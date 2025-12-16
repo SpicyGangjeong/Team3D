@@ -31,10 +31,14 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	void Set_Quest_Count(_int Index);
+	void Set_Quest_Data(class CQuest_Data* Data);
+
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
+	class CQuest_Data* m_pQuest_Date = { nullptr };
 
 	CGameObject* m_pQuest_Border = { nullptr };
 	CGameObject* m_pQuest_Header = { nullptr };
@@ -44,6 +48,8 @@ private:
 	CGameObject* m_pQuest_Info_Header= { nullptr };
 	CGameObject* m_pQuest_Info_Line = { nullptr };
 	CGameObject* m_pQuest_Entry_Line = { nullptr };
+
+	_int m_iQuest_Count{};
 
 public:
 	static CQuest_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

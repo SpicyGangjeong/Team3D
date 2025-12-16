@@ -294,18 +294,23 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
 		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-		m_DamageInfo.fDamage = damagePair.first;
-		m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
-		if (0 == damagePair.second) {
-			m_pFSM->Change_State(FSMSTATE::DEAD);
-			return;
-		}
 	}
 	break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
 		break;
+	case ENUM_CLASS(SKILL_TYPE::ACCIO):
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+		break;
 	}
+
+	m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	if (0 == damagePair.second) {
+		m_pFSM->Change_State(FSMSTATE::DEAD);
+		return;
+	}
+
 	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
 	}

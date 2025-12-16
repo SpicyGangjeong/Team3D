@@ -34,6 +34,7 @@ public:
 	void    Disable_Light();
 	void    Add_Light();
 	void    FollowParents(const _float4x4* pParentsMat, const _float4x4* pOffsetMat = nullptr);
+	EFFECT_INFO* Get_Effect_Info() { return &m_EffectInfo; }
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;

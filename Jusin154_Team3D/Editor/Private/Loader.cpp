@@ -111,6 +111,12 @@
 #include "Quest_Info_Line.h"
 #include "Quest_Entry_Line.h"
 
+#include "Quest_Status_Panel.h"
+#include "Quest_Status.h"
+
+#include "Completed_Panel.h"
+#include "InProgress_Panel.h"
+
 #include "IMGUIUI.h"
 
 #pragma endregion
@@ -627,208 +633,208 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Altering_Spell"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Altering_Spell\\Altering_Spell%d.png"), 349))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Altering_Spell"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Altering_Spell\\Altering_Spell%d.png"), 349))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Alohomora"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Alohomora\\Alohomora%d.png"), 394))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Alohomora"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Alohomora\\Alohomora%d.png"), 394))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Ancient_Magic"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic\\Ancient_Magic%d.png"), 152))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Ancient_Magic"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic\\Ancient_Magic%d.png"), 152))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Ancient_Magic_Throw"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic_Throw\\Ancient_Magic_Throw%d.png"), 89))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Ancient_Magic_Throw"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic_Throw\\Ancient_Magic_Throw%d.png"), 89))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Arresto_Momentum"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Arresto_Momentum\\Arresto_Momentum%d.png"), 120))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Arresto_Momentum"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Arresto_Momentum\\Arresto_Momentum%d.png"), 120))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Avada_Kedavra"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Avada_Kedavra\\Avada_Kedavra%d.png"), 208))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Avada_Kedavra"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Avada_Kedavra\\Avada_Kedavra%d.png"), 208))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Basic_Cast"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Basic_Cast\\Basic_Cast%d.png"), 308))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Basic_Cast"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Basic_Cast\\Basic_Cast%d.png"), 308))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Beast_Feed"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Beast_Feed\\Beast_Feed%d.png"), 378))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Beast_Feed"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Beast_Feed\\Beast_Feed%d.png"), 378))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Beast_Petting_Brush"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Beast_Petting_Brush\\Beast_Petting_Brush%d.png"), 327))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Beast_Petting_Brush"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Beast_Petting_Brush\\Beast_Petting_Brush%d.png"), 327))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Bombarda"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Bombarda\\Bombarda%d.png"), 262))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Bombarda"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Bombarda\\Bombarda%d.png"), 262))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Confringo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Confringo\\Confringo%d.png"), 157))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Confringo"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Confringo\\Confringo%d.png"), 157))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Conjuring_Spell"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Conjuring_Spell\\Conjuring_Spell%d.png"), 115))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Conjuring_Spell"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Conjuring_Spell\\Conjuring_Spell%d.png"), 115))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Descendo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Descendo\\Descendo%d.png"), 155))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Descendo"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Descendo\\Descendo%d.png"), 155))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Depulso"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Depulso\\Depulso%d.png"), 152))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Depulso"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Depulso\\Depulso%d.png"), 152))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Diffindo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Diffindo\\Diffindo%d.png"), 150))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Diffindo"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Diffindo\\Diffindo%d.png"), 150))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Disillusionment"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Disillusionment\\Disillusionment%d.png"), 260))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Disillusionment"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Disillusionment\\Disillusionment%d.png"), 260))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Evanesco"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Evanesco\\Evanesco%d.png"), 136))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Evanesco"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Evanesco\\Evanesco%d.png"), 136))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Expelliarmus"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Expelliarmus\\Expelliarmus%d.png"), 146))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Expelliarmus"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Expelliarmus\\Expelliarmus%d.png"), 146))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Flipendo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Flipendo\\Flipendo%d.png"), 188))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Flipendo"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Flipendo\\Flipendo%d.png"), 188))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Glacius"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Glacius\\Glacius%d.png"), 156))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Glacius"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Glacius\\Glacius%d.png"), 156))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Imperio"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Imperio\\Imperio%d.png"), 462))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Imperio"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Imperio\\Imperio%d.png"), 462))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Incendio"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Incendio\\Incendio%d.png"), 213))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Incendio"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Incendio\\Incendio%d.png"), 213))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Levioso"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Levioso\\Levioso%d.png"), 180))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Levioso"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Levioso\\Levioso%d.png"), 180))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Lumos"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Lumos\\Lumos%d.png"), 365))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Lumos"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Lumos\\Lumos%d.png"), 365))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Nab_Sack"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Nab_Sack\\Nab_Sack%d.png"), 235))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Nab_Sack"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Nab_Sack\\Nab_Sack%d.png"), 235))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Petrificus_Totalus"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Petrificus_Totalus\\Petrificus_Totalus%d.png"), 275))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Petrificus_Totalus"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Petrificus_Totalus\\Petrificus_Totalus%d.png"), 275))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Protego"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Protego\\Protego%d.png"), 285))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Protego"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Protego\\Protego%d.png"), 285))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Reparo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Reparo\\Reparo%d.png"), 385))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Reparo"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Reparo\\Reparo%d.png"), 385))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Revelio"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Revelio\\Revelio%d.png"), 227))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Revelio"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Revelio\\Revelio%d.png"), 227))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Stupefy"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Stupefy\\Stupefy%d.png"), 222))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Stupefy"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Stupefy\\Stupefy%d.png"), 222))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Transformation"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Transformation\\Transformation%d.png"), 146))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Transformation"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Transformation\\Transformation%d.png"), 146))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Wingardium_Leviosa"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Wingardium_Leviosa\\Wingardium_Leviosa%d.png"), 273))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Wingardium_Leviosa"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Wingardium_Leviosa\\Wingardium_Leviosa%d.png"), 273))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Wingardium_Leviosa"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Wingardium_Leviosa\\Wingardium_Leviosa%d.png"), 273))))
+	//{
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Wingardium_Leviosa"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Wingardium_Leviosa\\Wingardium_Leviosa%d.png"), 273))))
+	//{
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Crucio"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Crucio\\Crucio%d.png"), 216))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Crucio"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Crucio\\Crucio%d.png"), 216))))
+	//{
+	//	return E_FAIL;
+	//}
 
 	m_strMessage = TEXT("Model Loading..");
 
@@ -1170,6 +1176,25 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Entry_Line>(g_iStaticLevel, CQuest_Entry_Line::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status_Panel>(g_iStaticLevel, CQuest_Status_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status>(g_iStaticLevel, CQuest_Status::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CCompleted_Panel>(g_iStaticLevel, CCompleted_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CInProgress_Panel>(g_iStaticLevel, CInProgress_Panel::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -2477,7 +2502,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 HRESULT CLoader::Loading_For_MapViewer()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
-
+#pragma region TEXTURES
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures//T_LandscapeStreamingProxy_0_LOD1_Summer_D.png"), 0)))) {
 		return E_FAIL;
@@ -2536,6 +2561,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 			TEXT("../Bin/Resources/Models/Lake/T_Noises_D.dds"), 0)))) {
 		return E_FAIL;
 	}
+
 	/* For.Prototype_Component_T_Water_Normal_Large_N */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("T_Water_Normal_Large_N"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
@@ -2571,6 +2597,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Models/Lake/T_MudSmallRocks_A_D.dds"), 0)))) {
 		return E_FAIL;
 	}
+#pragma endregion
 
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
@@ -2587,57 +2614,55 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_South_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_North_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_North_Hogwart2_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_West_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_West_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_East_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogwart_Lake"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Deep.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Deep.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_LakeSurFace */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogwart_LakeSurFace"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Shallow.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Shallow.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogsmead_NorthLake */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLake"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Deep.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Deep.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 	/* For.Prototype_Component_Hogsmead_NorthLakeShallow */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Shallow.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Shallow.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 #pragma endregion
-
 	
-
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
 
 #pragma region HOGSMEADE
 
-	///* Terrain*/
+	/* Terrain*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
@@ -2647,26 +2672,26 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	///* TScrolls*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Collisions",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
-	///* 3BroomStick*/
+	/* 3BroomStick*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* Ollivanders*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Meshes",
-	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Collision",
 	//	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
@@ -2674,80 +2699,80 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	///* Gatehouse*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Gatehouse\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_QuidditchShop */
-	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	//	return E_FAIL;
+	/*if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Meshes",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_HogsheadInn */
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_Honeydukes */
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_OwlPost */
-	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	//	return E_FAIL;
+	/*if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Meshes",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_TeaShop */
-	/*if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Meshes",
-		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;*/
-
-	///* BLDG_Zonkos */
-	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Meshes",
 	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Collision",
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_Zonkos */
+	/*if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Meshes",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Collision",
 	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_DB_GR */
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_Potions */
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Collisions",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
-	///* BLDG_Salon */
-	/*if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Meshes",
-		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Collision",
-		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;*/
+	/* BLDG_Salon */
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Meshes",
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Collision",
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
 
 	///* Hengist_Tree */
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Vegetation\\Hengist_Tree",
@@ -2759,122 +2784,140 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	///* GEN A*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN B*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN C*/
-	/*if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
-		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;*/
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
-	///* GEN E*/
+	/* GEN E*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Meshes",
 	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN F*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN G*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN H*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN J*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
+	
 
-	/* Fences */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\fences",
-		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
 
-	/* Light */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\LightPosts",
+#pragma endregion
+
+
+#pragma region HOGSMEADE_OBJECT
+
+//	/* Fences */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\fences",
+//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+//	return E_FAIL;
+
+/* Light */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\LightPosts",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+/* Doors */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Doors",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+/* Step */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\GroundSurfaces",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\GroundSurfaces",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+/* Box */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\MiscProps",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+/* TeaShop Table */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Tables",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+/* TeaShop Chair*/
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Chairs",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+/* Hogwart LOD */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\HogwartsLOD",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+/* Barrel */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Meshes",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+/* Object Interactables */
+/* Chest */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactables",
+	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+#pragma endregion
+
+
+#pragma region HOGWART
+	/* QuidditchPitch */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_QuidditchPitch\\Static_Mesh\\KIT_Ext",
 		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
-
-	/* Doors */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Doors",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* Step */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\GroundSurfaces",
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_QuidditchPitch\\Static_Mesh\\Collisions",
 		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\GroundSurfaces",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* Barrel */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* Box */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\MiscProps",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* TeaShop Table */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Tables",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* TeaShop Chair*/
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Chairs",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* Hogwart LOD */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\HogwartsLOD",
-		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* Object Interactables */
-	/* Chest */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactables",
-		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
 #pragma endregion
 
 #ifdef gimch
@@ -2912,7 +2955,6 @@ if(isLoad_Map)
 			&Contents[jobFutures.size()]
 		));
 	}
-
 	{ /* Gatehouse*/
 		jobFutures.emplace_back(Deferred_FolderLoad(
 			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Gatehouse/Meshes",
@@ -2920,7 +2962,6 @@ if(isLoad_Map)
 			&Contents[jobFutures.size()]
 		));
 	}
-
 	{ /* TScrolls */
 		jobFutures.emplace_back(Deferred_FolderLoad(
 			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Meshes",

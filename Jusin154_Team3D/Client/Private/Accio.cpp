@@ -249,6 +249,8 @@ void CAccio::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_bHit == false)
 		return;
 
+	dynamic_cast<CPlayer*>(m_pOwner)->Set_SpellHit(true);
+
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
@@ -270,8 +272,9 @@ void CAccio::OnCollision(CGameObject* pOther, void* pDesc)
 	pWandLight->Set_Visible(false);
 	pSpread_Circle->Set_Visible(false);
 	
-	if(m_isFix)
-		m_pRope_Trail->Get_Component<CTrail>()->Rope_Fix(true);
+	m_pRope_Trail->Get_Component<CTrail>()->Rope_Fix(true);
+	m_pRope_Trail->SetDissolve(true);
+
 }
 
 void CAccio::Free()
@@ -293,7 +296,6 @@ void CAccio::Describe_Entity()
 	GUI::DragFloat("Range", &m_fRange);
 	GUI::DragFloat("Attenuation", &m_fAttenuation);
 	
-	GUI::Checkbox("Collision Fix", &m_isFix);
 
 	m_pRope_Trail->Describe_Entity();
 	m_pRope_Trail->Get_Component<CTrail>()->Describe_Entity();

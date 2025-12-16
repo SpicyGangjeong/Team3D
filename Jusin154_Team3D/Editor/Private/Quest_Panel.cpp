@@ -9,6 +9,7 @@
 #include "Quest_Info_Header.h"
 #include "Quest_Info_Line.h"
 #include "Quest_Entry_Line.h"
+#include "Quest_Data.h"
 
 CQuest_Panel::CQuest_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CPanelObject(pDevice, pContext)
@@ -29,9 +30,9 @@ HRESULT CQuest_Panel::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 960.f;
-	Desc.fY = 540.f;
-	Desc.fSizeX = g_iWinSizeX;
+	Desc.fX = 0.f;
+	Desc.fY = 0.f;
+	Desc.fSizeX = 1575.f;
 	Desc.fSizeY = g_iWinSizeY;
 
 	if (FAILED(__super::Initialize(&Desc)))
@@ -47,12 +48,25 @@ HRESULT CQuest_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_fCanvasAlpha = 1.f;
-	m_fSortZ = 0.05f;
+	m_fSortZ = 0.04f;
 	m_iSpellType = -1;
 	m_fDelayTime = 1.f;
 	Visible(true);
 	ElementAllVisible(true);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QUESTPANELDATA"), [this](void* p) {this->Set_Quest_Data(reinterpret_cast<CQuest_Data*>(p)); });
 	return S_OK;
+}
+
+void CQuest_Panel::Set_Quest_Count(_int Index)
+{
+	m_iQuest_Count = Index;
+}
+
+void CQuest_Panel::Set_Quest_Data(CQuest_Data* Data)
+{
+	m_pQuest_Date = Data;
+	Function_Callback(TEXT("QUEST_DATA"), m_pQuest_Date);
+	static_cast<CQuest_List*>(m_pQuest_List)->Set_Name(static_cast<CQuest_Data*>(m_pQuest_Date)->Get_Quest(0).pQuestName, 0);
 }
 
 void CQuest_Panel::Priority_Update(_float fTimeDelta)
@@ -88,19 +102,6 @@ void CQuest_Panel::Late_Update(_float fTimeDelta)
 
 HRESULT CQuest_Panel::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Render())) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -111,56 +112,11 @@ _vector CQuest_Panel::Get_WorldPostion()
 
 HRESULT CQuest_Panel::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOwnerAlpha", &m_fOwnerAlpha, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
 HRESULT CQuest_Panel::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Quest_Widget"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
-	{
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -247,8 +203,6 @@ void CQuest_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 

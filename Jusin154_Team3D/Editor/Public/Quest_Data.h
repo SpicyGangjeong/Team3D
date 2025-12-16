@@ -27,8 +27,8 @@ public:
 	{
 		_int					iQuestID{};
 		_int					iType{};
-		_string					pQuestName;
-		_string					pQuestInfo;
+		_wstring					pQuestName;
+		_wstring					pQuestInfo;
 		vector<OBJECTIVEINFO>	ObjectiveInfo;
 		vector<REWARDSINFO>		RewardsInfo;
 	}QUESTINFO;
@@ -44,6 +44,9 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+public:
+	QUESTINFO Get_Quest(_int QuestID);
+	_int Get_Count();
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -52,7 +55,7 @@ private:
 
 public:
 	//const SPELLINFO& Get_Info(_uint SpellID) const;
-
+	
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
@@ -61,6 +64,8 @@ private:
 	REWARDSINFO RewardsInfo = {};
 
 	vector<QUESTINFO> QuestInfos;
+
+	_int m_iQuest_Count{};
 
 	_bool m_bClear[1] = { false };
 public:

@@ -57,6 +57,20 @@ enum class TEXTURE_MOUNT_SLOT1 { NOT_DEFINED, ROUGHNESS,                    END 
 enum class TEXTURE_MOUNT_SLOT2 { NOT_DEFINED, OCCLUSION, ALPHA, Amount_Scatter, END };
 enum class TEXTURE_MOUNT_SLOT3 { NOT_DEFINED, HEIGHT, ALPHA, Brightness_Scatter, END };
 
+enum PBR_FLAG
+{
+	PBR_NONE = 0,
+	PBR_MRO = 1,
+	PBR_SRO = 2,
+	PBR_MROH = 3,
+	PBR_MROA = 4,
+	PBR_SROH = 5,
+	PBR_SROA = 6,
+	PBR_MROA_MASK = 7,
+	PBR_MRS = 8,
+	PBR_SRA = 9,
+	PBR_HRO = 10
+};
 
 #ifndef EDITOR_PROJECT
 enum aiTextureType {

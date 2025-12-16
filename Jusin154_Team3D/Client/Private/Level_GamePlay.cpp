@@ -254,7 +254,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = false;
 #endif // 
 #ifdef 진우
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
@@ -268,7 +268,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if(false == isReady_Background)
 	{
 		/* 테스트용 맵 */
-		CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+		CInfoInstance::GetInstance()->Load_MapObjects("Map1215");
 	}
 	else
 	{

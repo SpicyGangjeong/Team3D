@@ -33,6 +33,8 @@
 #include "Barral_Splesh.h"
 #include "Goblin_Teleport.h"
 #include "Accio.h"
+#include "Screen_Wind.h"
+
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -354,6 +356,16 @@ HRESULT CEffectPool::Ready_Effect()
 		CBarral_Splesh* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CBarral_Splesh>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::SCREEN_WIND, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CScreen_Wind* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CScreen_Wind>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

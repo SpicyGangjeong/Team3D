@@ -3,26 +3,26 @@
 #include "GameInstance.h"
 
 CQuest_HeaderLine::CQuest_HeaderLine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CQuest_HeaderLine::CQuest_HeaderLine(const CQuest_HeaderLine& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
 HRESULT CQuest_HeaderLine::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CQuest_HeaderLine::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -485.f;
-	Desc.fY = -310.f;
+	Desc.fX = -475.f;
+	Desc.fY = 310.f;
 	Desc.fSizeX = 480.f;
 	Desc.fSizeY = 10.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };

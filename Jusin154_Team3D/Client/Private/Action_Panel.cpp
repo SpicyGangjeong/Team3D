@@ -33,7 +33,7 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 1150.f;
-	Desc.fY = 850.f;
+	Desc.fY = -850.f;
 	Desc.fSizeX = 1650.f;
 	Desc.fSizeY = 450.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -180,7 +180,7 @@ void CAction_Panel::Magic_Meter_UV()
 	for (_uint i = 0; i < 5; ++i)
 	{
 		m_vMagic_MeterUV[i].x = 570.f - (55.f * i);
-		m_vMagic_MeterUV[i].y = 145.f;
+		m_vMagic_MeterUV[i].y = -145.f;
 	}
 }
 

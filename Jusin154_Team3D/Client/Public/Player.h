@@ -127,6 +127,11 @@ private:
 	_float			m_fAnimTime = {};
 	_bool			m_bTurbo = {};
 
+	/* 무적 불 변수*/
+#ifdef _DEBUG
+	_bool			m_isDebugMode = { false };
+#endif
+
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();

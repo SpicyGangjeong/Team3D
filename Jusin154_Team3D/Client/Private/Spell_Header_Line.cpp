@@ -22,7 +22,7 @@ HRESULT CSpell_Header_Line::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 600.f;
-	Desc.fY = -340.f;
+	Desc.fY = 340.f;
 	Desc.fSizeX = 487.f;
 	Desc.fSizeY = 18.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };

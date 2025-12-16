@@ -112,6 +112,12 @@
 #include "Quest_Info_Line.h"
 #include "Quest_Entry_Line.h"
 
+#include "Quest_Status_Panel.h"
+#include "Quest_Status.h"
+
+#include "Completed_Panel.h"
+#include "InProgress_Panel.h"
+
 #pragma endregion
 
 #pragma region PHYSX
@@ -161,6 +167,7 @@
 #include "Box_Splesh.h"
 #include "Chair_Splesh.h"
 #include "Barral_Splesh.h"
+#include "Screen_Wind.h"
 
 #pragma endregion
 
@@ -1457,19 +1464,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc1{};
 		{
-			Desc.eType = ACTOR::BOX;
-			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
-			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
-			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
-			Desc.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
-			Desc.fDensity = 1.f;
-			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
-			Desc.eLockFlag = {};
-			Desc.vAutoDamping = { 1.f, 1.f };
-			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
-			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
+			Desc1.eType = ACTOR::BOX;
+			Desc1.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc1.fContactOffset = { 0.05f };
+			Desc1.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+			Desc1.fDensity = 1.f;
+			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc1.eLockFlag = {};
+			Desc1.vAutoDamping = { 1.f, 1.f };
+			Desc1.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
 
@@ -1713,6 +1720,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CScreen_Wind>(NEXT_LEVEL, CScreen_Wind::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	
@@ -2020,6 +2031,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_Quest_Entry_Line*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Entry_Line>(g_iStaticLevel, CQuest_Entry_Line::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+		
+	/* For.Prototype_GameObject_Quest_Status_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status_Panel>(g_iStaticLevel, CQuest_Status_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Status*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status>(g_iStaticLevel, CQuest_Status::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Completed_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CCompleted_Panel>(g_iStaticLevel, CCompleted_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_InProgress_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CInProgress_Panel>(g_iStaticLevel, CInProgress_Panel::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
