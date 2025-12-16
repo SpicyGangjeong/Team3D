@@ -43,7 +43,7 @@ private:
 
 	_float4				m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
 	_float4				m_vTargetPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 타게팅 된 위치
-	_float				m_fLinearSpeed = 1.f;
+	_float				m_fLinearSpeed = 0.5f;
 	_float3				m_vCameraLook = {};
 
 	_float4x4				 m_TrailWorld = {};
@@ -52,7 +52,7 @@ private:
 	_float				m_fAccRotateTime = {};
 	_float				m_fTurnSpeed = { 65.f };
 	_float				m_fRange = { 1.f };
-	_float              m_fAttenuation = { 100.f };
+	_float              m_fAttenuation = { 65.f };
 	_bool				m_isDissolve = { true };
 	_bool				m_isReverse = { false };
 	_int				m_iLoopTime = { 5 };
