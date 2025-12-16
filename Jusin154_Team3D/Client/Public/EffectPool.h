@@ -27,6 +27,9 @@ public:
 public:
 	HRESULT Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPrototypeLevel, _uint iCloneLevel , function<class CEffect_Container*(_uint , _uint)> AddPrototypeEvent);
 	HRESULT Use_Skill(SKILL_TYPE eType , CGameObject* pOwner, void* pArg = nullptr);
+#ifdef _DEBUG
+	HRESULT Reset_Pool();
+#endif
 private:
 	list<class CEffect_Container*> m_EffectList[ENUM_CLASS(SKILL_TYPE::END)] = {};
 	list<class CEffect_Container*> m_ActiveEffectList = {};

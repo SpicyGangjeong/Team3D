@@ -60,7 +60,10 @@ HRESULT CBroom::Initialize(void* pArg)
 			return E_FAIL;
 		}
 
+		m_pWindEffect->Get_Effect_Info()->isBillboard = false;
 	}
+
+
 
 
 	return S_OK;
@@ -115,7 +118,7 @@ void CBroom::Update(_float fTimeDelta)
 	{
 		if (m_fSpeed <= 5.f)
 		{
-			m_pWindEffect->Set_Visible(false);
+			//m_pWindEffect->Set_Visible(false);
 			return;
 		}
 
@@ -137,16 +140,24 @@ void CBroom::Late_Update(_float fTimeDelta)
 	{
 		CTransform* WindTransform = m_pWindEffect->Get_Component<CTransform>();
 
-		_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix() * XMMatrixRotationAxis(WindTransform->Get_State(STATE::UP) , XMConvertToRadians(180.f));
+		_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix()/* * XMMatrixRotationAxis(XMVectorSet(0.f , 1.f, 0.f ,0.f), XMConvertToRadians(180.f))*/;
 		WindTransform->Set_WorldMatrix(WorldMat);
-		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition());
 
+		_vector vCameraLook = XMVector3Normalize(m_pGameInstance->Get_CameraLook());
+		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition() + vCameraLook * m_fCameraOffset + XMVectorSet(0.f ,m_fYOffset , 0.f ,0.f));
+
+#if _DEBUG
+#if 진우
 		GUI::Begin("Wind");
 
 		m_pWindEffect->Get_Component<CInstance_Model>()->Describe_Entity();
-
+		GUI::Checkbox("BillBoard", &m_pWindEffect->Get_Effect_Info()->isBillboard);
+		GUI::DragFloat("Offset", &m_fCameraOffset);
+		GUI::DragFloat("Offset Y", &m_fYOffset);
 		GUI::End();
 	}
+#endif
+#endif
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 

@@ -74,6 +74,8 @@ private:
 
 	BroomInput			m_Input;
 	class CEffectParts* m_pWindEffect = { nullptr };
+	_float m_fCameraOffset = { -10.f };
+	_float m_fYOffset= { -5.f };
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
@@ -97,7 +99,7 @@ public:
 	_float		m_fAmount = { 1.f };
 	_float		m_fInputTime = {};
 	_bool		m_bRatio = { false };
-
+	
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();
