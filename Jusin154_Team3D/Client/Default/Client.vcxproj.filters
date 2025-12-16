@@ -602,10 +602,9 @@
     <ClInclude Include="..\Public\RaceRing.h">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClInclude>
-	  <ClInclude Include="..\Public\Screen_Wind.h">
-		  <Filter>02.GameObjects\Effect\ScreenFX</Filter>
+    <ClInclude Include="..\Public\Screen_Wind.h">
+      <Filter>02.GameObjects\Effect\ScreenFX</Filter>
     </ClInclude>
-	  <ClInclude Include="..\Public\BroomRaceManager.h" />
     <ClInclude Include="..\Public\Quest_Status_Panel.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel</Filter>
     </ClInclude>
@@ -620,6 +619,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Quest_Data.h">
       <Filter>04.Mechanic\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRaceManager.h">
+      <Filter>02.GameObjects\BroomRaceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Interaction_Key.h">
+      <Filter>02.GameObjects\UI\Interaction_Key</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1303,6 +1308,9 @@
     <Filter Include="04.Mechanic\Quest">
       <UniqueIdentifier>{fe64513c-fbb3-4577-b424-82d99c9075a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Interaction_Key">
+      <UniqueIdentifier>{08163c4a-63c9-4cc2-97b4-97bb2f9467ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1852,7 +1860,6 @@
     <ClCompile Include="..\Private\Screen_Wind.cpp">
       <Filter>02.GameObjects\Effect\ScreenFX</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\BroomRaceManager.cpp" />
     <ClCompile Include="..\Private\Quest_Status_Panel.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel</Filter>
     </ClCompile>
@@ -1867,6 +1874,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Data.cpp">
       <Filter>04.Mechanic\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRaceManager.cpp">
+      <Filter>02.GameObjects\BroomRaceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Interaction_Key.cpp">
+      <Filter>02.GameObjects\UI\Interaction_Key</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -118,6 +118,8 @@
 #include "Completed_Panel.h"
 #include "InProgress_Panel.h"
 
+#include "Interaction_Key.h"
+
 #pragma endregion
 
 #pragma region PHYSX
@@ -2054,6 +2056,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_InProgress_Panel*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CInProgress_Panel>(g_iStaticLevel, CInProgress_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Interaction_Key*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CInteraction_Key>(g_iStaticLevel, CInteraction_Key::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

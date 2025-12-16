@@ -42,7 +42,7 @@ HRESULT CQuest_Border::Initialize(void* pArg)
 	m_fAlphaTime = 5.f;
 	m_vNine_Slice = _float4(48.f, 148.f, 48.f, 148.f);
 	m_fSortZ = 0.02f;
-	m_fFontX = -31.5f;
+	m_fFontX = -10.f;
 	m_fFontY = -50.f;
 	SizeUpX(500.f);
 	SizeUpY(500.f);
@@ -133,7 +133,7 @@ HRESULT CQuest_Border::Render()
 		return E_FAIL;
 	}
 
-	_float OffSet = m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("전 체") - 22) * 0.5f;
+	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("전 체")) - 22) * 0.5f;
 	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("전 체"), _float2((m_fFontX - m_fX) - OffSet, m_fFontY + m_fY));
 
 	for (_int i = 0; i < m_iCount; ++i)

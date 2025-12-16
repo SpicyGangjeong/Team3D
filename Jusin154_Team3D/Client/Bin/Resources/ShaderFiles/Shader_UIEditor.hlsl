@@ -29,6 +29,7 @@ float g_fMapAngle;
 float g_fCoolTime;
 float g_fHp;
 
+float2 g_fViewport;
 float2 g_fOrigin_Size;
 float2 g_fCurrent_Size;
 float2 g_fHpBG;
@@ -1726,7 +1727,7 @@ PS_OUT PS_Broomstick(PS_IN In)
     float2 texsize1 = g_fItemImageSizes1 / g_fCurrent_Size;
     float2 texlocal1 = (In.vTexcoord - texpos1) / texsize1;
     bool inside = all(texlocal1 >= 0.0f && texlocal1 <= 1.0f);
-    if(inside)
+    if (inside)
     {
         float4 tex3 = g_Texture2.Sample(ClampSampler, texlocal1);
         color = lerp(color, tex3, tex3.a);
@@ -1787,7 +1788,6 @@ VS_OUT3D VS_MAIN3D(VS_IN3D In)
     Out.vTexcoord = TexCoord;
     return Out;
 }
-
 
 PS_OUT PS_Enemy_Detection(PS_IN In)
 {
@@ -1890,6 +1890,64 @@ PS_OUT PS_Enemy_Detection(PS_IN In)
         }
        
     }
+
+    Color.a *= g_fAlpha;
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+VS_OUT3D VS_NONESIZE3D(VS_IN3D In)
+{
+    VS_OUT3D Out;
+
+    float3 worldCenter = float3(
+        g_WorldMatrix._41,
+        g_WorldMatrix._42,
+        g_WorldMatrix._43
+    );
+
+    float4 clipPos = mul(
+        float4(worldCenter, 1.f),
+        mul(g_ViewMatrix, g_ProjMatrix)
+    );
+
+    float w = clipPos.w;
+
+    clipPos.xy /= w;
+
+    float2 offset = In.vTexcoord - 0.5f;
+    float2 pixelOffset = offset * g_fCurrent_Size.xy;
+
+    float2 ndcOffset;
+    ndcOffset.x = pixelOffset.x / g_fViewport.x * 2.f;
+    ndcOffset.y = pixelOffset.y / g_fViewport.y * 2.f;
+
+    clipPos.xy += ndcOffset;
+
+    clipPos.xy *= w;
+    clipPos.w = w;
+
+    Out.vPosition = clipPos;
+
+    float2 TexCoord = In.vTexcoord;
+    TexCoord.y = 1.f - TexCoord.y;
+    Out.vTexcoord = TexCoord;
+
+    return Out;
+}
+
+PS_OUT PS_Interaction_Object(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 Color = float4(1.f, 1.f, 1.f, 0.f * g_fAlpha);
+    
+    float2 atlasUV = g_fImageUV.xy + In.vTexcoord * (g_fImageUV.zw - g_fImageUV.xy);
+    float2 safeUV = saturate(atlasUV);
+    float4 tex1 = g_Texture.Sample(DefaultSampler, safeUV);
+    
+    Color = tex1;
 
     Color.a *= g_fAlpha;
     Out.vColor = Color;
@@ -2255,5 +2313,15 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN3D();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Enemy_Detection();
+    }
+
+    pass Interaction_Object
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_NONESIZE3D();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Interaction_Object();
     }
 }

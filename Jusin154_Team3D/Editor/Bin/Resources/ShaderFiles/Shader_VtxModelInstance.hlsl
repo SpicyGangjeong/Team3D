@@ -557,21 +557,7 @@ float4 DrawEffect(PS_IN In)
             discard;
     }
     
-    /* 소프트 이펙트 */
-    
-    float2 vTexcoord;
-    
-    vTexcoord.x = In.vProjPos.x / In.vProjPos.w * 0.5f + 0.5f;
-    vTexcoord.y = In.vProjPos.y / In.vProjPos.w * -0.5f + 0.5f;
-    
-    float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vTexcoord);
-    
-    float fOldViewZ = vDepthDesc.y * g_fFar;
-    
-    float fDistance = fOldViewZ - In.vProjPos.w;
-    
-    vMtrlDiffuse.a = vMtrlDiffuse.a * saturate(fDistance);
-    
+
     return vMtrlDiffuse;
 }
 
@@ -681,6 +667,28 @@ float4 RimLight(PS_IN In)
     return vRimLight;
 }
 
+float4 SoftEffect(PS_IN In, float4 vMtrlDiffuse)
+{
+        /* 소프트 이펙트 */
+    
+    float4 vDiffuse = vMtrlDiffuse;
+    
+    float2 vTexcoord;
+    
+    vTexcoord.x = In.vProjPos.x / In.vProjPos.w * 0.5f + 0.5f;
+    vTexcoord.y = In.vProjPos.y / In.vProjPos.w * -0.5f + 0.5f;
+    
+    float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vTexcoord);
+    
+    float fOldViewZ = vDepthDesc.y * g_fFar;
+    
+    float fDistance = fOldViewZ - In.vProjPos.w;
+    
+    vDiffuse.a = vDiffuse.a * saturate(fDistance);
+   
+    return vDiffuse;
+    
+}
 PS_OUT PS_MAIN(PS_IN In)
 {
    
@@ -689,10 +697,12 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vMtrlDiffuse = DrawEffect(In);
     
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
+    
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
 
     vMtrlDiffuse.rgb += RimLight(In).rgb;
-    
+   
     Out.vDiffuse = vMtrlDiffuse;
     
     return Out;
@@ -705,6 +715,8 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     vector vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
+    
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
     
     int2 iTexel = int2(In.vPosition.xy);
     
@@ -790,7 +802,8 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
-    //// 색깔 추가할 처리 (이미시브)
+    //// 색깔 추가할 처리 (이미시브)    
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
     
     vMtrlDiffuse.a *= 5.f;
    
@@ -810,6 +823,8 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     vector vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
+    
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
     
     vMtrlDiffuse.a *= 5.f;
     
@@ -834,6 +849,7 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
     
     //// 색깔 추가할 처리 (이미시브)
    
@@ -869,6 +885,8 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
+    
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
     vMtrlDiffuse += RimLight(In);
@@ -885,6 +903,8 @@ PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
     vector vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
+    
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
@@ -915,6 +935,7 @@ PS_OUT PS_NO_DEPTH_COMPARE(PS_IN In)
 
 technique11 DefaultTechnique
 {
+//0
     pass Model
     {
         SetRasterizerState(RS_Default);
@@ -924,7 +945,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
-
+//1
     pass NON_NOMALMAP
     {
         SetRasterizerState(RS_Nocull);
@@ -934,7 +955,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
     }
-
+//2
     pass Blur
     {
         SetRasterizerState(RS_Nocull);
@@ -944,7 +965,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR();
     }
-
+//3
     pass WEIGHTBLEND
     {
         SetRasterizerState(RS_Nocull);
@@ -954,7 +975,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
     }
-
+//4
     pass NO_WORLD
     {
         SetRasterizerState(RS_Nocull);
@@ -964,7 +985,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
     }
-
+//5
     pass BLUR_NO_WORLD
     {
         SetRasterizerState(RS_Nocull);
@@ -975,7 +996,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUR();
     }
 
- 
+ //6
     pass BLEND
     {
         SetRasterizerState(RS_Nocull);
@@ -985,7 +1006,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLEND();
     }
-
+//7
     pass BLEND_NOWORLD
     {
         SetRasterizerState(RS_Nocull);
@@ -995,7 +1016,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLEND();
     }
-
+//8
     pass BLOOM
     {
         SetRasterizerState(RS_Nocull);
@@ -1005,7 +1026,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
     }
-
+//9
     pass BLOOM_NOWORLD
     {
         SetRasterizerState(RS_Nocull);
@@ -1016,7 +1037,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLOOM();
     }
 
-
+//10
     pass BLUR_NO_EMMISVE
     {
         SetRasterizerState(RS_Nocull);
@@ -1026,6 +1047,8 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR_NOEMISSIVE();
     }
+
+//11
 
     pass BLUR_NO_WORLD_NO_EMISSIVE
     {
@@ -1037,6 +1060,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUR_NOEMISSIVE();
     }
 
+//12
     pass WEIGHTBLEND_FOR_BLEND
     {
         SetRasterizerState(RS_Nocull);
@@ -1048,7 +1072,7 @@ technique11 DefaultTechnique
     }
 
 
-
+//13
     pass PARTICLE_DEPTH_STOP
     {
         SetRasterizerState(RS_Nocull);
@@ -1059,7 +1083,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-
+//14
     pass WB_CULLING
     {
         SetRasterizerState(RS_Default);
@@ -1070,6 +1094,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
     }
 
+//15
     pass SCREEN_FX
     {
         SetRasterizerState(RS_Nocull);
