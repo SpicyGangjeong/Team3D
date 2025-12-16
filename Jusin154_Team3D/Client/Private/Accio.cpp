@@ -184,7 +184,9 @@ HRESULT CAccio::Pre_Setting(CGameObject* pObject, void* pArg)
 	_vector vStartPos = WandPos;
 	XMStoreFloat4(&m_vStartPos, vStartPos);
 
-	_matrix WandWorld = pPlayer->Get_WandPos();
+	_matrix WandWorld = XMMatrixIdentity();
+
+	WandWorld.r[3] = pPlayer->Get_WandPos().r[3];
 
 	XMStoreFloat4x4(&m_TrailWorld , WandWorld);
 
