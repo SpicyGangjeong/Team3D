@@ -24,6 +24,7 @@ public:
 	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
 	void Set_Shield(_bool bShield) { m_bShield = bShield; }
 	void Start_CameraShake(_float fTime, _float fIntense);
+	_int Get_UIState() { return m_eUIState; }
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG

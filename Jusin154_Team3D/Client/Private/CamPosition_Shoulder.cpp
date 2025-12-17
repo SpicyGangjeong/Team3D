@@ -3,6 +3,7 @@
 #include "CamPosition_Target.h"
 #include "GameInstance.h"
 #include "Camera_Gaze.h"
+#include "Player.h"
 
 CCamPosition_Shoulder::CCamPosition_Shoulder(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamPosition(pDevice, pContext)
@@ -100,6 +101,14 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+
+	if (dynamic_cast<CPlayer*>(m_pOwner)->Get_UIState() == ENUM_CLASS(UI_STATE::GAMEPLAYER))
+	{
+		m_bMovable = true;
+	}
+	else {
+		m_bMovable = false;
+	}
 	if (m_pGameInstance->Key_Up(DIK_PGDN)) {
 		m_bDampingParentPos = !m_bDampingParentPos;
 	}
