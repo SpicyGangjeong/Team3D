@@ -49,6 +49,10 @@ HRESULT CAccio::Initialize(void* pArg)
 	m_pRope_Trail = Get_PartObject<CTrailObject>("Accio_Trail");
 	m_pWandLight = Get_PartObject<CEffectParts>("Wand_Light");
 	m_pRotate0 = Get_PartObject<CEffectParts>("Rotate0");
+	m_pRotate1 = Get_PartObject<CEffectParts>("Rotate1");
+
+	m_pAccio_PT = Get_PartObject<CEffectParts>("Accio_PT");
+	m_pAccio_Distortion = Get_PartObject<CEffectParts>("Accio_Distortion");
 
 	if (m_pRope_Trail == nullptr)
 		return E_FAIL;
@@ -56,10 +60,13 @@ HRESULT CAccio::Initialize(void* pArg)
 	SAFE_ADDREF(m_pRope_Trail);
 	SAFE_ADDREF(m_pWandLight);
 	SAFE_ADDREF(m_pRotate0);
+	SAFE_ADDREF(m_pRotate1);
+	SAFE_ADDREF(m_pAccio_PT);
+	SAFE_ADDREF(m_pAccio_Distortion);
 
 	XMStoreFloat4x4(&m_TrailWorld, XMMatrixIdentity());
 
-	m_fDuration = 5.f;
+	m_fDuration = 6.f;
 
 	return S_OK;
 }
@@ -97,14 +104,17 @@ void CAccio::Update(_float fTimeDelta)
 	TrailPos.r[3] += XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed;
 
 
-
-
 	if (m_bHit == true && m_pEnemyCCT != nullptr)
 	{
 		/* 특정 대상과 충돌 했다면*/
 		TrailPos.r[3] = m_pEnemyCCT->Get_Position();
 
-		m_pRotate0->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pEnemyCCT->Get_FootPosition());
+		_vector vPos = m_pEnemyCCT->Get_FootPosition();
+
+		m_pRotate0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+		m_pRotate1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+		m_pAccio_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+		m_pAccio_Distortion->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	}
 
 	XMStoreFloat4x4(&m_TrailWorld, TrailPos);
@@ -164,12 +174,15 @@ HRESULT CAccio::Pre_Setting(CGameObject* pObject, void* pArg)
 	_vector WandPos = pPlayer->Get_WandPos().r[3];
 
 	CEffectParts* pCircle = Get_PartObject<CEffectParts>("Accio_Circle");
-
 	CEffectParts* pSpread_Circle = Get_PartObject<CEffectParts>("Spread_Circle");
 
 	m_pRope_Trail->Set_Visible(true);
 	pCircle->Set_Visible(true);
+	
 	m_pWandLight->Set_Visible(true);
+	m_pWandLight->Get_Effect_Info()->isDissolve = false;
+	m_pWandLight->Get_Effect_Info()->isLightDissolve = false;
+
 	pSpread_Circle->Set_Visible(true);
 
 	m_pRope_Trail->Get_Component<CTrail>()->Reset_Trail();
@@ -208,6 +221,8 @@ HRESULT CAccio::Pre_Setting(CGameObject* pObject, void* pArg)
 	}
 
 	m_fAccRotateTime = 0.f;
+
+	m_pRope_Trail->Get_TrailInfo()->fMass = 0.05f;
 
 	return S_OK;
 }
@@ -269,30 +284,41 @@ void CAccio::OnCollision(CGameObject* pOther, void* pDesc)
 
 
 	CEffectParts* pHit = Get_PartObject<CEffectParts>("Accio_Hit");
+	CEffectParts* pHit0 = Get_PartObject<CEffectParts>("Accio_Hit0");
+
 
 	pHit->Set_Visible(true);
 	pHit->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 
+	pHit0->Set_Visible(true);
+	pHit0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+
+	m_pAccio_Distortion->Set_Visible(true);
+
+	
+
 	CEffectParts* pCircle = Get_PartObject<CEffectParts>("Accio_Circle");
-	CEffectParts* pWandLight = Get_PartObject<CEffectParts>("Wand_Light");
 	CEffectParts* pSpread_Circle = Get_PartObject<CEffectParts>("Spread_Circle");
-	CEffectParts* pAccio_PT = Get_PartObject<CEffectParts>("Accio_PT");
 
 
 	pCircle->Set_Visible(false);
-	pWandLight->Set_Visible(false);
 	pSpread_Circle->Set_Visible(false);
 
+	m_pWandLight->Get_Effect_Info()->isDissolve = true;
+	m_pWandLight->Get_Effect_Info()->isLightDissolve = true;
 
 	m_pRotate0->Set_Visible(true);
-	pAccio_PT->Set_Visible(true);
+	m_pRotate1->Set_Visible(true);
 
-	pAccio_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	m_pAccio_PT->Set_Visible(true);
+	m_pAccio_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	
 	m_pRope_Trail->Get_Component<CTrail>()->Rope_Fix(true);
 
 	if(m_isDissolve)
 		m_pRope_Trail->SetDissolve(true);
+
+	m_pRope_Trail->Get_TrailInfo()->fMass = 0.1f;
 
 }
 
@@ -303,6 +329,9 @@ void CAccio::Free()
 	SAFE_RELEASE(m_pRope_Trail);
 	SAFE_RELEASE(m_pWandLight);
 	SAFE_RELEASE(m_pRotate0);
+	SAFE_RELEASE(m_pRotate1);
+	SAFE_RELEASE(m_pAccio_PT);
+	SAFE_RELEASE(m_pAccio_Distortion);
 }
 #ifdef _DEBUG
 

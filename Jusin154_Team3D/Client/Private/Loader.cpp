@@ -1780,6 +1780,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Lightning", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+		});
+
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
 #pragma region UI 

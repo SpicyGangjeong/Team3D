@@ -872,10 +872,8 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
         fBloomStrength = g_fBloomStrength * ((In.vLifeTime.x / In.vLifeTime.y));
     }
     
-    if (vMtrlDiffuse.a <= 0.1f)
-        discard;
-   
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBloomStrength, (float) g_iBloomType / 255.f);
+
+    Out.vDiffuse = vMtrlDiffuse * fBloomStrength;
     
     return Out;
 
@@ -944,14 +942,17 @@ PS_BLOOM_OUT PS_DISTORTION(PS_IN In)
     vector vMtrlDiffuse;
     
 
-    Out.vDiffuse = DrawEffect(In);
+    vMtrlDiffuse = DrawEffect(In);
     
-    if (Out.vDiffuse.a == 0.f)
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
+    
+    if (vMtrlDiffuse.a == 0.f)
         discard;
+  
+
+    Out.vDiffuse = vMtrlDiffuse;
     
     /* b,a 성분은 0으로 밀어준다. */
-    
-
     
     /* 거리 기반으로 디스토션 할 객체 중점으로부터의 거리 구해냄. */
     /* 중점이라면 r은 1, 중점에서의 거리가 멀수록 1에서 r 성분의 크기가 줄어드는 형태. */
@@ -1054,7 +1055,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
@@ -1064,7 +1065,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_NOWORLD();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();

@@ -931,6 +931,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fModelDistortIntensity", &m_EffectInfo.fModelDistortIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+
 
 	if (m_pDiffuse_TextureCom != nullptr)
 	{
