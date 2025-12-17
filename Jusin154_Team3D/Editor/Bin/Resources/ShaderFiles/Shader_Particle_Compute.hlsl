@@ -209,6 +209,9 @@ void CS_MAIN(
         
         float fDrag = particleValue.fDrag;
         
+        if (fMoveLerpOption != 0.f)
+            fDrag = SelectLerpUV(float2(particleValue.fDrag, 0.f), fTime, fMoveLerpOption).x;
+        
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;
         
@@ -230,6 +233,9 @@ void CS_MAIN(
         
         float fDrag = particleValue.fDrag;
         
+        if (fMoveLerpOption != 0.f)
+            fDrag = SelectLerpUV(float2(particleValue.fDrag, 0.f), fTime, fMoveLerpOption).x;
+        
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;
         
@@ -250,6 +256,9 @@ void CS_MAIN(
         float fRatio = 1 - (1 - fTime * fTime);
         
         float fDrag = particleValue.fDrag;
+        
+        if (fMoveLerpOption != 0.f)
+            fDrag = SelectLerpUV(float2(particleValue.fDrag, 0.f), fTime, fMoveLerpOption).x;
         
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;

@@ -40,6 +40,9 @@ private:
 	class CTrailObject* m_pRope_Trail = { nullptr };
 	class CEffectParts* m_pWandLight = { nullptr };
 	class CEffectParts* m_pRotate0 = { nullptr };
+	class CEffectParts* m_pRotate1 = { nullptr };
+	class CEffectParts* m_pAccio_PT = { nullptr };
+	class CEffectParts* m_pAccio_Distortion = { nullptr };
 
 	_float4				m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
 	_float4				m_vTargetPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 타게팅 된 위치
