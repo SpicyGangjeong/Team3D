@@ -830,10 +830,10 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_ACCUM(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     
-    float3 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
-    float3 vColorSrcB = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord).xyz;
+    float4 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    float4 vColorSrcB = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord);
     
-    Out.vFirstTarget = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
+    Out.vFirstTarget = saturate(vColorSrcA + vColorSrcB);
     
     return Out;
 }
@@ -842,9 +842,9 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_FINISH(PS_IN In)
     PS_OUT_FLT4_SINGLE Out;
     
     vector vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    float3 vBloom = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord).xyz;
+    float4 vBloom = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord);
     Out.vFirstTarget = vColor;
-    Out.vFirstTarget += float4(vBloom, 1.f);
+    Out.vFirstTarget += vBloom;
     
     return Out;
 }
