@@ -26,10 +26,12 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 public:
 	vector<D3D11_MAPPED_SUBRESOURCE> Dispatch(_uint iSRVIndex, _uint iUAVIndex, _float3 vGroupCount, ID3D11Buffer** ppBuffers, ID3D11Buffer* pConstantBuffer = nullptr);
+	void	Dispatch_ExternalSRV_UAV(_uint srvStartSlot, _uint uavStartSlot, const _float3& groupCount, ID3D11ShaderResourceView** ppSRVs, _uint srvCount, ID3D11UnorderedAccessView** ppUAVs, _uint uavCount, ID3D11Buffer* pConstantBuffer);
 	void    Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex);
 	void    Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
 	ID3D11ComputeShader* Get_Compute() { return m_pComputeShader; }
 	ID3D11UnorderedAccessView* GetOutputUAV(_uint iIndex) const;
+	ID3D11Buffer* Get_OutputBuffer(_int iIndex) {return m_pOutputBuffer[iIndex]; }
 private:
 	void	Bind_SRV(_uint iIndex);
 	void	Bind_UAV(_uint iIndex);

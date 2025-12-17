@@ -1323,5 +1323,8 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Instance_Compute.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Distortion.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

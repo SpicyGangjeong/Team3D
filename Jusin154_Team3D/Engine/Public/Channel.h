@@ -23,10 +23,9 @@ public:
 	CHANNEL_DESC Fill_GPU_ChannelDesc();
 
 public:
-	void Update_TransformationMatirx(const vector<class CBone*>& Bones, LOCALPOS_DESC** pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, _bool bIsSpine, vector<_uint> BoneMask, _vector vector[3]);
+	void Update_TransformationMatirx(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, _bool bIsSpine, vector<_uint> BoneMask, _vector vector[3], _int RootBoneIndex);
 	_int Get_BoneIndex() { return { m_iBoneIndex }; }
 	void Set_BoneIndex(_int iBoneIndex) { m_iBoneIndex = iBoneIndex; }
-	void ResetRootMotion();
 	_matrix Get_BoneTransformationMatrix() { return m_BoneTransformationMatrix; }
 
 	KEYFRAME* Get_Frame(_uint iIndex);
@@ -58,13 +57,8 @@ private:
 	vector<KEYFRAME>		m_KeyFrames;	// 키프레임 벡터
 	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
 	_int					m_ilayerIndex = 0;
-	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
-	_float4					m_vInitialRootRot = {};
 	_matrix					m_BoneTransformationMatrix = {};
-	LOCALPOS_DESC			LocalPos = {};
 	vector<KEYFRAME_DESC>	m_KeyFrameDesc;
-	_bool					m_bInitialRootPos = { false };
-	_bool					m_bInitialRootRotSaved = { false };
 	_bool					m_IsUpper = false;
 public:
 	// 바이너리

@@ -11,10 +11,15 @@ public:
 	{
 		_float CurrentTime;
 		_float Duration;
-		_float Speed;
+		_int MeshBoneCount;
 		_int BoneCount;
-		_float4x4 PreTransformMatrix;
 
+		_int RootBoneIndex;
+		_int Padding;
+		_float PrevTime;
+		_float BlendRatio;
+		_float4x4 PreTransformMatrix;
+		_float4 RootInitRot;
 	}ANIMSTATE_DESC;
 
 private:
@@ -59,28 +64,32 @@ public:
 	void Set_BlendDuration(_float Duration) { m_fBlendDuration = Duration; }
 #pragma endregion
 #pragma region Mesh
-	const _char*	Get_MeshName(_uint iIndex);
-	_uint			Get_NumMeshes() const { return m_iNumMeshes; }
-	void			Update_RootBone(_float Amount = 1.f);
-	void			Initialize_RootBone();
+	const _char*		Get_MeshName(_uint iIndex);
+	_uint				Get_NumMeshes() const { return m_iNumMeshes; }
+	void				Update_RootBone(_float Amount = 1.f);
+	void				Initialize_RootBone();
+	void				BeginFrame();
+	vector<_float4x4>	Get_OffsetMatrix(_int iIndex);
+	void				Apply_CPUMask_ToBones();
+	void				Mark_CPUChain(_int boneIdx);
 #pragma endregion
 #pragma region Bone
 	HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
-	const _float4x4*		Get_BoneMatrixPtr(const _char* pBoneName) const;
+	const _float4x4*		Get_BoneMatrixPtr(const _char* pBoneName);
 	_matrix					Get_BoneMatrix(const _char* pBoneName) const;
 	_matrix					Get_BoneLocalMatrix(const _char* pBoneName) const;
 	static _int				Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
 	_int					Get_BoneIndex(const _char* pBoneName) const;
 	_matrix					Get_BoneMatrix(_uint iBoneIndex);
 	void					Combined_BoneMatrix();
-
 #pragma endregion
 #pragma region Material
 	HRESULT					Bind_Material(_uint iMeshIndex, class CShader* pShader);
 	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader, _bool OutLine = false);
 #pragma endregion
 
-	void			ComputeAnimation(_uint AnimIndex);
+	void			ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
+	void			Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
 	void			ComputeAnimation_Second(_uint AnimIndex);
 	void			InItialize_BoneIndex();
 
@@ -146,8 +155,7 @@ private:
 	_int						m_iCurrSecondAnimIndex = { -1 };
 	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1 };
 	vector<vector<_uint>>		m_BoneMask;
-
-
+	vector<_bool>				m_CPUBoneMask;
 
 	// 바이너리
 	SaveModel* m_pSaveModel = { nullptr };
@@ -161,18 +169,19 @@ private:
 	_matrix					m_BoneTransformationMatrix = {};
 	_float4					m_vInitialRootRot = {};
 
-	_float						m_fRadius = { 0.f };			// 컬링용 Radius
-	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
+	_float					m_fRadius = { 0.f };			// 컬링용 Radius
+	_int					m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
 	_vector					m_vector[3];
 
 	vector<_uint>			m_iBoneMask;
 	_bool					m_bInitialRootPos = { false };
 	_bool					m_bInitialRootRotSaved = { false };
 	_bool					m_bLoopRestarted = false;
-	_bool						m_bIsSecondFinishedAnim = { false };
-	_bool						m_bIsSecondLoop = { false };
-	_bool m_bRatio = { false };
-	_bool  m_bRootBone = {};
+	_bool					m_bIsSecondFinishedAnim = { false };
+	_bool					m_bIsSecondLoop = { false };
+	_bool					m_bRatio = { false };
+	_bool					m_bRootBone = {};
+	_float4x4				m_RootMatrix = {};
 
 private:
 #ifdef EDITOR_PROJECT
@@ -184,26 +193,37 @@ private:
 #pragma region Compute
 
 private:
+	HRESULT			Create_ComputeShader();
 	HRESULT			Create_ParentVB();
-	void			Create_Temp();
-	void			Create_LocalPosVB();
+	HRESULT			Create_BoneLocalVB();
+	HRESULT			Create_Temp();
+	HRESULT			Create_BoneMatrixVB();
+	HRESULT			Create_Const();
+	HRESULT			Create_ParentSrv();
+	HRESULT			Create_BoneLocalSrv();
 
-	_uint					m_iNumBuffer = {};
+	_uint				m_iNumBuffer = {};
 
-	vector<PARENT_DESC>		m_Parent = {};
+	vector<_int>		m_Parent = {};
+	vector<_float4x4>	m_BoneLocal = {};
+
 	vector<ANIMSTATE_DESC> m_AnimRanges;
-
-	LOCALPOS_DESC* m_pLocalPos[2] = { nullptr };
 
 	class CComputeShader* m_pComputeShader = nullptr;
 
 	ID3D11Buffer* m_pConstantBuffer = { nullptr };
-
 	ID3D11Buffer* m_pParentBuffer = { nullptr };
-	ID3D11Buffer* m_pLocalPosBuffer = { nullptr };
+	ID3D11Buffer* m_pBoneMatrixBuffer = { nullptr };
+	ID3D11Buffer* m_pBoneLocalBuffer = { nullptr };
+
+	ID3D11ShaderResourceView* m_pParentSRV = {};
+	ID3D11ShaderResourceView* m_pBoneLocalSRV = {};
+	ID3D11ShaderResourceView* m_pBoneMatrixSRV = {};
+	ID3D11UnorderedAccessView* m_pBoneMatrixUAV = {}; 
 #pragma endregion
 
 private:
+
 	// 바이너리
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
 	void LoadAdditionalAnimations(const char* ModelFilePath);

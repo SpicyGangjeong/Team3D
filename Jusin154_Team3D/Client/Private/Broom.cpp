@@ -60,7 +60,10 @@ HRESULT CBroom::Initialize(void* pArg)
 			return E_FAIL;
 		}
 
+		m_pWindEffect->Get_Effect_Info()->isBillboard = false;
 	}
+
+
 
 
 	return S_OK;
@@ -115,13 +118,13 @@ void CBroom::Update(_float fTimeDelta)
 	{
 		if (m_fSpeed <= 5.f)
 		{
-			m_pWindEffect->Set_Visible(false);
+			//m_pWindEffect->Set_Visible(false);
 			return;
 		}
 
 		m_pWindEffect->Set_Visible(true);
 		m_pWindEffect->Get_Component<CInstance_Model>()->Set_TimeMult(0.5f + m_fSpeed / 20.f);
-		m_pWindEffect->Get_Effect_Info()->fSoftMask = 1.f + m_fSpeed / 10.f;
+		m_pWindEffect->Get_Effect_Info()->fBlurIntensity = m_fSpeed / 30.f;
 
 	}
 
@@ -137,15 +140,22 @@ void CBroom::Late_Update(_float fTimeDelta)
 	{
 		CTransform* WindTransform = m_pWindEffect->Get_Component<CTransform>();
 
-		_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix() * XMMatrixRotationAxis(WindTransform->Get_State(STATE::UP) , XMConvertToRadians(180.f));
+		_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix()/* * XMMatrixRotationAxis(XMVectorSet(0.f , 1.f, 0.f ,0.f), XMConvertToRadians(180.f))*/;
 		WindTransform->Set_WorldMatrix(WorldMat);
-		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition());
 
+		_vector vCameraLook = XMVector3Normalize(m_pGameInstance->Get_CameraLook());
+		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition() + vCameraLook * m_fCameraOffset);
+
+#if _DEBUG
+#if 진우
 		GUI::Begin("Wind");
 
 		m_pWindEffect->Get_Component<CInstance_Model>()->Describe_Entity();
-
+		GUI::Checkbox("BillBoard", &m_pWindEffect->Get_Effect_Info()->isBillboard);
+		GUI::DragFloat("Offset", &m_fCameraOffset);
 		GUI::End();
+#endif
+#endif
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
@@ -166,16 +176,23 @@ HRESULT CBroom::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
 		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

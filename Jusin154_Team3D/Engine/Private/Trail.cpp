@@ -221,15 +221,18 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float fDamping, _float fLength , _float fMass , _fmatrix EndWorldMatrix)
 {
+
 	if (m_isFix == false)
 	{
 		if (m_iNumCount > 2)
+		{
 			memmove(m_pVertices + 2, m_pVertices, sizeof(VTXPOSTEX) * (m_iNumCount - 2));
+			memmove(m_pOldPosition + 2, m_pOldPosition, sizeof(_float3) * (m_iNumCount - 2));
+		}
 
 		if (m_iNumCount >= m_iNumVertices)
 			m_iNumCount -= 2;
 	}
-
 
 	m_pOldPosition[0] = m_pVertices[0].vPosition;
 	m_pOldPosition[1] = m_pVertices[1].vPosition;
@@ -265,6 +268,9 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 	XMStoreFloat3(&m_pVertices[m_iNumCount - 2].vPosition, vEndLow);
 	XMStoreFloat3(&m_pVertices[m_iNumCount - 1].vPosition, vEndHigh);
 
+	m_pOldPosition[m_iNumCount - 2] = m_pVertices[m_iNumCount - 2].vPosition;
+	m_pOldPosition[m_iNumCount - 1] = m_pVertices[m_iNumCount - 1].vPosition;
+
 	for (_uint i = 2; i < m_iNumCount; i++) /* 고정점은 연산에서 제외 0 , 1*/
 	{
 
@@ -293,7 +299,7 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 
 	}
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 20; ++i) {
 		for (_uint k = 0; k < m_iNumCount - 2; k += 2) {
 
 			/* Low , High */
@@ -316,14 +322,14 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 			_float fLowDiff = (fLength - fLowDist) / fLowDist;
 			_float fHighDiff = (fLength - fHighDist) / fHighDist;
 
-			// 각 점을 절반씩 밀거나 당겨서 거리 맞춤
+			// 각 점을 절반씩 밀거나 당겨서  거리 맞춤
 			// 손잡이(Pinned)는 움직이지 않도록 질량 비율 조절 가능 (여기선 0.5씩)
 
 			_vector vLowOffset = vDeltaLow * (fMass * fLowDiff);
 			_vector vHighOffset = vDeltaHigh * (fMass * fHighDiff);
 
 			// k!=0 (즉, 움직이는 마디)일 때만 vFirst를 움직임
-			if (k != 0)
+ 			if (k != 0)
 			{
 				vFirst[0] -= vLowOffset;
 				vFirst[1] -= vHighOffset;
@@ -344,10 +350,18 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 				vNext[1] += vHighOffset;
 			}
 
+			if (k == m_iNumCount - 4)
+			{
+
+				vFirst[0] -= vLowOffset;
+				vFirst[1] -= vHighOffset;
+			}
+
 			// --- 3. 결과 저장 ---
 
 			// vFirst 저장 (k=0 일 때는 vFirst가 vLow/vHigh의 값을 가지지만, 
 			// 움직이지 않았으므로 저장해도 무방. 하지만 명확성을 위해 조건부 저장 가능)
+
 			if (k != 0)
 			{
 				XMStoreFloat3(&m_pVertices[k].vPosition, vFirst[0]);
@@ -359,6 +373,9 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 			XMStoreFloat3(&m_pVertices[k + 3].vPosition, vNext[1]);
 		}
 	}
+
+	XMStoreFloat3(&m_pVertices[m_iNumCount - 2].vPosition, vEndLow);
+	XMStoreFloat3(&m_pVertices[m_iNumCount - 1].vPosition, vEndHigh);
 
 	for (_uint i = 0; i < m_iNumCount; i += 2)
 	{

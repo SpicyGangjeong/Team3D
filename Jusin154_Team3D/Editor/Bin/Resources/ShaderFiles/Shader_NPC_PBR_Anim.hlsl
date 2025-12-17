@@ -1,7 +1,16 @@
 
 #include "Engine_Shader_Defines.hlsli" 
 
+struct BoneOut
+{
+    row_major float4x4 Local;
+    row_major float4x4 Combined;
+    row_major float4x4 LocalCombined;
+
+};
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_OffsetMatrix[256];
+
 
 int g_bRimLight;
 int g_bUseNormalMap;
@@ -44,6 +53,7 @@ Texture2D g_Maya_Specular_ColorTexture;
 Texture2D g_Maya_Specular_RoughnessTexture;
 Texture2D g_AnisotropyTexture;
 
+StructuredBuffer<BoneOut> g_BoneBuffer : register(t26);
 
 Texture2D g_SurfaceParamsTexture;
 
@@ -103,13 +113,19 @@ VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
     
-    float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
-    
+    float4 w = In.vBlendWeight;
+    float sumW = max(dot(w, 1.0f), 1e-6f);
+    w /= sumW;
+
     matrix BoneMatrix =
-        mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
-        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
-        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
-        mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
+        mul(g_OffsetMatrix[In.vBlendIndex.x],
+            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+      + mul(g_OffsetMatrix[In.vBlendIndex.y],
+            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+      + mul(g_OffsetMatrix[In.vBlendIndex.z],
+            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+      + mul(g_OffsetMatrix[In.vBlendIndex.w],
+            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
@@ -135,13 +151,19 @@ VS_OUT VS_MAIN_OUTLINE_READ(VS_IN In)
 {
     VS_OUT Out;
     
-    float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
-    
+    float4 w = In.vBlendWeight;
+    float sumW = max(dot(w, 1.0f), 1e-6f);
+    w /= sumW;
+
     matrix BoneMatrix =
-        mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
-        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
-        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
-        mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
+        mul(g_OffsetMatrix[In.vBlendIndex.x],
+            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+      + mul(g_OffsetMatrix[In.vBlendIndex.y],
+            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+      + mul(g_OffsetMatrix[In.vBlendIndex.z],
+            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+      + mul(g_OffsetMatrix[In.vBlendIndex.w],
+            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
@@ -173,12 +195,19 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
 {
     VS_OUT_SHADOW Out;
     
-    float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
-    
-    matrix BoneMatrix = mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
-                        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
-                        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
-                        mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
+    float4 w = In.vBlendWeight;
+    float sumW = max(dot(w, 1.0f), 1e-6f);
+    w /= sumW;
+
+    matrix BoneMatrix =
+        mul(g_OffsetMatrix[In.vBlendIndex.x],
+            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+      + mul(g_OffsetMatrix[In.vBlendIndex.y],
+            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+      + mul(g_OffsetMatrix[In.vBlendIndex.z],
+            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+      + mul(g_OffsetMatrix[In.vBlendIndex.w],
+            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
    
