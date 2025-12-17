@@ -1,15 +1,13 @@
 ﻿#include "pch.h"
 #include "Quest_Panel.h"
 #include "GameInstance.h"
-#include "Quest_Border.h"
-#include "Quest_Header.h"
-#include "Quest_HeaderLine.h"
-#include "Quest_List.h"
 #include "Quest_Info.h"
 #include "Quest_Info_Header.h"
 #include "Quest_Info_Line.h"
 #include "Quest_Entry_Line.h"
 #include "Quest_Data.h"
+#include "Quest_Slot.h"
+#include "Quest_Status.h"
 
 CQuest_Panel::CQuest_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CPanelObject(pDevice, pContext)
@@ -30,9 +28,9 @@ HRESULT CQuest_Panel::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 1575.f;
+	Desc.fX = 960.f;
+	Desc.fY = -540.f;
+	Desc.fSizeX = g_iWinSizeX;
 	Desc.fSizeY = g_iWinSizeY;
 
 	if (FAILED(__super::Initialize(&Desc)))
@@ -53,20 +51,9 @@ HRESULT CQuest_Panel::Initialize(void* pArg)
 	m_fDelayTime = 1.f;
 	Visible(true);
 	ElementAllVisible(true);
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QUESTPANELDATA"), [this](void* p) {this->Set_Quest_Data(reinterpret_cast<CQuest_Data*>(p)); });
+	Set_Status();
+	Add_Function(TEXT("Click"), [this](void* p) {this->Slot_Hover(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
-}
-
-void CQuest_Panel::Set_Quest_Count(_int Index)
-{
-	m_iQuest_Count = Index;
-}
-
-void CQuest_Panel::Set_Quest_Data(CQuest_Data* Data)
-{
-	m_pQuest_Date = Data;
-	Function_Callback(TEXT("QUEST_DATA"), m_pQuest_Date);
-	static_cast<CQuest_List*>(m_pQuest_List)->Set_Name(static_cast<CQuest_Data*>(m_pQuest_Date)->Get_Quest(0).pQuestName, 0);
 }
 
 void CQuest_Panel::Priority_Update(_float fTimeDelta)
@@ -102,6 +89,19 @@ void CQuest_Panel::Late_Update(_float fTimeDelta)
 
 HRESULT CQuest_Panel::Render()
 {
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Render())) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -112,39 +112,71 @@ _vector CQuest_Panel::Get_WorldPostion()
 
 HRESULT CQuest_Panel::Bind_ShaderResources()
 {
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOwnerAlpha", &m_fOwnerAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
 HRESULT CQuest_Panel::Ready_Components(void* pArg)
 {
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Quest_Widget"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	{
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
 HRESULT CQuest_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Border>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Border**>(&m_pQuest_Border))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Data**>(&m_pQuest_Data))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Quest_Border"), m_pQuest_Border);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Header>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Header**>(&m_pQuest_Header))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Slot**>(&m_pQuest_Slot))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Quest_Header"), m_pQuest_Header);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_HeaderLine>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_HeaderLine**>(&m_pQuest_HeaderLine))))
-	{
-		return E_FAIL;
-	}
-	Add_Element(TEXT("Quest_HeaderLine"), m_pQuest_HeaderLine);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_List>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_List**>(&m_pQuest_List))))
-	{
-		return E_FAIL;
-	}
-	Add_Element(TEXT("Quest_List"), m_pQuest_List);
+	Add_Element(TEXT("Quest_Slot"), m_pQuest_Slot);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Info>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Info**>(&m_pQuest_Info))))
 	{
@@ -170,7 +202,71 @@ HRESULT CQuest_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Quest_Entry_Line"), m_pQuest_Entry_Line);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status1))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Quest_Status1"), m_pQuest_Status1);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status2))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Quest_Status2"), m_pQuest_Status2);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status3))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Quest_Status3"), m_pQuest_Status3);
+
     return S_OK;
+}
+
+_int CQuest_Panel::Set_Quest_Count(_int Index)
+{
+	return static_cast<CQuest_Data*>(m_pQuest_Data)->Get_Count(Index);
+}
+
+CQuest_Data::QUESTINFO CQuest_Panel::Get_Quest(_int QuestID)
+{
+	return static_cast<CQuest_Data*>(m_pQuest_Data)->Get_Quest(QuestID);
+}
+
+void CQuest_Panel::Set_Status()
+{
+	static_cast<CQuest_Status*>(m_pQuest_Status1)->Set_Status(0, -860.f, 400.f, TEXT("전 체"));
+	static_cast<CQuest_Status*>(m_pQuest_Status2)->Set_Status(1, -860.f, 220.f, TEXT("진행중"));
+	static_cast<CQuest_Status*>(m_pQuest_Status3)->Set_Status(2, -860.f, 40.f, TEXT("완 료"));
+	static_cast<CQuest_Status*>(m_pQuest_Status1)->Set_Click(true);
+	m_bClick[0] = true;
+	m_bClick[1] = false;
+	m_bClick[2] = false;
+}
+
+void CQuest_Panel::Slot_Hover(_int Index)
+{
+	_int iIndex{};
+	if (m_bClick[Index] == true)
+		return;
+
+	for (_int i = 0; i < 3; ++i)
+	{
+		if (i == Index)
+		{
+			m_bClick[i] = true;
+			iIndex = i;
+		}
+		else
+		{
+			m_bClick[i] = false;
+		}
+	}
+	static_cast<CQuest_Status*>(m_pQuest_Status1)->Set_Click(m_bClick[0]);
+	static_cast<CQuest_Status*>(m_pQuest_Status2)->Set_Click(m_bClick[1]);
+	static_cast<CQuest_Status*>(m_pQuest_Status3)->Set_Click(m_bClick[2]);
+
+	static_cast<CQuest_Slot*>(m_pQuest_Slot)->Set_QuestType(iIndex);
 }
 
 CQuest_Panel* CQuest_Panel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -203,6 +299,8 @@ void CQuest_Panel::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 

@@ -5,12 +5,12 @@
 
 NS_BEGIN(Editor)
 
-class CQuest_List final : public CElementObject
+class CQuest_Slot final : public CElementObject
 {
 private:
-	CQuest_List(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CQuest_List(const CQuest_List& rhs);
-	virtual ~CQuest_List() = default;
+	CQuest_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CQuest_Slot(const CQuest_Slot& rhs);
+	virtual ~CQuest_Slot() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -18,6 +18,10 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
+
+	virtual void SizeUpX(_float fSizeX) override;
+	virtual void SizeUpY(_float fSizeY) override;
+	virtual void SizeUpdate(_float fSizeX, _float fSizeY) override;
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -29,21 +33,23 @@ private:
 	void Hover();
 
 public:
-	void Set_Name(_wstring Name, _int ID);
+	void Set_QuestType(_int Index);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
 
-	_int m_iColor = { false };
 
-	_wstring m_pFontSize;
-	_wstring m_pQuest_Name;
-	_int m_pQuest_ID{};
+	_float	m_fOffSetX{};
+	_float	m_fOffSetY{};
+	_uint	m_iCols{};
+	_int	m_iColor{};
 
+	_int	m_iQuestIndex{};
+	_int	m_iQuestCount{};
 public:
-	static CQuest_List* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CQuest_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

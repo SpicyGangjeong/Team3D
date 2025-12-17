@@ -17,6 +17,7 @@ HRESULT CSkill_Data::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 	m_bNoCool = false;
 	m_pInfoInstance->Add_Event(TEXT("NoCooL"), [this](void* p) {this->NoCool(*reinterpret_cast<_bool*>(p)); });
 	Spell_UnLock(2);
+	Spell_UnLock(4);
 	Spell_UnLock(6);
 	Spell_UnLock(11);
 	Spell_UnLock(14);
@@ -89,7 +90,7 @@ void CSkill_Data::Update(_float fTimeDelta)
 	{
 		for (_int i = 0; i < 34; ++i)
 		{
-			m_fSpell_CoolTime[i] = 1.f;
+			m_fSpell_CoolTime[i] = 1.2f;
 		}
 	}
 

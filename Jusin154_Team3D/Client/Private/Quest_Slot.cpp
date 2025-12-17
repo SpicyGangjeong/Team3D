@@ -1,32 +1,34 @@
 ﻿#include "pch.h"
-#include "Quest_List.h"
+#include "Quest_Slot.h"
 #include "GameInstance.h"
+#include "Quest_Panel.h"
 #include "InfoInstance.h"
 
-CQuest_List::CQuest_List(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CQuest_Slot::CQuest_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CQuest_List::CQuest_List(const CQuest_List& rhs)
+CQuest_Slot::CQuest_Slot(const CQuest_Slot& rhs)
 	:CElementObject(rhs),
 	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
-HRESULT CQuest_List::Initialize_Prototype()
+HRESULT CQuest_Slot::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CQuest_List::Initialize(void* pArg)
+HRESULT CQuest_Slot::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -475.f;
-	Desc.fY = -150.f;
+	Desc.fX = 0.f;
+	Desc.fY = 0.f;
 	Desc.fSizeX = 256.f;
 	Desc.fSizeY = 64.f;
+
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
 	if (FAILED(__super::Initialize(&Desc)))
@@ -38,17 +40,26 @@ HRESULT CQuest_List::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
-	m_fAlphaTime = 5.f;
+	m_fTimeMult = 3.f;
 	m_vNine_Slice = _float4(70.f, 186.f, 0.f, 64.f);
+	m_fAlphaTime = 1.f;
+	m_fFontX = 300.f;
+	m_fFontY = 330.f;
+	m_fOffSetX = 0.f;
+	m_fOffSetY = 85;
+	m_iCols = 1;
 	SizeUpX(495.f);
 	SizeUpY(80.f);
+	m_pVIBufferCom->Set_Cloned(true);
+	m_pVIBufferCom->Set_Pos(-475.f, 330.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_iQuestCount = m_pInfoInstance->Get_Quest_Count(ENUM_CLASS(QUESTSTATE::NONE));
 	Visible(true);
 	return S_OK;
 }
 
-void CQuest_List::Priority_Update(_float fTimeDelta)
+void CQuest_Slot::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -57,18 +68,17 @@ void CQuest_List::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CQuest_List::Update(_float fTimeDelta)
+void CQuest_Slot::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
 		return;
 	}
+
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
-		{
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
-		}
 
 		if (m_fAlpha >= 1.f)
 		{
@@ -80,7 +90,7 @@ void CQuest_List::Update(_float fTimeDelta)
 	if (m_bFadeOut == true)
 	{
 		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta * m_fAlphaTime;;
+			m_fAlpha -= fTimeDelta;
 
 		if (m_fAlpha <= 0.f)
 		{
@@ -88,71 +98,87 @@ void CQuest_List::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-
 	Hover();
-	if (m_bHover == true)
-	{
-		m_fSizeX = 505.f;
-		m_fSizeY = 90.f;
-		m_fFontX = 765.f;
-		m_fFontY = 520.f;
-		m_pFontSize = TEXT("Font_size21");
-		m_pQuest_ID = 0;
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_pQuest_ID);
-	}
-	else
-	{
-		m_fSizeX = 495.f;
-		m_fSizeY = 80.f;
-		m_fFontX = 770.f;
-		m_fFontY = 520.f;
-		m_pFontSize = TEXT("Font_size20");
-		m_pQuest_ID = -1;
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_pQuest_ID);
-	}
+
+	static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_iQuestIndex);
+
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CQuest_List::Late_Update(_float fTimeDelta)
+void CQuest_Slot::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
 		return;
 	}
-	if (m_bVisible) {
+	if (m_bVisible)
+	{
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		__super::Late_Update(fTimeDelta);
 	}
+	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CQuest_List::Render()
+HRESULT CQuest_Slot::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
+	if (FAILED(Bind_ShaderResources()))
+	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::QUEST_BORDER)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::QUEST_SLOT))))
+	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+	if (FAILED(m_pVIBufferCom->Bind_Resources()))
+	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pVIBufferCom->Render())) {
+	if (FAILED(m_pVIBufferCom->Render()))
+	{
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Render_Text(m_pFontSize, m_pQuest_Name.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY));
-
+	for (_int i = 0; i < m_iQuestCount; ++i)
+	{
+		m_fFontY = 190 + i * 85.f;
+		if (i == m_iQuestIndex)
+		{
+			m_pGameInstance->Render_Text(TEXT("Font_size30"), m_pInfoInstance->Get_Quest(i).pQuestName.c_str(), _float2(m_fFontX - 10.f + m_fX, m_fFontY - 10.F - m_fY));
+		}
+		else
+		{
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(i).pQuestName.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY));
+		}
+	}
 	return S_OK;
 }
 
-_vector CQuest_List::Get_WorldPostion()
+_vector CQuest_Slot::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CQuest_List::Bind_ShaderResources()
+void CQuest_Slot::SizeUpX(_float fSizeX)
+{
+	m_fSizeX = fSizeX;
+	m_pVIBufferCom->Set_SizeX(m_fSizeX);
+}
+
+void CQuest_Slot::SizeUpY(_float fSizeY)
+{
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_SizeY(m_fSizeY);
+}
+
+void CQuest_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
+{
+	m_fSizeX = fSizeX;
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+}
+
+HRESULT CQuest_Slot::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -202,16 +228,12 @@ HRESULT CQuest_List::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iColor", &m_iColor, sizeof(_int))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
-HRESULT CQuest_List::Ready_Components(void* pArg)
+HRESULT CQuest_Slot::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Quest_Slot"), (CComponent**)&m_pVIBufferCom, nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -219,7 +241,7 @@ HRESULT CQuest_List::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIINSTANCE, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -227,19 +249,18 @@ HRESULT CQuest_List::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CQuest_List::Hover()
+void CQuest_Slot::Hover()
 {
 	POINT ptMouse{};
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
-	_float2 fMouse{};
+	_float2 fMouse;
 	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
 	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
-	POINT pt{};
-	pt.x = _long(fMouse.x);
-	pt.y = _long(fMouse.y);
 
-	if (PtInRect(&m_pRect, pt))
+	m_iQuestIndex = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+
+	if (m_iQuestIndex != -1)
 	{
 		m_bHover = true;
 	}
@@ -249,39 +270,57 @@ void CQuest_List::Hover()
 	}
 }
 
-void CQuest_List::Set_Name(_wstring Name, _int ID)
+void CQuest_Slot::Set_QuestType(_int Index)
 {
-	m_pQuest_Name = Name;
-	m_pQuest_ID = ID;
+	switch (Index)
+	{
+	case 0:
+		m_iQuestCount = m_pInfoInstance->Get_Quest_Count(ENUM_CLASS(QUESTSTATE::NONE));
+		m_pVIBufferCom->Set_Draw(-1);
+		break;
+
+	case 1:
+		m_iQuestCount = m_pInfoInstance->Get_Quest_Count(ENUM_CLASS(QUESTSTATE::ACCEPTED));
+		m_pVIBufferCom->Set_Draw(m_iQuestCount);
+		break;
+
+	case 2:
+		m_iQuestCount = m_pInfoInstance->Get_Quest_Count(ENUM_CLASS(QUESTSTATE::CLEARED));
+		m_pVIBufferCom->Set_Draw(m_iQuestCount);
+		break;
+
+	default:
+		break;
+	}
 }
 
-CQuest_List* CQuest_List::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CQuest_Slot* CQuest_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CQuest_List* pInstance = new CQuest_List(pDevice, pContext);
+	CQuest_Slot* pInstance = new CQuest_Slot(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CQuest_List");
+		MSG_BOX("Failed to Created : CQuest_Slot");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CQuest_List::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CQuest_Slot::Clone(void* pArg, CGameObject* pOwner)
 {
-	CQuest_List* pInstance = new CQuest_List(*this);
+	CQuest_Slot* pInstance = new CQuest_Slot(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSpell_Header");
+		MSG_BOX("Failed to Cloned : CQuest_Slot");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CQuest_List::Free()
+void CQuest_Slot::Free()
 {
 	__super::Free();
 
@@ -290,8 +329,9 @@ void CQuest_List::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+
 #ifdef _DEBUG
-void CQuest_List::Describe_Entity()
+void CQuest_Slot::Describe_Entity()
 {
 }
 #endif // _DEBUG
