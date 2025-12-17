@@ -38,6 +38,7 @@ public:
 	}
 	const _float4* Get_StatePtr(STATE eState) { return reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]); }
 	const _float4x4* Get_WorldMatrixPtr() const { return &m_WorldMatrix; }
+	const _float4x4* Get_PrevWorldMatrixPtr() const { return &m_PrevMatrix; }
 	const _matrix Get_XMWorldMatrix() const { return XMLoadFloat4x4(&m_WorldMatrix); }
 	const _matrix Get_WorldMatrixInv() const { return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)); }
 public:

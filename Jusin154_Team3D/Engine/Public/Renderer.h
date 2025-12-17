@@ -15,6 +15,7 @@ public:
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
 	void	Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
 	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
+	HRESULT Bind_PrevMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 
 #ifdef _DEBUG
 private:
@@ -58,6 +59,13 @@ private:
 
 #pragma region TunningParameters
 	/* TunningParam  */
+
+	// MotionBlur 
+	_float	m_fMBBlurRadius = { 1.f };
+	_int	m_iMBSampleCount = { 3 };
+	_int	m_iMBType = { 0 };
+
+	// ToneMapping
 	_int	m_iToneMappingType = { 2 };
 	_float	m_fExposure = { 0.7f };
 

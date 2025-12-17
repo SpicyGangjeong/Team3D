@@ -11,10 +11,6 @@ void CRenderer::Render()
 	m_pContext->RSGetViewports(&iNumViewPort, &vp);
 	_float2 vResolution = { vp.Width, vp.Height };
 
-	if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
-		assert(false);
-	}
-
 	Render_Priority();
 	Render_Shadow();
 	Render_NonBlend();
@@ -36,8 +32,8 @@ void CRenderer::Render()
 	Render_UI();
 	Render_UI_Overley();
 
-	memcpy_s(&m_MotionBlurPreViewMatrix,	sizeof(_float4x4), &m_ScreenViewMatrix,		sizeof(_float4x4));
-	memcpy_s(&m_MotionBlurPreProjMatrix,	sizeof(_float4x4), &m_ScreenProjMatrix,		sizeof(_float4x4));
+	memcpy_s(&m_MotionBlurPreViewMatrix,	sizeof(_float4x4), m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW), sizeof(_float4x4));
+	memcpy_s(&m_MotionBlurPreProjMatrix,	sizeof(_float4x4), m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ), sizeof(_float4x4));
 
 #ifdef _DEBUG
 	static _bool m_bToggleDebug = false;
@@ -111,6 +107,21 @@ HRESULT CRenderer::Bind_PreShadowMatrix(class CShader* pShader, const _char* pCo
 		}
 	} else if (D3DTS::PROJ == eType) {
 		if (FAILED(pShader->Bind_Matrix(pConstants, &m_PreShadowProj))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
+HRESULT CRenderer::Bind_PrevMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	if (D3DTS::VIEW == eType) {
+		if (FAILED(pShader->Bind_Matrix(pConstants, &m_MotionBlurPreViewMatrix))) {
+			return E_FAIL;
+		}
+	}
+	else if (D3DTS::PROJ == eType) {
+		if (FAILED(pShader->Bind_Matrix(pConstants, &m_MotionBlurPreProjMatrix))) {
 			return E_FAIL;
 		}
 	}
@@ -811,8 +822,45 @@ void CRenderer::Render_Blend()
 void CRenderer::Render_PostProcessing()
 {
 	/* POSTPROCESSING */
-
 	COMPUTE_TIMEDELTA("Timer_Render_PostProcessing");
+	//{
+	//	ID3D11Texture2D* pBackBuffer = { nullptr };
+	//	m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
+	//	if (FAILED(m_pGameInstance->Copy_RenderTargetTo(TEXT("Target_AfterBlend"), pBackBuffer))) {
+	//		assert(false);
+	//	}
+	//	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_AfterBlend"), TEXT("Target_AfterBlend2x2"), SHADER_PASS_DEFERRED::DOWNSAMPLE);
+	//}
+	///* MotionBlur */
+	//
+	//{	// Bind_Resorces
+	//	m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	//	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	//	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
+	//	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
+	//	m_pShader->Bind_RawValue("g_fMBBlurRadius", &m_fMBBlurRadius, sizeof(_float));
+	//	m_pShader->Bind_RawValue("g_iMBSampleCount", &m_iMBSampleCount, sizeof(_int));
+	//	m_pShader->Bind_RawValue("g_iMBType", &m_iMBType, sizeof(_int));
+	//}
+	//{
+	//	// Bind_Targets
+	//	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_AfterBlend2x2"), m_pShader, "g_ColorTexture"))) {
+	//		assert(false);
+	//		return;
+	//	}
+	//	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
+	//		assert(false);
+	//		return;
+	//	}
+	//	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_VelocityMap"), m_pShader, "g_VelocityTexture"))) {
+	//		assert(false);
+	//		return;
+	//	}
+	//}
+	//m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::MOTIONBLUR));
+
+	//m_pVIBuffer->Bind_Resources();
+	//m_pVIBuffer->Render();
 
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Bloom")))) {
 		return;
@@ -948,7 +996,7 @@ void CRenderer::Render_Tone_Mapping()
 	{ // BackBuffer 
 		ID3D11Texture2D* pBackBuffer = nullptr;
 		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
-		m_pGameInstance->Paste_RenderTarget(TEXT("Target_ToneMapping"), pBackBuffer);
+		m_pGameInstance->Copy_RenderTargetFrom(TEXT("Target_ToneMapping"), pBackBuffer);
 		SAFE_RELEASE(pBackBuffer);
 	}
 

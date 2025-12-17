@@ -443,4 +443,9 @@ typedef struct tagSSAO_GeometryDirections_RANDOM_REAL {
 	_float4 vDir[16];
 }SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL;
 
+typedef struct tagPrevVPMatrices {
+	_float4x4 PrevViewMatrix;
+	_float4x4 PrevProjMatrix;
+}PREVVPMATRICES;
+
 NS_END

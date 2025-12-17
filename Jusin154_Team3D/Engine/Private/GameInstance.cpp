@@ -689,6 +689,11 @@ HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pCons
 	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);
 }
 
+HRESULT CGameInstance::Bind_PrevMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	return m_pRenderer->Bind_PrevMatrix(pShader, pConstants, eType);
+}
+
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
 {
 	m_pPipeLine->Set_Transform(eState, TransformStateMatrix);
@@ -854,13 +859,13 @@ HRESULT CGameInstance::Bind_RenderTarget(const _wstring& strTargetTag, CShader* 
 	return m_pRenderTarget_Manager->Bind_RenderTarget(strTargetTag, pShader, pConstantName);
 }
 
-HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
-	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetTo(strTargetTag, pTexture2D);
 }
-HRESULT CGameInstance::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
-	return m_pRenderTarget_Manager->Paste_RenderTarget(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetFrom(strTargetTag, pTexture2D);
 }
 HRESULT CGameInstance::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
 {
@@ -940,8 +945,6 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 {
 	m_ModelMap[filePath] = pModel;
 }
-
-
 #endif
 
 void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)

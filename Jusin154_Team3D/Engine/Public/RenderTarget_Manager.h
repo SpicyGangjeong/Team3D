@@ -18,8 +18,8 @@ public:
 	HRESULT Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
-	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
-	HRESULT Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
 
 

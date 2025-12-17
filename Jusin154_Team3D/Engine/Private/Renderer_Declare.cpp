@@ -267,6 +267,16 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_AfterBlend */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterBlend"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0, 1.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterBlend_2x2"), (_uint)(Viewport.Width * 0.5f), (_uint)(Viewport.Height * 0.5f),
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0, 1.0f)))) {
+			return E_FAIL;
+		}
+
 		/* Target_Color*/
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
@@ -339,7 +349,7 @@ HRESULT CRenderer::Initialize()
 
 		/* Target_VelocityMap */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMap"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.f, 0.f, 0.f)))) {
+			DXGI_FORMAT_R32G32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BeforeNormal"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -373,6 +383,10 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Surface")))) {
 			return E_FAIL;
 		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_VelocityMap")))) {
+			return E_FAIL;
+		}
+
 		/* MRT_SSAO */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_OCCLUSION"), TEXT("Target_SSAO_AmbientOcclusion")))) {
 			return E_FAIL;
@@ -458,11 +472,6 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		/* MRT_VELOCITY_MAP */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_VELOCITY_MAP"), TEXT("Target_VelocityMap")))) {
-			return E_FAIL;
-		}
-
 		/* MRT_Fog */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog")))) {
 			return E_FAIL;
@@ -501,6 +510,8 @@ HRESULT CRenderer::Initialize()
 
 	Fill_Geometry(SSAO_SAMPLE_NUMBER);
 
+	XMStoreFloat4x4(&m_MotionBlurPreViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_MotionBlurPreProjMatrix, XMMatrixIdentity());
 	return S_OK;
 }
 CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

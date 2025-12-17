@@ -469,5 +469,43 @@ float4 BlendDiffuse(float4 vDiffuseA, Texture2D DiffuseBlendTexture, float2 vTex
 
 }
 
+float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos)
+{
+    if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5) {
+        return float2(0.0f, 0.0f);
+    }
+
+    float2 currentUV = (vCurrentProjPos.xy/vCurrentProjPos.w);
+    float2 previousUV = (vPreviousProjPos.xy / vCurrentProjPos.w);
+
+    currentUV.y *= -1.f;
+    previousUV.y *= -1.f;
+
+    return currentUV - previousUV;
+}
+
+float3 DownSampleFast(Texture2D SrcTexture2D, float2 vCenterTexcoord, float2 vSrcTexelSize, float2 vResolution)
+{
+    float2 uv = float2(0.f, 0.f);
+    float3 vCenterColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
+    uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, -1.0);
+    float3 fLTColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroLinearSampler);
+    uv = vCenterTexcoord + vSrcTexelSize * float2(0.0, -1.0);
+    float3 fTColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
+    uv = vCenterTexcoord + vSrcTexelSize * float2(+1.0, -1.0);
+    float3 fRTColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroLinearSampler);
+    uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, 0.0);
+    float3 fLColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
+    uv = vCenterTexcoord + vSrcTexelSize * float2(1.0, 0.0);
+    float3 fRColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
+    uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, +1.0);
+    float3 fLBColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroLinearSampler);
+    uv = vCenterTexcoord + vSrcTexelSize * float2(0.0, 1.0);
+    float3 fBColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
+    uv = vCenterTexcoord + vSrcTexelSize * float2(+1.0, +1.0);
+    float3 fRBColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroLinearSampler);
+    
+    return vCenterColor * 0.25f + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.0625f + (fTColor + fLColor + fRColor + fBColor) * 0.125f;
+}
 
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI
