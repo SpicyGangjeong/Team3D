@@ -26,7 +26,7 @@ HRESULT CEnemy_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 960.f;
-	Desc.fY = 50.f;
+	Desc.fY = -50.f;
 	Desc.fSizeX = 960.f;
 	Desc.fSizeY = 150.f;
 

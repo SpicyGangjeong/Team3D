@@ -26,11 +26,22 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	void Hover();
+
+public:
+	void Set_Name(_wstring Name, _int ID);
+
+private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_int m_iColor = { false };
+
+	_wstring m_pFontSize;
+	_wstring m_pQuest_Name;
+	_int m_pQuest_ID{};
+
 public:
 	static CQuest_List* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

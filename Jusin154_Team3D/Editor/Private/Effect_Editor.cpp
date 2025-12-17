@@ -568,6 +568,7 @@ void CEffect_Editor::Describe_Entity()
 	if (m_pEditEffect != nullptr)
 		m_pEditEffect->Reference_Mat_For_EditEffect();
 
+
 	ImGui::End();
 
 	ImGui::Begin("Effect Hierarchy");

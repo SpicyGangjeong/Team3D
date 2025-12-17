@@ -33,6 +33,8 @@ public:
 	HRESULT Load_Trail(CEffect_Container::TRAIL_SAVE_INFO Trail_Save_Info, LEVEL eLevel);
 	HRESULT Load_Trail(const _char* pPath, LEVEL eLevel);
 
+	void   SetDissolve(_bool isDissolve) { m_TrailInfo.isDissolve = true; }
+
 private:
 	HRESULT Bind_ShaderResources() override;
 	virtual HRESULT Initialize_Prototype() override;

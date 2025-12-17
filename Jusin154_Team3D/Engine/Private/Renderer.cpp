@@ -26,6 +26,8 @@ void CRenderer::Render()
 	Render_Occlusion();
 	Render_EnvironmentPostProcess();
 	Render_Fog();
+	Render_Distortion();
+	Render_DistortionAcc();
 	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
@@ -56,17 +58,14 @@ void CRenderer::Render()
 #endif
 }
 
-void CRenderer::Render_PreShadow()
+void CRenderer::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix)
 {
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_PreShadow"), m_pPreShadowDSV))) {
 		return;
 	}
 
-	const _float4x4* pMatrices = m_pGameInstance->Get_ShadowMatricesPtr(0);
-	m_PreShadowFar = m_pGameInstance->Get_ShadowBoxFar(0);
-	for (int i = 0; i < ENUM_CLASS(D3DTS::END); ++i) {
-		m_PreShadowMatrices[i] = pMatrices[i];
-	}
+	m_PreShadowView = ViewMatrix;
+	m_PreShadowProj = ProjMatrix;
 
 	D3D11_VIEWPORT			ViewPortOldDesc;
 	D3D11_VIEWPORT			ViewPortDesc;
@@ -76,8 +75,8 @@ void CRenderer::Render_PreShadow()
 	{
 		ViewPortDesc.TopLeftX = 0;
 		ViewPortDesc.TopLeftY = 0;
-		ViewPortDesc.Width		= (_float)g_iMaxShadowWidth;
-		ViewPortDesc.Height		= (_float)g_iMaxShadowHeight;
+		ViewPortDesc.Width		= (_float)g_iPreShadowWidth;
+		ViewPortDesc.Height		= (_float)g_iPreShadowHeight;
 		ViewPortDesc.MinDepth = 0.f;
 		ViewPortDesc.MaxDepth = 1.f;
 	}
@@ -87,7 +86,7 @@ void CRenderer::Render_PreShadow()
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::PRESHADOW)])
 	{
 		if (nullptr != pRenderObject) {
-			if (FAILED(pRenderObject->Render_Shadow(SHADOW::END))) {
+			if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_PRE))) {
 				assert(false);
 			}
 		}
@@ -101,6 +100,20 @@ void CRenderer::Render_PreShadow()
 	}
 
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
+}
+
+HRESULT CRenderer::Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	if (D3DTS::VIEW == eType) {
+		if (FAILED(pShader->Bind_Matrix(pConstants, &m_PreShadowView))) {
+			return E_FAIL;
+		}
+	} else if (D3DTS::PROJ == eType) {
+		if (FAILED(pShader->Bind_Matrix(pConstants, &m_PreShadowProj))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
 }
 
 void CRenderer::Render_Occlusion()
@@ -385,13 +398,10 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_FAR", D3DTS::PROJ, SHADOW::SHADOW_FAR))) {
 			return;
 		}
-		if (FAILED(m_pShader->Bind_RawValue("g_fPreShadowFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		if (FAILED(m_pShader->Bind_Matrix("g_PreShadowLightViewMatrix", &m_PreShadowView))) {
 			return;
 		}
-		if (FAILED(m_pShader->Bind_Matrix("g_PreShadowLightViewMatrix", &m_PreShadowMatrices[ENUM_CLASS(D3DTS::VIEW)]))) {
-			return;
-		}
-		if (FAILED(m_pShader->Bind_Matrix("g_PreShadowLightProjMatrix", &m_PreShadowMatrices[ENUM_CLASS(D3DTS::PROJ)]))) {
+		if (FAILED(m_pShader->Bind_Matrix("g_PreShadowLightProjMatrix", &m_PreShadowProj))) {
 			return;
 		}
 	}
@@ -445,7 +455,7 @@ void CRenderer::Render_Combined()
 void CRenderer::Render_EnvironmentPostProcess()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_EnvironmentPostProcess");
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_ENV_Blur_X")))) {
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_ENV_Blur_X")))) { // Target_ENV_Blur_X
 		return;
 	}
 
@@ -517,7 +527,9 @@ void CRenderer::Render_Fog()
 	COMPUTE_TIMEDELTA("Timer_Render_Fog");
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
 
-	m_pGameInstance->Bind_FogValue(m_pShader);
+	if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
+		assert(false);
+	}
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_OriginalTexture"))) {
 		return;
@@ -537,11 +549,10 @@ void CRenderer::Render_Fog()
 void CRenderer::Render_Effect()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Effect");
+
 	if (FAILED(m_pGameInstance->Begin_MRT_NO_DepthStencil(TEXT("MRT_WB")))) {
 		return;
 	}
-
-
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
 	{
@@ -705,6 +716,11 @@ void CRenderer::Render_SSAO()
 			assert(false);
 			return;
 		}
+
+		if (FAILED(m_pShader->Bind_RawValue("g_fSSAOStrength", &m_fSSAOStrength, sizeof(_float)))) {
+			assert(false);
+			return;
+		}
 	}
 	{
 		// Bind_Targets
@@ -852,6 +868,66 @@ void CRenderer::Render_Bloom()
 	m_pGameInstance->Finish_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::BLOOM_FINISH); // 9
 
 	COMPUTE_TIMEDELTA("Timer_Render_Bloom");
+}
+
+void CRenderer::Render_Distortion()
+{
+	COMPUTE_TIMEDELTA("Timer_Render_Distortion");
+
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Distortion")))) {
+		return;
+	}
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::DISTORTION)])
+	{
+		if (nullptr != pRenderObject)
+			pRenderObject->Render();
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::DISTORTION)].clear();
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+
+	COMPUTE_TIMEDELTA("Timer_Render_Distortion");
+}
+
+void CRenderer::Render_DistortionAcc()
+{
+	COMPUTE_TIMEDELTA("Timer_Render_DistortionAcc");
+	// Bind_Resorces
+
+	ID3D11Texture2D* pBackBufferTexture2D = { nullptr };
+
+	m_pGameInstance->Get_BackBufferPTR(&pBackBufferTexture2D);
+
+	if (FAILED(m_pGameInstance->Paste_RenderTarget(TEXT("Target_PreEffect"), pBackBufferTexture2D))) {
+		return;
+	}
+
+	m_pDistortionShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pDistortionShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pDistortionShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Distortion"), m_pDistortionShader, "g_DistortionTexture"))) {
+		return;
+	}
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_PreEffect"), m_pDistortionShader, "g_SceneTexture"))) {
+		return;
+	}
+
+	m_pDistortionShader->Begin(0);
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
+	SAFE_RELEASE(pBackBufferTexture2D);
+
+	COMPUTE_TIMEDELTA("Timer_Render_DistortionAcc");
 }
 
 void CRenderer::Render_UI()

@@ -39,7 +39,7 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 960.f;
-	Desc.fY = 540.f;
+	Desc.fY = -540.f;
 	Desc.fSizeX = g_iWinSizeX;
 	Desc.fSizeY = g_iWinSizeY;
 
@@ -330,10 +330,6 @@ HRESULT CSpell_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Spell_Drag"), m_pSpell_Drag);
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, m_Info, nullptr, reinterpret_cast<CSpell_Data**>(&m_pSpell_Data))))
-	//{
-	//	return E_FAIL;
-	//}
 	return S_OK;
 }
 

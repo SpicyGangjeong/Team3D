@@ -443,4 +443,13 @@ float4 BilinearFetches(float2 vGlobalTexelSize, Texture2D SrcTexture2D, float2 v
     return float4(vFilteredColor, 1.0);
 }
 
+float4 BlendDiffuse(float4 vDiffuseA, Texture2D DiffuseBlendTexture, float2 vTexcoord, float fRatio)
+{
+    float4 vDiffuseBlendColor = DiffuseBlendTexture.Sample(DefaultSampler, vTexcoord);
+    
+    return lerp(vDiffuseA, vDiffuseBlendColor, fRatio);
+
+}
+
+
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI

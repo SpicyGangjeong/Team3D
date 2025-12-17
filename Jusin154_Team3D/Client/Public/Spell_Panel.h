@@ -60,7 +60,6 @@ private:
 	CGameObject* m_pSpell_Preview = { nullptr };
 	CGameObject* m_pSpell_Vidio_Border = { nullptr };
 	CGameObject* m_pCurrent_Slot_Number = { nullptr };
-	CGameObject* m_pSpell_Data= { nullptr };
 	CGameObject* m_pSpell_Header = { nullptr };
 	CGameObject* m_pSpell_Header_Line = { nullptr };
 	CGameObject* m_pSpell_Anim = { nullptr };

@@ -167,6 +167,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Boss_HpBar.h" />
     <ClInclude Include="..\Public\CallBack_Troll_HitReport.h" />
     <ClInclude Include="..\Public\CameraLockOn.h" />
+    <ClInclude Include="..\Public\Completed_Panel.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Damage_Font.h" />
@@ -182,6 +183,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
+    <ClInclude Include="..\Public\InProgress_Panel.h" />
+    <ClInclude Include="..\public\Interaction_Key.h" />
     <ClInclude Include="..\Public\InteractiveInfo.h" />
     <ClInclude Include="..\Public\Intro_BG.h" />
     <ClInclude Include="..\Public\Intro_Image.h" />
@@ -194,6 +197,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Logo_Glow.h" />
     <ClInclude Include="..\Public\Logo_Text.h" />
     <ClInclude Include="..\Public\Goblin_Attack.h" />
+    <ClInclude Include="..\Public\Screen_Wind.h" />
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
     <ClInclude Include="..\Public\Mage_Down_Attack.h" />
@@ -203,6 +207,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Box_Splesh.h" />
     <ClInclude Include="..\Public\Quest_Border.h" />
     <ClInclude Include="..\Public\Quest_Canvas.h" />
+    <ClInclude Include="..\Public\Quest_Data.h" />
     <ClInclude Include="..\Public\Quest_Entry_Line.h" />
     <ClInclude Include="..\Public\Quest_Header.h" />
     <ClInclude Include="..\Public\Quest_HeaderLine.h" />
@@ -211,6 +216,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Quest_Info_Line.h" />
     <ClInclude Include="..\Public\Quest_List.h" />
     <ClInclude Include="..\Public\Quest_Panel.h" />
+    <ClInclude Include="..\Public\Quest_Status.h" />
+    <ClInclude Include="..\Public\Quest_Status_Panel.h" />
     <ClInclude Include="..\Public\RaceRing.h" />
     <ClInclude Include="..\Public\State_Broom_TurboFly.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
@@ -364,6 +371,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Broom_States.cpp" />
     <ClCompile Include="..\Private\CallBack_Troll_HitReport.cpp" />
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
+    <ClCompile Include="..\Private\Completed_Panel.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Damage_Font.cpp" />
@@ -380,6 +388,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
+    <ClCompile Include="..\Private\InProgress_Panel.cpp" />
+    <ClCompile Include="..\private\Interaction_Key.cpp" />
     <ClCompile Include="..\Private\InteractiveInfo.cpp" />
     <ClCompile Include="..\Private\Intro_BG.cpp" />
     <ClCompile Include="..\Private\Intro_Image.cpp" />
@@ -391,12 +401,14 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
+    <ClCompile Include="..\Private\Screen_Wind.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
     <ClCompile Include="..\Private\NPC_Ollivander.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\Private\Quest_Border.cpp" />
     <ClCompile Include="..\Private\Quest_Canvas.cpp" />
+    <ClCompile Include="..\Private\Quest_Data.cpp" />
     <ClCompile Include="..\Private\Quest_Entry_Line.cpp" />
     <ClCompile Include="..\Private\Quest_Header.cpp" />
     <ClCompile Include="..\Private\Quest_HeaderLine.cpp" />
@@ -405,6 +417,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Quest_Info_Line.cpp" />
     <ClCompile Include="..\Private\Quest_List.cpp" />
     <ClCompile Include="..\Private\Quest_Panel.cpp" />
+    <ClCompile Include="..\Private\Quest_Status.cpp" />
+    <ClCompile Include="..\Private\Quest_Status_Panel.cpp" />
     <ClCompile Include="..\Private\RaceRing.cpp" />
     <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
     <ClCompile Include="..\Private\State_Broom_Fly.cpp" />

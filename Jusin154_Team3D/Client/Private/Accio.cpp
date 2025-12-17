@@ -48,12 +48,14 @@ HRESULT CAccio::Initialize(void* pArg)
 
 	m_pRope_Trail = Get_PartObject<CTrailObject>("Accio_Trail");
 	m_pWandLight = Get_PartObject<CEffectParts>("Wand_Light");
+	m_pRotate0 = Get_PartObject<CEffectParts>("Rotate0");
 
 	if (m_pRope_Trail == nullptr)
 		return E_FAIL;
 
 	SAFE_ADDREF(m_pRope_Trail);
 	SAFE_ADDREF(m_pWandLight);
+	SAFE_ADDREF(m_pRotate0);
 
 	XMStoreFloat4x4(&m_TrailWorld, XMMatrixIdentity());
 
@@ -101,6 +103,8 @@ void CAccio::Update(_float fTimeDelta)
 	{
 		/* 특정 대상과 충돌 했다면*/
 		TrailPos.r[3] = m_pEnemyCCT->Get_Position();
+
+		m_pRotate0->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pEnemyCCT->Get_FootPosition());
 	}
 
 	XMStoreFloat4x4(&m_TrailWorld, TrailPos);
@@ -111,12 +115,16 @@ void CAccio::Update(_float fTimeDelta)
 		_matrix rotMat = XMMatrixRotationAxis(XMLoadFloat3(&m_vCameraLook), m_fAccRotateTime);
 
 		_float fRange = m_fRange - m_fAccRotateTime / m_fAttenuation;
-		
+
 		if (fRange > 0)
 			TrailPos.r[3] += rotMat.r[1] * fRange;
 	}
 
-	m_pRope_Trail->Rope_Trail_Update(TrailPos, pPlayer->Get_WandPos(), fTimeDelta);
+	if(m_isReverse == false)
+		m_pRope_Trail->Rope_Trail_Update(TrailPos, pPlayer->Get_WandPos(), fTimeDelta);
+	else
+		m_pRope_Trail->Rope_Trail_Update(pPlayer->Get_WandPos(), TrailPos, fTimeDelta);
+
 
 }
 
@@ -176,7 +184,9 @@ HRESULT CAccio::Pre_Setting(CGameObject* pObject, void* pArg)
 	_vector vStartPos = WandPos;
 	XMStoreFloat4(&m_vStartPos, vStartPos);
 
-	_matrix WandWorld = pPlayer->Get_WandPos();
+	_matrix WandWorld = XMMatrixIdentity();
+
+	WandWorld.r[3] = pPlayer->Get_WandPos().r[3];
 
 	XMStoreFloat4x4(&m_TrailWorld , WandWorld);
 
@@ -266,14 +276,24 @@ void CAccio::OnCollision(CGameObject* pOther, void* pDesc)
 	CEffectParts* pCircle = Get_PartObject<CEffectParts>("Accio_Circle");
 	CEffectParts* pWandLight = Get_PartObject<CEffectParts>("Wand_Light");
 	CEffectParts* pSpread_Circle = Get_PartObject<CEffectParts>("Spread_Circle");
+	CEffectParts* pAccio_PT = Get_PartObject<CEffectParts>("Accio_PT");
 
 
 	pCircle->Set_Visible(false);
 	pWandLight->Set_Visible(false);
 	pSpread_Circle->Set_Visible(false);
+
+
+	m_pRotate0->Set_Visible(true);
+	pAccio_PT->Set_Visible(true);
+
+	pAccio_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	
-	if(m_isFix)
-		m_pRope_Trail->Get_Component<CTrail>()->Rope_Fix(true);
+	m_pRope_Trail->Get_Component<CTrail>()->Rope_Fix(true);
+
+	if(m_isDissolve)
+		m_pRope_Trail->SetDissolve(true);
+
 }
 
 void CAccio::Free()
@@ -282,7 +302,7 @@ void CAccio::Free()
 
 	SAFE_RELEASE(m_pRope_Trail);
 	SAFE_RELEASE(m_pWandLight);
-
+	SAFE_RELEASE(m_pRotate0);
 }
 #ifdef _DEBUG
 
@@ -294,9 +314,10 @@ void CAccio::Describe_Entity()
 	GUI::DragFloat("Speed", &m_fLinearSpeed);
 	GUI::DragFloat("Range", &m_fRange);
 	GUI::DragFloat("Attenuation", &m_fAttenuation);
+	GUI::Checkbox("Dissolve", &m_isDissolve);
+	GUI::Checkbox("Reverse", &m_isReverse);
+	GUI::InputInt("LoopTime", &m_iLoopTime);
 	
-	GUI::Checkbox("Collision Fix", &m_isFix);
-
 	m_pRope_Trail->Describe_Entity();
 	m_pRope_Trail->Get_Component<CTrail>()->Describe_Entity();
 

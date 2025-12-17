@@ -33,6 +33,8 @@
 #include "Barral_Splesh.h"
 #include "Goblin_Teleport.h"
 #include "Accio.h"
+#include "Screen_Wind.h"
+
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -144,7 +146,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 
 	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::ACCIO)].begin())->Describe_Entity();
 
-
+	Describe_Entity();
 
 #endif
 #endif
@@ -358,6 +360,16 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::SCREEN_WIND, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CScreen_Wind* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CScreen_Wind>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	return S_OK;
 }
 
@@ -505,6 +517,34 @@ HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg
 	return S_OK;
 }
 
+#ifdef _DEBUG
+HRESULT CEffectPool::Reset_Pool()
+{
+	for (size_t i = 0; i < ENUM_CLASS(SKILL_TYPE::END); i++)
+	{
+		for (auto& pEffect : m_EffectList[i])
+		{
+			SAFE_RELEASE(pEffect);
+		}
+
+		m_EffectList[i].clear();
+	}
+
+	for (auto& pEffect : m_ActiveEffectList)
+	{
+		SAFE_RELEASE(pEffect);
+	}
+
+
+	m_ActiveEffectList.clear();
+
+
+	if (FAILED(Ready_Effect()))
+		return E_FAIL;
+
+	return S_OK;
+}
+#endif
 
 CEffectPool* CEffectPool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -555,6 +595,14 @@ void CEffectPool::Free()
 
 void CEffectPool::Describe_Entity()
 {
+
+	GUI::Begin("Effect Pool");
+	if (GUI::Button("Reset Pool"))
+	{
+		Reset_Pool();
+	}
+	GUI::End();
+
 }
 
 #endif // _DEBUG

@@ -56,6 +56,7 @@ private:
 	CGameObject* m_pQuest_Canvas = { nullptr };
 	CGameObject* m_pCamera_LockOn = { nullptr };
 	CGameObject* m_pDamage_Font = { nullptr };
+	CGameObject* m_pInteraction_Key = { nullptr };
 	_bool			m_bCanvas_Change = { false };
 
 	UI_STATE	m_eType{};

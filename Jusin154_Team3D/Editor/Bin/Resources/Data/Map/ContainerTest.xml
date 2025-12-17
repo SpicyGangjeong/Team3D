@@ -1969,24 +1969,9 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
-        <PartObject Lod_Level="1" Key_Index="1">
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_EXT_Walls_Decals</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_EXT_Walls_Decals_Lod1</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
         <PartObject Lod_Level="1" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_Window_Display</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_Window_Display_Lod1</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
-        <PartObject Lod_Level="2" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim_Lod2</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>

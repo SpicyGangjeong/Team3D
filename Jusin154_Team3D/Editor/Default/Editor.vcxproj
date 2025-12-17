@@ -177,11 +177,14 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Boss_HpBer.h" />
+    <ClInclude Include="..\public\Completed_Panel.h" />
     <ClInclude Include="..\public\Enemy_Detection.h" />
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
+    <ClInclude Include="..\public\InProgress_Panel.h" />
+    <ClInclude Include="..\public\Interaction_Panel.h" />
     <ClInclude Include="..\public\MapElement_Chest.h" />
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
@@ -196,6 +199,8 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Quest_Info_Line.h" />
     <ClInclude Include="..\public\Quest_List.h" />
     <ClInclude Include="..\public\Quest_Panel.h" />
+    <ClInclude Include="..\public\Quest_Status.h" />
+    <ClInclude Include="..\public\Quest_Status_Panel.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
     <ClInclude Include="..\Public\State_Blink.h" />
     <ClInclude Include="..\Public\State_Dead.h" />
@@ -395,11 +400,14 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Boss_HpBer.cpp" />
+    <ClCompile Include="..\private\Completed_Panel.cpp" />
     <ClCompile Include="..\Private\Enemy_Detection.cpp" />
     <ClCompile Include="..\Private\Goblin_BattleAxe.cpp" />
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
+    <ClCompile Include="..\private\InProgress_Panel.cpp" />
+    <ClCompile Include="..\private\Interaction_Panel.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
@@ -414,6 +422,8 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Quest_Info_Line.cpp" />
     <ClCompile Include="..\private\Quest_List.cpp" />
     <ClCompile Include="..\private\Quest_Panel.cpp" />
+    <ClCompile Include="..\private\Quest_Status.cpp" />
+    <ClCompile Include="..\private\Quest_Status_Panel.cpp" />
     <ClCompile Include="..\Private\Skill_Data.cpp" />
     <ClCompile Include="..\Private\State_Blink.cpp" />
     <ClCompile Include="..\Private\State_Dead.cpp" />

@@ -106,8 +106,8 @@ public:
 
 		_float3		vDissolveValue = {};
 
-
-		_float2		vPadding0 = {};
+		_float      fModelDistortIntensity = {};
+		_float		vPadding0 = {};
 
 		_float      fLightDeley = {};
 		_float		fLightIntensity = {};

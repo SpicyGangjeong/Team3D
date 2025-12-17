@@ -35,9 +35,10 @@ private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CInfoInstance* m_pInfoInstance = { nullptr };
 
-	_int m_iColor = { false };
-
+	_int m_iColor{};
+	_int m_iQuest_Count{};
 
 public:
 	static CQuest_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

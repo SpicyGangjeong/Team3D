@@ -8,6 +8,7 @@
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
 #include "Damage_Font.h"
+#include "Interaction_Key.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -165,6 +166,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Camera_LockOn"), m_pDamage_Font);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInteraction_Key>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CInteraction_Key**>(&m_pInteraction_Key)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Interaction_Key"), m_pInteraction_Key);
 
 	return S_OK;
 }

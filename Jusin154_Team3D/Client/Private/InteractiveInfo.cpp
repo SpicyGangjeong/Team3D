@@ -85,7 +85,7 @@ HRESULT CInteractiveInfo::Refresh_LockOnTarget()
 
 			vInteractablePos = pInteractive->Get_LockOnPos();
 			vToMonsterDir = vInteractablePos - vCameraPos;
-			if (150.f <= XMVectorGetX(XMVector4Length(vToMonsterDir))) {
+			if (40.f <= XMVectorGetX(XMVector4Length(vToMonsterDir))) {
 				continue;
 			}
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);

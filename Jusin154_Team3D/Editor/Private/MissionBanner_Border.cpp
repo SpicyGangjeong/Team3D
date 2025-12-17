@@ -24,7 +24,7 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -207.f;
-	Desc.fY = 115.f;
+	Desc.fY = -115.f;
 	Desc.fSizeX = 256.f;
 	Desc.fSizeY = 128.f;
 

@@ -31,12 +31,16 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	void Set_Hover(_int Index);
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_int m_iColor = true;
+	_int m_iQuest_Index{};
 
 public:
 	static CQuest_Info_Header* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

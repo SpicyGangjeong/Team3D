@@ -312,6 +312,7 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 
 			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fDecel;
 
+
 			m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
 		}

@@ -61,6 +61,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	}
 #ifdef _DEBUG
 	Load_KeyFrame();
+
+#if 진우
+	m_isDebugMode = true; // 디버그 무적 모드
+#endif
+
 #endif // _DEBUG
 
 	m_pBroomModel = m_pBroom->Get_Component<CModel>();
@@ -304,6 +309,11 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+#ifdef _DEBUG
+	if (m_isDebugMode == true)
+		return;
+#endif
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
@@ -522,6 +532,7 @@ void CPlayer::ReLockOnTarget()
 			m_LockOnInfo.pUnit = nullptr;
 		}
 	}
+
 	//m_pLockOnMonster->Get_State
 }
 

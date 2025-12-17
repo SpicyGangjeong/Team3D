@@ -112,6 +112,14 @@
 #include "Quest_Info_Line.h"
 #include "Quest_Entry_Line.h"
 
+#include "Quest_Status_Panel.h"
+#include "Quest_Status.h"
+
+#include "Completed_Panel.h"
+#include "InProgress_Panel.h"
+
+#include "Interaction_Key.h"
+
 #pragma endregion
 
 #pragma region PHYSX
@@ -161,6 +169,7 @@
 #include "Box_Splesh.h"
 #include "Chair_Splesh.h"
 #include "Barral_Splesh.h"
+#include "Screen_Wind.h"
 
 #pragma endregion
 
@@ -910,6 +919,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma endregion
 #if 진우
+#elif 기무리
 #else
 #pragma region UI_ANI
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
@@ -1715,6 +1725,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CScreen_Wind>(NEXT_LEVEL, CScreen_Wind::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -2020,6 +2034,34 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_Quest_Entry_Line*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Entry_Line>(g_iStaticLevel, CQuest_Entry_Line::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+		
+	/* For.Prototype_GameObject_Quest_Status_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status_Panel>(g_iStaticLevel, CQuest_Status_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Status*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status>(g_iStaticLevel, CQuest_Status::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Completed_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CCompleted_Panel>(g_iStaticLevel, CCompleted_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_InProgress_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CInProgress_Panel>(g_iStaticLevel, CInProgress_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Interaction_Key*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CInteraction_Key>(g_iStaticLevel, CInteraction_Key::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

@@ -679,9 +679,14 @@ HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRender
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
-void CGameInstance::Render_PreShadow()
+void CGameInstance::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix)
 {
-	return m_pRenderer->Render_PreShadow();
+	return m_pRenderer->Render_PreShadow(ViewMatrix, ProjMatrix);
+}
+
+HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);
 }
 
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
@@ -1074,65 +1079,110 @@ ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
 
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Pressing(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Key_Pressing(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 bool		CGameInstance::Key_Up(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Up(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Key_Up(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 bool		CGameInstance::Key_Down(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Down(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Key_Down(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Pressing(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Pressing(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_Pressing(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Up(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Up(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_Up(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Down(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_StartMove()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_StartMove();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_StartMove();
 	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Moving()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Moving();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_Moving();
 	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_StopMove()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_StopMove();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_StopMove();
 	}
+#endif // _DEBUG
 	return false;
 }
 _float3 CGameInstance::Get_MouseMove()

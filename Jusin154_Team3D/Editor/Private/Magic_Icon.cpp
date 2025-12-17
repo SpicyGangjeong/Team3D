@@ -22,7 +22,7 @@ HRESULT CMagic_Icon::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 630.f;
-	Desc.fY = 125.f;
+	Desc.fY = -125.f;
 	Desc.fSizeX = 65.f;
 	Desc.fSizeY = 65.f;
 

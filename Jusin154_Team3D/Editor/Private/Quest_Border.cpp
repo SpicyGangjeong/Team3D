@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Quest_Border.h"
 #include "GameInstance.h"
+#include "Quest_Data.h"
 
 CQuest_Border::CQuest_Border(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -21,8 +22,8 @@ HRESULT CQuest_Border::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -485.f;
-	Desc.fY = -150.f;
+	Desc.fX = -475.f;
+	Desc.fY = 150.f;
 	Desc.fSizeX = 192.f;
 	Desc.fSizeY = 192.f;
 
@@ -41,12 +42,20 @@ HRESULT CQuest_Border::Initialize(void* pArg)
 	m_fAlphaTime = 5.f;
 	m_vNine_Slice = _float4(48.f, 148.f, 48.f, 148.f);
 	m_fSortZ = 0.02f;
-	m_fFontX = 740.f;
-	m_fFontY = 500.f;
+	m_fFontX = -10.f;
+	m_fFontY = -50.f;
 	SizeUpX(500.f);
 	SizeUpY(500.f);
 	Visible(true);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QUEST_DATA"), [this](void* p) {this->Set_Quest_Data(reinterpret_cast<CQuest_Data*>(p)); });
 	return S_OK;
+}
+
+void CQuest_Border::Set_Quest_Data(CQuest_Data* Data)
+{
+	m_pQuest_Data = Data;
+
+	m_iCount = m_pQuest_Data->Get_Count();
 }
 
 void CQuest_Border::Priority_Update(_float fTimeDelta)
@@ -124,7 +133,14 @@ HRESULT CQuest_Border::Render()
 		return E_FAIL;
 	}
 
-	//m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX + m_fX, (m_fFontY + m_fY) - m_fPreviewOffSet * 0.5f), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("전 체")) - 22) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("전 체"), _float2((m_fFontX - m_fX) - OffSet, m_fFontY + m_fY));
+
+	for (_int i = 0; i < m_iCount; ++i)
+	{
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pQuest_Data->Get_Quest(i).pQuestName.c_str(), _float2((-210 - m_fX), 100 + m_fY));
+
+	}
 	return S_OK;
 }
 
