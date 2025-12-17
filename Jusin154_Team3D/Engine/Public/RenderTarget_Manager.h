@@ -22,6 +22,7 @@ public:
 	HRESULT Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
 
+
 	// 두 랜더타겟을 하나로 모음
 	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
 	// 랜더 타겟의 크기를 dest로 다시 맞춤

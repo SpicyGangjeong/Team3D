@@ -335,7 +335,7 @@ private:
 	_float							m_fTimer_Render_NonLight = { 0.f };
 	_float							m_fTimer_Render_Blend = { 0.f };
 	_float							m_fTimer_Render_WeightBlend = { 0.f };
-	_float							m_fTimer_Render_Bloom = { 0.f };
+	_float							m_fTimer_Render_PostProcessing = { 0.f };
 	_float							m_fTimer_Render_LastColor = { 0.f };
 	_float							m_fTimer_Render_Tone_Mapping = { 0.f };
 	_float							m_fTimer_Render_UI = { 0.f };

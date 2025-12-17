@@ -228,6 +228,24 @@ float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
     return normalize(n);
 }
 
+// BackGround ForeGround 합은 1
+float2 DepthCompare(float fCenterDepth, float fSampleDepth, float fDepthScale)
+{
+    return saturate(0.5f + float2(fDepthScale, -fDepthScale) * (fSampleDepth - fCenterDepth));
+}
+
+float2 SpreadCompare(float fOffsetLength, float2 fSpreadLength, float fPixelToSampleUnitsScale)
+{
+    return saturate(fPixelToSampleUnitsScale * fSpreadLength - fOffsetLength + 1.f);
+}
+
+float SampleWeight(float fCenterDepth, float fSampleDepth, float fOffsetLength, float fCenterSpreadLength, float fSampleSpreadLength, float fPixelToSampleUnitsScale, float fDepthScale)
+{
+    float2 vDepthCompare = DepthCompare(fCenterDepth, fSampleDepth, fDepthScale);
+    float2 vSpreadCompare = SpreadCompare(fOffsetLength, float2(fCenterSpreadLength, fSampleSpreadLength), fPixelToSampleUnitsScale);
+    return dot(vDepthCompare, vSpreadCompare);
+}
+
 float4x4 RotateX(float fAngle)
 {
     float fCos = cos(radians(fAngle));

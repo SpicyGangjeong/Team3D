@@ -30,11 +30,14 @@ void CRenderer::Render()
 	Render_NonLight();
 	Render_Blend();
 	Render_WeightBlend();
-	Render_Bloom();
+	Render_PostProcessing();
 	Render_LastColor();
 	Render_Tone_Mapping();
 	Render_UI();
 	Render_UI_Overley();
+
+	memcpy_s(&m_MotionBlurPreViewMatrix,	sizeof(_float4x4), &m_ScreenViewMatrix,		sizeof(_float4x4));
+	memcpy_s(&m_MotionBlurPreProjMatrix,	sizeof(_float4x4), &m_ScreenProjMatrix,		sizeof(_float4x4));
 
 #ifdef _DEBUG
 	static _bool m_bToggleDebug = false;
@@ -318,9 +321,9 @@ void CRenderer::Render_LightAcc()
 		return;
 	}
 
-	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 	m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
 	m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
 	m_pShader->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4));
@@ -363,9 +366,9 @@ void CRenderer::Render_Combined()
 	{
 		// Bind_Resorces
 
-		m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-		m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-		m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+		m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+		m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+		m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 		m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
 		m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
 
@@ -457,9 +460,9 @@ void CRenderer::Render_EnvironmentPostProcess()
 		return;
 	}
 
-	m_pShader->Bind_Matrix("g_WorldMatrix",				&m_WorldMatrix);
-	m_pShader->Bind_Matrix("g_ViewMatrix",				&m_ViewMatrix);
-	m_pShader->Bind_Matrix("g_ProjMatrix",				&m_ProjMatrix);
+	m_pShader->Bind_Matrix("g_WorldMatrix",				&m_ScreenWorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix",				&m_ScreenViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix",				&m_ScreenProjMatrix);
 	m_pShader->Bind_Matrix("g_invMatView",				m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
 	m_pShader->Bind_Matrix("g_invmatProj",				m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
 	m_pShader->Bind_RawValue("g_fFar",					m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
@@ -488,9 +491,9 @@ void CRenderer::Render_EnvironmentPostProcess()
 		return;
 	}
 
-	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 	m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
 	m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
@@ -574,9 +577,9 @@ void CRenderer::Render_WeightBlend()
 	COMPUTE_TIMEDELTA("Timer_Render_WeightBlend");
 	// Bind_Resorces
 
-	m_pWeightBlendShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	m_pWeightBlendShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-	m_pWeightBlendShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pWeightBlendShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pWeightBlendShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pWeightBlendShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_WB_Color"), m_pWeightBlendShader, "g_MixedDiffuseTexture"))) {
@@ -636,9 +639,9 @@ void CRenderer::Render_Blur()
 		return;
 	}
 
-	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur"), m_pShader, "g_BlurTexture"))) {
 		return;
@@ -762,9 +765,9 @@ void CRenderer::Render_SSAO_BLUR()
 	}
 	{
 		// Bind_Resorces
-		m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-		m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-		m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+		m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+		m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+		m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
@@ -805,20 +808,11 @@ void CRenderer::Render_Blend()
 	COMPUTE_TIMEDELTA("Timer_Render_Blend");
 }
 
-void CRenderer::Render_Bloom()
+void CRenderer::Render_PostProcessing()
 {
-	COMPUTE_TIMEDELTA("Timer_Render_Bloom");
-	// "Target_Bloom_Input"
-	// "Target_Bloom"
-	// "Target_Bloom_2x2"
-	// "Target_Bloom_4x4"
-	// "Target_Bloom_8x8"
-	// "Target_Bloom_2x2_1"
-	// "Target_Bloom_4x4_1"
-	// "Target_Bloom_8x8_1"
-	// "Target_Bloom_8x8_X"
-	// "Target_Bloom_4x4_2"
-	// "Target_Bloom_2x2_2"
+	/* POSTPROCESSING */
+
+	COMPUTE_TIMEDELTA("Timer_Render_PostProcessing");
 
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Bloom")))) {
 		return;
@@ -838,6 +832,19 @@ void CRenderer::Render_Bloom()
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
 	}
+
+	// "Target_Bloom_Input"
+	// "Target_Bloom"
+	// "Target_Bloom_2x2"
+	// "Target_Bloom_4x4"
+	// "Target_Bloom_8x8"
+	// "Target_Bloom_2x2_1"
+	// "Target_Bloom_4x4_1"
+	// "Target_Bloom_8x8_1"
+	// "Target_Bloom_8x8_X"
+	// "Target_Bloom_4x4_2"
+	// "Target_Bloom_2x2_2"
+
 
 	m_pShader->Bind_RawValue("g_fBloomThreshold", &m_fBloomThreshold, sizeof(_float));
 	m_pShader->Bind_RawValue("g_iBloomEmbossingPass", &m_iBloomEmbossingPass, sizeof(_int));
@@ -866,7 +873,7 @@ void CRenderer::Render_Bloom()
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2_2"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::UPSAMPLE);
 	m_pGameInstance->Finish_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::BLOOM_FINISH); // 9
 
-	COMPUTE_TIMEDELTA("Timer_Render_Bloom");
+	COMPUTE_TIMEDELTA("Timer_Render_PostProcessing");
 }
 
 void CRenderer::Render_UI()
@@ -920,9 +927,9 @@ void CRenderer::Render_LastColor()
 	COMPUTE_TIMEDELTA("Timer_Render_LastColor");
 	// Bind_Resorces
 
-	m_pLastColorShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	m_pLastColorShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-	m_pLastColorShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pLastColorShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pLastColorShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pLastColorShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Color"), m_pLastColorShader, "g_ColorTexture"))) {
 		return;
@@ -945,9 +952,9 @@ void CRenderer::Render_Tone_Mapping()
 		SAFE_RELEASE(pBackBuffer);
 	}
 
-	m_pLastColorShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	m_pLastColorShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
-	m_pLastColorShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pLastColorShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pLastColorShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pLastColorShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 	
 	if (FAILED(m_pShader->Bind_RawValue("g_iToneMappingType", &m_iToneMappingType, sizeof(_uint)))) {
 		assert(false);
@@ -985,10 +992,10 @@ void CRenderer::Render_Debug()
 		SAFE_RELEASE(pDebugCom);
 	} m_DebugComponents.clear();
 
-	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix))) {
+	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix))) {
 		return;
 	}
-	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix))) {
+	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix))) {
 		return;
 	}
 	if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {

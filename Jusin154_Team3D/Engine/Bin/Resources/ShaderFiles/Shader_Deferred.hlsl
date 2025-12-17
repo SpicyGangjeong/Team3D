@@ -5,6 +5,7 @@ matrix g_LightViewMatrix_NEAR, g_LightProjMatrix_NEAR;
 matrix g_LightViewMatrix_MIDDLE, g_LightProjMatrix_MIDDLE;
 matrix g_LightViewMatrix_FAR, g_LightProjMatrix_FAR;
 matrix g_PreShadowLightViewMatrix, g_PreShadowLightProjMatrix;
+matrix g_MotionBlurPreWorldMatrix, g_MotionBlurPreViewMatrix, g_MotionBlurPreProjMatrix;
 
 float4 g_SamplePos[64];
 float g_fFar;
@@ -137,6 +138,66 @@ struct VS_OUT
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
+struct VS_IN_VELOCITYBLUR
+{
+    float4 vPosition : POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD1;
+};
+struct VS_OUT_VELOCITYBLUR
+{
+    float4 vPosition : POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD1;
+    float4 vDirection : TEXCOORD2;
+};
+struct PS_IN_VELOCITYBLUR
+{
+    float4 vPosition : POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD1;
+    float4 vDirection : TEXCOORD2;
+};
+struct PS_OUT_VELOCITYBLUR
+{
+    float4 vColor : SV_TARGET0;
+};
+VS_OUT_VELOCITYBLUR VS_MOTIONBLUR(VS_IN_VELOCITYBLUR In)
+{
+    VS_OUT_VELOCITYBLUR Out;
+
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(float4(In.vPosition.xyz, 1.f), matWVP);
+    Out.vNormal = normalize(mul(float4(In.vNormal.xyz, 0.f), matWVP));
+    Out.vTexcoord = In.vTexcoord;
+    
+    float4 vNewPos = Out.vPosition;
+    float4 vOldPos = mul(float4(In.vPosition.xyz, 1.f), g_MotionBlurPreWorldMatrix);
+    vOldPos = mul(vOldPos, g_MotionBlurPreViewMatrix);
+    vOldPos = mul(vOldPos, g_MotionBlurPreProjMatrix);
+    
+    float3 vDir = vNewPos.xyz - vOldPos.xyz;
+    
+    float fDota = dot(normalize(vDir), normalize(Out.vNormal.xyz));
+    if (fDota < 0.f) { // 
+        Out.vPosition = vOldPos;
+    }
+    else {
+        Out.vPosition = vNewPos;
+    }
+    
+    float2 vVelocity = (vNewPos.xy / vNewPos.w) - (vOldPos.xy / vOldPos.w);
+    Out.vDirection.xy = vVelocity * 0.5f;
+    Out.vDirection.y *= -1.f; // 투영좌표계 -> 스크린좌표계
+    Out.vDirection.z = Out.vPosition.z;
+    Out.vDirection.w = Out.vPosition.w;
+    
+    return Out;
+}
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
@@ -213,6 +274,14 @@ struct PS_OUT_SSAO_BLUR
 {
     float fBlur : SV_TARGET0;
 };
+PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN_VELOCITYBLUR In)
+{
+    PS_OUT_VELOCITYBLUR Out;
+    Out.vColor.xy = In.vDirection.xy;
+    Out.vColor.z = 1.f;
+    Out.vColor.w = (In.vDirection.z / In.vDirection.w);
+    return Out;
+}
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
     PS_OUT_LIGHT Out;
@@ -1360,5 +1429,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SSAO_BLUR();
+    }
+
+    pass VelocityMapPass // 18
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MOTIONBLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MOTIONBLUR();
     }
 }

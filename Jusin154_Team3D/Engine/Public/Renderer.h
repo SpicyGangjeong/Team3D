@@ -13,7 +13,7 @@ private:
 public:
 	void	Render();
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
-	void Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
+	void	Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
 	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 
 #ifdef _DEBUG
@@ -37,9 +37,9 @@ private:
 	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
 
 private:
-	_float4x4					m_WorldMatrix = {};
-	_float4x4					m_ViewMatrix = {};
-	_float4x4					m_ProjMatrix = {};
+	_float4x4					m_ScreenWorldMatrix = {};
+	_float4x4					m_ScreenViewMatrix = {};
+	_float4x4					m_ScreenProjMatrix = {};
 
 	ID3D11DepthStencilView*		m_pShadowDSV_NEAR = { nullptr };
 	ID3D11DepthStencilView*		m_pShadowDSV_MIDDLE = { nullptr };
@@ -47,11 +47,16 @@ private:
 	ID3D11DepthStencilView*		m_pPreShadowDSV = { nullptr };
 	ID3D11ShaderResourceView*	m_pSSAO_NoiseSRV = { nullptr };
 	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
-	ID3D11Buffer*				m_pGlobalStaticCB = { nullptr };
+
+	_float4x4					m_MotionBlurPreViewMatrix = {};
+	_float4x4					m_MotionBlurPreProjMatrix = {};
 
 	_float4x4					m_PreShadowView = {};
 	_float4x4					m_PreShadowProj = {};
 
+
+
+#pragma region TunningParameters
 	/* TunningParam  */
 	_int	m_iToneMappingType = { 2 };
 	_float	m_fExposure = { 0.7f };
@@ -74,6 +79,8 @@ private:
 
 	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
 	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};
+#pragma endregion
+
 private:
 	void Render_Occlusion();
 	void Render_Priority();
@@ -90,7 +97,7 @@ private:
 	void Render_WeightBlend();
 	void Render_NonLight();
 	void Render_Blend();
-	void Render_Bloom();
+	void Render_PostProcessing();
 	void Render_LastColor();
 	void Render_Tone_Mapping();
 	void Render_UI();
@@ -103,7 +110,7 @@ private:
 #endif
 
 private:
-	void  Fill_Geometry(_uint iNumSample);
+	void	Fill_Geometry(_uint iNumSample);
 	HRESULT Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY);
 
 private:

@@ -369,7 +369,7 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_Render_NonLight = Get_TimeDelta(TEXT("Timer_Render_NonLight"));
 	m_fTimer_Render_Blend = Get_TimeDelta(TEXT("Timer_Render_Blend"));
 	m_fTimer_Render_WeightBlend = Get_TimeDelta(TEXT("Timer_Render_WeightBlend"));
-	m_fTimer_Render_Bloom = Get_TimeDelta(TEXT("Timer_Render_Bloom"));
+	m_fTimer_Render_PostProcessing = Get_TimeDelta(TEXT("Timer_Render_PostProcessing"));
 	m_fTimer_Render_LastColor = Get_TimeDelta(TEXT("Timer_Render_LastColor"));
 	m_fTimer_Render_Tone_Mapping = Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
 	m_fTimer_Render_UI = Get_TimeDelta(TEXT("Timer_Render_UI"));
@@ -443,7 +443,7 @@ void CGameInstance::Present_TimeCost() const
 					+ m_fTimer_Render_NonLight
 					+ m_fTimer_Render_Blend
 					+ m_fTimer_Render_WeightBlend
-					+ m_fTimer_Render_Bloom
+					+ m_fTimer_Render_PostProcessing
 					+ m_fTimer_Render_LastColor
 					+ m_fTimer_Render_Tone_Mapping
 					+ m_fTimer_Render_UI
@@ -524,9 +524,9 @@ void CGameInstance::Present_TimeCost() const
 					GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
 				}
 				{
-					GUI::ProgressBar(m_fTimer_Render_Bloom / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::ProgressBar(m_fTimer_Render_PostProcessing / fRenderer_Total, ImVec2(200.f, 0.f));
 					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Bloom %d", int(m_fTimer_Render_Bloom / fRenderer_Total * 100.f));
+					GUI::Text("Render_PostProcessing %d", int(m_fTimer_Render_PostProcessing / fRenderer_Total * 100.f));
 				}
 				{
 					GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
