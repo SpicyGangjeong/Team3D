@@ -50,9 +50,9 @@ private:
 	CCharacter_Controller*	 m_pEnemyCCT = { nullptr };
 
 	_float				m_fAccRotateTime = {};
-	_float				m_fTurnSpeed = { 65.f };
-	_float				m_fRange = { 1.f };
-	_float              m_fAttenuation = { 65.f };
+	_float				m_fTurnSpeed = { 55.f };
+	_float				m_fRange = { 0.7f };
+	_float              m_fAttenuation = { 85.f };
 	_bool				m_isDissolve = { true };
 	_bool				m_isReverse = { false };
 	_int				m_iLoopTime = { 5 };

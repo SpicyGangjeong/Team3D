@@ -97,8 +97,6 @@ void CAccio::Update(_float fTimeDelta)
 	TrailPos.r[3] += XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed;
 
 
-
-
 	if (m_bHit == true && m_pEnemyCCT != nullptr)
 	{
 		/* 특정 대상과 충돌 했다면*/
@@ -209,6 +207,8 @@ HRESULT CAccio::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_fAccRotateTime = 0.f;
 
+	m_pRope_Trail->Get_TrailInfo()->fMass = 0.05f;
+
 	return S_OK;
 }
 
@@ -293,6 +293,8 @@ void CAccio::OnCollision(CGameObject* pOther, void* pDesc)
 
 	if(m_isDissolve)
 		m_pRope_Trail->SetDissolve(true);
+
+	m_pRope_Trail->Get_TrailInfo()->fMass = 0.1f;
 
 }
 
