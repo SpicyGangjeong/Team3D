@@ -42,8 +42,8 @@ HRESULT CQuest_Status::Initialize(void* pArg)
 	m_fAlphaTime = 1.f;
 	Compute_UI(0);
 	m_vImageposi = _float4{ 32.f, 32.f, 64.f, 64.f };
-	m_fFontX = 80.f;
-	m_fFontY = 480.f;
+	m_fFontX = -780.f;
+	m_fFontY = 610.f;
 	Visible(true);
 	return S_OK;
 }
@@ -274,11 +274,12 @@ void CQuest_Status::Compute_UI(_int Index)
 	m_vUV = UV;
 }
 
-void CQuest_Status::Set_Status(_int Index, _float m_fPosY, _wstring Name)
+void CQuest_Status::Set_Status(_int Index, _float PosX, _float PosY, _wstring Name)
 {
 	m_iIndex = Index;
 	Compute_UI(Index);
-	MoveY(m_fPosY);
+	MoveX(PosX);
+	MoveY(PosY);
 	m_pName = Name;
 }
 

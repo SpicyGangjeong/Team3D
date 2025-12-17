@@ -208,11 +208,9 @@ void CQuest_Info_Line::Set_Hover(_int Index)
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);
+		return;
 	}
-	else
-	{
-		Visible(true);
-	}
+	Visible(true);
 }
 
 CQuest_Info_Line* CQuest_Info_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

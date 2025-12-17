@@ -113,6 +113,34 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 	return StagingSubResources;
 }
 
+void CComputeShader::Dispatch_ExternalSRV_UAV(
+	_uint srvStartSlot, _uint uavStartSlot,
+	const _float3& groupCount,
+	ID3D11ShaderResourceView** ppSRVs, _uint srvCount,
+	ID3D11UnorderedAccessView** ppUAVs, _uint uavCount,
+	ID3D11Buffer* pConstantBuffer)
+{
+	m_pContext->CSSetShader(m_pComputeShader, nullptr, 0);
+	if (pConstantBuffer)
+		m_pContext->CSSetConstantBuffers(0, 1, &pConstantBuffer);
+
+	m_pContext->CSSetShaderResources(srvStartSlot, srvCount, ppSRVs);
+	m_pContext->CSSetUnorderedAccessViews(uavStartSlot, uavCount, ppUAVs, nullptr);
+
+	m_pContext->Dispatch((UINT)groupCount.x, (UINT)groupCount.y, (UINT)groupCount.z);
+
+	ID3D11ShaderResourceView* nullSRV[16] = {};
+	ID3D11UnorderedAccessView* nullUAV[8] = {};
+	m_pContext->CSSetShaderResources(srvStartSlot, srvCount, nullSRV);
+	m_pContext->CSSetUnorderedAccessViews(uavStartSlot, uavCount, nullUAV, nullptr);
+
+	ID3D11Buffer* nullCB = nullptr;
+	m_pContext->CSSetConstantBuffers(0, 1, &nullCB);
+	m_pContext->CSSetShader(nullptr, nullptr, 0);
+}
+
+
+
 void CComputeShader::Bind_SRV(_uint iIndex)
 {
 	m_pContext->CSSetShaderResources(iIndex, // 시작슬롯 번호

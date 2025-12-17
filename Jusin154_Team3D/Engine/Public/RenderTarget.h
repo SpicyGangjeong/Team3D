@@ -17,8 +17,8 @@ public:
 	HRESULT Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
 	void Clear();
-	void Copy_Resource(ID3D11Texture2D* pTexture2D);
-	void Paste_Resource(ID3D11Texture2D* pTexture2D);
+	void Copy_ResourceTo(ID3D11Texture2D* pTexture2D);
+	void Copy_ResourceFrom(ID3D11Texture2D* pTexture2D);
 	void Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc);
 	ID3D11ShaderResourceView* Get_SRV() const { return m_pSRV; }
 

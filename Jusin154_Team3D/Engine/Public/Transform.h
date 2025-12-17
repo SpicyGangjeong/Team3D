@@ -33,11 +33,12 @@ public:
 	_float3		Get_Scale() const;
 	_vector		Get_QuarternionVector() const; // 현재 회전정보를 담고 있는 쿼터니언 벡터를 out 
 	_vector		Get_RollPitchYawVector() const;
-	_vector		Get_State(STATE eState) const { 
+	_vector		Get_State(STATE eState) const {
 		return XMLoadFloat4(reinterpret_cast<const _float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)])); 
 	}
 	const _float4* Get_StatePtr(STATE eState) { return reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]); }
 	const _float4x4* Get_WorldMatrixPtr() const { return &m_WorldMatrix; }
+	const _float4x4* Get_PrevWorldMatrixPtr() const { return &m_PrevMatrix; }
 	const _matrix Get_XMWorldMatrix() const { return XMLoadFloat4x4(&m_WorldMatrix); }
 	const _matrix Get_WorldMatrixInv() const { return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)); }
 public:
@@ -83,6 +84,7 @@ private:
 	_float				m_fSpeedPerSec = {};
 	_float				m_fRotationPerSec = {};
 	_float4x4			m_WorldMatrix = {};
+	_float4x4			m_PrevMatrix = {};
 	_float				m_fRadius = { 20.f };
 
 	_float3				m_vMomentum = {}; // 현재 프레임에 계산된 이동량

@@ -458,7 +458,7 @@ void CGoblin::Behavior_HitEnter()
 	{
 		if (m_fHitDegree >= 90.f)
 		{
-			_int iRandIndex = m_pGameInstance->Real_Random_Int(0, 5);
+			_int iRandIndex = m_pGameInstance->Real_Random_Int(0, 3);
 			switch (iRandIndex)
 			{
 			case 0:
@@ -543,7 +543,8 @@ HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
 			}
 		}
 	}
-	else
+
+	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ACCIO))
 	{
 		if (!m_bPos)
 		{

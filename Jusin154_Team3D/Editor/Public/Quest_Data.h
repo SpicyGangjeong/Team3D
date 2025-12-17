@@ -13,10 +13,10 @@ class CQuest_Data final : public CGameObject
 public:
 	typedef struct tagObjectiveInfo
 	{
-		_int iObjectType{};
-		_int iTargetID{};
-		_int iRequiredCount{};
-		_int iCurrentCount{};
+		_bool	bClear{};
+		_int	iTargetID{};
+		_int	iRequiredCount{};
+		_int	iCurrentCount{};
 	}OBJECTIVEINFO;
 	typedef struct tagRewardsInfo
 	{
@@ -31,6 +31,7 @@ public:
 		_wstring					pQuestInfo;
 		vector<OBJECTIVEINFO>	ObjectiveInfo;
 		vector<REWARDSINFO>		RewardsInfo;
+		_int					iAcceptState;
 	}QUESTINFO;
 private:
 	CQuest_Data(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -46,7 +47,14 @@ public:
 
 public:
 	QUESTINFO Get_Quest(_int QuestID);
-	_int Get_Count();
+	_int Get_Count(_int Index);
+	const vector<QUESTINFO>& Get_AllQuest() const;
+	const vector<QUESTINFO>& Get_ClearQuest() const;
+	const vector<QUESTINFO>& Get_AcceptQuest() const;
+	HRESULT Set_AcceptQuest(_int index);
+	void Set_ClearQuest(_int Index);
+	void Update_AcceptQuest(_int MonsterIndex = -1);
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -55,17 +63,25 @@ private:
 
 public:
 	//const SPELLINFO& Get_Info(_uint SpellID) const;
-	
+
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CGameObject* m_pQuestInstance = { nullptr };
+
 
 	QUESTINFO QuestInfo = {};
 	OBJECTIVEINFO ObjectiveInfo = {};
 	REWARDSINFO RewardsInfo = {};
 
 	vector<QUESTINFO> QuestInfos;
+	vector<QUESTINFO> m_QuestNoneInfos;
+	vector<CGameObject*> m_QuestAcceptedInfoObject;
+	vector<QUESTINFO> m_QuestAcceptedInfos;
+	vector<QUESTINFO> m_QuestEndInfos;
 
 	_int m_iQuest_Count{};
+	_int m_iClearQeustCount{};
+	_int m_iAcceptQeustCount{};
 
 	_bool m_bClear[1] = { false };
 public:

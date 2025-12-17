@@ -66,10 +66,14 @@ public:
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
-#pragma region Spell_INFO
+#pragma region QuestINFO
+	QUESTINFO Get_Quest(_int QuestID);
+	_int Get_Quest_Count(_int Index);
+	const vector<QUESTINFO>& Get_AllQuest() const;
+	const vector<QUESTINFO>& Get_ClearQuest() const;
+	const vector<QUESTINFO>& Get_AcceptQuest() const;
+	HRESULT Set_AcceptQuest(_int Index);
 #pragma endregion
-	QUESTINFO Get_Quest_Info(_int QuestID);
-	_int Get_Quest_Count();
 #pragma region Interactive_INFO
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);

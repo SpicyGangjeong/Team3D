@@ -53,7 +53,8 @@ void CPlayer::Get_UIState(_int UIState)
 
 HRESULT CPlayer::InputAction()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) && 
+	m_eUIState !=ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
 		if (
 			m_pGameInstance->Key_Down(DIK_SPACE)
 			|| m_pGameInstance->Key_Down(DIK_LCONTROL)
@@ -86,6 +87,11 @@ HRESULT CPlayer::InputAction()
 			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
 			return S_OK;
 		}
+		if (m_pGameInstance->Key_Down(DIK_TAB))
+		{
+			if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
+			return S_OK;
+		}
 	}
 
 	return E_FAIL;
@@ -93,7 +99,8 @@ HRESULT CPlayer::InputAction()
 
 HRESULT CPlayer::InputMove()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
 
 		if (m_pGameInstance->Key_Pressing(DIK_W)
 			|| m_pGameInstance->Key_Pressing(DIK_A)
@@ -109,7 +116,8 @@ HRESULT CPlayer::InputMove()
 
 HRESULT CPlayer::InputKeyUpMove()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
 		if (m_pGameInstance->Key_Up(DIK_W)
 			|| m_pGameInstance->Key_Up(DIK_A)
 			|| m_pGameInstance->Key_Up(DIK_S)
@@ -123,7 +131,8 @@ HRESULT CPlayer::InputKeyUpMove()
 
 HRESULT CPlayer::InputSpell()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
 		if (
 			m_pGameInstance->Key_Down(DIK_1)
 			|| m_pGameInstance->Key_Down(DIK_2)
@@ -1625,6 +1634,7 @@ HRESULT CPlayer::Behavior_HitExitCheck()
 void CPlayer::Behavior_HitExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::HIT);
+	m_bLookAt = false;
 }
 
 void CPlayer::Behavior_Broom_RideEnter()
