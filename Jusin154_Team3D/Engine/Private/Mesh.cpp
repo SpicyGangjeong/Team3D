@@ -23,8 +23,9 @@ HRESULT CMesh::Bind_BoneMatrices(const vector<class CBone*>& Bones, CShader* pSh
 
 	for (size_t i = 0; i < m_iNumBones; ++i) {
 		XMStoreFloat4x4(&m_pBoneMatrices[i],
-			XMLoadFloat4x4(&m_offsetMatrices[i]) * Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix());
+			/*XMLoadFloat4x4(&m_offsetMatrices[i]) **/ Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix());
 	}
+
 	if (0 == m_iNumBones) {
 		return S_OK;
 	}
@@ -341,6 +342,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 			pVertices[i].vTexcoord = _float2(0.f, 0.f);
 	}
 
+
 	m_iNumBones = (_uint)_SaveMesh->Bones.size();
 
 	m_offsetMatrices.reserve(m_iNumBones);
@@ -363,6 +365,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 		if (-1 == iBoneIndex)
 			return E_FAIL;
 
+		m_BoneRemap.push_back((_uint)iBoneIndex);
 		m_BoneIndices.push_back(iBoneIndex);
 		m_offsetMatrices.push_back(OffsetMatrix);
 
@@ -409,8 +412,39 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBData, &m_pVB)))
 		return E_FAIL;
 
+	Create_BoneRemapBuffer();
+
 
 	Safe_Delete_Array(pVertices);
+
+	return S_OK;
+}
+
+HRESULT CMesh::Create_BoneRemapBuffer()
+{
+	D3D11_BUFFER_DESC desc{};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(_uint) * (_uint)m_BoneRemap.size();
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = sizeof(_uint);
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	D3D11_SUBRESOURCE_DATA init{};
+	init.pSysMem = m_BoneRemap.data();
+
+	m_pDevice->CreateBuffer(&desc, &init, &m_pBoneRemapBuffer);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	srvDesc.Buffer.FirstElement = 0;
+	srvDesc.Buffer.NumElements = (_uint)m_BoneRemap.size();
+
+	m_pDevice->CreateShaderResourceView(
+		m_pBoneRemapBuffer,
+		&srvDesc,
+		&m_pBoneRemapSRV);
 
 	return S_OK;
 }
@@ -642,6 +676,8 @@ void CMesh::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pBoneRemapBuffer);
+	SAFE_RELEASE(m_pBoneRemapSRV);
 	Safe_Delete_Array(m_pBoneMatrices);
 }
 #ifdef _DEBUG
