@@ -100,7 +100,7 @@ void CQuest_Slot::Update(_float fTimeDelta)
 	}
 	Hover();
 
-	static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_iQuestIndex);
+	static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_Info);
 
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -142,13 +142,13 @@ HRESULT CQuest_Slot::Render()
 	for (_int i = 0; i < m_iQuestCount; ++i)
 	{
 		m_fFontY = 190 + i * 85.f;
-		if (i == m_iQuestIndex)
+		if (i == m_Info.iQuestIndex)
 		{
-			m_pGameInstance->Render_Text(TEXT("Font_size30"), m_pInfoInstance->Get_Quest(i).pQuestName.c_str(), _float2(m_fFontX - 10.f + m_fX, m_fFontY - 10.F - m_fY));
+			m_pGameInstance->Render_Text(TEXT("Font_size30"), m_pInfoInstance->Get_Quest(m_Info.iQuestCategory, i).pQuestName.c_str(), _float2(m_fFontX - 10.f + m_fX, m_fFontY - 10.F - m_fY));
 		}
 		else
 		{
-			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(i).pQuestName.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY));
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_Info.iQuestCategory, i).pQuestName.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY));
 		}
 	}
 	return S_OK;
@@ -258,9 +258,9 @@ void CQuest_Slot::Hover()
 	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
 	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
 
-	m_iQuestIndex = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+	m_Info.iQuestIndex= m_pVIBufferCom->Set_Mouse_Hover(fMouse);
 
-	if (m_iQuestIndex != -1)
+	if (m_Info.iQuestIndex != -1)
 	{
 		m_bHover = true;
 	}
@@ -275,16 +275,19 @@ void CQuest_Slot::Set_QuestType(_int Index)
 	switch (Index)
 	{
 	case 0:
+		m_Info.iQuestCategory = ENUM_CLASS(QUESTSTATE::NONE);
 		m_iQuestCount = m_pInfoInstance->Get_Quest_Count(ENUM_CLASS(QUESTSTATE::NONE));
 		m_pVIBufferCom->Set_Draw(-1);
 		break;
 
 	case 1:
+		m_Info.iQuestCategory = ENUM_CLASS(QUESTSTATE::ACCEPTED);
 		m_iQuestCount = m_pInfoInstance->Get_Quest_Count(ENUM_CLASS(QUESTSTATE::ACCEPTED));
 		m_pVIBufferCom->Set_Draw(m_iQuestCount);
 		break;
 
 	case 2:
+		m_Info.iQuestCategory = ENUM_CLASS(QUESTSTATE::CLEARED);
 		m_iQuestCount = m_pInfoInstance->Get_Quest_Count(ENUM_CLASS(QUESTSTATE::CLEARED));
 		m_pVIBufferCom->Set_Draw(m_iQuestCount);
 		break;

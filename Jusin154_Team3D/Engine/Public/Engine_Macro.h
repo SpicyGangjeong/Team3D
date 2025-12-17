@@ -43,7 +43,7 @@
 #elif 인혁
 #undef ASSERT_INHYUK
 #define ASSERT_INHYUK(expression) assert(expression)
-#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #endif
 
 

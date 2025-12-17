@@ -51,7 +51,7 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	m_fFontY = 500.f;
 	m_iPerQuestIndex = -1;
 	Visible(false);
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
 	return S_OK;
 }
 
@@ -129,7 +129,7 @@ HRESULT CQuest_Info::Render()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iQuest_Index).pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest ,m_iQuest_Index).pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 
@@ -217,9 +217,12 @@ HRESULT CQuest_Info::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CQuest_Info::Set_Hover(_int Index)
+void CQuest_Info::Set_Hover(void* pArg)
 {
-	m_iQuest_Index = Index;
+	CURRENTQUESTSECETINFO* Desc = static_cast<CURRENTQUESTSECETINFO*>(pArg);
+
+	m_iCurrentQuest = Desc->iQuestCategory;
+	m_iQuest_Index = Desc->iQuestIndex;
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);

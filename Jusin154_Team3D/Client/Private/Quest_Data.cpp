@@ -95,9 +95,20 @@ HRESULT CQuest_Data::Load_QuestInfo(const _char* pFilePath)
 	return S_OK;
 }
 
-QUESTINFO CQuest_Data::Get_Quest(_int QuestID)
+QUESTINFO CQuest_Data::Get_Quest(_int QuestType, _int QuestID)
 {
-	return QuestInfos[QuestID];
+	switch (QuestType)
+	{
+	case 0:
+		return QuestInfos[QuestID];
+	case 1:
+		return m_QuestAcceptedInfos[QuestID];
+	case 2:
+		return m_QuestEndInfos[QuestID];
+	default:
+		return QuestInfos[QuestID];
+	}
+
 }
 
 const vector<QUESTINFO>& CQuest_Data::Get_AllQuest() const
@@ -164,18 +175,24 @@ void CQuest_Data::Set_ClearQuest(_int Index)
 
 void CQuest_Data::Update_AcceptQuest(_int MonsterID)
 {
-	m_QuestAcceptedInfoObject.erase(remove_if(m_QuestAcceptedInfoObject.begin(), m_QuestAcceptedInfoObject.end(),
-		[MonsterID, this](auto& it) {
-			CQuestInstance* instance = static_cast<CQuestInstance*>(it);
-			if (static_cast<CQuestInstance*>(it)->Update_Objective(MonsterID) == true)
-			{
-				Set_ClearQuest(static_cast<CQuestInstance*>(it)->Get_QuestID());
-				return true;
-			}
-			return false;
-		}),
-		m_QuestAcceptedInfoObject.end()
-	);
+	vector<_int> toRemoveIndex;
+
+	_int index = 0;
+	for (auto* instance : m_QuestAcceptedInfoObject)
+	{
+		if (static_cast<CQuestInstance*>(instance)->Update_Objective(MonsterID))
+		{
+			Set_ClearQuest(static_cast<CQuestInstance*>(instance)->Get_QuestID());
+			toRemoveIndex.push_back(index); 
+		}
+		index++;
+	}
+
+	for (auto it = toRemoveIndex.rbegin(); it != toRemoveIndex.rend(); ++it)
+	{
+		m_QuestAcceptedInfoObject.erase(m_QuestAcceptedInfoObject.begin() + *it);
+		m_QuestAcceptedInfos.erase(m_QuestAcceptedInfos.begin() + *it);
+	}
 }
 
 CQuest_Data* CQuest_Data::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

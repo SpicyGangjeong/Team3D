@@ -67,6 +67,13 @@ typedef struct SlotHover
 	_int iSlotID{};
 	_int iHover_Index{};
 }HOVER_INFO;
+
+typedef struct tagCurrentQeustSerectInfo
+{
+	_int iQuestCategory{};
+	_int iQuestIndex{};
+}CURRENTQUESTSECETINFO;
+
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIObject(const CUIObject& rhs);
