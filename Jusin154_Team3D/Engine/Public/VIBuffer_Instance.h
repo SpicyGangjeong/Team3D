@@ -32,6 +32,7 @@ protected:
 	D3D11_SUBRESOURCE_DATA	m_InstanceInitialDesc = {};
 	_uint					m_iInstanceStride = {};
 	_uint					m_iNumInstance = {};
+	_uint					m_iCopyCount{};
 	_uint					m_iNumIndexPerInstance = {};
 public:
 	virtual void Free() override;

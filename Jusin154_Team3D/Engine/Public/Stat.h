@@ -9,6 +9,7 @@ class ENGINE_DLL CStat final : public CComponent
 	typedef struct tagUnitInfo
 	{
 		_wstring		pUnit_Name;
+		_int			iObjectID{};
 		_float			fCurrentHp{};
 		_float			fMaxHp{};
 		_float			fTargetHp{};

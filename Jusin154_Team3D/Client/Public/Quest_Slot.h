@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "PanelObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Engine)
 class CTexture;
@@ -11,12 +11,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CInProgress_Panel final : public CPanelObject
+class CQuest_Slot final : public CElementObject
 {
 private:
-	CInProgress_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CInProgress_Panel(const CInProgress_Panel& rhs);
-	virtual ~CInProgress_Panel() = default;
+	CQuest_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CQuest_Slot(const CQuest_Slot& rhs);
+	virtual ~CQuest_Slot() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -25,20 +25,37 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+	virtual void SizeUpX(_float fSizeX) override;
+	virtual void SizeUpY(_float fSizeY) override;
+	virtual void SizeUpdate(_float fSizeX, _float fSizeY) override;
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	void Hover();
 
 public:
-	static CInProgress_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	void Set_QuestType(_int Index);
+
+private:
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
+	_float	m_fOffSetX{};
+	_float	m_fOffSetY{};
+	_uint	m_iCols{};
+	_int	m_iColor{};
+
+	_int	m_iQuestIndex{};
+	_int	m_iQuestCount{};
+public:
+	static CQuest_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG
