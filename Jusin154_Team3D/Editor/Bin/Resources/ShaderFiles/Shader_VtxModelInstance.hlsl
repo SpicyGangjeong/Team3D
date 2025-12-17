@@ -873,7 +873,7 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     }
     
 
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBloomStrength, (float) g_iBloomType / 255.f);
+    Out.vDiffuse = vMtrlDiffuse * fBloomStrength;
     
     return Out;
 
@@ -1055,7 +1055,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
@@ -1065,7 +1065,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_NOWORLD();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();

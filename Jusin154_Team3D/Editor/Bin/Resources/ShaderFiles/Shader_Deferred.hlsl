@@ -794,7 +794,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     float2 uv = In.vTexcoord;
-    float fSrcAlpha = g_DiffuseTexture.Sample(PointSampler, uv).a;
+    float4 fSrcAlpha = g_DiffuseTexture.Sample(PointSampler, uv);
     float2 vSrcTexelSize = float2(1.f / g_vResolution.x, 1.f / g_vResolution.y);
     float3 vColor = (0.f, 0.f, 0.f);
     
@@ -806,7 +806,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     
     float fBloomIntensity = GetBloomCurve(fIntensity, g_fBloomThreshold, g_iBloomEmbossingPass);
     float3 bloomColor = (vColor * fBloomIntensity) / fIntensity;
-    Out.vFirstTarget = float4(bloomColor, fSrcAlpha);
+    Out.vFirstTarget = fSrcAlpha;
     
     return Out;
 }
@@ -1299,7 +1299,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_EMBOSS();
