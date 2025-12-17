@@ -174,17 +174,23 @@ HRESULT CGoblin::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
 
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-
 		if (FAILED(m_pShaderCom->Begin(iShaderPass))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -240,12 +246,20 @@ HRESULT CGoblin::Render_Shadow(SHADOW eType)
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
+
 		}
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -308,6 +322,8 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
+		_int ID = m_pStat->Get_Stat().iObjectID;
+		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
 	}
 

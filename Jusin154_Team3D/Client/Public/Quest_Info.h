@@ -39,6 +39,7 @@ private:
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CInfoInstance* m_pInfoInstance = { nullptr };
 
 	_wstring m_pQuest_Info;
 

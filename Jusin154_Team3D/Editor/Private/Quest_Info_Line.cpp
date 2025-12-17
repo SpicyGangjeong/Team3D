@@ -3,18 +3,18 @@
 #include "GameInstance.h"
 
 CQuest_Info_Line::CQuest_Info_Line(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CQuest_Info_Line::CQuest_Info_Line(const CQuest_Info_Line& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
 HRESULT CQuest_Info_Line::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CQuest_Info_Line::Initialize(void* pArg)
@@ -99,7 +99,7 @@ void CQuest_Info_Line::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -208,11 +208,9 @@ void CQuest_Info_Line::Set_Hover(_int Index)
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);
+		return;
 	}
-	else
-	{
-		Visible(true);
-	}
+	Visible(true);
 }
 
 CQuest_Info_Line* CQuest_Info_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

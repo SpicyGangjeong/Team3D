@@ -30,7 +30,8 @@
 #elif 진우
 #undef ASSERT_JINWOO
 #define ASSERT_JINWOO(expression) assert(expression)
-#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif gimch
 #undef ASSERT_JINHO
 #define ASSERT_JINHO(expression) assert(expression)
@@ -38,7 +39,7 @@
 #elif Bin
 #undef ASSERT_HYUNBIN
 #define ASSERT_HYUNBIN(expression) assert(expression)
-#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif 인혁
 #undef ASSERT_INHYUK
 #define ASSERT_INHYUK(expression) assert(expression)
@@ -87,8 +88,9 @@
 #define FX_DEFERRED			TEXT("FX_DEFERRED")
 #define FX_LASTCOLOR		TEXT("FX_LASTCOLOR")
 #define FX_WEIGHTBELND		TEXT("FX_WEIGHTBELND")
+#define FX_DISTORTION       TEXT("FX_DISTORTION")
 
-#define CS_EFFECT			TEXT("CS_EFFECT")
+#define CS_EFFECT					TEXT("CS_EFFECT")
 #define CS_INSTANCE_MODEL			TEXT("CS_INSTANCE_MODEL")
 
 #define			SAFE_ADDREF(pInstance)		Safe_AddRef(pInstance)

@@ -126,6 +126,13 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 		return E_FAIL;
 	}
 
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, FX_DISTORTION,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_Distortion.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+	
+
 #pragma region COMPUTE_SHADER
 
 	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_EFFECT,
@@ -138,6 +145,13 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_INSTANCE_MODEL,
 		CComputeShader::Create(m_pDevice, m_pContext,
 			L"../Bin/Resources/ShaderFiles/Shader_Instance_Compute.hlsl", "CS_MAIN")))) {
+		return E_FAIL;
+
+	}
+
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, TEXT("CS_Model"),
+		CComputeShader::Create(m_pDevice, m_pContext,
+			L"../Bin/Resources/ShaderFiles/Shader_Mesh_Compute.hlsl", "CS_MAIN")))) {
 		return E_FAIL;
 
 	}

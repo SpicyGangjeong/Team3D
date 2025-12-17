@@ -68,10 +68,10 @@ namespace Client
 
 	typedef struct tagObjectiveInfo
 	{
-		_int iObjectType{};
-		_int iTargetID{};
-		_int iRequiredCount{};
-		_int iCurrentCount{};
+		_bool	bClear{};
+		_int	iTargetID{};
+		_int	iRequiredCount{};
+		_int	iCurrentCount{};
 	}OBJECTIVEINFO;
 
 	typedef struct tagRewardsInfo
@@ -84,10 +84,11 @@ namespace Client
 	{
 		_int					iQuestID{};
 		_int					iType{};
-		_wstring					pQuestName;
-		_wstring					pQuestInfo;
+		_wstring				pQuestName;
+		_wstring				pQuestInfo;
 		vector<OBJECTIVEINFO>	ObjectiveInfo;
 		vector<REWARDSINFO>		RewardsInfo;
+		_int					iAcceptState;
 	}QUESTINFO;
 
 	typedef struct tagEffectInfo

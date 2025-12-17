@@ -35,6 +35,7 @@ private:
 	class CShader* m_pShader = { nullptr };
 	class CShader* m_pLastColorShader = { nullptr };
 	class CShader* m_pWeightBlendShader = { nullptr };
+	class CShader* m_pDistortionShader = { nullptr };
 	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
 
 private:
@@ -106,6 +107,8 @@ private:
 	void Render_NonLight();
 	void Render_Blend();
 	void Render_PostProcessing();
+	void Render_Distortion();
+	void Render_DistortionAcc();
 	void Render_LastColor();
 	void Render_Tone_Mapping();
 	void Render_UI();

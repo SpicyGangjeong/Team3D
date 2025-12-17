@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Quest_Info.h"
 #include "GameInstance.h"
+#include "Quest_Panel.h"
 
 CQuest_Info::CQuest_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -45,7 +46,7 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	SizeUpX(960);
 	SizeUpY(m_fOriginPerviewSize);
 	m_fSortZ = 0.02f;
-	m_fFontX = 740.f;
+	m_fFontX = 530.f;
 	m_fFontY = 500.f;
 	m_iPerQuestIndex = -1;
 	Visible(false);
@@ -107,7 +108,7 @@ void CQuest_Info::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -126,7 +127,7 @@ HRESULT CQuest_Info::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
-
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), static_cast<CQuest_Panel*>(m_pOwner)->Get_Quest(m_iQuest_Index).pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 
@@ -213,18 +214,16 @@ HRESULT CQuest_Info::Ready_Components(void* pArg)
 
 	return S_OK;
 }
-	
+
 void CQuest_Info::Set_Hover(_int Index)
 {
 	m_iQuest_Index = Index;
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);
+		return;
 	}
-	else
-	{
-		Visible(true);
-	}
+	Visible(true);
 }
 
 CQuest_Info* CQuest_Info::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

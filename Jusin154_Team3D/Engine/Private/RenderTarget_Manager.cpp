@@ -216,6 +216,7 @@ HRESULT CRenderTarget_Manager::Bind_CS_RenderTarget(_uint iIndex, const _wstring
    return S_OK;
 }
 
+
 HRESULT CRenderTarget_Manager::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, 
     const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, 
     const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)

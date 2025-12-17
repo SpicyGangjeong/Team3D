@@ -262,14 +262,34 @@ void CInfoInstance::Event_CallBack(_wstring EventName, void* pArg)
 	}
 }
 
-QUESTINFO CInfoInstance::Get_Quest_Info(_int QuestID)
+QUESTINFO CInfoInstance::Get_Quest(_int QuestID)
 {
 	return m_pQuestInfo->Get_Quest(QuestID);
 }
 
-_int CInfoInstance::Get_Quest_Count()
+_int CInfoInstance::Get_Quest_Count(_int Index)
 {
-	return m_pQuestInfo->Get_Count();
+	return m_pQuestInfo->Get_Count(Index);
+}
+
+const vector<QUESTINFO>& CInfoInstance::Get_AllQuest() const
+{
+	return m_pQuestInfo->Get_AllQuest();
+}
+
+const vector<QUESTINFO>& CInfoInstance::Get_ClearQuest() const
+{
+	return m_pQuestInfo->Get_ClearQuest();
+}
+
+const vector<QUESTINFO>& CInfoInstance::Get_AcceptQuest() const
+{
+	return m_pQuestInfo->Get_AcceptQuest();
+}
+
+HRESULT CInfoInstance::Set_AcceptQuest(_int Index)
+{
+	return m_pQuestInfo->Set_AcceptQuest(Index);
 }
 
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)

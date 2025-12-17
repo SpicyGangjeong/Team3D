@@ -415,25 +415,13 @@ typedef struct tagChannelDesc
 	//_uint Padding;
 }CHANNEL_DESC;
 
-
-typedef struct tagParentDesc
+typedef struct tagBoneMatrix
 {
-	_int ParentIndex;
-}PARENT_DESC;
-
-typedef struct tagLocalPos
-{
-	_float3 Scale;
-	_float  pad0;
-	_float4 Rotation;
-	_float3 Translation;
-	_float  pad1;
-}LOCALPOS_DESC;
-
-typedef struct tagBoneDesc
-{
+	_float4x4 Local;
 	_float4x4 Combined;
+	_float4x4 LocalCombined;
 }BONE_DESC;
+
 
 typedef struct tagSSAO_Geometry_Hemisphere {
 	_float3 SamplePos[SSAO_SAMPLE_NUMBER];

@@ -121,7 +121,7 @@ HRESULT CQuest_Entry_Line::Render()
 		return E_FAIL;
 	}
 
-	_float OffSet = m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("보 상") - 22) * 0.5f;
+	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("보 상")) - 22) * 0.5f;
 	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("조 건"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 
 	return S_OK;
@@ -214,11 +214,9 @@ void CQuest_Entry_Line::Set_Hover(_int Index)
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);
+		return;
 	}
-	else
-	{
-		Visible(true);
-	}
+	Visible(true);
 }
 
 CQuest_Entry_Line* CQuest_Entry_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

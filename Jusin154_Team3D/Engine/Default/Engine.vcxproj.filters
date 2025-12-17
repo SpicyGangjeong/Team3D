@@ -304,6 +304,9 @@
     <Filter Include="02.Element\02.Component\12.Stat\Event">
       <UniqueIdentifier>{b31a93a4-8bba-4e94-8008-bbb9b458a55e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\01.GameObject\51.Quest">
+      <UniqueIdentifier>{5e5c6c23-470f-4e7a-93e0-303e5171f4fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -581,6 +584,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\StatEvent.cpp">
       <Filter>02.Element\02.Component\12.Stat\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest.cpp">
+      <Filter>02.Element\01.GameObject\51.Quest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1226,6 +1232,9 @@
     <ClInclude Include="..\Public\StatEvent.h">
       <Filter>02.Element\02.Component\12.Stat\Event</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Quest.h">
+      <Filter>02.Element\01.GameObject\51.Quest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\Assimp\color4.inl">
@@ -1312,6 +1321,9 @@
       <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Instance_Compute.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Distortion.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>

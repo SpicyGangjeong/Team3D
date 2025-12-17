@@ -342,6 +342,7 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
+
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_2x2_2"), (_uint)(Viewport.Width * 0.5f), (_uint)(Viewport.Height * 0.5f),
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
@@ -360,6 +361,17 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 1.f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Distortion"), (_uint)(Viewport.Width), (_uint)(Viewport.Height),
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_PreEffect"), (_uint)(Viewport.Width), (_uint)(Viewport.Height),
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+
 
 		if (FAILED(Ready_ShadowDepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
 			return E_FAIL;
@@ -480,6 +492,15 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+
+		/* MRT_Distortion */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion")))) {
+			return E_FAIL;
+		}
+
+
+
+
 	}
 
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);
@@ -498,6 +519,14 @@ HRESULT CRenderer::Initialize()
 	if (nullptr == m_pWeightBlendShader) {
 		return E_FAIL;
 	}
+
+	m_pDistortionShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DISTORTION, nullptr, nullptr);
+
+	if (nullptr == m_pDistortionShader) {
+		return E_FAIL;
+	}
+
+	
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer) {
@@ -556,6 +585,7 @@ void CRenderer::Free()
 	SAFE_RELEASE(m_pShader);
 	SAFE_RELEASE(m_pLastColorShader);
 	SAFE_RELEASE(m_pWeightBlendShader);
+	SAFE_RELEASE(m_pDistortionShader);
 	SAFE_RELEASE(m_pVIBuffer);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);

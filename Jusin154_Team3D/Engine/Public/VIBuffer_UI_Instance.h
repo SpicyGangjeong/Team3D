@@ -38,6 +38,7 @@ public:
 	_int Set_Mouse_Hover(_float2 fMousePos);
 	void Set_Hover_Index(_uint iIndex);
 	void Set_Equip_Index(_uint iIndex);
+	void Set_Draw(_int iCount = -1);
 
 private:
 	VTX_INSTANCE_UI*	m_pInstanceVertices = { nullptr };
