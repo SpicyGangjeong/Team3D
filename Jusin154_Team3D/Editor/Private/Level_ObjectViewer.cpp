@@ -770,9 +770,6 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_Test)))
 		return E_FAIL;*/
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;
-
 	return S_OK;
 }
 

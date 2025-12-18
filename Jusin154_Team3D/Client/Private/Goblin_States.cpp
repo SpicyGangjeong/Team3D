@@ -47,15 +47,17 @@ HRESULT CGoblin::Behavior_IdleExitCheck()
 		m_vOriginPos = m_pTransformCom->Get_State(STATE::POSITION);
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::MOVE);
+		return E_FAIL;
 	}
 	else if (m_fTargetDistance >= 25.f)
 	{
 		m_bDetection = false;
 
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_IdleExit()
@@ -100,9 +102,10 @@ HRESULT CGoblin::Behavior_IdleBreakExitCheck()
 {
 	if (m_pModelCom->IsFinishedAnim()) {
 		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_IdleBreakExit()
@@ -180,9 +183,12 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 	}
 
 	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 5.f && m_fTargetDistance != 0.f)
+	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_MoveExit()
@@ -215,20 +221,24 @@ HRESULT CGoblin::Behavior_CombatExitCheck(_float fTimeDelta)
 	if (m_fTargetDistance <= 6.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SWING);
+		return E_FAIL;
 	}
 	else if (m_fTargetDistance >= 7.f && m_fTargetDistance <= 12.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SKILL);
+		return E_FAIL;
 	}
 	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::BLINK);
+		return E_FAIL;
 	}
 	else {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_CombatExit()
@@ -280,7 +290,7 @@ HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	if (m_pFSM->IsEnable(FSMSTATE::SWING) && m_bStep)
 	{
-		_float fDesiredRange = 2.f;
+		_float fDesiredRange = 1.f;
 		_float dist = m_fTargetDistance;
 
 		if (dist > fDesiredRange)
@@ -290,11 +300,11 @@ HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
 			vDistance = XMVector4Normalize(vDistance);
 			_float step = dist - fDesiredRange;
 
-			m_pTransformCom->AccumulateMomentum(vDistance * step * fTimeDelta * 1.5f);
+			m_pTransformCom->AccumulateMomentum(vDistance * step * fTimeDelta * 2.f);
 		}
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_SwingExit()
@@ -328,7 +338,7 @@ HRESULT CGoblin::Behavior_ThrowExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_ThrowExit()
@@ -391,7 +401,7 @@ HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_BlinkExit()
@@ -429,9 +439,10 @@ HRESULT CGoblin::Behavior_ShuffleExitCheck(_float fTimeDelta)
 	if (fRatio >= 0.3f)
 	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_ShuffleExit()
@@ -550,23 +561,18 @@ HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
 		{
 			m_pCharacter_Controller->SetGravity(false);
 			_vector vPlayerPos = pTransform->Get_State(STATE::POSITION);
+			vPlayerPos = XMVectorSetY(vPlayerPos,XMVectorGetY(vPlayerPos) + 2.5f);
 			_vector vMonsterPos = m_pCharacter_Controller->Get_Position();
 
 			_vector vDir = XMVector3Normalize(vPlayerPos - vMonsterPos);
 			_float fLength = XMVectorGetX(XMVector3Length(vPlayerPos - vMonsterPos));
 
-
-			_vector vUp = m_pTransformCom->Get_State(STATE::UP);
-			vUp = XMVector4Normalize(vUp);
-			_vector vPos = m_pCharacter_Controller->Get_Position();
-			_vector Force = vUp * fTimeDelta * 15.f;
-
 			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
 
-			if (fLength >= 3.5f)
+			if (fLength >= 2.5f)
 			{
 				m_pCharacter_Controller->Set_Position(
-					vMonsterPos + vDir * m_fSpeed * fTimeDelta + Force
+					vMonsterPos + vDir * m_fSpeed * fTimeDelta
 				);
 			}
 			else {
@@ -590,7 +596,7 @@ HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin::Behavior_HitExit()
