@@ -1,8 +1,80 @@
 ﻿<QuestInfo>
 	<QuestData>
-		<Quest QuestID="1" QuestType="Main" QuestName="트롤을 잡아라!" QuestInfo="마을에서 난리를 피우는 트롤을 제압하기">
+		<Quest QuestID="0" QuestType="Main" QuestName="전사의 결투!" QuestInfo="고블린 전사와 힘겨루기를 해서 승리하기" AcceptState="0">
 			<Objectives>
-				<Objective Type="1" TargetID="2" RequiredCount="1" CurrentCount="0"/>
+				<Objective Type="0" TargetID="0" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="1" QuestType="Main" QuestName="마법 대결!" QuestInfo="고블린 마법사와 마법 대결에서 승리하기" AcceptState="0">
+			<Objectives>
+				<Objective Type="0" TargetID="1" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="2" QuestType="Main" QuestName="트롤을 잡아라!" QuestInfo="마을에서 난리를 피우는 트롤을 제압하기" AcceptState="0"> 
+			<Objectives>
+				<Objective Type="0" TargetID="2" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="3" QuestType="Main" QuestName="빗자루 레이스!" QuestInfo="빗자루 레이스에서 1등 하기" AcceptState="0"> 
+			<Objectives>
+				<Objective Type="0" TargetID="-1" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="4" QuestType="Main" QuestName="zxcv!" QuestInfo="zxcv" AcceptState="0"> 
+			<Objectives>
+				<Objective Type="0" TargetID="2" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="5" QuestType="Main" QuestName="qwer!" QuestInfo="qwer" AcceptState="0"> 
+			<Objectives>
+				<Objective Type="0" TargetID="2" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="6" QuestType="Main" QuestName="tyui!" QuestInfo="tyui" AcceptState="0"> 
+			<Objectives>
+				<Objective Type="0" TargetID="2" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="7" QuestType="Main" QuestName="ghjk!" QuestInfo="ghjk" AcceptState="0"> 
+			<Objectives>
+				<Objective Type="0" TargetID="2" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="8" QuestType="Main" QuestName="vbnm!" QuestInfo="vbnm" AcceptState="0"> 
+			<Objectives>
+				<Objective Type="0" TargetID="2" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+		<Quest QuestID="9" QuestType="Main" QuestName="1234!" QuestInfo="1234" AcceptState="0"> 
+			<Objectives>
+				<Objective Type="0" TargetID="2" RequiredCount="1" CurrentCount="0"/>
 			</Objectives>
 			<Rewards>
 				<Reward Type="1" Value="BOMBARDA"/>

@@ -369,7 +369,7 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_Render_NonLight = Get_TimeDelta(TEXT("Timer_Render_NonLight"));
 	m_fTimer_Render_Blend = Get_TimeDelta(TEXT("Timer_Render_Blend"));
 	m_fTimer_Render_WeightBlend = Get_TimeDelta(TEXT("Timer_Render_WeightBlend"));
-	m_fTimer_Render_Bloom = Get_TimeDelta(TEXT("Timer_Render_Bloom"));
+	m_fTimer_Render_PostProcessing = Get_TimeDelta(TEXT("Timer_Render_PostProcessing"));
 	m_fTimer_Render_LastColor = Get_TimeDelta(TEXT("Timer_Render_LastColor"));
 	m_fTimer_Render_Tone_Mapping = Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
 	m_fTimer_Render_UI = Get_TimeDelta(TEXT("Timer_Render_UI"));
@@ -443,7 +443,7 @@ void CGameInstance::Present_TimeCost() const
 					+ m_fTimer_Render_NonLight
 					+ m_fTimer_Render_Blend
 					+ m_fTimer_Render_WeightBlend
-					+ m_fTimer_Render_Bloom
+					+ m_fTimer_Render_PostProcessing
 					+ m_fTimer_Render_LastColor
 					+ m_fTimer_Render_Tone_Mapping
 					+ m_fTimer_Render_UI
@@ -524,9 +524,9 @@ void CGameInstance::Present_TimeCost() const
 					GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
 				}
 				{
-					GUI::ProgressBar(m_fTimer_Render_Bloom / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::ProgressBar(m_fTimer_Render_PostProcessing / fRenderer_Total, ImVec2(200.f, 0.f));
 					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Bloom %d", int(m_fTimer_Render_Bloom / fRenderer_Total * 100.f));
+					GUI::Text("Render_PostProcessing %d", int(m_fTimer_Render_PostProcessing / fRenderer_Total * 100.f));
 				}
 				{
 					GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
@@ -687,6 +687,11 @@ void CGameInstance::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x
 HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
 {
 	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);
+}
+
+HRESULT CGameInstance::Bind_PrevMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	return m_pRenderer->Bind_PrevMatrix(pShader, pConstants, eType);
 }
 
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
@@ -854,13 +859,13 @@ HRESULT CGameInstance::Bind_RenderTarget(const _wstring& strTargetTag, CShader* 
 	return m_pRenderTarget_Manager->Bind_RenderTarget(strTargetTag, pShader, pConstantName);
 }
 
-HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
-	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetTo(strTargetTag, pTexture2D);
 }
-HRESULT CGameInstance::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
-	return m_pRenderTarget_Manager->Paste_RenderTarget(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetFrom(strTargetTag, pTexture2D);
 }
 HRESULT CGameInstance::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
 {
@@ -940,8 +945,6 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 {
 	m_ModelMap[filePath] = pModel;
 }
-
-
 #endif
 
 void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)

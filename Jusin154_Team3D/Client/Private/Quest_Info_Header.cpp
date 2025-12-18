@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Quest_Info_Header.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CQuest_Info_Header::CQuest_Info_Header(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CQuest_Info_Header::CQuest_Info_Header(ID3D11Device* pDevice, ID3D11DeviceContex
 }
 
 CQuest_Info_Header::CQuest_Info_Header(const CQuest_Info_Header& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -41,7 +43,7 @@ HRESULT CQuest_Info_Header::Initialize(void* pArg)
 	m_fAlphaTime = 5.f;
 	m_vNine_Slice = _float4(0.f, 128.f, 0.f, 32.f);
 	m_fSortZ = 0.02f;
-	m_fFontX = 740.f;
+	m_fFontX = 925.f;
 	m_fFontY = 520.f;
 	m_iColor = 2;
 	SizeUpX(1105.f);
@@ -127,8 +129,8 @@ HRESULT CQuest_Info_Header::Render()
 		return E_FAIL;
 	}
 
-	_float OffSet = m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기") - 22) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iQuest_Index).pQuestName.c_str()) - 30) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iQuest_Index).pQuestName.c_str(), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 
@@ -218,11 +220,9 @@ void CQuest_Info_Header::Set_Hover(_int Index)
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);
+		return;
 	}
-	else
-	{
-		Visible(true);
-	}
+	Visible(true);
 }
 
 CQuest_Info_Header* CQuest_Info_Header::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

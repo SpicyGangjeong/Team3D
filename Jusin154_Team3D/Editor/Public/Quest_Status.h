@@ -27,7 +27,7 @@ private:
 
 public:
 	void Compute_UI(_int Index);
-	void Set_Status(_int Index, _float m_PosY, _wstring Name);
+	void Set_Status(_int Index, _float PosX, _float m_PosY, _wstring Name);
 
 	void Set_Click(_bool bClick);
 

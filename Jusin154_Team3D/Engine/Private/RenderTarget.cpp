@@ -69,11 +69,11 @@ void CRenderTarget::Clear()
     m_pContext->ClearRenderTargetView(m_pRTV, reinterpret_cast<_float*>(&m_vClearColor));
 }
 
-void CRenderTarget::Copy_Resource(ID3D11Texture2D* pTexture2D)
+void CRenderTarget::Copy_ResourceTo(ID3D11Texture2D* pTexture2D)
 {
     m_pContext->CopyResource(pTexture2D, m_pTexture2D);
 }
-void CRenderTarget::Paste_Resource(ID3D11Texture2D* pTexture2D)
+void CRenderTarget::Copy_ResourceFrom(ID3D11Texture2D* pTexture2D)
 {
     m_pContext->CopyResource(m_pTexture2D, pTexture2D);
 }

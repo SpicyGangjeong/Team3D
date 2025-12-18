@@ -97,7 +97,7 @@ HRESULT CVIBuffer_UI_Instance::Initialize_Prototype(const INSTANCE_DESC* pInstan
 #pragma region INSTANCE_BUFFER
 	const UI_INSTANCE_DESC* pDesc = static_cast<const UI_INSTANCE_DESC*>(pInstanceDesc);
 
-	m_iNumInstance = pDesc->iNum;
+	m_iNumInstance = m_iCopyCount = pDesc->iNum;
 	m_iInstanceStride = sizeof(VTX_INSTANCE_UI);
 	m_iNumIndexPerInstance = 6;
 
@@ -368,6 +368,11 @@ void CVIBuffer_UI_Instance::Set_Equip_Index(_uint iIndex)
 	pVertices[iIndex].bSpell = 1.f;
 
 	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_Draw(_int iCount)
+{
+	m_iNumInstance = (iCount == -1) ? m_iCopyCount : iCount;
 }
 
 CVIBuffer_UI_Instance* CVIBuffer_UI_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc)

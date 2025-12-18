@@ -42,8 +42,8 @@ HRESULT CQuest_Status::Initialize(void* pArg)
 	m_fAlphaTime = 1.f;
 	Compute_UI(0);
 	m_vImageposi = _float4{ 32.f, 32.f, 64.f, 64.f };
-	m_fFontX = 80.f;
-	m_fFontY = 480.f;
+	m_fFontX = -780.f;
+	m_fFontY = 610.f;
 	Visible(true);
 	return S_OK;
 }
@@ -97,7 +97,7 @@ void CQuest_Status::Update(_float fTimeDelta)
 			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Click"), &m_iIndex);
 		}
 	}
-	
+
 	if (m_bClick == true)
 	{
 		m_fSizeX = 148.f;
@@ -114,6 +114,7 @@ void CQuest_Status::Update(_float fTimeDelta)
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
+
 
 void CQuest_Status::Late_Update(_float fTimeDelta)
 {
@@ -274,12 +275,13 @@ void CQuest_Status::Compute_UI(_int Index)
 	m_vUV = UV;
 }
 
-void CQuest_Status::Set_Status(_int Index, _float m_fPosY, _wstring Text)
+void CQuest_Status::Set_Status(_int Index, _float PosX, _float PosY, _wstring Name)
 {
 	m_iIndex = Index;
 	Compute_UI(Index);
-	MoveY(m_fPosY);
-	m_pName = Text;
+	MoveX(PosX);
+	MoveY(PosY);
+	m_pName = Name;
 }
 
 void CQuest_Status::Set_Click(_bool bClick)

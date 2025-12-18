@@ -563,29 +563,14 @@
     <ClInclude Include="..\Public\Accio.h">
       <Filter>02.GameObjects\Effect\Effects\Accio</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Quest_Border.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Quest_Entry_Line.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Quest_Header.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Quest_HeaderLine.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Quest_Info.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Quest_Info_Header.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Quest_Info_Line.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Quest_List.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Quest_Canvas.h">
       <Filter>02.GameObjects\UI\Quest_Canvas</Filter>
@@ -605,17 +590,8 @@
     <ClInclude Include="..\Public\Screen_Wind.h">
       <Filter>02.GameObjects\Effect\ScreenFX</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Quest_Status_Panel.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\InProgress_Panel.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\InProgress_Panel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Completed_Panel.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Completed_Panel</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Quest_Status.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel\Quest_Status</Filter>
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Status</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Quest_Data.h">
       <Filter>04.Mechanic\Quest</Filter>
@@ -625,6 +601,15 @@
     </ClInclude>
     <ClInclude Include="..\public\Interaction_Key.h">
       <Filter>02.GameObjects\UI\Interaction_Key</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\QuestInstance.h">
+      <Filter>04.Mechanic\Quest\QuestInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Slot.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Info_Header.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1254,17 +1239,8 @@
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel">
       <UniqueIdentifier>{322edb99-c59d-4a92-8ab1-8ec57a9e18fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border">
-      <UniqueIdentifier>{ba5406be-c0a0-41dd-879f-a324d71ea4b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line">
       <UniqueIdentifier>{c02a6573-5be6-4f17-b1b0-39698c0fff5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header">
-      <UniqueIdentifier>{da2bbb64-73eb-427a-ae36-21c9ed5db304}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine">
-      <UniqueIdentifier>{73ceb062-c340-4365-9fb3-7bb21f9b9552}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info">
       <UniqueIdentifier>{bfeebdc4-6aa9-400f-a086-3d6a32a3d37e}</UniqueIdentifier>
@@ -1274,9 +1250,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line">
       <UniqueIdentifier>{7c8b3162-a6d5-441f-84ae-cfb4bf779dfa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List">
-      <UniqueIdentifier>{2d8d199b-8ba8-497a-afb3-edcc4c905ea5}</UniqueIdentifier>
     </Filter>
     <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_TurboFly">
       <UniqueIdentifier>{2326c134-a2bb-45f1-8452-2dd49bf42697}</UniqueIdentifier>
@@ -1293,23 +1266,20 @@
     <Filter Include="02.GameObjects\BroomRaceManager">
       <UniqueIdentifier>{9e8bccb6-c491-4f3a-bdb8-5f03f13ad84d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel">
-      <UniqueIdentifier>{9060b2e1-d8cb-4259-a17a-f8ee2407d37c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\InProgress_Panel">
-      <UniqueIdentifier>{c25a401b-91f1-4e01-8805-51fffef366a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Completed_Panel">
-      <UniqueIdentifier>{2bd79ab2-fae7-4757-81b3-26231a4496cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel\Quest_Status">
-      <UniqueIdentifier>{bffcced5-6951-4db4-9df1-44b33b52ece7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Mechanic\Quest">
       <UniqueIdentifier>{fe64513c-fbb3-4577-b424-82d99c9075a3}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Interaction_Key">
       <UniqueIdentifier>{08163c4a-63c9-4cc2-97b4-97bb2f9467ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Status">
+      <UniqueIdentifier>{bffcced5-6951-4db4-9df1-44b33b52ece7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Quest\QuestInstance">
+      <UniqueIdentifier>{35a6cb6f-4bbb-47fb-8f7a-63615128dece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot">
+      <UniqueIdentifier>{6bbfb8f0-c71a-4769-b1e6-efd5d863ba7f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1818,17 +1788,8 @@
     <ClCompile Include="..\Private\Accio.cpp">
       <Filter>02.GameObjects\Effect\Effects\Accio</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Quest_Border.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Quest_Entry_Line.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Quest_Header.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Quest_HeaderLine.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Info.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
@@ -1838,9 +1799,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Info_Line.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Quest_List.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Canvas.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas</Filter>
@@ -1860,17 +1818,8 @@
     <ClCompile Include="..\Private\Screen_Wind.cpp">
       <Filter>02.GameObjects\Effect\ScreenFX</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Quest_Status_Panel.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\InProgress_Panel.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\InProgress_Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Completed_Panel.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Completed_Panel</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Quest_Status.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel\Quest_Status</Filter>
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Status</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Data.cpp">
       <Filter>04.Mechanic\Quest</Filter>
@@ -1880,6 +1829,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Interaction_Key.cpp">
       <Filter>02.GameObjects\UI\Interaction_Key</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\QuestInstance.cpp">
+      <Filter>04.Mechanic\Quest\QuestInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Slot.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

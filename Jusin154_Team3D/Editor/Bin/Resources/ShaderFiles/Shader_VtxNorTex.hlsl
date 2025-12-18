@@ -1,7 +1,8 @@
 
 #include "Engine_Shader_Defines.hlsli"
 
-matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4x4 g_PrevWorldMatrix, g_PrevViewMatrix, g_PrevProjMatrix;
 
 float g_fFar;
 float g_fUsingSurfaceParams;
@@ -31,6 +32,7 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vPrevProjPos : TEXCOORD3;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -42,11 +44,16 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
+    matrix matPrevWV, matPrevWVP;
+    matPrevWV = mul(g_PrevWorldMatrix, g_PrevViewMatrix);
+    matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
+    
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
     Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    Out.vPrevProjPos = mul(vector(In.vPosition, 1.f), matPrevWVP);
     return Out;
 }
 
@@ -57,15 +64,17 @@ struct PS_IN
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vPrevProjPos : TEXCOORD3;
 };
 
 struct PS_OUT
 {
-        float4 vAlbedo : SV_TARGET0;
-        float4 vNormal : SV_TARGET1;
-        float4 vDepth : SV_TARGET2;
-        float4 vColor : SV_Target3;
-        float4 vSurface : SV_Target4;
+    float4 vAlbedo : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
+    float4 vColor : SV_Target3;
+    float4 vSurface : SV_Target4;
+    float2 vVelocityUV : SV_TARGET5;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -122,6 +131,7 @@ PS_OUT PS_MAIN(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }
@@ -180,6 +190,7 @@ PS_OUT PS_MAIN_TERRAIN_ANISO(PS_IN In)
         (1.f / 255.f)); // 지형은 1
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }

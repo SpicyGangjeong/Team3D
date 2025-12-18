@@ -34,6 +34,7 @@ public:
 	HRESULT Load_Trail(const _char* pPath, LEVEL eLevel);
 
 	void   SetDissolve(_bool isDissolve) { m_TrailInfo.isDissolve = true; }
+	TRAIL_INFO* Get_TrailInfo() { return &m_TrailInfo; }
 
 private:
 	HRESULT Bind_ShaderResources() override;

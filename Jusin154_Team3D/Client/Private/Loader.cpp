@@ -103,20 +103,14 @@
 
 #include "Quest_Canvas.h"
 #include "Quest_Panel.h"
-#include "Quest_Border.h"
-#include "Quest_Header.h"
-#include "Quest_HeaderLine.h"
-#include "Quest_List.h"
 #include "Quest_Info.h"
 #include "Quest_Info_Header.h"
 #include "Quest_Info_Line.h"
 #include "Quest_Entry_Line.h"
-
-#include "Quest_Status_Panel.h"
 #include "Quest_Status.h"
+#include "Quest_Slot.h"
 
-#include "Completed_Panel.h"
-#include "InProgress_Panel.h"
+#include "QuestInstance.h"
 
 #include "Interaction_Key.h"
 
@@ -344,7 +338,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = true;
@@ -1446,6 +1440,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC Quest_Slot_Desc{};
+
+	Quest_Slot_Desc.iNum = 10;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Quest_Slot"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &Quest_Slot_Desc)))) {
+		return E_FAIL;
+	}
 
 	{ // LIGHT PHYSX DYNAMIC
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
@@ -1778,6 +1780,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Lightning", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+		});
+
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
 #pragma region UI 
@@ -1794,6 +1805,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_CameraLockOn*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CCameraLockOn>(g_iStaticLevel, CCameraLockOn::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_QuestInstance*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuestInstance>(g_iStaticLevel, CQuestInstance::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -1997,26 +2014,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	{
 		return E_FAIL;
 	}
-	/* For.Prototype_GameObject_Quest_Border*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Border>(g_iStaticLevel, CQuest_Border::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_Quest_Header*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Header>(g_iStaticLevel, CQuest_Header::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_Quest_HeaderLine*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_HeaderLine>(g_iStaticLevel, CQuest_HeaderLine::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_Quest_List*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_List>(g_iStaticLevel, CQuest_List::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
 	/* For.Prototype_GameObject_Quest_Info*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info>(g_iStaticLevel, CQuest_Info::Create(m_pDevice, m_pContext))))
 	{
@@ -2037,25 +2034,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 	{
 		return E_FAIL;
 	}
-		
-	/* For.Prototype_GameObject_Quest_Status_Panel*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status_Panel>(g_iStaticLevel, CQuest_Status_Panel::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
 	/* For.Prototype_GameObject_Quest_Status*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status>(g_iStaticLevel, CQuest_Status::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
+		/* For.Prototype_GameObject_Quest_Slot*/
 	}
-
-	/* For.Prototype_GameObject_Completed_Panel*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CCompleted_Panel>(g_iStaticLevel, CCompleted_Panel::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_InProgress_Panel*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CInProgress_Panel>(g_iStaticLevel, CInProgress_Panel::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Slot>(g_iStaticLevel, CQuest_Slot::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

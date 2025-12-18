@@ -262,6 +262,7 @@ void CTransform::RewindMomentum()
 {
 	m_vMomentum = m_vBackMomentum;
 	m_vBackMomentum = { 0.f, 0.f, 0.f };
+	m_PrevMatrix = m_WorldMatrix;
 }
 
 void CTransform::BookMomentum(_fvector vMomentum)

@@ -68,10 +68,10 @@ namespace Client
 
 	typedef struct tagObjectiveInfo
 	{
-		_int iObjectType{};
-		_int iTargetID{};
-		_int iRequiredCount{};
-		_int iCurrentCount{};
+		_bool	bClear{};
+		_int	iTargetID{};
+		_int	iRequiredCount{};
+		_int	iCurrentCount{};
 	}OBJECTIVEINFO;
 
 	typedef struct tagRewardsInfo
@@ -84,10 +84,11 @@ namespace Client
 	{
 		_int					iQuestID{};
 		_int					iType{};
-		_wstring					pQuestName;
-		_wstring					pQuestInfo;
+		_wstring				pQuestName;
+		_wstring				pQuestInfo;
 		vector<OBJECTIVEINFO>	ObjectiveInfo;
 		vector<REWARDSINFO>		RewardsInfo;
+		_int					iAcceptState;
 	}QUESTINFO;
 
 	typedef struct tagEffectInfo
@@ -180,8 +181,8 @@ namespace Client
 
 		_float3		vDissolveValue = {};
 
-
-		_float2		vPadding0 = {};
+		_float      fModelDistortIntensity = {};
+		_float		vPadding0 = {};
 
 		_float      fLightDeley = {};
 		_float		fLightIntensity = {};
@@ -208,6 +209,7 @@ namespace Client
 		_bool		isPadding2 = {};
 		_bool		isPadding3 = {};
 		_bool		isPadding4 = {};
+
 	}EFFECT_INFO;
 	
 	typedef struct tagTrailInfo
