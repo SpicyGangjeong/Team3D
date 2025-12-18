@@ -274,20 +274,20 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	{
 
 
-//#if 진우
-//
-//#else
-//		/* 전체 맵 */
-//		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
-//
-//		/* 물 오브젝트 */
-//		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
-//			return E_FAIL;
-//		}
-//
-//		/* 조명 오브젝트 */
-//		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
-//#endif
+#if 진우
+
+#else
+		/* 전체 맵 */
+		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+
+		/* 물 오브젝트 */
+		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
+			return E_FAIL;
+		}
+
+		/* 조명 오브젝트 */
+		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
+#endif
 
 		/* 상호작용 오브젝트 */
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
