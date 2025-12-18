@@ -72,6 +72,7 @@ private:
 	_float	m_fMBSampleBias = { 0.005f };
 	_int	m_iMBMaxSampleCount = { 28 };
 	_int	m_iMBSampleCount = { m_iMBMaxSampleCount };
+	_int	m_iMBTileSize = { 20 };
 	_int	m_iMBType = { 0 };
 	_bool	m_bMB = { true }; 
 

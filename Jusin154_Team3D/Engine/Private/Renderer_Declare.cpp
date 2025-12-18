@@ -281,19 +281,6 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MotionBlurX"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MotionBlurY"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MotionBlur_UpSample"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-
 		/* Target_Color*/
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
@@ -367,15 +354,15 @@ HRESULT CRenderer::Initialize()
 
 		/* Target_VelocityMap */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMap"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R32G32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
+			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMapX"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R32G32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityTile"), (_uint)(Viewport.Width / (_float)m_iMBTileSize), (_uint)(Viewport.Height / (_float)m_iMBTileSize),
+			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMapY"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R32G32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityTent"), (_uint)(Viewport.Width / (_float)m_iMBTileSize), (_uint)(Viewport.Height / (_float)m_iMBTileSize),
+			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BeforeNormal"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -523,19 +510,8 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		/* MRT_Distortion */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_X"), TEXT("Target_MotionBlurX")))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_X"), TEXT("Target_VelocityMapX")))) {
-			return E_FAIL;
-		}
-
-		/* MRT_MotionBlur_Y */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_Y"), TEXT("Target_MotionBlurY")))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_Y"), TEXT("Target_VelocityMapY")))) {
+		/* MRT_MotionBlur */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur"), TEXT("Target_MotionBlur")))) {
 			return E_FAIL;
 		}
 	}

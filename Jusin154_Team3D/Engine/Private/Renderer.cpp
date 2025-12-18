@@ -849,21 +849,15 @@ void CRenderer::Render_PostProcessing()
 			assert(false);
 		}
 		SAFE_RELEASE(pBackBuffer);
+		if (FAILED(m_pShader->Bind_RawValue("g_iMBTileSize", &m_iMBTileSize, sizeof(_int)))) {
+			assert(false);  return;
+		}
 		m_pGameInstance->Copy_RenderTargetAToB(TEXT("Target_AfterBlend"), TEXT("Target_MotionBlur"));
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_VelocityMap"), TEXT("Target_VelocityTile"), SHADER_PASS_DEFERRED::MOTIONBLURTILE);
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_VelocityTile"), TEXT("Target_VelocityTent"), SHADER_PASS_DEFERRED::MOTIONBLURTENT);
 	}
 	/* MotionBlur */
-	D3D11_VIEWPORT vpOld = {};
-	_uint iVPOldNum = 1;
-	m_pContext->RSGetViewports(&iVPOldNum, &vpOld);
-	D3D11_VIEWPORT vpNew = vpOld;
-	_float2 vTaretSize = m_pGameInstance->Get_RenderTargetSize(TEXT("Target_MotionBlur"));
-	vpNew.Width = vTaretSize.x;
-	vpNew.Height = vTaretSize.y;
-	//if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vTaretSize, sizeof(_float2)))) {
-	//	assert(false);
-	//}
-
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_MotionBlur_X")))) {
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_MotionBlur")))) {
 		assert(false); return;
 	}
 	{	// Bind_Resorces
@@ -914,34 +908,12 @@ void CRenderer::Render_PostProcessing()
 			return;
 		}
 	}
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::MOTIONBLURX));
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::MOTIONBLUR));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
-	}
-	if (false == m_bMB) {
-		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_MotionBlur_Y")))) {
-			assert(false); return;
-		}
-	}
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_MotionBlurX"), m_pShader, "g_ColorTexture"))) {
-		assert(false);
-		return;
-	}
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_VelocityMapX"), m_pShader, "g_VelocityTexture"))) {
-		assert(false);
-		return;
-	}
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::MOTIONBLURY));
-
-	m_pVIBuffer->Bind_Resources();
-	m_pVIBuffer->Render();
-	if (false == m_bMB) {
-		if (FAILED(m_pGameInstance->End_MRT())) {
-			return;
-		}
 	}
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Bloom")))) {
 		return;

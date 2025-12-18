@@ -360,6 +360,11 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
         assert(false);
     }
 
+    vResolution = { vp.Width, vp.Height };
+    if (FAILED(pShader->Bind_RawValue("g_vSrcResolution", &vResolution, sizeof(_float2)))) {
+        assert(false);
+    }
+
     pOutput->Clear();
 
     { // Bind RTVs
@@ -385,6 +390,12 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
         break;
     case Engine::SHADER_PASS_DEFERRED::DOWNSAMPLE:
         pConstantName = "g_DiffuseTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::MOTIONBLURTENT:
+        pConstantName = "g_VelocityTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::MOTIONBLURTILE:
+        pConstantName = "g_VelocityTexture";
         break;
     case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURY:
         pConstantName = "g_BlurXTexture";
