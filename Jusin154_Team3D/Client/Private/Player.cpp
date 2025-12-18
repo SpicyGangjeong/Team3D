@@ -143,8 +143,6 @@ void CPlayer::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
 
-
-
 	Play_Event();
 	
 __super::Update(fTimeDelta);

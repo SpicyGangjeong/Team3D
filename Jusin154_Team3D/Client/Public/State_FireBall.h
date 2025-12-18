@@ -4,16 +4,16 @@
 
 NS_BEGIN(Client)
 
-class CState_Broom_Fly final : public CState_Root
+class CState_FireBall final : public CState_Root
 {
 public:
-    typedef struct tagBroomFly : public CState_Root::STATE_ROOT_DESC {
+    typedef struct tagFireBall : public CState_Root::STATE_ROOT_DESC {
         function<void(_float fTimeDelta)> funcPriorityUpdate = { nullptr };
         function<void(_float fTimeDelta)> funcLateUpdate = { nullptr };
-    }STATE_BROOM_FLY_DESC;
+    }STATE_FIREBALL_DESC;
 private:
-    CState_Broom_Fly();
-    virtual ~CState_Broom_Fly() = default;
+    CState_FireBall();
+    virtual ~CState_FireBall() = default;
 
 public:
     virtual void Enter();
@@ -25,10 +25,10 @@ private:
     function<void(_float fTimeDelta)> m_funcLateUpdate = { nullptr };
 
 private:
-    HRESULT Initialize(STATE_BROOM_FLY_DESC* pDesc);
+    HRESULT Initialize(STATE_FIREBALL_DESC* pDesc);
 
 public:
-    static CState_Broom_Fly* Create(STATE_BROOM_FLY_DESC* pDesc);
+    static CState_FireBall* Create(STATE_FIREBALL_DESC* pDesc);
     virtual void Free() override;
     virtual void Describe_Entity();
 };

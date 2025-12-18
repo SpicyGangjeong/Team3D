@@ -14,13 +14,19 @@ public:
 		_int MeshBoneCount;
 		_int BoneCount;
 
-		_int RootBoneIndex;
-		_int Padding;
+		_int CurrentAnimIndex;
+		_int PrevAnimIndex;
 		_float PrevTime;
 		_float BlendRatio;
+
+		_int RootBoneIndex;
+		_float3 padding;
+
 		_float4x4 PreTransformMatrix;
 		_float4 RootInitRot;
 	}ANIMSTATE_DESC;
+
+
 
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -72,6 +78,8 @@ public:
 	vector<_float4x4>	Get_OffsetMatrix(_int iIndex);
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
+	void Create_BoneStagingBuffer();
+	void Copy_BoneToStaging(_uint boneIndex);
 #pragma endregion
 #pragma region Bone
 	HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
@@ -82,6 +90,8 @@ public:
 	_int					Get_BoneIndex(const _char* pBoneName) const;
 	_matrix					Get_BoneMatrix(_uint iBoneIndex);
 	void					Combined_BoneMatrix();
+	_int					Find_BoneIndex(const _char* pBoneName);
+
 #pragma endregion
 #pragma region Material
 	HRESULT					Bind_Material(_uint iMeshIndex, class CShader* pShader);
@@ -89,6 +99,8 @@ public:
 #pragma endregion
 
 	void			ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
+	void			ComputeLocal(_uint AnimIndex, _uint MeshIndex);
+	void			ReadbackBoneMatrices();
 	void			Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
 	void			ComputeAnimation_Second(_uint AnimIndex);
 	void			InItialize_BoneIndex();
@@ -137,7 +149,7 @@ private:
 
 	_int						m_iPreAnimIndex = { -1 };
 	_float						m_fBlendTime = { 0.f };
-	_float						m_fBlendDuration = { 0.3f };
+	_float						m_fBlendDuration = { 0.35f };
 
 	_float3						m_vRadiusOffset = {};			// 컬링용 Radius Offset
 	_float						m_fSecondBlendTime = {};
@@ -182,6 +194,8 @@ private:
 	_bool					m_bRatio = { false };
 	_bool					m_bRootBone = {};
 	_float4x4				m_RootMatrix = {};
+	unordered_map<_string, _float4x4> m_SocketCache;
+
 
 private:
 #ifdef EDITOR_PROJECT
@@ -194,6 +208,7 @@ private:
 
 private:
 	HRESULT			Create_ComputeShader();
+	HRESULT			Create_ComputeShaderLocal();
 	HRESULT			Create_ParentVB();
 	HRESULT			Create_BoneLocalVB();
 	HRESULT			Create_Temp();
@@ -202,6 +217,8 @@ private:
 	HRESULT			Create_ParentSrv();
 	HRESULT			Create_BoneLocalSrv();
 
+	HRESULT			Create_Local();
+
 	_uint				m_iNumBuffer = {};
 
 	vector<_int>		m_Parent = {};
@@ -209,17 +226,27 @@ private:
 
 	vector<ANIMSTATE_DESC> m_AnimRanges;
 
+	vector<_float4x4> m_BoneMatrixCPU;
+
 	class CComputeShader* m_pComputeShader = nullptr;
+	class CComputeShader* m_pCS_AnimLocal = nullptr;
 
 	ID3D11Buffer* m_pConstantBuffer = { nullptr };
 	ID3D11Buffer* m_pParentBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneLocalBuffer = { nullptr };
+	ID3D11Buffer* m_pLocalMatrixBuffer = { nullptr };
+
 
 	ID3D11ShaderResourceView* m_pParentSRV = {};
 	ID3D11ShaderResourceView* m_pBoneLocalSRV = {};
 	ID3D11ShaderResourceView* m_pBoneMatrixSRV = {};
+	ID3D11ShaderResourceView* m_pLocalMatrixSRV = {};
+
 	ID3D11UnorderedAccessView* m_pBoneMatrixUAV = {}; 
+	ID3D11UnorderedAccessView* m_pLocalMatrixUAV = {};
+
+
 #pragma endregion
 
 private:

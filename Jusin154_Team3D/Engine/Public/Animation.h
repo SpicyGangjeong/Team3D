@@ -39,6 +39,7 @@ public:
 	_uint Get_ChannelCount() { return m_iNumChannels; }
 	_uint Get_KeyFrameCount() { return m_iKeyframeCount; }
 	_float Get_Duration() { return m_fDuration; }
+	_float Get_AnimTime() { return m_fTempTrack; }
 
 	ID3D11Buffer* Get_KeyFrameBuffer() { return m_pKeyFrameBuffer; }
 	ID3D11Buffer* Get_ChannelBuffer() { return m_pChannelBuffer; }
