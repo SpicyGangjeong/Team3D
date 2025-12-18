@@ -13,6 +13,12 @@ NS_BEGIN(Client)
 
 class CQuest_Slot final : public CElementObject
 {
+	struct FontInfo
+	{
+		_wstring	pFontSizeName;
+		_wstring	pQuestName;
+		_float2		m_fFontSize{};
+	};
 private:
 	CQuest_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CQuest_Slot(const CQuest_Slot& rhs);
@@ -37,6 +43,8 @@ private:
 
 private:
 	void Hover();
+	void Font_Size();
+	void Font_Setting(_int Index);
 
 public:
 	void Set_QuestType(_int Index);
@@ -54,6 +62,7 @@ private:
 
 	_int	m_iCurrentQeustClick{};
 	_int	m_iQuestCount{};
+	vector<FontInfo> m_Fonts;
 public:
 	static CQuest_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
