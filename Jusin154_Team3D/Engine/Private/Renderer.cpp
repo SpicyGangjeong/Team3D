@@ -166,6 +166,7 @@ void CRenderer::Render_Occlusion()
 void CRenderer::Render_Priority()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Priority");
+	EVENTSCOPE_("Render_Priority");
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::PRIORITY)])
 	{
 		if (nullptr != pRenderObject) {
@@ -184,6 +185,7 @@ void CRenderer::Render_Priority()
 void CRenderer::Render_Shadow()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Shadow");
+	EVENTSCOPE_("Render_Shadow");
 	D3D11_VIEWPORT			ViewPortOldDesc;
 	_uint					iNumViewOldPort = { 1 };
 	ZeroMemory(&ViewPortOldDesc, sizeof(D3D11_VIEWPORT));
@@ -308,6 +310,7 @@ void CRenderer::Render_Shadow()
 void CRenderer::Render_NonBlend()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_NonBlend");
+	EVENTSCOPE_("Render_NonBlend");
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects")))) {
 		return;
 	}
@@ -333,6 +336,7 @@ void CRenderer::Render_NonBlend()
 void CRenderer::Render_LightAcc()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_LightAcc");
+	EVENTSCOPE_("Render_LightAcc");
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_LightAcc")))) {
 		return;
 	}
@@ -376,6 +380,7 @@ void CRenderer::Render_LightAcc()
 void CRenderer::Render_Combined()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Combined");
+	EVENTSCOPE_("Render_Combined");
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Combined")))) {
 		return;
 	}
@@ -472,6 +477,7 @@ void CRenderer::Render_Combined()
 void CRenderer::Render_EnvironmentPostProcess()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_EnvironmentPostProcess");
+	EVENTSCOPE_("Render_EnvironmentPostProcess");
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_ENV_Blur_X")))) { // Target_ENV_Blur_X
 		return;
 	}
@@ -542,6 +548,7 @@ void CRenderer::Render_EnvironmentPostProcess()
 void CRenderer::Render_Fog()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Fog");
+	EVENTSCOPE_("Render_Fog");
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
 
 	if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
@@ -566,6 +573,7 @@ void CRenderer::Render_Fog()
 void CRenderer::Render_Effect()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Effect");
+	EVENTSCOPE_("Render_Effect");
 
 	if (FAILED(m_pGameInstance->Begin_MRT_NO_DepthStencil(TEXT("MRT_WB")))) {
 		return;
@@ -590,6 +598,7 @@ void CRenderer::Render_Effect()
 void CRenderer::Render_WeightBlend()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_WeightBlend");
+	EVENTSCOPE_("Render_WeightBlend");
 	// Bind_Resorces
 
 	m_pWeightBlendShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
@@ -615,6 +624,7 @@ void CRenderer::Render_WeightBlend()
 void CRenderer::Render_NonLight()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_NonLight");
+	EVENTSCOPE_("Render_NonLight");
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::NONLIGHT)])
 	{
 		if (nullptr != pRenderObject)
@@ -630,6 +640,7 @@ void CRenderer::Render_NonLight()
 void CRenderer::Render_Blur()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Blur");
+	EVENTSCOPE_("Render_Blur");
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur")))) {
 		return;
 	}
@@ -681,6 +692,7 @@ void CRenderer::Render_Blur()
 void CRenderer::Render_SSAO()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO");
+	EVENTSCOPE_("Render_SSAO");
 	_uint iKernelSize = SSAO_SAMPLE_NUMBER;
 
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO_OCCLUSION")))) {
@@ -775,6 +787,7 @@ void CRenderer::Render_SSAO()
 void CRenderer::Render_SSAO_BLUR()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO_BLUR");
+	EVENTSCOPE_("Render_SSAO_BLUR");
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO_BLUR")))) {
 		return;
 	}
@@ -803,6 +816,7 @@ void CRenderer::Render_SSAO_BLUR()
 void CRenderer::Render_Blend()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Blend");
+	EVENTSCOPE_("Render_Blend");
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
@@ -827,6 +841,7 @@ void CRenderer::Render_PostProcessing()
 {
 	/* POSTPROCESSING */
 	COMPUTE_TIMEDELTA("Timer_Render_PostProcessing");
+	EVENTSCOPE_("Render_PostProcessing");
 	{
 		ID3D11Texture2D* pBackBuffer = { nullptr };
 		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
@@ -993,6 +1008,7 @@ void CRenderer::Render_PostProcessing()
 void CRenderer::Render_Distortion()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Distortion");
+	EVENTSCOPE_("Render_Distortion");
 
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Distortion")))) {
 		return;
@@ -1018,6 +1034,7 @@ void CRenderer::Render_Distortion()
 void CRenderer::Render_DistortionAcc()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_DistortionAcc");
+	EVENTSCOPE_("Render_DistortionAcc");
 	// Bind_Resorces
 
 	ID3D11Texture2D* pBackBufferTexture2D = { nullptr };
@@ -1053,6 +1070,7 @@ void CRenderer::Render_DistortionAcc()
 void CRenderer::Render_UI()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_UI");
+	EVENTSCOPE_("Render_UI");
 	m_RenderObjects[ENUM_CLASS(RENDER::UI)].sort([](CGameObject* pDest, CGameObject* pSrc)->_bool {
 		_float3 vDstPos = {};
 		_float3 vSrcPos = {};
@@ -1081,6 +1099,7 @@ void CRenderer::Render_UI()
 void CRenderer::Render_UI_Overley()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_UI_Overley");
+	EVENTSCOPE_("Render_UI_Overley");
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::UI_OVERLAY)])
 	{
 		if (nullptr != pRenderObject) {
@@ -1099,6 +1118,7 @@ void CRenderer::Render_UI_Overley()
 void CRenderer::Render_LastColor()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_LastColor");
+	EVENTSCOPE_("Render_LastColor");
 	// Bind_Resorces
 
 	m_pLastColorShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
@@ -1119,6 +1139,7 @@ void CRenderer::Render_LastColor()
 void CRenderer::Render_Tone_Mapping()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Tone_Mapping");
+	EVENTSCOPE_("Render_Tone_Mapping");
 	{ // BackBuffer 
 		ID3D11Texture2D* pBackBuffer = nullptr;
 		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
@@ -1155,6 +1176,7 @@ void CRenderer::Render_Tone_Mapping()
 
 void CRenderer::Render_Debug()
 {
+	EVENTSCOPE_("Render_Debug");
 	for (auto& pDebugCom : m_DebugComponents)
 	{
 		if (nullptr != pDebugCom) {

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Base.h"
+#include "RenderEventDebugger.h"
 
 NS_BEGIN(Engine)
 
@@ -26,6 +27,11 @@ private:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	class CGameInstance* m_pGameInstance = { nullptr };
 	list<class CGameObject*>	m_RenderObjects[ENUM_CLASS(RENDER::END)];
+
+#ifdef _DEBUG
+	CRenderEventDebugger m_AnnotationHelper = {};
+#endif // _DEBUG
+
 
 #ifdef _DEBUG
 private:

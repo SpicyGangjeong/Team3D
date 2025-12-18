@@ -148,6 +148,11 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 }
 HRESULT CRenderer::Initialize()
 {
+#ifdef _DEBUG
+	m_AnnotationHelper.Initialize(m_pContext);
+#endif // _DEBUG
+
+
 	_uint		iNumViewports = { 1 };
 
 	D3D11_VIEWPORT		Viewport{};
