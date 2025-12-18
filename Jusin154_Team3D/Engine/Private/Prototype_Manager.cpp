@@ -156,6 +156,13 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 
 	}
 
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, TEXT("CS_Local"),
+		CComputeShader::Create(m_pDevice, m_pContext,
+			L"../Bin/Resources/ShaderFiles/Shader_Local_Compute.hlsl", "CS_LOCAL")))) {
+		return E_FAIL;
+
+	}
+
 #pragma endregion
 
 	return S_OK;

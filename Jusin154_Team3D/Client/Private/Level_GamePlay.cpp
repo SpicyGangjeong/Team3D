@@ -28,6 +28,7 @@
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
 #include "BroomRacerAI.h"
+#include "Ranrak.h"
 #pragma endregion
 
 
@@ -575,13 +576,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 	 for (_uint i = 0; i <3; ++i)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &i))) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 	}
 
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrak>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
 

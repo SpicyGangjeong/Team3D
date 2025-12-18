@@ -1,19 +1,19 @@
 ﻿#include "pch.h"
-#include "State_Broom_Fly.h"
+#include "State_FireBall.h"
 #include "Unit.h"
 
 
-CState_Broom_Fly::CState_Broom_Fly()
+CState_FireBall::CState_FireBall()
     :CState_Root()
 {
 }
 
-void CState_Broom_Fly::Enter()
+void CState_FireBall::Enter()
 {
     __super::Enter();
 }
 
-HRESULT CState_Broom_Fly::Update(_float fTimeDelta)
+HRESULT CState_FireBall::Update(_float fTimeDelta)
 {
     if (nullptr != m_funcPriorityUpdate) {
         m_funcPriorityUpdate(fTimeDelta);
@@ -27,12 +27,12 @@ HRESULT CState_Broom_Fly::Update(_float fTimeDelta)
     return S_OK;
 }
 
-void CState_Broom_Fly::Exit()
+void CState_FireBall::Exit()
 {
     __super::Exit();
 }
 
-HRESULT CState_Broom_Fly::Initialize(STATE_BROOM_FLY_DESC* pDesc)
+HRESULT CState_FireBall::Initialize(STATE_FIREBALL_DESC* pDesc)
 {
     if (FAILED(__super::Initialize(pDesc))) {
         return E_FAIL;
@@ -45,20 +45,20 @@ HRESULT CState_Broom_Fly::Initialize(STATE_BROOM_FLY_DESC* pDesc)
     return S_OK;
 }
 
-CState_Broom_Fly* CState_Broom_Fly::Create(STATE_BROOM_FLY_DESC* pDesc)
+CState_FireBall* CState_FireBall::Create(STATE_FIREBALL_DESC* pDesc)
 {
-    CState_Broom_Fly* pInstance = new CState_Broom_Fly;
+    CState_FireBall* pInstance = new CState_FireBall;
     if (FAILED(pInstance->Initialize(pDesc))) {
         SAFE_RELEASE(pInstance);
     }
     return pInstance;
 }
 
-void CState_Broom_Fly::Free()
+void CState_FireBall::Free()
 {
     __super::Free();
 }
 
-void CState_Broom_Fly::Describe_Entity()
+void CState_FireBall::Describe_Entity()
 {
 }

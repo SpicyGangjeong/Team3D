@@ -164,11 +164,11 @@ void CChannel::Update_TransformationMatirx(
 			vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSourTranslation), XMLoadFloat3(&vDestTranslation), fRatio), 1.f);
 
 		}
-		if (!bIsSpine)
+		/*if (!bIsSpine)
 		{
 			m_IsUpper = BoneMask[m_iBoneIndex];
 			m_ilayerIndex = m_IsUpper ? 1 : 0;
-		}
+		}*/
 		if (m_iBoneIndex == RootBoneIndex)
 		{
 			if (vector)
@@ -177,25 +177,31 @@ void CChannel::Update_TransformationMatirx(
 				vector[1] = vRotation;
 				vector[2] = vTranslation;
 			}
+			
 		}
-	
-		if (bIsSpine)
-		{
-			m_BoneTransformationMatrix =
-				XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
-			Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
-		}
-		else
-		{
-			if (m_ilayerIndex == 1)
-			{
-				m_BoneTransformationMatrix =
-					XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
-				Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
-			}
-		}
+		m_BoneTransformationMatrix =
+			XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+
+		Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+			//if (bIsSpine)
+			//{
+			//	m_BoneTransformationMatrix =
+			//		XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+
+			//	Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+			//}
+			//else
+			//{
+			//	if (m_ilayerIndex == 1)
+			//	{
+			//		m_BoneTransformationMatrix =
+			//			XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+
+			//		Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+			//	}
+			//}
 	}
 }
 
