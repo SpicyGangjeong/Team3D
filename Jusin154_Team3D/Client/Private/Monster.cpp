@@ -92,6 +92,15 @@ HRESULT CMonster::Render_OutLine()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
 	Compute_Depth();
 	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
 	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);

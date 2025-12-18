@@ -6,6 +6,7 @@ matrix g_LightViewMatrix_MIDDLE, g_LightProjMatrix_MIDDLE;
 matrix g_LightViewMatrix_FAR, g_LightProjMatrix_FAR;
 matrix g_PreShadowLightViewMatrix, g_PreShadowLightProjMatrix;
 
+
 float4 g_SamplePos[64];
 float g_fFar;
 float g_fShadowFar_NEAR;
@@ -70,6 +71,12 @@ Texture2D g_BlurWeightXTexture;
 Texture2D g_SurfaceTexture;
 Texture2D g_OriginalTexture;
 
+Texture2D g_ColorTexture;
+Texture2D g_VelocityTexture;
+
+int g_iMBSampleCount;
+int g_fMBBlurRadius;
+float g_iMBType;
 
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
@@ -136,6 +143,10 @@ struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
+};
+struct PS_OUT_VELOCITYBLUR
+{
+    float4 vColor : SV_TARGET0;
 };
 VS_OUT VS_MAIN(VS_IN In)
 {
@@ -213,6 +224,30 @@ struct PS_OUT_SSAO_BLUR
 {
     float fBlur : SV_TARGET0;
 };
+// g_ColorTexture;
+// g_DepthTexture;
+// g_VelocityTexture;
+// g_fFar
+// g_fMBBlurRadius
+// g_iMBType
+// g_iMBSampleCount
+PS_OUT_VELOCITYBLUR PS_MOTIONBLUR_X(PS_IN In)
+{
+    PS_OUT_VELOCITYBLUR Out = (PS_OUT_VELOCITYBLUR)0;
+    //float2 uv = In.vTexcoord;
+    //float2 vSrcTexelSize = float2(1.f / g_vResolution.x, 1.f / g_vResolution.y);
+    //float3 vColor = (0.f, 0.f, 0.f);
+    
+    //for (int i = -g_iMBSampleCount; i < g_iMBSampleCount; ++i)
+    //{
+    //    vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
+    //    vTexcoord.y = In.vTexcoord.y;
+        
+    //    vColor += g_fWeights_32[i + 15] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+    //}
+    
+    return Out;
+}
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
     PS_OUT_LIGHT Out;
@@ -759,48 +794,34 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     float2 uv = In.vTexcoord;
-    float fMask = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0).a;
+    float4 fSrcAlpha = g_DiffuseTexture.Sample(PointSampler, uv);
     float2 vSrcTexelSize = float2(1.f / g_vResolution.x, 1.f / g_vResolution.y);
     float3 vColor = (0.f, 0.f, 0.f);
     
-    uint iMask = (uint) round(fMask * 255.f); // int a = 1  -> // vBloom.a = (enum / 255);
-    //if (0 != iMask) {
-        // 주변 4개 셀(LT RT LB RB)및 중앙을 이중선형샘플링, 이후 자체적으로 이중선형샘플링
-        
-    float3 vCenterColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
-        uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, -1.0);
-    float3 fLTColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-        uv = In.vTexcoord + vSrcTexelSize * float2(0.0, -1.0);
-    float3 fTColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
-        uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, -1.0);
-    float3 fRTColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-        uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, 0.0);
-    float3 fLColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
-        uv = In.vTexcoord + vSrcTexelSize * float2(1.0, 0.0);
-    float3 fRColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
-        uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, +1.0);
-    float3 fLBColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-        uv = In.vTexcoord + vSrcTexelSize * float2(0.0, 1.0);
-    float3 fBColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
-        uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, +1.0);
-    float3 fRBColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
+    vColor = DownSampleFast(g_DiffuseTexture, In.vTexcoord, vSrcTexelSize, g_vResolution);
     
-        
-    
-        // vSample /= fWeight 이중선형샘플러가 자체적으로 웨이츠 계싼해주기 때문에 안해도 상관없을듯
-    vColor = vCenterColor * 0.25f + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.0625f + (fTColor + fLColor + fRColor + fBColor) * 0.125f;
-        //if (iMask == 2)
-        //{
-        //    vColor *= 3.f;
-        //}
-    //}
     float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f));
     fIntensity = max(FLT_EPSILON3, fIntensity);
 
     
     float fBloomIntensity = GetBloomCurve(fIntensity, g_fBloomThreshold, g_iBloomEmbossingPass);
     float3 bloomColor = (vColor * fBloomIntensity) / fIntensity;
-    Out.vFirstTarget = float4(bloomColor, 1.f);
+    Out.vFirstTarget = fSrcAlpha;
+    
+    return Out;
+}
+
+PS_OUT_FLT4_SINGLE PS_MAIN_DOWNSAMPLE(PS_IN In)
+{
+    PS_OUT_FLT4_SINGLE Out;
+    float2 uv = In.vTexcoord;
+    float fMask = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0).a;
+    float2 vSrcTexelSize = float2(1.f / g_vResolution.x, 1.f / g_vResolution.y);
+    float3 vColor = (0.f, 0.f, 0.f);
+    
+    vColor = DownSampleFast(g_DiffuseTexture, In.vTexcoord, vSrcTexelSize, g_vResolution);
+    
+    Out.vFirstTarget = float4(vColor, 1.f);
     
     return Out;
 }
@@ -809,10 +830,10 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_ACCUM(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     
-    float3 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
-    float3 vColorSrcB = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord).xyz;
+    float4 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    float4 vColorSrcB = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord);
     
-    Out.vFirstTarget = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
+    Out.vFirstTarget = saturate(vColorSrcA + vColorSrcB);
     
     return Out;
 }
@@ -821,9 +842,9 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_FINISH(PS_IN In)
     PS_OUT_FLT4_SINGLE Out;
     
     vector vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    float3 vBloom = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord).xyz;
+    float4 vBloom = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord);
     Out.vFirstTarget = vColor;
-    Out.vFirstTarget += float4(vBloom, 1.f);
+    Out.vFirstTarget += vBloom;
     
     return Out;
 }
@@ -1278,7 +1299,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_EMBOSS();
@@ -1361,4 +1382,24 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SSAO_BLUR();
     }
+
+    pass MotionBlurPass // 18
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MOTIONBLUR_X();
+    }
+    pass DownSamplePass // 19
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DOWNSAMPLE();
+    }
+
 }

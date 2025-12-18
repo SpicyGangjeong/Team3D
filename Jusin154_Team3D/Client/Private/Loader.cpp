@@ -338,7 +338,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = true;
@@ -1778,6 +1778,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		return S_OK;
 
+		});
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Lightning", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
 		});
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
