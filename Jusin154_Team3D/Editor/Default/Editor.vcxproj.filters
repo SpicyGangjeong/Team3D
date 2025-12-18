@@ -610,6 +610,21 @@
     <Filter Include="50.UI\QuestInstance">
       <UniqueIdentifier>{a2d06f57-c74f-4604-91b4-884bf6586584}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas">
+      <UniqueIdentifier>{91999870-f29b-4c24-b888-09eb08b8e10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel">
+      <UniqueIdentifier>{37571a2a-97dd-447b-a25b-11194584a57a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name">
+      <UniqueIdentifier>{f4d24f99-186c-4074-90ef-48a95d74fb47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn">
+      <UniqueIdentifier>{7a016450-f745-4313-ba9d-781fa5909b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer">
+      <UniqueIdentifier>{d9382839-c0b8-4b3d-9227-6dcf65fba44f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1217,6 +1232,21 @@
     </ClInclude>
     <ClInclude Include="..\public\QuestInstance.h">
       <Filter>50.UI\QuestInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpellLearn_Canvas.h">
+      <Filter>50.UI\SpellLearn_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpellLearn_Panel.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpellLearn_Name.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpellLearn_MovePointer.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1827,6 +1857,21 @@
     </ClCompile>
     <ClCompile Include="..\private\QuestInstance.cpp">
       <Filter>50.UI\QuestInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpellLearn_Canvas.cpp">
+      <Filter>50.UI\SpellLearn_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpellLearn_Panel.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpellLearn_Name.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpellLearn_MovePointer.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

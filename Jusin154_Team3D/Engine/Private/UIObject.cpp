@@ -304,7 +304,7 @@ void CUIObject::Nine_Slice_Left(_float X)
 
 void CUIObject::Nine_Slice_Right(_float Y)
 {
-	m_vNine_Slice.y =Y;
+	m_vNine_Slice.y = Y;
 }
 
 void CUIObject::Nine_Slice_Top(_float Z)
@@ -367,8 +367,14 @@ void CUIObject::Lerp_PosY(_float PosY)
 	m_fLerpY = PosY;
 }
 
-void CUIObject::Start_Lerp(_float fTimeDelta)
+_bool CUIObject::Start_Lerp(_float fTimeDelta)
 {
+	return false;
+}
+
+_bool CUIObject::Start_Bezier(_float fTimeDelta)
+{
+	return _bool();
 }
 
 void CUIObject::Reset_Pos(_float fTimeDelta)

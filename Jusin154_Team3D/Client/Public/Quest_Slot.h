@@ -46,6 +46,8 @@ private:
 	void Font_Size();
 	void Font_Setting(_int Index);
 
+	_int Mousechack(POINT Mouse);
+
 public:
 	void Set_QuestType(_int Index);
 
@@ -62,6 +64,11 @@ private:
 
 	_int	m_iCurrentQeustClick{};
 	_int	m_iQuestCount{};
+
+	_float	m_fPositionX{};
+	_float	m_fPositionY{};
+
+	_int	m_Index{};
 	vector<FontInfo> m_Fonts;
 public:
 	static CQuest_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

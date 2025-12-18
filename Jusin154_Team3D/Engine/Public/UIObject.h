@@ -141,7 +141,8 @@ public:
 
 	virtual void Lerp_PosX(_float PosX);
 	virtual void Lerp_PosY(_float PosY);
-	virtual void Start_Lerp(_float fTimeDelta);
+	virtual _bool Start_Lerp(_float fTimeDelta);
+	virtual _bool Start_Bezier(_float fTimeDelta);
 	virtual void Reset_Pos(_float fTimeDelta);
 	virtual void Start_Size_Lerp(_float fTimeDelta);
 	virtual void Reset_Size_Lerp(_float fTimeDelta);

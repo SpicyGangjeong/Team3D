@@ -49,10 +49,12 @@ HRESULT CQuest_Slot::Initialize(void* pArg)
 	m_fOffSetX = 0.f;
 	m_fOffSetY = 85;
 	m_iCols = 1;
+	m_fPositionX = -475.f;
+	m_fPositionY = 330.f;
 	SizeUpX(495.f);
 	SizeUpY(80.f);
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(-475.f, 330.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(m_fPositionX, m_fPositionY, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_iQuestCount = m_pInfoInstance->Get_Quest_Count(ENUM_CLASS(QUESTSTATE::NONE));
 	Set_QuestType(ENUM_CLASS(QUESTSTATE::NONE));
@@ -100,7 +102,6 @@ void CQuest_Slot::Update(_float fTimeDelta)
 		}
 	}
 	Hover();
-	Font_Size();
 	static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_Info);
 
 
@@ -152,14 +153,14 @@ void CQuest_Slot::Font_Size()
 	for (_int i = 0; i < m_iQuestCount; ++i)
 	{
 		m_fFontY = 190 + i * 85.f;
-		if (m_Info.iQuestIndex == -1)
+		if (m_Index == -1)
 		{
 			m_Fonts[i].pFontSizeName = TEXT("Font_size20");
 			m_Fonts[i].m_fFontSize = _float2(m_fFontX + m_fX, m_fFontY - m_fY);
 		}
 		else
 		{
-			if (i == m_Info.iQuestIndex)
+			if (i == m_Index)
 			{
 				m_Fonts[i].pFontSizeName = TEXT("Font_size30");
 				m_Fonts[i].m_fFontSize = _float2(m_fFontX - 10.f + m_fX, m_fFontY - 10.f - m_fY);
@@ -187,6 +188,26 @@ void CQuest_Slot::Font_Setting(_int Index)
 
 		m_Fonts.push_back(Fonts);
 	}
+}
+
+_int CQuest_Slot::Mousechack(POINT Mouse)
+{
+	for (_int i = 0; i < m_iQuestCount; ++i)
+	{
+		RECT Box = { 
+			long(m_fPositionX - m_fSizeX * 0.5f),
+			long((m_fPositionY - (i * m_fOffSetY)) - m_fSizeY * 0.5f),
+			long(m_fPositionX + m_fSizeX * 0.5f),
+			long((m_fPositionY + (i * m_fOffSetY)) + m_fSizeY * 0.5f) };
+
+		if (PtInRect(&Box, Mouse))
+		{
+			return i;
+		}
+	}
+
+
+	return -1;
 }
 
 _vector CQuest_Slot::Get_WorldPostion()
@@ -293,9 +314,14 @@ void CQuest_Slot::Hover()
 	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
 	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
 
-	m_Info.iQuestIndex = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+	POINT Mouse{};
+	Mouse.x = _long(fMouse.x);
+	Mouse.y = _long(fMouse.y);
+	
+	m_Index = Mousechack(Mouse);
 
-	if (m_Info.iQuestIndex != -1)
+	m_pVIBufferCom->Set_Hover(m_Index);
+	if (m_Index != -1)
 	{
 		m_bHover = true;
 	}
@@ -303,6 +329,7 @@ void CQuest_Slot::Hover()
 	{
 		m_bHover = false;
 	}
+	Font_Size();
 }
 
 
