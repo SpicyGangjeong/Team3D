@@ -172,12 +172,14 @@ public:
 	HRESULT Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
-	HRESULT Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
-	HRESULT Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Copy_RenderTargetTo(const _wstring& strSrcTag, ID3D11Texture2D* pDst2D);
+	HRESULT Copy_RenderTargetFrom(const _wstring& strDstTag, ID3D11Texture2D* pSrc2D);
+	HRESULT Copy_RenderTargetAToB(const _wstring& strATag, const _wstring& strBTag);
 	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
 	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
+	_float2 Get_RenderTargetSize(const _wstring& wstrTargetKey);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);

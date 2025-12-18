@@ -269,11 +269,23 @@ HRESULT CRenderer::Initialize()
 
 		/* Target_AfterBlend */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterBlend"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0, 1.0f)))) {
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterBlend_2x2"), (_uint)(Viewport.Width * 0.5f), (_uint)(Viewport.Height * 0.5f),
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0, 1.0f)))) {
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MotionBlur"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MotionBlurX"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MotionBlurY"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MotionBlur_UpSample"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
 
@@ -350,6 +362,14 @@ HRESULT CRenderer::Initialize()
 
 		/* Target_VelocityMap */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMap"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32G32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMapX"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32G32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMapY"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R32G32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
@@ -498,9 +518,21 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* MRT_Distortion */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_X"), TEXT("Target_MotionBlurX")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_X"), TEXT("Target_VelocityMapX")))) {
+			return E_FAIL;
+		}
 
-
-
+		/* MRT_MotionBlur_Y */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_Y"), TEXT("Target_MotionBlurY")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_Y"), TEXT("Target_VelocityMapY")))) {
+			return E_FAIL;
+		}
 	}
 
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);
@@ -638,6 +670,12 @@ void CRenderer::Describe_Entitiy()
 			GUI::SliderInt("m_iToneMappingType", &m_iToneMappingType, 0, 2, "%d");
 			GUI::SliderFloat("m_fExposure", &m_fExposure, 0.5f, 2.f, "%.3f");
 			GUI::EndChild();
+		}
+		if (GUI::CollapsingHeader("MotionBlurr")) {
+			GUI::Checkbox("m_bMB", &m_bMB);
+			GUI::SliderFloat("g_fMBSampleBias", &m_fMBSampleBias, -1.f, 1.f, "%.3f");
+			GUI::SliderFloat("g_fMBBlurRadius", &m_fMBBlurRadius, 0.1f, 16.f, "%.1f");
+			GUI::SliderInt("g_iMBSampleCount", &m_iMBSampleCount, 0, 28, "%d");
 		}
 		if (GUI::CollapsingHeader("End_Padding")) {
 		}

@@ -175,26 +175,42 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NO_DepthStencil(const _wstring& strMRTT
 
     return S_OK;
 }
-HRESULT CRenderTarget_Manager::Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CRenderTarget_Manager::Copy_RenderTargetTo(const _wstring& strSrcTag, ID3D11Texture2D* pDst2D)
 {
-    CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+    CRenderTarget* pRenderTarget = Find_RenderTarget(strSrcTag);
     if (nullptr == pRenderTarget) {
         return E_FAIL;
     }
 
-    pRenderTarget->Copy_ResourceTo(pTexture2D);
+    pRenderTarget->Copy_ResourceTo(pDst2D);
 
     return S_OK;
 }
 
-HRESULT CRenderTarget_Manager::Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CRenderTarget_Manager::Copy_RenderTargetFrom(const _wstring& strDstTag, ID3D11Texture2D* pSrc2D)
 {
-    CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+    CRenderTarget* pRenderTarget = Find_RenderTarget(strDstTag);
     if (nullptr == pRenderTarget) {
         return E_FAIL;
     }
 
-    pRenderTarget->Copy_ResourceFrom(pTexture2D);
+    pRenderTarget->Copy_ResourceFrom(pSrc2D);
+
+    return S_OK;
+}
+
+HRESULT CRenderTarget_Manager::Copy_RenderTargetAToB(const _wstring& strATag, const _wstring& strBTag)
+{
+    CRenderTarget* pTargetA = Find_RenderTarget(strATag);
+    if (nullptr == pTargetA) {
+        return E_FAIL;
+    }
+    CRenderTarget* pTargetB = Find_RenderTarget(strBTag);
+    if (nullptr == pTargetB) {
+        return E_FAIL;
+    }
+
+    pTargetA->Copy_ResourceTo(*pTargetB);
 
     return S_OK;
 }
@@ -467,6 +483,16 @@ HRESULT CRenderTarget_Manager::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CS
     }
 
     return S_OK;
+}
+
+_float2 CRenderTarget_Manager::Get_RenderTargetSize(const _wstring& wstrTargetKey)
+{
+    CRenderTarget* pRenderTarget = Find_RenderTarget(wstrTargetKey);
+    if (nullptr == pRenderTarget) {
+        return _float2();
+    }
+
+    return pRenderTarget->Get_TargetSize();
 }
 
 HRESULT CRenderTarget_Manager::End_MRT()

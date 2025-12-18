@@ -859,13 +859,17 @@ HRESULT CGameInstance::Bind_RenderTarget(const _wstring& strTargetTag, CShader* 
 	return m_pRenderTarget_Manager->Bind_RenderTarget(strTargetTag, pShader, pConstantName);
 }
 
-HRESULT CGameInstance::Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetTo(const _wstring& strSrcTag, ID3D11Texture2D* pDst2D)
 {
-	return m_pRenderTarget_Manager->Copy_RenderTargetTo(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetTo(strSrcTag, pDst2D);
 }
-HRESULT CGameInstance::Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetFrom(const _wstring& strDstTag, ID3D11Texture2D* pSrc2D)
 {
-	return m_pRenderTarget_Manager->Copy_RenderTargetFrom(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetFrom(strDstTag, pSrc2D);
+}
+HRESULT CGameInstance::Copy_RenderTargetAToB(const _wstring& strATag, const _wstring& strBTag)
+{
+	return m_pRenderTarget_Manager->Copy_RenderTargetAToB(strATag, strBTag);
 }
 HRESULT CGameInstance::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
 {
@@ -882,6 +886,10 @@ HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* p
 HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag)
 {
 	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
+}
+_float2 CGameInstance::Get_RenderTargetSize(const _wstring& wstrTargetKey)
+{
+	return m_pRenderTarget_Manager->Get_RenderTargetSize(wstrTargetKey);
 }
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()

@@ -62,9 +62,11 @@ private:
 	/* TunningParam  */
 
 	// MotionBlur 
-	_float	m_fMBBlurRadius = { 1.f };
-	_int	m_iMBSampleCount = { 3 };
+	_float	m_fMBBlurRadius = { 8.f };
+	_float	m_fMBSampleBias = { 0.005f };
+	_int	m_iMBSampleCount = { 14 };
 	_int	m_iMBType = { 0 };
+	_bool	m_bMB = { true };
 
 	// ToneMapping
 	_int	m_iToneMappingType = { 2 };
