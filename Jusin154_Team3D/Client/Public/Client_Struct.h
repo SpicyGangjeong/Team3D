@@ -202,7 +202,8 @@ namespace Client
 		_float4     vNoiseColor = {};
 		_float4     vRimLightColor = {};
 
-		_float4     vPadding4 = {};
+		_float2     vMaskOffset = {};
+		_float2     vPadding4 = {};
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};

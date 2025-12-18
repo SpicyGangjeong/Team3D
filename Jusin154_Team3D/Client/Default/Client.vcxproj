@@ -161,6 +161,7 @@ call Update_Resources.bat
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Barral_Splesh.h" />
+    <ClInclude Include="..\Public\Stupefy.h" />
     <ClInclude Include="..\Public\BroomRaceManager.h" />
     <ClInclude Include="..\Public\BroomRacerAI.h" />
     <ClInclude Include="..\Public\Chair_Splesh.h" />
@@ -364,6 +365,7 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\Stupefy.cpp" />
     <ClCompile Include="..\Private\Boss_HpBar.cpp" />
     <ClCompile Include="..\Private\Barral_Splesh.cpp" />
     <ClCompile Include="..\Private\BroomRaceManager.cpp" />

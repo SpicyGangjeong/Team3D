@@ -629,6 +629,9 @@
     <ClInclude Include="..\Public\Quest_Info_Header.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Stupefy.h">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1293,6 +1296,9 @@
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot">
       <UniqueIdentifier>{6bbfb8f0-c71a-4769-b1e6-efd5d863ba7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Stupefy">
+      <UniqueIdentifier>{7672784a-86a8-4485-a4de-a979bd0c8f52}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrak">
       <UniqueIdentifier>{bb981766-6030-4dd9-b92d-f6819a70c93d}</UniqueIdentifier>
     </Filter>
@@ -1871,6 +1877,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Slot.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stupefy.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrak.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>

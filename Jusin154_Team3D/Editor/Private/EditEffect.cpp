@@ -756,6 +756,7 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("MaskClampSample", &m_EffectInfo.isMaskClampSample);
 
 			ImGui::PushItemWidth(80);
+			GUI::DragFloat2("MaskOffset", (_float*)&m_EffectInfo.vMaskOffset, 0.01f);
 			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_EffectInfo.vMaskingUVGainAmount, 0.01f);
 			GUI::Spacing();
 			GUI::DragFloat("SoftMask", &m_EffectInfo.fSoftMask, 0.01f, 0.f);
@@ -787,6 +788,7 @@ void CEditEffect::Describe_Entity()
 
 				GUI::TreePop();
 			}
+
 			GUI::Separator(); GUI::Spacing();
 
 			GUI::TreePop();

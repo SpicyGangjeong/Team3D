@@ -1,19 +1,19 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "Effect_Container.h"
 
 NS_BEGIN(Engine)
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CProtego final : public CEffect_Container
+class CStupefy final : public CEffect_Container
 {
 private:
-	CProtego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CProtego(const CProtego& rhs);
-	virtual ~CProtego() = default;
+	CStupefy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CStupefy(const CStupefy& rhs);
+	virtual ~CStupefy() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -30,18 +30,21 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
+
 private:
-	_wstring	 m_wstrEffectName = {};
+	class  CInfoInstance*			  m_pInfoInstance = { nullptr };
+private:
+	_wstring						  m_wstrEffectName = {};
+	class CEffectParts*				  m_pProjectile0 = {};
+	class CEffectParts*				  m_pProjectile1 = {};
+	class CEffectParts*				  m_pStupefy_PJ_PT = {};
 
-	class CEditEffect* m_pSphere = { nullptr };
-	class CEditEffect* m_pSphereLay = { nullptr };
-
-	_float		 m_fSizeAccTime = {};
-	_float       m_fAmountSize = {};
-	_float       m_fSpeed = {};
-
+	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
+	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
+	_float							  m_fLinearSpeed = 0.65f;
+	_float3							  m_vCameraLook = {};
 public:
-	static CProtego* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CStupefy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 #ifdef _DEBUG
