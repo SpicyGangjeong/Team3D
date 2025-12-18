@@ -12,6 +12,18 @@ NS_BEGIN(Editor)
 
 class CUnified final : public CGameObject
 {
+public:
+	typedef struct tagUnified_Desc
+	{
+		_float				fLodSwitchDistnace;
+		_float4				vUnifiedCenterPos;
+		_float3				vPosition;
+		_float3				vRotation;
+		_float3				vScale;
+		_wstring			srtLayerTag;
+		vector<_wstring>	srtModelPrototypeTags;
+	}UNIFIED_DESC;
+
 private:
 	CUnified(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUnified(const CUnified& rhs);
@@ -29,17 +41,28 @@ public:
 private:
 	_bool				m_bSelected = { false };
 	_bool				m_isVisible = { true };
+	_bool				m_isLayerEnable = { true };
 
 	_uint				m_iMaxLodLevel = {};
 	_uint				m_iLodIndex = {};
 	_float				m_fUsingSurfaceParams = {};
 
-	CShader*			m_pShaderCom = { nullptr };
-	CModel*				m_pModelCom = { nullptr };
-	_float4				m_vPosition = {};
+	_float				m_fLodSwitchDistnace = {};
+	_float4				m_vUnifiedCenterPos = {};
 
-	_float4x4			m_ProjMatrix = {};
-	_float4x4			m_ViewMatrix = {};
+	CShader*			m_pShaderCom = { nullptr };
+	_wstring			m_srtLayerTag;
+
+	vector<CModel*>		m_pModelComs;
+
+
+
+#ifdef _DEBUG
+	_float				m_fCamDistance = {};
+	_float4				m_vPosition = {};
+#endif // _DEBUG
+
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

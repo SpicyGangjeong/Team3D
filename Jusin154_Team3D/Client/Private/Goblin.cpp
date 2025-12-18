@@ -119,7 +119,7 @@ void CGoblin::Update(_float fTimeDelta)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
 
-	m_pDetection->Set_Active(m_bDetection);
+	//m_pDetection->Set_Active(m_bDetection);
 
 
 	if (m_bDisolve) {
@@ -456,9 +456,9 @@ HRESULT CGoblin::Ready_Parts()
 #pragma endregion
 
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Detection>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &PartsDesc, this, &m_pDetection))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Detection>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &PartsDesc, this, &m_pDetection))) {
+	//	return E_FAIL;
+	//}
 
 	return S_OK;
 }

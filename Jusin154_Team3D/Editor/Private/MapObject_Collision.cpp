@@ -44,7 +44,6 @@ void CMapObject_Collision::Late_Update(_float fTimeDelta)
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 	if (m_bVisible){
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-		
 	}
 	
 }
@@ -66,7 +65,7 @@ HRESULT CMapObject_Collision::Render()
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (m_bSelected)
+		if (m_bVisible)
 		{
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
 				return E_FAIL;
@@ -157,7 +156,7 @@ HRESULT CMapObject_Collision::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Texture */
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("CollisionDebug"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("T_Noises_D"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) {
 		return E_FAIL;
 	}
 

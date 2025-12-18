@@ -5,6 +5,7 @@
 
 CLayer::CLayer():
 	m_pGameInstance(CGameInstance::GetInstance())
+	, m_isLayerEnabled{ true }
 {
 	SAFE_ADDREF(m_pGameInstance);
 }
@@ -16,32 +17,41 @@ HRESULT CLayer::Initialize()
 
 void CLayer::Priority_Update(_float fTimeDelta)
 {
-	for (auto& iter : m_ObjectList)
+	if(m_isLayerEnabled)
 	{
-		if (iter == nullptr)
-			return;
+		for (auto& iter : m_ObjectList)
+		{
+			if (iter == nullptr)
+				return;
 
-		iter->Priority_Update(fTimeDelta);
+			iter->Priority_Update(fTimeDelta);
+		}
 	}
 }
 
 void CLayer::Update(_float fTimeDelta)
 {
-	for (auto& iter : m_ObjectList)
+	if(m_isLayerEnabled)
 	{
-		if (iter == nullptr)
-			return;
-		iter->Update(fTimeDelta);
+		for (auto& iter : m_ObjectList)
+		{
+			if (iter == nullptr)
+				return;
+			iter->Update(fTimeDelta);
+		}
 	}
 }
 
 void CLayer::Late_Update(_float fTimeDelta)
 {
-	for (auto& iter : m_ObjectList)
+	if (m_isLayerEnabled)
 	{
-		if (iter == nullptr)
-			return;
-		iter->Late_Update(fTimeDelta);
+		for (auto& iter : m_ObjectList)
+		{
+			if (iter == nullptr)
+				return;
+			iter->Late_Update(fTimeDelta);
+		}
 	}
 }
 

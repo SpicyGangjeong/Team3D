@@ -110,7 +110,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
-	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000);
+	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000, EngineDesc.iNumLevels);
 	if (nullptr == m_pResource_Manager) {
 		return E_FAIL;
 	}
@@ -176,6 +176,7 @@ void CGameInstance::Clear_Resources(_uint iLevelIndex)
 	m_pCamera_Manager->Clear_Cameras(iLevelIndex);
 	m_pObject_Manager->Clear(iLevelIndex);
 	m_pLight_Manager->Light_Clear(iLevelIndex);
+	m_pResource_Manager->Clear_LevelResources(iLevelIndex);
 }
 
 _float CGameInstance::Random_Normal()
@@ -1058,9 +1059,9 @@ HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 #pragma endregion
 
 #pragma region FOG
-void CGameInstance::Set_FogDensity(_float fFogDensity)
+void CGameInstance::Set_Fog(_float fFogDensity, _float fPow)
 {
-	m_pFog->Set_FogDensity(fFogDensity);
+	m_pFog->Set_Fog(fFogDensity, fPow);
 }
 void CGameInstance::Set_FogColor(_float4& vFogColor)
 {
@@ -1071,9 +1072,14 @@ HRESULT CGameInstance::Bind_FogValue(class CShader* pShader)
 {
 	return m_pFog->Bind_FogValue(pShader);
 }
-ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
+ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath, _uint iLevel)
 {
-	return m_pResource_Manager->Add_Texture(pFilePath);
+	return m_pResource_Manager->Add_Texture(pFilePath, iLevel);
+}
+
+void CGameInstance::Clear_LevelResources(_uint iLevel)
+{
+	m_pResource_Manager->Clear_LevelResources(iLevel);
 }
 
 #pragma endregion // FOG
@@ -1086,7 +1092,7 @@ bool		CGameInstance::Key_Pressing(int _iKey)
 	return m_pKey_Manager->Key_Pressing(_iKey);
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Pressing(_iKey);
 	}
 #endif // _DEBUG
@@ -1098,7 +1104,7 @@ bool		CGameInstance::Key_Up(int _iKey)
 	return m_pKey_Manager->Key_Up(_iKey);
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Up(_iKey);
 	}
 #endif // _DEBUG
@@ -1110,7 +1116,7 @@ bool		CGameInstance::Key_Down(int _iKey)
 	return m_pKey_Manager->Key_Down(_iKey);
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Down(_iKey);
 	}
 #endif // _DEBUG
@@ -1122,7 +1128,7 @@ _bool CGameInstance::Mouse_Pressing(int _iKey)
 	return m_pKey_Manager->Mouse_Pressing(_iKey);
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Pressing(_iKey);
 	}
 #endif // _DEBUG
@@ -1134,7 +1140,7 @@ _bool CGameInstance::Mouse_Up(int _iKey)
 	return m_pKey_Manager->Mouse_Up(_iKey);
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Up(_iKey);
 	}
 #endif // _DEBUG
@@ -1146,7 +1152,7 @@ _bool CGameInstance::Mouse_Down(int _iKey)
 	return m_pKey_Manager->Mouse_Down(_iKey);
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
 	}
 #endif // _DEBUG
@@ -1158,7 +1164,7 @@ _bool CGameInstance::Mouse_StartMove()
 	return m_pKey_Manager->Mouse_StartMove();
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_StartMove();
 	}
 #endif // _DEBUG
@@ -1170,7 +1176,7 @@ _bool CGameInstance::Mouse_Moving()
 	return m_pKey_Manager->Mouse_Moving();
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Moving();
 	}
 #endif // _DEBUG
@@ -1182,7 +1188,7 @@ _bool CGameInstance::Mouse_StopMove()
 	return m_pKey_Manager->Mouse_StopMove();
 #endif // !_DEBUG
 #ifdef _DEBUG
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_StopMove();
 	}
 #endif // _DEBUG

@@ -56,10 +56,14 @@ private:
 
 #pragma region SAVE_LOAD
 	HRESULT		Save_MapData(const _char* pFileName);
+	HRESULT		Save_StaticElements(const _char* pFileName);
 	HRESULT		Load_MapData(const _char* pFileName);
+
+	HRESULT		Load_MapData(const _char* pFileName, const _wchar* pLayerTag);
 
 	HRESULT		Save_ContainerData(const _char* pFileName, const _char* pContainerName);
 	HRESULT		Load_ContainerData(const _char* pFileName, const _char* pContainerName);
+
 	HRESULT		Load_ContainerToMapObject(const _char* pFileName, const _char* pContainerName);
 
 	HRESULT		Save_LightObject(const _char* pFileName);
@@ -75,6 +79,7 @@ private:
 	void		Update_ObjectList();
 	void		Update_Edit();
 	void		Update_ContainerObject();
+	void		Update_Unified();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
 	void		Create_Elemnt(_wstring& strPrototypeTag);

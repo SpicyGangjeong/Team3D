@@ -20,6 +20,7 @@ protected:
 public:
 	_uint Get_LodLevel() const{ return m_iMaxLodLevel; }
 	const _wstring& Get_PrototypeTag(_uint iIndex);
+	virtual _float3& Get_Rotation() { return m_vRotation; }
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
