@@ -231,7 +231,7 @@ float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
 // BackGround ForeGround 합은 1
 float2 DepthCompare(float fCenterDepth, float fSampleDepth, float fDepthScale)
 {
-    return saturate(0.5f + float2(fDepthScale, -fDepthScale) * (fSampleDepth - fCenterDepth));
+    return saturate(0.5f + 0.5f + 0.5f*(float2(fDepthScale, -fDepthScale) * (fSampleDepth - fCenterDepth)));
 }
 
 float2 SpreadCompare(float fOffsetLength, float2 fSpreadLength, float fPixelToSampleUnitsScale)
@@ -468,20 +468,25 @@ float4 BlendDiffuse(float4 vDiffuseA, Texture2D DiffuseBlendTexture, float2 vTex
     return lerp(vDiffuseA, vDiffuseBlendColor, fRatio);
 
 }
-
-float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos)
+float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIntensity = 1.f)
 {
-    if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5) {
-        return float2(0.0f, 0.0f);
+    if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5)
+    {
+        return float2(0.5f, 0.5f);
     }
 
-    float2 currentUV = (vCurrentProjPos.xy/vCurrentProjPos.w);
-    float2 previousUV = (vPreviousProjPos.xy / vCurrentProjPos.w);
+    float2 currentNDC = vCurrentProjPos.xy / vCurrentProjPos.w;
+    float2 previousNDC = vPreviousProjPos.xy / vPreviousProjPos.w;
 
-    currentUV.y *= -1.f;
-    previousUV.y *= -1.f;
-    
-    return (currentUV - previousUV) * 0.5f + 0.5f;
+    currentNDC.y *= -1.f;
+    previousNDC.y *= -1.f;
+
+    // UV 델타
+    float2 velocityUV = (currentNDC - previousNDC) * 0.5f;
+    velocityUV *= fIntensity;
+    velocityUV = clamp(velocityUV, -1.0f, 1.0f);
+
+    return velocityUV * 0.5f + 0.5f; // 0 속도 -> 0.5
 }
 
 float3 DownSampleFast(Texture2D SrcTexture2D, float2 vCenterTexcoord, float2 vSrcTexelSize, float2 vResolution)

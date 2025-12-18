@@ -873,6 +873,9 @@ void CRenderer::Render_PostProcessing()
 		if (FAILED(m_pShader->Bind_RawValue("g_iMBSampleCount", &m_iMBSampleCount, sizeof(_int)))) {
 			assert(false); return;
 		}
+		if (FAILED(m_pShader->Bind_RawValue("g_iMBMaxSampleCount", &m_iMBMaxSampleCount, sizeof(_int)))) {
+			assert(false); return;
+		}
 		if (FAILED(m_pShader->Bind_RawValue("g_iMBType", &m_iMBType, sizeof(_int)))) {
 			assert(false); return;
 		}

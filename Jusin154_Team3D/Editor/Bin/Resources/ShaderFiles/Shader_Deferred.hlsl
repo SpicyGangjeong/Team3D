@@ -75,6 +75,7 @@ Texture2D g_ColorTexture;
 Texture2D g_VelocityTexture;
 
 int g_iMBSampleCount;
+int g_iMBMaxSampleCount;
 float g_fMBBlurRadius;
 int g_iMBType;
 float g_fMBSampleBias;
@@ -233,8 +234,9 @@ struct PS_OUT_SSAO_BLUR
 // g_fFar
 // g_fMBSampleBias
 // g_fMBBlurRadius
-// g_iMBType
 // g_iMBSampleCount
+// g_iMBMaxSampleCount
+// g_iMBType
 PS_OUT_VELOCITYBLUR PS_MOTIONBLURX(PS_IN In)
 {
     PS_OUT_VELOCITYBLUR Out = (PS_OUT_VELOCITYBLUR) 0;
@@ -249,12 +251,12 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLURX(PS_IN In)
     float fSampleSpreadLength;
     
     float2 uv = In.vTexcoord;
-    float fCenterDepth = g_DepthTexture.Sample(PointSampler, uv).y * g_fFar; // 해당 셀의 깊이
-    float2 vCenterVelocityUV = g_VelocityTexture.Sample(PointSampler, uv).xy;
+    float fCenterDepth = g_DepthTexture.Sample(PointSampler, uv).y; // 해당 셀의 깊이
+    float2 vCenterVelocityUV = (g_VelocityTexture.Sample(PointSampler, uv).xy * 2.f - 1.f);
     float2 vCenterVelocityPixels = vCenterVelocityUV * g_vResolution.xy; // UV -> 픽셀
     float fCenterSpreadLength = clamp(abs(vCenterVelocityPixels.x), 0.0f, g_fMBBlurRadius);
     float2 vSrcTexelSize = float2(1.f / g_vResolution.x, 1.f / g_vResolution.y); // 소스 셀 사이즈 g_vResolution-> 현재는 colortexture 해상도
-    int iMaxMotionBlurSampleCount = min(g_iMBSampleCount, 7); /* 최대 속도 */
+    int iMaxMotionBlurSampleCount = min(g_iMBSampleCount, g_iMBMaxSampleCount); /* 최대 속도 */
 
     float fPixelToSampleUnitsScale = (float) iMaxMotionBlurSampleCount / max(g_fMBBlurRadius, FLT_EPSILON5);
     float fDepthScale = 0.5f / max(g_fMBSampleBias, FLT_EPSILON5);
@@ -273,8 +275,8 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLURX(PS_IN In)
             continue;
         }
         
-        fSampledDepth = g_DepthTexture.Sample(PointSampler, vDestUV).y * g_fFar; 
-        vSampledVelocityUV = g_VelocityTexture.Sample(PointSampler, vDestUV).xy;
+        fSampledDepth = g_DepthTexture.Sample(PointSampler, vDestUV).y; 
+        vSampledVelocityUV = (g_VelocityTexture.Sample(PointSampler, vDestUV).xy * 2.f - 1.f);
         vSampledVelocityPixels = vSampledVelocityUV * g_vResolution.xy;
         fSampleSpreadLength = clamp(abs(vSampledVelocityPixels.x), 0.0f, g_fMBBlurRadius);
         
@@ -296,9 +298,17 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLURX(PS_IN In)
     float fTapCount = (float) (2 * iMaxMotionBlurSampleCount + 1);
     float fCoverage = saturate(fWeight / max(fTapCount, 1.0f));
     
-    Out.vColor = float4(vBlurColor.rgb, fCoverage);
-    //Out.vColor = vBlurColor;
-    Out.vVelocity = vBlurVelocity;
+    //Out.vColor = float4(vBlurColor.rgb, fCoverage);
+    Out.vColor = vBlurColor;
+    Out.vVelocity = vBlurVelocity * 0.5f + 0.5f;
+    float2 vBlurVelocityPixels = vBlurVelocity * g_vResolution.xy;
+    if (length(vBlurVelocityPixels) < 0.5f) // 0.5px 이하면 정지 취급
+    {
+        Out.vColor = g_ColorTexture.Sample(ClampLinearSampler, uv);
+        Out.vVelocity = float2(0.5f, 0.5f);
+        return Out;
+    }
+
     return Out;
 }
 PS_OUT_VELOCITYBLUR PS_MOTIONBLURY(PS_IN In)
@@ -315,8 +325,8 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLURY(PS_IN In)
     float fSampleSpreadLength;
     
     float2 uv = In.vTexcoord;
-    float fCenterDepth = g_DepthTexture.Sample(PointSampler, uv).y * g_fFar; // 해당 셀의 깊이
-    float2 vCenterVelocityUV = g_VelocityTexture.Sample(PointSampler, uv).xy;
+    float fCenterDepth = g_DepthTexture.Sample(PointSampler, uv).y; // 해당 셀의 깊이
+    float2 vCenterVelocityUV = (g_VelocityTexture.Sample(PointSampler, uv).xy * 2.f - 1.f);
     float2 vCenterVelocityPixels = vCenterVelocityUV * g_vResolution.xy; // UV -> 픽셀
     float fCenterSpreadLength = clamp(abs(vCenterVelocityPixels.y), 0.0f, g_fMBBlurRadius);
     float2 vSrcTexelSize = float2(1.f / g_vResolution.x, 1.f / g_vResolution.y); // 소스 셀 사이즈 g_vResolution-> 현재는 colortexture 해상도
@@ -339,15 +349,14 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLURY(PS_IN In)
             continue;
         }
         
-        fSampledDepth = g_DepthTexture.Sample(PointSampler, vDestUV).y * g_fFar;
-        vSampledVelocityUV = g_VelocityTexture.Sample(PointSampler, vDestUV).xy;
+        fSampledDepth = g_DepthTexture.Sample(PointSampler, vDestUV).y;
+        vSampledVelocityUV = (g_VelocityTexture.Sample(PointSampler, vDestUV).xy * 2.f - 1.f);
         vSampledVelocityPixels = vSampledVelocityUV * g_vResolution.xy;
         fSampleSpreadLength = clamp(abs(vSampledVelocityPixels.y), 0.0f, g_fMBBlurRadius);
         
         // [Sample]
         float fWeightCalculated = SampleWeight(fCenterDepth, fSampledDepth, float(abs(i)), fCenterSpreadLength, fSampleSpreadLength, fPixelToSampleUnitsScale, fDepthScale);
-        if (fWeightCalculated <= 0.0f)
-        {
+        if (fWeightCalculated <= 0.0f) {
             continue;
         }
         vSampledColor = g_ColorTexture.Sample(ClampLinearSampler, vDestUV);
@@ -362,9 +371,17 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLURY(PS_IN In)
     float fTapCount = (float) (2 * iMaxMotionBlurSampleCount + 1);
     float fCoverage = saturate(fWeight / max(fTapCount, 1.0f));
 
-    Out.vColor = float4(vBlurColor.rgb, fCoverage);
-    //Out.vColor = vBlurColor;
-    Out.vVelocity = vBlurVelocity;
+    //Out.vColor = float4(vBlurColor.rgb, fCoverage);
+    Out.vColor = vBlurColor;
+    Out.vVelocity = vBlurVelocity * 0.5f + 0.5f;
+    float2 vBlurVelocityPixels = vBlurVelocity * g_vResolution.xy;
+    if (length(vBlurVelocityPixels) < 0.5f) // 0.5px 이하면 정지 취급
+    {
+        Out.vColor = g_ColorTexture.Sample(ClampLinearSampler, uv);
+        Out.vVelocity = float2(0.5f, 0.5f);
+        return Out;
+    }
+
     return Out;
 }
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
