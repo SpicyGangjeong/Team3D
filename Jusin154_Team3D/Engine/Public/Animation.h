@@ -11,9 +11,8 @@ private:
 	CAnimation(const CAnimation& rhs);
 	virtual ~CAnimation() = default;
 public:
-	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, LOCALPOS_DESC** pLocalPosArray, _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask,_vector vector[3] = nullptr);
-	void			ProgressAnimation(const vector<CBone*>& Bones,LOCALPOS_DESC** pLocalPosArray, _bool bIsSpine, vector<_uint> BoneMask, _vector vector[3]);
-	void			ResetRootMotion();
+	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones,  _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask,_vector vector[3] = nullptr, _int RootBoneIndex = -1);
+	void			ProgressAnimation(const vector<CBone*>& Bones, _bool bIsSpine, vector<_uint> BoneMask, _vector vector[3], _int RootBoneIndex);
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }
 	_float			Get_AnimProgressRatio();
@@ -38,7 +37,9 @@ public:
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
 
 	_uint Get_ChannelCount() { return m_iNumChannels; }
+	_uint Get_KeyFrameCount() { return m_iKeyframeCount; }
 	_float Get_Duration() { return m_fDuration; }
+	_float Get_AnimTime() { return m_fTempTrack; }
 
 	ID3D11Buffer* Get_KeyFrameBuffer() { return m_pKeyFrameBuffer; }
 	ID3D11Buffer* Get_ChannelBuffer() { return m_pChannelBuffer; }

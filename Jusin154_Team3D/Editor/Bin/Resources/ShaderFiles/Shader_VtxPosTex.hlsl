@@ -63,6 +63,10 @@ int   g_iBloomType;
 
 float2 g_vBloomTime;
 
+/* 디졸브 */
+float2 g_vDissolveTime;
+bool   g_isDissolve;
+
 
 
 struct VS_IN
@@ -255,6 +259,11 @@ vector Draw_Trail(PS_IN In)
     /* 디퓨즈 알파 컷*/
     if (vMtrlDiffuse.a <= FLT_EPSILON5)
         discard;
+    
+    if (g_isDissolve)
+    {
+        vMtrlDiffuse.a *= saturate((0.96f - g_vDissolveTime.x / g_vDissolveTime.y)); 
+    }
 
     return vMtrlDiffuse;
      

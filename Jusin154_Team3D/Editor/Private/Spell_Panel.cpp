@@ -38,7 +38,7 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 960.f;
-	Desc.fY = 540.f;
+	Desc.fY = -540.f;
 	Desc.fSizeX = g_iWinSizeX;
 	Desc.fSizeY = g_iWinSizeY;
 

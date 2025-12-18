@@ -10,8 +10,8 @@
 #pragma region STATE
 #include "State_Broom_Ride.h"
 #include "State_Broom_Ride_Move.h"
-#include "State_Broom_Hover.h"
-#include "State_Broom_Fly.h"
+#include "State_Hover.h"
+#include "State_Fly.h"
 #include "State_Broom_TurboFly.h"
 #pragma endregion
 
@@ -41,6 +41,8 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
+
+	m_bAI = true;
 
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
@@ -83,7 +85,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 
-	m_bAI = true;
+
 
 	m_pBroom->Set_Ride(true);
 
@@ -187,13 +189,20 @@ HRESULT CBroomRacerAI::Render_Shadow(SHADOW eType)
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
+			return E_FAIL;
+
+		}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
-			return E_FAIL;
-		}
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -572,7 +581,7 @@ void CBroomRacerAI::Add_FSM()
 	}
 
 	{
-		CState_Broom_Hover::STATE_BROOM_HOVER_DESC Desc{};
+		CState_Hover::STATE_HOVER_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_HoverEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_HoverExitCheck(fTimedelta); };
@@ -582,11 +591,11 @@ void CBroomRacerAI::Add_FSM()
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::HOVER, CState_Broom_Hover::Create(&Desc));
+		m_States.emplace(FSMSTATE::HOVER, CState_Hover::Create(&Desc));
 	}
 
 	{
-		CState_Broom_Fly::STATE_BROOM_FLY_DESC Desc{};
+		CState_Fly::STATE_FLY_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_FlyEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_FlyExitCheck(fTimedelta); };
@@ -596,7 +605,7 @@ void CBroomRacerAI::Add_FSM()
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::FLY, CState_Broom_Fly::Create(&Desc));
+		m_States.emplace(FSMSTATE::FLY, CState_Fly::Create(&Desc));
 	}
 
 	{

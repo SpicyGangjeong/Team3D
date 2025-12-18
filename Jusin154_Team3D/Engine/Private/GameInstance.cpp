@@ -369,7 +369,7 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_Render_NonLight = Get_TimeDelta(TEXT("Timer_Render_NonLight"));
 	m_fTimer_Render_Blend = Get_TimeDelta(TEXT("Timer_Render_Blend"));
 	m_fTimer_Render_WeightBlend = Get_TimeDelta(TEXT("Timer_Render_WeightBlend"));
-	m_fTimer_Render_Bloom = Get_TimeDelta(TEXT("Timer_Render_Bloom"));
+	m_fTimer_Render_PostProcessing = Get_TimeDelta(TEXT("Timer_Render_PostProcessing"));
 	m_fTimer_Render_LastColor = Get_TimeDelta(TEXT("Timer_Render_LastColor"));
 	m_fTimer_Render_Tone_Mapping = Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
 	m_fTimer_Render_UI = Get_TimeDelta(TEXT("Timer_Render_UI"));
@@ -443,7 +443,7 @@ void CGameInstance::Present_TimeCost() const
 					+ m_fTimer_Render_NonLight
 					+ m_fTimer_Render_Blend
 					+ m_fTimer_Render_WeightBlend
-					+ m_fTimer_Render_Bloom
+					+ m_fTimer_Render_PostProcessing
 					+ m_fTimer_Render_LastColor
 					+ m_fTimer_Render_Tone_Mapping
 					+ m_fTimer_Render_UI
@@ -524,9 +524,9 @@ void CGameInstance::Present_TimeCost() const
 					GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
 				}
 				{
-					GUI::ProgressBar(m_fTimer_Render_Bloom / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::ProgressBar(m_fTimer_Render_PostProcessing / fRenderer_Total, ImVec2(200.f, 0.f));
 					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Bloom %d", int(m_fTimer_Render_Bloom / fRenderer_Total * 100.f));
+					GUI::Text("Render_PostProcessing %d", int(m_fTimer_Render_PostProcessing / fRenderer_Total * 100.f));
 				}
 				{
 					GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
@@ -679,9 +679,19 @@ HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRender
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
-void CGameInstance::Render_PreShadow()
+void CGameInstance::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix)
 {
-	return m_pRenderer->Render_PreShadow();
+	return m_pRenderer->Render_PreShadow(ViewMatrix, ProjMatrix);
+}
+
+HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);
+}
+
+HRESULT CGameInstance::Bind_PrevMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	return m_pRenderer->Bind_PrevMatrix(pShader, pConstants, eType);
 }
 
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
@@ -849,13 +859,13 @@ HRESULT CGameInstance::Bind_RenderTarget(const _wstring& strTargetTag, CShader* 
 	return m_pRenderTarget_Manager->Bind_RenderTarget(strTargetTag, pShader, pConstantName);
 }
 
-HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
-	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetTo(strTargetTag, pTexture2D);
 }
-HRESULT CGameInstance::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
-	return m_pRenderTarget_Manager->Paste_RenderTarget(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetFrom(strTargetTag, pTexture2D);
 }
 HRESULT CGameInstance::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
 {
@@ -935,8 +945,6 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 {
 	m_ModelMap[filePath] = pModel;
 }
-
-
 #endif
 
 void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
@@ -1074,65 +1082,110 @@ ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
 
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Pressing(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Key_Pressing(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 bool		CGameInstance::Key_Up(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Up(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Key_Up(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 bool		CGameInstance::Key_Down(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Down(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Key_Down(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Pressing(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Pressing(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_Pressing(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Up(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Up(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_Up(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Down(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_StartMove()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_StartMove();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_StartMove();
 	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Moving()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Moving();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_Moving();
 	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_StopMove()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_StopMove();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)OPTIONAL_TRUE_KEYINPUTGUICHECK)) {
 		return m_pKey_Manager->Mouse_StopMove();
 	}
+#endif // _DEBUG
 	return false;
 }
 _float3 CGameInstance::Get_MouseMove()

@@ -22,7 +22,7 @@ HRESULT CLogo_Glow::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 470.f;
-	Desc.fY = 385.f;
+	Desc.fY = -385.f;
 	Desc.fSizeX = 256.f;
 	Desc.fSizeY = 128.f;
 

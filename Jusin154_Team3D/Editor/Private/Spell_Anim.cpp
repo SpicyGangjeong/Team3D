@@ -22,7 +22,7 @@ HRESULT CSpell_Anim::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 590.f;
-	Desc.fY = -100.f;
+	Desc.fY = 100.f;
 	Desc.fSizeX = 470.f;
 	Desc.fSizeY = 250.f;
 
@@ -106,7 +106,7 @@ void CSpell_Anim::Update(_float fTimeDelta)
 
 	if (m_iPerSpell != -1)
 	{
-		m_fY = m_fOrigin_Position.y + static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iPerSpell).fVidio;
+		m_fY = m_fOrigin_Position.y - static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iPerSpell).fVidio;
 	}
 
 	__super::Update(fTimeDelta);

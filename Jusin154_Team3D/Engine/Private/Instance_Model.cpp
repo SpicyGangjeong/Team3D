@@ -552,7 +552,8 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 	{
 		CS_PARTICLE_DESC* pDesc = static_cast<CS_PARTICLE_DESC*>(ConstantSubResource.pData);
 
-		pDesc->fTimeDelta = fTimeDelta;
+		pDesc->fTimeDelta = fTimeDelta * m_fTimeMult;
+
 		pDesc->isLoop = m_InstanceDesc.isLoop;
 		pDesc->isDrop = m_InstanceDesc.isDrop;
 		pDesc->isTurn = m_InstanceDesc.isTurn;

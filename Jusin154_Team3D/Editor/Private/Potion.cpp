@@ -22,7 +22,7 @@ HRESULT CPotion::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 700.f;
-	Desc.fY = 150.f;
+	Desc.fY = -150.f;
 	Desc.fSizeX = 80.f;
 	Desc.fSizeY = 80.f;
 

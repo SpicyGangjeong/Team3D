@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Quest_Info.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CQuest_Info::CQuest_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CQuest_Info::CQuest_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CQuest_Info::CQuest_Info(const CQuest_Info& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -22,7 +24,7 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 325.f;
-	Desc.fY = -250.f;
+	Desc.fY = 250.f;
 	Desc.fSizeX = 128.f;
 	Desc.fSizeY = 128.f;
 
@@ -45,10 +47,11 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	SizeUpX(960);
 	SizeUpY(m_fOriginPerviewSize);
 	m_fSortZ = 0.02f;
-	m_fFontX = 740.f;
+	m_fFontX = 530.f;
 	m_fFontY = 500.f;
 	m_iPerQuestIndex = -1;
-	Visible(true);
+	Visible(false);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
 
@@ -96,11 +99,6 @@ void CQuest_Info::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
-	Hover();
-	m_pRect.left = long(m_fX - m_vScale.x * 0.5f);
-	m_pRect.top = long(m_fY - m_vScale.y * 0.5f);
-	m_pRect.right = long(m_fX + m_vScale.x * 0.5f);
-	m_pRect.bottom = long(m_fY + m_vScale.y * 0.5f);
 	__super::Update(fTimeDelta);
 }
 
@@ -131,6 +129,7 @@ HRESULT CQuest_Info::Render()
 		return E_FAIL;
 	}
 
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iQuest_Index).pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 
@@ -218,21 +217,15 @@ HRESULT CQuest_Info::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CQuest_Info::Hover()
+void CQuest_Info::Set_Hover(_int Index)
 {
-	POINT ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	_float2 fMouse;
-	fMouse.x = ptMouse.x - g_iWinSizeX * 0.5f;
-	fMouse.y = -(ptMouse.y - g_iWinSizeY * 0.5f);
-
-	if (fMouse.x >= m_pRect.left && fMouse.x <= m_pRect.right &&
-		fMouse.y >= m_pRect.top && fMouse.y <= m_pRect.bottom)
+	m_iQuest_Index = Index;
+	if (m_iQuest_Index == -1)
 	{
-		_int a = 0;
+		Visible(false);
+		return;
 	}
-
+	Visible(true);
 }
 
 CQuest_Info* CQuest_Info::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

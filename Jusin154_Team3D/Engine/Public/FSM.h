@@ -43,6 +43,11 @@ enum ESTATE : _u64Flag
     FLY                         = 1ULL << 36,
     TURBOFLY                    = 1ULL << 37,
     PARRY                       = 1ULL << 38,
+    FIREBREATH                  = 1ULL << 39,
+    FIREBALL                    = 1ULL << 40,
+    PULSE                       = 1ULL << 41,
+    TUCKED                      = 1ULL << 42,
+    ANCIENT_SPELL               = 1ULL << 43,
     END
 };
 NS_END

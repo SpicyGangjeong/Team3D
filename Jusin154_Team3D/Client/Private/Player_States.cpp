@@ -25,12 +25,13 @@
 #include "State_Combat.h"
 #include "State_LightAttack.h"
 #include "State_Spell.h"
+#include "State_AncientSpell.h"
 #include "State_Shield.h"
 #include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #include "State_Broom_Ride_Move.h"
-#include "State_Broom_Hover.h"
-#include "State_Broom_Fly.h"
+#include "State_Hover.h"
+#include "State_Fly.h"
 #include "State_Broom_TurboFly.h"
 #include "State_Broom_Dismount.h"
 #pragma endregion
@@ -53,7 +54,8 @@ void CPlayer::Get_UIState(_int UIState)
 
 HRESULT CPlayer::InputAction()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) && 
+	m_eUIState !=ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
 		if (
 			m_pGameInstance->Key_Down(DIK_SPACE)
 			|| m_pGameInstance->Key_Down(DIK_LCONTROL)
@@ -76,6 +78,7 @@ HRESULT CPlayer::InputAction()
 			if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
 			if (m_pGameInstance->Key_Down(DIK_X)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_X));
 			if (m_pGameInstance->Key_Down(DIK_G)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_G));
+			if (m_pGameInstance->Key_Down(DIK_Z)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_Z));
 			return S_OK;
 		}
 	}
@@ -85,6 +88,11 @@ HRESULT CPlayer::InputAction()
 			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
 			return S_OK;
 		}
+		if (m_pGameInstance->Key_Down(DIK_TAB))
+		{
+			if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
+			return S_OK;
+		}
 	}
 
 	return E_FAIL;
@@ -92,7 +100,8 @@ HRESULT CPlayer::InputAction()
 
 HRESULT CPlayer::InputMove()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
 
 		if (m_pGameInstance->Key_Pressing(DIK_W)
 			|| m_pGameInstance->Key_Pressing(DIK_A)
@@ -108,7 +117,8 @@ HRESULT CPlayer::InputMove()
 
 HRESULT CPlayer::InputKeyUpMove()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
 		if (m_pGameInstance->Key_Up(DIK_W)
 			|| m_pGameInstance->Key_Up(DIK_A)
 			|| m_pGameInstance->Key_Up(DIK_S)
@@ -122,7 +132,8 @@ HRESULT CPlayer::InputKeyUpMove()
 
 HRESULT CPlayer::InputSpell()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
 		if (
 			m_pGameInstance->Key_Down(DIK_1)
 			|| m_pGameInstance->Key_Down(DIK_2)
@@ -223,6 +234,9 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		}
 		else if (m_pGameInstance->Key_Down(DIK_T)) {
 			m_pInfoInstance->Change_Canvas();
+		}
+		else if (m_pGameInstance->Key_Down(DIK_X)) {
+			m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Z)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
@@ -430,6 +444,9 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 		else if (m_pGameInstance->Key_Down(DIK_V)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_X)) {
+			m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Z)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
@@ -856,6 +873,10 @@ void CPlayer::Behavior_CombatEnter()
 		m_pFSM->Enable_State(FSMSTATE::MAPHELP);
 		pairAnimInfo = m_Animation[STATEANIM::MAPHELP];
 	}
+	else if (m_pGameInstance->Key_Down(DIK_X)) {
+		m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
+		return;
+	}
 	else if (m_pGameInstance->Key_Down(DIK_Z)) {
 		if (nullptr != m_pGrapInteractive) {
 			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
@@ -1087,6 +1108,10 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 			}
 		}
 	}
+	else if (m_pGameInstance->Key_Down(DIK_X)) {
+		m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
+		return E_FAIL;
+	}
 	else if (m_pGameInstance->Key_Down(DIK_Z)) {
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
@@ -1181,7 +1206,7 @@ void CPlayer::Behavior_SpellEnter()
 		{
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); },
+				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this); }, /* 임시로 바꿔놓음 */
 				fRatio);
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
@@ -1397,6 +1422,10 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 			}
 		}
 	}
+	else if (m_pGameInstance->Key_Down(DIK_X)) {
+		m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
+		return E_FAIL;
+	}
 	else if (m_pGameInstance->Key_Down(DIK_Z)) {
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
@@ -1455,17 +1484,66 @@ void CPlayer::Behavior_SpellExit()
 	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
+void CPlayer::Behavior_AncientSpellEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+	m_pFSM->Enable_State(FSMSTATE::ANCIENT_SPELL);
+	pairAnimInfo = m_Animation[STATEANIM::ANCIENT_LIGHTNING_CHARGE];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {	pairAnimInfo = m_Animation[STATEANIM::ANCIENT_LIGHTNING];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
+		0.5f);
+}
+
+HRESULT CPlayer::Behavior_AncientSpellExitCheck()
+{
+	pair<_uint, _bool> pairAnimInfo;
+	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+		m_bLookAt = false;
+		return E_FAIL;
+	}
+
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_bLookAt = false;
+		if (SUCCEEDED(InputMove()))
+		{
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
+		}
+		else {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_AncientSpellExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::ANCIENT_SPELL);
+}
+
 void CPlayer::Behavior_ShieldEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 
-	m_pFSM->Enable_State(FSMSTATE::SHIELD);
-	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true,1.f);
+	if (!m_bShield)
+	{
+		m_pFSM->Enable_State(FSMSTATE::SHIELD);
+		pairAnimInfo = m_Animation[STATEANIM::SKILL2];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f);
 
-	Add_Event(pairAnimInfo.first,
-		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
-		0.1f);
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
+			0.1f);
+
+	}
 }
 
 HRESULT CPlayer::Behavior_ShieldExitCheck()
@@ -1476,6 +1554,7 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 
 	if (m_bShield)
 	{
+
 		if (m_pGameInstance->Key_Pressing(DIK_Q))
 		{
 			m_pFSM->Enable_State(FSMSTATE::PARRY);
@@ -1524,10 +1603,11 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 			m_pGameInstance->SlowMotion(0.8f, 0.3f);
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-		/*	Add_Event(pairAnimInfo.first,
-				[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iIndex);  },
+			Add_Event(pairAnimInfo.first,
+				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
 				0.2f);
-*/			m_bShield = false;
+
+			m_bShield = false;
 			return S_OK;
 
 		}
@@ -1624,6 +1704,7 @@ HRESULT CPlayer::Behavior_HitExitCheck()
 void CPlayer::Behavior_HitExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::HIT);
+	m_bLookAt = false;
 }
 
 void CPlayer::Behavior_Broom_RideEnter()
@@ -2412,6 +2493,17 @@ void CPlayer::Add_FSM()
 	}
 
 	{
+		CState_AncientSpell::STATE_ANCIENTSPELL_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_AncientSpellEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_AncientSpellExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_AncientSpellExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::ANCIENT_SPELL, CState_AncientSpell::Create(&Desc));
+	}
+
+	{
 		CState_Shield::STATE_SHIELD_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_ShieldEnter(); };
@@ -2507,7 +2599,7 @@ void CPlayer::Add_FSM()
 	}
 
 	{
-		CState_Broom_Hover::STATE_BROOM_HOVER_DESC Desc{};
+		CState_Hover::STATE_HOVER_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_HoverEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_HoverExitCheck(fTimedelta); };
@@ -2517,11 +2609,11 @@ void CPlayer::Add_FSM()
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::HOVER, CState_Broom_Hover::Create(&Desc));
+		m_States.emplace(FSMSTATE::HOVER, CState_Hover::Create(&Desc));
 	}
 
 	{
-		CState_Broom_Fly::STATE_BROOM_FLY_DESC Desc{};
+		CState_Fly::STATE_FLY_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_FlyEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_FlyExitCheck(fTimedelta); };
@@ -2531,7 +2623,7 @@ void CPlayer::Add_FSM()
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::FLY, CState_Broom_Fly::Create(&Desc));
+		m_States.emplace(FSMSTATE::FLY, CState_Fly::Create(&Desc));
 	}
 
 	{
@@ -2626,6 +2718,9 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 586,false };
 	m_Animation[STATEANIM::ANCIENT_THROW] = { 919,false };
 
+	m_Animation[STATEANIM::ANCIENT_LIGHTNING_CHARGE] = { 755,false };
+	m_Animation[STATEANIM::ANCIENT_LIGHTNING] = { 859,false }; // 859
+
 	m_Animation[STATEANIM::SPELL_FAIL] = { 906,false };
 
 	m_Animation[STATEANIM::PARRY_180] = { 947,false };
@@ -2700,6 +2795,8 @@ void CPlayer::Set_Anim()
 
 	// 716 아래 앞 왼 오 업
 	// 947
+
+	// 755 기모으기 859
 }
 
 

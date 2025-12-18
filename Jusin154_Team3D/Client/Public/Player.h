@@ -24,6 +24,7 @@ public:
 	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
 	void Set_Shield(_bool bShield) { m_bShield = bShield; }
 	void Start_CameraShake(_float fTime, _float fIntense);
+	_int Get_UIState() { return m_eUIState; }
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -127,6 +128,11 @@ private:
 	_float			m_fAnimTime = {};
 	_bool			m_bTurbo = {};
 
+	/* 무적 불 변수*/
+#ifdef _DEBUG
+	_bool			m_isDebugMode = { false };
+#endif
+
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();
@@ -165,6 +171,10 @@ private:
 	void	Behavior_SpellEnter();
 	HRESULT Behavior_SpellExitCheck();
 	void	Behavior_SpellExit();
+	 
+	void	Behavior_AncientSpellEnter();
+	HRESULT Behavior_AncientSpellExitCheck();
+	void	Behavior_AncientSpellExit();
 
 	void	Behavior_ShieldEnter();
 	HRESULT Behavior_ShieldExitCheck();

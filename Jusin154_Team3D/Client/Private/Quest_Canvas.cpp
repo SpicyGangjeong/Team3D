@@ -3,20 +3,22 @@
 #include "Quest_Canvas.h"
 #include "GameInstance.h"
 #include "Quest_Panel.h"
+#include "InfoInstance.h"
 
 CQuest_Canvas::CQuest_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CCanvasObject(pDevice, pContext)
+	:CCanvasObject(pDevice, pContext)
 {
 }
 
 CQuest_Canvas::CQuest_Canvas(const CQuest_Canvas& rhs)
-    :CCanvasObject(rhs)
+	:CCanvasObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
 HRESULT CQuest_Canvas::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CQuest_Canvas::Initialize(void* pArg)
@@ -25,8 +27,8 @@ HRESULT CQuest_Canvas::Initialize(void* pArg)
 
 	Desc.fX = 0.f;
 	Desc.fY = 0.f;
-	Desc.fSizeX = 1920.f;
-	Desc.fSizeY = 1080.f;
+	Desc.fSizeX = g_iWinSizeX;
+	Desc.fSizeY = g_iWinSizeY;
 
 	if (FAILED(__super::Initialize(&Desc)))
 	{
@@ -41,6 +43,7 @@ HRESULT CQuest_Canvas::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	Visible(false);
+	m_pInfoInstance->Set_AcceptQuest(0);
 	return S_OK;
 }
 
@@ -56,8 +59,6 @@ void CQuest_Canvas::Update(_float fTimeDelta)
 
 void CQuest_Canvas::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible) {
-	}
 	__super::Late_Update(fTimeDelta);
 }
 
@@ -78,10 +79,10 @@ HRESULT CQuest_Canvas::Bind_ShaderResources()
 
 HRESULT CQuest_Canvas::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
+	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 
@@ -92,11 +93,20 @@ HRESULT CQuest_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Quest_Panel"), m_pQuest_Panel);
+
 	return S_OK;
 }
 
 void CQuest_Canvas::Clear_Penel()
 {
+}
+
+void CQuest_Canvas::Visible(_bool bVisible)
+{
+	_int Index = 0;
+	m_bVisible = bVisible;
+	if (m_bVisible == false)
+		Function_Callback(TEXT("QuestPanelClose"), &Index);
 }
 
 CQuest_Canvas* CQuest_Canvas::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

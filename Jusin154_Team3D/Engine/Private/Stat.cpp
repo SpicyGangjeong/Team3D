@@ -18,6 +18,7 @@ HRESULT CStat::Initialize_Prototype(tinyxml2::XMLNode* pChild)
 {
 	auto pElement = pChild->ToElement();
 	m_UnitInfo.pUnit_Name = CMyTools::ToWstring(pElement->Attribute("Name"));
+	pElement->QueryIntAttribute("OBJECTID", &m_UnitInfo.iObjectID);
 	pElement->QueryFloatAttribute("HP", &m_UnitInfo.fCurrentHp);
 	pElement->QueryFloatAttribute("MAXHP", &m_UnitInfo.fMaxHp);
 	pElement->QueryFloatAttribute("TARGETHP", &m_UnitInfo.fTargetHp);

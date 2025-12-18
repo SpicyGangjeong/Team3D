@@ -586,18 +586,6 @@
     <Filter Include="50.UI\Quest_Canvas\Quest_Panel">
       <UniqueIdentifier>{cf0e6cef-f688-481a-8e7e-478038907ca8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Border">
-      <UniqueIdentifier>{0a514079-ba47-4973-8472-07a80f1390cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Header">
-      <UniqueIdentifier>{104ae31b-3c6a-4acb-9886-abace9859c6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine">
-      <UniqueIdentifier>{2af37b38-5cbe-4701-8681-638dfe78a9ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_List">
-      <UniqueIdentifier>{0dfdc08d-b662-45f1-a1ea-1ca474010600}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Info">
       <UniqueIdentifier>{971fb38a-f92c-4eea-99d3-287704800ba5}</UniqueIdentifier>
     </Filter>
@@ -607,8 +595,20 @@
     <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line">
       <UniqueIdentifier>{a5e3c859-7e28-47b3-8b2e-3be3348bb7ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Interaction_Panel">
+      <UniqueIdentifier>{daeac33b-8465-457b-ba3f-18738f7a0d32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Status">
+      <UniqueIdentifier>{18181fd1-eb00-4d29-a2aa-071428fe4ba6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line">
-      <UniqueIdentifier>{2347d77a-ac72-4b3e-bf5f-434ca410e544}</UniqueIdentifier>
+      <UniqueIdentifier>{64947266-fbe6-49ca-aa4d-bb58a5a3aff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Slot">
+      <UniqueIdentifier>{f4b89bbe-d67d-4314-9843-5daf515e7ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\QuestInstance">
+      <UniqueIdentifier>{a2d06f57-c74f-4604-91b4-884bf6586584}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1194,18 +1194,6 @@
     <ClInclude Include="..\public\Quest_Panel.h">
       <Filter>50.UI\Quest_Canvas\Quest_Panel</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Quest_Border.h">
-      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Quest_Header.h">
-      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Quest_HeaderLine.h">
-      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Quest_List.h">
-      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Quest_Info.h">
       <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
     </ClInclude>
@@ -1215,8 +1203,20 @@
     <ClInclude Include="..\public\Quest_Info_Line.h">
       <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Quest_Entry_Line.h">
+    <ClInclude Include="..\public\Quest_Status.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Status</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Interaction_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Interaction_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Slot.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Entry_Line.h">
       <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\QuestInstance.h">
+      <Filter>50.UI\QuestInstance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1804,18 +1804,6 @@
     <ClCompile Include="..\private\Quest_Panel.cpp">
       <Filter>50.UI\Quest_Canvas\Quest_Panel</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Quest_Border.cpp">
-      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Quest_Header.cpp">
-      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Quest_HeaderLine.cpp">
-      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Quest_List.cpp">
-      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Quest_Info.cpp">
       <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
     </ClCompile>
@@ -1825,8 +1813,20 @@
     <ClCompile Include="..\private\Quest_Info_Line.cpp">
       <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Quest_Entry_Line.cpp">
+    <ClCompile Include="..\private\Quest_Status.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Status</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Interaction_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Interaction_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Slot.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Entry_Line.cpp">
       <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\QuestInstance.cpp">
+      <Filter>50.UI\QuestInstance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

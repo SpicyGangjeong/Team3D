@@ -37,13 +37,15 @@ HRESULT CGoblin_Mage::Behavior_IdleExitCheck()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_PROTEGO, this);
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::MOVE);
+		return E_FAIL;
 	}
 	else if (m_fTargetDistance >= 25.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin_Mage::Behavior_IdleExit()
@@ -88,9 +90,10 @@ HRESULT CGoblin_Mage::Behavior_IdleBreakExitCheck()
 {
 	if (m_pModelCom->IsFinishedAnim()) {
 		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin_Mage::Behavior_IdleBreakExit()
@@ -113,13 +116,14 @@ HRESULT CGoblin_Mage::Behavior_MoveExitCheck()
 
 	if (m_fTargetDistance <= 15.f && m_fTargetDistance != 0.f) {
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
 	}
 	else {
 		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin_Mage::Behavior_MoveExit()
@@ -155,20 +159,24 @@ HRESULT CGoblin_Mage::Behavior_CombatExitCheck(_float fTimeDelta)
 	if (m_fTargetDistance <= 7.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::BLINK);
+		return E_FAIL;
 	}
 	else if (m_fTargetDistance <= 10.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SPELL);
+		return E_FAIL;
 	}
 	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
+		return E_FAIL;
 	}
 	else {
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin_Mage::Behavior_CombatExit()
@@ -189,9 +197,6 @@ void CGoblin_Mage::Behavior_SpellEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_MAGE_SIDE, this);
 
 		}, 0.1f);
-
-
-
 }
 
 HRESULT CGoblin_Mage::Behavior_SpellExitCheck(_float fTimeDelta)
@@ -221,7 +226,7 @@ HRESULT CGoblin_Mage::Behavior_SpellExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin_Mage::Behavior_SpellExit()
@@ -261,7 +266,7 @@ HRESULT CGoblin_Mage::Behavior_LightAttackExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin_Mage::Behavior_LightAttackExit()
@@ -286,7 +291,7 @@ HRESULT CGoblin_Mage::Behavior_SustainExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin_Mage::Behavior_SustainExit()
@@ -355,7 +360,7 @@ HRESULT CGoblin_Mage::Behavior_BlinkExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CGoblin_Mage::Behavior_BlinkExit()
@@ -382,7 +387,7 @@ void CGoblin_Mage::Behavior_HitEnter()
 	{
 		if (m_fHitDegree >= 90.f)
 		{
-			_int iRandIndex = m_pGameInstance->Real_Random_Int(0, 5);
+			_int iRandIndex = m_pGameInstance->Real_Random_Int(0, 3);
 			switch (iRandIndex)
 			{
 			case 0:
@@ -467,29 +472,25 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 			}
 		}
 	}
-	else
+
+	if(m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ACCIO))
 	{
 		if (!m_bPos)
 		{
 			m_pCharacter_Controller->SetGravity(false);
 			_vector vPlayerPos = pTransform->Get_State(STATE::POSITION);
+			vPlayerPos = XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + 2.5f);
 			_vector vMonsterPos = m_pCharacter_Controller->Get_Position();
 
 			_vector vDir = XMVector3Normalize(vPlayerPos - vMonsterPos);
 			_float fLength = XMVectorGetX(XMVector3Length(vPlayerPos - vMonsterPos));
 
-
-			_vector vUp = m_pTransformCom->Get_State(STATE::UP);
-			vUp = XMVector4Normalize(vUp);
-			_vector vPos = m_pCharacter_Controller->Get_Position();
-			_vector Force = vUp * fTimeDelta * 15.f;
-
 			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
 
-			if (fLength >= 3.5f)
+			if (fLength >= 2.5f)
 			{
 				m_pCharacter_Controller->Set_Position(
-					vMonsterPos + vDir * m_fSpeed * fTimeDelta + Force
+					vMonsterPos + vDir * m_fSpeed * fTimeDelta
 				);
 			}
 			else {
@@ -513,7 +514,7 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 

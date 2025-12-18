@@ -61,6 +61,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	}
 #ifdef _DEBUG
 	Load_KeyFrame();
+
+#if 진우
+	m_isDebugMode = true; // 디버그 무적 모드
+#endif
+
 #endif // _DEBUG
 
 	m_pBroomModel = m_pBroom->Get_Component<CModel>();
@@ -137,8 +142,6 @@ void CPlayer::Update(_float fTimeDelta)
 		ease = 0.85f;      
 
 	m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
-
-
 
 	Play_Event();
 	
@@ -248,16 +251,24 @@ HRESULT CPlayer::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}
+
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -287,13 +298,20 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
-
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -304,6 +322,17 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+
+	if (m_pFSM->IsEnable(FSMSTATE::SHIELD))
+	{
+		m_bShield = true;
+	}
+
+#ifdef _DEBUG
+	if (m_isDebugMode == true)
+		return;
+#endif
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
@@ -311,10 +340,7 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	else {
 		m_fHitDegree = -1.f;
 	}
-	if (m_pFSM->IsEnable(FSMSTATE::SHIELD))
-	{
-		m_bShield = true;
-	}
+
 
 	if(!m_pFSM->IsEnable(FSMSTATE::DODGE) && !m_bShield)
 		m_pFSM->Change_State(FSMSTATE::HIT);
@@ -503,6 +529,15 @@ HRESULT CPlayer::Bind_ShaderResources()
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -522,6 +557,7 @@ void CPlayer::ReLockOnTarget()
 			m_LockOnInfo.pUnit = nullptr;
 		}
 	}
+
 	//m_pLockOnMonster->Get_State
 }
 

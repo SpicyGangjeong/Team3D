@@ -22,7 +22,7 @@ HRESULT CSpell_UI::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 650.f;
-	Desc.fY = -60.f;
+	Desc.fY = 60.f;
 	Desc.fSizeX = 180.f;
 	Desc.fSizeY = 50.f;
 

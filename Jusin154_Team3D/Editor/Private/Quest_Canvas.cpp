@@ -25,8 +25,8 @@ HRESULT CQuest_Canvas::Initialize(void* pArg)
 
 	Desc.fX = 0.f;
 	Desc.fY = 0.f;
-	Desc.fSizeX = 1920.f;
-	Desc.fSizeY = 1080.f;
+	Desc.fSizeX = g_iWinSizeX;
+	Desc.fSizeY = g_iWinSizeY;
 
 	if (FAILED(__super::Initialize(&Desc)))
 	{
@@ -57,7 +57,9 @@ void CQuest_Canvas::Update(_float fTimeDelta)
 void CQuest_Canvas::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible) {
+	m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
+
 	__super::Late_Update(fTimeDelta);
 }
 
@@ -78,7 +80,8 @@ HRESULT CQuest_Canvas::Bind_ShaderResources()
 
 HRESULT CQuest_Canvas::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
+	{
 		return E_FAIL;
 	}
 
@@ -92,6 +95,7 @@ HRESULT CQuest_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Quest_Panel"), m_pQuest_Panel);
+
 	return S_OK;
 }
 

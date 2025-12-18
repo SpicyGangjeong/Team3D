@@ -4,6 +4,9 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Unit.h"
+#include "PartObject.h"
+#include "EffectParts.h"
+
 CBroom::CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
 {
@@ -31,6 +34,9 @@ HRESULT CBroom::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
+
+
 	Add_FSM();
 
 	Set_Anim();
@@ -47,18 +53,31 @@ HRESULT CBroom::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
 
 	m_pParentUnit = dynamic_cast<CUnit*>(m_pOwner);
-		
+
+	if (m_pParentUnit->IsAI() == false)
+	{
+		if (FAILED(Ready_Child())) {
+			return E_FAIL;
+		}
+
+		m_pWindEffect->Get_Effect_Info()->isBillboard = false;
+	}
+
+
+
 
 	return S_OK;
 }
 
 void CBroom::Priority_Update(_float fTimeDelta)
 {
-	
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CBroom::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
+
 	Update_CameraCoordinateSystem();
 
 	if(!m_pParentUnit->IsAI())
@@ -73,6 +92,15 @@ void CBroom::Update(_float fTimeDelta)
 		m_bHoverToggle = true;
 		m_fSpeed = 0.f;
 
+		if(m_pWindEffect != nullptr)
+		{
+			if(m_pWindEffect->Get_Visible() == true) // 전 프레임에 트루였다면
+			{
+				m_pWindEffect->Set_Visible(false);
+				m_pWindEffect->Get_Effect_Info()->fSoftMask = 1.f;
+			}
+		}
+
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
@@ -80,16 +108,58 @@ void CBroom::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+
+	/* 윈드 이펙트 */
+
+	if (m_bRide == true && m_pWindEffect != nullptr)
+	{
+		if (m_fSpeed <= 5.f)
+		{
+			//m_pWindEffect->Set_Visible(false);
+			return;
+		}
+
+		m_pWindEffect->Set_Visible(true);
+		m_pWindEffect->Get_Component<CInstance_Model>()->Set_TimeMult(0.5f + m_fSpeed / 20.f);
+		m_pWindEffect->Get_Effect_Info()->fBlurIntensity = m_fSpeed / 30.f;
+
+	}
+
+
 
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
 {
+	__super::Late_Update(fTimeDelta);
+
+	if (m_bRide == true && m_pWindEffect != nullptr)
+	{
+		CTransform* WindTransform = m_pWindEffect->Get_Component<CTransform>();
+
+		_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix()/* * XMMatrixRotationAxis(XMVectorSet(0.f , 1.f, 0.f ,0.f), XMConvertToRadians(180.f))*/;
+		WindTransform->Set_WorldMatrix(WorldMat);
+
+		_vector vCameraLook = XMVector3Normalize(m_pGameInstance->Get_CameraLook());
+		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition() + vCameraLook * m_fCameraOffset);
+
+#if _DEBUG
+#if 진우
+		GUI::Begin("Wind");
+
+		m_pWindEffect->Get_Component<CInstance_Model>()->Describe_Entity();
+		GUI::Checkbox("BillBoard", &m_pWindEffect->Get_Effect_Info()->isBillboard);
+		GUI::DragFloat("Offset", &m_fCameraOffset);
+		GUI::End();
+#endif
+#endif
+	}
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+
 }
 
 HRESULT CBroom::Render()
@@ -106,21 +176,45 @@ HRESULT CBroom::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
 		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
 	}
+
+	return S_OK;
+}
+
+HRESULT CBroom::Ready_Child()
+{
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CEffectParts>("Wind_Screen", g_iStaticLevel, &m_pWindEffect, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pWindEffect->Load("../Bin/Resources/Data/Effect/ScreenFX/Wind", static_cast<LEVEL>(NEXT_LEVEL));
 
 	return S_OK;
 }
@@ -156,7 +250,15 @@ HRESULT CBroom::Bind_ShaderResources()
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -234,6 +336,8 @@ CGameObject* CBroom::Clone(void* pArg, CGameObject* pOwner)
 void CBroom::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pWindEffect);
 }
 #ifdef _DEBUG
 

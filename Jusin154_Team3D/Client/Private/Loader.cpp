@@ -32,6 +32,7 @@
 #include "Troll.h"
 #include "NPC_Ollivander.h"
 #include "BroomRacerAI.h"
+#include "Ranrak.h"
 
 #pragma endregion
 
@@ -103,14 +104,16 @@
 
 #include "Quest_Canvas.h"
 #include "Quest_Panel.h"
-#include "Quest_Border.h"
-#include "Quest_Header.h"
-#include "Quest_HeaderLine.h"
-#include "Quest_List.h"
 #include "Quest_Info.h"
 #include "Quest_Info_Header.h"
 #include "Quest_Info_Line.h"
 #include "Quest_Entry_Line.h"
+#include "Quest_Status.h"
+#include "Quest_Slot.h"
+
+#include "QuestInstance.h"
+
+#include "Interaction_Key.h"
 
 #pragma endregion
 
@@ -161,6 +164,8 @@
 #include "Box_Splesh.h"
 #include "Chair_Splesh.h"
 #include "Barral_Splesh.h"
+#include "Screen_Wind.h"
+#include "Stupefy.h"
 
 #pragma endregion
 
@@ -332,10 +337,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = false;
 #endif // 
 #ifdef 진우
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = true;
@@ -910,6 +915,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma endregion
 #if 진우
+#elif 기무리
 #else
 #pragma region UI_ANI
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
@@ -1436,6 +1442,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC Quest_Slot_Desc{};
+
+	Quest_Slot_Desc.iNum = 10;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Quest_Slot"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &Quest_Slot_Desc)))) {
+		return E_FAIL;
+	}
 
 	{ // LIGHT PHYSX DYNAMIC
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
@@ -1558,12 +1572,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrak_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Dragon/Dragon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
 
 #pragma endregion
+
+#pragma region ITEM
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Wand_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
@@ -1596,6 +1612,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_BattleAxe_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
+
+#pragma endregion
 
 
 
@@ -1712,7 +1730,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(NEXT_LEVEL, CStupefy::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CScreen_Wind>(NEXT_LEVEL, CScreen_Wind::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	
@@ -1764,6 +1793,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Lightning", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+		});
+
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
 #pragma region UI 
@@ -1780,6 +1818,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_CameraLockOn*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CCameraLockOn>(g_iStaticLevel, CCameraLockOn::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_QuestInstance*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuestInstance>(g_iStaticLevel, CQuestInstance::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -1983,26 +2027,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	{
 		return E_FAIL;
 	}
-	/* For.Prototype_GameObject_Quest_Border*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Border>(g_iStaticLevel, CQuest_Border::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_Quest_Header*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Header>(g_iStaticLevel, CQuest_Header::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_Quest_HeaderLine*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_HeaderLine>(g_iStaticLevel, CQuest_HeaderLine::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_Quest_List*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_List>(g_iStaticLevel, CQuest_List::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
 	/* For.Prototype_GameObject_Quest_Info*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info>(g_iStaticLevel, CQuest_Info::Create(m_pDevice, m_pContext))))
 	{
@@ -2020,6 +2044,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_Quest_Entry_Line*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Entry_Line>(g_iStaticLevel, CQuest_Entry_Line::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Status*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status>(g_iStaticLevel, CQuest_Status::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+		/* For.Prototype_GameObject_Quest_Slot*/
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Slot>(g_iStaticLevel, CQuest_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Interaction_Key*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CInteraction_Key>(g_iStaticLevel, CInteraction_Key::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -2328,8 +2368,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll>(g_iStaticLevel, CTroll::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_Troll */
+	/* For.Prototype_GameObject_Ollivander */
 	if (FAILED(m_pGameInstance->Add_Prototype<CNPC_Ollivander>(g_iStaticLevel, CNPC_Ollivander::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Ranrak */
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrak>(g_iStaticLevel, CRanrak::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

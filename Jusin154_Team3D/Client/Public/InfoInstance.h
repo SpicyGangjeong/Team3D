@@ -66,6 +66,14 @@ public:
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
+#pragma region QuestINFO
+	QUESTINFO Get_Quest(_int QuestID);
+	_int Get_Quest_Count(_int Index);
+	const vector<QUESTINFO>& Get_AllQuest() const;
+	const vector<QUESTINFO>& Get_ClearQuest() const;
+	const vector<QUESTINFO>& Get_AcceptQuest() const;
+	HRESULT Set_AcceptQuest(_int Index);
+#pragma endregion
 #pragma region Interactive_INFO
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
@@ -79,6 +87,7 @@ private:
 	class CMonsterInfo*			m_pMonsterInfo = { nullptr };
 	class CMapInfo*				m_pMapInfo = { nullptr };
 	class CSkill_Data*			m_pSkillInfo = { nullptr };
+	class CQuest_Data*			m_pQuestInfo= { nullptr };
 	class CInteractiveInfo*		m_pInteractiveInfo =  { nullptr };
 	class CDamage_Font*			m_pDamage_Font =  { nullptr };
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);

@@ -38,9 +38,10 @@ HRESULT CProtego::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pSphere = Get_PartObject<CEffectParts>("ProtegoSphere");
+	m_pSphereLay = Get_PartObject<CEffectParts>("ProtegoLay");
 
 	SAFE_ADDREF(m_pSphere);
-
+	SAFE_ADDREF(m_pSphereLay);
 
 	m_wstrEffectName = L"Protego";
 
@@ -65,10 +66,13 @@ void CProtego::Update(_float fTimeDelta)
 		return;
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
+
+
 
 	/* 시작 사이즈 러프 */
 	if (m_fSizeAccTime > XM_PIDIV2)
@@ -80,6 +84,7 @@ void CProtego::Update(_float fTimeDelta)
 	_float3 vSize = _float3(fSize, fSize, fSize);
 
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
+	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
 }
 
 void CProtego::Late_Update(_float fTimeDelta)
@@ -98,13 +103,16 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 		return E_FAIL;
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	m_pSphere->Set_Visible(true);
+	m_pSphereLay->Set_Visible(true);
 
 
 
 	_float3 vSize = _float3(1.f, 1.f, 1.f);
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
+	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
 
 	m_fSizeAccTime = 0.f;
 
@@ -180,6 +188,7 @@ void CProtego::Free()
 	//		SAFE_RELEASE(m_pPhysHitBox);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pSphere);
+	SAFE_RELEASE(m_pSphereLay);
 
 }
 #ifdef _DEBUG

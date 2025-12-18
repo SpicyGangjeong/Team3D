@@ -6,8 +6,8 @@
 #pragma region STATE
 #include "State_Idle.h"
 #include "State_Move.h"
-#include "State_Broom_Hover.h"
-#include "State_Broom_Fly.h"
+#include "State_Hover.h"
+#include "State_Fly.h"
 #include "State_Broom_TurboFly.h"
 #pragma endregion
 
@@ -311,6 +311,7 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 			m_fTargetSpeed = 0.f;
 
 			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fDecel;
+
 
 			m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
@@ -847,25 +848,25 @@ void CBroom::Add_FSM()
 	}
 
 	{
-		CState_Broom_Hover::STATE_BROOM_HOVER_DESC Desc{};
+		CState_Hover::STATE_HOVER_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_HoverEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_HoverExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_Broom_HoverExit(); };
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::HOVER, CState_Broom_Hover::Create(&Desc));
+		m_States.emplace(FSMSTATE::HOVER, CState_Hover::Create(&Desc));
 	}
 
 	{
-		CState_Broom_Fly::STATE_BROOM_FLY_DESC Desc{};
+		CState_Fly::STATE_FLY_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_FlyEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_FlyExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_Broom_FlyExit(); };
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::FLY, CState_Broom_Fly::Create(&Desc));
+		m_States.emplace(FSMSTATE::FLY, CState_Fly::Create(&Desc));
 	}
 
 	{

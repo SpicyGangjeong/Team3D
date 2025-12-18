@@ -66,6 +66,30 @@ namespace Client
 		DAMAGE_TYPE eType = DAMAGE_TYPE::NOMAL;
 	}DAMAGE_INFO;
 
+	typedef struct tagObjectiveInfo
+	{
+		_bool	bClear{};
+		_int	iTargetID{};
+		_int	iRequiredCount{};
+		_int	iCurrentCount{};
+	}OBJECTIVEINFO;
+
+	typedef struct tagRewardsInfo
+	{
+		_int iRewardType{};
+		_int iRewardID{};
+	}REWARDSINFO;
+
+	typedef struct tagQuestInfo
+	{
+		_int					iQuestID{};
+		_int					iType{};
+		_wstring				pQuestName;
+		_wstring				pQuestInfo;
+		vector<OBJECTIVEINFO>	ObjectiveInfo;
+		vector<REWARDSINFO>		RewardsInfo;
+		_int					iAcceptState;
+	}QUESTINFO;
 
 	typedef struct tagEffectInfo
 	{
@@ -157,8 +181,8 @@ namespace Client
 
 		_float3		vDissolveValue = {};
 
-
-		_float2		vPadding0 = {};
+		_float      fModelDistortIntensity = {};
+		_float		vPadding0 = {};
 
 		_float      fLightDeley = {};
 		_float		fLightIntensity = {};
@@ -178,13 +202,15 @@ namespace Client
 		_float4     vNoiseColor = {};
 		_float4     vRimLightColor = {};
 
-		_float4     vPadding4 = {};
+		_float2     vMaskOffset = {};
+		_float2     vPadding4 = {};
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};
 		_bool		isPadding2 = {};
 		_bool		isPadding3 = {};
 		_bool		isPadding4 = {};
+
 	}EFFECT_INFO;
 	
 	typedef struct tagTrailInfo
@@ -248,17 +274,18 @@ namespace Client
 
 		_float      fDamping = { 0.5f };
 		_float      fRopeLength = { 0.1f };
-
 		_float		fMass = { 0.5f };
 
-		_float3 vPadding1 = {};
+		_float2 vDissolveTime = {};
+
+		_float  fPadding0 = {};
 		_float3 vPadding2 = {};
 
 		_float  fPadding1 = {};
 		_float  fPadding2 = {};
 		_float  fPadding3 = {};
 
-		_bool   isPadding0 = {};
+		_bool   isDissolve = {};
 		_bool   isPadding1 = {};
 		_bool   isPadding2 = {};
 

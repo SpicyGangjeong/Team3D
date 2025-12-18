@@ -36,6 +36,32 @@ typedef struct tagSpellInfo
 	_float			fPreview{};
 	_float			fVidio{};
 }SPELLINFO;
+
+typedef struct tagObjectiveInfo
+{
+	_int iObjectType{};
+	_int iTargetID{};
+	_int iRequiredCount{};
+	_int iCurrentCount{};
+}OBJECTIVEINFO;
+
+typedef struct tagRewardsInfo
+{
+	_int iRewardType{};
+	_int iRewardID{};
+}REWARDSINFO;
+
+typedef struct tagQuestInfo
+{
+	_int					iQuestID{};
+	_int					iType{};
+	_wstring				pQuestName;
+	_wstring				pQuestInfo;
+	vector<OBJECTIVEINFO>	ObjectiveInfo;
+	vector<REWARDSINFO>		RewardsInfo;
+	_int					iAcceptState;
+}QUESTINFO;
+
 typedef struct SlotHover
 {
 	_int iSlotID{};
@@ -140,6 +166,7 @@ public:
 	virtual _bool Get_Hover();
 
 	virtual const SPELLINFO Get_Info(_int Index);
+	virtual const QUESTINFO Get_QuestInfo(_int Index);
 
 	virtual void Set_FontX(_float fFontX);
 	virtual void Set_FontY(_float fFontY);

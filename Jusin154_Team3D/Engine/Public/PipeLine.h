@@ -57,7 +57,12 @@ private:
 	_float4		m_vCamPosition = {};
 
 	_float		m_fShadowNearBoxRatio = { 0.07f };
-	_float		m_fShadowFarBoxRatio = { 0.60f };
+	_float		m_fShadowFarBoxRatio = { 0.15f };
+	_float		m_fSafe_RadiusMultiplier = { 2.3f };
+	_float		m_fSafe_RadiusMargin = { 10.f };
+	_float3		m_vShadowBoxMarginMin = { 0.f, 0.f, -25.f };
+	_float3		m_vShadowBoxMarginMax = { 0.f, 0.f, 25.f };
+
 	_float4		m_vShadowBias = { 0.0018f, 0.0018f, 0.0018f, 0.0018f };
 
 	_float4		m_vOriginalRenderFrustumPoints[8] = {};
@@ -84,6 +89,7 @@ private:
 	void Make_LightBoxes();
 	void Get_CascadePoints8(const _float4* shadowViewPoints16, _uint cascadeIndex, _float4* outPoints8); // 
 	void Update_ShadowDepthNdcZ();
+	void Adjust_ShadowTexcel(_float& fMinX, _float& fMinY, _float& fMaxX, _float& fMaxY, _uint iShadowWidth, _uint iShadowHeight);
 	ID3D11ShaderResourceView* Find_GlobalShaderResourceView(const _tchar* wszKeyGlobalSRV);
 
 public:

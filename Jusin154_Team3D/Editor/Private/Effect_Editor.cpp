@@ -26,7 +26,7 @@ CEffect_Editor::CEffect_Editor(const CEffect_Editor& rhs)
 HRESULT CEffect_Editor::Initialize_Prototype()
 {
 
-	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Levioso");
+	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Stupify");
 
 
 	for (auto iter : m_MatFiles)
@@ -567,6 +567,7 @@ void CEffect_Editor::Describe_Entity()
 
 	if (m_pEditEffect != nullptr)
 		m_pEditEffect->Reference_Mat_For_EditEffect();
+
 
 	ImGui::End();
 

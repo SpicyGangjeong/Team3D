@@ -1,7 +1,8 @@
 
 #include "Engine_Shader_Defines.hlsli"
 
-matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4x4 g_PrevWorldMatrix, g_PrevViewMatrix, g_PrevProjMatrix;
 
 int g_bUVTargetDiffuse;
 int g_bAdditiveDisolve;
@@ -118,6 +119,7 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vPrevProjPos : TEXCOORD3;
 };
 
 struct VS_OUT_BLUR
@@ -168,6 +170,10 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
+    matrix matPrevWV, matPrevWVP;
+    matPrevWV = mul(g_PrevWorldMatrix, g_PrevViewMatrix);
+    matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
+    
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix)).xyz;
     Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), g_WorldMatrix)).xyz;
@@ -175,6 +181,7 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    Out.vPrevProjPos = mul(float4(In.vPosition, 1.f), matPrevWVP);
     return Out;
 }
 
@@ -201,6 +208,7 @@ struct VS_OUT_OUTLINE
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vPrevProjPos : TEXCOORD3;
 };
 
 VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
@@ -216,6 +224,10 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
+    matrix matPrevWV, matPrevWVP;
+    matPrevWV = mul(g_PrevWorldMatrix, g_PrevViewMatrix);
+    matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
+    
     Out.vPosition = mul(vPosition, matWVP);
     Out.vNormal = normalize(mul(vNormal, g_WorldMatrix)).xyz;
     Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), g_WorldMatrix)).xyz;
@@ -223,6 +235,7 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vPosition, g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    Out.vPrevProjPos = mul(vPosition, matPrevWVP);
     return Out;
 }
 
@@ -272,6 +285,7 @@ struct PS_IN
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vPrevProjPos : TEXCOORD3;
 };
 
 struct PS_OUT
@@ -281,6 +295,7 @@ struct PS_OUT
     float4 vDepth : SV_TARGET2;
     float4 vColor : SV_Target3;
     float4 vSurface : SV_Target4;
+    float2 vVelocityUV : SV_TARGET5;
 };
 PS_OUT PS_MAIN(PS_IN In)
 {
@@ -339,7 +354,6 @@ PS_OUT PS_MAIN(PS_IN In)
     
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-   
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     float fSurfaceParam = g_fUsingSurfaceParams;
@@ -353,6 +367,7 @@ PS_OUT PS_MAIN(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }
@@ -391,6 +406,7 @@ PS_OUT PS_GLASS(PS_IN In)
     Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }
@@ -418,6 +434,7 @@ PS_OUT PS_GLASS_CUBE(PS_IN In)
     Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }
@@ -554,12 +571,14 @@ struct PS_IN_OUTLINE
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vPrevProjPos : TEXCOORD3;
 };
 struct PS_OUT_OUTLINE
 {
     float4 vOutLine : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    float2 vVelocityUV : SV_TARGET3;
 };
 
 PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
@@ -582,6 +601,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
     AI_TEXTURE_TYPE_METALNESS, // 서페이스 파라미터
     1.f);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }
@@ -646,7 +666,8 @@ PS_OUT PS_LAKE(PS_IN In)
     1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+
     return Out;
 }
 
@@ -681,7 +702,8 @@ PS_OUT PS_LAND(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+
     return Out;
 }
 
@@ -708,7 +730,8 @@ PS_OUT PS_NONMRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = g_vSurfaceColor;
-    
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+
     return Out;
 }
 
@@ -749,7 +772,8 @@ PS_OUT PS_SPECTOR_WEAPON_MAIN(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+
     return Out;
 }
 PS_OUT PS_LEVIOSO(PS_IN In)
@@ -800,7 +824,8 @@ PS_OUT PS_LEVIOSO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+
     return Out;
 }
 
@@ -820,7 +845,7 @@ technique11 MeshTechnique11
     pass ShadowPass
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_Default_Less, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
         GeometryShader = NULL;

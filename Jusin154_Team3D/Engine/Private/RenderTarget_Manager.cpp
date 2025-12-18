@@ -175,26 +175,26 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NO_DepthStencil(const _wstring& strMRTT
 
     return S_OK;
 }
-HRESULT CRenderTarget_Manager::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CRenderTarget_Manager::Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
     CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
     if (nullptr == pRenderTarget) {
         return E_FAIL;
     }
 
-    pRenderTarget->Copy_Resource(pTexture2D);
+    pRenderTarget->Copy_ResourceTo(pTexture2D);
 
     return S_OK;
 }
 
-HRESULT CRenderTarget_Manager::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CRenderTarget_Manager::Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
     CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
     if (nullptr == pRenderTarget) {
         return E_FAIL;
     }
 
-    pRenderTarget->Paste_Resource(pTexture2D);
+    pRenderTarget->Copy_ResourceFrom(pTexture2D);
 
     return S_OK;
 }
@@ -215,6 +215,7 @@ HRESULT CRenderTarget_Manager::Bind_CS_RenderTarget(_uint iIndex, const _wstring
 
    return S_OK;
 }
+
 
 HRESULT CRenderTarget_Manager::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, 
     const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, 
@@ -364,6 +365,9 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
         pConstantName = "g_DiffuseTexture";
         break;
     case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURX:
+        pConstantName = "g_DiffuseTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::DOWNSAMPLE:
         pConstantName = "g_DiffuseTexture";
         break;
     case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURY:

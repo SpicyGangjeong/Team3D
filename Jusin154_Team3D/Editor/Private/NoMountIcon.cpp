@@ -22,7 +22,7 @@ HRESULT CNoMountIcon::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 120.f;
-	Desc.fY = -90;
+	Desc.fY = 90;
 	Desc.fSizeX = 65.f;
 	Desc.fSizeY = 65.f;
 

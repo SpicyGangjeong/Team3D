@@ -101,10 +101,9 @@ public:
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
-	void Render_PreShadow();
-#pragma endregion
-
-#pragma region ASSET_MANAGER
+	void Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
+	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
+	HRESULT Bind_PrevMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 #pragma endregion
 
 #pragma region KEY_MANAGER
@@ -173,8 +172,8 @@ public:
 	HRESULT Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
-	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
-	HRESULT Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Copy_RenderTargetTo(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Copy_RenderTargetFrom(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
 	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
 	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
@@ -334,7 +333,7 @@ private:
 	_float							m_fTimer_Render_NonLight = { 0.f };
 	_float							m_fTimer_Render_Blend = { 0.f };
 	_float							m_fTimer_Render_WeightBlend = { 0.f };
-	_float							m_fTimer_Render_Bloom = { 0.f };
+	_float							m_fTimer_Render_PostProcessing = { 0.f };
 	_float							m_fTimer_Render_LastColor = { 0.f };
 	_float							m_fTimer_Render_Tone_Mapping = { 0.f };
 	_float							m_fTimer_Render_UI = { 0.f };
