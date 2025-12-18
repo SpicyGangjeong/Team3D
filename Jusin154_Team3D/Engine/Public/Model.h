@@ -78,8 +78,6 @@ public:
 	vector<_float4x4>	Get_OffsetMatrix(_int iIndex);
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
-	void Create_BoneStagingBuffer();
-	void Copy_BoneToStaging(_uint boneIndex);
 #pragma endregion
 #pragma region Bone
 	HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
@@ -100,7 +98,6 @@ public:
 
 	void			ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
 	void			ComputeLocal(_uint AnimIndex, _uint MeshIndex);
-	void			ReadbackBoneMatrices();
 	void			Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
 	void			ComputeAnimation_Second(_uint AnimIndex);
 	void			InItialize_BoneIndex();
@@ -149,7 +146,7 @@ private:
 
 	_int						m_iPreAnimIndex = { -1 };
 	_float						m_fBlendTime = { 0.f };
-	_float						m_fBlendDuration = { 0.35f };
+	_float						m_fBlendDuration = { 0.3f };
 
 	_float3						m_vRadiusOffset = {};			// 컬링용 Radius Offset
 	_float						m_fSecondBlendTime = {};

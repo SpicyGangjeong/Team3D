@@ -218,8 +218,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 	}
 
-	BeginFrame();
-
 	return m_bIsFinishedAnim;
 }
 
