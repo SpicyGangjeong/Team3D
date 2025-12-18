@@ -4,16 +4,16 @@
 			<Pos x="730" y="200"/>
 		</Start>
 		<Position>
-			<Pos Type="0" x="625" y="60"/>
+			<Pos x="625" y="60"/>
 		</Position>
 		<Position>
-			<Pos Type="0" x="810" y="-185"/>
+			<Pos x="810" y="-185"/>
 		</Position>
 		<Position>
-			<Pos Type="0" x="395" y="-185"/>
+			<Pos x="395" y="-185"/>
 		</Position>
 		<Position>
-			<Pos Type="0" x="515" y="-45"/>
+			<Pos x="515" y="-45"/>
 		</Position>
 	</Name>
 	<Name SpellName="루모스" Size="520">
@@ -21,10 +21,10 @@
 			<Pos x="410" y="-210"/>
 		</Start>
 		<Position>
-			<Pos Type="0" x="600" y="200"/>
+			<Pos x="600" y="200"/>
 		</Position>
 		<Position>
-			<Pos Type="0" x="790" y="-230"/>
+			<Pos x="790" y="-230"/>
 		</Position>
 	</Name>
 	<Name SpellName="아씨오" Size="520">
