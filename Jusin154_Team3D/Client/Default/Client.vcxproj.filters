@@ -632,6 +632,10 @@
     <ClInclude Include="..\Public\Stupefy.h">
       <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BroomRaceManager.h" />
+    <ClInclude Include="..\public\MapElement_Static.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1323,6 +1327,9 @@
     <Filter Include="04.Mechanic\State\State_Combat\State_AncientSpell">
       <UniqueIdentifier>{c69a2485-7f6e-4e22-81b4-1410fdae9d57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Static">
+      <UniqueIdentifier>{c3b86f00-da19-47ad-a26e-7ff641e2c4d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1901,6 +1908,10 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_AncientSpell.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_AncientSpell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRaceManager.cpp" />
+    <ClCompile Include="..\private\MapElement_Static.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

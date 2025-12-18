@@ -90,6 +90,11 @@ private:
 	_float3				m_vMomentum = {}; // 현재 프레임에 계산된 이동량
 	_float3				m_vBackMomentum = {}; // 다음 프레임에 계산될 이동량
 
+#ifdef _DEBUG
+	_float3		m_vRotation = {};
+#endif // _DEBUG
+
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

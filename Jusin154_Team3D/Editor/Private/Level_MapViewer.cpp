@@ -51,9 +51,9 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
+	//	return E_FAIL;
+	//}
 
 	//if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
 	//	return E_FAIL;
@@ -63,13 +63,13 @@ HRESULT CLevel_MapViewer::Initialize()
 	//	return E_FAIL;
 	//}
 
-	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
-		return E_FAIL;
-	}
-
-	//if (FAILED(Ready_Layer_Door(TEXT("Layer_Door")))) {
+	//if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
 	//	return E_FAIL;
 	//}
+
+	/*if (FAILED(Ready_Layer_Door(TEXT("Layer_Door")))) {
+		return E_FAIL;
+	}*/
 
 	/*if (FAILED(Ready_Layer_Chest(TEXT("Layer_Chest")))) {
 		return E_FAIL;
@@ -131,7 +131,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	CTerrain::TERRAIN_DESC Desc = {};
 
 	/* Hogsmeade */
-	Desc.isEdit = false;
+	/*Desc.isEdit = false;
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2048;
 	Desc.vPosition = _float3(-194, 18.5f, -153.f);
@@ -139,7 +139,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
 	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	/* Hogwart */
 	Desc.isEdit = false;
@@ -212,7 +212,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Land(const _wstring& strLayerTag)
 	Land_Desc.vScale = _float3(1.f, 1.25f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_South_Hogwart_Land_LOD1";
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
 		return E_FAIL;
 
 	/* North_Hogwart_Land */
@@ -221,7 +221,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Land(const _wstring& strLayerTag)
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart_Land_LOD1";
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
 		return E_FAIL;
 
 	/* North_Hogwart2_Land */
@@ -230,7 +230,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Land(const _wstring& strLayerTag)
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart2_Land_LOD1";
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
 		return E_FAIL;
 
 	/* West_Hogwart_Land */
@@ -239,7 +239,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Land(const _wstring& strLayerTag)
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_West_Hogwart_Land_LOD1";
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
 		return E_FAIL;
 
 	/* East_Hogsmeade_Land */
@@ -248,7 +248,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Land(const _wstring& strLayerTag)
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_East_Hogsmeade_Land_LOD1";
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -421,7 +421,35 @@ HRESULT CLevel_MapViewer::Ready_Layer_BuildingContainer(const _wstring& strLayer
 
 HRESULT CLevel_MapViewer::Ready_Layer_Unified(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	CUnified::UNIFIED_DESC Desc = {};
+
+	/* Hogwart Unified*/
+	Desc.fLodSwitchDistnace = 500.f;
+	Desc.vUnifiedCenterPos = _float4(-291.2f, 17.2f, -474.7f, 1.f);
+	Desc.vPosition = _float3(-291.2f, 17.2f, -474.7f);
+	Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Desc.vScale = _float3(1.f ,1.f, 1.f);
+	Desc.srtLayerTag = LAYER_HOGWART;
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HW_HogwartsShell_B"));
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.srtModelPrototypeTags.clear();
+	/* Hogwart Unified*/
+	Desc.fLodSwitchDistnace = 550.f;
+	Desc.vUnifiedCenterPos = _float4(62.f, 10.f, 93.f, 1.f);
+	Desc.vPosition = _float3(62.f, 10.f, 93.f);
+	Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Desc.srtLayerTag = LAYER_HOGSMEADE;
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_0"));
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_1"));
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_2"));
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_3"));
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_Streets_LOD1_Merged_0"));
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
 	return S_OK;

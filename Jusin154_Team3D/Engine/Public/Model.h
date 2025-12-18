@@ -249,7 +249,7 @@ private:
 private:
 
 	// 바이너리
-	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
+	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, _uint iLevel);
 	void LoadAdditionalAnimations(const char* ModelFilePath);
 	bool LoadData(const _char* filename);
 	void LoadAnim(const _char* fileName);
@@ -260,14 +260,14 @@ private:
 private:
 	// 바이너리
 	HRESULT Ready_Meshes();
-	HRESULT Ready_Materials(const _char* pModelFilePath);
+	HRESULT Ready_Materials(const _char* pModelFilePath, _uint iLevel);
 	HRESULT Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex);
 	HRESULT Ready_Animations(const vector<CBone*>& Bones);
 	//
 
 public:
 	// 바이너리
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity(), _uint iLevel = 0);
 	//
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
 

@@ -293,6 +293,12 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 	}
 
+	/* Terrain_Diffuse */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Diffuse"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_D_%d.dds"), 4, L"", ENUM_CLASS(LEVEL::LOGO))))) {
+		return E_FAIL;
+	}
+
 	Asset_FileLoad("../Bin/Resources/Textures/Logo", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
@@ -2652,6 +2658,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 	vector<filesystem::path> ModelPrototypePath = {};
 
 #pragma region HOGSMEADE
+	/* Hogsmead LOD */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\HogsmeadeLOD\\ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath))) 
+		return E_FAIL;
+
 
 	/* Terrain*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
@@ -2883,10 +2894,7 @@ if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\M
 	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	return E_FAIL;
 
-/* Hogwart LOD */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\HogwartsLOD",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+
 
 /* Barrel */
 if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Meshes",
@@ -2902,14 +2910,92 @@ if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactabl
 
 
 #pragma region HOGWART
+	///* Hogwart LOD */
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\HogwartsLOD",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
 	/* QuidditchPitch */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_QuidditchPitch\\Static_Mesh\\KIT_Ext",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_QuidditchPitch\\Static_Mesh\\Collisions",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_QuidditchPitch\\Static_Mesh\\KIT_Ext",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_QuidditchPitch\\Static_Mesh\\Collisions",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_Greenhouses\\Static_Mesh\\Kit_EXT",
+	//	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
 #pragma endregion
+
+
+#pragma region DUNGEON
+/* Cave Wall */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Wall",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/* Props */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Props",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/* Rocks */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Cavern_Dungeon\\Mesh\\Rocks",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Floors */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ArenaFloor",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/*Sanctum_Dungeon_BoH_Area5_Scaffolding */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BoH_Area5_Scaffolding",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Center_Structure_AnteChamber */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\AnteChamber",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Center_Structure_Core */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\Core",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_ConjuredDragonAttackZones */ // 바닥 충돌용
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ConjuredDragonAttackZones",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Rock_Barriers */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Rock_Barriers",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/*Sanctum_Dungeon_Rock_SM_Repository_FloatingGround */ //평평한 작은돌
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\SM_Repository_FloatingGround",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/*Sanctum_Dungeon_Rock_SM_Repository_Stage3MoveableRocks*/  // 채우기용
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Stage3MoveableRocks",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/*Sanctum_Dungeon_Rock_Interactables*/ // 입구쪽
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Interactables",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Rock_SM_Repository_BreakingRocks*/ // 큰돌
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BreakingRocks\\LG_E",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Rock_Main*/ // 기본 모델들
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+#pragma endregion
+
 
 #ifdef gimch
 
@@ -2918,7 +3004,7 @@ vector<future<void>> jobFutures;
 _uint iLoadCount = 46;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { true };
+_bool isLoad_Map = { false };
 if(isLoad_Map)
 {
 	{ /* Terrain */

@@ -273,8 +273,6 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	}
 	else
 	{
-
-
 #if 진우
 
 #else

@@ -13,9 +13,10 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 
-	HRESULT Add_GameObject(class CGameObject* _pGameObject);
-	void	Clear_DeadObj();
-	HRESULT Clear_Layer();
+	HRESULT		Add_GameObject(class CGameObject* _pGameObject);
+	void		Clear_DeadObj();
+	HRESULT		Clear_Layer();
+	void		Set_LayerEnabled(_bool isEnable) { m_isLayerEnabled = isEnable; }
 
 public:
 	template<typename T>
@@ -41,6 +42,8 @@ private:
 private:
 	class CGameObject* m_pTargetObject = { nullptr };
 #endif
+private:
+	_bool			m_isLayerEnabled = { true };
 private:
 	HRESULT Initialize();
 

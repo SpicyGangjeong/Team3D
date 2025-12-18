@@ -1071,30 +1071,34 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     
-    float4 vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (true == g_bFogVisible)
-    {
-        float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
-        float fOriginalAlpha = vColor.a;
-        float fViewZ = vDepthDesc.y * g_fFar;
+    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
     
-        float4 vFinalColor;
-        float fRatio = pow(1.f - saturate(exp(-1.f * vDepthDesc.y * g_fFogDensity)), g_fFogPow);
-  
-        vFinalColor = lerp(vColor, g_vFogColor, fRatio);
-    
-        if (1.f == vDepthDesc.y)
-        {
-            vFinalColor = float4(g_vFogColor);
-        }
-        vFinalColor.a = 1.f;  // fOriginalAlpha;
-        Out.vFirstTarget = vFinalColor;
-    }
-    else
+    if (0.f == g_fFogPow)
     {
-        vColor.a = 1.f;
-        Out.vFirstTarget = vColor;
+        if (1 == vDepthDesc.y)
+            Out.vFirstTarget = float4(vColor.rgb, 0.f);
+        else
+            Out.vFirstTarget = float4(vColor.rgb, 1.f);
+        return Out;
     }
+    
+    vector vFinalColor;
+    float fViewZ = vDepthDesc.y * g_fFar;
+    
+    float fRatio;
+    
+    fRatio = pow(1.f - saturate(exp(-1.f * vDepthDesc.y * g_fFogDensity)), g_fFogPow);
+    
+    vFinalColor = lerp(vColor, g_vFogColor, fRatio);
+    vFinalColor.a = 1.f;
+    
+    if (1.f == vDepthDesc.y)
+    {
+        vFinalColor = float4(g_vFogColor);
+    }
+    Out.vFirstTarget = vFinalColor;
+ 
     return Out;
 }
 PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)

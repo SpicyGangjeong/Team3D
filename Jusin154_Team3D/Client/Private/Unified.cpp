@@ -88,7 +88,7 @@ HRESULT CUnified::Ready_Components(void* pArg)
 	}
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_GameObject_SM_HW_HogwartsShell_B"),
+	if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, TEXT("Prototype_GameObject_SM_HW_HogwartsShell_B"),
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 

@@ -1800,7 +1800,7 @@ void CModel::Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex)
 
 
 #ifdef _DEBUG
-HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, _uint iLevel)
 {
 	m_eType = eType;
 	_char		szTextureFileName[MAX_PATH] = {};
@@ -1846,7 +1846,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Materials(pModelFilePath))) {
+	if (FAILED(Ready_Materials(pModelFilePath, iLevel))) {
 		return E_FAIL;
 	}
 	if (MODEL::PBR_ANIM == m_eType || MODEL::PBR_NONANIM == m_eType) {
@@ -2285,13 +2285,13 @@ HRESULT CModel::Ready_Meshes()
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Materials(const _char* pModelFilePath)
+HRESULT CModel::Ready_Materials(const _char* pModelFilePath, _uint iLevel)
 {
 	m_iNumMaterials = m_pSaveModel->MaterialCount;
 
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
-		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, pModelFilePath, m_pSaveModel->Materials[i]);
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, pModelFilePath, m_pSaveModel->Materials[i], iLevel);
 		if (nullptr == pMaterial)
 			return E_FAIL;
 
@@ -2337,11 +2337,11 @@ HRESULT CModel::Ready_Animations(const vector<CBone*>& Bones)
 	return S_OK;
 }
 
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, _uint iLevel)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eType, pModelFilePath, PreTransformMatrix)))
+	if (FAILED(pInstance->Initialize_Prototype(eType, pModelFilePath, PreTransformMatrix, iLevel)))
 	{
 		MSG_BOX("Failed to Created : CModel");
 		SAFE_RELEASE(pInstance);
