@@ -1191,7 +1191,7 @@ void CPlayer::Behavior_SpellEnter()
 		{
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); },
+				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this); }, /* 임시로 바꿔놓음 */
 				fRatio);
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
@@ -1469,13 +1469,17 @@ void CPlayer::Behavior_ShieldEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 
-	m_pFSM->Enable_State(FSMSTATE::SHIELD);
-	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true,1.f);
+	if (!m_bShield)
+	{
+		m_pFSM->Enable_State(FSMSTATE::SHIELD);
+		pairAnimInfo = m_Animation[STATEANIM::SKILL2];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f);
 
-	Add_Event(pairAnimInfo.first,
-		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
-		0.1f);
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
+			0.1f);
+
+	}
 }
 
 HRESULT CPlayer::Behavior_ShieldExitCheck()
@@ -1486,6 +1490,7 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 
 	if (m_bShield)
 	{
+
 		if (m_pGameInstance->Key_Pressing(DIK_Q))
 		{
 			m_pFSM->Enable_State(FSMSTATE::PARRY);
@@ -1534,10 +1539,11 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 			m_pGameInstance->SlowMotion(0.8f, 0.3f);
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-		/*	Add_Event(pairAnimInfo.first,
-				[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iIndex);  },
+			Add_Event(pairAnimInfo.first,
+				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
 				0.2f);
-*/			m_bShield = false;
+
+			m_bShield = false;
 			return S_OK;
 
 		}

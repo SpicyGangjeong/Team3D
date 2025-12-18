@@ -95,6 +95,7 @@ float2 g_vMaskDistortionUVGainAmount;
 float2 g_vUVMaskCutting;
 
 int    g_iMaskMoveLerpOption;
+float2 g_vMaskOffset;
 /* 디졸브 */
 
 
@@ -387,6 +388,7 @@ float4 DrawEffect(PS_IN In)
         
         vMaskTexcoord = UV_Cutting(In.vTexcoord, g_vUVMaskCutting, int(fAnimIndex));
         
+        vMaskTexcoord += g_vMaskOffset;
         // 마스크 디스토션 
         if (g_isDistortion == true)
         {
@@ -858,6 +860,8 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     //// 색깔 추가할 처리 (이미시브)
    
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
+    
+    vMtrlDiffuse += RimLight(In);
     
     float fBloomStrength = g_fBloomStrength;
     

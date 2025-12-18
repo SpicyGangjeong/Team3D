@@ -164,6 +164,7 @@
 #include "Chair_Splesh.h"
 #include "Barral_Splesh.h"
 #include "Screen_Wind.h"
+#include "Stupefy.h"
 
 #pragma endregion
 
@@ -335,7 +336,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = false;
 #endif // 
 #ifdef 진우
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 기무리
 	isLoad_Background = false;
@@ -1723,6 +1724,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CWandEnd>(NEXT_LEVEL, CWandEnd::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(NEXT_LEVEL, CStupefy::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
