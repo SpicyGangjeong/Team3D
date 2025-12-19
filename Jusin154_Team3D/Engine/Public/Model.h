@@ -74,7 +74,6 @@ public:
 	_uint				Get_NumMeshes() const { return m_iNumMeshes; }
 	void				Update_RootBone(_float Amount = 1.f);
 	void				Initialize_RootBone();
-	void				BeginFrame();
 	vector<_float4x4>	Get_OffsetMatrix(_int iIndex);
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
@@ -168,8 +167,8 @@ private:
 
 	// 바이너리
 	SaveModel* m_pSaveModel = { nullptr };
-	list<SaveModel> m_SaveModel;
 	//
+
 
 	vector<_float4x4> m_BoneMatrix;
 
@@ -191,7 +190,6 @@ private:
 	_bool					m_bRatio = { false };
 	_bool					m_bRootBone = {};
 	_float4x4				m_RootMatrix = {};
-	unordered_map<_string, _float4x4> m_SocketCache;
 
 
 private:

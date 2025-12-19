@@ -911,6 +911,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma endregion
 #if 진우
 #elif 기무리
+#elif Bin
 #elif gimch
 #else
 #pragma region UI_ANI

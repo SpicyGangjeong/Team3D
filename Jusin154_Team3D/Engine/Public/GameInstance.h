@@ -265,7 +265,7 @@ public:
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel);
 
-	void Add_SaveModel(const _char* filePath, SaveModel sModel);
+	void Add_SaveModel(const _char* filePath, SaveModel& sModel);
 
 	SaveModel* Load_SaveModel(const _char* filePath);
 #ifdef EDITOR_PROJECT

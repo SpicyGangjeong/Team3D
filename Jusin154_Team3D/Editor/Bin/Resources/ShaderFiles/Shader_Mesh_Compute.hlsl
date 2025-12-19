@@ -39,19 +39,19 @@ void CS_MAIN(uint3 DTid : SV_DispatchThreadID)
 
     uint global = g_BoneRemap[local];
 
-    row_major float4x4 combined = g_LocalMatIn[global];
+   float4x4 combined = g_LocalMatIn[global];
 
     int p = g_ParentBuffer[global];
     while (p != -1)
     {
-        combined = mul(combined, g_LocalMatIn[(uint) p]);
-        p = g_ParentBuffer[(uint) p];
+        combined = mul(combined,g_LocalMatIn[p]);
+        p = g_ParentBuffer[p];
     }
 
     combined = mul(combined, PreTransformMatrix);
-
-    g_LocalPosOutput[local].Combined = combined;
-    g_LocalPosOutput[local].LocalCombined = combined;
-
+    
     g_LocalPosOutput[local].Local = g_LocalMatIn[global];
+    g_LocalPosOutput[local].LocalCombined = combined;
+    g_LocalPosOutput[local].Combined = combined;
+
 }

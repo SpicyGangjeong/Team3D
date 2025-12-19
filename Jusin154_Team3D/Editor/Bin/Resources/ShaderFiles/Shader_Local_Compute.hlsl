@@ -215,6 +215,15 @@ void SampleLocalTRS_Cur(uint bone, float t, out float3 S, out float4 R, out floa
         DecomposeAffine_RowMajor(g_BoneLocalBuffer[bone].BoneLocal, S, R, T);
         return;
     }
+    
+    if (ch.KeyCount < 2)
+    {
+        KeyFrame k = g_KeyFrameBuffer[ch.StartIndex];
+        S = k.vScale;
+        T = k.vTranslation;
+        R = QuatNormalize(k.vRotation);
+        return;
+    }
 
     uint idx0 = FindKeyIndexCur(ch.StartIndex, ch.KeyCount, t);
     uint idx1 = idx0 + 1;
@@ -239,6 +248,15 @@ void SampleLocalTRS_Prev(uint bone, float t, out float3 S, out float4 R, out flo
         DecomposeAffine_RowMajor(g_BoneLocalBuffer[bone].BoneLocal, S, R, T);
         return;
     }
+    
+    if (ch.KeyCount < 2)
+    {
+        KeyFrame k = g_KeyFrameBuffer[ch.StartIndex];
+        S = k.vScale;
+        T = k.vTranslation;
+        R = QuatNormalize(k.vRotation);
+        return;
+    }
 
     uint idx0 = FindKeyIndexPrev(ch.StartIndex, ch.KeyCount, t);
     uint idx1 = idx0 + 1;
@@ -256,6 +274,20 @@ void SampleLocalTRS_Prev(uint bone, float t, out float3 S, out float4 R, out flo
 
 row_major float4x4 SampleBlendedLocal(uint bone)
 {
+    if (PrevAnimIndex == 0xFFFFFFFFu)
+    {
+        float3 S;
+        float4 R;
+        float3 T;
+        SampleLocalTRS_Cur(bone, CurrentTime, S, R, T);
+        if ((int) bone == RootBoneIndex)
+        {
+            T = 0;
+            R = RootInitRot;
+        }
+        return MakeAffine(S, R, T);
+    }
+
     if (CurrentAnimIndex == PrevAnimIndex)
     {
         float3 S;

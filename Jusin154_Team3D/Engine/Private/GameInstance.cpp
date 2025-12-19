@@ -948,7 +948,7 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 }
 #endif
 
-void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
+void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel& sModel)
 {
 	lock_guard<mutex> lock(m_mtxLoadModelLock);
 	m_sModelMap[filePath] = sModel;
