@@ -25,7 +25,7 @@ void CMapInfo::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
-	static _bool s_bConverted = { false };
+	/*static _bool s_bConverted = { false };
 	static _bool s_bReadyToCreate = { false };
 
 	if (true != s_bConverted || true != s_bReadyToCreate) {
@@ -55,14 +55,14 @@ void CMapInfo::Update(_float fTimeDelta)
 					}
 				}
 		}
-	}
+	}*/
 }
 
 void CMapInfo::Change_Level()
 {
 }
 
-HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
+HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTag)
 {
 	tinyxml2::XMLDocument xmlDoc;
 
@@ -92,21 +92,21 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
 
 		if (0 == iMapContainerType)
 		{
-			Load_BuildingContainer(Container, &pContainerObject);
+			Load_BuildingContainer(Container, &pContainerObject, pLayerTag);
 		}
 		else if (1 == iMapContainerType)
 		{
-			Load_StreetContainer(Container, &pContainerObject);
+			Load_StreetContainer(Container, &pContainerObject, pLayerTag);
 		}
 		else {
 			return E_FAIL;
 		}
 
-		if (FAILED(Load_MapRenderObjects(Container, pContainerObject))){
+		if (FAILED(Load_MapRenderObjects(Container, pContainerObject, pLayerTag))){
 			return E_FAIL;
 		}
 
-		if (FAILED(Load_MapCollisionObjects(Container, pContainerObject))){
+		if (FAILED(Load_MapCollisionObjects(Container, pContainerObject, pLayerTag))){
 			return E_FAIL;
 		}
 	}
@@ -145,7 +145,7 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
 		}
 
 		if (MAPOBJECT_TYPE::ELEMENT_STATIC == eType)
-			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Static"), &Desc);
+			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc);
 		/*else if (MAPOBJECT_TYPE::ELEMENT_INTERACT == eType)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);*/
 	}
@@ -153,7 +153,7 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_BuildingContainer(tinyxml2::XMLElement* Container, CMapContainer** ppContainerObject)
+HRESULT CMapInfo::Load_BuildingContainer(tinyxml2::XMLElement* Container, CMapContainer** ppContainerObject, const _wchar* pLayerTag)
 {
 	CBuildingContainer::MAP_CONTAINER_DESC  ContainerDesc = {};
 
@@ -183,12 +183,12 @@ HRESULT CMapInfo::Load_BuildingContainer(tinyxml2::XMLElement* Container, CMapCo
 	BoundingBox_Max->QueryFloatAttribute("z", &ContainerDesc.vContainerMax.z);
 
 	m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(
-		g_iStaticLevel, ENUM_CLASS(LEVEL::GAMEPLAY), LAYER_BACKGROUND, &ContainerDesc, nullptr, reinterpret_cast<CBuildingContainer**>(ppContainerObject));
+		g_iStaticLevel, ENUM_CLASS(LEVEL::GAMEPLAY), pLayerTag, &ContainerDesc, nullptr, reinterpret_cast<CBuildingContainer**>(ppContainerObject));
 
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_StreetContainer(tinyxml2::XMLElement* Container, CMapContainer** ppContainerObject)
+HRESULT CMapInfo::Load_StreetContainer(tinyxml2::XMLElement* Container, CMapContainer** ppContainerObject, const _wchar* pLayerTag)
 {
 	CMapContainer::MAP_CONTAINER_DESC  ContainerDesc = {};
 
@@ -208,12 +208,12 @@ HRESULT CMapInfo::Load_StreetContainer(tinyxml2::XMLElement* Container, CMapCont
 	ContainerRotation->QueryFloatAttribute("z", &ContainerDesc.vRotation.z);
 
 	m_pGameInstance->Add_GameObject_ToLayer<CStreetContainer>(
-		g_iStaticLevel, ENUM_CLASS(LEVEL::GAMEPLAY), LAYER_BACKGROUND, &ContainerDesc, nullptr, reinterpret_cast<CStreetContainer**>(ppContainerObject));
+		g_iStaticLevel, ENUM_CLASS(LEVEL::GAMEPLAY), pLayerTag, &ContainerDesc, nullptr, reinterpret_cast<CStreetContainer**>(ppContainerObject));
 
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject)
+HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject, const _wchar* pLayerTag)
 {
 #pragma region ADD_PARTOBJECT
 	for (auto* PartObject = Container->FirstChildElement("PartObject"); PartObject; PartObject = PartObject->NextSiblingElement("PartObject"))
@@ -265,7 +265,7 @@ HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapCon
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_MapCollisionObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject)
+HRESULT CMapInfo::Load_MapCollisionObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject, const _wchar* pLayerTag)
 {
 #pragma region ADD_COLLISION
 	for (auto* Collision = Container->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
@@ -312,7 +312,7 @@ HRESULT CMapInfo::Load_MapCollisionObjects(tinyxml2::XMLElement* Container, CMap
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_LightElements(const _char* pFileName)
+HRESULT CMapInfo::Load_LightElements(const _char* pFileName, const _wchar* pLayerTag)
 {
 	tinyxml2::XMLDocument xmlDoc;
 
@@ -390,7 +390,7 @@ HRESULT CMapInfo::Load_LightElements(const _char* pFileName)
 
 		Desc.isPow = 0 == iPow ? false : true;
 
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Desc)))
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc)))
 			return E_FAIL;
 	}
 #ifndef 기무리
@@ -400,7 +400,7 @@ HRESULT CMapInfo::Load_LightElements(const _char* pFileName)
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_InteractableElements(const _char* pFileName)
+HRESULT CMapInfo::Load_InteractableElements(const _char* pFileName, const _wchar* pLayerTag)
 {
 	tinyxml2::XMLDocument xmlDoc;
 
@@ -459,7 +459,7 @@ HRESULT CMapInfo::Load_InteractableElements(const _char* pFileName)
 		LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
 		LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
 
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, LAYER_INTERACTABLE, &Desc)))
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc)))
 			return E_FAIL;
 	}
 	//MSG_BOX("Successed to Create Interactalbe Element");
@@ -576,7 +576,7 @@ HRESULT CMapInfo::Load_WaterElemet(const _char* pFileName)
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_DoorElemet(const _char* pFileName)
+HRESULT CMapInfo::Load_DoorElemet(const _char* pFileName, const _wchar* pLayerTag)
 {
 	tinyxml2::XMLDocument xmlDoc;
 
@@ -634,14 +634,14 @@ HRESULT CMapInfo::Load_DoorElemet(const _char* pFileName)
 		//LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
 		//LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
 
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Door>(g_iStaticLevel, NEXT_LEVEL, LAYER_DOOR, &Desc)))
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Door>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc)))
 			return E_FAIL;
 	}
 
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_ChestElemet(const _char* pFileName)
+HRESULT CMapInfo::Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag)
 {
 	tinyxml2::XMLDocument xmlDoc;
 

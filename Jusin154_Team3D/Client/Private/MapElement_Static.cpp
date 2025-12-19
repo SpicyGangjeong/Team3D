@@ -45,7 +45,7 @@ HRESULT CMapElement_Static::Initialize(void* pArg)
 	_float fMaxScale = max(pDesc->vScale.x, pDesc->vScale.y);
 	fMaxScale = max(fMaxScale, pDesc->vScale.z);
 
-	m_fRadius = m_pModelComs[0]->Get_Radius() * fMaxScale;
+	m_fRadius = m_pModelComs[0]->Get_Radius() * fMaxScale * 1.2f;
 
 	ReadyForPhysX();
 	ConvertToPhysX();
@@ -62,15 +62,15 @@ void CMapElement_Static::Update(_float fTimeDelta)
 }
 
 void CMapElement_Static::Late_Update(_float fTimeDelta)
-{
+{/*
 	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_fRadius)) {
 
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
 
-		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (m_fRadius * m_fRadius + 3600.f)));
+		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (m_fRadius * m_fRadius + 40000.f)));*/
 
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	}
+	//}
 }
 
 HRESULT CMapElement_Static::Render()

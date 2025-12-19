@@ -45,6 +45,8 @@ namespace Client {
 #define LAYER_SKYBOX		TEXT("Layer_SkyBox")
 #define LAYER_EDITOR_CAMERA TEXT("Layer_Editor_Camera")
 #define LAYER_BACKGROUND	TEXT("Layer_BackGround")
+#define LAYER_HOGSMEADE		TEXT("Layer_Hogsmeade")
+#define LAYER_HOGWART		TEXT("Layer_Hogwart")
 #define LAYER_MARKER		TEXT("Layer_Marker")
 #define LAYER_PLAYER		TEXT("Layer_Player")
 #define LAYER_CAMERA		TEXT("Layer_Camera")
@@ -63,6 +65,7 @@ namespace Client {
 #define LAYER_UNIFIED		TEXT("Layer_Unified")
 #define LAYER_DOOR			TEXT("Layer_Door")
 #define LAYER_HIDDEN		TEXT("Layer_HIDDEN")
+
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 
