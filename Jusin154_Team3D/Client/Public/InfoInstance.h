@@ -9,6 +9,7 @@ class CTransform;
 class CUnit;
 class CState;
 class CStat;
+class CUIObject;
 NS_END
 
 NS_BEGIN(Client)
@@ -75,6 +76,10 @@ public:
 	HRESULT Set_AcceptQuest(_int Index);
 #pragma endregion
 #pragma region Interactive_INFO
+#pragma region SpellLearn_Data
+	const SPELLLEARNINFO& Get_SpellLearn(_int Index) const;
+	_int Get_SpellLearnIndex();
+#pragma endregion
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 #pragma endregion
@@ -90,6 +95,7 @@ private:
 	class CQuest_Data*			m_pQuestInfo= { nullptr };
 	class CInteractiveInfo*		m_pInteractiveInfo =  { nullptr };
 	class CDamage_Font*			m_pDamage_Font =  { nullptr };
+	class CSpellLearn_Data*		m_pSpellLearn_Data =  { nullptr };
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 

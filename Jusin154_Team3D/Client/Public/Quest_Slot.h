@@ -68,7 +68,8 @@ private:
 	_float	m_fPositionX{};
 	_float	m_fPositionY{};
 
-	_int	m_Index{};
+	_int	m_iIndex{};
+	_int	m_iPrevIndex{};
 	vector<FontInfo> m_Fonts;
 public:
 	static CQuest_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

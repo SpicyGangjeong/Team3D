@@ -132,6 +132,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
 
+
 	if (m_fTargetDistance >= 6.f)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
@@ -182,7 +183,8 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 5.f && m_fTargetDistance != 0.f)
+
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 4.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
@@ -614,8 +616,7 @@ void CGoblin::Behavior_DeadEnter()
 	PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 	PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
 	m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
-	m_pRigidBody->SetActive(false);
-	m_pCharacter_Controller->SetActive(false);
+	m_pCharacter_Controller->SetGravity(true);
 
 	_bool bStrongerKnockDown = { false };
 
@@ -650,9 +651,6 @@ void CGoblin::Behavior_DeadEnter()
 	}
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
 
-	//Get_PartObject<CEffectParts>("Goblin_Particle")->Set_Visible(false);
-	//Get_PartObject<CEffectParts>("Goblin_Particle2")->Set_Visible(false);
-	//Get_PartObject<CEffectParts>("Goblin_Smoke")->Set_Visible(false);
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
@@ -666,6 +664,8 @@ HRESULT CGoblin::Behavior_DeadExitCheck(_float fTimeDelta)
 
 void CGoblin::Behavior_DeadExit()
 {
+	m_pRigidBody->SetActive(false);
+	m_pCharacter_Controller->SetActive(false);
 	m_bDead = true;
 }
 

@@ -114,6 +114,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
 
 	m_bAI = false;
+
+	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
+
 	return S_OK;
 }
 
@@ -520,6 +523,8 @@ HRESULT CPlayer::Ready_Parts()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this,&m_pBroom))) {
 		return E_FAIL;
 	}
+
+
 
 	return S_OK;
 }

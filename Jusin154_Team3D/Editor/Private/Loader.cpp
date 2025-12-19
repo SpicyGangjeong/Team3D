@@ -111,6 +111,8 @@
 
 #include "QuestInstance.h"
 
+#include "SpellLearn_Data.h"
+
 #include "SpellLearn_Canvas.h"
 #include "SpellLearn_Panel.h"
 #include "SpellLearn_Name.h"
@@ -1207,6 +1209,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Data>(g_iStaticLevel, CSpellLearn_Data::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Canvas>(g_iStaticLevel, CSpellLearn_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -2375,11 +2381,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Dragon_Model")
 	));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/Dragon/Dragon_Anim.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Dragon_Model")
-	));
-
 #pragma endregion
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2406,12 +2407,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
-
-
-	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/Dragon/SK_ConjuredDragon_Anim.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_Npc_Model")
-	//));
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin",XMMatrixIdentity(),

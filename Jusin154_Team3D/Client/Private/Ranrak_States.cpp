@@ -30,7 +30,7 @@ void CRanrak::Behavior_IdleEnter()
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::HOVER_LOOP];
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CRanrak::Behavior_IdleExitCheck()
@@ -204,7 +204,6 @@ void CRanrak::Behavior_HoverEnter()
 	switch (iRand)
 	{
 	case 0:
-		pairAnimInfo = m_Animation[STATEANIM::HOVER_DASH_LEFT];
 		break;
 	case 1:
 		pairAnimInfo = m_Animation[STATEANIM::HOVER_DASH_RIGHT];
@@ -215,6 +214,7 @@ void CRanrak::Behavior_HoverEnter()
 
 HRESULT CRanrak::Behavior_HoverExitCheck(_float fTimeDelta)
 {
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_pFSM->Change_State(FSMSTATE::IDLE);
@@ -252,21 +252,21 @@ void CRanrak::Behavior_FireBreathEnter()
 
 		Add_Event(pairAnimInfo.first,
 			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_A];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)]; },
-			0.9f);
+			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::FIREBREATH_A].first,
 			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_COOLDOWN_A];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
-			0.9f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
+			0.95f);
 	}
 	else if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND))
 	{
 		pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_G];
 		m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)];
 	}
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CRanrak::Behavior_FireBreathExitCheck(_float fTimeDelta)
@@ -298,13 +298,13 @@ void CRanrak::Behavior_FireSweepEnter()
 
 		Add_Event(pairAnimInfo.first,
 			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_A];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)]; },
 			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::FIRESWEEP_A].first,
 			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_COOLDOWN_A];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
 			0.95f);
 	}
 	else if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND))
@@ -312,7 +312,7 @@ void CRanrak::Behavior_FireSweepEnter()
 		pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_G];
 		m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)];
 	}
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CRanrak::Behavior_FireSweepExitCheck(_float fTimeDelta)
@@ -368,7 +368,7 @@ void CRanrak::Behavior_FireBallEnter()
 	}
 
 	m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBALL)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBALL)];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CRanrak::Behavior_FireBallExitCheck(_float fTimeDelta)
@@ -410,7 +410,7 @@ void CRanrak::Behavior_SwipeEnter()
 	}
 
 	m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::SWIPE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::SWIPE)];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CRanrak::Behavior_SwipeExitCheck(_float fTimeDelta)
@@ -462,7 +462,7 @@ void CRanrak::Behavior_PulseEnter()
 
 	pairAnimInfo = m_Animation[STATEANIM::PULSE];
 	m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::PULSE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::PULSE)];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CRanrak::Behavior_PulseExitCheck(_float fTimeDelta)
@@ -503,7 +503,7 @@ HRESULT CRanrak::Behavior_TuckedExitCheck(_float fTimeDelta)
 	{
 		m_fTuckedTime = 0.f;
 		pairAnimInfo = m_Animation[STATEANIM::FLY_TO_HOVER];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return S_OK;
 	}
 
@@ -524,9 +524,19 @@ void CRanrak::Behavior_LandEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::LAND);
+	m_pCharacter_Controller->SetGravity(true);
 
 	pairAnimInfo = m_Animation[STATEANIM::LAND];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
+					if (pPlayer == nullptr)
+						return;
+					_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
+					_float fShakeValue = clamp(30.f / fDistance, 5.f, 10.f);
+					pPlayer->Start_CameraShake(1.2f, fShakeValue); },
+					0.57f);
 }
 
 HRESULT CRanrak::Behavior_LandExitCheck(_float fTimeDelta)
@@ -903,7 +913,7 @@ void CRanrak::Add_FSM()
 
 void CRanrak::Set_Anim()
 {
-	m_Animation[STATEANIM::IDLE_G] = { 52,true };
+	m_Animation[STATEANIM::IDLE_G] = { 100,true };
 	m_Animation[STATEANIM::IDLE_BREAK1] = { 27,false };
 	m_Animation[STATEANIM::IDLE_BREAK2] = { 28,false };
 

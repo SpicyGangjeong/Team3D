@@ -62,8 +62,8 @@ HRESULT CRanrak::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, 4.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, 4.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 3.f, 4.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 3.f, 4.f, 1.f));
 
 	return S_OK;
 }
@@ -143,19 +143,6 @@ void CRanrak::Late_Update(_float fTimeDelta)
 	if (true == m_bLookAt) {
 		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
-
-
-	_vector vDir = XMLoadFloat4(&m_vTargetPos) - Get_WorldPostion();
-	vDir = XMVector4Normalize(vDir);
-	_vector vLook = XMVector3Normalize(
-		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
-	float dot = XMVectorGetX(XMVector3Dot(vLook, vDir));
-	dot = max(-1.f, min(1.f, dot));
-
-	float angle = acosf(dot);
-	m_fDegree = XMConvertToDegrees(angle);
-
-	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
@@ -368,8 +355,8 @@ HRESULT CRanrak::Ready_Components()
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.12f };
-		Desc.fRadius = 1.2f;
-		Desc.fHeight = 1.5f;
+		Desc.fRadius = 2.f;
+		Desc.fHeight = 2.f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
@@ -377,6 +364,8 @@ HRESULT CRanrak::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
+
+		m_pCharacter_Controller->SetGravity(false);
 	}
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 	{ // DO
@@ -388,7 +377,7 @@ HRESULT CRanrak::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_TROLL"), (CComponent**)&m_pStat))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_RANRAK"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
 
@@ -475,6 +464,7 @@ void CRanrak::Describe_Entity()
 	if (GUI::CollapsingHeader("Ranrak")) {
 		__super::Describe_Entity();
 
+		
 		m_pTransformCom->Describe_Entity();
 	}
 	GUI::End();

@@ -55,6 +55,19 @@ void CMonster::Update(_float fTimeDelta)
 void CMonster::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
+
+
+	_vector vDir = XMLoadFloat4(&m_vTargetPos) - Get_WorldPostion();
+	vDir = XMVector4Normalize(vDir);
+	_vector vLook = XMVector3Normalize(
+		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_float dot = XMVectorGetX(XMVector3Dot(vLook, vDir));
+	dot = max(-1.f, min(1.f, dot));
+
+	_float angle = acosf(dot);
+	m_fDegree = XMConvertToDegrees(angle);
+
+	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 }
 
 HRESULT CMonster::Render_DeadDisolve()

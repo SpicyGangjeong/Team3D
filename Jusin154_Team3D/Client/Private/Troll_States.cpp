@@ -36,7 +36,7 @@ void CTroll::Behavior_IdleEnter()
 HRESULT CTroll::Behavior_IdleExitCheck()
 {
 	if (m_fTargetDistance <= 18.f && m_fTargetDistance != 0)
-		m_pFSM->Change_State(FSMSTATE::MOVE);
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 
 	return E_FAIL;
 }

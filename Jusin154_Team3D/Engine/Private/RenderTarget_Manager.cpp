@@ -496,15 +496,6 @@ HRESULT CRenderTarget_Manager::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CS
     return S_OK;
 }
 
-_float2 CRenderTarget_Manager::Get_RenderTargetSize(const _wstring& wstrTargetKey)
-{
-    CRenderTarget* pRenderTarget = Find_RenderTarget(wstrTargetKey);
-    if (nullptr == pRenderTarget) {
-        return _float2();
-    }
-
-    return pRenderTarget->Get_TargetSize();
-}
 
 HRESULT CRenderTarget_Manager::End_MRT()
 {
