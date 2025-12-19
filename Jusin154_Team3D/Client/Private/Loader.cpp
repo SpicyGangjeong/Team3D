@@ -1468,7 +1468,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc1{};
 		{
-			Desc1.eType = ACTOR::BOX;
+			Desc1.eType = ACTOR::SPHERE;
 			Desc1.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
 			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
