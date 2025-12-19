@@ -207,7 +207,7 @@ void CInfoInstance::Key_Input(_uint Input)
 			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
 		}
 		break;
-	case ENUM_CLASS(KEYINPUT::INPUT_N):
+	case ENUM_CLASS(KEYINPUT::INPUT_ESPACE):
 		if (m_eUI_State == UI_STATE::GAMEPLAYER)
 		{
 			m_eUI_State = UI_STATE::SPELLNEARN;

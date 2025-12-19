@@ -74,6 +74,7 @@ HRESULT CPlayer::InputAction()
 			|| m_pGameInstance->Key_Down(DIK_B)
 			|| m_pGameInstance->Key_Down(DIK_T)
 			|| m_pGameInstance->Key_Down(DIK_TAB)
+			|| m_pGameInstance->Key_Down(DIK_ESCAPE)
 			)
 		{
 			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
@@ -81,7 +82,7 @@ HRESULT CPlayer::InputAction()
 			if (m_pGameInstance->Key_Down(DIK_X)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_X));
 			if (m_pGameInstance->Key_Down(DIK_G)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_G));
 			if (m_pGameInstance->Key_Down(DIK_Z)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_Z));
-			if (m_pGameInstance->Key_Down(DIK_N)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_N));
+			if (m_pGameInstance->Key_Down(DIK_ESCAPE)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_ESPACE));
 			return S_OK;
 		}
 	}
