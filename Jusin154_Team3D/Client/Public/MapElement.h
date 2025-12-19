@@ -35,6 +35,8 @@ public:
 	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
+
 protected:
 	_uint				m_iMaxLodLevel = {};
 	_uint				m_iLodIndex = {};

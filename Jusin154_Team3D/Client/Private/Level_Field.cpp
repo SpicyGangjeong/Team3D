@@ -5,6 +5,9 @@
 #include "InfoInstance.h"
 #include "Light_Main.h"
 #include "Layer.h"
+#include "Camera_Debug.h"
+#include "Terrain.h"
+#include "SkyBox.h"
 
 CLevel_Field::CLevel_Field(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -16,6 +19,17 @@ CLevel_Field::CLevel_Field(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 HRESULT CLevel_Field::Initialize(void* pArg)
 {
 	if (FAILED(Ready_Lights())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_SkyBox())) {
+		return E_FAIL;
+	}
+	if (FAILED(Ready_Background())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Camera())) {
 		return E_FAIL;
 	}
 
@@ -42,7 +56,7 @@ void CLevel_Field::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Up(DIK_F1))
 	{
-		m_pGameInstance->Set_LevelToChange();
+		//m_pGameInstance->Set_LevelToChange();
 	}
 
 	m_pInfoInstance->Update(fTimeDelta);
@@ -105,6 +119,58 @@ HRESULT CLevel_Field::Ready_Lights()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))) {
 		return E_FAIL;
 	}
+	return S_OK;
+}
+
+HRESULT CLevel_Field::Ready_Camera()
+{
+#ifdef _DEBUG
+	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
+	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
+	Camera_Desc.fNear = 0.1f;
+	Camera_Desc.fFar = 500.f;
+	Camera_Desc.vEye = _float3(0.f, 10.f, -10.f);
+	Camera_Desc.vAt = _float3(0.f, 0.f, 0.f);
+	Camera_Desc.fSpeedPerSec = 5.f;
+	Camera_Desc.pCameraKey = CAMERA_DEBUG;
+	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
+	Camera_Desc.fMouseSensor = 0.1f;
+	Camera_Desc.iPriority = 53;
+	Camera_Desc.pFollowTarget = { nullptr };
+	Camera_Desc.pLookTarget = { nullptr };
+
+	CCamera_Debug* pCamera = { nullptr };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
+		return E_FAIL;
+	}
+
+	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
+
+#endif // _DEBUG
+
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT CLevel_Field::Ready_Layer_SkyBox()
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_Field::Ready_Background()
+{
+	_float4 vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	m_pGameInstance->Set_FogColor(vColor);
+	m_pGameInstance->Set_Fog(10.f, 5.f);
+
+	CInfoInstance::GetInstance()->Load_MapObjects("Dungeon_Map_Data");
+
 	return S_OK;
 }
 

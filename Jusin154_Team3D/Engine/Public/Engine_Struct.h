@@ -417,8 +417,8 @@ typedef struct tagChannelDesc
 
 typedef struct tagBoneMatrix
 {
-	_float4x4 Local;
 	_float4x4 Combined;
+	_float4x4 Local;
 	_float4x4 LocalCombined;
 }BONE_DESC;
 

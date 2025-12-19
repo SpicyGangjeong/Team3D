@@ -171,6 +171,10 @@ private:
 	void	Behavior_SpellEnter();
 	HRESULT Behavior_SpellExitCheck();
 	void	Behavior_SpellExit();
+	 
+	void	Behavior_AncientSpellEnter();
+	HRESULT Behavior_AncientSpellExitCheck();
+	void	Behavior_AncientSpellExit();
 
 	void	Behavior_ShieldEnter();
 	HRESULT Behavior_ShieldExitCheck();

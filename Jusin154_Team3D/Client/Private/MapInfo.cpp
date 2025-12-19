@@ -12,6 +12,7 @@
 #include "MapElement_Lake.h"
 #include "MapElement_Door.h"
 #include "MapElement_Chest.h"
+#include "MapElement_Static.h"
 #include "Layer.h"
 
 CMapInfo::CMapInfo()
@@ -143,9 +144,9 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
 			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
 		}
 
-		/*if (MAPOBJECT_TYPE::ELEMENT_STATIC == eType)
+		if (MAPOBJECT_TYPE::ELEMENT_STATIC == eType)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Static"), &Desc);
-		else if (MAPOBJECT_TYPE::ELEMENT_INTERACT == eType)
+		/*else if (MAPOBJECT_TYPE::ELEMENT_INTERACT == eType)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);*/
 	}
 

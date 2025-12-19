@@ -28,6 +28,7 @@
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
 #include "BroomRacerAI.h"
+#include "Ranrak.h"
 #pragma endregion
 
 
@@ -270,42 +271,40 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		/* 테스트용 맵 */
 		CInfoInstance::GetInstance()->Load_MapObjects("Map1215");
 	}
-//	else
-//	{
-//
-//
-//#if 진우
-//
-//#else
-//		/* 전체 맵 */
-//		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
-//
-//		/* 물 오브젝트 */
-//		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
-//			return E_FAIL;
-//		}
-//
-//		/* 조명 오브젝트 */
-//		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
-//#endif
-//
-//		/* 상호작용 오브젝트 */
-//		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
-//		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_B");
-//		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
-//		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
-//		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
-//
-//		/* Doors */
-//		CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info");
-//		
-//		/* Chests */
-//		CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info");
-//		
-//		if (FAILED(Ready_IntstanceProp()))
-//			return E_FAIL;
-//	}
-//	
+	else
+	{
+#if 진우
+
+#else
+		/* 전체 맵 */
+		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+
+		/* 물 오브젝트 */
+		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
+			return E_FAIL;
+		}
+
+		/* 조명 오브젝트 */
+		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
+#endif
+
+		/* 상호작용 오브젝트 */
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_B");
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
+
+		/* Doors */
+		CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info");
+		
+		/* Chests */
+		CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info");
+		
+		if (FAILED(Ready_IntstanceProp()))
+			return E_FAIL;
+	}
+	
 	return S_OK;
 }
 
@@ -566,22 +565,26 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	for (_uint i = 0; i < 1; ++i)
+	for (_uint i = 0; i < 0; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 	}
 
-	 for (_uint i = 0; i <1; ++i)
+	 for (_uint i = 0; i <3; ++i)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &i))) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 	}
 
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrak>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
 

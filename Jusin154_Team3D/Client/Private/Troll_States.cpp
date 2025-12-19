@@ -246,7 +246,7 @@ HRESULT CTroll::Behavior_CombatExitCheck(_float fTimeDelta)
 	{
 		m_pFSM->Change_State(FSMSTATE::SWING);
 	}
-	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)] <= 0.f)
+	else if (m_fTargetDistance <= 15.f && m_fTargetDistance>=8.f &&m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::THROW_ROCK);
 	}

@@ -25,8 +25,10 @@ public:
 
 public:
 	virtual _wstring	Get_PrototypeTag(_uint iLodIndex = 0);
-	_uint		Get_LodLevel();
-	_uint		Get_iKeyIndex() const { return m_iKeyIndex; }
+	virtual _float3&	Get_Rotation() { return m_vRotation; }
+
+	_uint				Get_LodLevel();
+	_uint				Get_iKeyIndex() const { return m_iKeyIndex; }
 
 protected:
 	_float4		m_vExtentPosition = {};

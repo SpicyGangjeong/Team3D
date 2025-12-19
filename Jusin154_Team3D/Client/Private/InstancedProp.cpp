@@ -102,7 +102,7 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 	INSTANCE_PROP_DESC* pDesc = static_cast<INSTANCE_PROP_DESC*>(pArg);
 
 	/* Com_VIBuffer_Instance_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->strPrototypeTag,
+	if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, pDesc->strPrototypeTag,
 		reinterpret_cast<CComponent**>(&m_pVIBufferInstanceCom))))
 		return E_FAIL;
 

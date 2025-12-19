@@ -330,6 +330,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "DiffuseTexture")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
+	else if (!strcmp(FileType.c_str(), "Distort texture")){
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
 	else if (!strcmp(FileType.c_str(), "Diffuse")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
@@ -362,6 +365,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		m_vSRV_Flag.x += 1.f;
 	}
 	else if (!strcmp(FileType.c_str(), "Normal Map")){
+		eTexture = aiTextureType::aiTextureType_NORMALS;
+	}
+	else if (!strcmp(FileType.c_str(), "Base Normal")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	}
 	else if (!strcmp(FileType.c_str(), "Object_Normal")){
@@ -510,6 +516,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "MRO/SRO Map B")) {
 		eTexture = Switch_PBR_B(Use);
 	}
+	else if (!strcmp(FileType.c_str(), "MRO/SRO B")) {
+		eTexture = Switch_PBR_B(Use);
+	}
 	else if (!strcmp(FileType.c_str(), "MROH/SROH B")) {
 		eTexture = Switch_PBR_B(Use);
 	}
@@ -577,12 +586,50 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Detail Normal B")) 
 				return S_OK;
-
-		return S_OK;
+		else if (!strcmp(FileType.c_str(), "Vertex Blend Texture ")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Water Color tex")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "emissiveMask")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "EmissiveAlphaMask")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Distortion Map")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Distortion Bottom")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Distortion Top")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Rock_Texture")) {
+			eTexture = aiTextureType::aiTextureType_DIFFUSE;
+		}
+		else if (!strcmp(FileType.c_str(), "Rock MRO")) {
+			eTexture = aiTextureType::aiTextureType_METALNESS;
+			m_vPBR_Flag.x = PBR_MROA;
+		}
+		else if (!strcmp(FileType.c_str(), "Base MRO/SRO")) {
+			eTexture = Switch_PBR(Use);
+		}
+		else if (!strcmp(FileType.c_str(), "MRO/SRO")) {
+			eTexture = Switch_PBR(Use);
+		}
+		else if (!strcmp(FileType.c_str(), "Rock Details")) {
+			eTexture = aiTextureType::aiTextureType_OPACITY;
+			m_vSRV_Flag.y += 1.f;
+		}
+		else if (!strcmp(FileType.c_str(), "Rock baked Normals")) {
+			eTexture = aiTextureType::aiTextureType_NORMALS;
+		}
+		else
+		{
 #ifndef 기무리
-		MSG_BOX("Failed to Path Material Texture Type");
+			MSG_BOX("Failed to Path Material Texture Type");
 #endif // !기무리
-		return S_OK;
+#ifndef gimch
+			MSG_BOX("Failed to Path Material Texture Type");
+#endif // !기무리
+			return S_OK;
+		}
 	}
 	_char TexturePath[MAX_PATH] = {};
 
@@ -986,7 +1033,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader, MODEL eType)
 	return S_OK;
 }
 
-HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _SaveMaterial)
+HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _SaveMaterial, _uint iLevel)
 {
 	m_vSRV_Flag = _SaveMaterial.vSRV_Flag;
 	m_vPBR_Flag = _SaveMaterial.vPBR_Flag;
@@ -1015,7 +1062,7 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 			const char* ext = strrchr(szFullPath, '.');
 			if (ext)
 			{
-				pSRV = m_pGameInstance->Add_Resource(szFullPath);
+				pSRV = m_pGameInstance->Add_Resource(szFullPath, iLevel);
 			}
 
 			if (nullptr == pSRV) {
@@ -1027,11 +1074,11 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 	return S_OK;
 }
 
-CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const SaveMaterial& _SaveMaterial)
+CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const SaveMaterial& _SaveMaterial, _uint iLevel)
 {
 	CMaterial* pInstance = new CMaterial(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize(pModelFilePath, _SaveMaterial)))
+	if (FAILED(pInstance->Initialize(pModelFilePath, _SaveMaterial, iLevel)))
 	{
 		MSG_BOX("Failed to Created : CMaterial");
 		SAFE_RELEASE(pInstance);
