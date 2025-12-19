@@ -109,29 +109,29 @@ CMonster* CInfoInstance::Get_TargetMonster()
 #pragma endregion
 
 #pragma region MAP_INFO
-HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
+HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath, const _wchar* pLayerTag)
 {
-	return m_pMapInfo->Load_MapObjects(pFilePath);
+	return m_pMapInfo->Load_MapObjects(pFilePath, pLayerTag);
 }
-HRESULT CInfoInstance::Load_LightElements(const _char* pFilePath)
+HRESULT CInfoInstance::Load_LightElements(const _char* pFilePath, const _wchar* pLayerTag)
 {
-	return m_pMapInfo->Load_LightElements(pFilePath);
+	return m_pMapInfo->Load_LightElements(pFilePath, pLayerTag);
 }
-HRESULT CInfoInstance::Load_InteractableElements(const _char* pFileName)
+HRESULT CInfoInstance::Load_InteractableElements(const _char* pFileName, const _wchar* pLayerTag)
 {
-	return m_pMapInfo->Load_InteractableElements(pFileName);
+	return m_pMapInfo->Load_InteractableElements(pFileName, pLayerTag);
 }
 HRESULT CInfoInstance::Load_WaterElemet(const _char* pFileName)
 {
 	return m_pMapInfo->Load_WaterElemet(pFileName);
 }
-HRESULT CInfoInstance::Load_DoorElemet(const _char* pFileName)
+HRESULT CInfoInstance::Load_DoorElemet(const _char* pFileName, const _wchar* pLayerTag)
 {
-	return m_pMapInfo->Load_DoorElemet(pFileName);
+	return m_pMapInfo->Load_DoorElemet(pFileName, pLayerTag);
 }
-HRESULT CInfoInstance::Load_ChestElemet(const _char* pFileName)
+HRESULT CInfoInstance::Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag)
 {
-	return m_pMapInfo->Load_ChestElemet(pFileName);
+	return m_pMapInfo->Load_ChestElemet(pFileName, pLayerTag);
 }
 #pragma endregion
 

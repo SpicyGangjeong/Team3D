@@ -28,6 +28,8 @@ private:
 	HRESULT Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const aiMesh* pAIMesh);
 
+	void BuildGlobalToLocal(_uint boneCount);
+
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
 #endif // EDITOR_PROJECT
@@ -62,11 +64,9 @@ private:
 	ID3D11ShaderResourceView* m_pBoneRemapSRV = nullptr;
 	ID3D11Buffer* m_pBoneRemapBuffer = nullptr;
 
-
-
 	// 바이너리
-	std::vector<_uint>   m_Indices;
-	std::vector<_float3> m_Vertices;
+	vector<_uint>   m_Indices;
+	vector<_float3> m_Vertices;
 	//
 
 private:

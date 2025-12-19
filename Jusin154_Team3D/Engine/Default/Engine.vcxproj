@@ -182,6 +182,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\Bounding_AABB.cpp" />
     <ClCompile Include="..\Private\Bounding_OBB.cpp" />
     <ClCompile Include="..\Private\Bounding_Sphere.cpp" />
+    <ClCompile Include="..\Private\CallBack_QueryFilterCallback.cpp" />
     <ClCompile Include="..\Private\Camera.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </ExcludedFromBuild>
@@ -214,6 +215,7 @@ call Update_Lib.bat
     <ClCompile Include="..\private\OcclusionQuery.cpp" />
     <ClCompile Include="..\private\Quest.cpp" />
     <ClCompile Include="..\Private\Renderer_Declare.cpp" />
+    <ClCompile Include="..\Private\RenderEventDebugger.cpp" />
     <ClCompile Include="..\private\Resource_Manager.cpp" />
     <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -328,14 +330,6 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\private\VIBuffer_UI_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
-    <ClCompile Include="..\Public\NCallBack_Playable_Behavior.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\Public\NCallBack_Playable_HitRepot.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Animation.h" />
@@ -429,6 +423,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Bounding_AABB.h" />
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
+    <ClInclude Include="..\Public\CallBack_QueryFilterCallback.h" />
     <ClInclude Include="..\public\Fog.h" />
     <ClInclude Include="..\public\Font.h" />
     <ClInclude Include="..\public\Font_Manager.h" />
@@ -436,16 +431,9 @@ call Update_Lib.bat
     <ClInclude Include="..\public\QuadTree.h" />
     <ClInclude Include="..\public\OcclusionQuery.h" />
     <ClInclude Include="..\public\Quest.h" />
+    <ClInclude Include="..\Public\RenderEventDebugger.h" />
     <ClInclude Include="..\public\Resource_Manager.h" />
     <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="..\Public\NCallBack_Playable_Behavior.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="..\Public\NCallBack_Playable_HitRepot.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -641,12 +629,18 @@ call Update_Lib.bat
     <None Include="..\Public\fMod\fmod_errors.cs" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Distortion.hlsl" />
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Distortion.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Instance_Compute.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Local_Compute.hlsl" />
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Local_Compute.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Mesh_Compute.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>

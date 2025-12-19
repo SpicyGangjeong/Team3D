@@ -113,13 +113,20 @@
 #define			SSAO_SAMPLE_NUMBER			64
 #define			TIMER_SHORT_LERP			0.16f
 
+
+constexpr unsigned int g_iNearShadowWidth		= 8192;
+constexpr unsigned int g_iNearShadowHeight		= 4096;
+
+constexpr unsigned int g_iMiddleShadowWidth		= 4096;
+constexpr unsigned int g_iMiddleShadowHeight	= 2304;
+
+constexpr unsigned int g_iFarShadowWidth		= 6144;
+constexpr unsigned int g_iFarShadowHeight		= 3072;
+
 constexpr unsigned int g_iPreShadowWidth		= 16384;
 constexpr unsigned int g_iPreShadowHeight		= 9216;
 
-constexpr unsigned int g_iMaxShadowWidth		= 16384;
-constexpr unsigned int g_iMaxShadowHeight		= 9216;
-//constexpr unsigned int g_iMaxShadowWidth		= 4096;
-//constexpr unsigned int g_iMaxShadowHeight		= 2304;
+
 
 #ifndef AI_TEXTURE_TYPE_MAX
 #define AI_TEXTURE_TYPE_MAX 27

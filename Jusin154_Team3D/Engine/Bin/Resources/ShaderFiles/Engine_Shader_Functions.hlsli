@@ -468,42 +468,47 @@ float4 BlendDiffuse(float4 vDiffuseA, Texture2D DiffuseBlendTexture, float2 vTex
     return lerp(vDiffuseA, vDiffuseBlendColor, fRatio);
 
 }
-
-float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos)
+float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIntensity = 1.f)
 {
-    if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5) {
-        return float2(0.0f, 0.0f);
+    if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5)
+    {
+        return float2(0.5f, 0.5f);
     }
 
-    float2 currentUV = (vCurrentProjPos.xy/vCurrentProjPos.w);
-    float2 previousUV = (vPreviousProjPos.xy / vCurrentProjPos.w);
+    float2 currentNDC = vCurrentProjPos.xy / vCurrentProjPos.w;
+    float2 previousNDC = vPreviousProjPos.xy / vPreviousProjPos.w;
 
-    currentUV.y *= -1.f;
-    previousUV.y *= -1.f;
+    currentNDC.y *= -1.f;
+    previousNDC.y *= -1.f;
 
-    return currentUV - previousUV;
+    // UV 델타
+    float2 velocityUV = (currentNDC - previousNDC) * 0.5f;
+    velocityUV *= fIntensity;
+    velocityUV = clamp(velocityUV, -1.0f, 1.0f);
+
+    return velocityUV * 0.5f + 0.5f; // 0 속도 -> 0.5
 }
 
 float3 DownSampleFast(Texture2D SrcTexture2D, float2 vCenterTexcoord, float2 vSrcTexelSize, float2 vResolution)
 {
     float2 uv = float2(0.f, 0.f);
-    float3 vCenterColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
+    float3 vCenterColor = SrcTexture2D.SampleLevel(BorderZeroSampler, vCenterTexcoord, 0);
     uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, -1.0);
-    float3 fLTColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroLinearSampler);
+    float3 fLTColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroSampler);
     uv = vCenterTexcoord + vSrcTexelSize * float2(0.0, -1.0);
     float3 fTColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
     uv = vCenterTexcoord + vSrcTexelSize * float2(+1.0, -1.0);
-    float3 fRTColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroLinearSampler);
+    float3 fRTColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroSampler);
     uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, 0.0);
     float3 fLColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
     uv = vCenterTexcoord + vSrcTexelSize * float2(1.0, 0.0);
     float3 fRColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
     uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, +1.0);
-    float3 fLBColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroLinearSampler);
+    float3 fLBColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroSampler);
     uv = vCenterTexcoord + vSrcTexelSize * float2(0.0, 1.0);
     float3 fBColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0);
     uv = vCenterTexcoord + vSrcTexelSize * float2(+1.0, +1.0);
-    float3 fRBColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroLinearSampler);
+    float3 fRBColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroSampler);
     
     return vCenterColor * 0.25f + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.0625f + (fTColor + fLColor + fRColor + fBColor) * 0.125f;
 }

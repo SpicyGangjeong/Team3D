@@ -36,7 +36,7 @@ void CTroll::Behavior_IdleEnter()
 HRESULT CTroll::Behavior_IdleExitCheck()
 {
 	if (m_fTargetDistance <= 18.f && m_fTargetDistance != 0)
-		m_pFSM->Change_State(FSMSTATE::MOVE);
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 
 	return E_FAIL;
 }
@@ -106,9 +106,10 @@ HRESULT CTroll::Behavior_IdleBreakExitCheck()
 {
 	if (m_pModelCom->IsFinishedAnim()){
 		m_pFSM->Change_State(FSMSTATE::MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_IdleBreakExit()
@@ -201,9 +202,12 @@ HRESULT CTroll::Behavior_MoveExitCheck(_float fTimeDelta)
 
 
 	if (m_fTargetDistance <= 6.f && m_fTargetDistance != 0.f)
+	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_MoveExit()
@@ -237,29 +241,35 @@ HRESULT CTroll::Behavior_CombatExitCheck(_float fTimeDelta)
 	if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] <= 0.f))
 	{
 		m_pFSM->Change_State(FSMSTATE::SLAM);
+		return E_FAIL;
 	}
 	else if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] <= 0.f))
 	{
 		m_pFSM->Change_State(FSMSTATE::BACKHAND_SWING);
+		return E_FAIL;
 	}
 	else if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] <= 0.f))
 	{
 		m_pFSM->Change_State(FSMSTATE::SWING);
+		return E_FAIL;
 	}
-	else if (m_fTargetDistance <= 15.f && m_fTargetDistance>=8.f &&m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)] <= 0.f)
+	else if (m_fTargetDistance <= 15.f &&m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::THROW_ROCK);
+		return E_FAIL;
 	}
 	else  if (m_fTargetDistance <= 18.f && m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::RUSH)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::RUSH);
+		return E_FAIL;
 	}
 	else
 	{
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_CombatExit()
@@ -326,8 +336,9 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 	{
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_RushExit()
@@ -391,8 +402,9 @@ HRESULT CTroll::Behavior_ThrowExitCheck(_float fTimeDelta)
 	{
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_ThrowExit()

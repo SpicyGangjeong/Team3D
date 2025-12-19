@@ -86,6 +86,9 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 
 void CCamera_Debug::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
 }
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)
@@ -177,6 +180,16 @@ void CCamera_Debug::Free()
 
 void CCamera_Debug::Describe_Entity()
 {
+	_float3 vPosition = {};
+	GUI::Begin("PickingPos");
+	if (m_pGameInstance->Key_Pressing(DIK_Y))
+	{
+		if (m_pGameInstance->isPicking(&vPosition))
+		{
+			GUI::InputFloat3("Pos", (float*)&vPosition);
+		}
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

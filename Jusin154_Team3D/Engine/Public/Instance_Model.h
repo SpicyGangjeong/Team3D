@@ -61,8 +61,8 @@ public:
 
 		_float2		vDropAttenuation = { 1.f , 1.f };
 
-		_float		fPadding0 = {};
-		_float3		vPadding1 = {};
+		_float2		vRotateAttenuation = {};
+		_float2		vRotateAttDelay = {};
 
 		_float		fSizeLerpOption = {};
 		_float		fMoveLerpOption = {};
@@ -231,6 +231,8 @@ public:
 		_float    fAcceleration = {};
 
 		_bool     isStop = {};
+		_float    fRotateAttenuation = {};
+		_float    fRotateAttDelay = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 
