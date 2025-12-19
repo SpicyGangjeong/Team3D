@@ -268,39 +268,6 @@ void CRenderer::Render_Shadow()
 			return;
 		}
 	}
-	{ // MRT_Shadow_Far
-		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow_Far"), m_pShadowDSV_FAR))) {
-			return;
-		}
-
-		D3D11_VIEWPORT			ViewPortDesc;
-		ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
-		{
-			ViewPortDesc.TopLeftX = 0;
-			ViewPortDesc.TopLeftY = 0;
-			ViewPortDesc.Width = (_float)(g_iMaxShadowWidth);
-			ViewPortDesc.Height = (_float)(g_iMaxShadowHeight);
-			ViewPortDesc.MinDepth = 0.f;
-			ViewPortDesc.MaxDepth = 1.f;
-		}
-		m_pContext->RSSetViewports(1, &ViewPortDesc);
-
-		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_FAR)]) {
-			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_FAR))) {
-					assert(false);
-				}
-			}
-
-			SAFE_RELEASE(pRenderObject);
-		}
-
-		m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_FAR)].clear();
-
-		if (FAILED(m_pGameInstance->End_MRT())) {
-			return;
-		}
-	}
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
 
 
@@ -895,7 +862,7 @@ void CRenderer::Render_PostProcessing()
 			assert(false);
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_MotionBlur"), m_pShader, "g_ColorTexture"))) {
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_AfterBlend"), m_pShader, "g_ColorTexture"))) {
 			assert(false);
 			return;
 		}
@@ -904,6 +871,10 @@ void CRenderer::Render_PostProcessing()
 			return;
 		}
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_VelocityMap"), m_pShader, "g_VelocityTexture"))) {
+			assert(false);
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_VelocityTent"), m_pShader, "g_TileVelocityTexture"))) {
 			assert(false);
 			return;
 		}

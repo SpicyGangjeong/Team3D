@@ -74,6 +74,7 @@ Texture2D g_OriginalTexture;
 
 Texture2D g_ColorTexture;
 Texture2D g_VelocityTexture;
+Texture2D g_TileVelocityTexture;
 
 int g_iMBSampleCount;
 int g_iMBMaxSampleCount;
@@ -246,96 +247,86 @@ struct PS_OUT_SSAO_BLUR
 PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
 {
     PS_OUT_VELOCITYBLUR Out = (PS_OUT_VELOCITYBLUR) 0;
-
-    float2 centerUV = In.vTexcoord;
-
-    float4 centerColor = g_ColorTexture.Sample(ClampLinearSampler, centerUV);
-    float centerDepth = g_DepthTexture.Sample(PointSampler, centerUV).y;
-
-    // encoded(0..1) -> signed(-1..1)
-    float2 centerVelocitySignedUV = g_VelocityTexture.Sample(PointSampler, centerUV).xy * 2.0f - 1.0f;
-
-    // UV -> pixels
-    float2 centerVelocityPixels = centerVelocitySignedUV * g_vResolution.xy;
-    float centerSpeedPixels = length(centerVelocityPixels);
-
-    // **정지 데드존**
-    if (centerSpeedPixels < 0.5f)
-    {
-        Out.vColor = centerColor;
+    
+    float2 vCenterUV = In.vTexcoord;
+    float2 vFullResolutionTexelSize = 1.f / g_vResolution;
+    float fCenterDepth = g_DepthTexture.Sample(PointSampler, vCenterUV).y;
+    float2 vCenterVelo = g_VelocityTexture.Sample(PointSampler, vCenterUV).xy * 2.f - 1.f; // 0~1 -> -1~+1
+    float2 vCenterVeloPixel = vCenterVelo * g_vResolution.xy;
+    bool bBorrowedVelocityFromTile = false;
+    
+    float2 vBlurVelo = vCenterVelo;
+    float2 vBlurVeloPixel = vCenterVeloPixel;
+    if (length(vBlurVeloPixel) < 0.5f) {
+        vBlurVelo = g_TileVelocityTexture.Sample(PointSampler, vCenterUV).xy * 2.f - 1.f;
+        vBlurVeloPixel = vBlurVelo * g_vResolution.xy;
+        bBorrowedVelocityFromTile = true;
+    }
+    
+    if (length(vBlurVeloPixel) < 0.5f) {
+        Out.vColor = g_ColorTexture.Sample(ClampLinearSampler, vCenterUV);
         Out.vVelocity = float2(0.5f, 0.5f);
         return Out;
     }
-
-    // **방향(정규화)**
-    float2 velocityDirectionPixels = centerVelocityPixels / max(centerSpeedPixels, FLT_EPSILON5);
-
-    // **최대 블러 반경(픽셀)**
-    float blurRadiusPixels = min(centerSpeedPixels, g_fMBBlurRadius);
-
-    int maximumSampleCount = min(g_iMBSampleCount, g_iMBMaxSampleCount);
-    int tapRadius = min(maximumSampleCount, (int) ceil(blurRadiusPixels)); // 옵션: 속도에 따라 탭 줄이기
-
-    float sampleStepPixels = blurRadiusPixels / max((float) tapRadius, 1.0f);
-
-    // SpreadCompare용 스케일 (픽셀 -> 샘플단위)
-    float pixelToSampleUnitsScale = (float) tapRadius / max(blurRadiusPixels, FLT_EPSILON5);
-
-    float depthScale = 0.5f / max(g_fMBSampleBias, FLT_EPSILON5);
-
-    float4 weightedColorSum = float4(0, 0, 0, 0);
-    float2 weightedVelocitySum = float2(0, 0);
-    float weightSum = 0.0f;
-
-    // 픽셀 오프셋 -> UV 오프셋
-    float2 pixelToUV = 1.0f / g_vResolution.xy;
-
-    // center spread는 "반경"으로 잡는 편이 안정적
-    float centerSpreadLength = blurRadiusPixels;
+    
+    float2 vBlurDirPixel = (vBlurVeloPixel / max(length(vBlurVeloPixel), FLT_EPSILON5));
+    int iMaxRadius = min(g_iMBSampleCount, g_iMBMaxSampleCount);
+    
+     // 샘플링 당 이동 픽셀
+    float fSamplePixelSpeed = g_fMBBlurRadius / max((float) iMaxRadius, 1.f);
+    
+    // 샘플유닛의 크기
+    float fScalePixelToSampleUnit = (float) iMaxRadius / max(g_fMBBlurRadius, FLT_EPSILON5);
+    float fScaleDepth = 0.5f / max(g_fMBSampleBias, FLT_EPSILON5);
+    float4 vAccColorSum = float4(0.f, 0.f, 0.f, 0.f);
+    float2 vAccVeloSum = float2(0.f, 0.f);
+    float fAccWeight = 0.f;
+    
+    // 센터의 스프레드 길이
+    float2 vReferenceVelocityPixel = vCenterVeloPixel;
+    if (true == bBorrowedVelocityFromTile)
+    {
+        vReferenceVelocityPixel = vBlurVeloPixel;
+    }
+    float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, g_fMBBlurRadius);
 
     [loop]
-    for (int i = -tapRadius; i <= tapRadius; ++i)
-    {
-        float offsetLengthSamples = (float) abs(i);
-
-        float2 offsetPixels = velocityDirectionPixels * ((float) i * sampleStepPixels);
-        float2 sampleUV = centerUV + offsetPixels * pixelToUV;
-
-        // Clamp 샘플러를 쓰면 굳이 IsValidUV가 필수는 아니지만, 남겨도 됩니다.
-        if (false == IsValidUV(sampleUV))
+    for (int iInterval = -iMaxRadius; iInterval <= iMaxRadius; ++iInterval) {
+        float fOffset = (float) abs(iInterval);
+        float2 vOffsetPixel = vBlurDirPixel * ((float) iInterval * fSamplePixelSpeed);
+        float2 vSamplingUV = vCenterUV + vOffsetPixel * vFullResolutionTexelSize;
+        if (false == IsValidUV(vSamplingUV)) {
             continue;
+        }
 
-        float sampleDepth = g_DepthTexture.Sample(PointSampler, sampleUV).y;
+        float fSampledDepth = g_DepthTexture.Sample(PointSampler, vSamplingUV).y;
+        float2 vSampledVelo = g_VelocityTexture.Sample(PointSampler, vSamplingUV).xy * 2.f - 1.f;
+        float2 vSampledVeloPixel = vSampledVelo * g_vResolution.xy;
 
-        float2 sampleVelocitySignedUV = g_VelocityTexture.Sample(PointSampler, sampleUV).xy * 2.0f - 1.0f;
-        float2 sampleVelocityPixels = sampleVelocitySignedUV * g_vResolution.xy;
+        // 샘플의 스프레드 길이
+        float fBlurSampleAccurate = abs(dot(vSampledVeloPixel, vBlurDirPixel));
+        float fSampleSpreadLengthPixel = clamp(fBlurSampleAccurate, 0.f, g_fMBBlurRadius);
+        if (true == bBorrowedVelocityFromTile)
+        {
+            fSampleSpreadLengthPixel = max(fSampleSpreadLengthPixel, fCenterSpreadLengthPixel);
+        }
 
-        float sampleSpreadLength = clamp(length(sampleVelocityPixels), 0.0f, g_fMBBlurRadius);
-
-        float weightCalculated = SampleWeight(
-            centerDepth, sampleDepth,
-            offsetLengthSamples,
-            centerSpreadLength, sampleSpreadLength,
-            pixelToSampleUnitsScale,
-            depthScale
-        );
-
-        if (weightCalculated <= 0.0f)
+        // 샘플과 센터의 (깊이테스트 + 스프레드테스트)
+        float fWeightCalculated = SampleWeight(fCenterDepth, fSampledDepth, fOffset, fCenterSpreadLengthPixel, fSampleSpreadLengthPixel, fScalePixelToSampleUnit, fScaleDepth);
+        
+        if (fWeightCalculated <= 0.f) {
             continue;
-
-        float4 sampleColor = g_ColorTexture.Sample(ClampLinearSampler, sampleUV);
-
-        weightedColorSum += sampleColor * weightCalculated;
-        weightedVelocitySum += sampleVelocitySignedUV * weightCalculated;
-        weightSum += weightCalculated;
+        }
+        
+        float4 vSampledColor = g_ColorTexture.Sample(ClampLinearSampler, vSamplingUV);
+        vAccColorSum += vSampledColor * fWeightCalculated;
+        vAccVeloSum += vSampledVelo * fWeightCalculated;
+        fAccWeight += fWeightCalculated;
     }
-
-    float4 blurColor = weightedColorSum / max(weightSum, FLT_EPSILON5);
-    float2 blurVelocitySignedUV = weightedVelocitySum / max(weightSum, FLT_EPSILON5);
-
-    Out.vColor = blurColor;
-    Out.vVelocity = blurVelocitySignedUV * 0.5f + 0.5f; // 다시 encode
-
+    float4 vBlurredColor = vAccColorSum / max(fAccWeight, FLT_EPSILON5);
+    float2 vBlurredVelo = vAccVeloSum / max(fAccWeight, FLT_EPSILON5);
+    Out.vColor = vBlurredColor;
+    Out.vVelocity = vBlurredVelo * 0.5f + 0.5f;
     return Out;
 }
 PS_OUT_VELOCITYTILE PS_MOTIONBLUR_TILESAMPLE(PS_IN In)
@@ -1578,7 +1569,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MOTIONBLUR_TILESAMPLE();
     }
@@ -1587,7 +1578,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MOTIONBLUR_TENTSAMPLE();
     }

@@ -231,7 +231,7 @@ float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
 // BackGround ForeGround 합은 1
 float2 DepthCompare(float fCenterDepth, float fSampleDepth, float fDepthScale)
 {
-    return saturate(0.5f + 0.5f + 0.5f*(float2(fDepthScale, -fDepthScale) * (fSampleDepth - fCenterDepth)));
+    return saturate(0.5f + float2(fDepthScale, -fDepthScale) * (fSampleDepth - fCenterDepth));
 }
 
 float2 SpreadCompare(float fOffsetLength, float2 fSpreadLength, float fPixelToSampleUnitsScale)
