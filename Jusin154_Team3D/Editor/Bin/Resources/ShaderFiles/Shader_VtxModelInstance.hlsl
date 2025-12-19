@@ -42,6 +42,9 @@ struct ParticleValue
     float fAcceleration;
     
     bool isStop;
+    
+    float fRotateAttenuation;
+    float fRotateAttDelay;
 };
 
 

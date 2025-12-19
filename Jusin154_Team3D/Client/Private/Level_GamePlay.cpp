@@ -237,9 +237,6 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
 		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED)))
-		return E_FAIL;
 	 
 	
 	// ---------------------------------
@@ -258,7 +255,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 #ifdef 인혁
 	isReady_Background = true;
@@ -269,42 +266,101 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if(false == isReady_Background)
 	{
 		/* 테스트용 맵 */
-		CInfoInstance::GetInstance()->Load_MapObjects("Map1215");
+		CInfoInstance::GetInstance()->Load_MapObjects("Map1215", LAYER_HOGSMEADE);
 	}
 	else
 	{
 #if 진우
 
 #else
-		/* 전체 맵 */
-		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+		if (FAILED(Ready_Layer_Hogsmeade()))
+			return E_FAIL;
+
+		if (FAILED(Ready_Layer_Hogwart()))
+			return E_FAIL;
+
+		if (FAILED(Ready_Layer_Unified()))
+			return E_FAIL;
 
 		/* 물 오브젝트 */
 		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
 			return E_FAIL;
 		}
-
-		/* 조명 오브젝트 */
-		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 #endif
-
-		/* 상호작용 오브젝트 */
-		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
-		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_B");
-		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
-		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
-		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
-
-		/* Doors */
-		CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info");
-		
-		/* Chests */
-		CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info");
 		
 		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;
 	}
 	
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Hogsmeade()
+{
+	/* 전체 맵 */
+	CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE);
+
+	/* 조명 오브젝트 */
+	CInfoInstance::GetInstance()->Load_LightElements("LightElement", LAYER_HOGSMEADE);
+
+	/* 상호작용 오브젝트 */
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel", LAYER_HOGSMEADE);
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_B", LAYER_HOGSMEADE);
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F", LAYER_HOGSMEADE);
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable", LAYER_HOGSMEADE);
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair", LAYER_HOGSMEADE);
+
+	/* Doors */
+	CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info", LAYER_HOGSMEADE);
+
+	/* Chests */
+	CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info", LAYER_HOGSMEADE);
+
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Hogwart()
+{
+
+	CInfoInstance::GetInstance()->Load_MapObjects("Hogwart_MapContainer_Data", LAYER_HOGWART);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Unified()
+{
+	CUnified::UNIFIED_DESC Desc = {};
+
+	/* Hogwart Unified*/
+	Desc.fLodSwitchDistnace = 400.f;
+	Desc.vUnifiedCenterPos = _float4(-250.2f, 17.2f, -500.7f, 1.f);
+	Desc.vPosition = _float3(-291.2f, 17.2f, -474.7f);
+	Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Desc.srtLayerTag = LAYER_HOGWART;
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HW_HogwartsShell_B"));
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED, &Desc)))
+		return E_FAIL;
+
+	Desc.srtModelPrototypeTags.clear();
+	/* Hogwart Unified*/
+	Desc.fLodSwitchDistnace = 500.f;
+	Desc.vUnifiedCenterPos = _float4(62.f, 10.f, 93.f, 1.f);
+	Desc.vPosition = _float3(62.f, 10.f, 93.f);
+	Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Desc.srtLayerTag = LAYER_HOGSMEADE;
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_0"));
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_1"));
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_2"));
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_3"));
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_Streets_LOD1_Merged_0"));
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED, &Desc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -336,70 +392,70 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	///* WA_Rectangle_Double_A */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	///* WC_Retangle_Double_A */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	///* WA_Square_Double_C */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* Quid_Window_A */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* Ollivanders_Box_Window */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* WC_L_DoubleS_A */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* WC_Round_Double_A */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* SM_HM_Door1a */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* SM_HM_Door2b */
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* OakTree_TallA */

@@ -116,9 +116,19 @@ HRESULT CLevel_Field::Render()
 
 HRESULT CLevel_Field::Ready_Lights()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))) {
+	CLight_Main* pLight = { nullptr };
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT,nullptr, nullptr, &pLight))) {
 		return E_FAIL;
 	}
+
+	_float4 vDiffuse = _float4(0.3f, 0.3f, 0.3f, 0.f);
+	_float4 vAmbient = _float4(0.12f, 0.12f, 0.12f, 0.f);
+	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+	
+	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+
+
 	return S_OK;
 }
 
@@ -169,7 +179,7 @@ HRESULT CLevel_Field::Ready_Background()
 	m_pGameInstance->Set_FogColor(vColor);
 	m_pGameInstance->Set_Fog(10.f, 5.f);
 
-	CInfoInstance::GetInstance()->Load_MapObjects("Dungeon_Map_Data");
+	CInfoInstance::GetInstance()->Load_MapObjects("Dungeon_Map_Data", LAYER_BACKGROUND);
 
 	return S_OK;
 }

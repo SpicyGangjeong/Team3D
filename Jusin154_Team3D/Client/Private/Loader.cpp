@@ -166,6 +166,8 @@
 #include "Barral_Splesh.h"
 #include "Screen_Wind.h"
 #include "Stupefy.h"
+#include "Lightning.h"
+#include "LightningSide.h"
 
 #pragma endregion
 
@@ -335,7 +337,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = false;
+	isLoad_Background = true;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = true;
@@ -374,7 +376,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 		{	/* Hogwart LOD */
 			jobMapModels.emplace_back(Deferred_FolderLoad(
-				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD/",
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
+				".bin", false
+			));
+		}
+		{	/* Hogsmeade LOD */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/HogsmeadeLOD/ProxyAssets",
 				".bin", false
 			));
 		}
@@ -632,6 +640,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 				/* Object Interactables (Chest)*/
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Interactables",
+					".bin", false
+				));
+			}
+	/* ------------------------------------ HOGWART ------------------------------- */
+			{ /* QuidditchPitch */
+				/*  */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/KIT_Ext",
+					".bin", false
+				));
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/Collisions",
 					".bin", false
 				));
 			}
@@ -1468,7 +1488,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc1{};
 		{
-			Desc1.eType = ACTOR::BOX;
+			Desc1.eType = ACTOR::SPHERE;
 			Desc1.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
 			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
@@ -1731,8 +1751,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CLightning>(NEXT_LEVEL, CLightning::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
-	
+	if (FAILED(m_pGameInstance->Add_Prototype<CLightningSide>(NEXT_LEVEL, CLightningSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;

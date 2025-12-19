@@ -113,7 +113,7 @@ void CAccio::Update(_float fTimeDelta)
 
 		m_pRotate0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 		m_pRotate1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
-		m_pAccio_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+		m_pAccio_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pEnemyCCT->Get_Position());
 		m_pAccio_Distortion->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	}
 

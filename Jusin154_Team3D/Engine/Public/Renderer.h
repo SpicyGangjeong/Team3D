@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Base.h"
+#include "RenderEventDebugger.h"
 
 NS_BEGIN(Engine)
 
@@ -28,6 +29,11 @@ private:
 	list<class CGameObject*>	m_RenderObjects[ENUM_CLASS(RENDER::END)];
 
 #ifdef _DEBUG
+	CRenderEventDebugger m_AnnotationHelper = {};
+#endif // _DEBUG
+
+
+#ifdef _DEBUG
 private:
 	list<class CComponent*>				m_DebugComponents;
 #endif
@@ -46,6 +52,13 @@ private:
 	ID3D11DepthStencilView*		m_pShadowDSV_NEAR = { nullptr };
 	ID3D11DepthStencilView*		m_pShadowDSV_MIDDLE = { nullptr };
 	ID3D11DepthStencilView*		m_pShadowDSV_FAR = { nullptr };
+
+	_float2 m_vNearShadowResoltion = { (_float)g_iNearShadowWidth,(_float)g_iNearShadowHeight };
+	_float2 m_vMiddleShadowResoltion = { (_float)g_iMiddleShadowWidth,(_float)g_iMiddleShadowHeight };
+	_float2 m_vFarShadowResoltion = { (_float)g_iFarShadowWidth,(_float)g_iFarShadowHeight };
+	_float2 m_vPreShadowResoltion = { (_float)g_iPreShadowWidth,(_float)g_iPreShadowHeight };
+
+
 	ID3D11DepthStencilView*		m_pPreShadowDSV = { nullptr };
 	ID3D11ShaderResourceView*	m_pSSAO_NoiseSRV = { nullptr };
 	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
@@ -62,9 +75,13 @@ private:
 	/* TunningParam  */
 
 	// MotionBlur 
-	_float	m_fMBBlurRadius = { 1.f };
-	_int	m_iMBSampleCount = { 3 };
+	_float	m_fMBBlurRadius = { 28.f };
+	_float	m_fMBSampleBias = { 0.005f };
+	_int	m_iMBMaxSampleCount = { 28 };
+	_int	m_iMBSampleCount = { m_iMBMaxSampleCount };
+	_int	m_iMBTileSize = { 20 };
 	_int	m_iMBType = { 0 };
+	_bool	m_bMB = { true }; 
 
 	// ToneMapping
 	_int	m_iToneMappingType = { 2 };
@@ -91,6 +108,7 @@ private:
 #pragma endregion
 
 private:
+	void Bind_RawValue();
 	void Render_Occlusion();
 	void Render_Priority();
 	void Render_Shadow();
@@ -122,7 +140,7 @@ private:
 
 private:
 	void	Fill_Geometry(_uint iNumSample);
-	HRESULT Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY);
+	HRESULT Ready_ShadowDepthStencilView(_float2 vSize, ID3D11DepthStencilView** pDSV);
 
 private:
 	HRESULT Initialize();
