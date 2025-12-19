@@ -77,6 +77,8 @@ HRESULT CStreetContainer::Initialize(void* pArg)
     m_pTransformCom->Set_Scale(pDesc->vScale);
     m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
 
+
+
     return S_OK;
 }
 

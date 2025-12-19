@@ -17,41 +17,45 @@ private:
 	virtual ~CMapObject_Render() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
-	virtual HRESULT Render() override;
-	virtual HRESULT Render_Shadow(SHADOW eType) override;
-	void ReadyForPhysX();
-	void ConvertToPhysX();
+	virtual HRESULT		Initialize_Prototype() override;
+	virtual HRESULT		Initialize(void* pArg) override;
+	virtual void		Priority_Update(_float fTimeDelta) override;
+	virtual void		Update(_float fTimeDelta) override;
+	virtual void		Late_Update(_float fTimeDelta) override;
+	virtual HRESULT		Render() override;
+	virtual HRESULT		Render_Shadow(SHADOW eType) override;
+	void				ReadyForPhysX();
+	void				ConvertToPhysX();
 
 public:
 	virtual _wstring Get_PrototypeTag(_uint iLodIndex = 0);
 	HRESULT Add_LodModel(const _tchar* pModelPrototypeTag);
 
 private:
-	MAPOBJECT_RENDER_TYPE	m_Type = {};
-	CShader*				m_pShaderCom = { nullptr };
-	vector<CModel*>			m_pModelComs;
-	vector<vector<CRigidBody_Static*>> m_RigidBodies;
+	_bool								m_bReadyToCreatePhysX = { false };
+	_bool								m_bConverted = { false };
 
-	_uint					m_iLodIndex = {};
-	_uint					m_iShaderPass = {};
-	_uint					m_iNumMeshe = {};
+	MAPOBJECT_RENDER_TYPE				m_Type = {};
+	RENDER								m_eRenderGroup = { RENDER::END };
+	
 
-	_float					m_fRadius = { 0.f };
-	_bool					m_bReadyToCreatePhysX = { false };
-	_bool					m_bConverted = { false };
+	_uint								m_iLodIndex = {};
+	_uint								m_iShaderPass = {};
+	_uint								m_iNumMeshe = {};
 
+	_float								m_fRadius = { 0.f };
 
-	vector<_wstring>		m_ModelPrototypeTags;
-	vector<_uint>			m_ModelPathIndices = { };
+	CShader*							m_pShaderCom = { nullptr };
+	CTexture*							m_pDefaultGlassTextureCom = { nullptr };
+	vector<CModel*>						m_pModelComs;
+	vector<vector<CRigidBody_Static*>>	m_RigidBodies;
+
+	vector<_wstring>					m_ModelPrototypeTags;
+	vector<_uint>						m_ModelPathIndices = {};
 
 private:
-	HRESULT Ready_Components();
-	HRESULT Bind_ShaderResources();
+	HRESULT					Ready_Components();
+	HRESULT					Bind_ShaderResources();
 
 public:
 	static CMapObject_Render* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

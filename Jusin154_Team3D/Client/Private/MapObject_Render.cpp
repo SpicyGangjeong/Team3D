@@ -37,11 +37,10 @@ HRESULT CMapObject_Render::Initialize(void* pArg)
 		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
 	}
 
-	/*if (_wstring::npos != m_ModelPrototypeTags.front().find(L"Glass"))
-		m_iShaderPass = 12;
-	else*/
-
-	m_iShaderPass = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+	if (_wstring::npos != m_ModelPrototypeTags.front().find(L"Glass"))
+		m_iShaderPass = ENUM_CLASS(SHADER_PASS_MESH::GLASS_CUBE);
+	else
+		m_iShaderPass = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -83,21 +82,8 @@ void CMapObject_Render::Late_Update(_float fTimeDelta)
 
 		m_iNumMeshe = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
 
-		switch (m_Type)
-		{
-		case MAPOBJECT_RENDER_TYPE::NORMAL:
-			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-			Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(XMLoadFloat4((_float4*)&m_CombinedWorldMatrix.m[3][0]), m_fRadius));
-			break;
-		case MAPOBJECT_RENDER_TYPE::GLASS:
-			break;
-		case MAPOBJECT_RENDER_TYPE::DECAL:
-			m_pGameInstance->Add_RenderGroup(RENDER::DECAL, this);
-			break;
-
-		default:
-			break;
-		}
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(XMLoadFloat4((_float4*)&m_CombinedWorldMatrix.m[3][0]), m_fRadius));
 	}
 }
 
@@ -111,6 +97,17 @@ HRESULT CMapObject_Render::Render()
 	{
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
+		}
+
+		if (20 == m_iShaderPass)
+		{
+
+			if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pShaderCom->Bind_SRV("g_CubeTexture", m_pDefaultGlassTextureCom->Get_SRV(0))))
+				return E_FAIL;
 		}
 
 		if (FAILED(m_pShaderCom->Begin(m_iShaderPass))) {
@@ -243,6 +240,11 @@ HRESULT CMapObject_Render::Ready_Components()
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Lake_Cube_D"),
+		reinterpret_cast<CComponent**>(&m_pDefaultGlassTextureCom))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -297,6 +299,7 @@ void CMapObject_Render::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pDefaultGlassTextureCom);
 
 	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
 		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {

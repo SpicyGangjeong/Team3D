@@ -374,7 +374,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 		{	/* Hogwart LOD */
 			jobMapModels.emplace_back(Deferred_FolderLoad(
-				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD/",
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
+				".bin", false
+			));
+		}
+		{	/* Hogsmeade LOD */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/HogsmeadeLOD/ProxyAssets",
 				".bin", false
 			));
 		}
@@ -632,6 +638,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 				/* Object Interactables (Chest)*/
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Interactables",
+					".bin", false
+				));
+			}
+	/* ------------------------------------ HOGWART ------------------------------- */
+			{ /* QuidditchPitch */
+				/*  */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/KIT_Ext",
+					".bin", false
+				));
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/Collisions",
 					".bin", false
 				));
 			}
