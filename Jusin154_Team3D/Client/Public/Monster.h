@@ -40,6 +40,8 @@ protected:
 	_float			m_fOutLinePower = { 1.f };
 	_float			m_fDisolveTime = { 0.f };
 	_bool			m_bDisolve = { false };
+	_float			m_fDegree = {};
+	_float			m_fCross = {};
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

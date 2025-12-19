@@ -3,10 +3,9 @@
 
 struct BoneOut
 {
-    row_major float4x4 Local;
     row_major float4x4 Combined;
+    row_major float4x4 Local;
     row_major float4x4 LocalCombined;
-
 };
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_PrevWorldMatrix, g_PrevViewMatrix, g_PrevProjMatrix;

@@ -97,9 +97,6 @@ private:
 	_float m_fRushTime = {};
 	_float m_fAttackDelay = {};
 
-	_float m_fDegree = {};
-	_float m_fCross = {};
-
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
