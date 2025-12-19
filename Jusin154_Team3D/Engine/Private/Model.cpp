@@ -159,6 +159,8 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector,m_iRootBoneIndex);
 
+		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
+
 		if (m_fRatio >= 1.f)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
@@ -172,7 +174,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
-
 	if (m_bIsFinishedAnim)
 	{
 		if (m_bIsLoop)
@@ -184,14 +185,10 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
 		}
 	}
-	
+
 	ComputeAnimation(m_iCurrentAnimIndex, 0);
 
-	if (m_bIsFinishedAnim)
-	{
-		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
-		m_bInitialRootRotSaved = false;
-	}
+
 
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);
@@ -513,11 +510,6 @@ void CModel::Initialize_RootBone()
 	}
 }
 
-void CModel::BeginFrame()
-{
-	fill(m_CPUBoneMask.begin(), m_CPUBoneMask.end(), false);
-}
-
 vector<_float4x4> CModel::Get_OffsetMatrix(_int iIndex)
 {
 	return m_Meshes[iIndex]->Get_OffsetMatrix();
@@ -541,52 +533,6 @@ void CModel::Mark_CPUChain(_int boneIdx)
 		boneIdx = m_Parent[boneIdx];
 	}
 }
-
-//void CModel::Create_BoneStagingBuffer()
-//{
-//	D3D11_BUFFER_DESC desc{};
-//	desc.Usage = D3D11_USAGE_STAGING;
-//	desc.ByteWidth = sizeof(BONE_DESC) * (_uint)m_Bones.size();
-//	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-//	desc.BindFlags = 0;
-//	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-//	desc.StructureByteStride = sizeof(BONE_DESC);
-//
-//	HRESULT hr = m_pDevice->CreateBuffer(&desc, nullptr, &m_pBoneStagingBuffer);
-//}
-
-//const _float4x4 CModel::Get_BoneMatrix_GPU(_uint boneIndex)
-//{
-//	
-//	m_pContext->CopyResource(m_pBoneStagingBuffer, m_pBoneMatrixBuffer);
-//
-//	D3D11_MAPPED_SUBRESOURCE mapped{};
-//	m_pContext->Map(
-//		m_pBoneStagingBuffer,
-//		0,
-//		D3D11_MAP_READ,
-//		0,
-//		&mapped
-//	);
-//
-//	BONE_DESC*pBone = static_cast<BONE_DESC*>(mapped.pData);
-//
-//	m_pContext->Unmap(m_pBoneStagingBuffer, 0);
-//
-//	return pBone->Combined;
-//}
-
-//const _float4x4* CModel::Get_BoneMatrixPtr_Socket(const _char* name)
-//{
-//	_int idx = Find_BoneIndex(name);
-//	if (idx < 0)
-//		return nullptr;
-//
-//	_float4x4 mat = Get_BoneMatrix_GPU(idx);
-//	m_SocketCache[name] = mat;
-//
-//	return &m_SocketCache[name];
-//}
 
 
 const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName)
@@ -2112,9 +2058,7 @@ _bool CModel::LoadData(const _char* filename)
 
 	fclose(fp);
 
-	m_SaveModel.push_back(NewModel);
-
-	m_pGameInstance->Add_SaveModel(filename, m_SaveModel.back());
+	m_pGameInstance->Add_SaveModel(filename, NewModel);
 
 	return true;
 }
@@ -2256,7 +2200,6 @@ HRESULT CModel::Initialize(void* pArg)
 		Create_BoneLocalVB();
 		Create_ParentSrv();
 		Create_BoneLocalSrv();
-		//Create_BoneStagingBuffer();
 
 		if (FAILED(Create_ComputeShaderLocal()))
 			return E_FAIL;
@@ -2402,8 +2345,6 @@ void CModel::Free()
 	m_Bones.clear();
 
 	SAFE_RELEASE(m_pTransform);
-
-	m_SaveModel.clear();
 
 	m_Parent.clear();
 	m_AnimRanges.clear();

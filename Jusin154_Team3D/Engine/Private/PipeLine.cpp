@@ -312,7 +312,27 @@ void CPipeLine::Make_LightBoxes()
 		fMinZ += m_vShadowBoxMarginMin.z;
 		fMaxZ += m_vShadowBoxMarginMax.z;
 
-		Adjust_ShadowTexcel(fMinX, fMinY, fMaxX, fMaxY, g_iMaxShadowWidth, g_iMaxShadowHeight);
+		_uint iShadowWidth = { 0 };
+		_uint iShadowHeight = { 0 };
+		switch (iIndex)
+		{
+			case 0:
+				iShadowWidth  = g_iNearShadowWidth;
+				iShadowHeight = g_iNearShadowHeight;
+				break;
+			case 1:
+				iShadowWidth = g_iMiddleShadowWidth;
+				iShadowHeight = g_iMiddleShadowHeight;
+				break;
+			case 2:
+				iShadowWidth = g_iFarShadowWidth;
+				iShadowHeight = g_iFarShadowHeight;
+				break;
+		default:
+			break;
+		}
+
+		Adjust_ShadowTexcel(fMinX, fMinY, fMaxX, fMaxY, iShadowWidth, iShadowHeight);
 
 		targetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
 		targetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
@@ -386,7 +406,7 @@ void CPipeLine::Update_ShadowDepthNdcZ()
 	}
 }
 
-// Out으로 _float4를 새롭게 메모리로 받고 다시 밖에서 할당할 바에 레퍼런스로 쓰는게 더 나은듯
+// Out으로 _float4를 새롭게 메모리로 받고 다시 밖에서 할당할 바에 레퍼런스로 쓰는게 더 나을지도?
 // 카메라 미세 흔들림으로 인한 그림자 튐 보정
 void CPipeLine::Adjust_ShadowTexcel(_float& fMinX, _float& fMinY, _float& fMaxX, _float& fMaxY, _uint iShadowWidth, _uint iShadowHeight)
 {

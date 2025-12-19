@@ -67,6 +67,13 @@ typedef struct SlotHover
 	_int iSlotID{};
 	_int iHover_Index{};
 }HOVER_INFO;
+
+typedef struct tagCurrentQeustSerectInfo
+{
+	_int iQuestCategory{};
+	_int iQuestIndex{};
+}CURRENTQUESTSECETINFO;
+
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIObject(const CUIObject& rhs);
@@ -134,7 +141,8 @@ public:
 
 	virtual void Lerp_PosX(_float PosX);
 	virtual void Lerp_PosY(_float PosY);
-	virtual void Start_Lerp(_float fTimeDelta);
+	virtual _bool Start_Lerp(_float fTimeDelta);
+	virtual _bool Start_Bezier(_float fTimeDelta);
 	virtual void Reset_Pos(_float fTimeDelta);
 	virtual void Start_Size_Lerp(_float fTimeDelta);
 	virtual void Reset_Size_Lerp(_float fTimeDelta);

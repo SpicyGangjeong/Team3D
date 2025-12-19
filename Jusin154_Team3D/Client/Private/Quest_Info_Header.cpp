@@ -48,7 +48,7 @@ HRESULT CQuest_Info_Header::Initialize(void* pArg)
 	m_iColor = 2;
 	SizeUpX(1105.f);
 	SizeUpY(60.f);
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
 	Visible(false);
 	return S_OK;
 }
@@ -129,8 +129,8 @@ HRESULT CQuest_Info_Header::Render()
 		return E_FAIL;
 	}
 
-	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iQuest_Index).pQuestName.c_str()) - 30) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iQuest_Index).pQuestName.c_str(), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).pQuestName.c_str()) - 30) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).pQuestName.c_str(), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 
@@ -214,9 +214,12 @@ HRESULT CQuest_Info_Header::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CQuest_Info_Header::Set_Hover(_int Index)
+void CQuest_Info_Header::Set_Hover(void* pArg)
 {
-	m_iQuest_Index = Index;
+	CURRENTQUESTSECETINFO* Desc = static_cast<CURRENTQUESTSECETINFO*>(pArg);
+
+	m_iCurrentQuest = Desc->iQuestCategory;
+	m_iQuest_Index = Desc->iQuestIndex;
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);

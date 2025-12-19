@@ -58,10 +58,9 @@ HRESULT CRanrak::Initialize(void* pArg)
 		m_pFSM->Bind_States(FSMDesc);
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
+
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
-
-
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, 4.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, 4.f, 1.f));
@@ -76,6 +75,21 @@ void CRanrak::Priority_Update(_float fTimeDelta)
 
 void CRanrak::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Up(DIK_H))
+	{
+		m_ePhase = ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND);
+		m_pFSM->Change_State(FSMSTATE::LAND);
+	}
+	if (m_pGameInstance->Key_Up(DIK_Y))
+	{
+		m_ePhase = ENUM_CLASS(RANRAK_PHASE::PHASE_AIR);
+		m_pFSM->Change_State(FSMSTATE::HOVER);
+	}
+	if (m_pGameInstance->Key_Up(DIK_I))
+	{
+		m_pFSM->Change_State(FSMSTATE::SKILL);
+	}
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -395,6 +409,15 @@ HRESULT CRanrak::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
 		return E_FAIL;
 	}
 

@@ -67,6 +67,9 @@ HRESULT CMapObject_Collision::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 
+	ReadyForPhysX();
+	ConvertToPhysX();
+
 	return S_OK;
 }
 

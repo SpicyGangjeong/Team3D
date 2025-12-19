@@ -82,7 +82,7 @@ HRESULT CLand::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_fRaduis = m_pModelCom->Get_Radius();
+	m_fRaduis = 350.f;
 
 	return S_OK;
 }

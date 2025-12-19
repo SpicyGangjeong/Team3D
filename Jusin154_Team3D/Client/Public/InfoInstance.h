@@ -45,12 +45,12 @@ public:
 	class CMonster* Get_TargetMonster();
 #pragma endregion
 #pragma region MAP_INFO
-	HRESULT Load_MapObjects(const _char* pFilePath);
-	HRESULT Load_LightElements(const _char* pFilePath);
-	HRESULT Load_InteractableElements(const _char* pFileName);
+	HRESULT Load_MapObjects(const _char* pFilePath, const _wchar* pLayerTag);
+	HRESULT Load_LightElements(const _char* pFilePath, const _wchar* pLayerTag);
+	HRESULT Load_InteractableElements(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_WaterElemet(const _char* pFileName);
-	HRESULT Load_DoorElemet(const _char* pFileName);
-	HRESULT Load_ChestElemet(const _char* pFileName);
+	HRESULT Load_DoorElemet(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);
@@ -67,7 +67,7 @@ public:
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
 #pragma region QuestINFO
-	QUESTINFO Get_Quest(_int QuestID);
+	QUESTINFO Get_Quest(_int QuestType, _int QuestID);
 	_int Get_Quest_Count(_int Index);
 	const vector<QUESTINFO>& Get_AllQuest() const;
 	const vector<QUESTINFO>& Get_ClearQuest() const;
@@ -94,7 +94,7 @@ private:
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 
 	_float						m_fDamage{};
-	UI_STATE					m_eUI_State;
+	UI_STATE					m_eUI_State = { UI_STATE::END };
 
 	// 임시로 이벤트 1개 만들어 둠
 	multimap<_wstring, function<void(void*)>> UI_Event;

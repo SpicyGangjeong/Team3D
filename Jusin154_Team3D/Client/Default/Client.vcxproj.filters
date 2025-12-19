@@ -632,7 +632,6 @@
     <ClInclude Include="..\Public\Stupefy.h">
       <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BroomRaceManager.h" />
     <ClInclude Include="..\public\MapElement_Static.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
     </ClInclude>
@@ -641,6 +640,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\LightningSide.h">
       <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\State_FireSweep.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireSweep</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Ground.h">
+      <Filter>04.Mechanic\State\Movement\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Swipe.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Swipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Slide.h">
+      <Filter>04.Mechanic\State\Focus\Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Skill.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1333,6 +1347,21 @@
     <Filter Include="04.Mechanic\State\State_Combat\State_AncientSpell">
       <UniqueIdentifier>{c69a2485-7f6e-4e22-81b4-1410fdae9d57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireSweep">
+      <UniqueIdentifier>{2c39ba68-2f23-4bc9-a277-b6e9295c11a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Ground">
+      <UniqueIdentifier>{9e2863cd-1a30-4a27-a076-5e1baff3dee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Swipe">
+      <UniqueIdentifier>{2fd96fb0-dbc3-4486-afda-82b3b1b63060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Slide">
+      <UniqueIdentifier>{ee880571-e18c-4206-80ea-448cadd04d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Skill">
+      <UniqueIdentifier>{cef80506-72c7-4bb9-a691-760f0a576eb7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Static">
       <UniqueIdentifier>{c3b86f00-da19-47ad-a26e-7ff641e2c4d4}</UniqueIdentifier>
     </Filter>
@@ -1921,7 +1950,21 @@
     <ClCompile Include="..\Private\State_AncientSpell.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_AncientSpell</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\BroomRaceManager.cpp" />
+    <ClCompile Include="..\Private\State_FireSweep.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_FireSweep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Ground.cpp">
+      <Filter>04.Mechanic\State\Movement\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Swipe.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Swipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slide.cpp">
+      <Filter>04.Mechanic\State\Focus\Slide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\MapElement_Static.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
     </ClCompile>

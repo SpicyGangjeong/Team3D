@@ -42,7 +42,7 @@ HRESULT CQuest_Info_Line::Initialize(void* pArg)
 	m_vNine_Slice = _float4(11.f, 245.f, 0.f, 64.f);
 	SizeUpX(934.f);
 	SizeUpY(15.f);
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
 	Visible(false);
 	return S_OK;
 }
@@ -202,9 +202,12 @@ HRESULT CQuest_Info_Line::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CQuest_Info_Line::Set_Hover(_int Index)
+void CQuest_Info_Line::Set_Hover(void* pArg)
 {
-	m_iQuest_Index = Index;
+	CURRENTQUESTSECETINFO* Desc = static_cast<CURRENTQUESTSECETINFO*>(pArg);
+
+	m_iCurrentQuest = Desc->iQuestCategory;
+	m_iQuest_Index = Desc->iQuestIndex;
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);

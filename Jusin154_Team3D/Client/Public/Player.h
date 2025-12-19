@@ -160,6 +160,10 @@ private:
 	HRESULT Behavior_DodgeExitCheck(_float fTimeDelta);
 	void	Behavior_DodgeExit();
 
+	void	Behavior_SlideEnter();
+	HRESULT Behavior_SlideExitCheck(_float fTimeDelta);
+	void	Behavior_SlideExit();
+
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();

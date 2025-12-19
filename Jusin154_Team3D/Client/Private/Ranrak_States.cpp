@@ -9,11 +9,15 @@
 #include "State_IdleBreak.h"
 #include "State_Land.h"
 #include "State_Move.h"
+#include "State_Ground.h"
 #include "State_Combat.h"
 #include "State_Hover.h"
 #include "State_Fly.h"
 #include "State_FireBreath.h"
+#include "State_FireSweep.h"
 #include "State_FireBall.h"
+#include "State_Swipe.h"
+#include "State_Skill.h"
 #include "State_Pulse.h"
 #include "State_Tucked.h"
 #include "State_Hit.h"
@@ -26,12 +30,12 @@ void CRanrak::Behavior_IdleEnter()
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::HOVER_LOOP];
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true);
 }
 
 HRESULT CRanrak::Behavior_IdleExitCheck()
 {
-	if (m_fTargetDistance <= 20.f && m_fTargetDistance !=0.f)
+	if (m_fTargetDistance <= 30.f && m_fTargetDistance !=0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
@@ -48,7 +52,6 @@ void CRanrak::Behavior_IdleBreakEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
-
 }
 
 HRESULT CRanrak::Behavior_IdleBreakExitCheck()
@@ -77,6 +80,13 @@ HRESULT CRanrak::Behavior_MoveExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (m_fTargetDistance <= 30.f && m_fTargetDistance != 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -90,44 +100,67 @@ void CRanrak::Behavior_CombatEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::COMBAT);
 	m_bLookAt = true;
-
-	pairAnimInfo = m_Animation[STATEANIM::HOVER_LOOP];
-
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CRanrak::Behavior_CombatExitCheck(_float fTimeDelta)
 {
-	if (m_fTargetDistance > 30.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance > 40.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
-	else if (m_fTargetDistance > 25.f && m_fTargetDistance != 0.f)
+	else if (m_fTargetDistance > 35.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
 
 
-	if (m_fTargetDistance <= 20.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)] <= 0.f)
+	if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::FIREBREATH);
 		return E_FAIL;
 	}
-	else if (m_fTargetDistance <= 20.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBALL)] <= 0.f)
+	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBALL)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::FIREBALL);
 		return E_FAIL;
 	}
-	else if (m_fTargetDistance <= 20.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::PULSE)] <= 0.f)
+	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::FIRESWEEP);
+		return E_FAIL;
+	}
+	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::SWIPE)] <= 0.f && m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND))
+	{
+		m_pFSM->Change_State(FSMSTATE::SWIPE);
+		return E_FAIL;
+	}
+	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::PULSE)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::PULSE);
 		return E_FAIL;
 	}
-	else {
-		m_pFSM->Change_State(FSMSTATE::IDLE);
+	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::TUCKED)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
 		return E_FAIL;
+	}
+	else {
+		if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_AIR)) {
+			m_pFSM->Change_State(FSMSTATE::HOVER);
+			return E_FAIL;
+		}
+		else 	if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND)) {
+			if (m_pFSM->IsEnable_Previous(FSMSTATE::TUCKED| FSMSTATE::PULSE))
+			{
+				m_pFSM->Change_State(FSMSTATE::LAND);
+			}
+			else {
+				m_pFSM->Change_State(FSMSTATE::GROUND);
+			}
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -138,13 +171,56 @@ void CRanrak::Behavior_CombatExit()
 	m_pFSM->Disable_State(FSMSTATE::COMBAT);
 }
 
+void CRanrak::Behavior_GroundEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::GROUND);
+	m_bLookAt = true;
+	pairAnimInfo = m_Animation[STATEANIM::IDLE_G];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CRanrak::Behavior_GroundExitCheck(_float fTimeDelta)
+{
+	if (m_fTargetDistance <= 30.f && m_fTargetDistance != 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CRanrak::Behavior_GroundExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::GROUND);
+}
+
 void CRanrak::Behavior_HoverEnter()
 {
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::HOVER);
+	_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+	switch (iRand)
+	{
+	case 0:
+		pairAnimInfo = m_Animation[STATEANIM::HOVER_DASH_LEFT];
+		break;
+	case 1:
+		pairAnimInfo = m_Animation[STATEANIM::HOVER_DASH_RIGHT];
+		break;
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CRanrak::Behavior_HoverExitCheck(_float fTimeDelta)
 {
-	return E_NOTIMPL;
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+	return S_OK;
 }
 
 void CRanrak::Behavior_HoverExit()
@@ -170,20 +246,27 @@ void CRanrak::Behavior_FireBreathEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::FIREBREATH);
+	if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_AIR))
+	{
+		pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_WINDUP_A];
 
-	pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_WINDUP];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		Add_Event(pairAnimInfo.first,
+			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_A];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)]; },
+			0.9f);
 
-	Add_Event(pairAnimInfo.first,
-		[&]() { pairAnimInfo = m_Animation[STATEANIM::FIREBREATH];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-				m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)]; },
-		0.95f);
-
-	Add_Event(m_Animation[STATEANIM::FIREBREATH].first,
-		[&]() { pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_COOLDOWN];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
-		0.95f);
+		Add_Event(m_Animation[STATEANIM::FIREBREATH_A].first,
+			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_COOLDOWN_A];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
+			0.9f);
+	}
+	else if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND))
+	{
+		pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_G];
+		m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBREATH)];
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 }
 
 HRESULT CRanrak::Behavior_FireBreathExitCheck(_float fTimeDelta)
@@ -191,7 +274,7 @@ HRESULT CRanrak::Behavior_FireBreathExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
-	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::FIREBREATH_COOLDOWN].first)
+	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
@@ -205,24 +288,87 @@ void CRanrak::Behavior_FireBreathExit()
 	m_pFSM->Disable_State(FSMSTATE::FIREBREATH);
 }
 
+void CRanrak::Behavior_FireSweepEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::FIRESWEEP);
+	if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_AIR))
+	{
+		pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_WINDUP_A];
+
+		Add_Event(pairAnimInfo.first,
+			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_A];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)]; },
+			0.95f);
+
+		Add_Event(m_Animation[STATEANIM::FIRESWEEP_A].first,
+			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_COOLDOWN_A];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
+			0.95f);
+	}
+	else if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND))
+	{
+		pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_G];
+		m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIRESWEEP)];
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+}
+
+HRESULT CRanrak::Behavior_FireSweepExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CRanrak::Behavior_FireSweepExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::FIRESWEEP);
+}
+
 void CRanrak::Behavior_FireBallEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::FIREBALL);
-
-	_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
-
-	switch (iRand)
+	if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_AIR))
 	{
-	case 0 :
-		pairAnimInfo = m_Animation[STATEANIM::FIREBALL1];
-		break;
-	case 1:
-		pairAnimInfo = m_Animation[STATEANIM::FIREBALL2];
-		break;
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+
+		switch (iRand)
+		{
+		case 0:
+			pairAnimInfo = m_Animation[STATEANIM::FIREBALL1_A];
+			break;
+		case 1:
+			pairAnimInfo = m_Animation[STATEANIM::FIREBALL2_A];
+			break;
+		}
 	}
+	else if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND))
+	{
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+
+		switch (iRand)
+		{
+		case 0:
+			pairAnimInfo = m_Animation[STATEANIM::FIREBALL1_G];
+			break;
+		case 1:
+			pairAnimInfo = m_Animation[STATEANIM::FIREBALL2_G];
+			break;
+		}
+	}
+
 	m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBALL)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::FIREBALL)];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 }
 
 HRESULT CRanrak::Behavior_FireBallExitCheck(_float fTimeDelta)
@@ -244,15 +390,79 @@ void CRanrak::Behavior_FireBallExit()
 	m_pFSM->Disable_State(FSMSTATE::FIREBALL);
 }
 
+void CRanrak::Behavior_SwipeEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::SWIPE);
+	if (m_ePhase == ENUM_CLASS(RANRAK_PHASE::PHASE_GROUND))
+	{
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+
+		switch (iRand)
+		{
+		case 0:
+			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_L];
+			break;
+		case 1:
+			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_R];
+			break;
+		}
+	}
+
+	m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::SWIPE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::SWIPE)];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+}
+
+HRESULT CRanrak::Behavior_SwipeExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CRanrak::Behavior_SwipeExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SWIPE);
+}
+
+void CRanrak::Behavior_SkillEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::SKILL);
+	pairAnimInfo = m_Animation[STATEANIM::SKILL];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CRanrak::Behavior_SkillExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::HOVER);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CRanrak::Behavior_SkillExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SKILL);
+}
+
 void CRanrak::Behavior_PulseEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::PULSE);
 
 	pairAnimInfo = m_Animation[STATEANIM::PULSE];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-
 	m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::PULSE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::PULSE)];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 }
 
 HRESULT CRanrak::Behavior_PulseExitCheck(_float fTimeDelta)
@@ -277,15 +487,25 @@ void CRanrak::Behavior_TuckedEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::TUCKED);
-
+ 
 	pairAnimInfo = m_Animation[STATEANIM::TUCKED];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::TUCKED)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::TUCKED)];
 }
 
 HRESULT CRanrak::Behavior_TuckedExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	m_fTuckedTime += fTimeDelta;
+	if (m_fTuckedTime >= 5.f && iCurrAnimIndex == m_Animation[STATEANIM::TUCKED].first)
+	{
+		m_fTuckedTime = 0.f;
+		pairAnimInfo = m_Animation[STATEANIM::FLY_TO_HOVER];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		return S_OK;
+	}
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
@@ -298,6 +518,30 @@ HRESULT CRanrak::Behavior_TuckedExitCheck(_float fTimeDelta)
 void CRanrak::Behavior_TuckedExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
+}
+
+void CRanrak::Behavior_LandEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::LAND);
+
+	pairAnimInfo = m_Animation[STATEANIM::LAND];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+}
+
+HRESULT CRanrak::Behavior_LandExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::GROUND);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CRanrak::Behavior_LandExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::LAND);
 }
 
 void CRanrak::Behavior_HitEnter()
@@ -476,6 +720,17 @@ void CRanrak::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
 	}
+
+	{
+		CState_Ground::STATE_GROUND_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_GroundEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_GroundExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_GroundExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::GROUND, CState_Ground::Create(&Desc));
+	}
 #pragma endregion
 
 #pragma region Hover
@@ -532,6 +787,17 @@ void CRanrak::Add_FSM()
 	}
 
 	{
+		CState_FireSweep::STATE_FIRESWEEP_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_FireSweepEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_FireSweepExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_FireSweepExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::FIRESWEEP, CState_FireSweep::Create(&Desc));
+	}
+
+	{
 		CState_FireBall::STATE_FIREBALL_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_FireBallEnter(); };
@@ -542,6 +808,28 @@ void CRanrak::Add_FSM()
 		m_States.emplace(FSMSTATE::FIREBALL, CState_FireBall::Create(&Desc));
 	}
 
+	{
+		CState_Swipe::STATE_SWIPE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_SwipeEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_SwipeExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_SwipeExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::SWIPE, CState_Swipe::Create(&Desc));
+	}
+
+
+	{
+		CState_Skill::STATE_SKILL_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_SkillEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_SkillExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_SkillExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::SKILL, CState_Skill::Create(&Desc));
+	}
 	{
 		CState_Pulse::STATE_PULSE_DESC Desc{};
 		Desc.pOwner = this;
@@ -564,6 +852,18 @@ void CRanrak::Add_FSM()
 		m_States.emplace(FSMSTATE::TUCKED, CState_Tucked::Create(&Desc));
 	}
 #pragma endregion
+
+#pragma region Land
+	{
+		CState_Land::STATE_LAND_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_LandEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_LandExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_LandExit(); };
+		m_States.emplace(FSMSTATE::LAND, CState_Land::Create(&Desc));
+	}
+#pragma endregion
+
 
 
 #pragma region Hit
@@ -599,12 +899,11 @@ void CRanrak::Add_FSM()
 	}
 #pragma endregion
 
-
-
 }
 
 void CRanrak::Set_Anim()
 {
+	m_Animation[STATEANIM::IDLE_G] = { 52,true };
 	m_Animation[STATEANIM::IDLE_BREAK1] = { 27,false };
 	m_Animation[STATEANIM::IDLE_BREAK2] = { 28,false };
 
@@ -614,14 +913,36 @@ void CRanrak::Set_Anim()
 	m_Animation[STATEANIM::HOVER_DASH_LEFT] = { 25,false };
 	m_Animation[STATEANIM::HOVER_DASH_RIGHT] = { 26,false };
 
-	m_Animation[STATEANIM::FIREBREATH] = { 9,false };
-	m_Animation[STATEANIM::FIREBREATH_COOLDOWN] = { 10,false };
-	m_Animation[STATEANIM::FIREBREATH_WINDUP] = { 11,false };
+	m_Animation[STATEANIM::FIREBREATH_A] = { 9,false };
+	m_Animation[STATEANIM::FIREBREATH_COOLDOWN_A] = { 10,false };
+	m_Animation[STATEANIM::FIREBREATH_WINDUP_A] = { 11,false };
 
-	m_Animation[STATEANIM::FIREBALL1] = { 0,false };
-	m_Animation[STATEANIM::FIREBALL2] = { 1,false };
+	m_Animation[STATEANIM::FIRESWEEP_A] = { 15,false };
+	m_Animation[STATEANIM::FIRESWEEP_COOLDOWN_A] = { 16,false };
+	m_Animation[STATEANIM::FIRESWEEP_WINDUP_A] = { 17,false };
+
+	m_Animation[STATEANIM::FIREBALL1_A] = { 0,false };
+	m_Animation[STATEANIM::FIREBALL2_A] = { 1,false };
+
+	m_Animation[STATEANIM::GROUND_SWIPE_L] = { 3,false };
+	m_Animation[STATEANIM::GROUND_SWIPE_R] = { 4,false };
+
+	m_Animation[STATEANIM::FIREBREATH_G] = { 6,false };
+
+	m_Animation[STATEANIM::FIRESWEEP_G] = { 7,false };
+
+	m_Animation[STATEANIM::FIREBALL1_G] = { 2,false };
+	m_Animation[STATEANIM::FIREBALL2_G] = { 5,false };
+
 	m_Animation[STATEANIM::PULSE] = { 33,false };
 
 	m_Animation[STATEANIM::TUCKED] = { 21,true };
+	m_Animation[STATEANIM::FLY_TO_HOVER] = { 22,false };
+
+	m_Animation[STATEANIM::LAND] = { 32,false };
+
+	m_Animation[STATEANIM::SKILL] = { 12,false };
+
+	//12
 
 }

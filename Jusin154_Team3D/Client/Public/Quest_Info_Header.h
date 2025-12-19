@@ -32,7 +32,7 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void Set_Hover(_int Index);
+	void Set_Hover(void* pArg);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -42,6 +42,7 @@ private:
 
 	_int m_iColor = true;
 	_int m_iQuest_Index{};
+	_int m_iCurrentQuest{};
 public:
 	static CQuest_Info_Header* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
