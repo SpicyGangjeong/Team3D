@@ -483,21 +483,49 @@ void CTransform::Free()
 void CTransform::Describe_Entity()
 {
 	if (GUI::TreeNode("Transform")) {
+		GUI::Text("----- Gizmo ----");
+		_float3 vMove = {};
+		GUI::InputFloat("Right", &vMove.x, 1.f, 10.f);
+		GUI::InputFloat("Up", &vMove.y, 1.0f, 10.f);
+		GUI::InputFloat("Look", &vMove.z, 1.0f, 10.f);
 
-		GUI::DragFloat4("Right", (_float*)(&m_WorldMatrix._11), 1.f, 0.f, 0.f, "%.3f");
-		GUI::DragFloat4("Up", (_float*)(&m_WorldMatrix._21), 1.f, 0.f, 0.f, "%.3f");
-		GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f");
-		GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f");
+		Move_Right(vMove.x);
+		Move_Up(vMove.y);
+		Move_Look(vMove.z);
 
-		
-		_vector vRotRPY = Get_RollPitchYawVector();
-		static _float3 s_vRotation = {};
-		XMStoreFloat3(&s_vRotation, vRotRPY);
-		_float3 vDegrees = { XMConvertToDegrees(s_vRotation.x),XMConvertToDegrees(s_vRotation.y),XMConvertToDegrees(s_vRotation.z) };
-		if(GUI::InputFloat3("Rotation", (_float*)&vDegrees))
-		{
-			Rotation(XMConvertToRadians(vDegrees.x), XMConvertToRadians(vDegrees.y), XMConvertToRadians(vDegrees.z));
-		}
+		_float3 vPosition;
+
+		XMStoreFloat3(&vPosition, Get_State(STATE::POSITION));
+
+		GUI::Text("----- Position ----");
+		GUI::InputFloat("X##Position", &vPosition.x, 0.1f, 1.f);
+		GUI::InputFloat("Y##Position", &vPosition.y, 0.1f, 1.f);
+		GUI::InputFloat("Z##Position", &vPosition.z, 0.1f, 1.f);
+		Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+
+
+		XMStoreFloat3(&m_vRotation, Get_RollPitchYawVector());
+
+
+		GUI::Text("----- Rotation ----");
+		GUI::InputFloat("X##Rotation", &m_vRotation.x, 1.f, 15.f);
+		GUI::InputFloat("Y##Rotation", &m_vRotation.y, 1.f, 15.f);
+		GUI::InputFloat("Z##Rotation", &m_vRotation.z, 1.f, 15.f);
+
+		Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+
+		_float3 vScale = Get_Scale();
+
+		GUI::Text("----- Scale ----");
+		GUI::InputFloat("X##Scale", &vScale.x, 0.05f, 0.1f);
+		GUI::InputFloat("Y##Scale", &vScale.y, 0.05f, 0.1f);
+		GUI::InputFloat("Z##Scale", &vScale.z, 0.05f, 0.1f);
+
+		vScale.x = max(0.001f, vScale.x);
+		vScale.y = max(0.001f, vScale.y);
+		vScale.z = max(0.001f, vScale.z);
+
+		Set_Scale(vScale);
 
 		GUI::TreePop();
 		GUI::Spacing();

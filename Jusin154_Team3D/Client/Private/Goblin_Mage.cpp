@@ -326,6 +326,8 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
+		_int ID = m_pStat->Get_Stat().iObjectID;
+		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
 	}
 

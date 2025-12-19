@@ -55,30 +55,30 @@ void CTexture::HoverName()
 }
 #endif
 
-HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName)
+HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName, _uint iLevel)
 {
 	switch (eType)
 	{
 	case Engine::TEXTURE_LOAD_TYPE::SINGLE:
 	{
 		ID3D11ShaderResourceView* pSRV = { nullptr };
-		if (FAILED(Load_SRV(CMyTools::ToString(pTextureFilePath).c_str(), &pSRV))) {
+		if (FAILED(Load_SRV(CMyTools::ToString(pTextureFilePath).c_str(), &pSRV, iLevel))) {
 			return E_FAIL;
 		}
 		m_SRVs.push_back(pSRV);
 	} break;
 	case Engine::TEXTURE_LOAD_TYPE::INCREMENTAL:
-		if (FAILED(ParseTextureIncrementalToSRVs(iNumTextures, pTextureFilePath))) {
+		if (FAILED(ParseTextureIncrementalToSRVs(iNumTextures, pTextureFilePath, iLevel))) {
 			return E_FAIL;
 		}
 		break;
 	case Engine::TEXTURE_LOAD_TYPE::PATH:
-		if (FAILED(ParseTexturePathToSRVs(pTextureFilePath))) {
+		if (FAILED(ParseTexturePathToSRVs(pTextureFilePath, iLevel))) {
 			return E_FAIL;
 		}
 		break;
 	case Engine::TEXTURE_LOAD_TYPE::CUBE:
-		if (FAILED(ParseTexturePathToSRVs(pTextureFilePath))) {
+		if (FAILED(ParseTexturePathToSRVs(pTextureFilePath, iLevel))) {
 			return E_FAIL;
 		}
 		break;
@@ -98,9 +98,9 @@ HRESULT CTexture::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV)
+HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV, _uint iLevel)
 {
-	ID3D11ShaderResourceView* pSRV = m_pGameInstance->Add_Resource(szPath);
+	ID3D11ShaderResourceView* pSRV = m_pGameInstance->Add_Resource(szPath, iLevel);
 
 	if (nullptr == pSRV){
 		return E_FAIL;
@@ -111,7 +111,7 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 	return S_OK;
 }
 
-HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath)
+HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath, _uint iLevel)
 {
 	m_SRVs.reserve(iNumTextures);
 
@@ -125,7 +125,7 @@ HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar
 	{
 		wsprintf(szFullPath, pTextureFilePath, i);
 
-		hr = Load_SRV(CMyTools::ToString(szFullPath).c_str(), &pSRV);
+		hr = Load_SRV(CMyTools::ToString(szFullPath).c_str(), &pSRV, iLevel);
 
 		if (FAILED(hr)) {
 			return E_FAIL;
@@ -135,7 +135,7 @@ HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar
 	return S_OK;
 }
 
-HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
+HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath, _uint iLevel)
 {
 	_wstring wstrFolder = pTextureFolderPath;
 	_wstring wstrSearch = wstrFolder + L"\\*";
@@ -169,7 +169,7 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 	HRESULT hr;
 	for (const auto& filePath : files)
 	{
-		hr = Load_SRV(CMyTools::ToString(filePath).c_str(), &pSRV);
+		hr = Load_SRV(CMyTools::ToString(filePath).c_str(), &pSRV, iLevel);
 
 		if (FAILED(hr)) {
 			return E_FAIL;
@@ -179,16 +179,12 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 
 	return S_OK;
 }
-HRESULT CTexture::Load_CubeSRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV)
-{
 
-	return S_OK;
-}
-CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrGroupName)
+CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrGroupName, _uint iLevel)
 {
 	CTexture* pInstance = new CTexture(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eType, pTextureFilePath, iNumTextures, wstrGroupName)))
+	if (FAILED(pInstance->Initialize_Prototype(eType, pTextureFilePath, iNumTextures, wstrGroupName, iLevel)))
 	{
 		MSG_BOX("Failed to Created : CTexture");
 		SAFE_RELEASE(pInstance);

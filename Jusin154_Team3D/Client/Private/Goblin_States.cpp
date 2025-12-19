@@ -42,7 +42,7 @@ HRESULT CGoblin::Behavior_IdleExitCheck()
 		m_bLookAt = false;
 		m_bDetection = true;
 	}
-	if ((m_fTargetDistance <= 10.f && m_fTargetDistance != 0.f) || m_pDetection->Get_Step() == true)
+	if ((m_fTargetDistance <= 10.f && m_fTargetDistance != 0.f) /*|| m_pDetection->Get_Step() == true*/)
 	{
 		m_vOriginPos = m_pTransformCom->Get_State(STATE::POSITION);
 		m_bLookAt = true;

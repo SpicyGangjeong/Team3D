@@ -67,7 +67,7 @@ public:
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
 #pragma region QuestINFO
-	QUESTINFO Get_Quest(_int QuestID);
+	QUESTINFO Get_Quest(_int QuestType, _int QuestID);
 	_int Get_Quest_Count(_int Index);
 	const vector<QUESTINFO>& Get_AllQuest() const;
 	const vector<QUESTINFO>& Get_ClearQuest() const;

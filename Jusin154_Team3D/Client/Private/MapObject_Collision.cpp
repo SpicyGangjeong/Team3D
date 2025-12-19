@@ -131,7 +131,7 @@ void CMapObject_Collision::ConvertToPhysX()
 			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
 			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 			Desc.pMeshName = wstrName.c_str();
-			if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+			if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
 				assert(false);
 			}
 			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
@@ -148,7 +148,7 @@ HRESULT CMapObject_Collision::Ready_Components()
 		CModel* pModel = { nullptr };
 
 		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[iIndexLOD],
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, m_ModelPrototypeTags[iIndexLOD],
 			reinterpret_cast<CComponent**>(&pModel)))){
 			return E_FAIL;
 		}

@@ -354,7 +354,8 @@ PS_OUT PS_MAIN(PS_IN In)
     
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    Out.vAlbedo = vMtrlDiffuse;
+   
+    Out.vAlbedo = float4(vMtrlDiffuse.xyz, 1.f);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     float fSurfaceParam = g_fUsingSurfaceParams;
     if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
@@ -377,17 +378,13 @@ PS_OUT PS_MAIN_SELECT(PS_IN In)
     PS_OUT Out;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.4f)
-    {
-        discard;
-    }
     
     vector vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
     float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
     
-    Out.vAlbedo = vMtrlDiffuse * float4(0.f, 1.f, 1.f, 0.3f);
+    Out.vAlbedo = float4(0.f, 0.5f, 0.5f, 1.f);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
     return Out;

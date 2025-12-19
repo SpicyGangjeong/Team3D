@@ -161,6 +161,7 @@ call Update_Resources.bat
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Barral_Splesh.h" />
+    <ClInclude Include="..\Public\Stupefy.h" />
     <ClInclude Include="..\Public\BroomRaceManager.h" />
     <ClInclude Include="..\Public\BroomRacerAI.h" />
     <ClInclude Include="..\Public\Chair_Splesh.h" />
@@ -205,6 +206,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Mage_Down_Attack.h" />
     <ClInclude Include="..\public\MapElement_Chest.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
+    <ClInclude Include="..\public\MapElement_Static.h" />
     <ClInclude Include="..\Public\NPC_Ollivander.h" />
     <ClInclude Include="..\Public\Box_Splesh.h" />
     <ClInclude Include="..\Public\Quest_Canvas.h" />
@@ -364,6 +366,7 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\Stupefy.cpp" />
     <ClCompile Include="..\Private\Boss_HpBar.cpp" />
     <ClCompile Include="..\Private\Barral_Splesh.cpp" />
     <ClCompile Include="..\Private\BroomRaceManager.cpp" />
@@ -407,6 +410,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Screen_Wind.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
+    <ClCompile Include="..\private\MapElement_Static.cpp" />
     <ClCompile Include="..\Private\NPC_Ollivander.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\Private\Quest_Canvas.cpp" />

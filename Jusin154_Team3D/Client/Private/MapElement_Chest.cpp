@@ -179,7 +179,7 @@ HRESULT CMapElement_Chest::Ready_Components(void* pArg)
 		CModel* pModel = { nullptr };
 
 		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, m_ModelPrototypeTags[i],
 			reinterpret_cast<CComponent**>(&pModel))))
 			return E_FAIL;
 

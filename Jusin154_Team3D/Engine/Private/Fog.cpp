@@ -7,9 +7,10 @@ CFog::CFog()
 {
 }
 
-void CFog::Set_FogDensity(_float fFogDensity)
+void CFog::Set_Fog(_float fFogDensity, _float fPow)
 {
     m_fFogDensity = fFogDensity;
+    m_fFogPow = fPow;
 }
 
 void CFog::Set_FogColor(_float4& vFogColor)

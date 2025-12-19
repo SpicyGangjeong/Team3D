@@ -41,14 +41,15 @@ HRESULT CMapElement_Static::Initialize(void* pArg)
 		return E_FAIL;
 
 #ifdef _DEBUG
+	m_isCollision = false;
 	m_bSelected = false;
 	m_vPosition = pDesc->vPosition;
 	m_vScale = pDesc->vScale;
 	m_vRotation = pDesc->vRotation;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 	m_pTransformCom->Set_Scale(m_vScale);
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 #endif // _DEBUG
 
 	return S_OK;
@@ -67,18 +68,9 @@ void CMapElement_Static::Update(_float fTimeDelta)
 
 void CMapElement_Static::Late_Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
-	if (m_bSelected)
-	{
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
-		m_pTransformCom->Set_Scale(m_vScale);
-		m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
-	}
-#endif 
-
-	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	}
+	//}
 }
 
 HRESULT CMapElement_Static::Render()
@@ -93,7 +85,7 @@ HRESULT CMapElement_Static::Render()
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (m_bSelected)
+		if (m_bSelected || m_isCollision)
 		{
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
 				return E_FAIL;
@@ -203,36 +195,54 @@ void CMapElement_Static::Describe_Entity()
 
 	GUI::Text(CMyTools::ToString(m_ModelPrototypeTags[m_iLodIndex]).c_str());
 	GUI::InputInt("Lod Level", (_int*)(&m_iLodIndex));
+	GUI::Checkbox("isCol", &m_isCollision);
 	m_iLodIndex = max(0, m_iLodIndex);
 	m_iLodIndex = min(m_iMaxLodLevel, m_iLodIndex);
-	GUI::Text("----- Transfrom ----");
+
+	_float3 vMove = {};
+	GUI::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
+	GUI::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
+	GUI::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+
+	m_pTransformCom->Move_Right(vMove.x);
+	m_pTransformCom->Move_Up(vMove.y);
+	m_pTransformCom->Move_Look(vMove.z);
+
+	XMStoreFloat3(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+
 	GUI::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
 	GUI::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
 	GUI::InputFloat("Z##Position", &m_vPosition.z, 0.1f, 1.f);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+
 
 	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
-		CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
-		if (nullptr != pTerrain)
+		_float3 vPosition = {};
+		if (m_pGameInstance->isPicking(&vPosition))
 		{
-			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>()->Get_XMWorldMatrix(), &m_vPosition);
+			memcpy(&m_vPosition, &vPosition, sizeof(_float3));
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 		}
-
 	}
 
 	GUI::Text("----- Rotation ----");
-	GUI::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
-	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);
-	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 10.f, 45.f);
+	GUI::InputFloat("X##Rotation", &m_vRotation.x, 1.f, 15.f);
+	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 1.f, 15.f);
+	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 1.f, 15.f);
+
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
 	GUI::Text("----- Scale ----");
-	GUI::InputFloat("X##Scale", &m_vScale.x, 0.1f, 1.f);
-	GUI::InputFloat("Y##Scale", &m_vScale.y, 0.1f, 1.f);
-	GUI::InputFloat("Z##Scale", &m_vScale.z, 0.1f, 1.f);
+	GUI::InputFloat("X##Scale", &m_vScale.x, 0.05f, 0.1f);
+	GUI::InputFloat("Y##Scale", &m_vScale.y, 0.05f, 0.1f);
+	GUI::InputFloat("Z##Scale", &m_vScale.z, 0.05f, 0.1f);
 
 	m_vScale.x = max(0.01f, m_vScale.x);
 	m_vScale.y = max(0.01f, m_vScale.y);
 	m_vScale.z = max(0.01f, m_vScale.z);
+
+	m_pTransformCom->Set_Scale(m_vScale);
 
 	if (GUI::Button("Delete"))
 		m_bDead = true;

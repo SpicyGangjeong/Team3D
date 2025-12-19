@@ -57,13 +57,14 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_iContainerObjectIndex = 99;
+
+	//if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
+	//	return E_FAIL;
+
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
-
-	if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data")))
-		return E_FAIL;
-
-	if (FAILED(Load_WaterObject("Element_Water_Info")))
-		return E_FAIL;
+	
+	/*if (FAILED(Load_WaterObject("Element_Water_Info")))
+		return E_FAIL;*/
 
 	/*if (FAILED(Load_LightObject("LightElement")))
 		return E_FAIL;*/
@@ -78,7 +79,8 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//	return E_FAIL;
 	//if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
 	//	return E_FAIL;
-	
+
+
 	return S_OK;
 }
 
@@ -110,7 +112,14 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	GUI::InputText("MapFileName", m_szSaveFileName, MAX_PATH);
 	if (GUI::Button("Save_Map"))
 	{
-		Save_MapData(m_szSaveFileName);
+		/*if (ADD_TYPE::ELEMENT_STATIC == m_eType)
+		{
+			Save_StaticElements(m_szSaveFileName);
+		}
+		else
+		{*/
+			Save_MapData(m_szSaveFileName);
+		//}
 	
 	}
 	if (GUI::Button("Load_Map"))
@@ -125,7 +134,7 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	{
 		if (GUI::Button("Save_Container"))
 		{
-			Save_ContainerData("ContainerTest", m_szSaveContainerName);
+			Save_ContainerData("DungeonContainer", m_szSaveContainerName);
 		}
 	}
 	else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
@@ -155,11 +164,11 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 
 	if (GUI::Button("Load_Container"))
 	{
-		Load_ContainerData("ContainerTest", m_szSaveContainerName);
+		Load_ContainerData("DungeonContainer", m_szSaveContainerName);
 	}
 	if (GUI::Button("Load_Container To MapObject"))
 	{
-		Load_ContainerToMapObject("ContainerTest", m_szSaveContainerName);
+		Load_ContainerToMapObject("DungeonContainer", m_szSaveContainerName);
 	}
 	GUI::End();
 
@@ -168,6 +177,8 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	Update_ObjectList();
 
 	Update_Edit();
+
+	Update_Unified();
 
 	if (ADD_TYPE::CONTAINER == m_eType)
 	{
@@ -182,6 +193,9 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	{
 		pObject->Update(fTimeDelta);
 	}
+
+	
+
 }
 
 void CMapObject_Manager::Late_Update(_float fTimeDelta)
@@ -258,89 +272,89 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 #pragma region SAVE_BUILDING
 	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"));
 
-	if (nullptr == pLayer)
-		return E_FAIL;
-	
-	const list<CGameObject*>* pList = pLayer->Get_Objects();
-
-	for (auto pGamObject : *pList)
+	if (nullptr != pLayer)
 	{
-		CBuildingContainer* pContainerObject = dynamic_cast<CBuildingContainer*>(pGamObject);
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
 
-		if (nullptr == pContainerObject)
-			return E_FAIL;
+		for (auto pGamObject : *pList)
+		{
+			CBuildingContainer* pContainerObject = dynamic_cast<CBuildingContainer*>(pGamObject);
 
-		string strName = pContainerObject->Get_Name();
+			if (nullptr == pContainerObject)
+				return E_FAIL;
 
-		tinyxml2::XMLElement* container = doc.NewElement("Container");
-		container->SetAttribute("Name", strName.c_str());
-		land->InsertEndChild(container);
+			string strName = pContainerObject->Get_Name();
 
-		_float3 vPosition = {};
-		XMStoreFloat3(&vPosition, pGamObject->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+			tinyxml2::XMLElement* container = doc.NewElement("Container");
+			container->SetAttribute("Name", strName.c_str());
+			land->InsertEndChild(container);
 
-		_float3 vScale = pGamObject->Get_Component<CTransform>()->Get_Scale();
+			_float3 vPosition = {};
+			XMStoreFloat3(&vPosition, pGamObject->Get_Component<CTransform>()->Get_State(STATE::POSITION));
 
-		_float3 vRotation = {};
-		XMStoreFloat3(&vRotation, pGamObject->Get_Component<CTransform>()->Get_RollPitchYawVector());
-		vRotation.x = XMConvertToDegrees(vRotation.x);
-		vRotation.y = XMConvertToDegrees(vRotation.y);
-		vRotation.z = XMConvertToDegrees(vRotation.z);
+			_float3 vScale = pGamObject->Get_Component<CTransform>()->Get_Scale();
+
+			_float3 vRotation = {};
+			XMStoreFloat3(&vRotation, pGamObject->Get_Component<CTransform>()->Get_RollPitchYawVector());
+			vRotation.x = XMConvertToDegrees(vRotation.x);
+			vRotation.y = XMConvertToDegrees(vRotation.y);
+			vRotation.z = XMConvertToDegrees(vRotation.z);
 
 #pragma region CONTAINER_TRANSFORM
-		tinyxml2::XMLElement* Position = doc.NewElement("Position");
-		Position->SetAttribute("x", vPosition.x);
-		Position->SetAttribute("y", vPosition.y);
-		Position->SetAttribute("z", vPosition.z);
-		container->InsertEndChild(Position);
+			tinyxml2::XMLElement* Position = doc.NewElement("Position");
+			Position->SetAttribute("x", vPosition.x);
+			Position->SetAttribute("y", vPosition.y);
+			Position->SetAttribute("z", vPosition.z);
+			container->InsertEndChild(Position);
 
-		tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
-		Scale->SetAttribute("x", vScale.x);
-		Scale->SetAttribute("y", vScale.y);
-		Scale->SetAttribute("z", vScale.z);
-		container->InsertEndChild(Scale);
+			tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
+			Scale->SetAttribute("x", vScale.x);
+			Scale->SetAttribute("y", vScale.y);
+			Scale->SetAttribute("z", vScale.z);
+			container->InsertEndChild(Scale);
 
-		tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
-		Rotation->SetAttribute("x", vRotation.x);
-		Rotation->SetAttribute("y", vRotation.y);
-		Rotation->SetAttribute("z", vRotation.z);
-		container->InsertEndChild(Rotation);
+			tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
+			Rotation->SetAttribute("x", vRotation.x);
+			Rotation->SetAttribute("y", vRotation.y);
+			Rotation->SetAttribute("z", vRotation.z);
+			container->InsertEndChild(Rotation);
 #pragma endregion
 
 #pragma region BOUNDING_BOX
-		tinyxml2::XMLElement* MapContainerType = doc.NewElement("MapContainerType");
-		if(pContainerObject->Is_OcclusionPassed())
-			MapContainerType->SetAttribute("type", 0); // Building
-		else
-			MapContainerType->SetAttribute("type", 1); // Road
+			tinyxml2::XMLElement* MapContainerType = doc.NewElement("MapContainerType");
+			if (pContainerObject->Is_OcclusionPassed())
+				MapContainerType->SetAttribute("type", 0); // Building
+			else
+				MapContainerType->SetAttribute("type", 1); // Road
 
-		container->InsertEndChild(MapContainerType);
+			container->InsertEndChild(MapContainerType);
 
-		_float3 vMinPosition = dynamic_cast<CBuildingContainer*>(pGamObject)->Get_BoundingBox_Min();
-		_float3 vMaxPosition = dynamic_cast<CBuildingContainer*>(pGamObject)->Get_BoundingBox_Max();
+			_float3 vMinPosition = dynamic_cast<CBuildingContainer*>(pGamObject)->Get_BoundingBox_Min();
+			_float3 vMaxPosition = dynamic_cast<CBuildingContainer*>(pGamObject)->Get_BoundingBox_Max();
 
-		tinyxml2::XMLElement* BoundingBox_Min = doc.NewElement("BoundingBox_Min");
-		BoundingBox_Min->SetAttribute("x", vMinPosition.x);
-		BoundingBox_Min->SetAttribute("y", vMinPosition.y);
-		BoundingBox_Min->SetAttribute("z", vMinPosition.z);
-		container->InsertEndChild(BoundingBox_Min);
+			tinyxml2::XMLElement* BoundingBox_Min = doc.NewElement("BoundingBox_Min");
+			BoundingBox_Min->SetAttribute("x", vMinPosition.x);
+			BoundingBox_Min->SetAttribute("y", vMinPosition.y);
+			BoundingBox_Min->SetAttribute("z", vMinPosition.z);
+			container->InsertEndChild(BoundingBox_Min);
 
-		tinyxml2::XMLElement* BoundingBox_Max = doc.NewElement("BoundingBox_Max");
-		BoundingBox_Max->SetAttribute("x", vMaxPosition.x);
-		BoundingBox_Max->SetAttribute("y", vMaxPosition.y);
-		BoundingBox_Max->SetAttribute("z", vMaxPosition.z);
-		container->InsertEndChild(BoundingBox_Max);
+			tinyxml2::XMLElement* BoundingBox_Max = doc.NewElement("BoundingBox_Max");
+			BoundingBox_Max->SetAttribute("x", vMaxPosition.x);
+			BoundingBox_Max->SetAttribute("y", vMaxPosition.y);
+			BoundingBox_Max->SetAttribute("z", vMaxPosition.z);
+			container->InsertEndChild(BoundingBox_Max);
 #pragma endregion
 
 
 #pragma region SAVE_PARTOBJECT
 
-		if (FAILED(pContainerObject->Save_PartObjects(doc, container)))
-			return E_FAIL;
-#pragma endregion
-	}
+			if (FAILED(pContainerObject->Save_PartObjects(doc, container)))
+				return E_FAIL;
 #pragma endregion
 
+#pragma endregion
+		}
+	}
 #pragma region ELEMENT_STATIC
 	 pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Static"));
 
@@ -378,11 +392,7 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 
 			_float3 vScale = pGamObject->Get_Component<CTransform>()->Get_Scale();
 
-			_float3 vRotation = {};
-			XMStoreFloat3(&vRotation, pGamObject->Get_Component<CTransform>()->Get_RollPitchYawVector());
-			vRotation.x = XMConvertToDegrees(vRotation.x);
-			vRotation.y = XMConvertToDegrees(vRotation.y);
-			vRotation.z = XMConvertToDegrees(vRotation.z);
+			_float3 vRotation = pElement->Get_Rotation();
 
 			tinyxml2::XMLElement* Position = doc.NewElement("Position");
 			Position->SetAttribute("x", vPosition.x);
@@ -483,6 +493,88 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 #ifndef 기무리
 		MSG_BOX("Succeed to Save File");
 #endif // !기무리
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapObject_Manager::Save_StaticElements(const _char* pFileName)
+{
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* land = doc.NewElement("Land");
+	doc.InsertEndChild(land);
+
+#pragma region ELEMENT_STATIC
+	 CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Static"));
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CMapElement* pElement = dynamic_cast<CMapElement*>(pGamObject);
+
+			if (nullptr == pElement)
+				return E_FAIL;
+
+			_uint iLodLevel = pElement->Get_LodLevel();
+
+			tinyxml2::XMLElement* object = doc.NewElement("Object");
+			object->SetAttribute("Type", ENUM_CLASS(MAPOBJECT_TYPE::ELEMENT_STATIC));
+			object->SetAttribute("Lod_Level", iLodLevel);
+			land->InsertEndChild(object);
+
+#pragma region PROTOTYPETAG
+			for (_uint i = 0; i < iLodLevel + 1; ++i)
+			{
+				tinyxml2::XMLElement* prototype = doc.NewElement("PrototypeTag");
+				prototype->SetText(CMyTools::ToString(pElement->Get_PrototypeTag(i)).c_str());
+				object->InsertEndChild(prototype);
+			}
+#pragma endregion
+
+
+#pragma region TRANSFORM
+			_float3 vPosition = {};
+			XMStoreFloat3(&vPosition, pGamObject->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+
+			_float3 vScale = pGamObject->Get_Component<CTransform>()->Get_Scale();
+			_float3 vRotation = pElement->Get_Rotation();
+
+			tinyxml2::XMLElement* Position = doc.NewElement("Position");
+			Position->SetAttribute("x", vPosition.x);
+			Position->SetAttribute("y", vPosition.y);
+			Position->SetAttribute("z", vPosition.z);
+			object->InsertEndChild(Position);
+
+			tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
+			Scale->SetAttribute("x", vScale.x);
+			Scale->SetAttribute("y", vScale.y);
+			Scale->SetAttribute("z", vScale.z);
+			object->InsertEndChild(Scale);
+
+			tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
+			Rotation->SetAttribute("x", vRotation.x);
+			Rotation->SetAttribute("y", vRotation.y);
+			Rotation->SetAttribute("z", vRotation.z);
+			object->InsertEndChild(Rotation);
+#pragma endregion
+
+
+		}
+	}
+#pragma endregion
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
 	}
 
 	return S_OK;
@@ -593,12 +685,7 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 		// <Rotation x="0.0" y="0.0" z="0.0"/>
 		tinyxml2::XMLElement* RotationElem = doc.NewElement("Rotation");
 
-		_float3 vRotation = {};
-		XMStoreFloat3(&vRotation, pMapObject->Get_Component<CTransform>()->Get_RollPitchYawVector());
-
-		vRotation.x = XMConvertToDegrees(vRotation.x);
-		vRotation.y = XMConvertToDegrees(vRotation.y);
-		vRotation.z = XMConvertToDegrees(vRotation.z);
+		_float3 vRotation = pMapObject->Get_Rotation();
 
 		RotationElem->SetAttribute("x", vRotation.x);
 		RotationElem->SetAttribute("y", vRotation.y);
@@ -878,6 +965,199 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 	return S_OK;
 }
 
+HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName, const _wchar* pLayerTag)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Land");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	/* Container */
+	for (auto* Container = root->FirstChildElement("Container"); Container; Container = Container->NextSiblingElement("Container"))
+	{
+		const _char* pName = {};
+
+		Container->QueryStringAttribute("Name", &pName);
+#pragma region ADD_CONTAINER_OBJECT
+
+		CBuildingContainer* pContainerObject = { nullptr };
+		CMapContainer::MAP_CONTAINER_DESC  ContainerDesc = {};
+
+		auto* ContainerPosition = Container->FirstChildElement("Position");
+		ContainerPosition->QueryFloatAttribute("x", &ContainerDesc.vPosition.x);
+		ContainerPosition->QueryFloatAttribute("y", &ContainerDesc.vPosition.y);
+		ContainerPosition->QueryFloatAttribute("z", &ContainerDesc.vPosition.z);
+
+		auto* ContainerScale = Container->FirstChildElement("Scale");
+		ContainerScale->QueryFloatAttribute("x", &ContainerDesc.vScale.x);
+		ContainerScale->QueryFloatAttribute("y", &ContainerDesc.vScale.y);
+		ContainerScale->QueryFloatAttribute("z", &ContainerDesc.vScale.z);
+
+		auto* ContainerRotation = Container->FirstChildElement("Rotation");
+		ContainerRotation->QueryFloatAttribute("x", &ContainerDesc.vRotation.x);
+		ContainerRotation->QueryFloatAttribute("y", &ContainerDesc.vRotation.y);
+		ContainerRotation->QueryFloatAttribute("z", &ContainerDesc.vRotation.z);
+
+		ContainerDesc.strName = string(pName);
+
+		m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(
+			g_iStaticLevel, ENUM_CLASS(LEVEL::MAP), pLayerTag, &ContainerDesc, nullptr, &pContainerObject);
+#pragma endregion
+
+#pragma region ADD_PARTOBJECT
+		for (auto* PartObject = Container->FirstChildElement("PartObject"); PartObject; PartObject = PartObject->NextSiblingElement("PartObject"))
+		{
+			_uint iLodLevel = {};
+			_uint iKeyIndex = {};
+
+			PartObject->QueryUnsignedAttribute("Lod_Level", &iLodLevel);
+			PartObject->QueryUnsignedAttribute("Key_Index", &iKeyIndex);
+
+#pragma region MAPOBJECT_LOD
+			MAPOBJECT_LOD_DESC Desc = {};
+			string strTag = {};
+			for (auto* PrototypeTag = PartObject->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+			{
+				strTag = PrototypeTag->GetText();
+
+				Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+			}
+
+			Desc.iMaxLodLevel = iLodLevel;
+			Desc.pParentTransform = pContainerObject->Get_Component<CTransform>();
+			const string strKey = CMyTools::ToString(Desc.ModelPrototypeTags.front()) + to_string(iKeyIndex);
+
+			/* Position */
+			tinyxml2::XMLElement* Position = PartObject->FirstChildElement("Position");
+			Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+			Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+			Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+			/* Scale */
+			tinyxml2::XMLElement* Scale = PartObject->FirstChildElement("Scale");
+			Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+			Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+			Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+			/* Rotation */
+			tinyxml2::XMLElement* Rotation = PartObject->FirstChildElement("Rotation");
+			Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+			Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+			Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+			CMapObject_LOD* pMapObject;
+
+			if (FAILED(pContainerObject->Add_Part<CMapObject_LOD>(strKey, g_iStaticLevel, &pMapObject, &Desc)))
+				return E_FAIL;
+
+			pMapObject->Set_KeyIndex(iKeyIndex);
+
+			SAFE_RELEASE(pMapObject);
+#pragma endregion
+
+		}
+#pragma endregion
+
+		pContainerObject->Set_BoundingBox();
+
+#pragma region ADD_COLLISION
+		for (auto* Collision = Container->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
+		{
+			_uint iLodLevel = {};
+			_uint iKeyIndex = {};
+
+			Collision->QueryUnsignedAttribute("Lod_Level", &iLodLevel);
+			Collision->QueryUnsignedAttribute("Key_Index", &iKeyIndex);
+
+#pragma region MAPOBJECT_LOD
+			MAPOBJECT_LOD_DESC Desc = {};
+			string strTag = {};
+			for (auto* PrototypeTag = Collision->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+			{
+				strTag = PrototypeTag->GetText();
+
+				Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+			}
+			Desc.iMaxLodLevel = iLodLevel;
+			Desc.pParentTransform = pContainerObject->Get_Component<CTransform>();
+
+			/* Position */
+			tinyxml2::XMLElement* Position = Collision->FirstChildElement("Position");
+			Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+			Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+			Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+			/* Scale */
+			tinyxml2::XMLElement* Scale = Collision->FirstChildElement("Scale");
+			Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+			Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+			Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+			/* Rotation */
+			tinyxml2::XMLElement* Rotation = Collision->FirstChildElement("Rotation");
+			Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+			Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+			Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+			pContainerObject->Add_Collision<CMapObject_Collision>(g_iStaticLevel, &Desc);
+#pragma endregion
+
+		}
+#pragma endregion
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		MAPOBJECT_LOD_DESC Desc = {};
+
+		MAPOBJECT_TYPE eType = {};
+
+		Object->QueryUnsignedAttribute("Type", (_uint*)(&eType));
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		string strTag = {};
+
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		if (MAPOBJECT_TYPE::ELEMENT_STATIC == eType)
+			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Static"), &Desc);
+		else if (MAPOBJECT_TYPE::ELEMENT_INTERACT == eType)
+			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interactable"), &Desc);
+	}
+
+	return S_OK;
+}
+
 HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _char* pContainerName)
 {
 	tinyxml2::XMLDocument xmlDoc;
@@ -1045,6 +1325,7 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 
 	return S_OK;
 }
+
 HRESULT CMapObject_Manager::Load_ContainerToMapObject(const _char* pFileName, const _char* pContainerName)
 {
 	tinyxml2::XMLDocument xmlDoc;
@@ -1795,6 +2076,22 @@ void CMapObject_Manager::Update_ContainerObject()
 	GUI::End();
 }
 
+void CMapObject_Manager::Update_Unified()
+{
+	GUI::Begin("Unifieds");
+	CLayer * pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Unified"));
+
+	if (nullptr != pLayer)
+	{
+		for (auto& pUnified : *pLayer->Get_Objects())
+		{
+			pUnified->Describe_Entity();
+		}
+	}
+		
+	GUI::End();
+}
+
 void CMapObject_Manager::Create_PartObject(_wstring& strPrototypeTag)
 {
 	vector<_uint> LodModelIndices;
@@ -1807,7 +2104,7 @@ void CMapObject_Manager::Create_PartObject(_wstring& strPrototypeTag)
 
 	PrototypeTags.push_back(strPrototypeTag);
 
-	for (_uint i = 0; i < LodModelIndices.size(); ++i)
+	for (_uint i = 0; i < LodModelIndices.size() - 1; ++i)
 	{
 		_wstring strLodTag = strPrototypeTag + L"_Lod" + to_wstring(i + 1);
 		PrototypeTags.push_back(strLodTag);
@@ -1896,7 +2193,7 @@ _bool CMapObject_Manager::Find_Lod_Prototype(_wstring strPrototypeTag, vector<_u
 	{
 		if (m_ModelPrototypeTags[i] == strPrototypeTag)
 			LodModelIndices.push_back(i);
-
+		 
 		_wstring strPt = strPrototypeTag + L"_Lod";
 		if (_wstring::npos != m_ModelPrototypeTags[i].find(strPt)) //&& 5 > (m_ModelPrototypeTags[i].size() - strPrototypeTag.size()))
 			LodModelIndices.push_back(i);

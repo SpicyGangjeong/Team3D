@@ -31,6 +31,7 @@ private:
 	_wstring	 m_wstrEffectName = {};
 
 	class CEffectParts* m_pSphere = { nullptr };
+	class CEffectParts* m_pSphereLay = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	_float		 m_fSizeAccTime = {};
 	_float       m_fAmountSize = {};

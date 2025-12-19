@@ -629,6 +629,13 @@
     <ClInclude Include="..\Public\Quest_Info_Header.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Stupefy.h">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRaceManager.h" />
+    <ClInclude Include="..\public\MapElement_Static.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1293,6 +1300,9 @@
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot">
       <UniqueIdentifier>{6bbfb8f0-c71a-4769-b1e6-efd5d863ba7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Stupefy">
+      <UniqueIdentifier>{7672784a-86a8-4485-a4de-a979bd0c8f52}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrak">
       <UniqueIdentifier>{bb981766-6030-4dd9-b92d-f6819a70c93d}</UniqueIdentifier>
     </Filter>
@@ -1316,6 +1326,9 @@
     </Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_AncientSpell">
       <UniqueIdentifier>{c69a2485-7f6e-4e22-81b4-1410fdae9d57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Static">
+      <UniqueIdentifier>{c3b86f00-da19-47ad-a26e-7ff641e2c4d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1872,6 +1885,9 @@
     <ClCompile Include="..\Private\Quest_Slot.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Stupefy.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Ranrak.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
     </ClCompile>
@@ -1892,6 +1908,10 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_AncientSpell.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_AncientSpell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRaceManager.cpp" />
+    <ClCompile Include="..\private\MapElement_Static.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

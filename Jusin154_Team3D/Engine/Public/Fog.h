@@ -11,7 +11,7 @@ private:
 	virtual ~CFog() = default;
 
 public:
-	void	Set_FogDensity(_float fFogDensity);
+	void	Set_Fog(_float fFogDensity, _float fPow);
 	void	Set_FogColor(_float4& vFogColor);
 
 	HRESULT Bind_FogValue(class CShader* pShader);

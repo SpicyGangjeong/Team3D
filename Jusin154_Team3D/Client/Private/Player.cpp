@@ -322,6 +322,12 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+
+	if (m_pFSM->IsEnable(FSMSTATE::SHIELD))
+	{
+		m_bShield = true;
+	}
+
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
 		return;
@@ -334,10 +340,7 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	else {
 		m_fHitDegree = -1.f;
 	}
-	if (m_pFSM->IsEnable(FSMSTATE::SHIELD))
-	{
-		m_bShield = true;
-	}
+
 
 	if(!m_pFSM->IsEnable(FSMSTATE::DODGE) && !m_bShield)
 		m_pFSM->Change_State(FSMSTATE::HIT);

@@ -94,9 +94,10 @@ public:
 		}
 		return hr;
 	}
-
+	void		Set_LayerEnabled(_bool isEnable);
 	class CLayer* Get_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag);
 	void Clear_Objects_With_Layers(_uint iLevelIndex);
+
 #pragma endregion
 
 #pragma region RENDERER
@@ -239,7 +240,7 @@ public:
 #pragma endregion
 
 #pragma region FOG
-	void	Set_FogDensity(_float fFogDensity);
+	void	Set_Fog(_float fFogDensity, _float fPow);
 	void	Set_FogColor(_float4& vFogColor);
 
 	HRESULT Bind_FogValue(class CShader* pShader);
@@ -247,7 +248,8 @@ public:
 
 #pragma region RESOURCE_MANGER
 	public:
-		ID3D11ShaderResourceView* Add_Resource(const _char* pFilePath);
+		ID3D11ShaderResourceView* Add_Resource(const _char* pFilePath, _uint iLevel = 0);
+		void Clear_LevelResources(_uint iLevel);
 #pragma endregion
 
 #pragma region FONT_MANAGER

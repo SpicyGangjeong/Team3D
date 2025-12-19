@@ -54,12 +54,12 @@ private:
 #endif // EDITOR_PROJECT
 
 	// 바이너리
-	HRESULT Initialize(const _char* pModelFilePath, const SaveMaterial& _SaveMaterial);
+	HRESULT Initialize(const _char* pModelFilePath, const SaveMaterial& _SaveMaterial, _uint iLevel);
 	//
 
 public:
 	// 바이너리
-	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePathconst, const SaveMaterial& _SaveMaterial);
+	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePathconst, const SaveMaterial& _SaveMaterial, _uint iLevel = 0);
 	//
 	virtual void Free() override;
 };
