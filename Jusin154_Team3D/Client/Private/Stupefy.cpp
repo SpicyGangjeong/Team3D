@@ -140,13 +140,14 @@ HRESULT CStupefy::Pre_Setting(CGameObject* pObject, void* pArg)
 	pStupefy_PJ1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
 
 	m_pStupefy_PJ_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
+
+	pStupefy_Light_Long->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
+	pBodyFlare->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
 	//
 	/*몸통 포지션*/
 
 	_vector vPlayerPos = m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position() + vDirection * -0.1f;
 
-	pStupefy_Light_Long->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerPos);
-	pBodyFlare->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerPos);
 	pWand_Distortion->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerPos);
 	/*발 포지션*/
 

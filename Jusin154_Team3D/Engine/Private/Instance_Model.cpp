@@ -741,7 +741,9 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].vDelay = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDelay.x, m_InstanceDesc.vDelay.y));
 				pParticleValues[i].fDropAttenuation = m_pGameInstance->Random_Float(m_InstanceDesc.vDropAttenuation.x, m_InstanceDesc.vDropAttenuation.y);
 				pParticleValues[i].fAcceleration = _float(m_pGameInstance->Random_Float(m_InstanceDesc.vAcceleration.x, m_InstanceDesc.vAcceleration.y));
-
+				pParticleValues[i].fRotateAttenuation = _float(m_pGameInstance->Random_Float(m_InstanceDesc.vRotateAttenuation.x, m_InstanceDesc.vRotateAttenuation.y));
+				pParticleValues[i].fRotateAttDelay = _float(m_pGameInstance->Random_Float(m_InstanceDesc.vRotateAttDelay.x, m_InstanceDesc.vRotateAttDelay.y));
+				
 				pParticleValues[i].fCollisionTime = 0.f;
 				pParticleValues[i].isCompareStop = false;
 				pParticleValues[i].isStop = false;
@@ -1010,6 +1012,18 @@ void CInstance_Model::Describe_Entity()
 			{
 				Instane_Buffer_ReStruct();
 			}
+
+			if (ImGui::DragFloat2("RotateAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vRotateAttenuation)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("RotateAttDelay", reinterpret_cast<_float*>(&m_InstanceDesc.vRotateAttDelay)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+			
+			
 
 			if (GUI::TreeNode("Nomal Turn"))
 			{

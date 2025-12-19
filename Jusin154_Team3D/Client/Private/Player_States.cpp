@@ -1252,7 +1252,7 @@ void CPlayer::Behavior_SpellEnter()
 		{
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this); }, /* 임시로 바꿔놓음 */
+				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); }, /* 임시로 바꿔놓음 */
 				fRatio);
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
@@ -1541,6 +1541,19 @@ void CPlayer::Behavior_AncientSpellEnter()
 		[&]() {	pairAnimInfo = m_Animation[STATEANIM::ANCIENT_LIGHTNING];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
 		0.5f);
+
+	Add_Event(m_Animation[STATEANIM::ANCIENT_LIGHTNING].first,
+		[this]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::LIGHTNING, Get_PartObject<CWand>());
+		},
+		0.15f);
+
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::LIGHTNING_SIDE, Get_PartObject<CWand>());
+		},
+		0.35f);
 }
 
 HRESULT CPlayer::Behavior_AncientSpellExitCheck()
@@ -1642,6 +1655,10 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 				Add_Event(pairAnimInfo.first,
 					[this]() {m_bLookAt = true;
 					},
+					0.01f);
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
 					0.01f);
 			}
 

@@ -426,7 +426,7 @@ PS_OUT PS_GLASS_CUBE(PS_IN In)
     
     float fFresnelScala = 0.02f + (1.f - 0.02f) * pow(1.f - max(0.f, dot(normalize(g_vCamPosition.xyz - In.vWorldPos.xyz), vNormal)), 5.f);
     
-    Out.vAlbedo = float4(vMtrlDiffuse.xyz, 1.f) * fFresnelScala + vReflactionDiffuse  * (1.f - fFresnelScala);
+    Out.vAlbedo = (float4(vMtrlDiffuse.xyz, 1.f) * fFresnelScala + vReflactionDiffuse  * (1.f - fFresnelScala)) * 0.7f;
     Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
     Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
