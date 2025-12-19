@@ -52,6 +52,13 @@ private:
 	ID3D11DepthStencilView*		m_pShadowDSV_NEAR = { nullptr };
 	ID3D11DepthStencilView*		m_pShadowDSV_MIDDLE = { nullptr };
 	ID3D11DepthStencilView*		m_pShadowDSV_FAR = { nullptr };
+
+	_float2 m_vNearShadowResoltion = { (_float)g_iNearShadowWidth,(_float)g_iNearShadowHeight };
+	_float2 m_vMiddleShadowResoltion = { (_float)g_iMiddleShadowWidth,(_float)g_iMiddleShadowHeight };
+	_float2 m_vFarShadowResoltion = { (_float)g_iFarShadowWidth,(_float)g_iFarShadowHeight };
+	_float2 m_vPreShadowResoltion = { (_float)g_iPreShadowWidth,(_float)g_iPreShadowHeight };
+
+
 	ID3D11DepthStencilView*		m_pPreShadowDSV = { nullptr };
 	ID3D11ShaderResourceView*	m_pSSAO_NoiseSRV = { nullptr };
 	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
@@ -101,6 +108,7 @@ private:
 #pragma endregion
 
 private:
+	void Bind_RawValue();
 	void Render_Occlusion();
 	void Render_Priority();
 	void Render_Shadow();
@@ -132,7 +140,7 @@ private:
 
 private:
 	void	Fill_Geometry(_uint iNumSample);
-	HRESULT Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY);
+	HRESULT Ready_ShadowDepthStencilView(_float2 vSize, ID3D11DepthStencilView** pDSV);
 
 private:
 	HRESULT Initialize();

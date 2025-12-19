@@ -37,15 +37,15 @@ HRESULT CRenderer::Add_DebugComponent(CComponent* pDebugCom)
 }
 #endif
 
-HRESULT CRenderer::Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY)
+HRESULT CRenderer::Ready_ShadowDepthStencilView(_float2 vSize, ID3D11DepthStencilView** pDSV)
 {
 	ID3D11Texture2D* pShadowDepthStencilTexture = nullptr;
 
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-	TextureDesc.Width = iSizeX;
-	TextureDesc.Height = iSizeY;
+	TextureDesc.Width = (_uint)vSize.x;
+	TextureDesc.Height = (_uint)vSize.y;
 	TextureDesc.MipLevels = 1;
 	TextureDesc.ArraySize = 1;
 	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -62,18 +62,7 @@ HRESULT CRenderer::Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY)
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV_NEAR))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV_MIDDLE))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV_FAR))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pPreShadowDSV))) {
+	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, pDSV))) {
 		return E_FAIL;
 	}
 
@@ -199,22 +188,17 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		/* Target_Shadow_Near */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)m_vNearShadowResoltion.x, (_uint)m_vNearShadowResoltion.y,
 			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
 		/* Target_Shadow_Middle */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Middle"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
-			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
-			return E_FAIL;
-		}
-		/* Target_Shadow_Far */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Far"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Middle"), (_uint)m_vMiddleShadowResoltion.x, (_uint)m_vMiddleShadowResoltion.y,
 			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
 		/* Target_PreShadow */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_PreShadow"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_PreShadow"), (_uint)m_vPreShadowResoltion.x, (_uint)m_vPreShadowResoltion.y,
 			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
@@ -385,7 +369,19 @@ HRESULT CRenderer::Initialize()
 
 
 
-		if (FAILED(Ready_ShadowDepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
+		if (FAILED(Ready_ShadowDepthStencilView(m_vNearShadowResoltion, &m_pShadowDSV_NEAR))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(Ready_ShadowDepthStencilView(m_vMiddleShadowResoltion, &m_pShadowDSV_MIDDLE))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(Ready_ShadowDepthStencilView(m_vFarShadowResoltion, &m_pShadowDSV_FAR))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(Ready_ShadowDepthStencilView(m_vPreShadowResoltion, &m_pPreShadowDSV))) {
 			return E_FAIL;
 		}
 
@@ -441,10 +437,6 @@ HRESULT CRenderer::Initialize()
 		}
 		/* MRT_Shadow_Middle */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Middle"), TEXT("Target_Shadow_Middle")))) {
-			return E_FAIL;
-		}
-		/* MRT_Shadow_Far */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Far"), TEXT("Target_Shadow_Far")))) {
 			return E_FAIL;
 		}
 

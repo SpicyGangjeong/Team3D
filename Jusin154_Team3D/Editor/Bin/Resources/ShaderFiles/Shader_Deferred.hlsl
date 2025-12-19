@@ -14,8 +14,10 @@ float g_fShadowFar_MIDDDLE;
 float g_fShadowFar_FAR;
 float g_fCascadeSplitRatioNear;
 float g_fCascadeSplitRatioFar;
-uint g_iMaxShadowWidth;
-uint g_iMaxShadowHeight;
+float2 g_vNearShadowResolution;
+float2 g_vMiddleShadowResolution;
+float2 g_vFarShadowResolution;
+float2 g_vPreShadowResolution;
 float2 g_vResolution;
 float2 g_vSrcResolution;
 float4 g_vShadowBias;
@@ -61,7 +63,6 @@ Texture2D g_DepthTexture;
 Texture2D g_SpecularTexture;
 Texture2D g_ShadowNearTexture;
 Texture2D g_ShadowMiddleTexture;
-Texture2D g_ShadowFarTexture;
 Texture2D g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
@@ -804,10 +805,9 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
         vPreShadowPosition = mul(vPreShadowPosition, g_PreShadowLightProjMatrix);
     }
     /* 광원의 NDC에서 샘플링 */
-    float fVisibility_Dynamic_Near = ShadowVisibility_hwPCF(g_ShadowNearTexture, vNearShadowPos, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.x);
-    float fVisibility_Dynamic_Middle = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.y);
-    //float fVisibility_Dynamic_Far = ShadowVisibility_hwPCF(g_ShadowFarTexture, vFarShadowPos, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.z);
-    float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.w);
+    float fVisibility_Dynamic_Near = ShadowVisibility_hwPCF(g_ShadowNearTexture, vNearShadowPos, g_vNearShadowResolution, g_vShadowBias.x);
+    float fVisibility_Dynamic_Middle = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos, g_vMiddleShadowResolution, g_vShadowBias.y);
+    float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, g_vPreShadowResolution, g_vShadowBias.w);
     
 ////////////////////////////
     // 케스케이드
@@ -824,9 +824,6 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 
     // Near -> Middle
     float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_NearToMiddle);
-    // Middle -> Far 경계 부드럽게
-    //fVisibilityDynamic = lerp(fVisibilityDynamic, fVisibility_Dynamic_Far, fCascadeBlend_MiddleToFar);
-    
     
     // 1번째 방법
     // Dynamic->Static 부드럽게 전환
@@ -1234,30 +1231,34 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     
-    float4 vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (true == g_bFogVisible)
-    {
-        float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
-        float fOriginalAlpha = vColor.a;
-        float fViewZ = vDepthDesc.y * g_fFar;
+    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
     
-        float4 vFinalColor;
-        float fRatio = pow(1.f - saturate(exp(-1.f * vDepthDesc.y * g_fFogDensity)), g_fFogPow);
-  
-        vFinalColor = lerp(vColor, g_vFogColor, fRatio);
-    
-        if (1.f == vDepthDesc.y)
-        {
-            vFinalColor = float4(g_vFogColor);
-        }
-        vFinalColor.a = 1.f;  // fOriginalAlpha;
-        Out.vFirstTarget = vFinalColor;
-    }
-    else
+    if (0.f == g_fFogPow)
     {
-        vColor.a = 1.f;
-        Out.vFirstTarget = vColor;
+        if (1 == vDepthDesc.y)
+            Out.vFirstTarget = float4(vColor.rgb, 0.f);
+        else
+            Out.vFirstTarget = float4(vColor.rgb, 1.f);
+        return Out;
     }
+    
+    vector vFinalColor;
+    float fViewZ = vDepthDesc.y * g_fFar;
+    
+    float fRatio;
+    
+    fRatio = pow(1.f - saturate(exp(-1.f * vDepthDesc.y * g_fFogDensity)), g_fFogPow);
+    
+    vFinalColor = lerp(vColor, g_vFogColor, fRatio);
+    vFinalColor.a = 1.f;
+    
+    if (1.f == vDepthDesc.y)
+    {
+        vFinalColor = float4(g_vFogColor);
+    }
+    Out.vFirstTarget = vFinalColor;
+ 
     return Out;
 }
 PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
@@ -1462,7 +1463,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_EMBOSS();

@@ -6,14 +6,7 @@
 
 void CRenderer::Render()
 {
-	_uint iNumViewPort = { 1 };
-	D3D11_VIEWPORT vp = {};
-	m_pContext->RSGetViewports(&iNumViewPort, &vp);
-	_float2 vResolution = { vp.Width, vp.Height };
-	if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
-		assert(false);
-	}
-
+	Bind_RawValue();
 	Render_Priority();
 	Render_Shadow();
 	Render_NonBlend();
@@ -133,6 +126,29 @@ HRESULT CRenderer::Bind_PrevMatrix(class CShader* pShader, const _char* pConstan
 	return S_OK;
 }
 
+void CRenderer::Bind_RawValue()
+{
+	_uint iNumViewPort = { 1 };
+	D3D11_VIEWPORT vp = {};
+	m_pContext->RSGetViewports(&iNumViewPort, &vp);
+	_float2 vResolution = { vp.Width, vp.Height };
+	if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
+		assert(false);
+	}
+	if (FAILED(m_pShader->Bind_RawValue("g_vNearShadowResolution", &m_vNearShadowResoltion, sizeof(_float2)))) {
+		return;
+	}
+	if (FAILED(m_pShader->Bind_RawValue("g_vMiddleShadowResolution", &m_vMiddleShadowResoltion, sizeof(_float2)))) {
+		return;
+	}
+	if (FAILED(m_pShader->Bind_RawValue("g_vFarShadowResolution", &m_vFarShadowResoltion, sizeof(_float2)))) {
+		return;
+	}
+	if (FAILED(m_pShader->Bind_RawValue("g_vPreShadowResolution", &m_vPreShadowResoltion, sizeof(_float2)))) {
+		return;
+	}
+}
+
 void CRenderer::Render_Occlusion()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Occlusion");
@@ -212,8 +228,8 @@ void CRenderer::Render_Shadow()
 		{
 			ViewPortDesc.TopLeftX = 0;
 			ViewPortDesc.TopLeftY = 0;
-			ViewPortDesc.Width = (_float)(g_iMaxShadowWidth);
-			ViewPortDesc.Height = (_float)(g_iMaxShadowHeight);
+			ViewPortDesc.Width = (_float)(m_vNearShadowResoltion.x);
+			ViewPortDesc.Height = (_float)(m_vNearShadowResoltion.y);
 			ViewPortDesc.MinDepth = 0.f;
 			ViewPortDesc.MaxDepth = 1.f;
 		}
@@ -245,8 +261,8 @@ void CRenderer::Render_Shadow()
 		{
 			ViewPortDesc.TopLeftX = 0;
 			ViewPortDesc.TopLeftY = 0;
-			ViewPortDesc.Width = (_float)(g_iMaxShadowWidth);
-			ViewPortDesc.Height = (_float)(g_iMaxShadowHeight);
+			ViewPortDesc.Width = (_float)(m_vMiddleShadowResoltion.x);
+			ViewPortDesc.Height = (_float)(m_vMiddleShadowResoltion.y);
 			ViewPortDesc.MinDepth = 0.f;
 			ViewPortDesc.MaxDepth = 1.f;
 		}
@@ -269,7 +285,6 @@ void CRenderer::Render_Shadow()
 		}
 	}
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
-
 
 	COMPUTE_TIMEDELTA("Timer_Render_Shadow");
 }
@@ -359,13 +374,7 @@ void CRenderer::Render_Combined()
 		m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 		m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
 		m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
-
-		if (FAILED(m_pShader->Bind_RawValue("g_iMaxShadowWidth", &g_iMaxShadowWidth, sizeof(_uint)))) {
-			return;
-		}
-		if (FAILED(m_pShader->Bind_RawValue("g_iMaxShadowHeight", &g_iMaxShadowHeight, sizeof(_uint)))) {
-			return;
-		}
+		
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
@@ -414,9 +423,6 @@ void CRenderer::Render_Combined()
 			return;
 		}
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Middle"), m_pShader, "g_ShadowMiddleTexture"))) {
-			return;
-		}
-		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Far"), m_pShader, "g_ShadowFarTexture"))) {
 			return;
 		}
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_PreShadow"), m_pShader, "g_PreShadowTexture"))) {
@@ -824,8 +830,10 @@ void CRenderer::Render_PostProcessing()
 		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_VelocityTile"), TEXT("Target_VelocityTent"), SHADER_PASS_DEFERRED::MOTIONBLURTENT);
 	}
 	/* MotionBlur */
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_MotionBlur")))) {
-		assert(false); return;
+	if (false == m_bMB) {
+		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_MotionBlur")))) {
+			assert(false); return;
+		}
 	}
 	{	// Bind_Resorces
 		if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix))) {
@@ -883,8 +891,10 @@ void CRenderer::Render_PostProcessing()
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
-	if (FAILED(m_pGameInstance->End_MRT())) {
-		return;
+	if (false == m_bMB) {
+		if (FAILED(m_pGameInstance->End_MRT())) {
+			return;
+		}
 	}
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Bloom")))) {
 		return;
