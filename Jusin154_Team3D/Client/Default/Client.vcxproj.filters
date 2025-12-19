@@ -636,6 +636,12 @@
     <ClInclude Include="..\public\MapElement_Static.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Lightning.h">
+      <Filter>02.GameObjects\Effect\Effects\Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LightningSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1330,6 +1336,12 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Static">
       <UniqueIdentifier>{c3b86f00-da19-47ad-a26e-7ff641e2c4d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Lightning">
+      <UniqueIdentifier>{8abf6703-8c12-4dd5-9a10-a6747a1c6037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Lightning\LightningSide">
+      <UniqueIdentifier>{b494a051-9dcc-4739-9048-13fb963c441f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1912,6 +1924,12 @@
     <ClCompile Include="..\Private\BroomRaceManager.cpp" />
     <ClCompile Include="..\private\MapElement_Static.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Lightning.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Lightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LightningSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

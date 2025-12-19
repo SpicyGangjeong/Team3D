@@ -166,6 +166,8 @@
 #include "Barral_Splesh.h"
 #include "Screen_Wind.h"
 #include "Stupefy.h"
+#include "Lightning.h"
+#include "LightningSide.h"
 
 #pragma endregion
 
@@ -1730,8 +1732,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CLightning>(NEXT_LEVEL, CLightning::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
-	
+	if (FAILED(m_pGameInstance->Add_Prototype<CLightningSide>(NEXT_LEVEL, CLightningSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
