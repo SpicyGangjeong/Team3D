@@ -108,7 +108,8 @@ void CGameObject::Set_Shadow(pair<_bool, _ubyte> shadowResult)
 			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
 		}
 		if (0 < (m_iShadow & (_ubyte)SHADOW::SHADOW_FAR)) {
-			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_FAR, this);
+			m_iShadow = 0;
+			assert(false); // 지금은 Shadow_Far 미사용
 		}
 	}
 	else {

@@ -27,6 +27,13 @@ sampler ClampSampler = sampler_state
     AddressV = clamp;
 };
 
+sampler ClampLinearSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = clamp;
+    AddressV = clamp;
+};
+
 sampler MirrorSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;

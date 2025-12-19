@@ -40,11 +40,11 @@ HRESULT CQuest_Entry_Line::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
 	m_vNine_Slice = _float4(0.f, 256.f, 0.f, 64.f);
-	m_fFontX = 928.f;
+	m_fFontX = 948.f;
 	m_fFontY = 520.f;
 	SizeUpX(800.f);
 	SizeUpY(15.f);
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
 	Visible(false);
 	return S_OK;
 }
@@ -120,7 +120,7 @@ HRESULT CQuest_Entry_Line::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
-
+	 
 	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("보 상")) - 22) * 0.5f;
 	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("조 건"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 
@@ -208,9 +208,12 @@ HRESULT CQuest_Entry_Line::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CQuest_Entry_Line::Set_Hover(_int Index)
+void CQuest_Entry_Line::Set_Hover(void* pArg)
 {
-	m_iQuest_Index = Index;
+	CURRENTQUESTSECETINFO* Desc = static_cast<CURRENTQUESTSECETINFO*>(pArg);
+
+	m_iCurrentQuest = Desc->iQuestCategory;
+	m_iQuest_Index = Desc->iQuestIndex;
 	if (m_iQuest_Index == -1)
 	{
 		Visible(false);

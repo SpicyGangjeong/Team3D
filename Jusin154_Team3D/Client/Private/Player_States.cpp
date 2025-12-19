@@ -21,6 +21,7 @@
 #include "State_Dodge.h"
 #include "State_Jump.h"
 #include "State_Land.h"
+#include "State_Slide.h"
 #include "State_Move.h"
 #include "State_Combat.h"
 #include "State_LightAttack.h"
@@ -497,6 +498,10 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			return S_OK;
 		}
+		else if (m_pGameInstance->Key_Down(DIK_E))
+		{
+			m_pFSM->Change_State(FSMSTATE::SLIDE);
+		}
 		return E_FAIL;
 	}
 
@@ -841,6 +846,46 @@ void CPlayer::Behavior_DodgeExit()
 	m_pFSM->Disable_State(FSMSTATE::DODGE);
 }
 
+void CPlayer::Behavior_SlideEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+	m_pFSM->Enable_State(FSMSTATE::SLIDE);
+	pairAnimInfo = m_Animation[STATEANIM::SLIDE_START_R];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	Add_Event(pairAnimInfo.first,
+		[&]() {	pairAnimInfo = m_Animation[STATEANIM::SLIDE_LOOP_R];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
+		0.95f);
+}
+
+HRESULT CPlayer::Behavior_SlideExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo;
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (m_pGameInstance->Key_Up(DIK_E))
+	{
+		pairAnimInfo = m_Animation[STATEANIM::SLIDE_STOP_R];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		return S_OK;
+	}
+	if (iCurrAnimIndex == m_Animation[STATEANIM::SLIDE_STOP_R].first)
+	{
+		if (fRatio >=0.38f)
+		{
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+void CPlayer::Behavior_SlideExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SLIDE);
+}
+
 void CPlayer::Behavior_CombatEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
@@ -883,11 +928,12 @@ void CPlayer::Behavior_CombatEnter()
 			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 		}
 		else if (nullptr != m_LockOnInfo.pInteractive) {
+			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
+			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 			m_pGrapInteractive = m_LockOnInfo.pInteractive;
 			SAFE_ADDREF(m_pGrapInteractive);
 			m_pGrapInteractive->Set_KinematicFlag(true);
 			m_vGrapInteratableLerp.x = 0.f;
-			return;
 		}
 
 		Add_Event(pairAnimInfo.first,
@@ -938,29 +984,29 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 				m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 				pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-				Add_Event(pairAnimInfo.first,
-					[this]() { m_bLookAt = true; },
-					0.1f);
-				Add_Event(pairAnimInfo.first,
-					[this]() { 
-						Throwing_Interactive(); 	
-					},
-					0.2f);
-
-				Add_Event(pairAnimInfo.first,
-					[this]() {
-						m_pGameInstance->SlowMotion(0.1f, 0.35f);
-					},
-					0.1f);
-
-
 			}
 			else if (nullptr != m_LockOnInfo.pInteractive) {
+				m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
+				pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 				m_pGrapInteractive = m_LockOnInfo.pInteractive;
 				SAFE_ADDREF(m_pGrapInteractive);
 				m_pGrapInteractive->Set_KinematicFlag(true);
 				m_vGrapInteratableLerp.x = 0.f;
 			}
+			Add_Event(pairAnimInfo.first,
+				[this]() { m_bLookAt = true; },
+				0.1f);
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					Throwing_Interactive();
+				},
+				0.2f);
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pGameInstance->SlowMotion(0.1f, 0.35f);
+				},
+				0.1f);
 		}
 	}
 
@@ -2309,7 +2355,7 @@ void CPlayer::Throwing_Interactive()
 {
 	if (nullptr == m_pGrapInteractive) {
 		return;
-	} _vector vDir = {}; _float vDistance = 45.f;
+	} _vector vDir = {}; _float vDistance = 60.f;
 	CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
 	if (nullptr != m_LockOnInfo.pUnit) {
 		vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
@@ -2456,6 +2502,17 @@ void CPlayer::Add_FSM()
 			};
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::DODGE, CState_Dodge::Create(&Desc));
+	}
+
+	{
+		CState_Slide::STATE_SLIDE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_SlideEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_SlideExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_SlideExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::SLIDE, CState_Slide::Create(&Desc));
 	}
 #pragma endregion
 #pragma region Behavior_Combat_NotFocus
@@ -2688,6 +2745,10 @@ void CPlayer::Set_Anim()
 
 	m_Animation[STATEANIM::LAND] = { 259,false };
 
+	m_Animation[STATEANIM::SLIDE_STOP_R] = { 568,false };
+	m_Animation[STATEANIM::SLIDE_START_R] = { 566,false };
+	m_Animation[STATEANIM::SLIDE_LOOP_R] = { 564,true };
+
 	m_Animation[STATEANIM::DODGE] = { 878,false };
 	m_Animation[STATEANIM::DODGE_BLINK] = { 876,true };
 
@@ -2797,6 +2858,7 @@ void CPlayer::Set_Anim()
 	// 947
 
 	// 755 기모으기 859
+	//568 566 564 슬라이드 스탑/스타트/루프
 }
 
 

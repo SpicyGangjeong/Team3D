@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Component.h"
+#include "CallBack_QueryFilterCallback.h"
 
 NS_BEGIN(Engine)
 class CTransform;
@@ -13,6 +14,7 @@ class ENGINE_DLL CCharacter_Controller final :
 	/* dev-treadmill.tistory.com/159 */
 	// 기본적으로 아무 힘도 받지 않는, 주지 않는 놈임
 	// kinematic 기반임
+	static CPhysX_CctQueryFilterCallback s_QueryFilterCallback_IGNORE_Shield;
 public:
 #pragma region STRUCT
 	typedef struct tagCharacter_ControllerDesc
@@ -86,7 +88,7 @@ private:
 	_int					m_iIsOnGround = { 0 };
 	_float4					m_vAccHeight = { 0.f, 0.16f, 0.f, 0.01f };
 	PhsXUserData			m_tagData = {};
-	
+
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
 	_bool					m_bActive = { true };
 	_bool					m_bGravity = { true };
