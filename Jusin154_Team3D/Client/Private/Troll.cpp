@@ -168,19 +168,6 @@ void CTroll::Late_Update(_float fTimeDelta)
 		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
 
-
-	_vector vDir = XMLoadFloat4(&m_vTargetPos) - Get_WorldPostion();
-	vDir = XMVector4Normalize(vDir);
-	_vector vLook = XMVector3Normalize(
-		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
-	float dot = XMVectorGetX(XMVector3Dot(vLook, vDir));
-	dot = max(-1.f, min(1.f, dot));
-
-	float angle = acosf(dot);
-	m_fDegree = XMConvertToDegrees(angle);
-
-	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
-
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
