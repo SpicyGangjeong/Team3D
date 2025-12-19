@@ -625,6 +625,9 @@
     <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer">
       <UniqueIdentifier>{d9382839-c0b8-4b3d-9227-6dcf65fba44f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="80.State\Focus\Slide">
+      <UniqueIdentifier>{eef1db06-8a9f-42b4-93e2-cc29de2b275d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
