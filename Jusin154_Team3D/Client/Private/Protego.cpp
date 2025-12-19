@@ -57,7 +57,6 @@ HRESULT CProtego::Initialize(void* pArg)
 void CProtego::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
-
 }
 
 void CProtego::Update(_float fTimeDelta)
@@ -72,6 +71,9 @@ void CProtego::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
+	if (m_bVisible == false){
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	}
 
 
 	/* 시작 사이즈 러프 */
@@ -89,9 +91,10 @@ void CProtego::Update(_float fTimeDelta)
 
 void CProtego::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
+	if (m_bVisible == false){
 		return;
-
+	}
+	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
 	__super::Late_Update(fTimeDelta);
 
 

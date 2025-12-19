@@ -2275,10 +2275,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SM_BRR_RaceRing_01_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM_LOCAL, "C:/MeshTable\\Game\\Environment\\BroomFlight\\Meshes\\SM_BRR_RaceRing_01.fbx", XMMatrixIdentity())))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SK_ConjuredDragon_Model"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Characters\\Creatures\\Dragons\\ConjuredDragon\\SK_ConjuredDragon.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity())))) {
+	//	return E_FAIL;
+	//}
 
 #pragma region BODY
 
