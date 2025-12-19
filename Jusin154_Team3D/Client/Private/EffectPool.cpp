@@ -34,6 +34,7 @@
 #include "Goblin_Teleport.h"
 #include "Accio.h"
 #include "Screen_Wind.h"
+#include "Stupefy.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -369,6 +370,18 @@ HRESULT CEffectPool::Ready_Effect()
 
 		return pEffect; }
 	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::STUPEFY, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CStupefy* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CStupefy>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	
 
 	return S_OK;
 }

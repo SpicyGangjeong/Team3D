@@ -277,18 +277,29 @@ void CBuildingContainer::Describe_Entity()
     {
         Set_BoundingBox();
     }
+    _float3 vMove = {};
+    GUI::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
+    GUI::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
+    GUI::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
 
+    m_pTransformCom->Move_Right(vMove.x);
+    m_pTransformCom->Move_Up(vMove.y);
+    m_pTransformCom->Move_Look(vMove.z);
 
-    GUI::Text(m_strName.c_str());
-    GUI::Text("----- Transfrom ----");
+    XMStoreFloat3(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+
     GUI::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
     GUI::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
     GUI::InputFloat("Z##Position", &m_vPosition.z, 0.1f, 1.f);
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 
     if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
     {
-        if (m_pGameInstance->isPicking(&m_vPosition))
+        _float3 vPosition = {};
+        if (m_pGameInstance->isPicking(&vPosition))
         {
+            memcpy(&m_vPosition, &vPosition, sizeof(_float3));
+            m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&m_vPosition));
         }
     }
 

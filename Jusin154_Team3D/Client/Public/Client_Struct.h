@@ -181,8 +181,8 @@ namespace Client
 
 		_float3		vDissolveValue = {};
 
-
-		_float2		vPadding0 = {};
+		_float      fModelDistortIntensity = {};
+		_float		vPadding0 = {};
 
 		_float      fLightDeley = {};
 		_float		fLightIntensity = {};
@@ -202,13 +202,15 @@ namespace Client
 		_float4     vNoiseColor = {};
 		_float4     vRimLightColor = {};
 
-		_float4     vPadding4 = {};
+		_float2     vMaskOffset = {};
+		_float2     vPadding4 = {};
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};
 		_bool		isPadding2 = {};
 		_bool		isPadding3 = {};
 		_bool		isPadding4 = {};
+
 	}EFFECT_INFO;
 	
 	typedef struct tagTrailInfo

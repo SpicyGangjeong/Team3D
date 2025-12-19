@@ -26,23 +26,27 @@
 #ifdef 기무리
 #undef ASSERT_NURI
 #define ASSERT_NURI(expression) assert(expression)
-//#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif 진우
 #undef ASSERT_JINWOO
 #define ASSERT_JINWOO(expression) assert(expression)
 //#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
-//#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif gimch
 #undef ASSERT_JINHO
 #define ASSERT_JINHO(expression) assert(expression)
-#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif Bin
 #undef ASSERT_HYUNBIN
 #define ASSERT_HYUNBIN(expression) assert(expression)
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 //#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif 인혁
 #undef ASSERT_INHYUK
 #define ASSERT_INHYUK(expression) assert(expression)
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 #define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #endif
 

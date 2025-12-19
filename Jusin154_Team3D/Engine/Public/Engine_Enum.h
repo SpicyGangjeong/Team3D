@@ -130,6 +130,7 @@ enum class PXOBJECT : _uint {
 	GOBLIN_THEIF,
 	TROLL,
 	PENSIVE_GUARDIAN,
+	RANRAK,
 
 #pragma endregion
 #pragma region HOSTILE_HITBOX

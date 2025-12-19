@@ -527,11 +527,11 @@
     <ClInclude Include="..\Public\Barral_Splesh.h">
       <Filter>02.GameObjects\Effect\PropsEffect\Barral</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Broom_Hover.h">
-      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
+    <ClInclude Include="..\Public\State_Hover.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Hover</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Broom_Fly.h">
-      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Fly</Filter>
+    <ClInclude Include="..\Public\State_Fly.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Fly</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MiniMap_Camera.h">
       <Filter>02.GameObjects\Cameras\MiniMap_Camera</Filter>
@@ -602,6 +602,24 @@
     <ClInclude Include="..\public\Interaction_Key.h">
       <Filter>02.GameObjects\UI\Interaction_Key</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrak.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireBreath.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireBall.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Pulse.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Pulse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Tucked.h">
+      <Filter>04.Mechanic\State\Movement\Tucked</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_AncientSpell.h">
+      <Filter>04.Mechanic\State\State_Combat\State_AncientSpell</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\QuestInstance.h">
       <Filter>04.Mechanic\Quest\QuestInstance</Filter>
     </ClInclude>
@@ -610,6 +628,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Quest_Info_Header.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Stupefy.h">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Static.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireSweep.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireSweep</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Ground.h">
+      <Filter>04.Mechanic\State\Movement\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Swipe.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Swipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Slide.h">
+      <Filter>04.Mechanic\State\Focus\Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Skill.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1197,12 +1236,6 @@
     <Filter Include="02.GameObjects\Effect\PropsEffect\Chair">
       <UniqueIdentifier>{3103c6e1-60cb-438b-a3eb-844b919ccd43}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Hover">
-      <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Fly">
-      <UniqueIdentifier>{f24321bb-6750-4baa-b19a-bf5a3c2a8909}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Cameras\MiniMap_Camera">
       <UniqueIdentifier>{dbf4ff12-e5eb-439a-aa02-e5a424453b08}</UniqueIdentifier>
     </Filter>
@@ -1280,6 +1313,51 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot">
       <UniqueIdentifier>{6bbfb8f0-c71a-4769-b1e6-efd5d863ba7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Stupefy">
+      <UniqueIdentifier>{7672784a-86a8-4485-a4de-a979bd0c8f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrak">
+      <UniqueIdentifier>{bb981766-6030-4dd9-b92d-f6819a70c93d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Hover">
+      <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Fly">
+      <UniqueIdentifier>{f24321bb-6750-4baa-b19a-bf5a3c2a8909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireBreath">
+      <UniqueIdentifier>{cbb70230-b830-4554-a678-c571d5a87176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireBall">
+      <UniqueIdentifier>{77fc199c-dd8f-4b36-8869-161a4998c189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Pulse">
+      <UniqueIdentifier>{70ff75c1-3309-4db7-9f5c-51573046df9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Tucked">
+      <UniqueIdentifier>{5fa641cd-bc30-4ab6-a8d4-26a9785ef4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_AncientSpell">
+      <UniqueIdentifier>{c69a2485-7f6e-4e22-81b4-1410fdae9d57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireSweep">
+      <UniqueIdentifier>{2c39ba68-2f23-4bc9-a277-b6e9295c11a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Ground">
+      <UniqueIdentifier>{9e2863cd-1a30-4a27-a076-5e1baff3dee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Swipe">
+      <UniqueIdentifier>{2fd96fb0-dbc3-4486-afda-82b3b1b63060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Slide">
+      <UniqueIdentifier>{ee880571-e18c-4206-80ea-448cadd04d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Skill">
+      <UniqueIdentifier>{cef80506-72c7-4bb9-a691-760f0a576eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Static">
+      <UniqueIdentifier>{c3b86f00-da19-47ad-a26e-7ff641e2c4d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1752,11 +1830,11 @@
     <ClCompile Include="..\Private\Chair_Splesh.cpp">
       <Filter>02.GameObjects\Effect\PropsEffect\Chair</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Broom_Hover.cpp">
-      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
+    <ClCompile Include="..\Private\State_Hover.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Hover</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Broom_Fly.cpp">
-      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Fly</Filter>
+    <ClCompile Include="..\Private\State_Fly.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Fly</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MiniMap_Camera.cpp">
       <Filter>02.GameObjects\Cameras\MiniMap_Camera</Filter>
@@ -1835,6 +1913,48 @@
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Slot.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stupefy.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrak.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrak_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireBreath.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireBall.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Pulse.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Pulse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Tucked.cpp">
+      <Filter>04.Mechanic\State\Movement\Tucked</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_AncientSpell.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_AncientSpell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireSweep.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_FireSweep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Ground.cpp">
+      <Filter>04.Mechanic\State\Movement\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Swipe.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Swipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slide.cpp">
+      <Filter>04.Mechanic\State\Focus\Slide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Static.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

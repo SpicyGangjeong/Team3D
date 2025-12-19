@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "MapElement.h"
@@ -17,6 +17,9 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+private:
+	_bool m_isCollision = {};
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

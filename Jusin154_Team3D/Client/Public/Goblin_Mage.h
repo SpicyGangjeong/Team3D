@@ -37,7 +37,7 @@ public:
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
 	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
-	CEnemy_Detection* m_pDetection = { nullptr };
+	//CEnemy_Detection* m_pDetection = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };

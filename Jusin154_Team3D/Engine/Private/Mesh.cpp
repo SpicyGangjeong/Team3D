@@ -23,7 +23,7 @@ HRESULT CMesh::Bind_BoneMatrices(const vector<class CBone*>& Bones, CShader* pSh
 
 	for (size_t i = 0; i < m_iNumBones; ++i) {
 		XMStoreFloat4x4(&m_pBoneMatrices[i],
-			/*XMLoadFloat4x4(&m_offsetMatrices[i]) **/ Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix());
+			XMLoadFloat4x4(&m_offsetMatrices[i]) * Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix());
 	}
 
 	if (0 == m_iNumBones) {
@@ -645,6 +645,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const ai
 
 	return S_OK;
 }
+
 #endif
 
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const CModel* pModel, SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix)

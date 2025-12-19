@@ -117,7 +117,7 @@ HRESULT CLight_Main::Ready_Components()
 
 	_float4 vColor = _float4(0.7f, 0.7f, 0.7f, 0.3f);
 	m_pGameInstance->Set_FogColor(vColor);
-	m_pGameInstance->Set_FogDensity(5.f);
+	m_pGameInstance->Set_Fog(5.f, 30.f);
 
 	return S_OK;
 }

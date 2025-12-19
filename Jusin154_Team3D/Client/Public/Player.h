@@ -160,6 +160,10 @@ private:
 	HRESULT Behavior_DodgeExitCheck(_float fTimeDelta);
 	void	Behavior_DodgeExit();
 
+	void	Behavior_SlideEnter();
+	HRESULT Behavior_SlideExitCheck(_float fTimeDelta);
+	void	Behavior_SlideExit();
+
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
@@ -171,6 +175,10 @@ private:
 	void	Behavior_SpellEnter();
 	HRESULT Behavior_SpellExitCheck();
 	void	Behavior_SpellExit();
+	 
+	void	Behavior_AncientSpellEnter();
+	HRESULT Behavior_AncientSpellExitCheck();
+	void	Behavior_AncientSpellExit();
 
 	void	Behavior_ShieldEnter();
 	HRESULT Behavior_ShieldExitCheck();

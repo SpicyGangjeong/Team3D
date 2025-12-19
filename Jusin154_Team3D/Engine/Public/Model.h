@@ -14,13 +14,19 @@ public:
 		_int MeshBoneCount;
 		_int BoneCount;
 
-		_int RootBoneIndex;
-		_int Padding;
+		_int CurrentAnimIndex;
+		_int PrevAnimIndex;
 		_float PrevTime;
 		_float BlendRatio;
+
+		_int RootBoneIndex;
+		_float3 padding;
+
 		_float4x4 PreTransformMatrix;
 		_float4 RootInitRot;
 	}ANIMSTATE_DESC;
+
+
 
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -68,7 +74,6 @@ public:
 	_uint				Get_NumMeshes() const { return m_iNumMeshes; }
 	void				Update_RootBone(_float Amount = 1.f);
 	void				Initialize_RootBone();
-	void				BeginFrame();
 	vector<_float4x4>	Get_OffsetMatrix(_int iIndex);
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
@@ -82,6 +87,8 @@ public:
 	_int					Get_BoneIndex(const _char* pBoneName) const;
 	_matrix					Get_BoneMatrix(_uint iBoneIndex);
 	void					Combined_BoneMatrix();
+	_int					Find_BoneIndex(const _char* pBoneName);
+
 #pragma endregion
 #pragma region Material
 	HRESULT					Bind_Material(_uint iMeshIndex, class CShader* pShader);
@@ -89,6 +96,7 @@ public:
 #pragma endregion
 
 	void			ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
+	void			ComputeLocal(_uint AnimIndex, _uint MeshIndex);
 	void			Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
 	void			ComputeAnimation_Second(_uint AnimIndex);
 	void			InItialize_BoneIndex();
@@ -159,8 +167,8 @@ private:
 
 	// 바이너리
 	SaveModel* m_pSaveModel = { nullptr };
-	list<SaveModel> m_SaveModel;
 	//
+
 
 	vector<_float4x4> m_BoneMatrix;
 
@@ -183,6 +191,7 @@ private:
 	_bool					m_bRootBone = {};
 	_float4x4				m_RootMatrix = {};
 
+
 private:
 #ifdef EDITOR_PROJECT
 	const aiScene* m_pAIScene = { nullptr };
@@ -194,6 +203,7 @@ private:
 
 private:
 	HRESULT			Create_ComputeShader();
+	HRESULT			Create_ComputeShaderLocal();
 	HRESULT			Create_ParentVB();
 	HRESULT			Create_BoneLocalVB();
 	HRESULT			Create_Temp();
@@ -202,6 +212,8 @@ private:
 	HRESULT			Create_ParentSrv();
 	HRESULT			Create_BoneLocalSrv();
 
+	HRESULT			Create_Local();
+
 	_uint				m_iNumBuffer = {};
 
 	vector<_int>		m_Parent = {};
@@ -209,23 +221,33 @@ private:
 
 	vector<ANIMSTATE_DESC> m_AnimRanges;
 
+	vector<_float4x4> m_BoneMatrixCPU;
+
 	class CComputeShader* m_pComputeShader = nullptr;
+	class CComputeShader* m_pCS_AnimLocal = nullptr;
 
 	ID3D11Buffer* m_pConstantBuffer = { nullptr };
 	ID3D11Buffer* m_pParentBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneLocalBuffer = { nullptr };
+	ID3D11Buffer* m_pLocalMatrixBuffer = { nullptr };
+
 
 	ID3D11ShaderResourceView* m_pParentSRV = {};
 	ID3D11ShaderResourceView* m_pBoneLocalSRV = {};
 	ID3D11ShaderResourceView* m_pBoneMatrixSRV = {};
+	ID3D11ShaderResourceView* m_pLocalMatrixSRV = {};
+
 	ID3D11UnorderedAccessView* m_pBoneMatrixUAV = {}; 
+	ID3D11UnorderedAccessView* m_pLocalMatrixUAV = {};
+
+
 #pragma endregion
 
 private:
 
 	// 바이너리
-	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
+	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, _uint iLevel);
 	void LoadAdditionalAnimations(const char* ModelFilePath);
 	bool LoadData(const _char* filename);
 	void LoadAnim(const _char* fileName);
@@ -236,14 +258,14 @@ private:
 private:
 	// 바이너리
 	HRESULT Ready_Meshes();
-	HRESULT Ready_Materials(const _char* pModelFilePath);
+	HRESULT Ready_Materials(const _char* pModelFilePath, _uint iLevel);
 	HRESULT Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex);
 	HRESULT Ready_Animations(const vector<CBone*>& Bones);
 	//
 
 public:
 	// 바이너리
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity(), _uint iLevel = 0);
 	//
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
 

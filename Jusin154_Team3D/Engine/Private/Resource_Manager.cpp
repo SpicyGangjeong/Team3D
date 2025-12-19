@@ -7,7 +7,7 @@ CResource_Manager::CResource_Manager(ID3D11Device* pDevice)
 	SAFE_ADDREF(m_pDevice);
 }
 
-ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath)
+ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath, _uint iLevel)
 {
 	if (pFilePath == nullptr || pFilePath[0] == '\0'){
 		return nullptr;
@@ -18,8 +18,8 @@ ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath)
 	{ // 브레이스 해제 금지
 		shared_lock<shared_mutex> sharedLock(m_smtxTexture);
 
-		auto iter = m_Resources.find(wstrKeyOriginal);
-		if (iter != m_Resources.end())
+		auto iter = m_Resources[iLevel].find(wstrKeyOriginal);
+		if (iter != m_Resources[iLevel].end())
 		{
 #ifdef _DEBUG
 			lock_guard<mutex> statisticsLock(m_mtxStatistics);
@@ -46,8 +46,8 @@ ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath)
 	{ // 브레이스 해제 금지
 		unique_lock<shared_mutex> uniqueLock(m_smtxTexture);
 
-		auto iter = m_Resources.find(wstrKeyOriginal);
-		if (iter != m_Resources.end())
+		auto iter = m_Resources[iLevel].find(wstrKeyOriginal);
+		if (iter != m_Resources[iLevel].end())
 		{
 			SAFE_RELEASE(pSRV); // 여기까지 왔는데 end가 아니다? -> 다른 스레드가 넣음 -> 이 srv는 이미 로드됨. -> 삭제해야 됨
 
@@ -55,7 +55,7 @@ ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath)
 			return iter->second; // sharedLock 소멸
 		}
 
-		m_Resources.emplace(wstrKeyOriginal, pSRV);
+		m_Resources[iLevel].emplace(wstrKeyOriginal, pSRV);
 		// sharedLock 소멸
 	} // 브레이스 해제 금지
 
@@ -66,9 +66,24 @@ ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath)
     return pSRV;
 }
 
-HRESULT CResource_Manager::Initialize(_uint iResourceCount)
+void CResource_Manager::Clear_LevelResources(_uint iLevel)
 {
-	m_Resources.reserve(iResourceCount);
+	unordered_map<_wstring, ID3D11ShaderResourceView*>::iterator iter = (m_Resources[iLevel]).begin();
+
+	for (; iter != m_Resources[iLevel].end();)
+	{
+		SAFE_RELEASE(iter->second);
+		iter = m_Resources[iLevel].erase(iter);
+	}
+	m_Resources[iLevel].clear();
+}
+
+HRESULT CResource_Manager::Initialize(_uint iResourceCount, _uint iNumLevel)
+{
+	m_iNumLevel = iNumLevel;
+
+	m_Resources = new unordered_map<_wstring, ID3D11ShaderResourceView*>[iNumLevel];
+
 
     return S_OK;
 }
@@ -107,11 +122,11 @@ ID3D11ShaderResourceView* CResource_Manager::Load_SRV(const filesystem::path& pa
 	return pSRV;
 }
 
-CResource_Manager* CResource_Manager::Create(ID3D11Device* pDevice, _uint iResourceCount)
+CResource_Manager* CResource_Manager::Create(ID3D11Device* pDevice, _uint iResourceCount, _uint iNumLevel)
 {
     CResource_Manager* pInstance = new CResource_Manager(pDevice);
 
-    if (FAILED(pInstance->Initialize(iResourceCount)))
+    if (FAILED(pInstance->Initialize(iResourceCount, iNumLevel)))
     {
         MSG_BOX("Failed to Create CResource_Manager");
         return nullptr;
@@ -126,14 +141,19 @@ void CResource_Manager::Free()
 
 	SAFE_RELEASE(m_pDevice);
 
-	unordered_map<_wstring, ID3D11ShaderResourceView*>::iterator iter = m_Resources.begin();
-
-	for (; iter != m_Resources.end();)
+	for (_uint i = 0; i < m_iNumLevel; ++i)
 	{
-		SAFE_RELEASE(iter->second);
-		iter = m_Resources.erase(iter);
+		unordered_map<_wstring, ID3D11ShaderResourceView*>::iterator iter = m_Resources[i].begin();
+
+		for (; iter != m_Resources[i].end();)
+		{
+			SAFE_RELEASE(iter->second);
+			iter = m_Resources[i].erase(iter);
+		}
+		m_Resources[i].clear();
+
 	}
-	m_Resources.clear();
+	Safe_Delete_Array(m_Resources);
 }
 
 
@@ -190,28 +210,28 @@ void CResource_Manager::Describe_Entity()
 			GUI::Text("Hit: %u  Miss: %u  HitRate: %.2f%%", iTotalHitCount, iTotalMissCount, fHitRatePercent);
 
 		}
-		if (GUI::CollapsingHeader("CacheHit")) {
-			GUI::Text("%d", vecHit.size());
-			GUI::BeginChild("CacheHit", { 300, 300 });
-			GUI::GetScrollY();
-			for (auto& element : vecHit) {
-				GUI::Text("%d", element.second); GUI::SameLine();
-				GUI::Text(CMyTools::ToString(element.first).c_str());
+			if (GUI::CollapsingHeader("CacheHit")) {
+				GUI::Text("%d", vecHit.size());
+				GUI::BeginChild("CacheHit", { 300, 300 });
+				GUI::GetScrollY();
+				for (auto& element : vecHit) {
+					GUI::Text("%d", element.second); GUI::SameLine();
+					GUI::Text(CMyTools::ToString(element.first).c_str());
+				}
+				GUI::EndChild();
 			}
-			GUI::EndChild();
-		}
-		if (GUI::CollapsingHeader("CacheMiss")) {
-			GUI::Text("%d", vecMiss.size());
-			GUI::BeginChild("CacheMiss", { 300, 300 });
-			GUI::GetScrollY();
-			for (auto& element : vecMiss) {
-				GUI::Text("%d", element.second); GUI::SameLine();
-				GUI::Text(CMyTools::ToString(element.first).c_str());
+			if (GUI::CollapsingHeader("CacheMiss")) {
+				GUI::Text("%d", vecMiss.size());
+				GUI::BeginChild("CacheMiss", { 300, 300 });
+				GUI::GetScrollY();
+				for (auto& element : vecMiss) {
+					GUI::Text("%d", element.second); GUI::SameLine();
+					GUI::Text(CMyTools::ToString(element.first).c_str());
+				}
+				GUI::EndChild();
 			}
-			GUI::EndChild();
 		}
-	}
-	GUI::End();
+		GUI::End();
 }
 
 #endif // _DEBUG

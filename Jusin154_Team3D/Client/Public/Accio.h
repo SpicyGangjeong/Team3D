@@ -40,6 +40,9 @@ private:
 	class CTrailObject* m_pRope_Trail = { nullptr };
 	class CEffectParts* m_pWandLight = { nullptr };
 	class CEffectParts* m_pRotate0 = { nullptr };
+	class CEffectParts* m_pRotate1 = { nullptr };
+	class CEffectParts* m_pAccio_PT = { nullptr };
+	class CEffectParts* m_pAccio_Distortion = { nullptr };
 
 	_float4				m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
 	_float4				m_vTargetPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 타게팅 된 위치
@@ -50,9 +53,9 @@ private:
 	CCharacter_Controller*	 m_pEnemyCCT = { nullptr };
 
 	_float				m_fAccRotateTime = {};
-	_float				m_fTurnSpeed = { 65.f };
-	_float				m_fRange = { 1.f };
-	_float              m_fAttenuation = { 65.f };
+	_float				m_fTurnSpeed = { 55.f };
+	_float				m_fRange = { 0.7f };
+	_float              m_fAttenuation = { 85.f };
 	_bool				m_isDissolve = { true };
 	_bool				m_isReverse = { false };
 	_int				m_iLoopTime = { 5 };
