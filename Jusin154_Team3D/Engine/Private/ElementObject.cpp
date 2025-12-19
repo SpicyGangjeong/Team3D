@@ -130,7 +130,7 @@ _float CElementObject::Get_Nine_Slice_Bottom()
 	return m_vNine_Slice.w;
 }
 
-void CElementObject::Start_Lerp(_float fTimeDelta)
+_bool CElementObject::Start_Lerp(_float fTimeDelta)
 {
 	_vector Pos = m_fCurrent_Position;
 
@@ -146,7 +146,7 @@ void CElementObject::Start_Lerp(_float fTimeDelta)
 	{
 		m_fX = m_vLerp_Position.m128_f32[0];
 		m_fY = m_vLerp_Position.m128_f32[1];
-		m_bLerpOn = false;
+		return true;
 	}
 
 	else
@@ -154,6 +154,7 @@ void CElementObject::Start_Lerp(_float fTimeDelta)
 		XMVECTOR DirNorm = XMVector3Normalize(Dir);
 		m_fX = (Pos + DirNorm * move).m128_f32[0];
 		m_fY = (Pos + DirNorm * move).m128_f32[1];
+		return false;
 	}
 }
 

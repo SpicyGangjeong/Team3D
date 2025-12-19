@@ -1,22 +1,16 @@
 ﻿#pragma once
 
-#include "Client_Define.h"
+#include "Editor_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Engine)
-class CTexture;
-class CShader;
-class CVIBuffer_Rect;
-NS_END
+NS_BEGIN(Editor)
 
-NS_BEGIN(Client)
-
-class CQuest_Info final : public CElementObject
+class CSpellLearn_MovePointer final : public CElementObject
 {
 private:
-	CQuest_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CQuest_Info(const CQuest_Info& rhs);
-	virtual ~CQuest_Info() = default;
+	CSpellLearn_MovePointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpellLearn_MovePointer(const CSpellLearn_MovePointer& rhs);
+	virtual ~CSpellLearn_MovePointer() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -32,32 +26,27 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void Set_Hover(void* pArg);
+	void SpellLearn(_int Index);
+private:
+	void Line(_float fTime);
+
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	CInfoInstance* m_pInfoInstance = { nullptr };
 
-	_wstring m_pQuest_Info;
+	_bool	m_bMoveStart = { false };
+	_int	m_iSpell{};
 
-	_float	m_fOriginPerviewSize{};
-	_float	m_fPreviewOffSet{};
-	_float4 m_vHeaderBack{};
+	_int	Index{};
+	vector<_vector> m_MoveLine;
 
-	_int	m_iQuest_Index{};
-	_int	m_iCurrentQuest{};
-
-	_int	m_iPerQuestIndex{};
 public:
-	static CQuest_Info* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpellLearn_MovePointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
-#ifdef _DEBUG
 	void Describe_Entity() override;
-#endif // _DEBUG
 };
 
 NS_END

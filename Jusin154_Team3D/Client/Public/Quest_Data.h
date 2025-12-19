@@ -25,7 +25,7 @@ private:
 	void Update_AcceptQuest(_int MonsterIndex = -1);
 
 public:
-	QUESTINFO Get_Quest(_int QuestID);
+	QUESTINFO Get_Quest(_int QuestType, _int QuestID);
 	_int Get_Count(_int Index);
 	const vector<QUESTINFO>& Get_AllQuest() const;
 	const vector<QUESTINFO>& Get_ClearQuest() const;

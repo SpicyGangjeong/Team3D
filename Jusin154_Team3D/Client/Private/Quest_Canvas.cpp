@@ -44,6 +44,8 @@ HRESULT CQuest_Canvas::Initialize(void* pArg)
 	}
 	Visible(false);
 	m_pInfoInstance->Set_AcceptQuest(0);
+	m_pInfoInstance->Set_AcceptQuest(1);
+	m_pInfoInstance->Set_AcceptQuest(2);
 	return S_OK;
 }
 

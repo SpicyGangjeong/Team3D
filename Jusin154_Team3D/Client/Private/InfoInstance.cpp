@@ -262,9 +262,9 @@ void CInfoInstance::Event_CallBack(_wstring EventName, void* pArg)
 	}
 }
 
-QUESTINFO CInfoInstance::Get_Quest(_int QuestID)
+QUESTINFO CInfoInstance::Get_Quest(_int QuestType, _int QuestID)
 {
-	return m_pQuestInfo->Get_Quest(QuestID);
+	return m_pQuestInfo->Get_Quest(QuestType, QuestID);
 }
 
 _int CInfoInstance::Get_Quest_Count(_int Index)

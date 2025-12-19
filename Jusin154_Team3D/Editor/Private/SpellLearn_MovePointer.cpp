@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Quest_Info_Line.h"
+#include "SpellLearn_MovePointer.h"
 #include "GameInstance.h"
 
-CQuest_Info_Line::CQuest_Info_Line(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSpellLearn_MovePointer::CSpellLearn_MovePointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CQuest_Info_Line::CQuest_Info_Line(const CQuest_Info_Line& rhs)
+CSpellLearn_MovePointer::CSpellLearn_MovePointer(const CSpellLearn_MovePointer& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CQuest_Info_Line::Initialize_Prototype()
+HRESULT CSpellLearn_MovePointer::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CQuest_Info_Line::Initialize(void* pArg)
+HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 323.f;
-	Desc.fY = 315.f;
-	Desc.fSizeX = 256.f;
-	Desc.fSizeY = 64.f;
+	Desc.fX = 454.f;
+	Desc.fY = -240.f;
+	Desc.fSizeX = 32.f;
+	Desc.fSizeY = 32.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
 	if (FAILED(__super::Initialize(&Desc)))
@@ -39,15 +39,43 @@ HRESULT CQuest_Info_Line::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
-	m_vNine_Slice = _float4(11.f, 245.f, 0.f, 64.f);
-	SizeUpX(934.f);
-	SizeUpY(15.f);
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
+	m_fMoveSpeed = 15.f;
+	m_MoveLine.push_back(XMVectorSet(454.f, -240.f, 0.f, 1.f));
+	m_MoveLine.push_back(XMVectorSet(454.f, 90.f, 0.f, 1.f));
+
+
+
+	Index = 0;
+
 	Visible(false);
 	return S_OK;
 }
 
-void CQuest_Info_Line::Priority_Update(_float fTimeDelta)
+void CSpellLearn_MovePointer::SpellLearn(_int Index)
+{
+	m_iSpell = Index;
+	m_bMoveStart = true;
+}
+
+void CSpellLearn_MovePointer::Line(_float fTime)
+{
+	m_vLerp_Position = m_MoveLine[Index];
+
+	if (Start_Lerp(m_fMoveSpeed * fTime) == true)
+	{
+		if (Index < m_MoveLine.size() -1)
+		{
+			++Index;
+		}
+		else
+		{
+			m_bMoveStart = false;
+		}
+	}
+
+}
+
+void CSpellLearn_MovePointer::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -56,7 +84,7 @@ void CQuest_Info_Line::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CQuest_Info_Line::Update(_float fTimeDelta)
+void CSpellLearn_MovePointer::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -88,11 +116,28 @@ void CQuest_Info_Line::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_pGameInstance->Key_Down(DIK_L))
+	{
+		m_bMoveStart = true;
+	}
+
+	if (m_bMoveStart == true)
+	{
+		if (m_iSpell == ENUM_CLASS(SPELL_LINE::LINE))
+		{
+			Line(fTimeDelta);
+		}
+		else if (m_iSpell == ENUM_CLASS(SPELL_LINE::CURVE))
+		{
+			//Curve();
+		}
+	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CQuest_Info_Line::Late_Update(_float fTimeDelta)
+void CSpellLearn_MovePointer::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -104,12 +149,12 @@ void CQuest_Info_Line::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CQuest_Info_Line::Render()
+HRESULT CSpellLearn_MovePointer::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::QUEST_BORDER)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -122,12 +167,12 @@ HRESULT CQuest_Info_Line::Render()
 	return S_OK;
 }
 
-_vector CQuest_Info_Line::Get_WorldPostion()
+_vector CSpellLearn_MovePointer::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CQuest_Info_Line::Bind_ShaderResources()
+HRESULT CSpellLearn_MovePointer::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -137,6 +182,7 @@ HRESULT CQuest_Info_Line::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 	{
 		return E_FAIL;
@@ -165,32 +211,16 @@ HRESULT CQuest_Info_Line::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNine_Slice", &m_vNine_Slice, sizeof(_float4))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOrigin_Size", &m_fOrigin_Size, sizeof(_float2))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iColor", &m_iColor, sizeof(_int))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
-HRESULT CQuest_Info_Line::Ready_Components(void* pArg)
+HRESULT CSpellLearn_MovePointer::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_Header_Line"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SU_Cursor"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -202,47 +232,33 @@ HRESULT CQuest_Info_Line::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CQuest_Info_Line::Set_Hover(void* pArg)
+CSpellLearn_MovePointer* CSpellLearn_MovePointer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CURRENTQUESTSECETINFO* Desc = static_cast<CURRENTQUESTSECETINFO*>(pArg);
-
-	m_iCurrentQuest = Desc->iQuestCategory;
-	m_iQuest_Index = Desc->iQuestIndex;
-	if (m_iQuest_Index == -1)
-	{
-		Visible(false);
-		return;
-	}
-	Visible(true);
-}
-
-CQuest_Info_Line* CQuest_Info_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CQuest_Info_Line* pInstance = new CQuest_Info_Line(pDevice, pContext);
+	CSpellLearn_MovePointer* pInstance = new CSpellLearn_MovePointer(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CQuest_Info_Line");
+		MSG_BOX("Failed to Created : CSpellLearn_MovePointer");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CQuest_Info_Line::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CSpellLearn_MovePointer::Clone(void* pArg, CGameObject* pOwner)
 {
-	CQuest_Info_Line* pInstance = new CQuest_Info_Line(*this);
+	CSpellLearn_MovePointer* pInstance = new CSpellLearn_MovePointer(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CQuest_Info_Line");
+		MSG_BOX("Failed to Cloned : CSpellLearn_MovePointer");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CQuest_Info_Line::Free()
+void CSpellLearn_MovePointer::Free()
 {
 	__super::Free();
 
@@ -251,8 +267,6 @@ void CQuest_Info_Line::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-#ifdef _DEBUG
-void CQuest_Info_Line::Describe_Entity()
+void CSpellLearn_MovePointer::Describe_Entity()
 {
 }
-#endif // _DEBUG

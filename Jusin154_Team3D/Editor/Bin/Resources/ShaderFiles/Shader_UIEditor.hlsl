@@ -1745,6 +1745,27 @@ PS_OUT PS_Broomstick(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_SpellLearn(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+
+    float4 tex = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float tex1 = g_Texture1.Sample(DefaultSampler, In.vTexcoord).r;
+    Color = tex;
+    
+    tex1 *= 0.95f;
+    
+    Color.a = tex1;
+
+    Color.a *= Alpha;
+    
+    Out.vColor = Color;
+    return Out;
+}
+
 struct VS_IN3D
 {
     float3 vPosition : POSITION;
@@ -2303,6 +2324,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Broomstick();
+    }
+
+    pass SpellLearn
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SpellLearn();
     }
 
     pass Enemy_Detection
