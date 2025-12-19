@@ -109,7 +109,6 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 	CPartObject* pLightning_Tornado_PT = Get_PartObject<CEffectParts>("Lightning_Tornado_PT");
 	CPartObject* pLightning0 = Get_PartObject<CEffectParts>("Lightning0");
 	CPartObject* pStart_Line = Get_PartObject<CEffectParts>("Start_Line");
-	CPartObject* pStraight_Lightning = Get_PartObject<CEffectParts>("Straight_Lightning");
 
 	_vector vDirection = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 	XMStoreFloat3(&m_vCameraLook, vDirection);
@@ -138,7 +137,6 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 	pLightning_Tornado_PT->Set_Visible(true);
 	pLightning0->Set_Visible(true);
 	pStart_Line->Set_Visible(true);
-	pStraight_Lightning->Set_Visible(true);
 
 	pBottomLightning->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pFlare->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
@@ -146,7 +144,6 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 	pLightning_Tornado_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pLightning0->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pStart_Line->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
-	pStraight_Lightning->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 
 
 	m_fDistance = XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
