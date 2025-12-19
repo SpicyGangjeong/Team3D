@@ -39,6 +39,7 @@ HRESULT CSpellLearn::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
+	Change_Image(0);
 	Visible(false);
 	return S_OK;
 }
@@ -105,7 +106,7 @@ HRESULT CSpellLearn::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::COLOR)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -133,12 +134,15 @@ HRESULT CSpellLearn::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 	{
 		return E_FAIL;
 	}
 	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
 	{
 		return E_FAIL;
 	}
@@ -171,7 +175,11 @@ HRESULT CSpellLearn::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SU_Levioso_Path"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Levioso"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_Goldleaf_Large"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -179,6 +187,22 @@ HRESULT CSpellLearn::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CSpellLearn::Change_Image(_int SpellID)
+{
+	_wstring pName = TEXT("Prototype_Texture_");
+	_wstring pImageName = pName + static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(SpellID).pImageName;
+
+	if (m_pDiffuse_TextureCom)
+	{
+		Remove_Component<CTexture>();
+		SAFE_RELEASE(m_pDiffuse_TextureCom);
+	}
+	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(LEVEL::UI), pImageName, reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -202,7 +226,7 @@ CGameObject* CSpellLearn::Clone(void* pArg, CGameObject* pOwner)
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSpell_Header");
+		MSG_BOX("Failed to Cloned : CSpellLearn");
 		SAFE_RELEASE(pInstance);
 	}
 
@@ -214,6 +238,7 @@ void CSpellLearn::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

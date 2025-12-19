@@ -111,6 +111,8 @@
 
 #include "QuestInstance.h"
 
+#include "SpellLearn_Data.h"
+
 #include "SpellLearn_Canvas.h"
 #include "SpellLearn_Panel.h"
 #include "SpellLearn_Name.h"
@@ -1207,6 +1209,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Data>(g_iStaticLevel, CSpellLearn_Data::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Canvas>(g_iStaticLevel, CSpellLearn_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;

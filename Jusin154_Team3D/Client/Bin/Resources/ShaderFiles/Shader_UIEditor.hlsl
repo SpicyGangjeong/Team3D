@@ -120,6 +120,20 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Texture_Color(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float4 Color = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    
+    tex1.rgb *= Color.rgb;
+    
+    tex1.a *= Alpha;
+    Out.vColor = tex1;
+    return Out;
+}
+
 PS_OUT PS_Logo(PS_IN In)
 {
     PS_OUT Out;
@@ -517,12 +531,15 @@ PS_OUT PS_Rotation(PS_IN In)
     
     float2 center = float2(0.5f, 0.5f);
     float2 uv = In.vTexcoord - center;
-    float2 Rotation = In.vTexcoord;
+    float2 Rotation;
     Rotation.x = uv.x * cos(g_fMapAngle) - uv.y * sin(g_fMapAngle);
     Rotation.y = uv.x * sin(g_fMapAngle) + uv.y * cos(g_fMapAngle);
     Rotation += center;
             
-    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+    float4 tex1 = g_Texture.Sample(BorderZeroLinearSampler, Rotation);
+    
+    if (tex1.a <= 0.f)
+        discard;
     
     color = tex1;
     
@@ -1986,6 +2003,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass Texture_Color
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Texture_Color();
     }
 
     pass Logo

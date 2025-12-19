@@ -113,6 +113,12 @@
 
 #include "QuestInstance.h"
 
+#include "SpellLearn_Canvas.h"
+#include "SpellLearn_Panel.h"
+#include "SpellLearn_Name.h"
+#include "SpellLearn.h"
+#include "SpellLearn_MovePointer.h"
+
 #include "Interaction_Key.h"
 
 #pragma endregion
@@ -340,7 +346,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // 
 #ifdef 인혁
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 
 #pragma region MAP_MODELS
@@ -728,6 +734,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 		});
 
 	Asset_FileLoad("../Bin/Resources/Textures/Enemy", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/SpellUnlock", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
 			_string strFilePath = pFilePath;
@@ -2074,9 +2096,35 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Status>(g_iStaticLevel, CQuest_Status::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
-		/* For.Prototype_GameObject_Quest_Slot*/
 	}
+	/* For.Prototype_GameObject_Quest_Slot*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Slot>(g_iStaticLevel, CQuest_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_SpellLearn_Canvas*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Canvas>(g_iStaticLevel, CSpellLearn_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Panel>(g_iStaticLevel, CSpellLearn_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Name*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Name>(g_iStaticLevel, CSpellLearn_Name::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn>(g_iStaticLevel, CSpellLearn::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_MovePointer*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_MovePointer>(g_iStaticLevel, CSpellLearn_MovePointer::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

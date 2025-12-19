@@ -242,6 +242,7 @@ void CQuest_Data::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pVIBufferCom);
 }
 
 void CQuest_Data::Describe_Entity()
