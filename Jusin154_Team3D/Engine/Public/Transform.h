@@ -53,6 +53,8 @@ public:
 	void Move_Right(_float fScala);
 	///////////////////////////////////
 	_vector Go_LerpStraight(_float fSpeed, _float fTimeDelta);
+	_vector Go_LerpLeft(_float fSpeed, _float fTimeDelta);
+	_vector Go_LerpRight(_float fSpeed, _float fTimeDelta);
 	_vector Go_LerpUp(_float fSpeed, _float fTimeDelta);
 	_vector Go_LerpDown(_float fSpeed, _float fTimeDelta);
 

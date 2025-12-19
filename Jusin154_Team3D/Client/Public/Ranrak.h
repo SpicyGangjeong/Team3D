@@ -78,8 +78,6 @@ private:
 	_float m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::END)] = { 40.f,40.f ,15.f,40.f,40.f,40.f };
 
-	_float m_fDegree = {};
-	_float m_fCross = {};
 	_float m_fTuckedTime = {};
 
 	void	Behavior_IdleEnter();

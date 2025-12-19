@@ -129,14 +129,14 @@ HRESULT CProtego::Ready_Components(void* pArg)
 	}
 
 
-	{ // DO
-		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::SKILL_PROTEGO);
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
-			return E_FAIL;
-		}
-		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor());
-	}
+	//{ // DO
+	//	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+	//	Desc.iSubKind = ENUM_CLASS(PXOBJECT::SKILL_PROTEGO);
+	//	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
+	//		return E_FAIL;
+	//	}
+	//	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor());
+	//}
 
 	return S_OK;
 }
