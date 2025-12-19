@@ -44,6 +44,7 @@ private:
 private:
 	_float4x4		m_WorldMatrix = {};
 	_point			m_ptWindowSize = {};
+	_float2			m_vTargetSize = {};
 	_bool			m_isDraw = { false };
 #endif
 

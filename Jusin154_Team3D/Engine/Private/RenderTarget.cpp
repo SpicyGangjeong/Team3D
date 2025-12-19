@@ -16,6 +16,8 @@ HRESULT CRenderTarget::Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixel
 {
     D3D11_TEXTURE2D_DESC            TextureDesc{};
 
+    m_vTargetSize.x = (_float)iSizeX;
+    m_vTargetSize.y = (_float)iSizeY;
     TextureDesc.Width = iSizeX;
     TextureDesc.Height = iSizeY;
     TextureDesc.MipLevels = 1;

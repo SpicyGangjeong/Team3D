@@ -888,6 +888,10 @@ HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTar
 {
 	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
 }
+_float2 CGameInstance::Get_RenderTargetSize(const _wstring& wstrTargetKey)
+{
+	return m_pRenderTarget_Manager->Get_RenderTargetSize(wstrTargetKey);
+}
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {

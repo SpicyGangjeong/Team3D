@@ -29,6 +29,7 @@ public:
 	// 랜더 타겟의 크기를 dest로 다시 맞춤
 	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
+	_float2 Get_RenderTargetSize(const _wstring& wstrRenderTargetOriginal);
 
 #ifdef _DEBUG
 public:
