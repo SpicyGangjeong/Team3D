@@ -165,7 +165,7 @@ void CCallBack_Monster_HitReport::Set_CurrentSlop()
 		float fAngleRad = acosf(fDot);
 		float fAngleDeg = XMConvertToDegrees(fAngleRad);
 
-		m_pController->Set_CurrentSlope(fAngleDeg);
+		m_pController->Set_CurrentSlope(fAngleDeg, m_vClimbNormal);
 	}
 }
 
