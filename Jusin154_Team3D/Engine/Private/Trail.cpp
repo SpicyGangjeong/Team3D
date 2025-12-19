@@ -248,7 +248,7 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 	_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), WorldMat);
 	_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), WorldMat);
 
-	/* 시작시 고정점 업데이트 */
+	/* 시작 시 고정점 업데이트 */
 	XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
 	XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);
 
@@ -323,12 +323,12 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 			_float fHighDiff = (fLength - fHighDist) / fHighDist;
 
 			// 각 점을 절반씩 밀거나 당겨서  거리 맞춤
-			// 손잡이(Pinned)는 움직이지 않도록 질량 비율 조절 가능 (여기선 0.5씩)
 
 			_vector vLowOffset = vDeltaLow * (fMass * fLowDiff);
 			_vector vHighOffset = vDeltaHigh * (fMass * fHighDiff);
 
-			// k!=0 (즉, 움직이는 마디)일 때만 vFirst를 움직임
+			// k!=0일 때만 vFirst를 움직임
+
  			if (k != 0)
 			{
 				vFirst[0] -= vLowOffset;
@@ -340,12 +340,11 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 			vNext[1] += vHighOffset;
 
 
-			// --- 2. 고정점 몫 몰아주기 (k=0 일 때만) ---
+			// k=0일 때 vFirst (손잡이)가 움직이지 않은 몫을 vNext에게 전부 몰아줌
 
-			// k=0일 때 vFirst (손잡이)가 움직이지 않은 몫을 vNext (첫 마디)에게 전부 몰아줌
 			if (k == 0)
 			{
-				// vFirst가 움직여야 할 양(-Offset)만큼 vNext에 추가 보정 (+Offset)
+				// vFirst가 움직여야 할 만큼 vNext에 추가 보정
 				vNext[0] += vLowOffset;
 				vNext[1] += vHighOffset;
 			}
@@ -357,10 +356,7 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 				vFirst[1] -= vHighOffset;
 			}
 
-			// --- 3. 결과 저장 ---
 
-			// vFirst 저장 (k=0 일 때는 vFirst가 vLow/vHigh의 값을 가지지만, 
-			// 움직이지 않았으므로 저장해도 무방. 하지만 명확성을 위해 조건부 저장 가능)
 
 			if (k != 0)
 			{
