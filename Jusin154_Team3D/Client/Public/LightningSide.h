@@ -8,12 +8,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CStupefy final : public CEffect_Container
+class CLightningSide final : public CEffect_Container
 {
 private:
-	CStupefy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CStupefy(const CStupefy& rhs);
-	virtual ~CStupefy() = default;
+	CLightningSide(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLightningSide(const CLightningSide& rhs);
+	virtual ~CLightningSide() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -30,21 +30,17 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
-
 private:
-	class  CInfoInstance*			  m_pInfoInstance = { nullptr };
-private:
-	_wstring						  m_wstrEffectName = {};
-	class CEffectParts*				  m_pProjectile0 = {};
-	class CEffectParts*				  m_pProjectile1 = {};
-	class CEffectParts*				  m_pStupefy_PJ_PT = {};
+	_wstring			m_wstrEffectName = {};
 
-	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
-	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
-	_float							  m_fLinearSpeed = 0.7f;
-	_float3							  m_vCameraLook = {};
+	_bool							  m_isTrailEnd = {};
+	_float4x4						  m_TrailStopMat = {};
+
+	class CEffectParts* m_pWandLight = { nullptr };
+	class CTrailObject* m_pWandTrail = { nullptr };
+
 public:
-	static CStupefy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLightningSide* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 #ifdef _DEBUG
