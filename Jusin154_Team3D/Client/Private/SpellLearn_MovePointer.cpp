@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "SpellLearn_MovePointer.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CSpellLearn_MovePointer::CSpellLearn_MovePointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CSpellLearn_MovePointer::CSpellLearn_MovePointer(ID3D11Device* pDevice, ID3D11De
 }
 
 CSpellLearn_MovePointer::CSpellLearn_MovePointer(const CSpellLearn_MovePointer& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -48,11 +50,11 @@ HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
 
 void CSpellLearn_MovePointer::Set_SpellLearn(_int Index)
 {
-	m_iLineIndex = _int(static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines.size());
-	m_MoveLine = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines;
+	m_iLineIndex = _int(m_pInfoInstance->Get_SpellLearn(Index).Lines.size());
+	m_MoveLine = m_pInfoInstance->Get_SpellLearn(Index).Lines;
 	m_iCurrentLine = 0;
-	m_fX = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.x;
-	m_fY = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.y;
+	m_fX = m_pInfoInstance->Get_SpellLearn(Index).fStartPosition.x;
+	m_fY = m_pInfoInstance->Get_SpellLearn(Index).fStartPosition.y;
 }
 
 void CSpellLearn_MovePointer::Line(_float fTime)
@@ -228,7 +230,7 @@ HRESULT CSpellLearn_MovePointer::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SU_Cursor"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_SU_Cursor"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -275,6 +277,8 @@ void CSpellLearn_MovePointer::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CSpellLearn_MovePointer::Describe_Entity()
 {
 }
+#endif // _DEBUG

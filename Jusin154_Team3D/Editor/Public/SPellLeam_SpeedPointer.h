@@ -1,21 +1,16 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
-#include "PanelObject.h"
-
-NS_BEGIN(Engine)
-class CGameObject;
-NS_END
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CSpellLearn_Panel final : public CPanelObject
+class CSPellLeam_SpeedPointer final : public CElementObject
 {
-
 private:
-	CSpellLearn_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpellLearn_Panel(const CSpellLearn_Panel& rhs);
-	virtual ~CSpellLearn_Panel() = default;
+	CSPellLeam_SpeedPointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSPellLeam_SpeedPointer(const CSPellLeam_SpeedPointer& rhs);
+	virtual ~CSPellLeam_SpeedPointer() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -27,30 +22,16 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-public:
-	virtual const SPELLLEARNINFO Get_Learninfo(_int Index) override;
-
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	vector<SPELLLEARNINFO>   m_Info = {};
-
-	CGameObject* m_pSpellLearn_Name = { nullptr };
-	CGameObject* m_pSpellLearn = { nullptr };
-	CGameObject* m_pSpellLearn_MovePointer = { nullptr };
-	CGameObject* m_pSpellLearn_Data = { nullptr };
-
-	_int Index{};
-
 public:
-	static CSpellLearn_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSPellLeam_SpeedPointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

@@ -54,6 +54,7 @@ private:
 	CGameObject* m_pSpell_Canvas = { nullptr };
 	CGameObject* m_pMouse_Cursor = { nullptr };
 	CGameObject* m_pQuest_Canvas = { nullptr };
+	CGameObject* m_pSpellLearn_Canvas = { nullptr };
 	CGameObject* m_pCamera_LockOn = { nullptr };
 	CGameObject* m_pDamage_Font = { nullptr };
 	CGameObject* m_pInteraction_Key = { nullptr };

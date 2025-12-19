@@ -8,6 +8,7 @@
 #include "Skill_Data.h"
 #include "Quest_Data.h"
 #include "Damage_Font.h"
+#include "SpellLearn_Data.h"
 #include "Player.h"
 
 IMPLEMENT_SINGLETON(CInfoInstance)
@@ -206,6 +207,18 @@ void CInfoInstance::Key_Input(_uint Input)
 			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
 		}
 		break;
+	case ENUM_CLASS(KEYINPUT::INPUT_N):
+		if (m_eUI_State == UI_STATE::GAMEPLAYER)
+		{
+			m_eUI_State = UI_STATE::SPELLNEARN;
+			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
+		}
+		else if (m_eUI_State == UI_STATE::SPELLNEARN)
+		{
+			m_eUI_State = UI_STATE::GAMEPLAYER;
+			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
+		}
+		break;
 
 	default:
 		break;
@@ -292,6 +305,16 @@ HRESULT CInfoInstance::Set_AcceptQuest(_int Index)
 	return m_pQuestInfo->Set_AcceptQuest(Index);
 }
 
+const SPELLLEARNINFO& CInfoInstance::Get_SpellLearn(_int Index) const
+{
+	return m_pSpellLearn_Data->Get_SpellLearn(Index);
+}
+
+_int CInfoInstance::Get_SpellLearnIndex()
+{
+	return m_pSpellLearn_Data->Get_Index();
+}
+
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
 {
 	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
@@ -353,6 +376,10 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	}
 	m_pInteractiveInfo = CInteractiveInfo::Create(pDevice, pContext);
 	if (nullptr == m_pInteractiveInfo) {
+		return E_FAIL;
+	}
+	m_pSpellLearn_Data = CSpellLearn_Data::Create(pDevice, pContext);
+	if (nullptr == m_pSpellLearn_Data) {
 		return E_FAIL;
 	}
 

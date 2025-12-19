@@ -1,13 +1,15 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "PanelObject.h"
 
 NS_BEGIN(Engine)
-class CGameObject;
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
 class CSpellLearn_Panel final : public CPanelObject
 {
@@ -31,14 +33,13 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-public:
-	virtual const SPELLLEARNINFO Get_Learninfo(_int Index) override;
-
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
+	CInfoInstance* m_pInfoInstance = { nullptr };
 
 	vector<SPELLLEARNINFO>   m_Info = {};
 
@@ -53,7 +54,9 @@ public:
 	static CSpellLearn_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

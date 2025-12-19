@@ -102,6 +102,7 @@ void CQuest_Slot::Update(_float fTimeDelta)
 		}
 	}
 	Hover();
+
 	static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_Info);
 
 
@@ -117,6 +118,7 @@ void CQuest_Slot::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
+		m_pVIBufferCom->Set_Hover(m_iIndex);
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 	__super::Late_Update(fTimeDelta);
@@ -153,14 +155,14 @@ void CQuest_Slot::Font_Size()
 	for (_int i = 0; i < m_iQuestCount; ++i)
 	{
 		m_fFontY = 190 + i * 85.f;
-		if (m_Index == -1)
+		if (m_iIndex == -1)
 		{
 			m_Fonts[i].pFontSizeName = TEXT("Font_size20");
 			m_Fonts[i].m_fFontSize = _float2(m_fFontX + m_fX, m_fFontY - m_fY);
 		}
 		else
 		{
-			if (i == m_Index)
+			if (i == m_iIndex)
 			{
 				m_Fonts[i].pFontSizeName = TEXT("Font_size30");
 				m_Fonts[i].m_fFontSize = _float2(m_fFontX - 10.f + m_fX, m_fFontY - 10.f - m_fY);
@@ -194,7 +196,7 @@ _int CQuest_Slot::Mousechack(POINT Mouse)
 {
 	for (_int i = 0; i < m_iQuestCount; ++i)
 	{
-		RECT Box = { 
+		RECT Box = {
 			long(m_fPositionX - m_fSizeX * 0.5f),
 			long((m_fPositionY - (i * m_fOffSetY)) - m_fSizeY * 0.5f),
 			long(m_fPositionX + m_fSizeX * 0.5f),
@@ -202,10 +204,10 @@ _int CQuest_Slot::Mousechack(POINT Mouse)
 
 		if (PtInRect(&Box, Mouse))
 		{
+
 			return i;
 		}
 	}
-
 
 	return -1;
 }
@@ -317,19 +319,15 @@ void CQuest_Slot::Hover()
 	POINT Mouse{};
 	Mouse.x = _long(fMouse.x);
 	Mouse.y = _long(fMouse.y);
-	
-	m_Index = Mousechack(Mouse);
 
-	m_pVIBufferCom->Set_Hover(m_Index);
-	if (m_Index != -1)
+	m_iIndex = Mousechack(Mouse);
+
+	if (m_iIndex != m_iPrevIndex)
 	{
-		m_bHover = true;
+		m_pVIBufferCom->Set_Hover(m_iIndex); 
+		Font_Size();
+		m_iPrevIndex = m_iIndex;
 	}
-	else
-	{
-		m_bHover = false;
-	}
-	Font_Size();
 }
 
 
