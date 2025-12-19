@@ -40,6 +40,7 @@ private:
 	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
 	_float							  m_fLinearSpeed = 5.f;
 	_float3							  m_vCameraLook = {};
+	_float							  m_fDistance = {};
 
 public:
 	static CLightning* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

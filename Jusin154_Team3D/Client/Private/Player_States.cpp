@@ -1548,6 +1548,7 @@ void CPlayer::Behavior_AncientSpellEnter()
 		},
 		0.15f);
 
+
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::LIGHTNING_SIDE, Get_PartObject<CWand>());

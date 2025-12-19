@@ -43,6 +43,13 @@ HRESULT CLightning::Initialize(void* pArg)
 
 	m_wstrEffectName = L"Lightning";
 
+	m_Events.emplace(0.5f, [&]() {
+
+		_float fShakeValue = clamp(15.f / m_fDistance, 2.f, 5.f);
+
+		static_cast<CPlayer*>(m_pOwner->Get_Owner())->Start_CameraShake(0.5f, fShakeValue);
+
+		});
 
 
 	m_fDuration = 5.5f;
@@ -140,6 +147,11 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 	pLightning0->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pStart_Line->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pStraight_Lightning->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
+
+
+	m_fDistance = XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
+
+
 
 	return S_OK;
 }
