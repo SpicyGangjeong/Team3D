@@ -28,7 +28,7 @@
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
 #include "BroomRacerAI.h"
-#include "Ranrak.h"
+#include "Ranrok.h"
 #pragma endregion
 
 
@@ -258,7 +258,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // 
 #ifdef 인혁
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 
 	
@@ -621,14 +621,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	for (_uint i = 0; i <1; ++i)
+	for (_uint i = 0; i <0; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 	}
 
-	 for (_uint i = 0; i <1; ++i)
+	 for (_uint i = 0; i <0; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;

@@ -123,6 +123,7 @@ public:
 	POINT	Get_MouseViewPortPos();
 	_bool	Toggle_MouseCenter();
 	_float3	Get_MouseMove();
+	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
 	void    Picking();
 	HRESULT Ray_WorldToLocal(_fmatrix* InvWorldMatrix);
 	_bool   MousePicking_InLocalSpace(const _float3& vPointA, const _float3& vPointB, const _float3& vPointC, _float3& pOut);

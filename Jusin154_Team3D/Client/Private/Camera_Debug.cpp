@@ -71,6 +71,14 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 			}
 		}
 
+		_long LWheel = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::W);
+		if (LWheel > 0)
+		{
+			m_pTransformCom->Add_SpeedPerSec(0.5f);
+		}
+		else if (LWheel < 0)
+			m_pTransformCom->Add_SpeedPerSec(-0.5f);
+
 #pragma endregion
 #pragma region Angle
 

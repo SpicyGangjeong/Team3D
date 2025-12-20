@@ -32,7 +32,7 @@
 #include "Troll.h"
 #include "NPC_Ollivander.h"
 #include "BroomRacerAI.h"
-#include "Ranrak.h"
+#include "Ranrok.h"
 
 #pragma endregion
 
@@ -345,7 +345,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
+	isLoad_Background = flase;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -955,6 +955,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma endregion
 #if 진우
 #elif 기무리
+#elif 인혁
 #elif Bin
 #elif gimch
 #else
@@ -1613,7 +1614,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrak_Model"),
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Dragon/Dragon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
@@ -2454,8 +2455,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_GameObject_Ranrak */
-	if (FAILED(m_pGameInstance->Add_Prototype<CRanrak>(g_iStaticLevel, CRanrak::Create(m_pDevice, m_pContext)))) {
+	/* For.Prototype_GameObject_Ranrok */
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok>(g_iStaticLevel, CRanrok::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

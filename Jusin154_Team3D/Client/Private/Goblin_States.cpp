@@ -510,6 +510,9 @@ void CGoblin::Behavior_HitEnter()
 	case ENUM_CLASS(SKILL_TYPE::ACCIO):
 		pairAnimInfo = m_Animation[STATEANIM::INCARCEROUS];
 		break;
+	default:
+		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_R];
+		break;
 	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -613,9 +616,6 @@ void CGoblin::Behavior_DeadEnter()
 	m_bLookAt = false;
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::DEAD);
-	PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
-	PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
-	m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
 	m_pCharacter_Controller->SetGravity(true);
 
 	_bool bStrongerKnockDown = { false };
@@ -657,6 +657,7 @@ void CGoblin::Behavior_DeadEnter()
 HRESULT CGoblin::Behavior_DeadExitCheck(_float fTimeDelta)
 {
 	if (FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
+
 		return E_PENDING;
 	}
 	return S_OK;
@@ -664,8 +665,6 @@ HRESULT CGoblin::Behavior_DeadExitCheck(_float fTimeDelta)
 
 void CGoblin::Behavior_DeadExit()
 {
-	m_pRigidBody->SetActive(false);
-	m_pCharacter_Controller->SetActive(false);
 	m_bDead = true;
 }
 
@@ -769,6 +768,11 @@ void CGoblin::Add_FSM()
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
 			m_fDeadRatio = fDeadRatio;
 			if (m_fDeadRatio > 1.f) {
+				PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
+				PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
+				m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+				m_pRigidBody->SetActive(false);
+				m_pCharacter_Controller->SetActive(false);
 				m_bDead = true;
 			}
 			};

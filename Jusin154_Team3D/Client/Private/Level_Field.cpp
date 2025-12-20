@@ -8,7 +8,7 @@
 #include "Camera_Debug.h"
 #include "Terrain.h"
 #include "SkyBox.h"
-
+#include "Ranrok.h"
 CLevel_Field::CLevel_Field(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
@@ -40,6 +40,9 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT))) {
+		return E_FAIL;
+	}
+	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
 
@@ -207,6 +210,15 @@ HRESULT CLevel_Field::Ready_Markers()
 
 HRESULT CLevel_Field::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
+	return S_OK;
+}
+
+HRESULT CLevel_Field::Ready_Layer_Monster()
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
