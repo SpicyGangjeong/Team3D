@@ -82,6 +82,9 @@ public:
 	void LookAt_Horizontal(_fvector vAt);
 	_float TargetDis(_fvector vTarget);
 
+
+	void Add_SpeedPerSec(_float fSpeedPerSec);
+
 private:
 	_float				m_fSpeedPerSec = {};
 	_float				m_fRotationPerSec = {};

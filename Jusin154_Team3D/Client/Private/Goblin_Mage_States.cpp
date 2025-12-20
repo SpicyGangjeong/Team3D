@@ -426,6 +426,9 @@ void CGoblin_Mage::Behavior_HitEnter()
 	case ENUM_CLASS(SKILL_TYPE::ACCIO):
 		pairAnimInfo = m_Animation[STATEANIM::INCARCEROUS];
 		break;
+	default:
+		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_L];
+		break;
 	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);

@@ -48,6 +48,7 @@ void CTroll::Behavior_IdleExit()
 
 void CTroll::Behavior_IdleBreakEnter()
 {
+
 	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
 	m_bLookAt = true;
@@ -100,6 +101,7 @@ void CTroll::Behavior_IdleBreakEnter()
 		break;
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_BlendDuration(0.6f);
 }
 
 HRESULT CTroll::Behavior_IdleBreakExitCheck()
@@ -115,6 +117,7 @@ HRESULT CTroll::Behavior_IdleBreakExitCheck()
 void CTroll::Behavior_IdleBreakExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
+	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
 void CTroll::Behavior_MoveEnter()
@@ -557,7 +560,7 @@ HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
 	}
 	else if (fRatio >= 0.4f) {
 		m_bLookAt = true;
-		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 		return E_FAIL;
 	}
 

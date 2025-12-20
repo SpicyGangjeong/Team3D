@@ -1209,6 +1209,11 @@ _float3 CGameInstance::Get_MouseMove()
 	return { 0.f, 0.f, 0.f };
 }
 
+_long CGameInstance::Get_DIMouseMove(MOUSEMOVESTATE eMouseState)
+{
+	return m_pKey_Manager->Get_DIMouseMove(eMouseState);
+}
+
 void    CGameInstance::Picking()
 {
 	return m_pMouse_Manager->Picking();

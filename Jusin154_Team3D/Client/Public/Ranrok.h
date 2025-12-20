@@ -7,9 +7,9 @@
 
 NS_BEGIN(Client)
 
-class CRanrak final : public CMonster
+class CRanrok final : public CMonster
 {
-	enum class RANRAK_SKILL
+	enum class RANROK_SKILL
 	{
 		FIREBREATH,
 		FIRESWEEP,
@@ -20,16 +20,16 @@ class CRanrak final : public CMonster
 		END
 	};
 
-	enum class RANRAK_PHASE
+	enum class RANROK_PHASE
 	{
 		PHASE_AIR,
 		PHASE_GROUND,
 		END
 	};
 private:
-	CRanrak(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CRanrak(const CRanrak& Prototype);
-	virtual ~CRanrak() = default;
+	CRanrok(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRanrok(const CRanrok& Prototype);
+	virtual ~CRanrok() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -52,16 +52,17 @@ private:
 	DAMAGE_INFO m_DamageInfo;
 
 private:
-
-private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	void Set_Points();
+	void MoveTo(_float fTimeDelta);
+	void AroundPoint(_float fTimeDelta);
 
 public:
-	static CRanrak* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRanrok* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 #ifdef _DEBUG
@@ -73,12 +74,27 @@ private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
-	_int m_ePhase = ENUM_CLASS(RANRAK_PHASE::PHASE_AIR);
+	_int m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_AIR);
 
-	_float m_fSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANRAK_SKILL::END)] = { 40.f,40.f ,15.f,40.f,40.f,40.f };
+	_float m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = {};
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,15.f,40.f,40.f,40.f };
 
 	_float m_fTuckedTime = {};
+	_bool m_bFireBurst = { false };
+	_bool m_bTucked = {false};
+	_vector m_vMoveDir = XMVectorZero();
+
+
+
+	vector<vector<_vector>> m_Points;
+	_int m_iCurrentPoint = 0;
+	_int m_iCurrentFlow = 0;
+
+	_float m_fAroundAngle = 0.f;
+	_float m_fAroundSpeed = 1.2f;
+	_float m_fAroundRadius = 40.f;
+	_float m_fAroundTime = {};
+
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

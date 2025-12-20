@@ -467,6 +467,13 @@ _float CTransform::TargetDis(_fvector vTarget)
 	return dist;
 }
 
+void CTransform::Add_SpeedPerSec(_float fSpeedPerSec)
+{
+	m_fSpeedPerSec += fSpeedPerSec;
+	if (m_fSpeedPerSec < 0.f)
+		m_fSpeedPerSec = 0.f;
+}
+
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CTransform* pInstance = new CTransform(pDevice, pContext);

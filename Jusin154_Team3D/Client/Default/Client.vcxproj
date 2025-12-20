@@ -207,7 +207,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\QuestInstance.h" />
     <ClInclude Include="..\Public\Quest_Info_Header.h" />
     <ClInclude Include="..\Public\Quest_Slot.h" />
-    <ClInclude Include="..\Public\Ranrak.h" />
+    <ClInclude Include="..\Public\Ranrok.h" />
     <ClInclude Include="..\Public\Screen_Wind.h" />
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
@@ -426,8 +426,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo_Text.cpp" />
     <ClCompile Include="..\Private\QuestInstance.cpp" />
     <ClCompile Include="..\Private\Quest_Slot.cpp" />
-    <ClCompile Include="..\Private\Ranrak.cpp" />
-    <ClCompile Include="..\Private\Ranrak_States.cpp" />
+    <ClCompile Include="..\Private\Ranrok.cpp" />
+    <ClCompile Include="..\Private\Ranrok_States.cpp" />
     <ClCompile Include="..\Private\Screen_Wind.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
