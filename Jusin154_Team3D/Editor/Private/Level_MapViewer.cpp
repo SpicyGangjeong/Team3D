@@ -63,9 +63,9 @@ HRESULT CLevel_MapViewer::Initialize()
 	//	return E_FAIL;
 	//}
 
-	//if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
+		return E_FAIL;
+	}
 
 	/*if (FAILED(Ready_Layer_Door(TEXT("Layer_Door")))) {
 		return E_FAIL;
@@ -172,7 +172,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 
 	CMapElement_Lake::MAPOBJECT_LAKE_DESC Lake_Desc = {};
 
-	/*vector<_wstring>		ModelPrototypeTags;
+	vector<_wstring>		ModelPrototypeTags;
 	vector<_wstring>		ShallowModelPrototypeTags;
 	ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
 	ShallowModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_LakeSurFace"));
@@ -196,7 +196,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
 	Lake_Desc.ShallowModelPrototypeTags = ShallowModelPrototypeTags;
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Lake_Desc)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 
 	return S_OK;
@@ -439,7 +439,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Unified(const _wstring& strLayerTag)
 	/* Hogwart Unified*/
 	Desc.fLodSwitchDistnace = 550.f;
 	Desc.vUnifiedCenterPos = _float4(62.f, 10.f, 93.f, 1.f);
-	Desc.vPosition = _float3(62.f, 10.f, 93.f);
+	Desc.vPosition = _float3(62.f, 5.6f, 93.f);
 	Desc.vRotation = _float3(0.f, 0.f, 0.f);
 	Desc.vScale = _float3(1.f, 1.f, 1.f);
 	Desc.srtLayerTag = LAYER_HOGSMEADE;
