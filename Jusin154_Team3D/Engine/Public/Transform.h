@@ -53,6 +53,8 @@ public:
 	void Move_Right(_float fScala);
 	///////////////////////////////////
 	_vector Go_LerpStraight(_float fSpeed, _float fTimeDelta);
+	_vector Go_LerpLeft(_float fSpeed, _float fTimeDelta);
+	_vector Go_LerpRight(_float fSpeed, _float fTimeDelta);
 	_vector Go_LerpUp(_float fSpeed, _float fTimeDelta);
 	_vector Go_LerpDown(_float fSpeed, _float fTimeDelta);
 
@@ -77,8 +79,12 @@ public:
 	// Up, Down 벡터를 바라보게 하면 터짐, w에 1 있어야함
 	void LookAt(_fvector vAt);
 	void LookAt_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed);
+	void LookAt_Horizontal_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed);
 	void LookAt_Horizontal(_fvector vAt);
 	_float TargetDis(_fvector vTarget);
+
+
+	void Add_SpeedPerSec(_float fSpeedPerSec);
 
 private:
 	_float				m_fSpeedPerSec = {};

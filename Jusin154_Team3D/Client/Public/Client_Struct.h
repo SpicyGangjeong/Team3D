@@ -91,6 +91,15 @@ namespace Client
 		_int					iAcceptState;
 	}QUESTINFO;
 
+	typedef struct tagSpellLearnInfo
+	{
+		_wstring pSpellName{};
+		_wstring pImageName{};
+		_float	fSpellSize{};
+		_float2 fStartPosition{};
+		vector<_vector> Lines;
+	}SPELLLEARNINFO;
+
 	typedef struct tagEffectInfo
 	{
 		_float4 vColor = { 0.f ,0.f ,0.f ,1.f };

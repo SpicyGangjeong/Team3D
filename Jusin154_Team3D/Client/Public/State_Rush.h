@@ -4,15 +4,15 @@
 
 NS_BEGIN(Client)
 
-class CTroll_State_Rush final : public CState_Root
+class CState_Rush final : public CState_Root
 {
 public:
-    typedef struct tagTrollRush : public CState_Root::STATE_ROOT_DESC {
+    typedef struct tagRush : public CState_Root::STATE_ROOT_DESC {
         _bool* pCollisionPlayer = { nullptr };
-    }TROLL_STATE_RUSH_DESC;
+    }STATE_RUSH_DESC;
 public:
-    CTroll_State_Rush();
-    virtual ~CTroll_State_Rush() = default;
+    CState_Rush();
+    virtual ~CState_Rush() = default;
 
 public:
     virtual void Enter();
@@ -23,10 +23,10 @@ private:
     _bool* m_pRushPlayerHit = { nullptr };
 
 private:
-    HRESULT Initialize(TROLL_STATE_RUSH_DESC* pDesc);
+    HRESULT Initialize(STATE_RUSH_DESC* pDesc);
 
 public:
-    static CTroll_State_Rush* Create(TROLL_STATE_RUSH_DESC* pDesc);
+    static CState_Rush* Create(STATE_RUSH_DESC* pDesc);
     virtual void Free() override;
     virtual void Describe_Entity();
 };

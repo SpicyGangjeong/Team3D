@@ -4,6 +4,7 @@
 #include "SpellLearn_Name.h"
 #include "SpellLearn.h"
 #include "SpellLearn_MovePointer.h"
+#include "SpellLearn_Data.h"
 
 CSpellLearn_Panel::CSpellLearn_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -44,9 +45,15 @@ HRESULT CSpellLearn_Panel::Initialize(void* pArg)
 	m_fCanvasAlpha = 1.f;
 	m_fSortZ = 0.05f;
 	m_fDelayTime = 1.f;
+	static_cast<CSpellLearn*>(m_pSpellLearn)->Set_Pointer(static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer));
 	Visible(true);
 	ElementAllVisible(true);
 	return S_OK;
+}
+
+const CUIObject::SPELLLEARNINFO CSpellLearn_Panel::Get_Learninfo(_int Index)
+{
+	return static_cast<CSpellLearn_Data*>(m_pSpellLearn_Data)->Get_SpellLearn(Index);
 }
 
 void CSpellLearn_Panel::Priority_Update(_float fTimeDelta)
@@ -64,6 +71,22 @@ void CSpellLearn_Panel::Update(_float fTimeDelta)
 	{
 		return;
 	}
+
+	if (m_pGameInstance->Key_Down(DIK_M))
+	{
+		if (Index >= m_Info.size() - 1)
+		{
+			Index = 0;
+		}
+		else
+		{
+			Index++;
+		}
+		static_cast<CSpellLearn*>(m_pSpellLearn)->Change_Image(Index);
+		static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer)->Set_SpellLearn(Index);
+		static_cast<CSpellLearn_Name*>(m_pSpellLearn_Name)->Set_Name(Index);
+	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -167,6 +190,11 @@ HRESULT CSpellLearn_Panel::Ready_Components(void* pArg)
 
 HRESULT CSpellLearn_Panel::Ready_Element(void* pArg)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, &m_Info, this, reinterpret_cast<CSpellLearn_Data**>(&m_pSpellLearn_Data))))
+	{
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Name>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Name**>(&m_pSpellLearn_Name))))
 	{
 		return E_FAIL;

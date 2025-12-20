@@ -174,6 +174,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
+
+	ComputeAnimation(m_iCurrentAnimIndex, 0);
+
 	if (m_bIsFinishedAnim)
 	{
 		if (m_bIsLoop)
@@ -185,9 +188,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
 		}
 	}
-
-	ComputeAnimation(m_iCurrentAnimIndex, 0);
-
 
 
 	if (m_bRatio) {
@@ -1621,7 +1621,6 @@ HRESULT CModel::Create_Local()
 
 void CModel::ComputeAnimation(_uint AnimIndex,_uint MeshIndex)
 {
-
 	ComputeLocal(AnimIndex,MeshIndex);
 
 	if (m_pComputeShader == nullptr)
@@ -1660,17 +1659,26 @@ void CModel::ComputeAnimation(_uint AnimIndex,_uint MeshIndex)
 		1,
 		m_pConstantBuffer
 	);
+
+	ID3D11UnorderedAccessView* nullUAV[1] = { nullptr };
+	UINT counts[1] = { 0 };
+	m_pContext->CSSetUnorderedAccessViews(0, 1, nullUAV, counts);
+
+	ID3D11ShaderResourceView* nullSRV[3] = { nullptr };
+	m_pContext->CSSetShaderResources(0, 3, nullSRV);
+
 }
 
 void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 {
 	D3D11_MAPPED_SUBRESOURCE ConstantSubResource = {};
 
+	auto* anim = m_Animations[AnimIndex];
+
 	if (SUCCEEDED(m_pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantSubResource)))
 	{
 		ANIMSTATE_DESC* pDesc = static_cast<ANIMSTATE_DESC*>(ConstantSubResource.pData);
 
-		auto* anim = m_Animations[AnimIndex];
 		pDesc->CurrentTime = anim->Get_CurrentTrackPosition();
 		pDesc->Duration = anim->Get_Duration();
 		pDesc->MeshBoneCount = m_Meshes[MeshIndex]->Get_NumBone();
@@ -1702,7 +1710,6 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		m_Meshes[MeshIndex]->Get_BoneRemapBuffer()
 	};
 
-	auto* anim = m_Animations[AnimIndex];
 	ID3D11ShaderResourceView* srvs[] =
 	{
 		anim->Get_KeyFrameSrv(),
@@ -1733,6 +1740,11 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 	ID3D11UnorderedAccessView* nullUAV[1] = { nullptr };
 	UINT counts[1] = { 0 };
 	m_pContext->CSSetUnorderedAccessViews(0, 1, nullUAV, counts);
+
+	ID3D11ShaderResourceView* nullSRV[7] = { nullptr };
+
+	m_pContext->CSSetShaderResources(0, 7, nullSRV);
+
 
 }
 
@@ -1811,7 +1823,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 #ifndef _DEBUG
 
-HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, _uint iLevel)
 {
 	m_eType = eType;
 
@@ -1829,7 +1841,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Materials(pModelFilePath))) {
+	if (FAILED(Ready_Materials(pModelFilePath, iLevel))) {
 		return E_FAIL;
 	}
 	if (MODEL::PBR_ANIM == m_eType || MODEL::PBR_NONANIM == m_eType) {

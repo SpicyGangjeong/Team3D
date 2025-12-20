@@ -48,6 +48,8 @@ private:
 	_float2 m_vCameraShakeTimer = { 0.f, TIMER_SHORT_LERP };
 	_float m_fCameraShakeTime = TIMER_SHORT_LERP;
 	_float m_fCameraShakeIntense = 5.f;
+	_float m_fOriginGravityAmount = {};
+	_float m_fGravityAmount = {};
 
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
@@ -121,13 +123,17 @@ private:
 	_bool			m_bLookAt = {false};
 	_bool			m_bSpellHit = {};
 	_float3			m_BroomScale = { 0.f, 0.f, 0.f };
+	_float3			m_vScale = { 0.f, 0.f, 0.f };
 	_float3			m_TargetScale = { 1.f, 1.f, 1.f };
 	_float			m_fScaleSmoothSpeed = 2.5f;
 	_bool			m_bLumos = {};
 	_bool			m_bShield = {false};
 	_float			m_fAnimTime = {};
 	_bool			m_bTurbo = {};
-
+	_float			m_fBlinkTime = {  };
+	_float			m_fAccel = { 1.f };
+	_float			m_fSlideSpeed = {};
+	_float			m_fTargetSpeed = { 7.f };
 	/* 무적 불 변수*/
 #ifdef _DEBUG
 	_bool			m_isDebugMode = { false };
@@ -153,12 +159,16 @@ private:
 	void	Behavior_JumpExit();
 
 	void	Behavior_LandEnter();
-	HRESULT Behavior_LandExitCheck();
+	HRESULT Behavior_LandExitCheck(_float fTimeDelta);
 	void	Behavior_LandExit();
 
 	void	Behavior_DodgeEnter();
 	HRESULT Behavior_DodgeExitCheck(_float fTimeDelta);
 	void	Behavior_DodgeExit();
+
+	void	Behavior_BlinkEnter();
+	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);
+	void	Behavior_BlinkExit();
 
 	void	Behavior_SlideEnter();
 	HRESULT Behavior_SlideExitCheck(_float fTimeDelta);

@@ -42,6 +42,9 @@ struct ParticleValue
     float fAcceleration;
     
     bool isStop;
+    
+    float fRotateAttenuation;
+    float fRotateAttDelay;
 };
 
 
@@ -269,6 +272,42 @@ VS_OUT VS_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
     
     return Out;
 }
+
+VS_OUT VS_NONPOS(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matW, matWV, matWVP;
+    
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    
+    row_major matrix Wolrd_NonPosMatrix = g_WorldMatrix;
+    
+    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    
+    matW = mul(TransformMatrix, Wolrd_NonPosMatrix);
+    
+    matW[3] = In.vTranslation;
+    
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    Out.vPosition = vPosition;
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vTexcoord = In.vTexcoord;
+    Out.vLifeTime = In.vLifeTime;
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
+    
+    return Out;
+}
+
+
 
 struct PS_IN
 {
@@ -789,6 +828,36 @@ VS_OUT VS_BLUR_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
     return Out;
 }
 
+VS_OUT VS_BLUR_NOPOS(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matW, matWV, matWVP;
+    
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    
+    row_major matrix Wolrd_NonPosMatrix = g_WorldMatrix;
+    
+    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    
+    matW = mul(TransformMatrix, Wolrd_NonPosMatrix);
+    
+    matW[3] = In.vTranslation;
+    
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    Out.vPosition = vPosition;
+    Out.vTexcoord = In.vTexcoord;
+    Out.vLifeTime = In.vLifeTime;
+    Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
+
+    return Out;
+}
+
 struct PS_BLUR_OUT
 {
     float4 vDiffuse : SV_TARGET0;
@@ -1152,6 +1221,29 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_DISTORTION();
     }
+
+//17
+    pass NONPOS
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_NONPOS();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
+    }
+
+//18
+    pass NONPOS_BLUR
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR_NOPOS();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
 }
 
 

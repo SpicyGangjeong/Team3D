@@ -138,6 +138,11 @@ void CUIObject::Move(_float fX, _float fY)
 	m_fY = fY;
 }
 
+_float2 CUIObject::Get_Position()
+{
+	return _float2(m_fX, m_fY);
+}
+
 void CUIObject::SizeUpdate(_float fSizeX, _float fSizeY)
 {
 	m_fSizeX = fSizeX;
@@ -511,6 +516,11 @@ const CUIObject::SPELLINFO CUIObject::Get_Info(_int Index)
 const CUIObject::QUESTINFO CUIObject::Get_QuestInfo(_int Index)
 {
 	return QUESTINFO();
+}
+
+const CUIObject::SPELLLEARNINFO CUIObject::Get_Learninfo(_int Index)
+{
+	return SPELLLEARNINFO();
 }
 
 void CUIObject::Set_FontX(_float fFontX)

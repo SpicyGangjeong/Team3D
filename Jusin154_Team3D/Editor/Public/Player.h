@@ -102,10 +102,30 @@ private:
 	function<void()> m_InputAction = nullptr;
 
 
-	_float3 m_OffsetPos = {};
-	_float m_fAmount = { 1.f };
-	_float m_fInputTime = {};
-	_bool m_bRatio = { false };
+	_int			m_eUIState = { };
+	_uint			m_iLightCombo = { 0 };
+
+	_float3			m_OffsetPos = {};
+	_float			m_fAmount = { 1.f };
+	_float			m_fInputTime = {};
+	_bool			m_bRatio = { false };
+	_bool			m_bAim = { false };
+	_float			m_fAnimSpeed = {};
+	_bool			m_bOnce = {  };
+	_bool			m_bLookAt = { false };
+	_bool			m_bSpellHit = {};
+	_float3			m_BroomScale = { 0.f, 0.f, 0.f };
+	_float3			m_vScale = { 0.f, 0.f, 0.f };
+	_float3			m_TargetScale = { 1.f, 1.f, 1.f };
+	_float			m_fScaleSmoothSpeed = 2.5f;
+	_bool			m_bLumos = {};
+	_bool			m_bShield = { false };
+	_float			m_fAnimTime = {};
+	_bool			m_bTurbo = {};
+	_float			m_fBlinkTime = {  };
+	_float			m_fAccel = { 1.f };
+	_float			m_fSlideSpeed = {};
+	_float			m_fTargetSpeed = { 7.f };
 
 	HRESULT InputAction();
 	HRESULT InputMove();
@@ -116,6 +136,10 @@ private:
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
+
+	void	Behavior_BlinkEnter();
+	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);
+	void	Behavior_BlinkExit();
 
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
@@ -130,7 +154,7 @@ private:
 	void	Behavior_LandExit();
 
 	void	Behavior_DodgeEnter();
-	HRESULT Behavior_DodgeExitCheck();
+	HRESULT Behavior_DodgeExitCheck(_float fTimeDelta);
 	void	Behavior_DodgeExit();
 
 	void	Behavior_CombatEnter();

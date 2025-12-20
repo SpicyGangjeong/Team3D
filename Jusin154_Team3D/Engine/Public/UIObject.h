@@ -74,6 +74,15 @@ typedef struct tagCurrentQeustSerectInfo
 	_int iQuestIndex{};
 }CURRENTQUESTSECETINFO;
 
+typedef struct tagSpellLearnInfo
+{
+	_wstring pSpellName{};
+	_wstring pImageName{};
+	_float	fSpellSize{};
+	_float2 fStartPosition{};
+	vector<_vector> Lines;
+}SPELLLEARNINFO;
+
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIObject(const CUIObject& rhs);
@@ -90,6 +99,7 @@ public:
 	virtual void MoveX(_float fX);
 	virtual void MoveY(_float fY);
 	virtual void Move(_float fX, _float fY);
+	virtual _float2 Get_Position();
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY);
 	virtual void SizeUpX(_float fSizeX);
 	virtual void SizeUpY(_float fSizeY);
@@ -175,6 +185,7 @@ public:
 
 	virtual const SPELLINFO Get_Info(_int Index);
 	virtual const QUESTINFO Get_QuestInfo(_int Index);
+	virtual const SPELLLEARNINFO Get_Learninfo(_int Index);
 
 	virtual void Set_FontX(_float fFontX);
 	virtual void Set_FontY(_float fFontY);

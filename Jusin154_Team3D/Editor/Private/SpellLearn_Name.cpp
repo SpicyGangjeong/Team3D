@@ -43,10 +43,16 @@ HRESULT CSpellLearn_Name::Initialize(void* pArg)
 	m_fFontY = 520.f;
 	SizeUpX(550.f);
 	SizeUpY(27.f);
+	Set_Name(0);
 	Visible(false);
 	return S_OK;
 }
 
+void CSpellLearn_Name::Set_Name(_int Index)
+{
+	SizeUpX(static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fSpellSize);
+	m_pSpell_Name = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).pSpellName;
+}
 
 void CSpellLearn_Name::Priority_Update(_float fTimeDelta)
 {
@@ -120,8 +126,8 @@ HRESULT CSpellLearn_Name::Render()
 		return E_FAIL;
 	}
 
-	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("봄바르다")) - 30) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("봄바르다"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pSpell_Name.c_str()) - 30) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pSpell_Name.c_str(), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

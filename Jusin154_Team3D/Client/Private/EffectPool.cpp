@@ -35,6 +35,9 @@
 #include "Accio.h"
 #include "Screen_Wind.h"
 #include "Stupefy.h"
+#include "Lightning.h"
+#include "LightningSide.h"
+#include "Blink.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -145,7 +148,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 #if 진우
 
 
-	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::ACCIO)].begin())->Describe_Entity();
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::BLINK)].begin())->Describe_Entity();
 
 	Describe_Entity();
 
@@ -381,6 +384,33 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::LIGHTNING, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CLightning* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLightning>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LIGHTNING_SIDE, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CLightningSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLightningSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::BLINK, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CBlink* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CBlink>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 	
 
 	return S_OK;

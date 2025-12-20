@@ -52,6 +52,9 @@ struct ParticleValue
     float  fAcceleration;
     
     bool   isStop;
+    
+    float  fRotateAttenuation;
+    float  fRotateAttDelay;
 };
 
 
@@ -85,7 +88,7 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isMoveUp;
     bool isExcludePos;
     bool isStopMove_For_Depth_Compare;
-    bool isPadding2;
+    bool isNoPos;
 
     float fTimeDelta;
     float fSizeLerpOption; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
@@ -143,6 +146,11 @@ void CS_MAIN(
             particle.vTranslation = CurMat[3].xyzw;
         }
         
+        if (isNoPos)
+        {       
+            particle.vTranslation.xyz += WorldMatrix[3].xyz;
+        }
+        
     }
     
     // 라이프타임 움직임
@@ -175,7 +183,13 @@ void CS_MAIN(
         particle.vLifeTime.x = 0.f;
         particleValue.vDelay.x = 0.f;
         particleValue.isStop = false;
-
+        
+        particleValue.vMaskingUVMoveTime.x = 0.f;
+        particleValue.vDiffuseUVMoveTime.x = 0.f;
+        particleValue.vNoiseUVMoveTime.x = 0.f;
+        particleValue.vDistortionUVMoveTime.x = 0.f;
+        particleValue.vDissolveUVMoveTime.x = 0.f;
+        
         if (isRandomAniIndex == false)
             particleValue.vAniIndex.x = 0.f;
         
@@ -316,12 +330,32 @@ void CS_MAIN(
         particle.vTranslation += vector( sin(particle.vLifeTime.x * 3.141592 * 2.f) * particleValue.vSinAmount, 0.f);
     }
     
+    
+    /* Rotate Time */
+    float fTimeX = (particle.vLifeTime.x - particleValue.fRotateAttDelay);
+    float fTimeY = (particle.vLifeTime.y - particleValue.fRotateAttDelay);
+    float fRotateTimeRatio = 0;
+        
+    if (particleValue.fRotateAttDelay <= FLT_EPSILON5)
+    {
+        fRotateTimeRatio = particle.vLifeTime.x / particle.vLifeTime.y;
+    }
+    else if (fTimeX > 0 && fTimeY != 0)
+    {
+        fRotateTimeRatio = saturate(fTimeX / fTimeY);
+    }
+    
     if (isTurn == true)
     {
         float fRotationSpeed = 1.f;
         
         if (particleValue.fRotaionSpeed > FLT_EPSILON5)
             fRotationSpeed = particleValue.fRotaionSpeed;
+        
+        fRotationSpeed = fRotationSpeed - fRotateTimeRatio * particleValue.fRotateAttenuation;
+        
+        if (fRotationSpeed < FLT_EPSILON5)
+            fRotationSpeed = 0.f;
         
         /* ROTATE */
         float4x4 RotateXMat = RotateX(particleValue.vDeltaAngle.x * fTimeDelta * fRotationSpeed);
@@ -349,6 +383,11 @@ void CS_MAIN(
         
         if (particleValue.fRotaionSpeed > FLT_EPSILON5)
             fRotationSpeed = particleValue.fRotaionSpeed;
+        
+        fRotationSpeed = fRotationSpeed - fRotateTimeRatio * particleValue.fRotateAttenuation;
+        
+        if (fRotationSpeed < FLT_EPSILON5)
+            fRotationSpeed = 0.f;
         
         float4x4 RotateAxisRightMat = RotateAxis(particle.vRight, particleValue.vDeltaAxisAngle.x * fRotationSpeed * fTimeDelta);
         float4x4 RotateAxisUpMat = RotateAxis(particle.vUp, particleValue.vDeltaAxisAngle.y * fRotationSpeed * fTimeDelta);

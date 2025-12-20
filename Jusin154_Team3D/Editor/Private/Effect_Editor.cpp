@@ -82,7 +82,7 @@ void CEffect_Editor::Update(_float fTimeDelta)
 		{
 			_matrix vWandPos = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_PartObject<CWand>()->Get_WorldMatrix();
 
-			m_pTrailObject->Rope_Trail_Update(vWandPos, m_pTransformCom->Get_XMWorldMatrix(), fTimeDelta);
+			m_pTrailObject->Oneside_Rope_Trail_Update(vWandPos, fTimeDelta);
 		}
 
 

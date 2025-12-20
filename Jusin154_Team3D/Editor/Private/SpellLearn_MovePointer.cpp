@@ -21,8 +21,8 @@ HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 454.f;
-	Desc.fY = -240.f;
+	Desc.fX = 476.f;
+	Desc.fY = -253.f;
 	Desc.fSizeX = 32.f;
 	Desc.fSizeY = 32.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -40,32 +40,30 @@ HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
 	m_fMoveSpeed = 15.f;
-	m_MoveLine.push_back(XMVectorSet(454.f, -240.f, 0.f, 1.f));
-	m_MoveLine.push_back(XMVectorSet(454.f, 90.f, 0.f, 1.f));
-
-
-
-	Index = 0;
-
+	Set_SpellLearn(0);
+	m_fAngle = XMConvertToRadians(0);
 	Visible(false);
 	return S_OK;
 }
 
-void CSpellLearn_MovePointer::SpellLearn(_int Index)
+void CSpellLearn_MovePointer::Set_SpellLearn(_int Index)
 {
-	m_iSpell = Index;
-	m_bMoveStart = true;
+	m_iLineIndex = _int(static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines.size());
+	m_MoveLine = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines;
+	m_iCurrentLine = 0;
+	m_fX = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.x;
+	m_fY = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.y;
 }
 
 void CSpellLearn_MovePointer::Line(_float fTime)
 {
-	m_vLerp_Position = m_MoveLine[Index];
+	m_vLerp_Position = m_MoveLine[m_iCurrentLine];
 
 	if (Start_Lerp(m_fMoveSpeed * fTime) == true)
 	{
-		if (Index < m_MoveLine.size() -1)
+		if (m_iCurrentLine < m_iLineIndex - 1)
 		{
-			++Index;
+			++m_iCurrentLine;
 		}
 		else
 		{
@@ -123,15 +121,21 @@ void CSpellLearn_MovePointer::Update(_float fTimeDelta)
 
 	if (m_bMoveStart == true)
 	{
-		if (m_iSpell == ENUM_CLASS(SPELL_LINE::LINE))
-		{
-			Line(fTimeDelta);
-		}
-		else if (m_iSpell == ENUM_CLASS(SPELL_LINE::CURVE))
-		{
-			//Curve();
-		}
+		Line(fTimeDelta);
 	}
+
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	_float2 fMouse;
+	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = -ptMouse.y + (g_iWinSizeY * 0.5f);
+
+	fMouse.x = fMouse.x - m_fX;
+	fMouse.y = fMouse.y - m_fY;
+
+
+	m_fAngle = atan2(-fMouse.x, fMouse.y);
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
@@ -154,7 +158,7 @@ HRESULT CSpellLearn_MovePointer::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ROTATION)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -208,6 +212,10 @@ HRESULT CSpellLearn_MovePointer::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMapAngle", &m_fAngle, sizeof(_float))))
 	{
 		return E_FAIL;
 	}

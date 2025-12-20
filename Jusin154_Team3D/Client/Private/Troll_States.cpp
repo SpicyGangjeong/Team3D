@@ -15,7 +15,7 @@
 #include "State_Move.h"
 #include "State_Combat.h"
 #include "Troll_State_Stun.h"
-#include "Troll_State_Rush.h"
+#include "State_Rush.h"
 #include "Troll_State_BackHand_Swing.h"
 #include "State_Throw.h"
 #include "State_Swing.h"
@@ -36,7 +36,7 @@ void CTroll::Behavior_IdleEnter()
 HRESULT CTroll::Behavior_IdleExitCheck()
 {
 	if (m_fTargetDistance <= 18.f && m_fTargetDistance != 0)
-		m_pFSM->Change_State(FSMSTATE::MOVE);
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 
 	return E_FAIL;
 }
@@ -48,6 +48,7 @@ void CTroll::Behavior_IdleExit()
 
 void CTroll::Behavior_IdleBreakEnter()
 {
+
 	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
 	m_bLookAt = true;
@@ -100,6 +101,7 @@ void CTroll::Behavior_IdleBreakEnter()
 		break;
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_BlendDuration(0.6f);
 }
 
 HRESULT CTroll::Behavior_IdleBreakExitCheck()
@@ -115,6 +117,7 @@ HRESULT CTroll::Behavior_IdleBreakExitCheck()
 void CTroll::Behavior_IdleBreakExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
+	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
 void CTroll::Behavior_MoveEnter()
@@ -557,7 +560,7 @@ HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
 	}
 	else if (fRatio >= 0.4f) {
 		m_bLookAt = true;
-		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 		return E_FAIL;
 	}
 
@@ -789,13 +792,13 @@ void CTroll::Add_FSM()
 	}
 
 	{
-		CTroll_State_Rush::TROLL_STATE_RUSH_DESC Desc{};
+		CState_Rush::STATE_RUSH_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_RushEnter(); };
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_RushExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_RushExit(); };
 		Desc.pCollisionPlayer = &m_bCollisionPlayer;
-		m_States.emplace(FSMSTATE::RUSH, CTroll_State_Rush::Create(&Desc));
+		m_States.emplace(FSMSTATE::RUSH, CState_Rush::Create(&Desc));
 	}
 
 	{
