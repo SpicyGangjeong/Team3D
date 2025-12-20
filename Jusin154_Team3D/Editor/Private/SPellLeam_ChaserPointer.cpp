@@ -1,25 +1,24 @@
 ﻿#include "pch.h"
-#include "SpellLearn_MovePointer.h"
+#include "SPellLeam_ChaserPointer.h"
 #include "GameInstance.h"
-#include "InfoInstance.h"
+#include "SpellLearn_MovePointer.h"
 
-CSpellLearn_MovePointer::CSpellLearn_MovePointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSPellLeam_ChaserPointer::CSPellLeam_ChaserPointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CSpellLearn_MovePointer::CSpellLearn_MovePointer(const CSpellLearn_MovePointer& rhs)
-	:CElementObject(rhs),
-	m_pInfoInstance(CInfoInstance::GetInstance())
+CSPellLeam_ChaserPointer::CSPellLeam_ChaserPointer(const CSPellLeam_ChaserPointer& rhs)
+	:CElementObject(rhs)
 {
 }
 
-HRESULT CSpellLearn_MovePointer::Initialize_Prototype()
+HRESULT CSPellLeam_ChaserPointer::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
+HRESULT CSPellLeam_ChaserPointer::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
@@ -41,41 +40,13 @@ HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
-	m_fMoveSpeed = 15.f;
+	m_fMoveSpeed = 140.f;
 	Set_SpellLearn(0);
-	m_fAngle = XMConvertToRadians(0);
 	Visible(false);
 	return S_OK;
 }
 
-void CSpellLearn_MovePointer::Set_SpellLearn(_int Index)
-{
-	m_iLineIndex = _int(m_pInfoInstance->Get_SpellLearn(Index).Lines.size());
-	m_MoveLine = m_pInfoInstance->Get_SpellLearn(Index).Lines;
-	m_iCurrentLine = 0;
-	m_fX = m_pInfoInstance->Get_SpellLearn(Index).fStartPosition.x;
-	m_fY = m_pInfoInstance->Get_SpellLearn(Index).fStartPosition.y;
-}
-
-void CSpellLearn_MovePointer::Line(_float fTime, _float2 fMouse)
-{
-	m_vLerp_Position = m_MoveLine[m_iCurrentLine];
-
-	if (Start_Lerp(m_fMoveSpeed * fTime) == true)
-	{
-		if (m_iCurrentLine < m_iLineIndex - 1)
-		{
-			++m_iCurrentLine;
-		}
-		else
-		{
-			m_bMoveStart = false;
-		}
-	}
-
-}
-
-void CSpellLearn_MovePointer::Priority_Update(_float fTimeDelta)
+void CSPellLeam_ChaserPointer::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -84,7 +55,7 @@ void CSpellLearn_MovePointer::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CSpellLearn_MovePointer::Update(_float fTimeDelta)
+void CSPellLeam_ChaserPointer::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -134,33 +105,51 @@ void CSpellLearn_MovePointer::Update(_float fTimeDelta)
 
 	if (m_bMoveStart == true)
 	{
-		Line(fTimeDelta, fMouse);
+		m_fTime += fTimeDelta * m_fTimeMult;
+		if (m_fTime >= 1.f)
+		{
+			m_bHover = true;
+			Line(fTimeDelta);
+		}
+	}
+
+	if (m_bHover == true)
+	{
+		_float Dir = XMVectorGetX(
+				  XMVector3Length(
+				 XMVectorSubtract(m_pPointer->Get_Current_Position(), m_fCurrent_Position)));
+		
+		if (Dir <= 16.f)
+		{
+			_int a = 10;
+		}
 	}
 
 	m_fAngle = atan2(-fFinalMouse.x, fFinalMouse.y);
-
-	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CSpellLearn_MovePointer::Late_Update(_float fTimeDelta)
+void CSPellLeam_ChaserPointer::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
 		return;
 	}
 	if (m_bVisible) {
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		if (m_bHover == true)
+		{
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		}
 		__super::Late_Update(fTimeDelta);
 	}
 }
 
-HRESULT CSpellLearn_MovePointer::Render()
+HRESULT CSPellLeam_ChaserPointer::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ROTATION)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -173,12 +162,47 @@ HRESULT CSpellLearn_MovePointer::Render()
 	return S_OK;
 }
 
-_vector CSpellLearn_MovePointer::Get_WorldPostion()
+_vector CSPellLeam_ChaserPointer::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CSpellLearn_MovePointer::Bind_ShaderResources()
+void CSPellLeam_ChaserPointer::Set_SpellLearn(_int Index)
+{
+	m_bHover = false;
+	m_bMoveStart = false;
+	m_fTime = 0.f;
+	m_iLineIndex = _int(static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines.size());
+	m_MoveLine = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines;
+	m_iCurrentLine = 0;
+	m_fX = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.x;
+	m_fY = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.y;
+}
+
+void CSPellLeam_ChaserPointer::Set_Pointer(CSpellLearn_MovePointer* Pointer)
+{
+	m_pPointer = Pointer;
+}
+
+void CSPellLeam_ChaserPointer::Line(_float fTime)
+{
+	m_vLerp_Position = m_MoveLine[m_iCurrentLine];
+
+	if (Start_Lerp(fTime) == true)
+	{
+		if (m_iCurrentLine < m_iLineIndex - 1)
+		{
+			++m_iCurrentLine;
+		}
+		else
+		{
+			m_bMoveStart = false;
+		}
+	}
+
+}
+
+HRESULT CSPellLeam_ChaserPointer::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -217,20 +241,16 @@ HRESULT CSpellLearn_MovePointer::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMapAngle", &m_fAngle, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
-HRESULT CSpellLearn_MovePointer::Ready_Components(void* pArg)
+HRESULT CSPellLeam_ChaserPointer::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_SU_Cursor"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SpellMinigame_SpeedBurstDropBack"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -242,33 +262,33 @@ HRESULT CSpellLearn_MovePointer::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CSpellLearn_MovePointer* CSpellLearn_MovePointer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSPellLeam_ChaserPointer* CSPellLeam_ChaserPointer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CSpellLearn_MovePointer* pInstance = new CSpellLearn_MovePointer(pDevice, pContext);
+	CSPellLeam_ChaserPointer* pInstance = new CSPellLeam_ChaserPointer(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CSpellLearn_MovePointer");
+		MSG_BOX("Failed to Created : CSPellLeam_ChaserPointer");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CSpellLearn_MovePointer::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CSPellLeam_ChaserPointer::Clone(void* pArg, CGameObject* pOwner)
 {
-	CSpellLearn_MovePointer* pInstance = new CSpellLearn_MovePointer(*this);
+	CSPellLeam_ChaserPointer* pInstance = new CSPellLeam_ChaserPointer(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSpellLearn_MovePointer");
+		MSG_BOX("Failed to Cloned : CSPellLeam_ChaserPointer");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CSpellLearn_MovePointer::Free()
+void CSPellLeam_ChaserPointer::Free()
 {
 	__super::Free();
 
@@ -277,8 +297,6 @@ void CSpellLearn_MovePointer::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-#ifdef _DEBUG
-void CSpellLearn_MovePointer::Describe_Entity()
+void CSPellLeam_ChaserPointer::Describe_Entity()
 {
 }
-#endif // _DEBUG

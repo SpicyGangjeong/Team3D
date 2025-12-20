@@ -627,11 +627,11 @@
     </Filter>
     <Filter Include="80.State\Focus\Slide">
       <UniqueIdentifier>{eef1db06-8a9f-42b4-93e2-cc29de2b275d}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="50.UI\SpellLearn_Data">
       <UniqueIdentifier>{6e769435-83c4-4f64-b306-1b8c5f2d228d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_SpeedPointer">
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
       <UniqueIdentifier>{54a92f0d-26f1-49bf-a13b-ab11995968c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -1260,8 +1260,8 @@
     <ClInclude Include="..\public\SpellLearn_Data.h">
       <Filter>50.UI\SpellLearn_Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SPellLeam_SpeedPointer.h">
-      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_SpeedPointer</Filter>
+    <ClInclude Include="..\public\SPellLeam_ChaserPointer.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1891,8 +1891,8 @@
     <ClCompile Include="..\private\SpellLearn_Data.cpp">
       <Filter>50.UI\SpellLearn_Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SPellLeam_SpeedPointer.cpp">
-      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_SpeedPointer</Filter>
+    <ClCompile Include="..\private\SPellLeam_ChaserPointer.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

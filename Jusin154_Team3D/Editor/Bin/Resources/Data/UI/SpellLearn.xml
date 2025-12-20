@@ -2,24 +2,225 @@
 	<SpellLearnData>
 		<Name SpellName="봄바르다" ImageName="Bombarda" Size="550" x="730" y="200">
 			<Position>
-				<Pos x="625" y="60"/>
+				<Pos x="730" y="200"/>
 			</Position>
 			<Position>
-				<Pos x="810" y="-185"/>
+				<Pos x="707" y="170"/>
 			</Position>
 			<Position>
-				<Pos x="395" y="-185"/>
+				<Pos x="683.5" y="140"/>
 			</Position>
 			<Position>
-				<Pos x="515" y="-45"/>
+				<Pos x="668" y="120"/>
+			</Position>
+			<Position>
+				<Pos x="652.5" y="100"/>
+			</Position>
+			<Position>
+				<Pos x="636" y="80"/>
+			</Position>
+			<Position>
+				<Pos x="622" y="60"/>
+			</Position>
+			<Position>
+				<Pos x="636.5" y="40"/>
+			</Position>
+			<Position>
+				<Pos x="652" y="20"/>
+			</Position>
+			<Position>
+				<Pos x="666.5" y="0"/>
+			</Position>
+			<Position>
+				<Pos x="682.5" y="-20"/>
+			</Position>
+			<Position>
+				<Pos x="698" y="-40"/>
+			</Position>
+			<Position>
+				<Pos x="713.5" y="-60"/>
+			</Position>
+			<Position>
+				<Pos x="728.5" y="-80"/>
+			</Position>
+			<Position>
+				<Pos x="744" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="759" y="-120"/>
+			</Position>
+			<Position>
+				<Pos x="774.5" y="-140"/>
+			</Position>
+			<Position>
+				<Pos x="790" y="-160"/>
+			</Position>
+			<Position>
+				<Pos x="805.5" y="-180"/>
+			</Position>
+			<Position>
+				<Pos x="811.5" y="-189"/>
+			</Position>
+			<Position>
+				<Pos x="790" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="760" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="730" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="700" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="670" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="640" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="610" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="580" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="550" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="520" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="490" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="460" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="430" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="400" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="390" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="416" y="-157"/>
+			</Position>
+			<Position>
+				<Pos x="441.5" y="-130"/>
+			</Position>
+			<Position>
+				<Pos x="468" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="496" y="-70"/>
+			</Position>
+			<Position>
+				<Pos x="516" y="-50"/>
+			</Position>
+			<Position>
+				<Pos x="522" y="-42"/>
 			</Position>
 		</Name>
-		<Name SpellName="루모스" ImageName="Lumos" Size="520" x="410" y="-210">
+		<Name SpellName="루모스" ImageName="Lumos" Size="520" x="408.5" y="-218">
 			<Position>
-				<Pos x="600" y="200"/>
+				<Pos x="408.5" y="-218"/>
 			</Position>
 			<Position>
-				<Pos x="790" y="-230"/>
+				<Pos x="420" y="-192"/>
+			</Position>
+			<Position>
+				<Pos x="434.5" y="-160"/>
+			</Position>
+			<Position>
+				<Pos x="448" y="-130"/>
+			</Position>
+			<Position>
+				<Pos x="461.5" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="475" y="-70"/>
+			</Position>
+			<Position>
+				<Pos x="488.5" y="-40"/>
+			</Position>
+			<Position>
+				<Pos x="501.5" y="-10"/>
+			</Position>
+			<Position>
+				<Pos x="515" y="20"/>
+			</Position>
+			<Position>
+				<Pos x="529" y="50"/>
+			</Position>
+			<Position>
+				<Pos x="542" y="80"/>
+			</Position>
+			<Position>
+				<Pos x="556" y="110"/>
+			</Position>
+			<Position>
+				<Pos x="565" y="130"/>
+			</Position>
+			<Position>
+				<Pos x="574" y="150"/>
+			</Position>
+			<Position>
+				<Pos x="587" y="180"/>
+			</Position>
+			<Position>
+				<Pos x="598.5" y="205"/>
+			</Position>
+			<Position>
+				<Pos x="609.5" y="180"/>
+			</Position>
+			<Position>
+				<Pos x="622.5" y="150"/>
+			</Position>
+			<Position>
+				<Pos x="630.5" y="130"/>
+			</Position>
+			<Position>
+				<Pos x="640" y="110"/>
+			</Position>
+			<Position>
+				<Pos x="653.5" y="80"/>
+			</Position>
+			<Position>
+				<Pos x="666.5" y="50"/>
+			</Position>
+			<Position>
+				<Pos x="679.5" y="20"/>
+			</Position>
+			<Position>
+				<Pos x="693" y="-10"/>
+			</Position>
+			<Position>
+				<Pos x="706" y="-40"/>
+			</Position>
+			<Position>
+				<Pos x="719.5" y="-70"/>
+			</Position>
+			<Position>
+				<Pos x="732.5" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="746" y="-130"/>
+			</Position>
+			<Position>
+				<Pos x="759" y="-160"/>
+			</Position>
+			<Position>
+				<Pos x="772.5" y="-190"/>
+			</Position>
+			<Position>
+				<Pos x="785.5" y="-220"/>
+			</Position>
+			<Position>
+				<Pos x="791.5" y="-235"/>
 			</Position>
 		</Name>
 		<Name SpellName="아씨오" ImageName="Accio" Size="520" x="852" y="-120">

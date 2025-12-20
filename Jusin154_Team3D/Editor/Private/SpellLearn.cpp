@@ -40,6 +40,7 @@ HRESULT CSpellLearn::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
+	m_iTrailIndex = 0;
 	Change_Image(0);
 	Visible(false);
 	return S_OK;
@@ -86,7 +87,27 @@ void CSpellLearn::Update(_float fTimeDelta)
 		}
 	}
 
-	m_fTime += fTimeDelta * m_fTimeMult;
+	if (m_pPointer != nullptr)
+	{
+		if (m_pPointer->Get_bMoveStart() == true)
+		{
+			m_vPointerPosition = m_pPointer->Get_Position();
+			m_vPointerScale = m_pPointer->Get_Current_Size();
+
+			m_fTime += fTimeDelta * m_fTimeMult;
+			if (m_fTime >= 1.f)
+			{
+				m_Trail.push_back(m_vPointerPosition);
+				m_iTrailIndex++;
+			}
+		}
+		else
+		{
+
+		}
+	}
+	
+
 	__super::Update(fTimeDelta);
 }
 
@@ -98,11 +119,7 @@ void CSpellLearn::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible) {
 		if (m_pPointer != nullptr)
-		{
-			m_vPointerPosition = m_pPointer->Get_Position();
-			m_vPointerScale = m_pPointer->Get_Current_Size();
-		}
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -188,7 +205,18 @@ HRESULT CSpellLearn::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Trail", m_Trail.data(), sizeof(_float2) * _uint(m_Trail.size()))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Count", &m_iTrailIndex, sizeof(_int))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iHover", &m_bHover, sizeof(_bool))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -216,9 +244,12 @@ HRESULT CSpellLearn::Ready_Components(void* pArg)
 
 HRESULT CSpellLearn::Change_Image(_int SpellID)
 {
+	m_Trail.clear();
+	m_Trail.push_back(_float2(0.f,0.f));
+	m_iTrailIndex = 0;
 	_wstring pName = TEXT("Prototype_Texture_");
 	_wstring pImageName = pName + static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(SpellID).pImageName;
-
+	m_MoveLine = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(SpellID).Lines;
 	if (m_pDiffuse_TextureCom)
 	{
 		Remove_Component<CTexture>();

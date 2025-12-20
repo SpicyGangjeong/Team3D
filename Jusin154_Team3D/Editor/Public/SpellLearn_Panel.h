@@ -45,6 +45,7 @@ private:
 	CGameObject* m_pSpellLearn_Name = { nullptr };
 	CGameObject* m_pSpellLearn = { nullptr };
 	CGameObject* m_pSpellLearn_MovePointer = { nullptr };
+	CGameObject* m_pSPellLeam_ChaserPointer = { nullptr };
 	CGameObject* m_pSpellLearn_Data = { nullptr };
 
 	_int Index{};

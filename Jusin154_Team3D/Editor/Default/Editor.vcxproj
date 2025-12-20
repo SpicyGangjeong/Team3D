@@ -197,7 +197,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Quest_Slot.h" />
     <ClInclude Include="..\public\Quest_Status.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
-    <ClInclude Include="..\public\SPellLeam_SpeedPointer.h" />
+    <ClInclude Include="..\public\SPellLeam_ChaserPointer.h" />
     <ClInclude Include="..\Public\SpellLearn.h" />
     <ClInclude Include="..\public\SpellLearn_Canvas.h" />
     <ClInclude Include="..\public\SpellLearn_Data.h" />
@@ -422,7 +422,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Quest_Slot.cpp" />
     <ClCompile Include="..\private\Quest_Status.cpp" />
     <ClCompile Include="..\Private\Skill_Data.cpp" />
-    <ClCompile Include="..\private\SPellLeam_SpeedPointer.cpp" />
+    <ClCompile Include="..\private\SPellLeam_ChaserPointer.cpp" />
     <ClCompile Include="..\Private\SpellLearn.cpp" />
     <ClCompile Include="..\private\SpellLearn_Canvas.cpp" />
     <ClCompile Include="..\private\SpellLearn_Data.cpp" />

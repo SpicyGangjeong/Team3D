@@ -34,7 +34,7 @@ private:
 public:
 	void Set_SpellLearn(_int Index);
 private:
-	void Line(_float fTime);
+	void Line(_float fTime, _float2 fMouse);
 
 
 private:

@@ -118,6 +118,7 @@
 #include "SpellLearn_Name.h"
 #include "SpellLearn.h"
 #include "SpellLearn_MovePointer.h"
+#include "SPellLeam_ChaserPointer.h"
 
 #include "IMGUIUI.h"
 
@@ -1230,6 +1231,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_MovePointer>(g_iStaticLevel, CSpellLearn_MovePointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSPellLeam_ChaserPointer>(g_iStaticLevel, CSPellLeam_ChaserPointer::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

@@ -27,9 +27,10 @@ private:
 
 public:
 	void Set_SpellLearn(_int Index);
-
+	_int Get_SpellTrail();
+	_bool Get_bMoveStart();
 private:
-	void Line(_float fTime);
+	void Line(_float fTime, _float2 fMouse);
 
 
 private:

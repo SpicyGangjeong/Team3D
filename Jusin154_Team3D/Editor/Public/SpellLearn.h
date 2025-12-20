@@ -38,6 +38,12 @@ private:
 
 	_float2 m_vPointerPosition{};
 	_float3 m_vPointerScale{};
+
+	_int m_iIndex{};
+	vector<_float2> m_Trail;
+	_int	m_iTrailIndex{};
+	vector<_vector> m_MoveLine;
+
 public:
 	static CSpellLearn* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

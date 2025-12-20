@@ -31,6 +31,7 @@ public:
 	virtual _float Get_Nine_Slice_Bottom() override;
 
 	virtual _bool Start_Lerp(_float fTimeDelta) override;
+	virtual _bool Start_Lerp_Speed(_float fTimeDelta, _float2 MousePoint) override;
 	virtual void Reset_Pos(_float fTimeDelta)override;
 	virtual void Start_Size_Lerp(_float fTimeDelta) override;
 	virtual void Reset_Size_Lerp(_float fTimeDelta) override;

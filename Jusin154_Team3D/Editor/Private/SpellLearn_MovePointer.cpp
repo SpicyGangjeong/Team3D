@@ -39,7 +39,7 @@ HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
-	m_fMoveSpeed = 15.f;
+	m_fMoveSpeed = 130.f;
 	Set_SpellLearn(0);
 	m_fAngle = XMConvertToRadians(0);
 	Visible(false);
@@ -48,6 +48,7 @@ HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
 
 void CSpellLearn_MovePointer::Set_SpellLearn(_int Index)
 {
+	m_bMoveStart = false;
 	m_iLineIndex = _int(static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines.size());
 	m_MoveLine = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines;
 	m_iCurrentLine = 0;
@@ -55,15 +56,26 @@ void CSpellLearn_MovePointer::Set_SpellLearn(_int Index)
 	m_fY = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.y;
 }
 
-void CSpellLearn_MovePointer::Line(_float fTime)
+_int CSpellLearn_MovePointer::Get_SpellTrail()
+{
+	return m_iCurrentLine;
+}
+
+_bool CSpellLearn_MovePointer::Get_bMoveStart()
+{
+	return m_bMoveStart;
+}
+
+void CSpellLearn_MovePointer::Line(_float fTime, _float2 fMouse)
 {
 	m_vLerp_Position = m_MoveLine[m_iCurrentLine];
 
-	if (Start_Lerp(m_fMoveSpeed * fTime) == true)
+	if (Start_Lerp_Speed(fTime, fMouse) == true)
 	{
 		if (m_iCurrentLine < m_iLineIndex - 1)
 		{
 			++m_iCurrentLine;
+			m_fPerPosition = _float2(m_MoveLine[m_iCurrentLine - 1].m128_f32[0], m_MoveLine[m_iCurrentLine - 1].m128_f32[1]);
 		}
 		else
 		{
@@ -114,6 +126,17 @@ void CSpellLearn_MovePointer::Update(_float fTimeDelta)
 		}
 	}
 
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	_float2 fMouse{};
+	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = -ptMouse.y + (g_iWinSizeY * 0.5f);
+
+	_float2 fFinalMouse{};
+	fFinalMouse.x = fMouse.x - m_fX;
+	fFinalMouse.y = fMouse.y - m_fY;
+
 	if (m_pGameInstance->Key_Down(DIK_L))
 	{
 		m_bMoveStart = true;
@@ -121,21 +144,10 @@ void CSpellLearn_MovePointer::Update(_float fTimeDelta)
 
 	if (m_bMoveStart == true)
 	{
-		Line(fTimeDelta);
+		Line(fTimeDelta, fMouse);
 	}
 
-	POINT ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	_float2 fMouse;
-	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
-	fMouse.y = -ptMouse.y + (g_iWinSizeY * 0.5f);
-
-	fMouse.x = fMouse.x - m_fX;
-	fMouse.y = fMouse.y - m_fY;
-
-
-	m_fAngle = atan2(-fMouse.x, fMouse.y);
+	m_fAngle = atan2(-fFinalMouse.x, fFinalMouse.y);
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);

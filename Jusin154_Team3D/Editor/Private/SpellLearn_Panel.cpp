@@ -4,6 +4,7 @@
 #include "SpellLearn_Name.h"
 #include "SpellLearn.h"
 #include "SpellLearn_MovePointer.h"
+#include "SPellLeam_ChaserPointer.h"
 #include "SpellLearn_Data.h"
 
 CSpellLearn_Panel::CSpellLearn_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -46,6 +47,7 @@ HRESULT CSpellLearn_Panel::Initialize(void* pArg)
 	m_fSortZ = 0.05f;
 	m_fDelayTime = 1.f;
 	static_cast<CSpellLearn*>(m_pSpellLearn)->Set_Pointer(static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer));
+	static_cast<CSPellLeam_ChaserPointer*>(m_pSPellLeam_ChaserPointer)->Set_Pointer(static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer));
 	Visible(true);
 	ElementAllVisible(true);
 	return S_OK;
@@ -84,6 +86,7 @@ void CSpellLearn_Panel::Update(_float fTimeDelta)
 		}
 		static_cast<CSpellLearn*>(m_pSpellLearn)->Change_Image(Index);
 		static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer)->Set_SpellLearn(Index);
+		static_cast<CSPellLeam_ChaserPointer*>(m_pSPellLeam_ChaserPointer)->Set_SpellLearn(Index);
 		static_cast<CSpellLearn_Name*>(m_pSpellLearn_Name)->Set_Name(Index);
 	}
 
@@ -212,6 +215,12 @@ HRESULT CSpellLearn_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("SpellLearn_MovePointer"), m_pSpellLearn_MovePointer);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSPellLeam_ChaserPointer>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSPellLeam_ChaserPointer**>(&m_pSPellLeam_ChaserPointer))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("SPellLeam_ChaserPointer"), m_pSPellLeam_ChaserPointer);
 
 	return S_OK;
 }
