@@ -174,6 +174,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
+
+	ComputeAnimation(m_iCurrentAnimIndex, 0);
+
 	if (m_bIsFinishedAnim)
 	{
 		if (m_bIsLoop)
@@ -186,7 +189,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 	}
 
-	ComputeAnimation(m_iCurrentAnimIndex, 0);
 
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);

@@ -599,8 +599,8 @@
     <ClInclude Include="..\public\Interaction_Key.h">
       <Filter>02.GameObjects\UI\Interaction_Key</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Ranrak.h">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    <ClInclude Include="..\Public\Ranrok.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_FireBreath.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
@@ -637,7 +637,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\LightningSide.h">
       <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\State_FireSweep.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireSweep</Filter>
     </ClInclude>
@@ -1341,9 +1341,6 @@
     <Filter Include="02.GameObjects\Effect\Effects\Stupefy">
       <UniqueIdentifier>{7672784a-86a8-4485-a4de-a979bd0c8f52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrak">
-      <UniqueIdentifier>{bb981766-6030-4dd9-b92d-f6819a70c93d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Mechanic\State\Broom_Player\State_Hover">
       <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
     </Filter>
@@ -1388,6 +1385,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Lightning\LightningSide">
       <UniqueIdentifier>{b494a051-9dcc-4739-9048-13fb963c441f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok">
+      <UniqueIdentifier>{bb981766-6030-4dd9-b92d-f6819a70c93d}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\SpellLearn_Canvas">
       <UniqueIdentifier>{c00fdde9-9768-475d-bde2-d89305b759d9}</UniqueIdentifier>
@@ -1962,11 +1962,11 @@
     <ClCompile Include="..\Private\Stupefy.cpp">
       <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Ranrak.cpp">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    <ClCompile Include="..\Private\Ranrok.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Ranrak_States.cpp">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    <ClCompile Include="..\Private\Ranrok_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_FireBreath.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>

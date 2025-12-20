@@ -340,10 +340,9 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-
-
 	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
@@ -360,30 +359,32 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::JAP):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
 			break;
-		default:
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ACCIO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
 			break;
 		}
 	}
 	else
 	{
 		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
+		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+		if (pProps != nullptr)
+		{
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
+		}
 	}
-
-	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
-
-	if (pProps != nullptr)
-	{
-		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
-	}
+	
 
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);

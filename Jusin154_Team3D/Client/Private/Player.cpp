@@ -136,15 +136,15 @@ void CPlayer::Update(_float fTimeDelta)
 	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
-	float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+/*	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	float ease = 1.f;
+	_float ease = 1.f;
 	if (ratio < 0.4f)
 		ease = 1.15f;      
 	else if (ratio > 0.85f)
-		ease = 0.85f;      
+		ease = 0.85f; */     
 
-	m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta /** ease*/, m_pTransformCom);
 
 	Play_Event();
 	
