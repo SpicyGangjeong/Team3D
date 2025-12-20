@@ -343,7 +343,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
+	isLoad_Background = flase;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -953,6 +953,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma endregion
 #if 진우
 #elif 기무리
+#elif 인혁
 #elif Bin
 #elif gimch
 #else

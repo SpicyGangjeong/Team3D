@@ -138,6 +138,11 @@ void CUIObject::Move(_float fX, _float fY)
 	m_fY = fY;
 }
 
+_float2 CUIObject::Get_Position()
+{
+	return _float2(m_fX, m_fY);
+}
+
 void CUIObject::SizeUpdate(_float fSizeX, _float fSizeY)
 {
 	m_fSizeX = fSizeX;

@@ -27,13 +27,17 @@ private:
 
 public:
 	HRESULT Change_Image(_int SpellID);
-
+	void Set_Pointer(class CSpellLearn_MovePointer* Pointer);
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	class CSpellLearn_MovePointer* m_pPointer = { nullptr };
+
+	_float2 m_vPointerPosition{};
+	_float3 m_vPointerScale{};
 public:
 	static CSpellLearn* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
