@@ -266,9 +266,9 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 
 
 
-	//Get_PartObject<CEffectParts>("Levioso_Tornado")
-	//CEffectParts* pLevioso_Hit =  Get_PartObject<CEffectParts>("Levioso_Hit");
-	//CEffectParts* pLevioso_Bottom_Wind = Get_PartObject<CEffectParts>("Levioso_Bottom_Wind");
+	//Get_PartObject<CEditEffect>("Levioso_Tornado")
+	//CEditEffect* pLevioso_Hit =  Get_PartObject<CEditEffect>("Levioso_Hit");
+	//CEditEffect* pLevioso_Bottom_Wind = Get_PartObject<CEditEffect>("Levioso_Bottom_Wind");
 
 
 

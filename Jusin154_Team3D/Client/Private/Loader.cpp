@@ -151,12 +151,14 @@
 #include "Levioso.h"
 #include "Lumos.h"
 #include "Accio.h"
+#include "Blink.h"
 #include "Goblin_Teleport.h"
 
 
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
+
 
 #include "WandEnd.h"
 #include "Goblin_Protego.h"
@@ -1778,6 +1780,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLightningSide>(NEXT_LEVEL, CLightningSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

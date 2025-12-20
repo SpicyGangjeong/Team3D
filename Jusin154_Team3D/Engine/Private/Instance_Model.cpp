@@ -569,6 +569,8 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isRandomAniIndex = m_InstanceDesc.isRandomAniIndex;
 		pDesc->isExcludePos = m_InstanceDesc.isExcludePos;
 		pDesc->isStop_Move_For_Depth_Compare = m_InstanceDesc.isStop_Move_For_Depth_Compare;
+		pDesc->isNoPos = m_InstanceDesc.isNoPos;
+		
 
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
@@ -856,6 +858,13 @@ void CInstance_Model::Describe_Entity()
 		{
 			Instane_Buffer_ReStruct();
 		}
+
+		if (GUI::Checkbox("NoPos", &m_InstanceDesc.isNoPos))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		
 
 		if (GUI::Checkbox("RandomIndex", &m_InstanceDesc.isRandomAniIndex))
 		{

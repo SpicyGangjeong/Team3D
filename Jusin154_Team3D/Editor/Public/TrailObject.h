@@ -106,6 +106,9 @@ public:
 	void	     Set_Target(class CTransform* pTargetTransform);
 	void         Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
 	void         Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta);
+	void		 Oneside_Rope_Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
+	void		 SetDissolve(_bool isDissolve) { m_TrailInfo.isDissolve = isDissolve; }
+	TRAIL_INFO*  Get_TrailInfo() { return &m_TrailInfo; }
 public:
 #ifdef _DEBUG
 	HRESULT Save_Trail(const _char* pPath);
