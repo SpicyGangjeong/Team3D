@@ -88,7 +88,7 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isMoveUp;
     bool isExcludePos;
     bool isStopMove_For_Depth_Compare;
-    bool isPadding2;
+    bool isNoPos;
 
     float fTimeDelta;
     float fSizeLerpOption; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
@@ -144,6 +144,11 @@ void CS_MAIN(
             particle.vUp = CurMat[1].xyzw;
             particle.vLook = CurMat[2].xyzw;
             particle.vTranslation = CurMat[3].xyzw;
+        }
+        
+        if (isNoPos)
+        {       
+            particle.vTranslation.xyz += WorldMatrix[3].xyz;
         }
         
     }

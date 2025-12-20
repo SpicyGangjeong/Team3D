@@ -68,7 +68,9 @@ void CTrailObject::Update(_float fTimeDelta)
 
 			if (m_TrailInfo.vDissolveTime.x > m_TrailInfo.vDissolveTime.y)
 			{
+				m_bVisible = false;
 				m_TrailInfo.vDissolveTime.x = 0.f;
+				m_TrailInfo.isDissolve = false;
 			}
 		}
 	}
@@ -137,6 +139,14 @@ void CTrailObject::Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _f
 	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass, EndWorldMat);
 }
 
+void CTrailObject::Oneside_Rope_Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
+{
+	if (m_bVisible == false)
+		return;
+
+	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass);
+
+}
 
 #ifdef _DEBUG
 
@@ -356,6 +366,7 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 	}
 
 	m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
+
 
 	CloseHandle(hFile);
 

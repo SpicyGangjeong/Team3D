@@ -180,6 +180,7 @@
 #include "Goblin_BattleAxe.h"
 #include "Goblin_Spector.h"
 #include "StunEffect.h"
+#include "Blink.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1694,6 +1695,11 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Spector>(g_iStaticLevel, CGoblin_Spector::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
