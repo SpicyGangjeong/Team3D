@@ -101,4 +101,6 @@ CSpellLearn_Data* CSpellLearn_Data::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 void CSpellLearn_Data::Free()
 {
 	__super::Free();
+
+	m_SpellLearnInfos.clear();
 }

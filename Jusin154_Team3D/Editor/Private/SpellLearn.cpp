@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "SpellLearn.h"
 #include "GameInstance.h"
+#include "SpellLearn_MovePointer.h"
 
 CSpellLearn::CSpellLearn(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -96,6 +97,11 @@ void CSpellLearn::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
+		if (m_pPointer != nullptr)
+		{
+			m_vPointerPosition = m_pPointer->Get_Position();
+			m_vPointerScale = m_pPointer->Get_Current_Size();
+		}
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
@@ -106,7 +112,7 @@ HRESULT CSpellLearn::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::COLOR)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::SPELLLEARNCOLOR)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -166,6 +172,23 @@ HRESULT CSpellLearn::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fItemPosition1", &m_vPointerPosition, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fItemImageSizes1", &m_vPointerScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPosition", &m_fCurrent_Position, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -205,6 +228,11 @@ HRESULT CSpellLearn::Change_Image(_int SpellID)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CSpellLearn::Set_Pointer(CSpellLearn_MovePointer* Pointer)
+{
+	m_pPointer = Pointer;
 }
 
 CSpellLearn* CSpellLearn::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

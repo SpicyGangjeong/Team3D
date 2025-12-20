@@ -45,6 +45,7 @@ HRESULT CSpellLearn_Panel::Initialize(void* pArg)
 	m_fCanvasAlpha = 1.f;
 	m_fSortZ = 0.05f;
 	m_fDelayTime = 1.f;
+	static_cast<CSpellLearn*>(m_pSpellLearn)->Set_Pointer(static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer));
 	Visible(true);
 	ElementAllVisible(true);
 	return S_OK;

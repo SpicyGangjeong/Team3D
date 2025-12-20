@@ -27,6 +27,7 @@ private:
 
 public:
 	void Set_SpellLearn(_int Index);
+
 private:
 	void Line(_float fTime);
 
@@ -35,6 +36,7 @@ private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
 
 	_bool	m_bMoveStart = { false };
 
