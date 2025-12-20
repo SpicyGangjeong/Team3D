@@ -249,7 +249,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -621,14 +621,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	for (_uint i = 0; i <0; ++i)
+	for (_uint i = 0; i <1; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 	}
 
-	 for (_uint i = 0; i <0; ++i)
+	 for (_uint i = 0; i <1; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
@@ -640,12 +640,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		return E_FAIL;
 	}
 
-#if 진우
-#else
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrak>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-		return E_FAIL;
-	}
-#endif 
+//#if 진우
+//#else
+//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrak>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+//		return E_FAIL;
+//	}
+//#endif 
 	
 
 

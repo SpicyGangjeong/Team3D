@@ -280,6 +280,9 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+	if (m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+		return;
+	}
 	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
 	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -345,9 +348,9 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+	
 		m_pFSM->Change_State(FSMSTATE::HIT);
-	}
+	
 }
 
 void CGoblin_Mage::OnHit(CGameObject* pOther, CGameObject* pCaller)

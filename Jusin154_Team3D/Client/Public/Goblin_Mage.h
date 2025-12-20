@@ -91,6 +91,8 @@ private:
 	_float	m_fAccel = { 3.f };
 	_float	m_fTargetSpeed = { 60.f };
 	_float	m_fSpeed = {};
+	_bool	m_bAir = {};
+	_float	m_fGravityAmount = {};
 
 #ifdef _DEBUG
 	_bool   m_isDebugMode = {};
