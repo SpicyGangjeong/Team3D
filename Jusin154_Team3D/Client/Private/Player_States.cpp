@@ -1168,44 +1168,47 @@ void CPlayer::Behavior_LightAttackEnter()
 	pair<_uint, _bool> pairAnimInfo;
 	m_pModelCom->Set_BlendDuration(0.1f);
 	m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
-	pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
-	if (m_LockOnInfo.pUnit)
+	
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+	vLook = XMVector3Normalize(vLook);
+	vCameraLook = XMVector3Normalize(vCameraLook);
+
+	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
+	fDot = clamp(fDot, -1.0f, 1.0f);
+
+	_float fAngleRad = acosf(fDot);
+	_float Degree = XMConvertToDegrees(fAngleRad);
+	_vector vCross = XMVector3Cross(vLook, vCameraLook);
+	_float Cross = XMVectorGetY(vCross);
+
+	if (Degree <= 30.f)
 	{
-		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-		_vector vTargetLook = m_LockOnInfo.pUnit->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-
-		vLook = XMVector3Normalize(vLook);
-		vTargetLook = XMVector3Normalize(vTargetLook);
-
-		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vTargetLook));
-		fDot = clamp(fDot, -1.0f, 1.0f);
-
-		_float fAngleRad = acosf(fDot);
-		_float Degree = XMConvertToDegrees(fAngleRad);
-		_vector vCross = XMVector3Cross(vLook, vTargetLook);
-		_float Cross = XMVectorGetY(vCross);
-
-		if (Degree <= 30.f)	
+		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+	}
+	else if (Degree <= 80.f)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_bLookAt = true;
+			},
+			0.01f);
+	}
+	else if (Degree <= 135.f)
+	{
+		if (Cross < 0.f)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_180_R];
+			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_L];
 		}
-		else if (Degree <= 120.f)
+		else
 		{
-			if (Cross > 0.f)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_L];
-			}
-			else
-			{
-				pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_R2];
-			}
-		} 
-		else{
-			Add_Event(pairAnimInfo.first,
-				[this]() {m_bLookAt = true;
-				},
-				0.01f);
+			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_R2];
 		}
+	}
+	else
+	{
+		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_180_R];
 	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true);
@@ -1270,6 +1273,10 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 			}
 		}
 	}
+	else if (m_pGameInstance->Key_Down(DIK_Q)) {
+		m_pFSM->Change_State(FSMSTATE::SHIELD);
+		return E_FAIL;
+	}
 	else if (m_pGameInstance->Key_Down(DIK_X)) {
 		m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
 		return E_FAIL;
@@ -1313,53 +1320,55 @@ void CPlayer::Behavior_SpellEnter()
 
 	m_pModelCom->Set_BlendDuration(0.1f);
 	m_pFSM->Enable_State(FSMSTATE::SPELL);
-	pairAnimInfo = m_Animation[STATEANIM::SPELL];
+
 	_float fRatio = 0.f;
-	if (m_LockOnInfo.pUnit)
+
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+	vLook = XMVector3Normalize(vLook);
+	vCameraLook = XMVector3Normalize(vCameraLook);
+
+	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
+	fDot = clamp(fDot, -1.0f, 1.0f);
+
+	_float fAngleRad = acosf(fDot);
+	_float Degree = XMConvertToDegrees(fAngleRad);
+	_vector vCross = XMVector3Cross(vLook, vCameraLook);
+	_float Cross = XMVectorGetY(vCross);
+
+	if (Degree <= 30.f)
 	{
-		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-		_vector vTargetLook = m_LockOnInfo.pUnit->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-
-		vLook = XMVector3Normalize(vLook);
-		vTargetLook = XMVector3Normalize(vTargetLook);
-
-		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vTargetLook));
-		fDot = clamp(fDot, -1.0f, 1.0f);
-
-		_float fAngleRad = acosf(fDot);
-		_float Degree = XMConvertToDegrees(fAngleRad);
-		_vector vCross = XMVector3Cross(vLook, vTargetLook);
-		_float Cross = XMVectorGetY(vCross);
-
-		if (Degree <= 30.f)
+		pairAnimInfo = m_Animation[STATEANIM::SPELL];
+		fRatio = 0.2f;
+	}
+	else if (Degree <= 80.f)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::SPELL];
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_bLookAt = true;
+			},
+			0.01f);
+		fRatio = 0.2f;
+	}
+	else if (Degree <= 135.f)
+	{
+		if (Cross < 0.f)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::SPELL_180_R];
-			fRatio = 0.18f;
-		}
-		else if (Degree <= 120.f)
-		{
-			if (Cross > 0.f)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::SPELL_90_L];
-			}
-			else {
-				Add_Event(pairAnimInfo.first,
-					[this]() {m_bLookAt = true;
-					},
-					0.01f);
-			}
-			fRatio = 0.15f;
+			pairAnimInfo = m_Animation[STATEANIM::SPELL_90_L];
 		}
 		else {
+			pairAnimInfo = m_Animation[STATEANIM::SPELL];
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_bLookAt = true;
 				},
 				0.01f);
-			fRatio = 0.2f;
 		}
+		fRatio = 0.15f;
 	}
 	else {
-		fRatio = 0.2f;
+		pairAnimInfo = m_Animation[STATEANIM::SPELL_180_R];
+		fRatio = 0.18f;
 	}
 
 	if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != -1)
@@ -1509,31 +1518,31 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 					switch (m_eSpell)
 					{
 					case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-						Add_Event(pairAnimInfo.first,
+						Add_Event(m_Animation[STATEANIM::SPELL].first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); },
 							fAttackRatio);
-						Add_Event(pairAnimInfo.first,
+						Add_Event(m_Animation[STATEANIM::SPELL].first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
 							0.f);
 						break;
 					case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-						Add_Event(pairAnimInfo.first,
+						Add_Event(m_Animation[STATEANIM::SPELL].first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
 							fAttackRatio);
-						Add_Event(pairAnimInfo.first,
+						Add_Event(m_Animation[STATEANIM::SPELL].first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
 							0.f);
 						break;
 					case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-						Add_Event(pairAnimInfo.first,
+						Add_Event(m_Animation[STATEANIM::SPELL].first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
 							fAttackRatio);
-						Add_Event(pairAnimInfo.first,
+						Add_Event(m_Animation[STATEANIM::SPELL].first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 							0.f);
 						break;
 					case ENUM_CLASS(SKILL_TYPE::ACCIO):
-						Add_Event(pairAnimInfo.first,
+						Add_Event(m_Animation[STATEANIM::SPELL].first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
 							fAttackRatio);
 						break;
@@ -1589,6 +1598,10 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 			}
 		}
 	}
+	else if (m_pGameInstance->Key_Down(DIK_Q)) {
+		m_pFSM->Change_State(FSMSTATE::SHIELD);
+		return E_FAIL;
+	}
 	else if (m_pGameInstance->Key_Down(DIK_X)) {
 		m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
 		return E_FAIL;
@@ -1616,9 +1629,8 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 				return S_OK;
 				break;
 			}
-
-			m_bSpellHit = false;
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 		}
 	}
 
@@ -1649,6 +1661,7 @@ void CPlayer::Behavior_SpellExit()
 
 	m_pModelCom->Set_BlendDuration(0.3f);
 	m_bLookAt = false;
+	m_bSpellHit = false;
 }
 
 void CPlayer::Behavior_AncientSpellEnter()

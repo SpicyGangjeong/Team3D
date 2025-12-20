@@ -345,7 +345,7 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 
-	if(!m_pFSM->IsEnable(FSMSTATE::DODGE) && !m_bShield)
+	if(!m_pFSM->IsEnable(FSMSTATE::DODGE|FSMSTATE::BLINK) && !m_bShield)
 		m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)

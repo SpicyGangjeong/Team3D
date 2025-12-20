@@ -77,6 +77,7 @@ public:
 	void			SetActive(_bool bCondition) { m_bActive = bCondition; }
 	_bool			UpdateGroundByCast(_float fTimeDelta);
 	void			Set_GravityAmount(_float Amount) { m_fGravity = Amount; }
+	void			Reset_GravityAmount() { m_fGravity = 0.450f; }
 	_float			Get_GravityAmount() { return m_fGravity; }
 
 private:

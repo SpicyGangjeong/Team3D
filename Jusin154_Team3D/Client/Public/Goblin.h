@@ -76,7 +76,7 @@ private:
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 5.f,2.f,15.f };
 
-	_bool	m_bStep = { false };
+	_bool	m_bStep = { true };
 	_float	m_fTpTime = {};
 	_float	m_fAirTime = {};
 	_vector m_vOriginPos = {};
@@ -87,6 +87,8 @@ private:
 	_float	m_fAccel = { 3.f};
 	_float	m_fTargetSpeed = {60.f};
 	_float	m_fSpeed = {};
+	_bool	m_bAir = {};
+	_float	m_fGravityAmount = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

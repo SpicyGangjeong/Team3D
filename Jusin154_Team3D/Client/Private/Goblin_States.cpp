@@ -335,7 +335,6 @@ HRESULT CGoblin::Behavior_ThrowExitCheck(_float fTimeDelta)
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_bLookAt = true;
-		m_bStep = true;
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
@@ -352,7 +351,6 @@ void CGoblin::Behavior_ThrowExit()
 
 void CGoblin::Behavior_BlinkEnter()
 {
-
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::BLINK);
 
@@ -360,10 +358,10 @@ void CGoblin::Behavior_BlinkEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	m_bDisolve = true;
 
-	/*Add_Event(pairAnimInfo.first,
+	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBILN_TELEPORT, this);
-		}, 0.1f);*/
+		}, 0.1f);
 }
 
 HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
@@ -384,10 +382,10 @@ HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
 		_matrix rot = XMMatrixRotationY(randAngleRad);
 		_vector offsetDir = XMVector3TransformNormal(vPlayerLook, rot);
 
-		_float randDist = m_pGameInstance->Real_Random_Float(5.f, 5.5f);
+		_float randDist = m_pGameInstance->Real_Random_Float(3.f, 3.5f);
 
 		_vector vFinalPos = vPlayerPos + offsetDir * randDist;
-		vFinalPos = XMVectorSetY(vFinalPos, XMVectorGetY(vPlayerPos) + 0.5f);
+		vFinalPos = XMVectorSetY(vFinalPos, XMVectorGetY(vPlayerPos) + 1.5f);
 
 		m_pCharacter_Controller->Set_Position(vFinalPos);
 
@@ -459,10 +457,12 @@ void CGoblin::Behavior_HitEnter()
 
 	m_bLookAt = false;
 
+	_float fAnimSpeed = 1.f;
 	switch (m_eHitSpell)
 	{
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
+		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD];
+		fAnimSpeed = 2.f;
 		break;
 	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_L];
@@ -515,22 +515,80 @@ void CGoblin::Behavior_HitEnter()
 		break;
 	}
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, fAnimSpeed);
+
+	Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+		[&]() {			pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 0.5f);
+	m_pCharacter_Controller->SetGravity(false);
+	m_bAir = true;
+		},
+		0.3f); 
+
+	Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+		[&]() {
+	CameraShake(10.f, 1.f, 2.f, 0.3f);
+		},
+		0.27f);
+
+	Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
+		[this]() {m_pModelCom->Set_AnimSpeed(1.5f); },
+		0.75f);
+
+	Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
+		[&]() {			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		m_bAir = false;
+		m_pCharacter_Controller->SetGravity(true);
+		},
+		0.95f);
+
+	Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+		[&]() {			pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f); },
+		0.95f);
+
+	Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
+		[&]() {m_bLookAt = true; },
+		0.7f);
 }
 
 HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	CTransform* pTransform = m_pTarget->Get_Component<CTransform>();
 
-	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD].first)
+	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_BWD].first)
 	{
-		if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.5f)
+		if (fRatio >= 0.15f)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f,false,2.f);
 		}
+	}
+	if (m_bAir)
+	{
+		_vector vDir = m_pTransformCom->Get_State(STATE::UP);
+		vDir = XMVector4Normalize(vDir);
+		_vector vPos = m_pCharacter_Controller->Get_Position();
+		_vector Force = vDir * fTimeDelta*0.6f;
+		m_pCharacter_Controller->Set_Position(vPos + Force);
+	}
+
+	if (!m_bAir && m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first)
+	{
+		m_fGravityAmount += fTimeDelta * fRatio* 15.f;
+		m_pCharacter_Controller->Set_GravityAmount(m_fGravityAmount);
+	}
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::TUMBLE_FWD].first)
+	{
+
+		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+			[&]() {CameraShake(3.f, 0.8f, 1.f, 0.2f); },
+			0.17f);
 	}
 
 	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::LEVIOSO))
@@ -598,7 +656,7 @@ HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
-		m_pFSM->Change_State(FSMSTATE::IDLE);
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
 	return S_OK;
@@ -609,6 +667,8 @@ void CGoblin::Behavior_HitExit()
 	m_pFSM->Disable_State(FSMSTATE::HIT);
 	m_bPos = false;
 	m_bLookAt = true;
+	m_pCharacter_Controller->Reset_GravityAmount();
+	m_fGravityAmount = 0.f;
 }
 
 void CGoblin::Behavior_DeadEnter()
@@ -871,6 +931,7 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::KNOCKBACK2] = { 378, true };
 	m_Animation[STATEANIM::TUMBLE] = { 379, true };
 	m_Animation[STATEANIM::TUMBLE2] = { 380, true };// 원래 true 였음
+	m_Animation[STATEANIM::TUMBLE_FWD] = { 429, true };
 	m_Animation[STATEANIM::PETRIFICUSED_START] = { 383, false };
 
 	m_Animation[STATEANIM::LAND] = { 376, false };
