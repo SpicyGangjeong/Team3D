@@ -134,7 +134,7 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	{
 		if (GUI::Button("Save_Container"))
 		{
-			Save_ContainerData("DungeonContainer", m_szSaveContainerName);
+			Save_ContainerData("HogwartContainer", m_szSaveContainerName);
 		}
 	}
 	else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
@@ -164,11 +164,11 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 
 	if (GUI::Button("Load_Container"))
 	{
-		Load_ContainerData("DungeonContainer", m_szSaveContainerName);
+		Load_ContainerData("HogwartContainer", m_szSaveContainerName);
 	}
 	if (GUI::Button("Load_Container To MapObject"))
 	{
-		Load_ContainerToMapObject("DungeonContainer", m_szSaveContainerName);
+		Load_ContainerToMapObject("HogwartContainer", m_szSaveContainerName);
 	}
 	GUI::End();
 
