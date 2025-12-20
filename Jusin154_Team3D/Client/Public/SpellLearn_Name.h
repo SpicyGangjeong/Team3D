@@ -1,16 +1,21 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Engine)
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
+NS_END
 
-class CSpellLearn_MovePointer final : public CElementObject
+NS_BEGIN(Client)
+class CSpellLearn_Name final : public CElementObject
 {
 private:
-	CSpellLearn_MovePointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpellLearn_MovePointer(const CSpellLearn_MovePointer& rhs);
-	virtual ~CSpellLearn_MovePointer() = default;
+	CSpellLearn_Name(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpellLearn_Name(const CSpellLearn_Name& rhs);
+	virtual ~CSpellLearn_Name() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -26,29 +31,23 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void Set_SpellLearn(_int Index);
+	void Set_Name(_int Index);
 
 private:
-	void Line(_float fTime);
-
-
-private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-
-	_bool	m_bMoveStart = { false };
-
-	_int	m_iLineIndex{};
-	_int	m_iCurrentLine{};
-	vector<_vector> m_MoveLine;
+	_wstring m_pSpell_Name;
 
 public:
-	static CSpellLearn_MovePointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpellLearn_Name* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

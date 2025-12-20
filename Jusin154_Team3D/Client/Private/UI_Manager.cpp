@@ -8,6 +8,7 @@
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
 #include "Damage_Font.h"
+#include "SpellLearn_Canvas.h"
 #include "Interaction_Key.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -53,6 +54,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
 		break;
 
 	case UI_STATE::SPELL:
@@ -70,6 +72,13 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		break;
 
 	case UI_STATE::INVENTORY:
+		break;
+
+	case UI_STATE::SPELLNEARN:
+		m_pMouse_Cursor->Set_Visible(true);
+		m_pCamera_LockOn->Set_Visible(false);
+		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(true);
+		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 		break;
 
 	default:
@@ -171,6 +180,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Interaction_Key"), m_pInteraction_Key);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Canvas**>(&m_pSpellLearn_Canvas)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("SpellLearn_Canvas"), m_pSpellLearn_Canvas);
 
 	return S_OK;
 }

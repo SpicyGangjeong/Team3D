@@ -1821,7 +1821,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 #ifndef _DEBUG
 
-HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, _uint iLevel)
 {
 	m_eType = eType;
 
@@ -1839,7 +1839,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Materials(pModelFilePath))) {
+	if (FAILED(Ready_Materials(pModelFilePath, iLevel))) {
 		return E_FAIL;
 	}
 	if (MODEL::PBR_ANIM == m_eType || MODEL::PBR_NONANIM == m_eType) {

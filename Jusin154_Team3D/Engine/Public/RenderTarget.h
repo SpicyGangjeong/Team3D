@@ -22,7 +22,6 @@ public:
 	void Copy_ResourceFrom(ID3D11Texture2D* pTexture2D);
 	void Copy_ResourceFrom(const CRenderTarget& Target);
 	void Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc);
-	_float2 Get_TargetSize() { return m_vTargetSize; };
 
 #ifdef _DEBUG
 public:

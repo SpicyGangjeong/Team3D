@@ -5,6 +5,7 @@
 #include "SpellLearn.h"
 #include "SpellLearn_MovePointer.h"
 #include "SpellLearn_Data.h"
+#include "InfoInstance.h"
 
 CSpellLearn_Panel::CSpellLearn_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -12,7 +13,8 @@ CSpellLearn_Panel::CSpellLearn_Panel(ID3D11Device* pDevice, ID3D11DeviceContext*
 }
 
 CSpellLearn_Panel::CSpellLearn_Panel(const CSpellLearn_Panel& rhs)
-	:CPanelObject(rhs)
+	:CPanelObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -45,15 +47,9 @@ HRESULT CSpellLearn_Panel::Initialize(void* pArg)
 	m_fCanvasAlpha = 1.f;
 	m_fSortZ = 0.05f;
 	m_fDelayTime = 1.f;
-	static_cast<CSpellLearn*>(m_pSpellLearn)->Set_Pointer(static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer));
 	Visible(true);
 	ElementAllVisible(true);
 	return S_OK;
-}
-
-const CUIObject::SPELLLEARNINFO CSpellLearn_Panel::Get_Learninfo(_int Index)
-{
-	return static_cast<CSpellLearn_Data*>(m_pSpellLearn_Data)->Get_SpellLearn(Index);
 }
 
 void CSpellLearn_Panel::Priority_Update(_float fTimeDelta)
@@ -74,7 +70,7 @@ void CSpellLearn_Panel::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_M))
 	{
-		if (Index >= m_Info.size() - 1)
+		if (Index >= m_pInfoInstance->Get_SpellLearnIndex() - 1)
 		{
 			Index = 0;
 		}
@@ -172,11 +168,11 @@ HRESULT CSpellLearn_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_SpellLearn"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_SpellLearn"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SpellLinkDivide"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_SpellLinkDivide"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -190,11 +186,6 @@ HRESULT CSpellLearn_Panel::Ready_Components(void* pArg)
 
 HRESULT CSpellLearn_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, &m_Info, this, reinterpret_cast<CSpellLearn_Data**>(&m_pSpellLearn_Data))))
-	{
-		return E_FAIL;
-	}
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Name>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Name**>(&m_pSpellLearn_Name))))
 	{
 		return E_FAIL;
@@ -252,6 +243,8 @@ void CSpellLearn_Panel::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CSpellLearn_Panel::Describe_Entity()
 {
 }
+#endif // _DEBUG

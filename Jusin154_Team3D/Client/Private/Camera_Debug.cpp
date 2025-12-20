@@ -86,7 +86,9 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 
 void CCamera_Debug::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
 }
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)

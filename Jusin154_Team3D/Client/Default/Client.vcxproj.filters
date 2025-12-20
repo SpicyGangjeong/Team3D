@@ -596,9 +596,6 @@
     <ClInclude Include="..\Public\Quest_Data.h">
       <Filter>04.Mechanic\Quest</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BroomRaceManager.h">
-      <Filter>02.GameObjects\BroomRaceManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Interaction_Key.h">
       <Filter>02.GameObjects\UI\Interaction_Key</Filter>
     </ClInclude>
@@ -655,6 +652,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Skill.h">
       <Filter>04.Mechanic\State\State_Combat\State_Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRaceManager.h">
+      <Filter>02.GameObjects\BroomRaceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Data.h">
+      <Filter>04.Mechanic\Skill\SpellLearn_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_MovePointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Name.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Panel.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Canvas.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1371,6 +1389,24 @@
     <Filter Include="02.GameObjects\Effect\Effects\Lightning\LightningSide">
       <UniqueIdentifier>{b494a051-9dcc-4739-9048-13fb963c441f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas">
+      <UniqueIdentifier>{c00fdde9-9768-475d-bde2-d89305b759d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel">
+      <UniqueIdentifier>{1c4d53fe-facb-4a8e-9f4e-c02e3b333d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn">
+      <UniqueIdentifier>{f0015309-1656-42bb-8c06-58660586eeeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer">
+      <UniqueIdentifier>{ec3213cc-8976-4c8b-b317-6155cae388cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name">
+      <UniqueIdentifier>{7d84f56c-9d2f-483e-9ee1-2637d35ccb7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill\SpellLearn_Data">
+      <UniqueIdentifier>{69f95207-1e94-42f2-9690-d3e34e4ff5a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1914,9 +1950,6 @@
     <ClCompile Include="..\Private\Quest_Data.cpp">
       <Filter>04.Mechanic\Quest</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\BroomRaceManager.cpp">
-      <Filter>02.GameObjects\BroomRaceManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Interaction_Key.cpp">
       <Filter>02.GameObjects\UI\Interaction_Key</Filter>
     </ClCompile>
@@ -1973,6 +2006,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\LightningSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRaceManager.cpp">
+      <Filter>02.GameObjects\BroomRaceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Data.cpp">
+      <Filter>04.Mechanic\Skill\SpellLearn_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_MovePointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Name.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Panel.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Canvas.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
