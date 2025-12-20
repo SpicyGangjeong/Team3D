@@ -321,6 +321,29 @@ PS_OUT PS_MAIN(PS_IN In)
             + g_DiffuseBlend.Sample(DefaultSampler, In.vTexcoord).xyz * 0.4f
             + g_MossDiffuseTexture.Sample(DefaultSampler, In.vTexcoord).xyz * 0.1f, 1.f);
     }
+    if (5 == g_vSRVFlag.x)
+    {
+        float4 vMask = g_Maya_BaseTexture.Sample(DefaultSampler, In.vTexcoord);
+        float fTotalMask = vMask.r + vMask.g + vMask.b + vMask.a;
+        
+        float4 vDiffuseB = g_DiffuseBlend.Sample(DefaultSampler, In.vTexcoord);
+        float4 vDiffuseC = g_MossDiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vDiffuseD = g_ClearcoadTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vFinalColor = (vMtrlDiffuse * vMask.r +
+                                vDiffuseB * vMask.g +
+                                vDiffuseC * vMask.b +
+                                vDiffuseD * vMask.a) / fTotalMask;
+        vMtrlDiffuse = vFinalColor;
+        
+        float4 vSurfaceB = g_SROBlendTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vSurfaceC = g_MossSROTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vSurfaceD = g_SheenTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vFinalSurface = (vSurface * vMask.r +
+                                vSurfaceB * vMask.g +
+                                vSurfaceC * vMask.b +
+                                vSurfaceD * vMask.a) / fTotalMask;
+        vSurface = vFinalSurface;
+    }
     
     if (1 == g_vSRVFlag.y)
     {
@@ -333,7 +356,7 @@ PS_OUT PS_MAIN(PS_IN In)
     else if (3 == g_vSRVFlag.y)
     {
         vNormalDecoded = normalize(vNormalDecoded + DecodeNormalFromRG(g_NormalBlendTexture, DefaultSampler, In.vTexcoord) + DecodeNormalFromRG(g_MossNormalTexture, DefaultSampler, In.vTexcoord));
-    }
+     }
     
     if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
     {

@@ -33,6 +33,8 @@ public:
 	}
 
 private:
+	_bool					m_isVisible = { true };
+	_bool					m_isVisibleSelect = { true };
 	MAPOBJECT_RENDER_TYPE	m_Type = {};
 	CShader*				m_pShaderCom = { nullptr };
 	vector<CModel*>			m_pModelComs;
