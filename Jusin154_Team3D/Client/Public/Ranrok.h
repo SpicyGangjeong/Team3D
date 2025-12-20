@@ -16,7 +16,7 @@ class CRanrok final : public CMonster
 		FIREBALL,
 		SWIPE,
 		PULSE,
-		TUCKED,
+		RUSH,
 		END
 	};
 
@@ -77,7 +77,7 @@ private:
 	_int m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_AIR);
 
 	_float m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,15.f,40.f,40.f,40.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,15.f,40.f,40.f,40.f};
 
 	_float m_fTuckedTime = {};
 	_bool m_bFireBurst = { false };
@@ -94,6 +94,7 @@ private:
 	_float m_fAroundSpeed = 1.2f;
 	_float m_fAroundRadius = 40.f;
 	_float m_fAroundTime = {};
+	_float m_fRushTime = {};
 
 
 	void	Behavior_IdleEnter();
@@ -143,6 +144,10 @@ private:
 	void	Behavior_SkillEnter();
 	HRESULT Behavior_SkillExitCheck(_float fTimeDelta);
 	void	Behavior_SkillExit();
+
+	void	Behavior_RushEnter();
+	HRESULT Behavior_RushExitCheck(_float fTimeDelta);
+	void	Behavior_RushExit();
 
 	void	Behavior_PulseEnter();
 	HRESULT Behavior_PulseExitCheck(_float fTimeDelta);

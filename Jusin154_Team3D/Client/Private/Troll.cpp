@@ -18,7 +18,7 @@
 #include "State_Move.h"
 #include "State_Combat.h"
 #include "State_Hit.h"
-#include "Troll_State_Rush.h"
+#include "State_Rush.h"
 #include "State_Throw.h"
 #pragma endregion
 
@@ -165,7 +165,7 @@ void CTroll::Late_Update(_float fTimeDelta)
 	}
 
 	if (true == m_bLookAt) {
-		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);

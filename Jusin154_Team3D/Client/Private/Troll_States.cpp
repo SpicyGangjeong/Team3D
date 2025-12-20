@@ -15,7 +15,7 @@
 #include "State_Move.h"
 #include "State_Combat.h"
 #include "Troll_State_Stun.h"
-#include "Troll_State_Rush.h"
+#include "State_Rush.h"
 #include "Troll_State_BackHand_Swing.h"
 #include "State_Throw.h"
 #include "State_Swing.h"
@@ -792,13 +792,13 @@ void CTroll::Add_FSM()
 	}
 
 	{
-		CTroll_State_Rush::TROLL_STATE_RUSH_DESC Desc{};
+		CState_Rush::STATE_RUSH_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_RushEnter(); };
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_RushExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_RushExit(); };
 		Desc.pCollisionPlayer = &m_bCollisionPlayer;
-		m_States.emplace(FSMSTATE::RUSH, CTroll_State_Rush::Create(&Desc));
+		m_States.emplace(FSMSTATE::RUSH, CState_Rush::Create(&Desc));
 	}
 
 	{

@@ -133,7 +133,7 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 	}
 
 	if (true == m_bLookAt) {
-		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta,3.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta,3.f);
 	}
 
 	m_fHoverTime += fTimeDelta;

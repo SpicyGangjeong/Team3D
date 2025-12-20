@@ -1324,7 +1324,7 @@ void CPlayer::Behavior_SpellEnter()
 		if (Degree <= 30.f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::SPELL_180_R];
-			fRatio = 0.15f;
+			fRatio = 0.18f;
 		}
 		else if (Degree <= 120.f)
 		{
@@ -1471,7 +1471,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 
 		if (iCurr >= iStart && iCurr < iStart + 3)
 		{
-			if (fRatio >= 0.15f)
+			if (fRatio >= 0.2f)
 			{
 				_uint iNext = iCurr + 1;
 				pairAnimInfo = m_Animation[STATEANIM::SPELL];
@@ -1486,22 +1486,22 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 
 				if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != -1)
 				{
-					_float fRatio = 0.2f;
+					_float fAttackRatio = 0.2f;
 					if (iNext - iStart == 2) {
-						fRatio = 0.17f; 
+						fAttackRatio = 0.17f;
 					}
 					else if (iNext - iStart == 3) {
-						fRatio = 0.14f;
+						fAttackRatio = 0.14f;
 					}
 					else {
-						fRatio = 0.2f;
+						fAttackRatio = 0.2f;
 					}
 					switch (m_eSpell)
 					{
 					case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 						Add_Event(pairAnimInfo.first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); },
-							fRatio);
+							fAttackRatio);
 						Add_Event(pairAnimInfo.first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
 							0.f);
@@ -1509,7 +1509,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 					case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 						Add_Event(pairAnimInfo.first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
-							fRatio);
+							fAttackRatio);
 						Add_Event(pairAnimInfo.first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
 							0.f);
@@ -1517,10 +1517,15 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 					case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 						Add_Event(pairAnimInfo.first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
-							fRatio);
+							fAttackRatio);
 						Add_Event(pairAnimInfo.first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 							0.f);
+						break;
+					case ENUM_CLASS(SKILL_TYPE::ACCIO):
+						Add_Event(pairAnimInfo.first,
+							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
+							fAttackRatio);
 						break;
 					case ENUM_CLASS(SKILL_TYPE::LUMOS):
 						if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
@@ -1587,6 +1592,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 	{
 		if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
 		{
+			m_bLookAt = true;
 			switch (m_eSpell)
 			{
 			case ENUM_CLASS(SKILL_TYPE::ACCIO):
@@ -1609,12 +1615,10 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 
 	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
-		m_bLookAt = false;
 		return E_FAIL;
 	}
 
 	if (m_pModelCom->IsFinishedAnim()) {
-		m_bLookAt = false;
 		if (SUCCEEDED(InputMove()))
 		{
 			m_pFSM->Change_State(FSMSTATE::MOVE);
@@ -1634,6 +1638,7 @@ void CPlayer::Behavior_SpellExit()
 	m_pFSM->Disable_State(FSMSTATE::SPELL);
 
 	m_pModelCom->Set_BlendDuration(0.3f);
+	m_bLookAt = false;
 }
 
 void CPlayer::Behavior_AncientSpellEnter()

@@ -16,7 +16,7 @@
 #include "State_Move.h"
 #include "State_Combat.h"
 #include "State_Hit.h"
-#include "Troll_State_Rush.h"
+#include "State_Rush.h"
 #include "State_Throw.h"
 #pragma endregion
 
@@ -154,7 +154,7 @@ void CRanrok::Late_Update(_float fTimeDelta)
 	if (!m_pFSM->IsEnable(FSMSTATE::TUCKED))
 	{
 		if (true == m_bLookAt) {
-			m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
+			m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 		}
 	}
 
@@ -225,6 +225,20 @@ HRESULT CRanrok::Render()
 		}
 	}
 #endif
+
+	if (0.f < m_fDeadRatio) {
+		_bool bDisolve = false;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+	}
+
+	{
+		_bool bDisolve = false;
+		_float zero = 0.f;
+		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
+	}
 
 	return S_OK;
 }
@@ -340,6 +354,11 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		m_pFSM->Change_State(FSMSTATE::DEAD);
 		return;
 	}
+	if (damagePair.second <= Get_Hp().y / 2.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
+	{
+		m_pFSM->Change_State(FSMSTATE::LAND);
+		return;
+	}
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
@@ -446,13 +465,26 @@ void CRanrok::Set_Points()
 			XMVectorSet(-0.334f, -18.565f, 186.488f, 1.f),
 		},
 
-
 		{
 			XMVectorSet(16.141f, -50.299f, 221.423f, 1.f),
+			XMVectorSet(41.967f, -53.684f, 246.943f,1.f),
+			XMVectorSet(11.950f, -51.993f, 263.268f,1.f),
+			XMVectorSet(-17.090f, -51.099f, 236.738f,1.f),
+			XMVectorSet(-13.968f, -53.362f, 201.439f,1.f),
+			XMVectorSet(-13.968f, -53.362f, 201.439f,1.f),
+			XMVectorSet(35.842f, -48.150f, 189.827f,1.f),
+			XMVectorSet(51.975f, -47.209f, 207.986f,1.f),
+			XMVectorSet(40.875f, -48.956f, 256.929f,1.f)
 		},
 
 		{
-			XMVectorSet(31.966f, -45.717f, 245.970f, 1.f),
+			XMVectorSet(14.121f, -41.890f, 248.021f,1.f),
+			XMVectorSet(-12.558f, -28.878f, 236.451f,1.f),
+			XMVectorSet(-20.145f, -48.688f, 216.771f,1.f),
+			XMVectorSet(11.854f, -50.864f, 182.233f,1.f),
+			XMVectorSet(44.661f, -52.001f, 202.435f,1.f),
+			XMVectorSet(29.840f, -60.349f, 212.004f,1.f),
+			XMVectorSet(23.993f, -58.307f, 220.465f,1.f)
 		}
 	};
 }
@@ -470,7 +502,18 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		m_iCurrentFlow = 0;
 	}
 
-	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+	_vector Target;
+	if (m_iCurrentFlow == 1)
+	{
+		_float fRandom = m_pGameInstance->Real_Random_Float(-20.f, 20.f);
+		Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+		Target += XMVectorSet(0.f, fRandom, 0.f, 0.f);
+	}
+	else
+	{
+		Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+	}
+
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 
 	_vector toTarget = Target - CurPos;
@@ -487,11 +530,11 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		return;
 	}
 
-	if (m_iCurrentFlow == 1)
+	/*if (m_iCurrentFlow == 1)
 	{
 		AroundPoint(fTimeDelta);
 		return;
-	}
+	}*/
 
 	_vector vDir = XMVector3Normalize(toTarget);
 
@@ -499,7 +542,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	m_vMoveDir = XMVector3Normalize(m_vMoveDir);
 
-	m_pTransformCom->LookAt_Lerp(CurPos + m_vMoveDir,fTimeDelta,4.f);
+	m_pTransformCom->LookAt_Horizontal_Lerp(CurPos + m_vMoveDir,fTimeDelta,4.f);
 
 	_float speed = 50.f;
 	m_pCharacter_Controller->Set_Position(CurPos + m_vMoveDir * speed * fTimeDelta);
@@ -540,7 +583,7 @@ void CRanrok::AroundPoint(_float fTimeDelta)
 			m_pCharacter_Controller->Set_Position(NextPos);
 		}
 
-		m_pTransformCom->LookAt_Lerp(Center, fTimeDelta, 3.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(Center, fTimeDelta, 3.f);
 	}
 }
 
@@ -595,6 +638,7 @@ void CRanrok::Describe_Entity()
 	if (GUI::CollapsingHeader("Ranrak")) {
 		__super::Describe_Entity();
 
+		GUI::Text("Degree %.2f", m_fDegree);
 		GUI::Text("CurrFlow %d", m_iCurrentFlow);
 
 		_float3 Pos;

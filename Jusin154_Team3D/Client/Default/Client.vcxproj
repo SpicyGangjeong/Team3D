@@ -169,6 +169,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\SpellLearn_MovePointer.h" />
     <ClInclude Include="..\Public\SpellLearn_Name.h" />
     <ClInclude Include="..\Public\SpellLearn_Panel.h" />
+    <ClInclude Include="..\Public\State_Skill2.h" />
     <ClInclude Include="..\Public\Stupefy.h" />
     <ClInclude Include="..\Public\BroomRaceManager.h" />
     <ClInclude Include="..\Public\BroomRacerAI.h" />
@@ -367,7 +368,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Troll_Rock.h" />
     <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
     <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h" />
-    <ClInclude Include="..\Public\Troll_State_Rush.h" />
+    <ClInclude Include="..\Public\State_Rush.h" />
     <ClInclude Include="..\Public\Troll_Weapon.h" />
     <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\Unified.h" />
@@ -387,6 +388,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\SpellLearn_MovePointer.cpp" />
     <ClCompile Include="..\Private\SpellLearn_Name.cpp" />
     <ClCompile Include="..\Private\SpellLearn_Panel.cpp" />
+    <ClCompile Include="..\Private\State_Skill2.cpp" />
     <ClCompile Include="..\Private\Stupefy.cpp" />
     <ClCompile Include="..\Private\Boss_HpBar.cpp" />
     <ClCompile Include="..\Private\Barral_Splesh.cpp" />
@@ -592,7 +594,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_States.cpp" />
     <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp" />
-    <ClCompile Include="..\Private\Troll_State_Rush.cpp" />
+    <ClCompile Include="..\Private\State_Rush.cpp" />
     <ClCompile Include="..\Private\Troll_Weapon.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\Unified.cpp" />
