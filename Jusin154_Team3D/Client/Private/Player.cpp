@@ -223,7 +223,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	if (m_bLookAt && m_LockOnInfo.pUnit)
 	{
-		m_pTransformCom->LookAt_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 8.f);
 	}
 	////////////////////////////////////////////////////////////////////////////
 	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));

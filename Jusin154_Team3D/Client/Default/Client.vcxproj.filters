@@ -361,7 +361,7 @@
     <ClInclude Include="..\Public\State_IdleBreak.h">
       <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Troll_State_Rush.h">
+    <ClInclude Include="..\Public\State_Rush.h">
       <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_LightAttack.h">
@@ -673,6 +673,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\SpellLearn_Canvas.h">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Skill2.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1407,6 +1410,9 @@
     <Filter Include="04.Mechanic\Skill\SpellLearn_Data">
       <UniqueIdentifier>{69f95207-1e94-42f2-9690-d3e34e4ff5a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Skill2">
+      <UniqueIdentifier>{785b1fd0-ef6f-43ab-96fc-e233cd93b29d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1760,7 +1766,7 @@
     <ClCompile Include="..\Private\State_IdleBreak.cpp">
       <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
+    <ClCompile Include="..\Private\State_Rush.cpp">
       <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_LightAttack.cpp">
@@ -2027,6 +2033,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\SpellLearn_Canvas.cpp">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill2.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

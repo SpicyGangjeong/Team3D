@@ -18,6 +18,7 @@
 #include "State_FireBall.h"
 #include "State_Swipe.h"
 #include "State_Skill.h"
+#include "State_Skill2.h"
 #include "State_Pulse.h"
 #include "State_Tucked.h"
 #include "State_Hit.h"
@@ -142,19 +143,20 @@ HRESULT CRanrok::Behavior_CombatExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::FIRESWEEP);
 		return E_FAIL;
 	}
+	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::RUSH)] <= 0.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
+	{
+		m_pFSM->Change_State(FSMSTATE::RUSH);
+		return E_FAIL;
+	}
 	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)] <= 0.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
 	{
 		m_pFSM->Change_State(FSMSTATE::SWIPE);
 		return E_FAIL;
 	}
+
 	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::PULSE);
-		return E_FAIL;
-	}
-	else if (m_fTargetDistance <= 30.f && m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::TUCKED)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
 		return E_FAIL;
 	}
 	else {
@@ -493,11 +495,73 @@ void CRanrok::Behavior_SkillExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SKILL);
 }
+// 깨물면서 돌진
+void CRanrok::Behavior_RushEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::RUSH);
+	pairAnimInfo = m_Animation[STATEANIM::RUSH_LOOP];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::RUSH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::RUSH)];
+	m_bLookAt = false;
+}
+
+HRESULT CRanrok::Behavior_RushExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	m_fRushTime += fTimeDelta;
+	if(m_fRushTime>=2.5f && iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
+	{
+		if (m_fDegree >= 60.f)
+		{
+			if (m_fCross < 0)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_L];
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_R];
+			}
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+		else
+		{
+			m_pFSM->Change_State(FSMSTATE::GROUND);
+			return E_FAIL;
+		}
+			
+	}
+	else if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
+	{
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+		vLook = XMVectorSetY(vLook, 0.f);
+		vLook = XMVector3Normalize(vLook);
+		_vector vPos = m_pCharacter_Controller->Get_Position();
+		_vector vNextPos = vPos + vLook * 5.f * fTimeDelta;
+		m_pCharacter_Controller->Set_Position(vNextPos);
+		return S_OK;
+	}
+
+	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex != m_Animation[STATEANIM::RUSH_LOOP].first)
+	{
+		m_pFSM->Change_State(FSMSTATE::GROUND);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CRanrok::Behavior_RushExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::RUSH);
+	m_fRushTime = 0.f;
+	m_bLookAt = true;
+}
 
 void CRanrok::Behavior_PulseEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::PULSE);
+	m_bLookAt = false;
 
 	pairAnimInfo = m_Animation[STATEANIM::PULSE];
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)];
@@ -521,6 +585,7 @@ HRESULT CRanrok::Behavior_PulseExitCheck(_float fTimeDelta)
 void CRanrok::Behavior_PulseExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::PULSE);
+	m_bLookAt = true;
 }
 
 void CRanrok::Behavior_TuckedEnter()
@@ -530,7 +595,6 @@ void CRanrok::Behavior_TuckedEnter()
  
 	pairAnimInfo = m_Animation[STATEANIM::TUCKED];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::TUCKED)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::TUCKED)];
 }
 
 HRESULT CRanrok::Behavior_TuckedExitCheck(_float fTimeDelta)
@@ -569,6 +633,7 @@ void CRanrok::Behavior_LandEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::LAND);
 	m_pCharacter_Controller->SetGravity(true);
+	m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
 
 	pairAnimInfo = m_Animation[STATEANIM::LAND];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -580,7 +645,7 @@ void CRanrok::Behavior_LandEnter()
 					_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
 					_float fShakeValue = clamp(30.f / fDistance, 5.f, 10.f);
 					pPlayer->Start_CameraShake(1.2f, fShakeValue); },
-					0.55f);
+					0.53f);
 }
 
 HRESULT CRanrok::Behavior_LandExitCheck(_float fTimeDelta)
@@ -645,38 +710,8 @@ void CRanrok::Behavior_DeadEnter()
 	m_pRigidBody->SetActive(false);
 	m_pCharacter_Controller->SetActive(false);
 
-	_bool bStrongerKnockDown = { false };
 
-	switch (m_eHitSpell)
-	{
-	case STATEANIM::KNOCKDOWN_FWD:
-		bStrongerKnockDown = true;
-		break;
-	case STATEANIM::TUMBLE2:
-		bStrongerKnockDown = true;
-		break;
-	default:
-		break;
-	}
-
-	_float fabsRadius = fabsf(m_fHitRadius);
-	_uint iState = { UINT_MAX };
-
-	if (fabsRadius > 135.f) {
-		iState = STATEANIM::DEAD_FWD;
-	}
-	else if (fabsRadius < 45.f) {
-		iState = STATEANIM::DEAD_BWD;
-	}
-	else {
-		if (m_fHitRadius < 0.f) {
-			iState = STATEANIM::DEAD_L;
-		}
-		else {
-			iState = STATEANIM::DEAD_R;
-		}
-	}
-	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
+	pairAnimInfo = m_Animation[STATEANIM::DEAD];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
@@ -839,6 +874,18 @@ void CRanrok::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::SKILL, CState_Skill::Create(&Desc));
 	}
+
+	{
+		CState_Skill2::STATE_SKILL2_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_RushEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_RushExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_RushExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::RUSH, CState_Skill2::Create(&Desc));
+	}
+
 	{
 		CState_Pulse::STATE_PULSE_DESC Desc{};
 		Desc.pOwner = this;
@@ -916,6 +963,9 @@ void CRanrok::Set_Anim()
 	m_Animation[STATEANIM::IDLE_BREAK1] = { 27,false };
 	m_Animation[STATEANIM::IDLE_BREAK2] = { 28,false };
 
+	m_Animation[STATEANIM::IDLE_TURN_L] = { 124,false };
+	m_Animation[STATEANIM::IDLE_TURN_R] = { 125,false };
+
 	m_Animation[STATEANIM::HOVER_LOOP] = { 29,true };
 	m_Animation[STATEANIM::HOVER_DASH_BWD] = { 23,false };
 	m_Animation[STATEANIM::HOVER_DASH_FWD] = { 24,false };
@@ -952,6 +1002,7 @@ void CRanrok::Set_Anim()
 
 	m_Animation[STATEANIM::SKILL] = { 12,false }; // FireBurst 
 
+	m_Animation[STATEANIM::RUSH_LOOP] = { 91,true }; // 앞으로 물면서 돌진
 
 	m_Animation[STATEANIM::FIREBURST_REEL] = { 13,false }; // Air reel
 
@@ -960,6 +1011,10 @@ void CRanrok::Set_Anim()
 
 	m_Animation[STATEANIM::HIT_BWD3] = { 35,false }; // Ground Large
 	m_Animation[STATEANIM::HIT_BWD4] = { 36,false }; // Ground Small
+
+	m_Animation[STATEANIM::DEAD] = { 34,false }; 
+
+
 
 
 }
