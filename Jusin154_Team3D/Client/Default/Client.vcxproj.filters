@@ -674,6 +674,9 @@
     <ClInclude Include="..\Public\SpellLearn_Canvas.h">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Blink.h">
+      <Filter>02.GameObjects\Effect\Effects\Blink</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\State_Skill2.h">
       <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
     </ClInclude>
@@ -1410,6 +1413,9 @@
     <Filter Include="04.Mechanic\Skill\SpellLearn_Data">
       <UniqueIdentifier>{69f95207-1e94-42f2-9690-d3e34e4ff5a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Blink">
+      <UniqueIdentifier>{262cc240-d062-406a-9d47-36702fe6b9f3}</UniqueIdentifier>
+	</Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_Skill2">
       <UniqueIdentifier>{785b1fd0-ef6f-43ab-96fc-e233cd93b29d}</UniqueIdentifier>
     </Filter>
@@ -2034,6 +2040,9 @@
     <ClCompile Include="..\Private\SpellLearn_Canvas.cpp">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Blink.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Blink</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\State_Skill2.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
     </ClCompile>

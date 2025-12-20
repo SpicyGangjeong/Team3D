@@ -427,6 +427,7 @@ void CInfoInstance::Release_Information()
 	SAFE_RELEASE(m_pSkillInfo);
 	SAFE_RELEASE(m_pQuestInfo);
 	SAFE_RELEASE(m_pInteractiveInfo);
+	SAFE_RELEASE(m_pSpellLearn_Data);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);

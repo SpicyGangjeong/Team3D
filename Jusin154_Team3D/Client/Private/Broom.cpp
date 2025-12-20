@@ -146,16 +146,6 @@ void CBroom::Late_Update(_float fTimeDelta)
 		_vector vCameraLook = XMVector3Normalize(m_pGameInstance->Get_CameraLook());
 		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition() + vCameraLook * m_fCameraOffset);
 
-#if _DEBUG
-#if 진우
-		GUI::Begin("Wind");
-
-		m_pWindEffect->Get_Component<CInstance_Model>()->Describe_Entity();
-		GUI::Checkbox("BillBoard", &m_pWindEffect->Get_Effect_Info()->isBillboard);
-		GUI::DragFloat("Offset", &m_fCameraOffset);
-		GUI::End();
-#endif
-#endif
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);

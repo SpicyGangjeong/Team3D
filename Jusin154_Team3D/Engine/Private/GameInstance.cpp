@@ -888,6 +888,7 @@ HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTar
 {
 	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
 }
+
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {

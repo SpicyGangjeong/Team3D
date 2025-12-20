@@ -894,6 +894,13 @@ void CPlayer::Behavior_BlinkEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::BLINK);
 
+
+	Add_Event(m_Animation[STATEANIM::DODGE].first,
+		[&]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::BLINK, this);
+			m_bVisible = false;
+		},
+		0.1f);
 }
 
 HRESULT CPlayer::Behavior_BlinkExitCheck(_float fTimeDelta)
@@ -903,13 +910,16 @@ HRESULT CPlayer::Behavior_BlinkExitCheck(_float fTimeDelta)
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	m_fBlinkTime += fTimeDelta;
 
-	if (m_fBlinkTime >= 0.6f && iCurrAnimIndex != m_Animation[STATEANIM::DODGE_BLINK].first)
+
+	if (m_fBlinkTime >= 1.f && iCurrAnimIndex != m_Animation[STATEANIM::DODGE_BLINK].first)
 	{
 		m_bVisible = true;
 		pairAnimInfo = m_Animation[STATEANIM::DODGE_BLINK];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.8f,false,1.5f);
 	}
 	else if(iCurrAnimIndex != m_Animation[STATEANIM::DODGE_BLINK].first) {
+
+
 		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
 		vLook = XMVectorSetY(vLook, 0.f);
 		vLook = XMVector3Normalize(vLook);
@@ -2638,6 +2648,7 @@ void CPlayer::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_BlinkExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_BlinkExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+
 			if (SUCCEEDED(InputMove()))
 			{
 				_vector xmvInputDir = XMVectorZero();
