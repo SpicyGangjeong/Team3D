@@ -124,6 +124,7 @@ private:
 	void Render_WeightBlend();
 	void Render_NonLight();
 	void Render_Blend();
+	void Render_Blur_Mesh();
 	void Render_PostProcessing();
 	void Render_Distortion();
 	void Render_DistortionAcc();
