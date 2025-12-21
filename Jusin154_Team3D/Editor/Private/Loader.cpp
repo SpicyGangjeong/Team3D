@@ -2434,10 +2434,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_GerboldOlivander_Model")
 	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander_Anim.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_GerboldOlivander_Anim_Model")
-	));
 
 
 	for (auto& job : futures) {

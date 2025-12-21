@@ -74,6 +74,7 @@ private:
 	HRESULT Bind_ShaderResources();
 	void ReLockOnTarget();
 	void SetGravity();
+	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
