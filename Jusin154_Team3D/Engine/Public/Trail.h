@@ -30,6 +30,7 @@ public:
 
 public:
 	void	Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta  , _float fDamping, _float fLength, _float fMass, _fmatrix EndWorldMatrix);
+	void    Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float fDamping, _float fLength, _float fMass);
 	void    Rope_Fix(_bool isFix) { m_isFix = isFix; }
 private:
 	virtual HRESULT Initialize_Prototype() override;

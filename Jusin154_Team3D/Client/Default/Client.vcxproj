@@ -163,6 +163,14 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Barral_Splesh.h" />
     <ClInclude Include="..\Public\LightningSide.h" />
     <ClInclude Include="..\Public\Lightning.h" />
+    <ClInclude Include="..\Public\Blink.h" />
+    <ClInclude Include="..\Public\SpellLearn.h" />
+    <ClInclude Include="..\Public\SpellLearn_Canvas.h" />
+    <ClInclude Include="..\Public\SpellLearn_Data.h" />
+    <ClInclude Include="..\Public\SpellLearn_MovePointer.h" />
+    <ClInclude Include="..\Public\SpellLearn_Name.h" />
+    <ClInclude Include="..\Public\SpellLearn_Panel.h" />
+    <ClInclude Include="..\Public\State_Skill2.h" />
     <ClInclude Include="..\Public\Stupefy.h" />
     <ClInclude Include="..\Public\BroomRaceManager.h" />
     <ClInclude Include="..\Public\BroomRacerAI.h" />
@@ -201,7 +209,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\QuestInstance.h" />
     <ClInclude Include="..\Public\Quest_Info_Header.h" />
     <ClInclude Include="..\Public\Quest_Slot.h" />
-    <ClInclude Include="..\Public\Ranrak.h" />
+    <ClInclude Include="..\Public\Ranrok.h" />
     <ClInclude Include="..\Public\Screen_Wind.h" />
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
@@ -361,7 +369,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Troll_Rock.h" />
     <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
     <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h" />
-    <ClInclude Include="..\Public\Troll_State_Rush.h" />
+    <ClInclude Include="..\Public\State_Rush.h" />
     <ClInclude Include="..\Public\Troll_Weapon.h" />
     <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\Unified.h" />
@@ -375,6 +383,14 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\LightningSide.cpp" />
     <ClCompile Include="..\Private\Lightning.cpp" />
+    <ClCompile Include="..\Private\Blink.cpp" />
+    <ClCompile Include="..\Private\SpellLearn.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_Canvas.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_Data.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_MovePointer.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_Name.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_Panel.cpp" />
+    <ClCompile Include="..\Private\State_Skill2.cpp" />
     <ClCompile Include="..\Private\Stupefy.cpp" />
     <ClCompile Include="..\Private\Boss_HpBar.cpp" />
     <ClCompile Include="..\Private\Barral_Splesh.cpp" />
@@ -414,8 +430,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo_Text.cpp" />
     <ClCompile Include="..\Private\QuestInstance.cpp" />
     <ClCompile Include="..\Private\Quest_Slot.cpp" />
-    <ClCompile Include="..\Private\Ranrak.cpp" />
-    <ClCompile Include="..\Private\Ranrak_States.cpp" />
+    <ClCompile Include="..\Private\Ranrok.cpp" />
+    <ClCompile Include="..\Private\Ranrok_States.cpp" />
     <ClCompile Include="..\Private\Screen_Wind.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
@@ -580,7 +596,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_States.cpp" />
     <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp" />
-    <ClCompile Include="..\Private\Troll_State_Rush.cpp" />
+    <ClCompile Include="..\Private\State_Rush.cpp" />
     <ClCompile Include="..\Private\Troll_Weapon.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\Unified.cpp" />

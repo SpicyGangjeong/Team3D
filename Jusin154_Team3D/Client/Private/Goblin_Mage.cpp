@@ -8,6 +8,7 @@
 #include "Goblin_Dagger.h"
 #include "Effect_Container.h"
 #include "EffectParts.h"
+#include "MapElement_Interactable.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -132,7 +133,7 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 	}
 
 	if (true == m_bLookAt) {
-		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta,3.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta,3.f);
 	}
 
 	m_fHoverTime += fTimeDelta;
@@ -280,48 +281,64 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+	if (m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+		return;
+	}
 	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
 	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
 
-	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-
 	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
 
-	switch (iSkillType)
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	pair<_float, _float> damagePair = {};
+
+	if (pEffect_Container != nullptr)
 	{
-	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::JAP):
-	{
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ACCIO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		}
 	}
-	break;
-	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::ACCIO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
-		break;
+	else
+	{
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
+		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+		if (pProps != nullptr)
+		{
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
+		}
 	}
 
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
-		m_pFSM->Change_State(FSMSTATE::HIT);
-	}
 
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
 		return;
 #endif
 
-
-	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
 
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
@@ -332,8 +349,9 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-
-
+	
+		m_pFSM->Change_State(FSMSTATE::HIT);
+	
 }
 
 void CGoblin_Mage::OnHit(CGameObject* pOther, CGameObject* pCaller)

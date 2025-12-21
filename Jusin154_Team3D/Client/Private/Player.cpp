@@ -136,15 +136,15 @@ void CPlayer::Update(_float fTimeDelta)
 	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
-	float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+/*	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	float ease = 1.f;
+	_float ease = 1.f;
 	if (ratio < 0.4f)
 		ease = 1.15f;      
 	else if (ratio > 0.85f)
-		ease = 0.85f;      
+		ease = 0.85f; */     
 
-	m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta /** ease*/, m_pTransformCom);
 
 	Play_Event();
 	
@@ -223,7 +223,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	if (m_bLookAt && m_LockOnInfo.pUnit)
 	{
-		m_pTransformCom->LookAt_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 8.f);
 	}
 	////////////////////////////////////////////////////////////////////////////
 	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
@@ -346,7 +346,7 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 
-	if(!m_pFSM->IsEnable(FSMSTATE::DODGE) && !m_bShield)
+	if(!m_pFSM->IsEnable(FSMSTATE::DODGE|FSMSTATE::BLINK) && !m_bShield)
 		m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)

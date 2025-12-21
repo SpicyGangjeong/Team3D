@@ -116,6 +116,12 @@ HRESULT CMainApp::Ready_Default_Setting()
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size21"), TEXT("../Bin/Resources/Fonts/Font_size21.spritefont"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size22"), TEXT("../Bin/Resources/Fonts/Font_size22.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size23"), TEXT("../Bin/Resources/Fonts/Font_size23.spritefont"))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size30"), TEXT("../Bin/Resources/Fonts/Font_size30.spritefont"))))
 		return E_FAIL;
 

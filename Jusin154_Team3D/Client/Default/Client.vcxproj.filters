@@ -361,7 +361,7 @@
     <ClInclude Include="..\Public\State_IdleBreak.h">
       <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Troll_State_Rush.h">
+    <ClInclude Include="..\Public\State_Rush.h">
       <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_LightAttack.h">
@@ -596,14 +596,11 @@
     <ClInclude Include="..\Public\Quest_Data.h">
       <Filter>04.Mechanic\Quest</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BroomRaceManager.h">
-      <Filter>02.GameObjects\BroomRaceManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Interaction_Key.h">
       <Filter>02.GameObjects\UI\Interaction_Key</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Ranrak.h">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    <ClInclude Include="..\Public\Ranrok.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_FireBreath.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
@@ -640,7 +637,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\LightningSide.h">
       <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\State_FireSweep.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireSweep</Filter>
     </ClInclude>
@@ -655,6 +652,33 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Skill.h">
       <Filter>04.Mechanic\State\State_Combat\State_Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRaceManager.h">
+      <Filter>02.GameObjects\BroomRaceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Data.h">
+      <Filter>04.Mechanic\Skill\SpellLearn_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_MovePointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Name.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Panel.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Canvas.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Blink.h">
+      <Filter>02.GameObjects\Effect\Effects\Blink</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\State_Skill2.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1323,9 +1347,6 @@
     <Filter Include="02.GameObjects\Effect\Effects\Stupefy">
       <UniqueIdentifier>{7672784a-86a8-4485-a4de-a979bd0c8f52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrak">
-      <UniqueIdentifier>{bb981766-6030-4dd9-b92d-f6819a70c93d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Mechanic\State\Broom_Player\State_Hover">
       <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
     </Filter>
@@ -1370,6 +1391,33 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Lightning\LightningSide">
       <UniqueIdentifier>{b494a051-9dcc-4739-9048-13fb963c441f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok">
+      <UniqueIdentifier>{bb981766-6030-4dd9-b92d-f6819a70c93d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas">
+      <UniqueIdentifier>{c00fdde9-9768-475d-bde2-d89305b759d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel">
+      <UniqueIdentifier>{1c4d53fe-facb-4a8e-9f4e-c02e3b333d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn">
+      <UniqueIdentifier>{f0015309-1656-42bb-8c06-58660586eeeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer">
+      <UniqueIdentifier>{ec3213cc-8976-4c8b-b317-6155cae388cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name">
+      <UniqueIdentifier>{7d84f56c-9d2f-483e-9ee1-2637d35ccb7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill\SpellLearn_Data">
+      <UniqueIdentifier>{69f95207-1e94-42f2-9690-d3e34e4ff5a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Blink">
+      <UniqueIdentifier>{262cc240-d062-406a-9d47-36702fe6b9f3}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Skill2">
+      <UniqueIdentifier>{785b1fd0-ef6f-43ab-96fc-e233cd93b29d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1724,7 +1772,7 @@
     <ClCompile Include="..\Private\State_IdleBreak.cpp">
       <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
+    <ClCompile Include="..\Private\State_Rush.cpp">
       <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_LightAttack.cpp">
@@ -1914,9 +1962,6 @@
     <ClCompile Include="..\Private\Quest_Data.cpp">
       <Filter>04.Mechanic\Quest</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\BroomRaceManager.cpp">
-      <Filter>02.GameObjects\BroomRaceManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Interaction_Key.cpp">
       <Filter>02.GameObjects\UI\Interaction_Key</Filter>
     </ClCompile>
@@ -1929,11 +1974,11 @@
     <ClCompile Include="..\Private\Stupefy.cpp">
       <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Ranrak.cpp">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    <ClCompile Include="..\Private\Ranrok.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Ranrak_States.cpp">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrak</Filter>
+    <ClCompile Include="..\Private\Ranrok_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_FireBreath.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
@@ -1973,6 +2018,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\LightningSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRaceManager.cpp">
+      <Filter>02.GameObjects\BroomRaceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Data.cpp">
+      <Filter>04.Mechanic\Skill\SpellLearn_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_MovePointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Name.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Panel.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Canvas.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Blink.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Blink</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\State_Skill2.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

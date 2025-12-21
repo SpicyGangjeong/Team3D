@@ -28,7 +28,7 @@
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
 #include "BroomRacerAI.h"
-#include "Ranrak.h"
+#include "Ranrok.h"
 #pragma endregion
 
 
@@ -249,7 +249,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -258,7 +258,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // 
 #ifdef 인혁
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 
 	
@@ -640,9 +640,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrak>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-		return E_FAIL;
-	}
+//#if 진우
+//#else
+//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrak>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+//		return E_FAIL;
+//	}
+//#endif 
+	
+
 
 	return S_OK;
 }

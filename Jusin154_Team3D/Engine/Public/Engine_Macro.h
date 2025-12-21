@@ -47,7 +47,7 @@
 #undef ASSERT_INHYUK
 #define ASSERT_INHYUK(expression) assert(expression)
 //#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
-#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK || true
 #endif
 
 

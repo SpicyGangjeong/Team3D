@@ -31,15 +31,23 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	virtual const SPELLLEARNINFO Get_Learninfo(_int Index) override;
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	vector<SPELLLEARNINFO>   m_Info = {};
+
 	CGameObject* m_pSpellLearn_Name = { nullptr };
 	CGameObject* m_pSpellLearn = { nullptr };
 	CGameObject* m_pSpellLearn_MovePointer = { nullptr };
+	CGameObject* m_pSpellLearn_Data = { nullptr };
+
+	_int Index{};
 
 public:
 	static CSpellLearn_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

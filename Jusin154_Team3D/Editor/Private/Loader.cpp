@@ -111,6 +111,8 @@
 
 #include "QuestInstance.h"
 
+#include "SpellLearn_Data.h"
+
 #include "SpellLearn_Canvas.h"
 #include "SpellLearn_Panel.h"
 #include "SpellLearn_Name.h"
@@ -178,6 +180,7 @@
 #include "Goblin_BattleAxe.h"
 #include "Goblin_Spector.h"
 #include "StunEffect.h"
+#include "Blink.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1207,6 +1210,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Data>(g_iStaticLevel, CSpellLearn_Data::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Canvas>(g_iStaticLevel, CSpellLearn_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -1688,6 +1695,11 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Spector>(g_iStaticLevel, CGoblin_Spector::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -2953,89 +2965,188 @@ if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactabl
 
 
 #pragma region HOGWART
-	///* Hogwart LOD */
-	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\HogwartsLOD",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	//	return E_FAIL;
-
+	/* Hogwart LOD */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	
 	/* QuidditchPitch */
-	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_QuidditchPitch\\Static_Mesh\\KIT_Ext",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_QuidditchPitch\\Static_Mesh\\Collisions",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	//	return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/KIT_Ext",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/Collisions",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
 
-	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_Greenhouses\\Static_Mesh\\Kit_EXT",
-	//	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	//	return E_FAIL;
+	/* Greenhouse */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Greenhouses/Static_Mesh/Kit_EXT",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Greenhouses/SUB_Greenhouses_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* ViaductEntrance */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductEntrance/SUB_ViaductEntrance_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductEntrance/Static_Mesh/Kit_EXT",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* CentralTower */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_CentralTower/SUB_CentralTower_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_CentralTower/Static_Mesh/Kit_EXT",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* Library */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Library/SUB_Library_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Library/Static_Mesh/Kit_EXT",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* BellTowers */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_BellTowers/SUB_BellTowers_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_BellTowers/Static_Mesh/Kit_EXT",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* GrandStaircaseTower */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GrandStaircaseTower/SUB_GrandStaircaseTower_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GrandStaircase/SUB_GrandStaircase_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GrandStaircaseTower/Static_Mesh/Kit_EXT",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* ViaductCourtyard */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductCourtyard/SUB_ViaductCourtyard_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductCourtyard/Static_Mesh",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* ViaductBridge */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductBridge/SUB_ViaductBridge_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductBridge/Static_Mesh",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* Boathouse */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Boathouse/SUB_Boathouse_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Boathouse/Static_Mesh",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* BoathouseStairway */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_BoathouseStairway/SUB_BoathouseStairway_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_BoathouseStairway/Static_Mesh",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* EntranceHall */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_EntranceHall/SUB_EntranceHall_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_EntranceHall/Static_Mesh/Kit_Ext",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_EntranceHall/Static_Mesh",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* GreatHall */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GreatHall/SUB_GreatHall_EXTLOD/ProxyAssets",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GreatHall/Static_Mesh/Kit_Ext",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
 #pragma endregion
 
 
 #pragma region DUNGEON
-/* Cave Wall */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Wall",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-/* Props */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Props",
-		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-/* Rocks */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Cavern_Dungeon\\Mesh\\Rocks",
-		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-/*Sanctum_Dungeon_Floors */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ArenaFloor",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-/*Sanctum_Dungeon_BoH_Area5_Scaffolding */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BoH_Area5_Scaffolding",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-/*Sanctum_Dungeon_Center_Structure_AnteChamber */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\AnteChamber",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-/*Sanctum_Dungeon_Center_Structure_Core */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\Core",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-/*Sanctum_Dungeon_ConjuredDragonAttackZones */ // 바닥 충돌용
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ConjuredDragonAttackZones",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-/*Sanctum_Dungeon_Rock_Barriers */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Rock_Barriers",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-/*Sanctum_Dungeon_Rock_SM_Repository_FloatingGround */ //평평한 작은돌
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\SM_Repository_FloatingGround",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-/*Sanctum_Dungeon_Rock_SM_Repository_Stage3MoveableRocks*/  // 채우기용
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Stage3MoveableRocks",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-/*Sanctum_Dungeon_Rock_Interactables*/ // 입구쪽
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Interactables",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-/*Sanctum_Dungeon_Rock_SM_Repository_BreakingRocks*/ // 큰돌
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BreakingRocks\\LG_E",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-/*Sanctum_Dungeon_Rock_Main*/ // 기본 모델들
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository",
-	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+///* Cave Wall */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Wall",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+///* Props */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Props",
+//		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+///* Rocks */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Cavern_Dungeon\\Mesh\\Rocks",
+//		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+//
+///*Sanctum_Dungeon_Floors */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ArenaFloor",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+///*Sanctum_Dungeon_BoH_Area5_Scaffolding */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BoH_Area5_Scaffolding",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+//
+///*Sanctum_Dungeon_Center_Structure_AnteChamber */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\AnteChamber",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+//
+///*Sanctum_Dungeon_Center_Structure_Core */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\Core",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+//
+///*Sanctum_Dungeon_ConjuredDragonAttackZones */ // 바닥 충돌용
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ConjuredDragonAttackZones",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+//
+///*Sanctum_Dungeon_Rock_Barriers */
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Rock_Barriers",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+///*Sanctum_Dungeon_Rock_SM_Repository_FloatingGround */ //평평한 작은돌
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\SM_Repository_FloatingGround",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+///*Sanctum_Dungeon_Rock_SM_Repository_Stage3MoveableRocks*/  // 채우기용
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Stage3MoveableRocks",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+///*Sanctum_Dungeon_Rock_Interactables*/ // 입구쪽
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Interactables",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+//
+///*Sanctum_Dungeon_Rock_SM_Repository_BreakingRocks*/ // 큰돌
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BreakingRocks\\LG_E",
+//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+//		return E_FAIL;
+//
+///*Sanctum_Dungeon_Rock_Main*/ // 기본 모델들
+//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository",
+//	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+//	return E_FAIL;
 
 #pragma endregion
 

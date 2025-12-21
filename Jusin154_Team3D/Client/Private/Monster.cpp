@@ -186,6 +186,16 @@ const _float4x4* CMonster::Get_HeadMatrix()
 	return m_pModelCom->Get_BoneMatrixPtr("Head");
 }
 
+void CMonster::CameraShake(_float ClampValue, _float Min, _float Max, _float Time)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
+	if (pPlayer == nullptr)
+		return;
+	_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
+	_float fShakeValue = clamp(ClampValue / fDistance, Min, Max);
+	pPlayer->Start_CameraShake(Time, fShakeValue);
+}
+
 HRESULT CMonster::Ready_Components(void*pArg)
 {
 	__super::Ready_Components(pArg);

@@ -25,10 +25,15 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	void Set_Name(_int Index);
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
+	_wstring m_pSpell_Name;
 
 public:
 	static CSpellLearn_Name* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

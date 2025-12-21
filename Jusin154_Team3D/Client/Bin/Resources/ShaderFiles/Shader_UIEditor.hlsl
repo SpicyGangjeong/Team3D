@@ -32,6 +32,7 @@ float g_fHp;
 float2 g_fViewport;
 float2 g_fOrigin_Size;
 float2 g_fCurrent_Size;
+float2 g_fPosition;
 float2 g_fHpBG;
 float2 g_Pos;
 float2 g_fImageSize;
@@ -45,7 +46,6 @@ float2 g_fItemPosition1;
 float2 g_fItemImageSizes1;
 float2 g_fItemPosition2;
 float2 g_fItemImageSizes2;
-float2 g_fPosition[4];
 float2 g_fImageSizes[4];
 float4 g_fImagesUV[4];
 
@@ -117,6 +117,20 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Color.a *= Alpha;
     Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_Texture_Color(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float4 Color = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    
+    tex1.rgb *= Color.rgb;
+    
+    tex1.a *= Alpha;
+    Out.vColor = tex1;
     return Out;
 }
 
@@ -517,12 +531,15 @@ PS_OUT PS_Rotation(PS_IN In)
     
     float2 center = float2(0.5f, 0.5f);
     float2 uv = In.vTexcoord - center;
-    float2 Rotation = In.vTexcoord;
+    float2 Rotation;
     Rotation.x = uv.x * cos(g_fMapAngle) - uv.y * sin(g_fMapAngle);
     Rotation.y = uv.x * sin(g_fMapAngle) + uv.y * cos(g_fMapAngle);
     Rotation += center;
             
-    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+    float4 tex1 = g_Texture.Sample(BorderZeroLinearSampler, Rotation);
+    
+    if (tex1.a <= 0.f)
+        discard;
     
     color = tex1;
     
@@ -1757,11 +1774,54 @@ PS_OUT PS_SpellLearn(PS_IN In)
     Color = tex;
     
     tex1 *= 0.95f;
-    
+           
     Color.a = tex1;
 
     Color.a *= Alpha;
     
+    Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_SpellLearnColor(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+
+    float4 tex = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float4 tex1 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    Color = tex;
+    
+    Color.rgb *= tex1.rgb;
+    
+    float2 rectPos = g_fPosition;
+    float2 rectSize = g_fCurrent_Size;
+
+    float2 itemPos = g_fItemPosition1;
+    float2 itemSize = g_fItemImageSizes1;
+
+    float x0 = max(rectPos.x, itemPos.x);
+    float x1 = min(rectPos.x + rectSize.x, itemPos.x + itemSize.x);
+    float y0 = max(rectPos.y, itemPos.y);
+    float y1 = min(rectPos.y + rectSize.y, itemPos.y + itemSize.y);
+
+    float uMin = (x0 - rectPos.x) / rectSize.x;
+    float uMax = (x1 - rectPos.x) / rectSize.x;
+    float vMin = (y0 - rectPos.y) / rectSize.y;
+    float vMax = (y1 - rectPos.y) / rectSize.y;
+
+    vMin = 1.0f - vMin;
+    vMax = 1.0f - vMax;
+
+    if (In.vTexcoord.x >= min(uMin, uMax) && In.vTexcoord.x <= max(uMin, uMax) &&
+    In.vTexcoord.y >= min(vMin, vMax) && In.vTexcoord.y <= max(vMin, vMax))
+    {
+        Color.rgb = float3(0.f, 0.f, 1.f);
+    }
+    
+    Color.a *= Alpha;
     Out.vColor = Color;
     return Out;
 }
@@ -1986,6 +2046,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass Texture_Color
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Texture_Color();
     }
 
     pass Logo
@@ -2334,6 +2404,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SpellLearn();
+    }
+
+    pass SpellLearnColor
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SpellLearnColor();
     }
 
     pass Enemy_Detection

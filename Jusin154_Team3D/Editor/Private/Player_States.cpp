@@ -21,6 +21,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Blink.h"
 #pragma endregion
 
 #include "EffectPool.h"
@@ -285,6 +286,67 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 	return S_OK;
 }
 
+
+void CPlayer::Behavior_BlinkEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::BLINK);
+
+
+	Add_Event(m_Animation[STATEANIM::DODGE].first,
+		[&]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::BLINK, this);
+			m_bVisible = false;
+		},
+		0.1f);
+}
+
+HRESULT CPlayer::Behavior_BlinkExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo;
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	m_fBlinkTime += fTimeDelta;
+
+	if (m_fBlinkTime >= 1.f && iCurrAnimIndex != m_Animation[STATEANIM::DODGE_BLINK].first)
+	{
+		m_bVisible = true;
+		pairAnimInfo = m_Animation[STATEANIM::DODGE_BLINK];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.8f, false, 1.5f);
+		m_BroomScale = { 1.f,1.f,1.f };
+	}
+	else if (iCurrAnimIndex != m_Animation[STATEANIM::DODGE_BLINK].first) {
+
+
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+		vLook = XMVectorSetY(vLook, 0.f);
+		vLook = XMVector3Normalize(vLook);
+		_vector vPos = m_pCharacter_Controller->Get_Position();
+		_vector vNextPos = vPos + vLook * 7.f * fTimeDelta;
+		m_pCharacter_Controller->Set_Position(vNextPos);
+	}
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::DODGE_BLINK].first)
+	{
+		if (SUCCEEDED(InputMove()) && fRatio >= 0.2f) {
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
+		}
+
+		if (fRatio >= 0.2f) {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+void CPlayer::Behavior_BlinkExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::BLINK);
+	m_fBlinkTime = 0.f;
+}
+
 void CPlayer::Behavior_IdleExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLE | FSMSTATE::IDLE_TURN);
@@ -298,7 +360,7 @@ void CPlayer::Behavior_MoveEnter()
 	_bool bRight = m_pGameInstance->Key_Pressing(DIK_D);
 	_bool bBackward = m_pGameInstance->Key_Pressing(DIK_S);
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
-	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::DODGE)) {
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::DODGE | FSMSTATE::BLINK)) {
 		if (true == m_bSprintToggle) {
 			m_pFSM->Enable_State(FSMSTATE::SPRINT);
 			m_bWalkToggle = false;
@@ -699,17 +761,28 @@ void CPlayer::Behavior_DodgeEnter()
 	// 혹시 @@ to Dodge 있으면 여기에
 	m_pFSM->Enable_State(FSMSTATE::DODGE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::DODGE];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f);
 }
 
-HRESULT CPlayer::Behavior_DodgeExitCheck()
+HRESULT CPlayer::Behavior_DodgeExitCheck(_float fTimeDelta)
 {
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (fRatio >= 0.08f)
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+		{
+			m_pFSM->Change_State(FSMSTATE::BLINK);
+			return E_FAIL;
+		}
+	}
+
 	if (m_pModelCom->IsFinishedAnim()) {
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
 
-	if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Throw")) {
+	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
@@ -1147,6 +1220,55 @@ void CPlayer::Add_FSM()
 		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
 	}
 #pragma endregion
+
+
+	{
+		CState_Blink::STATE_BLINK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_BlinkEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_BlinkExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_BlinkExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+
+			if (SUCCEEDED(InputMove()))
+			{
+				_vector xmvInputDir = XMVectorZero();
+
+				_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));
+				_vector xmvCamRight = XMVector4Normalize(XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f));
+
+				if (m_pGameInstance->Key_Pressing(DIK_W))
+					xmvInputDir += xmvCamLook;
+				if (m_pGameInstance->Key_Pressing(DIK_S))
+					xmvInputDir -= xmvCamLook;
+				if (m_pGameInstance->Key_Pressing(DIK_A))
+					xmvInputDir -= xmvCamRight;
+				if (m_pGameInstance->Key_Pressing(DIK_D))
+					xmvInputDir += xmvCamRight;
+
+				xmvInputDir = XMVector3Normalize(xmvInputDir);
+
+				_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
+				_vector xmvCurLook = XMVector4Normalize(
+					XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+				_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
+
+				_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
+				_float absDir = fabsf(vDir);
+				_float cross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
+				if (cross > 0.f)
+				{
+					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
+				}
+				else {
+					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
+				}
+			}
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::BLINK, CState_Blink::Create(&Desc));
+	}
+
 #pragma region Behavior_Movement_Focus
 	{
 		CState_Jump::STATE_JUMP_DESC Desc{};
@@ -1168,7 +1290,7 @@ void CPlayer::Add_FSM()
 		CState_Dodge::STATE_DODGE_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_DodgeEnter(); };
-		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_DodgeExitCheck(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_DodgeExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_DodgeExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			if (m_pGameInstance->Key_Pressing(DIK_A)) { m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta); }
@@ -1239,7 +1361,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::LAND] = { 259,false };
 
 	m_Animation[STATEANIM::DODGE] = { 878,false };
-	m_Animation[STATEANIM::DODGE_BLINK] = { 876,true };
+	m_Animation[STATEANIM::DODGE_BLINK] = { 874,false };
 
 	m_Animation[STATEANIM::SKILL] = { 593,false };
 	m_Animation[STATEANIM::SKILL2] = { 991,false };

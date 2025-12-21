@@ -412,6 +412,27 @@ void CTransform::LookAt_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
 {
 	_vector vPos = Get_State(STATE::POSITION);
 
+	_vector vDir = vAt - vPos;
+
+	_vector vTargetLook = XMVector3Normalize(vDir);
+	_vector vCurrentLook = Get_State(STATE::LOOK);
+
+	_vector vNewLook = XMVector3Normalize(
+		XMVectorLerp(vCurrentLook, vTargetLook, fTimeDelta * fSpeed)
+	);
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vNewLook));
+	_vector vUp = XMVector3Normalize(XMVector3Cross(vNewLook, vRight));
+
+	Set_State(STATE::LOOK, vNewLook);
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+}
+
+void CTransform::LookAt_Horizontal_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
+{
+	_vector vPos = Get_State(STATE::POSITION);
+
 	_float3 vMyPos, vTarget;
 	XMStoreFloat3(&vMyPos, vPos);
 	XMStoreFloat3(&vTarget, vAt);
@@ -465,6 +486,13 @@ _float CTransform::TargetDis(_fvector vTarget)
 	_float dist = XMVectorGetX(
 		XMVector3Length(vTargetDis));
 	return dist;
+}
+
+void CTransform::Add_SpeedPerSec(_float fSpeedPerSec)
+{
+	m_fSpeedPerSec += fSpeedPerSec;
+	if (m_fSpeedPerSec < 0.f)
+		m_fSpeedPerSec = 0.f;
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
