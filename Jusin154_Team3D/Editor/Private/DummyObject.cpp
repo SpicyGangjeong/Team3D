@@ -81,6 +81,7 @@ HRESULT CDummyObject::Render()
 
 
 		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

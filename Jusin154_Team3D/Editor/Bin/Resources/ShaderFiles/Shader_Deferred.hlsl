@@ -326,6 +326,13 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     }
     float4 vBlurredColor = vAccColorSum / max(fAccWeight, FLT_EPSILON5);
     float2 vBlurredVelo = vAccVeloSum / max(fAccWeight, FLT_EPSILON5);
+    
+    if (length(vAccVeloSum) < FLT_EPSILON5)
+    {
+        Out.vColor = g_ColorTexture.Sample(ClampLinearSampler, vCenterUV);
+        Out.vVelocity = float2(0.5f, 0.5f);
+        return Out;
+    }
     Out.vColor = vBlurredColor;
     Out.vVelocity = vBlurredVelo * 0.5f + 0.5f;
     return Out;

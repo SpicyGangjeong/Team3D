@@ -68,10 +68,12 @@ public:
 	_float3			Get_Volume();
 
 	HRESULT			ConvertToDO(class CRigidBody_Dynamic& BodyOriginal);
-	void			Set_OnGroundFlag(_bool bOnGround);
+	_float3			Get_LastSlopeNormal() { return m_vLastClimbNormal; };
+	void			Set_OnGroundFlag(_bool bFlag);
+	_bool			IsSliding() { return m_bSlide; };
 	_bool			IsGravity() { return m_bGravity; }
 	void			SetGravity(_bool bCondition) { m_bGravity = bCondition; };
-	void			Set_CurrentSlope(_float fSlope);
+	void			Set_CurrentSlope(_float fSlope, _float3& CurrentSlopeNormal);
 	void			Rewind_Grounded();
 	_bool			IsActive() const { return m_bActive; }
 	void			SetActive(_bool bCondition) { m_bActive = bCondition; }
@@ -95,6 +97,8 @@ private:
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
 	_bool					m_bActive = { true };
 	_bool					m_bGravity = { true };
+	_bool					m_bSlide = { false };
+	_float3					m_vLastClimbNormal = { 0.f, 1.f - FLT_EPSILON, 0.f };;
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
