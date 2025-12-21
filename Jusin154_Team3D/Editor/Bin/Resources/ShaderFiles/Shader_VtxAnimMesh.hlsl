@@ -72,6 +72,7 @@ Texture2D g_AnisotropyTexture : register(t30);
 
 
 StructuredBuffer<BoneOut> g_BoneBuffer : register(t31);
+StructuredBuffer<BoneOut> g_PrevBoneBuffer : register(t32);
 
 int g_iBinded_Texture[27];
 
@@ -133,8 +134,20 @@ VS_OUT VS_MAIN(VS_IN In)
             g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
     
 
+    matrix PrevBoneMatrix =
+        mul(g_OffsetMatrix[In.vBlendIndex.x],
+            g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+      + mul(g_OffsetMatrix[In.vBlendIndex.y],
+            g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+      + mul(g_OffsetMatrix[In.vBlendIndex.z],
+            g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+      + mul(g_OffsetMatrix[In.vBlendIndex.w],
+            g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
+    
+
     
     float4 skinnedPos = mul(float4(In.vPosition, 1.f), BoneMatrix);
+    float4 skinnedPrevPos = mul(float4(In.vPosition, 1.f), PrevBoneMatrix);
     float3 skinnedNormal = mul(float4(In.vNormal, 0.f), BoneMatrix).xyz;
     float3 skinnedTangent = mul(float4(In.vTangent, 0.f), BoneMatrix).xyz;
     float3 skinnedBinormal = mul(float4(In.vBinormal, 0.f), BoneMatrix).xyz;
@@ -154,11 +167,7 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(skinnedPos, g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
-    Out.vPrevProjPos = mul(skinnedPos, matPrevWVP);
-
-    Out.vTexcoord = In.vTexcoord;
-    Out.vProjPos = Out.vPosition;
-    Out.vPrevProjPos = mul(skinnedPos, matPrevWVP);
+    Out.vPrevProjPos = mul(skinnedPrevPos, matPrevWVP);
 
     return Out;
 }
@@ -194,11 +203,24 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
             g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
     
+    matrix PrevBoneMatrix =
+        mul(g_OffsetMatrix[In.vBlendIndex.x],
+            g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+      + mul(g_OffsetMatrix[In.vBlendIndex.y],
+            g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+      + mul(g_OffsetMatrix[In.vBlendIndex.z],
+            g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+      + mul(g_OffsetMatrix[In.vBlendIndex.w],
+            g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
+    
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vPrevPosition = mul(vector(In.vPosition, 1.f), PrevBoneMatrix);
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+    vector vPrevNormal = mul(vector(In.vNormal, 0.f), PrevBoneMatrix);
     vector vBinormal = mul(vector(In.vBinormal, 0.f), BoneMatrix);
     vector vTangent = mul(vector(In.vTangent, 0.f), BoneMatrix);
     vPosition.xyz += (vNormal.xyz * g_fOutLineThickness).xyz;
+    vPrevPosition.xyz += (vPrevNormal.xyz * g_fOutLineThickness).xyz;
 
 
     matrix matWV, matWVP;
@@ -216,7 +238,7 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vPosition, g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
-    Out.vPrevProjPos = mul(vPosition, matPrevWVP);
+    Out.vPrevProjPos = mul(vPrevPosition, matPrevWVP);
     return Out;
 }
 struct VS_OUT_CAPTUREDMODEL
