@@ -23,6 +23,7 @@ void CRenderer::Render()
 	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
+	Render_Blur_Mesh();
 	Render_WeightBlend();
 	Render_PostProcessing();
 	Render_LastColor();
@@ -794,7 +795,6 @@ void CRenderer::Render_Blend()
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
 
-
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BLEND)])
 	{
 		if (nullptr != pRenderObject) {
@@ -808,6 +808,37 @@ void CRenderer::Render_Blend()
 
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].clear();
 	COMPUTE_TIMEDELTA("Timer_Render_Blend");
+}
+
+void CRenderer::Render_Blur_Mesh()
+{
+	COMPUTE_TIMEDELTA("Timer_Render_Blur_Mesh");
+	EVENTSCOPE_("Render_Blur_Mesh");
+
+	m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
+		return pSour->Get_Depth() > pDest->Get_Depth();
+		});
+
+	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(L"MRT_Blur_Mesh")))
+		return;
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render())) {
+				assert(false);
+			}
+		}
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)].clear();
+	COMPUTE_TIMEDELTA("Timer_Render_Blur_Mesh");
 }
 
 void CRenderer::Render_PostProcessing()

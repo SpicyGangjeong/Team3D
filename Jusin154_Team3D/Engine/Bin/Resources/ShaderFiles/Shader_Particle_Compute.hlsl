@@ -55,6 +55,8 @@ struct ParticleValue
     
     float  fRotateAttenuation;
     float  fRotateAttDelay;
+    
+    row_major matrix PreWorldMatrix;
 };
 
 
@@ -156,10 +158,13 @@ void CS_MAIN(
     // 라이프타임 움직임
     particle.vLifeTime.x += fTimeDelta;
     
+    /* 이전 월드를 기록한다 */
+    
+    row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+    particleValue.PreWorldMatrix = CurMat;
+    
     
     /* 내 z가 가려지는 상황이었다면 연산하지않음*/
-    
-    
     if (particle.vLifeTime.x >= particle.vLifeTime.y || particleValue.isStop == true)
     {
 

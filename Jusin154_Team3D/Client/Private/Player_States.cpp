@@ -2425,6 +2425,11 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
 			fRatio);
 		break;
+	case ENUM_CLASS(SKILL_TYPE::TRANSFORMATION):
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::TRANSFORMATION, this); },
+			fRatio);
+		break;
 	case ENUM_CLASS(SKILL_TYPE::DIFFINDO):
 		pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
 		break;
