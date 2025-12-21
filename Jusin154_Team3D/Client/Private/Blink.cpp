@@ -93,7 +93,7 @@ HRESULT CBlink::Initialize(void* pArg)
 	m_fSpeed = 1.6f;
 
 
-	m_fDuration = 2.f;
+	m_fDuration = 1.45f;
 
 
 

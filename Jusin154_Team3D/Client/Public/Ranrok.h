@@ -47,6 +47,7 @@ private:
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+	class CEffectPool* m_pEffectPool = nullptr;
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
 	DAMAGE_INFO m_DamageInfo;
@@ -57,10 +58,9 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
-	void Set_Points();
 	void MoveTo(_float fTimeDelta);
 	void AroundPoint(_float fTimeDelta);
-
+	HRESULT Load_RanrokPos(const _char* pFilePath);
 public:
 	static CRanrok* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
@@ -82,6 +82,7 @@ private:
 	_float m_fTuckedTime = {};
 	_bool m_bFireBurst = { false };
 	_bool m_bTucked = {false};
+	_bool m_bHoverDash = { false };
 	_vector m_vMoveDir = XMVectorZero();
 
 
