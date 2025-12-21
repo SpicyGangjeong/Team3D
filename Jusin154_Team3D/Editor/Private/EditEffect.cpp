@@ -531,6 +531,7 @@ void CEditEffect::Describe_Entity()
 	if (GUI::TreeNode("MOTION BLUR"))
 	{
 		GUI::Checkbox("MotionBlur", &m_EffectInfo.isMotionBlur);
+		GUI::DragFloat("MotionBlurIntensity", &m_EffectInfo.fModelBlurIntensity , 0.005f , 0.f);
 		GUI::TreePop();
 	}
 

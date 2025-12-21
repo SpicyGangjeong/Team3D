@@ -48,6 +48,12 @@ HRESULT CEffectObject::Render()
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
 
+		if (m_EffectInfo.eRenderOrder == RENDER::BULR_MESH)
+		{
+			if (FAILED(m_pInstance_ModelCom->Bind_OutPut_SRV_VS(5, 1)))
+				return E_FAIL;
+		}
+		
 		if (FAILED(m_pInstance_ModelCom->Render(i)))
 		{
 			return E_FAIL;
@@ -1030,7 +1036,9 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fModelBlurIntensity", &m_EffectInfo.fModelBlurIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	
 
 

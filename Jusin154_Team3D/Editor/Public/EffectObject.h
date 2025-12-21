@@ -91,7 +91,7 @@ public:
 		_bool	    isMotionBlur = {};
 		_bool       isPadding0 = {};
 		_bool       isPadding1 = {};
-		_float      fPaading0 = {0.f};
+		_float      fModelBlurIntensity = {0.f};
 
 		_bool       isBloom = {};
 		_bool       isBloomDissolve = {};

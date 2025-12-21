@@ -45,6 +45,8 @@ struct ParticleValue
     
     float fRotateAttenuation;
     float fRotateAttDelay;
+    
+    row_major matrix PreWorldMatrix;
 };
 
 
@@ -177,7 +179,9 @@ float4 g_vRimLightColor;
 
 float g_fModelDistortIntensity;
 
+/* 모델 블러 */
 
+float g_fModelBlurIntensity;
 
 struct VS_IN
 {
@@ -320,14 +324,17 @@ VS_BULR_MESH_OUT VS_BLUR_MESH(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matrix matW, matWV, matWVP;
     
     row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    row_major matrix PreTransformMatrix = g_ParticleValue[iGPUIndex].PreWorldMatrix;
+    
     
     matW = mul(TransformMatrix, g_WorldMatrix);
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
+    matrix matPrevW, matPrevWV, matPrevWVP;
     
-    matrix matPrevWV, matPrevWVP;
-    matPrevWV = mul(g_PrevWorldMatrix, g_PrevViewMatrix);
+    matPrevW = mul(PreTransformMatrix, g_PrevWorldMatrix);
+    matPrevWV = mul(matPrevW, g_PrevViewMatrix);
     matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
     
 
@@ -1098,7 +1105,7 @@ PS_BLUR_MESH_OUT PS_BLUR_MESH(PS_BLUR_MESH_IN In)
 
     Out.vDiffuse = vMtrlDiffuse;
     
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, vMtrlDiffuse.a * 100.f);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, vMtrlDiffuse.a * g_fModelBlurIntensity);
     
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
         (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
@@ -1312,11 +1319,12 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUR();
     }
 
+//19
     pass BLUR_MESH
     {
-        SetRasterizerState(RS_Nocull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_BULR_MESH, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR_MESH();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR_MESH();
