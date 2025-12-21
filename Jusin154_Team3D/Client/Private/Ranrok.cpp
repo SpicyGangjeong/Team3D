@@ -3,8 +3,8 @@
 
 #include "GameInstance.h"
 #include "InfoInstance.h"
+#include "CallBack_Monster_HitReport.h"
 #include "Effect_Container.h"
-#include "CallBack_Troll_HitReport.h"
 #include "EffectParts.h"
 #include "EffectPool.h"
 #include "Layer.h"
@@ -62,10 +62,13 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
+	//m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	//SAFE_ADDREF(m_pEffectPool);
+
 	if (NEXT_LEVEL == ENUM_CLASS(LEVEL::FIELD))
 	{
-		m_pCharacter_Controller->Set_Position(XMVectorSet(20.226f, 6.46f, 142.8f, 1.f));
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(20.226f, 6.46f, 142.8f, 1.f));
+		m_pCharacter_Controller->Set_Position(XMVectorSet(58.990f, 71.321f, 241.628f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(58.990f, 71.321f, 241.628f, 1.f));
 	}
 	else {
 
@@ -73,8 +76,7 @@ HRESULT CRanrok::Initialize(void* pArg)
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
 	}
 
-
-	Set_Points();
+	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
 
 	return S_OK;
 }
@@ -203,6 +205,7 @@ HRESULT CRanrok::Render()
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -454,41 +457,6 @@ HRESULT CRanrok::Bind_ShaderResources()
 	}
 	return S_OK;
 }
-
-void CRanrok::Set_Points()
-{
-	m_Points =
-	{
-		{
-			XMVectorSet(-23.129f, 5.847f, 120.080f, 1.f),
-			XMVectorSet(-35.026f, 2.671f, 144.041f, 1.f),
-			XMVectorSet(-0.334f, -18.565f, 186.488f, 1.f),
-		},
-
-		{
-			XMVectorSet(16.141f, -50.299f, 221.423f, 1.f),
-			XMVectorSet(41.967f, -53.684f, 246.943f,1.f),
-			XMVectorSet(11.950f, -51.993f, 263.268f,1.f),
-			XMVectorSet(-17.090f, -51.099f, 236.738f,1.f),
-			XMVectorSet(-13.968f, -53.362f, 201.439f,1.f),
-			XMVectorSet(-13.968f, -53.362f, 201.439f,1.f),
-			XMVectorSet(35.842f, -48.150f, 189.827f,1.f),
-			XMVectorSet(51.975f, -47.209f, 207.986f,1.f),
-			XMVectorSet(40.875f, -48.956f, 256.929f,1.f)
-		},
-
-		{
-			XMVectorSet(14.121f, -41.890f, 248.021f,1.f),
-			XMVectorSet(-12.558f, -28.878f, 236.451f,1.f),
-			XMVectorSet(-20.145f, -48.688f, 216.771f,1.f),
-			XMVectorSet(11.854f, -50.864f, 182.233f,1.f),
-			XMVectorSet(44.661f, -52.001f, 202.435f,1.f),
-			XMVectorSet(29.840f, -60.349f, 212.004f,1.f),
-			XMVectorSet(23.993f, -58.307f, 220.465f,1.f)
-		}
-	};
-}
-
 void CRanrok::MoveTo(_float fTimeDelta)
 {
 	if (!m_pFSM->IsEnable(FSMSTATE::TUCKED))
@@ -587,8 +555,46 @@ void CRanrok::AroundPoint(_float fTimeDelta)
 	}
 }
 
+HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(pFilePath) != tinyxml2::XML_SUCCESS)
+		return E_FAIL;
 
+	tinyxml2::XMLElement* pSpellLearnInfo = doc.FirstChildElement("RanrokPosInfo");
+	if (!pSpellLearnInfo) return E_FAIL;
 
+	tinyxml2::XMLElement* pSpellLearnData = pSpellLearnInfo->FirstChildElement("RanrokPosData");
+	if (!pSpellLearnData) return E_FAIL;
+
+	tinyxml2::XMLElement* pName = pSpellLearnData->FirstChildElement("Name");
+	while (pName)
+	{
+		_int iCurrentFlow;
+		pName->QueryIntAttribute("Flow", &iCurrentFlow);
+
+		if (iCurrentFlow >= m_Points.size())
+			m_Points.resize(iCurrentFlow + 1);
+
+		tinyxml2::XMLElement* pPosition = pName->FirstChildElement("Position");
+		while (pPosition)
+		{
+			tinyxml2::XMLElement* pPos = pPosition->FirstChildElement("Pos");
+			if (pPos)
+			{
+				_float px{}, py{}, pz{};
+				pPos->QueryFloatAttribute("x", &px);
+				pPos->QueryFloatAttribute("y", &py);
+				pPos->QueryFloatAttribute("z", &pz);
+				m_Points[iCurrentFlow].emplace_back(XMVectorSet(px, py, pz, 1.f));
+			}
+			pPosition = pPosition->NextSiblingElement("Position");
+		}
+		pName = pName->NextSiblingElement("Name");
+	}
+
+	return S_OK;
+}
 
 CRanrok* CRanrok::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -627,6 +633,7 @@ void CRanrok::Free()
 
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
+	//SAFE_RELEASE(m_pEffectPool);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }
@@ -637,6 +644,13 @@ void CRanrok::Describe_Entity()
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Ranrak")) {
 		__super::Describe_Entity();
+
+		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+		GUI::Text(AnimList.c_str());
+
+		GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+		GUI::Text("AnimSpeed %.2f", m_pModelCom->Get_AnimSpeed());
 
 		GUI::Text("Degree %.2f", m_fDegree);
 		GUI::Text("CurrFlow %d", m_iCurrentFlow);

@@ -345,7 +345,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = flase;
+	isLoad_Background = true;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
