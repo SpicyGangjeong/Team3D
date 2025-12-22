@@ -457,6 +457,7 @@ HRESULT CRanrok::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+
 void CRanrok::MoveTo(_float fTimeDelta)
 {
 	if (!m_pFSM->IsEnable(FSMSTATE::TUCKED))
@@ -466,57 +467,74 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		return;
 
 	if (m_iCurrentFlow >= m_Points.size())
-	{
 		m_iCurrentFlow = 0;
-	}
 
-	_vector Target;
-	if (m_iCurrentFlow == 1)
-	{
-		_float fRandom = m_pGameInstance->Real_Random_Float(-20.f, 20.f);
-		Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
-		Target += XMVectorSet(0.f, fRandom, 0.f, 0.f);
-	}
-	else
-	{
-		Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
-	}
-
+	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
+	GUI::Text("Dist %.2f", fDist);
+	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
+	{
+		if (fDist < 10.f)
+		{
+			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
+			{
+				m_bTucked = true;
+				m_pFSM->Disable_State(FSMSTATE::TUCKED);
+			}
 
-	if (fDist < 10.f)
+			m_iCurrentPoint = (m_iCurrentPoint + 1) % m_Points[m_iCurrentFlow].size();
+			return;
+		}
+	}
+	else if (fDist < 10.f)
 	{
 		if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 		{
 			m_bTucked = true;
 			m_pFSM->Disable_State(FSMSTATE::TUCKED);
 		}
+
 		m_iCurrentPoint = (m_iCurrentPoint + 1) % m_Points[m_iCurrentFlow].size();
 		return;
 	}
 
-	/*if (m_iCurrentFlow == 1)
-	{
-		AroundPoint(fTimeDelta);
-		return;
-	}*/
+	//_float4x4 CurMat, TargetMat, LerpMat;
 
-	_vector vDir = XMVector3Normalize(toTarget);
+	//XMStoreFloat4x4(&CurMat,XMMatrixTranslationFromVector(CurPos));
 
-	m_vMoveDir = XMVectorLerp(m_vMoveDir, vDir,fTimeDelta * 4.f);
+	//XMStoreFloat4x4(&TargetMat,XMMatrixTranslationFromVector(Target));
 
-	m_vMoveDir = XMVector3Normalize(m_vMoveDir);
+	//_float fLerpRatio = fTimeDelta * 2.f;
+	//fLerpRatio = min(fLerpRatio, 1.f);
 
-	m_pTransformCom->LookAt_Horizontal_Lerp(CurPos + m_vMoveDir,fTimeDelta,4.f);
+	//CMyTools::MatrixLerp(&CurMat, &TargetMat, LerpMat, fLerpRatio);
 
-	_float speed = 50.f;
-	m_pCharacter_Controller->Set_Position(CurPos + m_vMoveDir * speed * fTimeDelta);
+	//_vector vNextPos = XMVectorSet(LerpMat._41, LerpMat._42, LerpMat._43, 1.f);
+
+
+	//m_pTransformCom->Set_WorldMatrix(LerpMat);
+
+	//m_pCharacter_Controller->Set_Position(vNextPos);
+
+	static _vector vMoveDir = m_pTransformCom->Get_State(STATE::LOOK);
+
+	_vector vDir = XMVector3Normalize(Target - CurPos);
+
+	vMoveDir = XMVectorLerp(vMoveDir, vDir, fTimeDelta * 2.f);
+	vMoveDir = XMVector3Normalize(vMoveDir);
+
+	m_pTransformCom->LookAt_Horizontal_Lerp(CurPos + vMoveDir, fTimeDelta, 1.f);
+
+	_float Speed = 35.f;
+	m_pCharacter_Controller->Set_Position(
+		CurPos + vMoveDir * Speed * fTimeDelta
+	);
+
 }
-
-
 
 void CRanrok::AroundPoint(_float fTimeDelta)
 {
@@ -655,6 +673,8 @@ void CRanrok::Describe_Entity()
 		GUI::Text("Degree %.2f", m_fDegree);
 		GUI::Text("CurrFlow %d", m_iCurrentFlow);
 
+
+
 		_float3 Pos;
 		XMStoreFloat3(&Pos, Get_WorldPostion());
 
@@ -663,14 +683,49 @@ void CRanrok::Describe_Entity()
 			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&Pos), 1.f));
 		}
 
-		ImGui::SameLine();
+		GUI::SameLine();
 
 		if (GUI::SmallButton("Copy"))
 		{
 			char buf[64];
 			sprintf_s(buf, "%.3ff, %.3ff, %.3ff", Pos.x, Pos.y, Pos.z);
-			ImGui::SetClipboardText(buf);
+			GUI::SetClipboardText(buf);
+			m_Points[0].push_back(XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
 		}
+
+		GUI::SameLine();
+
+		if (GUI::SmallButton("Clear"))
+		{
+			m_Points[0].clear();
+		}
+
+		GUI::Separator();
+		GUI::Text("Points[0] Count : %d", (_int)m_Points[0].size());
+
+		for (_uint i = 0; i < m_Points[0].size();)
+		{
+			_vector v = m_Points[0][i];
+			XMFLOAT3 p;
+			XMStoreFloat3(&p, v);
+
+			GUI::PushID(i);
+
+			GUI::Text("[%d] (%.2f, %.2f, %.2f)", i, p.x, p.y, p.z);
+
+			GUI::SameLine();
+
+			if (GUI::SmallButton("X"))
+			{
+				m_Points[0].erase(m_Points[0].begin() + i);
+				GUI::PopID();
+				continue; 
+			}
+
+			GUI::PopID();
+			i++;
+		}
+
 
 		if (GUI::Button("MovePos"))
 		{

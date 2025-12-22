@@ -1360,7 +1360,7 @@ void CPlayer::Set_Anim()
 
 	m_Animation[STATEANIM::LAND] = { 259,false };
 
-	m_Animation[STATEANIM::DODGE] = { 878,false };
+	m_Animation[STATEANIM::DODGE] = { 878,false }; // 879 880
 	m_Animation[STATEANIM::DODGE_BLINK] = { 874,false };
 
 	m_Animation[STATEANIM::SKILL] = { 593,false };

@@ -410,6 +410,7 @@ void CTransform::LookAt(_fvector vAt)
 
 void CTransform::LookAt_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
 {
+	_float3 vScale = Get_Scale();
 	_vector vPos = Get_State(STATE::POSITION);
 
 	_vector vDir = vAt - vPos;
@@ -424,13 +425,14 @@ void CTransform::LookAt_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
 	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vNewLook));
 	_vector vUp = XMVector3Normalize(XMVector3Cross(vNewLook, vRight));
 
-	Set_State(STATE::LOOK, vNewLook);
-	Set_State(STATE::RIGHT, vRight);
-	Set_State(STATE::UP, vUp);
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScale.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScale.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vNewLook) * vScale.z);
 }
 
 void CTransform::LookAt_Horizontal_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
 {
+	_float3 vScale = Get_Scale();
 	_vector vPos = Get_State(STATE::POSITION);
 
 	_float3 vMyPos, vTarget;
@@ -453,9 +455,9 @@ void CTransform::LookAt_Horizontal_Lerp(_fvector vAt, _float fTimeDelta, _float 
 	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vNewLook));
 	_vector vUp = XMVector3Normalize(XMVector3Cross(vNewLook, vRight));
 
-	Set_State(STATE::LOOK, vNewLook);
-	Set_State(STATE::RIGHT, vRight);
-	Set_State(STATE::UP, vUp);
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScale.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScale.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vNewLook) * vScale.z);
 }
 
 void CTransform::LookAt_Horizontal(_fvector vAt)
