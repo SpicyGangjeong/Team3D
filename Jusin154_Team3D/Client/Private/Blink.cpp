@@ -197,7 +197,8 @@ HRESULT CBlink::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_pBlink_Swirl->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
-
+	m_pBlink_Circle->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
+	m_pBlink_Circle2->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 
 	m_pBlink_Distortion->Set_Visible(true);
 

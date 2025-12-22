@@ -220,6 +220,7 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 
 	m_pInfoInstance->ActiveAt_Interactive(XMLoadFloat4(&vCCTPos));
 
+	CollisionDesc.pObject->Set_Visible(false);
 	//m_pTransformCom->Set_WorldMatrix(CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>()->Get_Actor()->getGlobalPose());
 
 

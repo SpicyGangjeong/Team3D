@@ -819,7 +819,7 @@ void CRenderer::Render_Blur_Mesh()
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
 
-	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(L"MRT_Blur_Mesh")))
+	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(L"MRT_Blur_Mesh", nullptr, false)))
 		return;
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)])
