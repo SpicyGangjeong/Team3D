@@ -194,7 +194,7 @@ void CPhysXEffectHitBox::Free()
 		PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 		PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
 		m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
-		m_pGameInstance->Detach_Actor(*m_pCharacter_Controller->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pCharacter_Controller->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
 
 
 	}

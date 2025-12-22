@@ -21,12 +21,12 @@ public:
 // HRESULT Update_RegionOfInterest(); ( 충돌 컬링, 필터링도 검색해야함 )
 // Aggregate ( 충돌 그룹, 이 그룹끼리는 서로 충돌검사를 하지 않음, 지형, 레그돌 등 )
 
-	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
-	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody);
-	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
+	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel);
+	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel);
 	
-	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
-	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc);
+	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh, _uint iLevel);
+	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel);
 	PSX::PxMaterial* Create_Material(const _float3* vMatInfo);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
@@ -44,14 +44,14 @@ public:
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	//HRESULT LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
-	PSX::PxTriangleMesh* Find_TriangleMesh(const _tchar* pMeshName);
-	PSX::PxHeightField* Find_HeightField(const _tchar* pFieldName);
+	PSX::PxTriangleMesh* Find_TriangleMesh(const _tchar* pMeshName, _uint iLevel);
+	PSX::PxHeightField* Find_HeightField(const _tchar* pFieldName, _uint iLevel);
 
 	void Update(_float fTimeDelta);
-	void ClearScene();
-	void Attach_Actor(PSX::PxActor& Actor);
-	unordered_set<PSX::PxActor*>::iterator Detach_Actor(PSX::PxActor& Actor);
-	void Release_Actor(PSX::PxActor& Actor);
+	void ClearScene(_uint iLevel);
+	void Attach_Actor(PSX::PxActor& Actor, _uint iLevel);
+	unordered_set<PSX::PxActor*>::iterator Detach_Actor(PSX::PxActor& Actor, _uint iLevel);
+	void Release_Actor(PSX::PxActor& Actor, _uint iLevel);
 #pragma endregion
 #pragma region CHARACTER_CONTROLLER
 	/* dev-treadmill.tistory.com/158  */
@@ -89,23 +89,24 @@ private:
 	PSX::PxPvdTransport*				m_pTransport = { nullptr };
 
 
+	_uint										m_iMaxLevel = {};
 
-	unordered_set<PSX::PxActor*>				m_pActiveBodys = { };
-	unordered_set<PSX::PxActor*>				m_pRestBodies = { }; // 피직스의 액터로 구별되기 때문에 피직스액터 포인터를 키로 사용함
+	unordered_set<PSX::PxActor*>*				m_pActiveBodys = { nullptr };
+	unordered_set<PSX::PxActor*>*				m_pRestBodies = { nullptr }; // 피직스의 액터로 구별되기 때문에 피직스액터 포인터를 키로 사용함
 
-	map<_wstring, PSX::PxTriangleMesh*>			m_TriangleMeshes = {};
-	map<_wstring, PSX::PxTriangleMeshGeometry*>	m_TriangleMeshGeometry = {};
+	map<_wstring, PSX::PxTriangleMesh*>*		m_TriangleMeshes = { nullptr };
+	map<_wstring, PSX::PxTriangleMeshGeometry*>*m_TriangleMeshGeometry = { nullptr };
 
-	map<_wstring, PSX::PxHeightField*>			m_HeightFields = {};
-	map<_wstring, PSX::PxHeightFieldGeometry*>	m_HeightFieldGeometry = {};
+	map<_wstring, PSX::PxHeightField*>*			m_HeightFields = { nullptr };
+	map<_wstring, PSX::PxHeightFieldGeometry*>* m_HeightFieldGeometry = { nullptr };
 
 
 	PhsXUserData PlaneData = {};
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
-	_uint m_iNumLevel = {};
+	_uint m_iNumLevel = { UINT_MAX };
 private:
-	HRESULT Initialize();
+	HRESULT Initialize(_uint iLevel);
 #ifdef _DEBUG
 	HRESULT Connect_DebugServer();
 #endif // _DEBUG
@@ -115,7 +116,7 @@ private:
 	//void Update_Dynamic_AllActors();
 
 public:
-	static CPhysX_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPhysX_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iLevel);
 	virtual void Free() override;
 };
 

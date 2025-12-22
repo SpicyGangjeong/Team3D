@@ -149,12 +149,12 @@ void CMapElement_Static::ReadyForPhysX()
 		return;
 	}
 	m_bConverted = true;
-
+	_uint iLevel = NEXT_LEVEL;
 	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
 	{
 		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		if (FAILED(pModel->Ready_PhysXMeshes(m_pTransformCom->Get_XMWorldMatrix()))) {
+		if (FAILED(pModel->Ready_PhysXMeshes(m_pTransformCom->Get_XMWorldMatrix(), iLevel))) {
 			assert(false);
 		}
 	}

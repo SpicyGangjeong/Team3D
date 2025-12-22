@@ -138,7 +138,7 @@ HRESULT CDummy_PhysXMonster::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
 	}
 
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,

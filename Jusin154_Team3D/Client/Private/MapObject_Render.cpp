@@ -156,11 +156,12 @@ void CMapObject_Render::ReadyForPhysX()
 	}
 	m_bConverted = true;
 
+	_uint iLevel = NEXT_LEVEL;
 	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
 	{
 		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix)))) {
+		if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix), iLevel))) {
 			assert(false);
 		}
 	}
