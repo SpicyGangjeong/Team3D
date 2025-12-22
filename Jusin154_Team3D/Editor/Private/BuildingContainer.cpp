@@ -278,9 +278,9 @@ void CBuildingContainer::Describe_Entity()
         Set_BoundingBox();
     }
     _float3 vMove = {};
-    GUI::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
-    GUI::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
-    GUI::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+    GUI::InputFloat("Right", &vMove.x, 0.1f, 1.f);
+    GUI::InputFloat("Up", &vMove.y, 0.1f, 1.f);
+    GUI::InputFloat("Look", &vMove.z, 0.1f, 1.f);
 
     m_pTransformCom->Move_Right(vMove.x);
     m_pTransformCom->Move_Up(vMove.y);
@@ -304,9 +304,9 @@ void CBuildingContainer::Describe_Entity()
     }
 
     GUI::Text("----- Rotation ----");
-    GUI::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
-    GUI::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);
-    GUI::InputFloat("Z##Rotation", &m_vRotation.z, 10.f, 45.f);
+    GUI::InputFloat("X##Rotation", &m_vRotation.x, 1.f, 15.f);
+    GUI::InputFloat("Y##Rotation", &m_vRotation.y, 1.f, 15.f);
+    GUI::InputFloat("Z##Rotation", &m_vRotation.z, 1.f, 15.f);
 
     GUI::Text("----- Scale ----");
     GUI::InputFloat("X##Scale", &m_vScale.x, 0.1f, 1.f);
