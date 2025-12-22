@@ -118,6 +118,11 @@
 #include "SpellLearn_Name.h"
 #include "SpellLearn.h"
 #include "SpellLearn_MovePointer.h"
+#include "SpellLearn_ChaserPointer.h"
+#include "SpellLearn_LookPointer.h"
+#include "SpellLearn_Booster.h"
+#include "SpellLearn_Slot.h"
+#include "SpellLearn_Overlay.h"
 
 #include "IMGUIUI.h"
 
@@ -1220,6 +1225,7 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Canvas>(g_iStaticLevel, CSpellLearn_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -1237,6 +1243,26 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_MovePointer>(g_iStaticLevel, CSpellLearn_MovePointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_ChaserPointer>(g_iStaticLevel, CSpellLearn_ChaserPointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_LookPointer>(g_iStaticLevel, CSpellLearn_LookPointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Booster>(g_iStaticLevel, CSpellLearn_Booster::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Slot>(g_iStaticLevel, CSpellLearn_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Overlay>(g_iStaticLevel, CSpellLearn_Overlay::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

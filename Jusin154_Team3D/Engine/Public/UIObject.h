@@ -76,10 +76,14 @@ typedef struct tagCurrentQeustSerectInfo
 
 typedef struct tagSpellLearnInfo
 {
-	_wstring pSpellName{};
-	_wstring pImageName{};
-	_float	fSpellSize{};
-	_float2 fStartPosition{};
+	_wstring		pSpellName{};
+	_wstring		pImageName{};
+	_int			iSpellID{};
+	_int			iSpellType{};
+	_float			fSpellSize{};
+	_float2			fStartPosition{};
+	_float2			fEndPosition{};
+	vector<_vector> Booster;
 	vector<_vector> Lines;
 }SPELLLEARNINFO;
 
@@ -152,7 +156,7 @@ public:
 	virtual void Lerp_PosX(_float PosX);
 	virtual void Lerp_PosY(_float PosY);
 	virtual _bool Start_Lerp(_float fTimeDelta);
-	virtual _bool Start_Bezier(_float fTimeDelta);
+	virtual _bool Start_Lerp_Speed(_float fTimeDelta, _float2 Mouse_Point);
 	virtual void Reset_Pos(_float fTimeDelta);
 	virtual void Start_Size_Lerp(_float fTimeDelta);
 	virtual void Reset_Size_Lerp(_float fTimeDelta);
@@ -190,6 +194,7 @@ public:
 	virtual void Set_FontX(_float fFontX);
 	virtual void Set_FontY(_float fFontY);
 	virtual _float2 Get_Font();
+	virtual _float2 Get_PerPosition();
 protected:
 	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
@@ -246,6 +251,8 @@ protected:
 	_float					m_fFontX{};
 	_float					m_fFontY{};
 	_float					m_fFontOffSet{};
+
+	_float2					m_fPerPosition{};
 protected:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

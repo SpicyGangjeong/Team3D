@@ -158,6 +158,46 @@ _bool CElementObject::Start_Lerp(_float fTimeDelta)
 	}
 }
 
+_bool CElementObject::Start_Lerp_Speed(_float fTimeDelta, _float2 MousePoint)
+{
+	_vector Mouse = XMVectorSet(MousePoint.x, MousePoint.y, 1.f, 1.f);
+	_vector Pos = m_fCurrent_Position;
+	_vector Target = m_vLerp_Position;
+
+	_vector Dir = XMVectorSubtract(Target, Pos);
+	_vector MouseDir = XMVectorSubtract(Mouse, Pos);
+
+	_vector NorDir = XMVector3Normalize(Dir);
+	_vector NorMouse = XMVector3Normalize(MouseDir);
+
+	_float SameDir = XMVectorGetX(XMVector3Dot(NorDir, NorMouse));
+	_float Weight = max(0.5f, SameDir);
+	_vector LenVec = XMVector3Length(Dir);
+	_float Distance = XMVectorGetX(LenVec);
+
+	_float move = m_fMoveSpeed * fTimeDelta * Weight;
+
+	if (Distance <= move)
+	{
+		m_fX = m_vLerp_Position.m128_f32[0];
+		m_fY = m_vLerp_Position.m128_f32[1];
+		return true;
+	}
+
+	else
+	{
+		XMVECTOR DirNorm = XMVector3Normalize(Dir);
+		m_fX = (Pos + DirNorm * move).m128_f32[0];
+		m_fY = (Pos + DirNorm * move).m128_f32[1];
+		return false;
+	}
+}
+
+_bool CElementObject::Set_Trgger()
+{
+	return _bool();
+}
+
 void CElementObject::Reset_Pos(_float fTimeDelta)
 {
 	_vector Pos = m_fCurrent_Position;
