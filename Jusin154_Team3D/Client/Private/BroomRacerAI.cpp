@@ -305,8 +305,6 @@ _float CBroomRacerAI::ComputeTurnToRing()
 	return clamp(turn, -1.f, 1.f);
 }
 
-
-
 _float CBroomRacerAI::ComputeHeightAdjust()
 {
 	_float dy = (XMVectorGetY(m_pRaceRing->Get_WorldPostion()) + 15.f)
