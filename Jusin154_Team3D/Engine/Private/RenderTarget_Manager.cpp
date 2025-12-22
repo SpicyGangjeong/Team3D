@@ -115,7 +115,7 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NonClear(const _wstring& strMultiRender
 
     return S_OK;
 }
-HRESULT CRenderTarget_Manager::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CRenderTarget_Manager::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV , _bool isClear)
 {
     m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pOriginalDSV);
 
@@ -135,14 +135,22 @@ HRESULT CRenderTarget_Manager::Begin_MRT_Include_BackBuffer(const _wstring& strM
 
     pRenderTargetViews[iNumRenderTargets++] = m_pBackBufferRTV;
 
+    
+
     for (auto& pRenderTarget : *pMRTList)
     {
-        pRenderTarget->Clear();
+        if (isClear == true) {
+            pRenderTarget->Clear();
+        }
+
         pRenderTargetViews[iNumRenderTargets++] = pRenderTarget->Get_RTV();
     }
+
+
     if (0 == iNumRenderTargets) {
         return E_FAIL;
     }
+
 
     m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, (nullptr == pDSV) ? m_pOriginalDSV : pDSV);
 

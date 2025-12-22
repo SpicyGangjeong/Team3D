@@ -170,7 +170,7 @@ public:
 	HRESULT Add_MRT(const _wstring& strMultiRenderTargetKey, const _wstring& strRenderTargetKey);
 	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
-	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr , _bool isClear = true);
 	HRESULT Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);

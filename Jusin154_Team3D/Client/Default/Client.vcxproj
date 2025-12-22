@@ -161,6 +161,7 @@ call Update_Resources.bat
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Barral_Splesh.h" />
+    <ClInclude Include="..\Public\TransformationSide.h" />
     <ClInclude Include="..\Public\Transformation.h" />
     <ClInclude Include="..\Public\LightningSide.h" />
     <ClInclude Include="..\Public\Lightning.h" />
@@ -382,6 +383,7 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
     <ClCompile Include="..\Private\LightningSide.cpp" />
     <ClCompile Include="..\Private\Lightning.cpp" />
