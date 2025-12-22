@@ -26,18 +26,18 @@ float g_fOutLinePower;
 float g_fUsingSurfaceParams;
 
 
-Texture2D g_DiffuseTexture;
+Texture2D g_DiffuseTexture : register(t00);
 Texture2D g_SpecularTexture;
 Texture2D g_AmbientTexture;
 Texture2D g_EmissiveTexture;
 Texture2D g_HeightTexture;
 Texture2D g_NormalTexture;
 Texture2D g_ShininessTexture;
-Texture2D g_OpacityTexture;
-Texture2D g_DisplacementTexture;
+Texture2D g_NormalBlendTexture;
+Texture2D g_SROBlendTexture;
 Texture2D g_LightMapTexture;
 Texture2D g_ReflectionTexture;
-Texture2D g_BaseColorTexture;
+Texture2D g_DiffuseBlend;
 Texture2D g_NormalCameraTexture;
 Texture2D g_EmissionColorTexture;
 Texture2D g_MetalnessTexture;
@@ -126,23 +126,23 @@ VS_OUT VS_MAIN(VS_IN In)
 
     matrix BoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
 
     matrix PrevBoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
+            mul(g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vPrevPosition = mul(vector(In.vPosition, 1.f), PrevBoneMatrix);
@@ -180,23 +180,23 @@ VS_OUT VS_MAIN_OUTLINE_READ(VS_IN In)
 
     matrix BoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
-    
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
+
     matrix PrevBoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
+            mul(g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vPrevPosition = mul(vector(In.vPosition, 1.f), PrevBoneMatrix);
@@ -243,13 +243,13 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
 
     matrix BoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
    
@@ -283,6 +283,14 @@ struct PS_OUT
     float4 vColor : SV_Target3;
     float4 vSurface : SV_Target4;
     float2 vVelocityUV : SV_TARGET5;
+};
+
+struct PS_OUT_BLEND
+{
+    float4 vAlbedo : SV_TARGET0;
+    //float4 vNormal : SV_TARGET1;
+    //float4 vDepth : SV_TARGET2;
+    //float2 vVelocityUV : SV_TARGET3;
 };
 struct PS_OUT_OUTLINE
 {
@@ -335,7 +343,7 @@ PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    float4 vTHV_Mask = g_DisplacementTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vTHV_Mask = g_SROBlendTexture.Sample(DefaultSampler, In.vTexcoord);
     float RootTip = vTHV_Mask.r;
     float SpecMask = vTHV_Mask.g;
     float AoMask_Thv = vTHV_Mask.b;
@@ -437,7 +445,7 @@ PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    float4 vTHV_Mask = g_DisplacementTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vTHV_Mask = g_SROBlendTexture.Sample(DefaultSampler, In.vTexcoord);
     float RootTip = vTHV_Mask.r;
     float SpecMask = vTHV_Mask.g;
     float AoMask_Thv = vTHV_Mask.b;
@@ -478,7 +486,7 @@ PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    float4 vTHV_Mask = g_DisplacementTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vTHV_Mask = g_SROBlendTexture.Sample(DefaultSampler, In.vTexcoord);
     float RootTip = vTHV_Mask.r;
     float SpecMask = vTHV_Mask.g;
     float AoMask_Thv = vTHV_Mask.b;
@@ -636,6 +644,34 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_DNMRO_ToMRO(PS_IN In)
+{
+    PS_OUT Out;
+    
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    vDiffuse.rgb += vEmissive.rgb;
+    if (vDiffuse.a < 0.2f) {
+        discard;
+    }
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    float4 vMRO_Mask = g_MetalnessTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    Out.vAlbedo = vDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = float4(vMRO_Mask.r, vMRO_Mask.g, vMRO_Mask.b, 0.f);
+    // SRO
+    return Out;
+}
+
 PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
 {
     PS_OUT Out;
@@ -660,6 +696,40 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vSpecular_Mask.r, 0.5f, 1.f, 0.f);
+    // SRO
+    return Out;
+}
+
+PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
+{
+    PS_OUT Out;
+    
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vAlpha = g_TransmissionTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vAlpha.r < 0.2f)
+    {
+        discard;
+    }
+    vDiffuse.a = vAlpha.r;
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    float4 vSRO_Mask = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vMRO_MASK = g_MetalnessTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    float Roughness = saturate(vSRO_Mask.g * vMRO_MASK.g);
+
+    float Occlusion = saturate(vSRO_Mask.b * vMRO_MASK.b);
+    
+    Out.vAlbedo = vDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        (float) AI_TEXTURE_TYPE_SPECULAR / (float) AI_TEXTURE_TYPE_MAX, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = float4(vSRO_Mask.r, Roughness, Occlusion, 0.f);
     // SRO
     return Out;
 }
@@ -696,6 +766,132 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMRO_MASK.r, Roughness, Occlusion, vSRXO_Mask.b);
     // SRO
+    return Out;
+}
+
+PS_OUT_BLEND PS_Dragon_Aura(PS_IN In)
+{
+    PS_OUT_BLEND Out;
+    float2 uv = In.vTexcoord;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).x;
+    vDiffuse.a = vDiffuse.a * fOppacity.r;
+    Out.vAlbedo = vDiffuse;
+    return Out;
+}
+
+PS_OUT_BLEND PS_Dragon_EtherealEyes(PS_IN In)
+{
+    PS_OUT_BLEND Out;
+    float2 uv = In.vTexcoord;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).x;
+    float4 vBaseColor = g_DiffuseBlend.Sample(DefaultSampler, uv);
+    //TODO 눈알 더 해야함
+    Out.vAlbedo = lerp(vDiffuse, vBaseColor, fOppacity);
+    return Out;
+}
+
+PS_OUT_BLEND PS_Dragon_EtherealWings(PS_IN In)
+{
+    PS_OUT_BLEND Out;
+    float2 uv = In.vTexcoord;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
+    vDiffuse += vEmissive;
+    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).x;
+    vDiffuse.a = fOppacity;
+    Out.vAlbedo = vDiffuse;
+    return Out;
+}
+
+PS_OUT PS_Dragon_Body(PS_IN In)
+{
+    PS_OUT Out;
+    float2 uv = In.vTexcoord;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).r;
+    vDiffuse.a = fOppacity;
+    if (vDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    float3 vMRO = g_MetalnessTexture.Sample(DefaultSampler, uv).rgb;
+    float4 vMask = g_UnknownTexture.Sample(DefaultSampler, uv);
+    
+    
+    Out.vAlbedo = vDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = float4(vMRO, 0.f);
+    // SRO
+    return Out;
+}
+
+PS_OUT PS_Dragon_Wings(PS_IN In)
+{
+    PS_OUT Out;
+    float2 uv = In.vTexcoord;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
+    vDiffuse += vEmissive;
+
+    if (vDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    float3 vMRO = g_MetalnessTexture.Sample(DefaultSampler, uv).rgb;
+    float4 vMask = g_UnknownTexture.Sample(DefaultSampler, uv);
+    
+    
+    Out.vAlbedo = vDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = float4(vMRO, 0.f);
+    // SRO
+    return Out;
+}
+
+PS_OUT_BLEND PS_Dragon_RedHot(PS_IN In)
+{
+    PS_OUT_BLEND Out;
+    float2 uv = In.vTexcoord;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    Out.vAlbedo = vDiffuse;
+    return Out;
+}
+
+PS_OUT_BLEND PS_Dragon_PinkHot(PS_IN In)
+{
+    PS_OUT_BLEND Out;
+    float2 uv = In.vTexcoord;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    Out.vAlbedo = vDiffuse;
+    return Out;
+}
+
+PS_OUT_BLEND PS_Dragon_YellowHot(PS_IN In)
+{
+    PS_OUT_BLEND Out;
+    float2 uv = In.vTexcoord;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    Out.vAlbedo = vDiffuse;
     return Out;
 }
 
@@ -903,4 +1099,131 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MI_ClothSim_DSEN_ToSRO();
     }
 ///////
+    pass MI_DANSROMRO_ToSRO // 20
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MI_DANSROMRO_ToSRO();
+    }
+    pass MI_DANSROMRO_ToSRO_OUTLINE_WRITE // 21
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MI_DANSROMRO_ToSRO();
+    }
+    pass DNMRO_ToMRO__OUTLINE_WRITE // 22
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_DNMRO_ToMRO();
+    }
+//// DRAGON
+    pass DragonAuraPass // 23
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_Aura();
+    }
+    pass DragonEtherealEyesPass // 24
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_EtherealEyes();
+    }
+    pass DragonEtherealEyes_OUTLINE_WRITEPass // 25
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_EtherealEyes();
+    }
+    pass DragonEtherealWingsPass // 26
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_EtherealWings();
+    }
+    pass DragonWingsPass // 27
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_Wings();
+    }
+    pass DragonWings_OUTLINE_WRITEPass // 28
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_Wings();
+    }
+    pass DragonBodyPass // 29
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_Body();
+    }
+    pass DragonBody_OUTLINE_WRITEPass // 30
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_Body();
+    }
+    pass DragonRedHotPass // 31
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_RedHot();
+    }
+    pass DragonPinkHotPass // 32
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_PinkHot();
+    }
+    pass DragonYellowHotPass // 33
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Dragon_YellowHot();
+    }
 }

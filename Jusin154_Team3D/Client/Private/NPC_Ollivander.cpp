@@ -40,8 +40,7 @@ void CNPC_Ollivander::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pTransformCom->Get_EstimatedPositionByMomentum());
 
-	//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	//m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	__super::Late_Update(fTimeDelta);
 }
@@ -110,6 +109,7 @@ HRESULT CNPC_Ollivander::Render_Shadow(SHADOW eType)
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

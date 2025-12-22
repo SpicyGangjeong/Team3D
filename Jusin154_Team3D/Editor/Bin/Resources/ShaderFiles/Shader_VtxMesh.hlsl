@@ -426,7 +426,8 @@ PS_OUT PS_GLASS(PS_IN In)
     Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
+    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }
@@ -454,7 +455,8 @@ PS_OUT PS_GLASS_CUBE(PS_IN In)
     Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos) * 0.5f + 0.5f;
+    Out.vVelocityUV = float2(0.5f, 0.5f);
+    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }
