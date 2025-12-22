@@ -176,6 +176,7 @@
 #include "Stupefy.h"
 #include "Lightning.h"
 #include "LightningSide.h"
+#include "Transformation.h"
 
 #pragma endregion
 
@@ -334,21 +335,27 @@ HRESULT CLoader::Loading_For_GamePlay()
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
 	_bool isLoad_Background = { true };
+	_bool isLoad_Hogwart = { false };
 
 #ifdef gimch
-	isLoad_Background = true;
+	isLoad_Background = false;
+	isLoad_Hogwart = true;
 #endif // gimch
 #ifdef Bin
 	isLoad_Background = false;
+	isLoad_Hogwart = false;
 #endif // 
 #ifdef 진우
 	isLoad_Background = false;
+	isLoad_Hogwart = false;
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
+	isLoad_Hogwart = false;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
+	isLoad_Hogwart = false;
 #endif // 
 
 #pragma region MAP_MODELS
@@ -651,18 +658,269 @@ HRESULT CLoader::Loading_For_GamePlay()
 					".bin", false
 				));
 			}
-	/* ------------------------------------ HOGWART ------------------------------- */
-			{ /* QuidditchPitch */
-				/*  */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/KIT_Ext",
-					".bin", false
-				));
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/Collisions",
-					".bin", false
-				));
-			}
+		}
+
+		/* ------------------------------------ HOGWART ------------------------------- */
+		if(true == isLoad_Hogwart)
+		{
+			/* QuidditchPitch */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/KIT_Ext",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/Collisions",
+				".bin", false
+			));
+			
+			/* Greenhouse */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Greenhouses/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Greenhouses/SUB_Greenhouses_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+
+			/* ViaductEntrance */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductEntrance/SUB_ViaductEntrance_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductEntrance/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* CentralTower */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_CentralTower/SUB_CentralTower_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_CentralTower/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* Library */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Library/SUB_Library_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Library/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* BellTowers */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_BellTowers/SUB_BellTowers_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_BellTowers/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* GrandStaircaseTower */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GrandStaircaseTower/SUB_GrandStaircaseTower_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GrandStaircase/SUB_GrandStaircase_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GrandStaircaseTower/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* ViaductCourtyard */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductCourtyard/SUB_ViaductCourtyard_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductCourtyard/Static_Mesh",
+				".bin", false
+			));
+
+			/* ViaductBridge */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductBridge/SUB_ViaductBridge_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ViaductBridge/Static_Mesh",
+				".bin", false
+			));
+
+			/* Boathouse */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Boathouse/SUB_Boathouse_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Boathouse/Static_Mesh",
+				".bin", false
+			));
+
+			/* BoathouseStairway */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_BoathouseStairway/SUB_BoathouseStairway_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_BoathouseStairway/Static_Mesh",
+				".bin", false
+			));
+
+			/* EntranceHall */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_EntranceHall/SUB_EntranceHall_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_EntranceHall/Static_Mesh/Kit_Ext",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_EntranceHall/Static_Mesh",
+				".bin", false
+			));
+
+			/* GreatHall */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GreatHall/SUB_GreatHall_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GreatHall/Static_Mesh/Kit_Ext",
+				".bin", false
+			));
+
+			/* Ravenclaw */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_RavenclawTower/SUB_RavenclawTower_ExtLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_RavenclawTower/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* QuadCourtyard */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuadCourtyard/SUB_QuadCourtyard_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuadCourtyard/Static_Mesh",
+				".bin", false
+			));
+
+			/* HospitalWing */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_HospitalWing/SUB_HospitalWing_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_HospitalWing/Static_Mesh",
+				".bin", false
+			));
+
+			/* GryffindorTower */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GryffindorTower/SUB_GryffindorTower_ExtLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_GryffindorTower/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* FacultyTower */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_FacultyTower/SUB_FacultyTower_ExtLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_FacultyTower/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* NorthTower */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_NorthTower/SUB_NorthTower_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_NorthTower/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* NorthHall */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_NorthHall/SUB_NorthHall_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_NorthHall/Static_Mesh/StaticMesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* AstronomyTower */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_AstronomyTower/SUB_AstronomyTower_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_AstronomyTower/Static_Mesh/EXT",
+				".bin", false
+			));
+
+			/* ClockTower */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ClockTower/SUB_ClockTower_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ClockTower/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* TransfigurationCourtyard */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_TransfigurationCourtyard/SUB_TransfigurationCourtyard_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_TransfigurationCourtyard/Static_Mesh",
+				".bin", false
+			));
+
+			/* ClockTowerCourtyard */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ClockTowerCourtyard/SUB_ClockTowerCourtyard_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_ClockTowerCourtyard/Static_Mesh/Kit_EXT",
+				".bin", false
+			));
+
+			/* DADATower */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_DADATower/SUB_DADATower_EXTLOD/ProxyAssets",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_DADATower/StaticMesh/EXT",
+				".bin", false
+			));
+		
 		}
 	}
 
@@ -1787,6 +2045,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTransformation>(NEXT_LEVEL, CTransformation::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {

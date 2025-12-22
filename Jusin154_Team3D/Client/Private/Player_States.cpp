@@ -893,12 +893,10 @@ void CPlayer::Behavior_DodgeExit()
 void CPlayer::Behavior_BlinkEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::BLINK);
-
-
+	m_bVisible = false;
 	Add_Event(m_Animation[STATEANIM::DODGE].first,
 		[&]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::BLINK, this);
-			m_bVisible = false;
 		},
 		0.1f);
 }
@@ -911,7 +909,7 @@ HRESULT CPlayer::Behavior_BlinkExitCheck(_float fTimeDelta)
 	m_fBlinkTime += fTimeDelta;
 
 
-	if (m_fBlinkTime >= 1.f && iCurrAnimIndex != m_Animation[STATEANIM::DODGE_BLINK].first)
+	if (m_fBlinkTime >= 0.8f && iCurrAnimIndex != m_Animation[STATEANIM::DODGE_BLINK].first)
 	{
 		m_bVisible = true;
 		pairAnimInfo = m_Animation[STATEANIM::DODGE_BLINK];
@@ -924,7 +922,7 @@ HRESULT CPlayer::Behavior_BlinkExitCheck(_float fTimeDelta)
 		vLook = XMVectorSetY(vLook, 0.f);
 		vLook = XMVector3Normalize(vLook);
 		_vector vPos = m_pCharacter_Controller->Get_Position();
-		_vector vNextPos = vPos + vLook * 7.f * fTimeDelta;
+		_vector vNextPos = vPos + vLook * 13.f * fTimeDelta;
 		m_pCharacter_Controller->Set_Position(vNextPos);
 	}
 
@@ -1169,47 +1167,55 @@ void CPlayer::Behavior_LightAttackEnter()
 	m_pModelCom->Set_BlendDuration(0.1f);
 	m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 	
-	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-	_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
-
-	vLook = XMVector3Normalize(vLook);
-	vCameraLook = XMVector3Normalize(vCameraLook);
-
-	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
-	fDot = clamp(fDot, -1.0f, 1.0f);
-
-	_float fAngleRad = acosf(fDot);
-	_float Degree = XMConvertToDegrees(fAngleRad);
-	_vector vCross = XMVector3Cross(vLook, vCameraLook);
-	_float Cross = XMVectorGetY(vCross);
-
-	if (Degree <= 30.f)
+	if (m_LockOnInfo.pUnit)
 	{
-		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
-	}
-	else if (Degree <= 80.f)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bLookAt = true;
-			},
-			0.01f);
-	}
-	else if (Degree <= 135.f)
-	{
-		if (Cross < 0.f)
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+		_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+		vLook = XMVector3Normalize(vLook);
+		vCameraLook = XMVector3Normalize(vCameraLook);
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
+		fDot = clamp(fDot, -1.0f, 1.0f);
+
+		_float fAngleRad = acosf(fDot);
+		_float Degree = XMConvertToDegrees(fAngleRad);
+		_vector vCross = XMVector3Cross(vLook, vCameraLook);
+		_float Cross = XMVectorGetY(vCross);
+
+		if (Degree <= 30.f)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_L];
+			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+		}
+		else if (Degree <= 80.f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+			Add_Event(pairAnimInfo.first,
+				[this]() {m_bLookAt = true;
+				},
+				0.01f);
+		}
+		else if (Degree <= 135.f)
+		{
+			if (Cross < 0.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_L];
+			}
+			else
+			{
+				pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_R2];
+			}
 		}
 		else
 		{
-			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_R2];
+			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_180_R];
 		}
 	}
-	else
-	{
-		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_180_R];
+	else {
+		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 	}
+
+
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true);
 
@@ -1320,146 +1326,65 @@ void CPlayer::Behavior_SpellEnter()
 
 	m_pModelCom->Set_BlendDuration(0.1f);
 	m_pFSM->Enable_State(FSMSTATE::SPELL);
-
 	_float fRatio = 0.f;
-
-	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-	_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
-
-	vLook = XMVector3Normalize(vLook);
-	vCameraLook = XMVector3Normalize(vCameraLook);
-
-	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
-	fDot = clamp(fDot, -1.0f, 1.0f);
-
-	_float fAngleRad = acosf(fDot);
-	_float Degree = XMConvertToDegrees(fAngleRad);
-	_vector vCross = XMVector3Cross(vLook, vCameraLook);
-	_float Cross = XMVectorGetY(vCross);
-
-	if (Degree <= 30.f)
+	if (m_LockOnInfo.pUnit)
 	{
-		pairAnimInfo = m_Animation[STATEANIM::SPELL];
-		fRatio = 0.2f;
-	}
-	else if (Degree <= 80.f)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::SPELL];
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bLookAt = true;
-			},
-			0.01f);
-		fRatio = 0.2f;
-	}
-	else if (Degree <= 135.f)
-	{
-		if (Cross < 0.f)
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+		_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+		vLook = XMVector3Normalize(vLook);
+		vCameraLook = XMVector3Normalize(vCameraLook);
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
+		fDot = clamp(fDot, -1.0f, 1.0f);
+
+		_float fAngleRad = acosf(fDot);
+		_float Degree = XMConvertToDegrees(fAngleRad);
+		_vector vCross = XMVector3Cross(vLook, vCameraLook);
+		_float Cross = XMVectorGetY(vCross);
+
+		if (Degree <= 30.f)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::SPELL_90_L];
+			pairAnimInfo = m_Animation[STATEANIM::SPELL];
+			fRatio = 0.2f;
 		}
-		else {
+		else if (Degree <= 80.f)
+		{
 			pairAnimInfo = m_Animation[STATEANIM::SPELL];
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_bLookAt = true;
 				},
 				0.01f);
+			fRatio = 0.2f;
 		}
-		fRatio = 0.15f;
+		else if (Degree <= 135.f)
+		{
+			if (Cross < 0.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::SPELL_90_L];
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::SPELL];
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_bLookAt = true;
+					},
+					0.01f);
+			}
+			fRatio = 0.15f;
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::SPELL_180_R];
+			fRatio = 0.18f;
+		}
 	}
 	else {
-		pairAnimInfo = m_Animation[STATEANIM::SPELL_180_R];
-		fRatio = 0.18f;
+		pairAnimInfo = m_Animation[STATEANIM::SPELL];
+		fRatio = 0.2f;
 	}
 
 	if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != -1)
 	{
-		switch (m_eSpell)
-		{
-		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); }, /* 임시로 바꿔놓음 */
-				fRatio);
-			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
-				0.f);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
-				fRatio);
-			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
-				0.f);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
-				fRatio);
-			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
-				0.f);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::ACCIO):
-			Add_Event(pairAnimInfo.first,
-				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
-				fRatio);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::DIFFINDO):
-			pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
-			break;
-		case ENUM_CLASS(SKILL_TYPE::DISILLUSIONMENT):
-			pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_ENTER];
-			break;
-		case ENUM_CLASS(SKILL_TYPE::LUMOS):
-			if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
-			{
-				if (SUCCEEDED(InputMove()))
-				{
-					if (m_bSprintToggle) {
-						pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-					}
-					else if (m_bWalkToggle) {
-						pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-					}
-					else {
-						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-					}
-				}
-				else {
-					pairAnimInfo = m_Animation[STATEANIM::IDLE];
-				}
-				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
-					0.f);
-				m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R),m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
-			}
-			else
-			{
-				if (SUCCEEDED(InputMove()))
-				{
-					if (m_bSprintToggle) {
-						pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-					}
-					else if (m_bWalkToggle) {
-						pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-					}
-					else {
-						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-					}
-				}
-				else {
-					pairAnimInfo = m_Animation[STATEANIM::IDLE];
-				}
-				m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R),m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
-			}
-			break;
-		default:
-			pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
-			Add_Event(pairAnimInfo.first,
-				[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },
-				0.2f);
-			break;
-		}
+		Add_SpellEvent(pairAnimInfo.first,fRatio);
 	}
 	else
 	{
@@ -1515,81 +1440,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 					else {
 						fAttackRatio = 0.2f;
 					}
-					switch (m_eSpell)
-					{
-					case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-						Add_Event(m_Animation[STATEANIM::SPELL].first,
-							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); },
-							fAttackRatio);
-						Add_Event(m_Animation[STATEANIM::SPELL].first,
-							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
-							0.f);
-						break;
-					case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-						Add_Event(m_Animation[STATEANIM::SPELL].first,
-							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
-							fAttackRatio);
-						Add_Event(m_Animation[STATEANIM::SPELL].first,
-							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
-							0.f);
-						break;
-					case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-						Add_Event(m_Animation[STATEANIM::SPELL].first,
-							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
-							fAttackRatio);
-						Add_Event(m_Animation[STATEANIM::SPELL].first,
-							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
-							0.f);
-						break;
-					case ENUM_CLASS(SKILL_TYPE::ACCIO):
-						Add_Event(m_Animation[STATEANIM::SPELL].first,
-							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
-							fAttackRatio);
-						break;
-					case ENUM_CLASS(SKILL_TYPE::LUMOS):
-						if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
-						{
-							if (SUCCEEDED(InputMove()))
-							{
-								if (m_bSprintToggle) {
-									pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-								}
-								else if (m_bWalkToggle) {
-									pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-								}
-								else {
-									pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-								}
-							}
-							else {
-								pairAnimInfo = m_Animation[STATEANIM::IDLE];
-							}
-							Add_Event(pairAnimInfo.first,
-								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
-								0.f);
-							m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
-						}
-						else
-						{
-							if (SUCCEEDED(InputMove()))
-							{
-								if (m_bSprintToggle) {
-									pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-								}
-								else if (m_bWalkToggle) {
-									pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-								}
-								else {
-									pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-								}
-							}
-							else {
-								pairAnimInfo = m_Animation[STATEANIM::IDLE];
-							}
-							m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
-						}
-						break;
-					}
+					Add_SpellEvent(pairAnimInfo.first, fAttackRatio);
 				}
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
@@ -1668,26 +1519,21 @@ void CPlayer::Behavior_AncientSpellEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	m_pFSM->Enable_State(FSMSTATE::ANCIENT_SPELL);
-	pairAnimInfo = m_Animation[STATEANIM::ANCIENT_LIGHTNING_CHARGE];
+	pairAnimInfo = m_Animation[STATEANIM::ANCIENT_LIGHTNING];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 	Add_Event(pairAnimInfo.first,
-		[&]() {	pairAnimInfo = m_Animation[STATEANIM::ANCIENT_LIGHTNING];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
-		0.5f);
-
-	Add_Event(m_Animation[STATEANIM::ANCIENT_LIGHTNING].first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::LIGHTNING, Get_PartObject<CWand>());
 		},
-		0.15f);
+		0.45f);
 
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::LIGHTNING_SIDE, Get_PartObject<CWand>());
 		},
-		0.2f);
+		0.18f);
 }
 
 HRESULT CPlayer::Behavior_AncientSpellExitCheck()
@@ -2545,6 +2391,104 @@ void CPlayer::Attach_Broom()
 	m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
 }
 
+void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
+{
+	pair<_uint, _bool> pairAnimInfo;
+	switch (m_eSpell)
+	{
+	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); }, /* 임시로 바꿔놓음 */
+			fRatio);
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+			0.f);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
+			fRatio);
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
+			0.f);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
+			fRatio);
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
+			0.f);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::ACCIO):
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
+			fRatio);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::TRANSFORMATION):
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::TRANSFORMATION, this); },
+			fRatio);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::DIFFINDO):
+		pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
+		break;
+	case ENUM_CLASS(SKILL_TYPE::DISILLUSIONMENT):
+		pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_ENTER];
+		break;
+	case ENUM_CLASS(SKILL_TYPE::LUMOS):
+		if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
+		{
+			if (SUCCEEDED(InputMove()))
+			{
+				if (m_bSprintToggle) {
+					pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+				}
+				else if (m_bWalkToggle) {
+					pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+				}
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+				}
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::IDLE];
+			}
+			Add_Event(AnimIndex,
+				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
+				0.f);
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
+		}
+		else
+		{
+			if (SUCCEEDED(InputMove()))
+			{
+				if (m_bSprintToggle) {
+					pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+				}
+				else if (m_bWalkToggle) {
+					pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+				}
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+				}
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::IDLE];
+			}
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+		}
+		break;
+	default:
+		pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
+		Add_Event(AnimIndex,
+			[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },
+			0.2f);
+		break;
+	}
+}
+
+
 void CPlayer::Add_FSM()
 {
 #pragma region Behavior_Movement_NotFocus
@@ -2991,8 +2935,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 586,false };
 	m_Animation[STATEANIM::ANCIENT_THROW] = { 919,false };
 
-	m_Animation[STATEANIM::ANCIENT_LIGHTNING_CHARGE] = { 755,false };
-	m_Animation[STATEANIM::ANCIENT_LIGHTNING] = { 859,false }; // 859
+	m_Animation[STATEANIM::ANCIENT_LIGHTNING] = { 1001,false }; // 859
 
 	m_Animation[STATEANIM::SPELL_FAIL] = { 906,false };
 
@@ -3002,13 +2945,13 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::PARRY4] = { 921,false };
 
 
-	m_Animation[STATEANIM::HIT_L] = { 1200,false };
-	m_Animation[STATEANIM::HIT_R] = { 1201,false };
-	m_Animation[STATEANIM::FLINCH_BWD] = { 1060,false };
-	m_Animation[STATEANIM::FLINCH_FWD] = { 1061,false };
-	m_Animation[STATEANIM::FLINCH_LEFT] = { 1062,false };
-	m_Animation[STATEANIM::FLINCH_RIGHT] = { 1063,false };
-	m_Animation[STATEANIM::KNOCKBACK] = { 1078,false };
+	m_Animation[STATEANIM::HIT_L] = { 1201,false };
+	m_Animation[STATEANIM::HIT_R] = { 1202,false };
+	m_Animation[STATEANIM::FLINCH_BWD] = { 1061,false };
+	m_Animation[STATEANIM::FLINCH_FWD] = { 1062,false };
+	m_Animation[STATEANIM::FLINCH_LEFT] = { 1063,false };
+	m_Animation[STATEANIM::FLINCH_RIGHT] = { 1064,false };
+	m_Animation[STATEANIM::KNOCKBACK] = { 1079,false };
 
 	m_Animation[STATEANIM::BROOM_IDLE] = { 710,true };
 	m_Animation[STATEANIM::BROOM_FWD] = { 711,true };

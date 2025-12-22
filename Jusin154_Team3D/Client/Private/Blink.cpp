@@ -74,7 +74,7 @@ HRESULT CBlink::Initialize(void* pArg)
 	SAFE_ADDREF(m_pBlink_Circle2);
 
 
-	m_Events.emplace(1.f, [&]() {
+	m_Events.emplace(0.85f, [&]() {
 		for (auto& pTrail : m_Blink_Trails)
 		{
 			pTrail->SetDissolve(true);
@@ -83,7 +83,7 @@ HRESULT CBlink::Initialize(void* pArg)
 
 		});
 
-	m_Events.emplace(1.5f, [&]() {
+	m_Events.emplace(1.1f, [&]() {
 
 		m_isParticleEnd = true;
 		m_pBlink_Swirl->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
@@ -93,7 +93,7 @@ HRESULT CBlink::Initialize(void* pArg)
 	m_fSpeed = 1.6f;
 
 
-	m_fDuration = 2.f;
+	m_fDuration = 1.45f;
 
 
 

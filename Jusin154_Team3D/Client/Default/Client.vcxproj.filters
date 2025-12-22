@@ -683,6 +683,9 @@
     <ClInclude Include="..\Public\NPC_EleazarFig.h">
       <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Transformation.h">
+      <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1422,6 +1425,9 @@
     <Filter Include="04.Mechanic\State\State_Combat\State_Skill2">
       <UniqueIdentifier>{785b1fd0-ef6f-43ab-96fc-e233cd93b29d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Transformation">
+      <UniqueIdentifier>{87b1db75-938f-462f-a288-fe9c8d6c689e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\GateKeeper">
       <UniqueIdentifier>{cef7b9f7-3bb3-4782-a1a8-09751fa538d8}</UniqueIdentifier>
     </Filter>
@@ -2051,6 +2057,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Skill2.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transformation.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NPC_EleazarFig.cpp">
       <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>

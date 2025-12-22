@@ -377,6 +377,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "Diffuse A")) {
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
+	else if (!strcmp(FileType.c_str(), "Object Diffuse")) {
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
 	else if (!strcmp(FileType.c_str(), "Diffuse B")) {
 		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
 		m_vSRV_Flag.x += 1.f;
@@ -401,6 +404,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		m_vPBR_Flag.y = PBR_HRO;
 	}
 	else if (!strcmp(FileType.c_str(), "Normal_1")){
+		eTexture = aiTextureType::aiTextureType_NORMALS;
+	}
+	else if (!strcmp(FileType.c_str(), "Object Normal")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	}
 	else if (!strcmp(FileType.c_str(), "Normal A Map")){
@@ -647,7 +653,7 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	{
 		if (!strcmp(FileType.c_str(), "Detail Diffuse A")) 
 				return S_OK;
-		if (!strcmp(FileType.c_str(), "Cavity-Lichen D Mask")) 
+		else if (!strcmp(FileType.c_str(), "Cavity-Lichen D Mask"))
 				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Detail Diffuse B")) 
 				return S_OK;
@@ -675,7 +681,15 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Albedo")) 
 				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Displacement")) 
+				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Material")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Distortion Pattern")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Ground Diffuse")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Ground MRO/SRO")) 
 				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Rock_Texture")) {
 			eTexture = aiTextureType::aiTextureType_DIFFUSE;

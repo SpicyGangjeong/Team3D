@@ -26,7 +26,6 @@ private:
 	HRESULT Ready_Background();
 	HRESULT Ready_Layer_Hogsmeade();
 	HRESULT Ready_Layer_Hogwart();
-	HRESULT Ready_Layer_Unified();
 	HRESULT Ready_IntstanceProp();
 	HRESULT Ready_Markers();
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
