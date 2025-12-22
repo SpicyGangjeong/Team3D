@@ -480,7 +480,8 @@ void CModel::Update_RootBone(_float Amount)
 			XMStoreFloat4(&axis, axisWorld);
 
 			swap(axis.z, axis.y);
-			m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
+			if (m_bRootBone)
+				m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
 
 		}
 		XMStoreFloat4(&m_vPrevRootRot, qCur);

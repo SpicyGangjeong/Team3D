@@ -82,6 +82,9 @@ void CGoblin_Mage::Priority_Update(_float fTimeDelta)
 
 void CGoblin_Mage::Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -124,6 +127,9 @@ void CGoblin_Mage::Update(_float fTimeDelta)
 
 void CGoblin_Mage::Late_Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	__super::Late_Update(fTimeDelta);
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
@@ -314,9 +320,11 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ACCIO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);

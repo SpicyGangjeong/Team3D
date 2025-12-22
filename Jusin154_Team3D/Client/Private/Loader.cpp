@@ -143,6 +143,7 @@
 #include "DecendoSide.h"
 #include "BombardSide.h"
 #include "LeviosoSide.h"
+#include "TransformationSide.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
@@ -338,8 +339,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	_bool isLoad_Hogwart = { false };
 
 #ifdef gimch
-	isLoad_Background = false;
-	isLoad_Hogwart = true;
+	isLoad_Background = true;
+	isLoad_Hogwart = false;
 #endif // gimch
 #ifdef Bin
 	isLoad_Background = false;
@@ -398,6 +399,33 @@ HRESULT CLoader::Loading_For_GamePlay()
 		{	/* Hogsmeade LOD */
 			jobMapModels.emplace_back(Deferred_FolderLoad(
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/HogsmeadeLOD/ProxyAssets",
+				".bin", false
+			));
+		}
+		/* Interactable */
+		{/* Barrel */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Meshes",
+				".bin", false
+			));
+			/* Box */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/MiscProps",
+				".bin", false
+			));
+			/* TeaShop Table */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Tables",
+				".bin", false
+			));
+			/* TeaShop Chair*/
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Chairs",
+				".bin", false
+			));
+			/* Object Interactables (Chest)*/
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Interactables",
 				".bin", false
 			));
 		}
@@ -629,32 +657,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 				));
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/GroundSurfaces",
-					".bin", false
-				));
-			}
-			{/* Barrel */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Meshes",
-					".bin", false
-				));
-				/* Box */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/MiscProps",
-					".bin", false
-				));
-				/* TeaShop Table */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Tables",
-					".bin", false
-				));
-				/* TeaShop Chair*/
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Chairs",
-					".bin", false
-				));
-				/* Object Interactables (Chest)*/
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Interactables",
 					".bin", false
 				));
 			}
@@ -1981,6 +1983,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CTransformationSide>(NEXT_LEVEL, CTransformationSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CTrollSwing>(NEXT_LEVEL, CTrollSwing::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2115,6 +2121,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 
 		return S_OK;
+		});
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Spline", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
 		});
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");

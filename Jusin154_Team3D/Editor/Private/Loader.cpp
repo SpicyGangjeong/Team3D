@@ -1481,6 +1481,17 @@ HRESULT CLoader::Loading_For_Effect()
 
 		});
 
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Spline", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Desc_Box"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixIdentity()))))
 		return E_FAIL;
@@ -2432,7 +2443,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
-
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin",XMMatrixIdentity(),
 		TEXT("Prototype_Component_Wand_Model")

@@ -59,6 +59,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	void HitState_Behavior(_float fTimeDelta);
 
 public:
 	static CGoblin* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -89,6 +90,8 @@ private:
 	_float	m_fSpeed = {};
 	_bool	m_bAir = {};
 	_float	m_fGravityAmount = {};
+	_float	m_fHitTimer = {};
+	_float	m_fTumbleTimer = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

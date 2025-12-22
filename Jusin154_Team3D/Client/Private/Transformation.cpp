@@ -145,7 +145,7 @@ HRESULT CTransformation::Pre_Setting(CGameObject* pObject, void* pArg)
 	/* PJ 월드 구성하기  */
 
 
-	_vector vRight = XMVector3Normalize(vDirection);
+	_vector vRight = XMVector3Normalize(XMLoadFloat3(&m_vCameraLook));
 	_vector vLook = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vRight));
 	_vector vUp = XMVector3Normalize(XMVector3Cross(vRight, vLook));
 	_vector vPos = pWand->Get_WorldPostion();
@@ -216,13 +216,13 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 
 	XMStoreFloat4(&vCCTPos , pCCT->Get_Position());
 
-	PSX::PxTransform pxTransform((_float)vCCTPos.x, (_float)vCCTPos.y + 100.f, (_float)vCCTPos.z);
-	pCCT->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
 	//m_pCharacter_Controller->Move(fTimeDelta);
 
-	m_pTransformCom->Set_WorldMatrix(CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>()->Get_Actor()->getGlobalPose());
+	m_pInfoInstance->ActiveAt_Interactive(XMLoadFloat4(&vCCTPos));
 
-	pCCT->ConvertToDO(*CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>());
+	CollisionDesc.pObject->Set_Visible(false);
+	//m_pTransformCom->Set_WorldMatrix(CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>()->Get_Actor()->getGlobalPose());
+
 
 
 	CEffectParts* pHit_Light = Get_PartObject<CEffectParts>("Hit_Light");

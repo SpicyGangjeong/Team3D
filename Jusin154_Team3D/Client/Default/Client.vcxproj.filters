@@ -686,6 +686,9 @@
     <ClInclude Include="..\Public\Transformation.h">
       <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TransformationSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1431,6 +1434,9 @@
     <Filter Include="02.GameObjects\NPC\Ally\GateKeeper">
       <UniqueIdentifier>{cef7b9f7-3bb3-4782-a1a8-09751fa538d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Transformation\TransformationSide">
+      <UniqueIdentifier>{064b5e2f-dcde-47fd-a43d-43e25800393d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2060,6 +2066,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Transformation.cpp">
       <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TransformationSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NPC_EleazarFig.cpp">
       <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>

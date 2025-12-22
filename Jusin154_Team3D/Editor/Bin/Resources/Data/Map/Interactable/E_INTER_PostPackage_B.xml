@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Element_Interactable>
-    <Object Type="2" ID="2" Lod_Level="0">
+    <Object Type="2" ID="1" Lod_Level="0">
         <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
         <Position x="108.8686" y="14.881624" z="114.76772"/>
         <Scale x="1.0000204" y="1" z="1.0000204"/>
@@ -8,7 +8,7 @@
         <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
         <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
     </Object>
-    <Object Type="2" ID="2" Lod_Level="0">
+    <Object Type="2" ID="1" Lod_Level="0">
         <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
         <Position x="109.45074" y="14.913768" z="114.48667"/>
         <Scale x="1" y="1" z="1"/>
@@ -16,7 +16,7 @@
         <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
         <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
     </Object>
-    <Object Type="2" ID="2" Lod_Level="0">
+    <Object Type="2" ID="1" Lod_Level="0">
         <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
         <Position x="104.27048" y="15.26092" z="116.47382"/>
         <Scale x="1" y="1" z="1"/>
@@ -24,7 +24,7 @@
         <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
         <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
     </Object>
-    <Object Type="2" ID="2" Lod_Level="0">
+    <Object Type="2" ID="1" Lod_Level="0">
         <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
         <Position x="103.42465" y="15.364328" z="115.0511"/>
         <Scale x="1" y="1" z="1"/>
@@ -32,7 +32,7 @@
         <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
         <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
     </Object>
-    <Object Type="2" ID="2" Lod_Level="0">
+    <Object Type="2" ID="1" Lod_Level="0">
         <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
         <Position x="104.1671" y="15.683837" z="116.41785"/>
         <Scale x="0.9999882" y="1" z="0.9999882"/>
@@ -40,7 +40,7 @@
         <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
         <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
     </Object>
-    <Object Type="2" ID="2" Lod_Level="0">
+    <Object Type="2" ID="1" Lod_Level="0">
         <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
         <Position x="109.21941" y="15.356162" z="114.69065"/>
         <Scale x="1" y="1" z="1"/>
@@ -48,7 +48,7 @@
         <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
         <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
     </Object>
-    <Object Type="2" ID="2" Lod_Level="0">
+    <Object Type="2" ID="1" Lod_Level="0">
         <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
         <Position x="109.56142" y="15.268259" z="115.72368"/>
         <Scale x="1" y="1" z="1"/>

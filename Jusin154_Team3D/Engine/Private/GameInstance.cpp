@@ -845,9 +845,9 @@ HRESULT CGameInstance::Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11Depth
 	return m_pRenderTarget_Manager->Begin_MRT_NonClear(strMRTTag, pDSV);
 }
 
-HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isClear)
 {
-	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV);
+	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV , isClear);
 }
 
 HRESULT CGameInstance::Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag)

@@ -83,6 +83,9 @@ void CGoblin::Priority_Update(_float fTimeDelta)
 
 void CGoblin::Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -135,6 +138,9 @@ void CGoblin::Update(_float fTimeDelta)
 
 void CGoblin::Late_Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	__super::Late_Update(fTimeDelta);
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
@@ -306,7 +312,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (pEffect_Container != nullptr)
 	{
 		_uint iSkillType = pEffect_Container->Get_SkillType();
-		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+		//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
 
 		switch (iSkillType)
 		{
@@ -321,9 +327,11 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ACCIO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
@@ -341,14 +349,14 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 
-	m_DamageInfo.fDamage = damagePair.first;
-	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
-	if (0 == damagePair.second) {
-		m_pFSM->Change_State(FSMSTATE::DEAD);
-		_int ID = m_pStat->Get_Stat().iObjectID;
-		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
-		return;
-	}
+	//m_DamageInfo.fDamage = damagePair.first;
+	//m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	//if (0 == damagePair.second) {
+	//	m_pFSM->Change_State(FSMSTATE::DEAD);
+	//	_int ID = m_pStat->Get_Stat().iObjectID;
+	//	m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
+	//	return;
+	//}
 
 
 	m_pFSM->Change_State(FSMSTATE::HIT);

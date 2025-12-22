@@ -371,17 +371,56 @@ void CGoblin_Mage::Behavior_BlinkExit()
 void CGoblin_Mage::Behavior_HitEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 
 	m_bLookAt = false;
 
+	_float fAnimSpeed = 1.f;
 	switch (m_eHitSpell)
 	{
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD];
+		fAnimSpeed = 2.f;
+
+		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+			[&]() {			pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 0.5f);
+		m_pCharacter_Controller->SetGravity(false);
+		m_bAir = true;
+			},
+			0.3f);
+
+		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+			[&]() {
+				CameraShake(10.f, 1.f, 2.f, 0.3f);
+			},
+			0.27f);
+
+		Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
+			[this]() {m_pModelCom->Set_AnimSpeed(1.5f); },
+			0.75f);
+
+		Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
+			[&]() {			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		m_bAir = false;
+		m_pCharacter_Controller->SetGravity(true);
+			},
+			0.96f);
+
+		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+			[&]() {			pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f); },
+			0.95f);
+
+		Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
+			[&]() {m_bLookAt = true; },
+			0.7f);
+
 		break;
 	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_R];
+		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_L];
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
@@ -415,7 +454,7 @@ void CGoblin_Mage::Behavior_HitEnter()
 				pairAnimInfo = m_Animation[STATEANIM::HIT_R];
 			}
 		}
-		else{
+		else {
 			pairAnimInfo = m_Animation[STATEANIM::HIT_FWD];
 		}
 	}
@@ -427,46 +466,11 @@ void CGoblin_Mage::Behavior_HitEnter()
 		pairAnimInfo = m_Animation[STATEANIM::INCARCEROUS];
 		break;
 	default:
-		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_L];
+		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_R];
 		break;
 	}
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-
-	Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-		[&]() {			pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 0.5f);
-	m_pCharacter_Controller->SetGravity(false);
-	m_bAir = true;
-		},
-		0.3f);
-
-	Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-		[&]() {
-			CameraShake(10.f, 1.f, 2.f, 0.3f);
-		},
-		0.27f);
-
-	Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
-		[this]() {m_pModelCom->Set_AnimSpeed(1.5f); },
-		0.75f);
-
-	Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
-		[&]() {			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-	m_bAir = false;
-	m_pCharacter_Controller->SetGravity(true);
-		},
-		0.95f);
-
-	Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-		[&]() {			pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f); },
-		0.95f);
-
-	Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
-		[&]() {m_bLookAt = true; },
-		0.7f);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, fAnimSpeed);
 }
 
 HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
@@ -493,18 +497,45 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 		m_pCharacter_Controller->Set_Position(vPos + Force);
 	}
 
-	if (!m_bAir && m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first)
+	if (!m_bAir && iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first)
 	{
-		m_fGravityAmount += fTimeDelta * fRatio * 15.f;
+		m_fGravityAmount += fTimeDelta * fRatio * 20.f;
 		m_pCharacter_Controller->Set_GravityAmount(m_fGravityAmount);
 	}
 
 	if (iCurrAnimIndex == m_Animation[STATEANIM::TUMBLE_FWD].first)
 	{
-
 		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
 			[&]() {CameraShake(3.f, 0.8f, 1.f, 0.2f); },
 			0.17f);
+	}
+
+	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ACCIO))
+	{
+		if (!m_bPos)
+		{
+			m_pCharacter_Controller->SetGravity(false);
+			_vector vPlayerPos = pTransform->Get_State(STATE::POSITION);
+			vPlayerPos = XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + 2.5f);
+			_vector vMonsterPos = m_pCharacter_Controller->Get_Position();
+
+			_vector vDir = XMVector3Normalize(vPlayerPos - vMonsterPos);
+			_float fLength = XMVectorGetX(XMVector3Length(vPlayerPos - vMonsterPos));
+
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
+
+			if (fLength >= 4.f)
+			{
+				m_pCharacter_Controller->Set_Position(
+					vMonsterPos + vDir * m_fSpeed * fTimeDelta
+				);
+			}
+			else {
+				m_bPos = true;
+				pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			}
+		}
 	}
 
 	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::LEVIOSO))
@@ -523,51 +554,39 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 				m_pCharacter_Controller->Set_Position(vPos);
 			}
 			m_pCharacter_Controller->SetGravity(false);
-
-			if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.31f)
-			{
-				m_fAirTime = 0.f;
-				m_pCharacter_Controller->SetGravity(true);
-				pairAnimInfo = m_Animation[STATEANIM::LAND];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
-			}
 		}
 	}
 
-	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ACCIO))
+	HitState_Behavior(fTimeDelta);
+
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::TUMBLE].first)
 	{
-		if (!m_bPos)
+		m_fTumbleTimer += fTimeDelta;
+
+		if (m_fTumbleTimer >= 1.5f)
 		{
-			m_pCharacter_Controller->SetGravity(false);
-			_vector vPlayerPos = pTransform->Get_State(STATE::POSITION);
-			vPlayerPos = XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + 2.5f);
-			_vector vMonsterPos = m_pCharacter_Controller->Get_Position();
-
-			_vector vDir = XMVector3Normalize(vPlayerPos - vMonsterPos);
-			_float fLength = XMVectorGetX(XMVector3Length(vPlayerPos - vMonsterPos));
-
-			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
-
-			if (fLength >= 2.5f)
-			{
-				m_pCharacter_Controller->Set_Position(
-					vMonsterPos + vDir * m_fSpeed * fTimeDelta
-				);
-			}
-			else {
-				m_bPos = true;
-				pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
-			}
-		}
-
-		if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.31f)
-		{
-			m_fAirTime = 0.f;
+			m_fTumbleTimer = 0.f;
+			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_pCharacter_Controller->SetGravity(true);
-			pairAnimInfo = m_Animation[STATEANIM::LAND];
+
+
+			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+				[&]() {CameraShake(3.f, 0.8f, 1.f, 0.2f); },
+				0.21f);
+
+			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+				[&]() {			pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			m_fAirTime = 0.f; },
+				0.95f);
 		}
+		return S_OK;
+	}
+	if (m_vStunTimer.y < m_vStunTimer.x) {
+		pairAnimInfo = m_Animation[STATEANIM::GETUP_FWD];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
 	}
 
 	if (m_pModelCom->IsFinishedAnim())
@@ -578,12 +597,12 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 	return S_OK;
 }
 
-
 void CGoblin_Mage::Behavior_HitExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::HIT);
 	m_bPos = false;
 	m_bLookAt = true;
+	m_eHitState = ENUM_CLASS(HIT_STATE::END);
 	m_pCharacter_Controller->Reset_GravityAmount();
 	m_fGravityAmount = 0.f;
 }
@@ -647,6 +666,108 @@ void CGoblin_Mage::Behavior_DeadExit()
 {
 	m_bDead = true;
 }
+
+void CGoblin_Mage::HitState_Behavior(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	CTransform* pTransform = m_pTarget->Get_Component<CTransform>();
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (m_eHitState == ENUM_CLASS(HIT_STATE::AIR_LEVIOSO))
+	{
+		switch (m_eHitSpell)
+		{
+		case  ENUM_CLASS(SKILL_TYPE::DESCENDO):
+		{
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pCharacter_Controller->SetGravity(true);
+			m_pCharacter_Controller->Set_GravityAmount(1.5f);
+			m_fAirTime = 0.f;
+			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 2.f);
+
+			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+				[&]() {			pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 0.5f);
+			m_pCharacter_Controller->SetGravity(false);
+			m_bAir = true;
+				},
+				0.3f);
+
+			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+				[&]() {
+					CameraShake(10.f, 1.f, 2.f, 0.3f);
+				},
+				0.27f);
+
+			Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
+				[this]() {m_pModelCom->Set_AnimSpeed(1.5f); },
+				0.75f);
+
+			Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
+				[&]() {			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_bAir = false;
+			m_pCharacter_Controller->SetGravity(true);
+				},
+				0.96f);
+
+			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+				[&]() {			pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f); },
+				0.95f);
+
+			Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
+				[&]() {m_bLookAt = true; },
+				0.7f);
+		}
+		break;
+		case  ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		{
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
+			_vector vCameraLook = m_pGameInstance->Get_CameraLook();
+			vCameraLook = XMVector3Normalize(vCameraLook);
+			m_pRigidBody->Add_Force(vCameraLook * 30.f, physx::PxForceMode::eIMPULSE);
+			m_fAirTime = 0.f;
+		}
+		break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+		{
+			m_fHitTimer += fTimeDelta;
+			if (m_fHitTimer <= 0.25f)
+			{
+				_vector vPlayerLook = pTransform->Get_State(STATE::LOOK);
+				vPlayerLook = XMVector4Normalize(vPlayerLook);
+				_vector vPos = m_pCharacter_Controller->Get_Position();
+
+				_float t = clamp(m_fHitTimer, 0.f, 1.f);
+				_float ease = 1.f - (t * t);
+				_vector Force = vPlayerLook * fTimeDelta * 6.f * ease;
+
+				m_pCharacter_Controller->Set_Position(vPos + Force);
+				pairAnimInfo = m_Animation[STATEANIM::TUMBLE];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 0.8f);
+			}
+			else {
+				m_fHitTimer = 0.f;
+				m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			}
+		}
+		break;
+		}
+		if (fRatio >= 0.31f && iCurrAnimIndex == m_Animation[STATEANIM::HIT_LEVIOSO].first)
+		{
+			m_fAirTime = 0.f;
+			m_pCharacter_Controller->SetGravity(true);
+			pairAnimInfo = m_Animation[STATEANIM::LAND];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+		}
+	}
+
+}
+
 
 void CGoblin_Mage::Add_FSM()
 {

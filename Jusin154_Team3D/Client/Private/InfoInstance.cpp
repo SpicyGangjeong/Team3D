@@ -331,6 +331,11 @@ HRESULT CInfoInstance::Deregist_ActiveInteractive(CMapElement_Interactable* pInt
 	return m_pInteractiveInfo->Deregist_ActiveInteractive(pInteractive);
 }
 
+HRESULT CInfoInstance::ActiveAt_Interactive(_fvector vPosition)
+{
+	return m_pInteractiveInfo->ActiveAt_Interactive(vPosition);
+}
+
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {
@@ -382,6 +387,14 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	if (nullptr == m_pSpellLearn_Data) {
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CInfoInstance::Late_Initialize()
+{
+	if (FAILED(m_pInteractiveInfo->Ready_PoolingInteractive()))
+		return E_FAIL;
 
 	return S_OK;
 }

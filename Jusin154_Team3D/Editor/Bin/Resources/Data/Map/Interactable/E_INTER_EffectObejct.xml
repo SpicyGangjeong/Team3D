@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Element_Interactable>
+    <Object Type="2" ID="0" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.37" z="0.30000001"/>
+        <LocalTranslation x="0" y="0.5" z="0"/>
+    </Object>
+     <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1.0000204" y="1" z="1.0000204"/>
+        <Rotation x="0" y="135" z="0"/>
+        <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
+        <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
+    </Object>
+     <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_F</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="0.99999207" y="1" z="0.99999207"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.1" y="0.079999998" z="0.23999999"/>
+        <LocalTranslation x="-0.0099999998" y="0.079999998" z="0"/>
+    </Object>
+     <Object Type="2" ID="3" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Chair_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="0.9999994" y="1" z="0.9999994"/>
+        <Rotation x="-0" y="-22.999996" z="-0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.33000001" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.45500001" z="0"/>
+    </Object>
+    <Object Type="2" ID="2" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Table_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.33000001" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.45500001" z="0"/>
+    </Object>
+     <Object Type="2" ID="0" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.37" z="0.30000001"/>
+        <LocalTranslation x="0" y="0.5" z="0"/>
+    </Object>
+     <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1.0000204" y="1" z="1.0000204"/>
+        <Rotation x="0" y="135" z="0"/>
+        <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
+        <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
+    </Object>
+     <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_F</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="0.99999207" y="1" z="0.99999207"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.1" y="0.079999998" z="0.23999999"/>
+        <LocalTranslation x="-0.0099999998" y="0.079999998" z="0"/>
+    </Object>
+     <Object Type="2" ID="3" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Chair_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="0.9999994" y="1" z="0.9999994"/>
+        <Rotation x="-0" y="-22.999996" z="-0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.33000001" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.45500001" z="0"/>
+    </Object>
+    <Object Type="2" ID="2" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Table_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.33000001" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.45500001" z="0"/>
+    </Object>
+    <Object Type="2" ID="0" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.37" z="0.30000001"/>
+        <LocalTranslation x="0" y="0.5" z="0"/>
+    </Object>
+     <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1.0000204" y="1" z="1.0000204"/>
+        <Rotation x="0" y="135" z="0"/>
+        <HalfGeometryInfo x="0.23" y="0.23" z="0.2"/>
+        <LocalTranslation x="-0.0099999998" y="0.2" z="0"/>
+    </Object>
+     <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_OwlPost_Package_F</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="0.99999207" y="1" z="0.99999207"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.1" y="0.079999998" z="0.23999999"/>
+        <LocalTranslation x="-0.0099999998" y="0.079999998" z="0"/>
+    </Object>
+     <Object Type="2" ID="3" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Chair_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="0.9999994" y="1" z="0.9999994"/>
+        <Rotation x="-0" y="-22.999996" z="-0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.33000001" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.45500001" z="0"/>
+    </Object>
+    <Object Type="2" ID="2" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Table_B</PrototypeTag>
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.33000001" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.45500001" z="0"/>
+    </Object>
+</Element_Interactable>
