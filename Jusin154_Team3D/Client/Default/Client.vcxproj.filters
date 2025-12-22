@@ -688,6 +688,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\TransformationSide.h">
       <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
+          </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Slot.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Overlay.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_LookPointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_ChaserPointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Booster.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1436,6 +1451,21 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Transformation\TransformationSide">
       <UniqueIdentifier>{064b5e2f-dcde-47fd-a43d-43e25800393d}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
+      <UniqueIdentifier>{d9c0bcb6-64f6-4b58-a68d-ff04c91b9861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer">
+      <UniqueIdentifier>{61024044-17a9-45ed-a6f9-73385290846d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster">
+      <UniqueIdentifier>{b512f128-fcec-4db4-8cd2-08abfc56e000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay">
+      <UniqueIdentifier>{2af08f38-aff0-4632-acb8-492111ff88f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot">
+      <UniqueIdentifier>{dd7d2910-1d3d-42c4-9390-ac60685357ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2072,6 +2102,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\NPC_EleazarFig.cpp">
       <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
+          </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Slot.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Overlay.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_LookPointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_ChaserPointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Booster.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -377,7 +377,7 @@ _bool CUIObject::Start_Lerp(_float fTimeDelta)
 	return false;
 }
 
-_bool CUIObject::Start_Bezier(_float fTimeDelta)
+_bool CUIObject::Start_Lerp_Speed(_float fTimeDelta, _float2 Mouse_Point)
 {
 	return _bool();
 }
@@ -536,6 +536,11 @@ void CUIObject::Set_FontY(_float fFontY)
 _float2 CUIObject::Get_Font()
 {
 	return _float2(m_fFontX, m_fFontY);
+}
+
+_float2 CUIObject::Get_PerPosition()
+{
+	return m_fPerPosition;
 }
 
 void CUIObject::Free()

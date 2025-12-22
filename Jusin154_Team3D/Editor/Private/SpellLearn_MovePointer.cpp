@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "SpellLearn_MovePointer.h"
 #include "GameInstance.h"
+#include "SpellLearn_LookPointer.h"
 
 CSpellLearn_MovePointer::CSpellLearn_MovePointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -36,41 +37,68 @@ HRESULT CSpellLearn_MovePointer::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
+	m_fTimeMult = 10.f;
+	m_fAlpha = 0.f;
 	m_fAlphaTime = 5.f;
-	m_fMoveSpeed = 15.f;
+	m_fMoveSpeed = 105.f;
 	Set_SpellLearn(0);
 	m_fAngle = XMConvertToRadians(0);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Booster"), [this](void* p) {this->Set_Booster(p); });
 	Visible(false);
 	return S_OK;
 }
 
 void CSpellLearn_MovePointer::Set_SpellLearn(_int Index)
 {
+	m_bMoveStart = false;
+	m_bHover = true;
 	m_iLineIndex = _int(static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines.size());
 	m_MoveLine = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Lines;
+	m_Boosters = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).Booster;
 	m_iCurrentLine = 0;
 	m_fX = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.x;
 	m_fY = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(Index).fStartPosition.y;
+	m_Booster.iBoosterIndex = -1;
+	m_Booster.bBoosterOn = false;
+	Set_FadeIn();
 }
 
-void CSpellLearn_MovePointer::Line(_float fTime)
+_int CSpellLearn_MovePointer::Get_SpellTrail()
+{
+	return m_iCurrentLine;
+}
+
+_bool CSpellLearn_MovePointer::Get_MoveStart()
+{
+	return m_bMoveStart;
+}
+
+void CSpellLearn_MovePointer::Line(_float fTime, _float2 fMouse)
 {
 	m_vLerp_Position = m_MoveLine[m_iCurrentLine];
 
-	if (Start_Lerp(m_fMoveSpeed * fTime) == true)
+	if (Start_Lerp_Speed(fTime, fMouse) == true)
 	{
 		if (m_iCurrentLine < m_iLineIndex - 1)
 		{
 			++m_iCurrentLine;
+			m_fPerPosition = _float2(m_MoveLine[m_iCurrentLine - 1].m128_f32[0], m_MoveLine[m_iCurrentLine - 1].m128_f32[1]);
 		}
 		else
 		{
 			m_bMoveStart = false;
+			Set_FadeOut();
+			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("LearnClear"));
 		}
 	}
+}
 
+void CSpellLearn_MovePointer::Set_Booster(void* pArg)
+{
+	Booster* Info = static_cast<Booster*>(pArg);
+	m_Booster.iBoosterIndex = Info->iBoosterIndex;
+	m_Booster.bBoosterOn = Info->bBoosterOn;
+	m_bBooster = true;
 }
 
 void CSpellLearn_MovePointer::Priority_Update(_float fTimeDelta)
@@ -114,28 +142,45 @@ void CSpellLearn_MovePointer::Update(_float fTimeDelta)
 		}
 	}
 
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	_float2 fMouse{};
+	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = -ptMouse.y + (g_iWinSizeY * 0.5f);
+
+	_float2 fFinalMouse{};
+	fFinalMouse.x = fMouse.x - m_fX;
+	fFinalMouse.y = fMouse.y - m_fY;
+
 	if (m_pGameInstance->Key_Down(DIK_L))
 	{
 		m_bMoveStart = true;
+		m_bBooster = false;
+		m_fMoveSpeed = 105.f;
 	}
 
 	if (m_bMoveStart == true)
 	{
-		Line(fTimeDelta);
+		Line(fTimeDelta, fMouse);
 	}
 
-	POINT ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	_float2 fMouse;
-	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
-	fMouse.y = -ptMouse.y + (g_iWinSizeY * 0.5f);
+	m_fAngle = atan2(-fFinalMouse.x, fFinalMouse.y);
 
-	fMouse.x = fMouse.x - m_fX;
-	fMouse.y = fMouse.y - m_fY;
+	if (m_bBooster == true)
+	{
+		if (m_pGameInstance->Mouse_Down(DIM_LBUTTON))
+		{
+			m_bBooster = false;
+			m_fMoveSpeed = 160.f;
+			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("BoosterOn"), &m_Booster);
+		}
+	}
 
-
-	m_fAngle = atan2(-fMouse.x, fMouse.y);
+	if (m_fMoveSpeed >= 105.f)
+	{
+		m_fMoveSpeed -= fTimeDelta * m_fTimeMult;
+	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
@@ -148,7 +193,8 @@ void CSpellLearn_MovePointer::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		if (m_bHover == true)
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -237,6 +283,10 @@ HRESULT CSpellLearn_MovePointer::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_LookPointer>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_LookPointer**>(&m_pSpellLeam_LookPointer))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

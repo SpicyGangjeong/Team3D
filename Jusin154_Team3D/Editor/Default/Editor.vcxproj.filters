@@ -631,11 +631,23 @@
     <Filter Include="50.UI\SpellLearn_Data">
       <UniqueIdentifier>{6e769435-83c4-4f64-b306-1b8c5f2d228d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_SpeedPointer">
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
       <UniqueIdentifier>{54a92f0d-26f1-49bf-a13b-ab11995968c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\Blink">
       <UniqueIdentifier>{3b207257-c396-473b-9906-df04b28fb0cd}</UniqueIdentifier>
+         </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer">
+      <UniqueIdentifier>{ea002e2c-481e-4f1f-a16f-4e47e3a48d37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster">
+      <UniqueIdentifier>{933a90c2-8fce-4e6d-89e7-74e88cbc7f45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot">
+      <UniqueIdentifier>{5bab4bbf-253e-4d66-a0d2-8a6328ae244b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay">
+      <UniqueIdentifier>{268e67a6-fa77-4a34-84d9-b3e6f6e46a00}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1263,8 +1275,20 @@
     <ClInclude Include="..\public\SpellLearn_Data.h">
       <Filter>50.UI\SpellLearn_Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SPellLeam_SpeedPointer.h">
-      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_SpeedPointer</Filter>
+    <ClInclude Include="..\public\SpellLearn_ChaserPointer.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpellLearn_LookPointer.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpellLearn_Booster.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpellLearn_Overlay.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpellLearn_Slot.h">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Blink.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Magic\Blink</Filter>
@@ -1897,8 +1921,20 @@
     <ClCompile Include="..\private\SpellLearn_Data.cpp">
       <Filter>50.UI\SpellLearn_Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SPellLeam_SpeedPointer.cpp">
-      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_SpeedPointer</Filter>
+    <ClCompile Include="..\private\SpellLearn_ChaserPointer.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpellLearn_LookPointer.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpellLearn_Booster.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpellLearn_Overlay.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpellLearn_Slot.cpp">
+      <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Blink.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Magic\Blink</Filter>
