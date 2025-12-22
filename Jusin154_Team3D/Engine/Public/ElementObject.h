@@ -32,6 +32,7 @@ public:
 
 	virtual _bool Start_Lerp(_float fTimeDelta) override;
 	virtual _bool Start_Lerp_Speed(_float fTimeDelta, _float2 MousePoint) override;
+	virtual _bool Set_Trgger();
 	virtual void Reset_Pos(_float fTimeDelta)override;
 	virtual void Start_Size_Lerp(_float fTimeDelta) override;
 	virtual void Reset_Size_Lerp(_float fTimeDelta) override;
@@ -43,6 +44,9 @@ protected:
 	virtual HRESULT	Ready_Components(void* pArg) override;
 
 	_float m_fBezierTime = 0;
+
+	vector<_vector> m_vector;
+
 
 public:
 	virtual void Free() override;

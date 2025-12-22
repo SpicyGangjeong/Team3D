@@ -2,6 +2,7 @@
 #include "SpellLearn.h"
 #include "GameInstance.h"
 #include "SpellLearn_MovePointer.h"
+#include "SpellLearn_ChaserPointer.h"
 
 CSpellLearn::CSpellLearn(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -38,9 +39,12 @@ HRESULT CSpellLearn::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
+	m_fAlpha = 0.f;
 	m_fAlphaTime = 5.f;
 	m_iTrailIndex = 0;
+	m_fSortZ = 0.02f;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("LearnClear"), [this](void* p) {this->Clear(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("OverrlayClear"), [this](void* p) {this->Set_FadeOut(); });
 	Change_Image(0);
 	Visible(false);
 	return S_OK;
@@ -87,26 +91,43 @@ void CSpellLearn::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_bReset == true)
+	{
+		m_Trail.clear();
+		m_ChaseTrail.clear();
+		m_bReset = false;
+	}
+
+	if (m_bHover == false)
+	{
+		fill(m_Trail.begin(), m_Trail.end(), _float2(-9999.f, -9999.f));
+		fill(m_ChaseTrail.begin(), m_ChaseTrail.end(), _float2(-9999.f, -9999.f));
+		m_bReset = true;
+	}
+
 	if (m_pPointer != nullptr)
 	{
-		if (m_pPointer->Get_bMoveStart() == true)
+		if (m_pPointer->Get_MoveStart() == true)
 		{
+			m_bHover = true;
 			m_vPointerPosition = m_pPointer->Get_Position();
 			m_vPointerScale = m_pPointer->Get_Current_Size();
 
+			m_vChasePosition = m_pChasePointer->Get_Position();
+			m_vChaseScale = m_pChasePointer->Get_Current_Size();
+
 			m_fTime += fTimeDelta * m_fTimeMult;
-			if (m_fTime >= 1.f)
+			if (m_fTime >= 0.3f)
 			{
+				m_fTime = 0.f;
 				m_Trail.push_back(m_vPointerPosition);
 				m_iTrailIndex++;
+				m_ChaseTrail.push_back(m_vChasePosition);
+				m_iChaseiTrailIndex++;
 			}
 		}
-		else
-		{
-
-		}
 	}
-	
+
 
 	__super::Update(fTimeDelta);
 }
@@ -189,10 +210,6 @@ HRESULT CSpellLearn::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fItemPosition1", &m_vPointerPosition, sizeof(_float2))))
-	{
-		return E_FAIL;
-	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fItemImageSizes1", &m_vPointerScale, sizeof(_float2))))
 	{
 		return E_FAIL;
@@ -213,7 +230,11 @@ HRESULT CSpellLearn::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iHover", &m_bHover, sizeof(_bool))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_ChaseTrail", m_ChaseTrail.data(), sizeof(_float2) * _uint(m_Trail.size()))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_ChaseCount", &m_iChaseiTrailIndex, sizeof(_int))))
 	{
 		return E_FAIL;
 	}
@@ -244,9 +265,11 @@ HRESULT CSpellLearn::Ready_Components(void* pArg)
 
 HRESULT CSpellLearn::Change_Image(_int SpellID)
 {
-	m_Trail.clear();
-	m_Trail.push_back(_float2(0.f,0.f));
+	m_bHover = false;
+	m_ChaseTrail.push_back(_float2(-9999.f, -9999.f));
+	m_Trail.push_back(_float2(-9999.f, -9999.f));
 	m_iTrailIndex = 0;
+	m_iChaseiTrailIndex = 0;
 	_wstring pName = TEXT("Prototype_Texture_");
 	_wstring pImageName = pName + static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(SpellID).pImageName;
 	m_MoveLine = static_cast<CUIObject*>(m_pOwner)->Get_Learninfo(SpellID).Lines;
@@ -258,12 +281,19 @@ HRESULT CSpellLearn::Change_Image(_int SpellID)
 	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(LEVEL::UI), pImageName, reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
 		return E_FAIL;
 
+	Set_FadeIn();
 	return S_OK;
 }
 
-void CSpellLearn::Set_Pointer(CSpellLearn_MovePointer* Pointer)
+void CSpellLearn::Set_Pointer(CSpellLearn_MovePointer* Pointer, CSpellLearn_ChaserPointer* Chase)
 {
 	m_pPointer = Pointer;
+	m_pChasePointer = Chase;
+}
+
+void CSpellLearn::Clear()
+{
+	fill(m_ChaseTrail.begin(), m_ChaseTrail.end(), _float2(-9999.f, -9999.f));
 }
 
 CSpellLearn* CSpellLearn::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

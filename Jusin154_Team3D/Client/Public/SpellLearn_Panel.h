@@ -13,7 +13,17 @@ NS_BEGIN(Client)
 
 class CSpellLearn_Panel final : public CPanelObject
 {
-
+private:
+	struct Booster
+	{
+		_bool bBoosterOn = { false };
+		_int iBoosterIndex{};
+	};
+	struct State
+	{
+		_bool bHit = { false };
+		_bool bPerHit = { false };
+	};
 private:
 	CSpellLearn_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CSpellLearn_Panel(const CSpellLearn_Panel& rhs);
@@ -33,6 +43,9 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	void Set_Learn(_int Index);
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
@@ -46,10 +59,18 @@ private:
 	CGameObject* m_pSpellLearn_Name = { nullptr };
 	CGameObject* m_pSpellLearn = { nullptr };
 	CGameObject* m_pSpellLearn_MovePointer = { nullptr };
+	CGameObject* m_pSpellLearn_ChaserPointer = { nullptr };
 	CGameObject* m_pSpellLearn_Data = { nullptr };
+	CGameObject* m_pSpellLearn_Booster = { nullptr };
+	CGameObject* m_pSpellLearn_Slot = { nullptr };
+	CGameObject* m_pSpellLearn_Overlay = { nullptr };
 
 	_int Index{};
-
+	vector<CGameObject*> m_pBooster;
+	Booster m_Booster;
+	State m_State;
+	vector<State> m_PointerStates;
+	vector<State> m_ChaseStates;
 public:
 	static CSpellLearn_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

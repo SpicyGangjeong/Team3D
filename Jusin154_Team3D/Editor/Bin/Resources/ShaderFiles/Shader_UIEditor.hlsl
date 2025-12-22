@@ -64,15 +64,19 @@ Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
 
 int g_iHover;
+int g_iBoosterOn;
+int g_iBoosterOff;
 int g_iClick;
 int g_iColor;
 int g_Count;
+int g_ChaseCount;
 
 int g_iStep1 = 0;
 int g_iStep2 = 0;
 int g_iStep3 = 0;
 
-float2 g_Trail[1000];
+float2 g_Trail[200];
+float2 g_ChaseTrail[200];
 
 
 struct VS_IN
@@ -1800,7 +1804,7 @@ PS_OUT PS_SpellLearnColor(PS_IN In)
     
     Color.rgb *= tex1.rgb;
 
-    float2 rectPos = g_fPosition - float2(256.f,259.f);
+    float2 rectPos = g_fPosition - float2(256.f, 259.f);
     float2 rectSize = g_fCurrent_Size;
 
     float2 itemPos = g_fItemPosition1;
@@ -1831,13 +1835,74 @@ PS_OUT PS_SpellLearnColor(PS_IN In)
         pixelPos.y >= trailCenter.y - halfHeight &&
         pixelPos.y <= trailCenter.y + halfHeight)
         {
-            Color.rgb = float3(0.f, 144.f, 248.f) / 255.f;
+            Color.rgb = float3(20.f, 100.f, 180.f) / 255.f;
+            break;
+        }
+    }
+    
+    for (int j = 0; j < g_ChaseCount; ++j)
+    {
+        float2 ChaseTopLeft = g_ChaseTrail[j];
+        float2 ChaseCenter = ChaseTopLeft + itemSize / 2.0f;
+
+        float halfWidth = itemSize.x * 0.7f;
+        float halfHeight = itemSize.y * 0.7f;
+
+        if (pixelPos.x >= ChaseCenter.x - halfWidth &&
+        pixelPos.x <= ChaseCenter.x + halfWidth &&
+        pixelPos.y >= ChaseCenter.y - halfHeight &&
+        pixelPos.y <= ChaseCenter.y + halfHeight)
+        {
+            Color.rgb = float3(110.f, 5.f, 5.f) / 255.f;
             break;
         }
     }
 
-    Color.
-        a *= Alpha;
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_SpellLearnBooster(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 tex = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Color = tex;
+    
+    float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+    float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+    float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+    bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+    
+    if (g_iBoosterOn == 0 && g_iBoosterOff == 0)
+    {
+        if (inside1)
+        {
+            float4 tex1 = g_Texture1.Sample(DefaultSampler, Imagelocal);
+            Color = lerp(Color, tex1, tex1.a);
+        }
+    }
+    else if (g_iBoosterOn != 0 && g_iBoosterOff == 0)
+    {
+
+        float4 tex3 = g_Texture3.Sample(DefaultSampler, In.vTexcoord);
+        Color = lerp(Color, tex3, tex3.a);
+    }    
+    else if (g_iBoosterOn == 0 && g_iBoosterOff != 0)
+    {
+        float4 tex2 = g_Texture2.Sample(DefaultSampler, In.vTexcoord);
+    
+        tex2.rgb *= float3(1.f, 0.f, 0.f);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Color = tex;
+        
+        Color = lerp(Color, tex2, tex2.a);
+    }
+
+    Color.a *= Alpha;
     Out.vColor = Color;
     return Out;
 }
@@ -2430,6 +2495,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SpellLearnColor();
+    }
+
+    pass SpellLearnBooster
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SpellLearnBooster();
     }
 
     pass Enemy_Detection

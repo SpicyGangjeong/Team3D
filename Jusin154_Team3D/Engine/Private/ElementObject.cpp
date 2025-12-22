@@ -186,12 +186,16 @@ _bool CElementObject::Start_Lerp_Speed(_float fTimeDelta, _float2 MousePoint)
 
 	else
 	{
-		m_fPerPosition = _float2(m_fX, m_fY);
 		XMVECTOR DirNorm = XMVector3Normalize(Dir);
 		m_fX = (Pos + DirNorm * move).m128_f32[0];
 		m_fY = (Pos + DirNorm * move).m128_f32[1];
 		return false;
 	}
+}
+
+_bool CElementObject::Set_Trgger()
+{
+	return _bool();
 }
 
 void CElementObject::Reset_Pos(_float fTimeDelta)
