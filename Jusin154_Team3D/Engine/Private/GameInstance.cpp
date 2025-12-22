@@ -685,6 +685,11 @@ void CGameInstance::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x
 	return m_pRenderer->Render_PreShadow(ViewMatrix, ProjMatrix);
 }
 
+RENDER CGameInstance::Get_CurrentRenderPass()
+{
+	return m_pRenderer->Get_CurrentRenderPass();
+}
+
 HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
 {
 	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);

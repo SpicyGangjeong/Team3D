@@ -563,7 +563,7 @@ void CPlayer::ReLockOnTarget()
 			m_LockOnInfo.pUnit = nullptr;
 		}
 	}
-	if (nullptr != m_LockOnInfo.pUnit) {
+	if (nullptr != m_LockOnInfo.pInteractive) {
 		if (true == m_LockOnInfo.pInteractive->isDead()) {
 			m_LockOnInfo.pInteractive = nullptr;
 		}

@@ -19,6 +19,18 @@ class CRanrok final : public CMonster
 		RUSH,
 		END
 	};
+	enum class RANROK_MESH_ORDER {
+		ETHEREAL_HOT_SPINE,
+		ETHEREAL_HOT_WINGS,
+		ETHEREAL_HOT_ARMS,
+		ETHEREAL_HOT_SHELL,
+		ETHEREAL_AURA,
+		ETHEREAL_EYES,
+		ETHEREAL_WINGS,
+		WINGS,
+		BODY,
+		END
+	};
 
 	enum class RANROK_PHASE
 	{
@@ -58,6 +70,8 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	HRESULT Render_Nonblend();
+	HRESULT Render_Blend();
 	void MoveTo(_float fTimeDelta);
 	void AroundPoint(_float fTimeDelta);
 	HRESULT Load_RanrokPos(const _char* pFilePath);
