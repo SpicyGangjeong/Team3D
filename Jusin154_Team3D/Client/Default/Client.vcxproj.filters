@@ -683,6 +683,9 @@
     <ClInclude Include="..\Public\Transformation.h">
       <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TransformationSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1425,6 +1428,9 @@
     <Filter Include="02.GameObjects\Effect\Effects\Transformation">
       <UniqueIdentifier>{87b1db75-938f-462f-a288-fe9c8d6c689e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Transformation\TransformationSide">
+      <UniqueIdentifier>{064b5e2f-dcde-47fd-a43d-43e25800393d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2054,6 +2060,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Transformation.cpp">
       <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TransformationSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

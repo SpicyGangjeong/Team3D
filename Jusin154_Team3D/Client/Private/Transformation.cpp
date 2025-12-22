@@ -216,13 +216,13 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 
 	XMStoreFloat4(&vCCTPos , pCCT->Get_Position());
 
-	PSX::PxTransform pxTransform((_float)vCCTPos.x, (_float)vCCTPos.y + 100.f, (_float)vCCTPos.z);
-	pCCT->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
-	//m_pCharacter_Controller->Move(fTimeDelta);
+	//PSX::PxTransform pxTransform((_float)vCCTPos.x, (_float)vCCTPos.y + 100.f, (_float)vCCTPos.z);
+	//pCCT->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+	////m_pCharacter_Controller->Move(fTimeDelta);
 
-	m_pTransformCom->Set_WorldMatrix(CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>()->Get_Actor()->getGlobalPose());
+	//m_pTransformCom->Set_WorldMatrix(CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>()->Get_Actor()->getGlobalPose());
 
-	pCCT->ConvertToDO(*CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>());
+	//pCCT->ConvertToDO(*CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>());
 
 
 	CEffectParts* pHit_Light = Get_PartObject<CEffectParts>("Hit_Light");

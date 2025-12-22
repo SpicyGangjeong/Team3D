@@ -446,7 +446,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
-			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+//			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_LSHIFT)) {
 			m_bSprintToggle = !m_bSprintToggle;
