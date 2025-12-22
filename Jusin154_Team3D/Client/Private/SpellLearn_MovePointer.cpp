@@ -101,7 +101,7 @@ void CSpellLearn_MovePointer::Set_Booster(void* pArg)
 	Booster* Info = static_cast<Booster*>(pArg);
 	m_Booster.iBoosterIndex = Info->iBoosterIndex;
 	m_Booster.bBoosterOn = Info->bBoosterOn;
-	m_bBooster = true;
+	m_bBooster = m_Booster.bBoosterOn;
 }
 
 void CSpellLearn_MovePointer::Priority_Update(_float fTimeDelta)
@@ -175,7 +175,7 @@ void CSpellLearn_MovePointer::Update(_float fTimeDelta)
 		if (m_pGameInstance->Mouse_Down(DIM_LBUTTON))
 		{
 			m_bBooster = false;
-			m_fMoveSpeed = 160.f;
+			m_fMoveSpeed = 170.f;
 			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("BoosterOn"), &m_Booster);
 		}
 	}
