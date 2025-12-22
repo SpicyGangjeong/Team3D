@@ -688,7 +688,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\TransformationSide.h">
       <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
-          </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\SpellLearn_Slot.h">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClInclude>
@@ -703,6 +703,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\SpellLearn_Booster.h">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\NPC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1451,7 +1457,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Transformation\TransformationSide">
       <UniqueIdentifier>{064b5e2f-dcde-47fd-a43d-43e25800393d}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
       <UniqueIdentifier>{d9c0bcb6-64f6-4b58-a68d-ff04c91b9861}</UniqueIdentifier>
     </Filter>
@@ -1466,6 +1472,12 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot">
       <UniqueIdentifier>{dd7d2910-1d3d-42c4-9390-ac60685357ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\Behavior\NPC">
+      <UniqueIdentifier>{954ad10f-edc4-4dda-a2e1-741a418831e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\NPC">
+      <UniqueIdentifier>{b265ac30-97f5-4dac-bc6b-b11fba1c5ad8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2102,7 +2114,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\NPC_EleazarFig.cpp">
       <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
-          </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\SpellLearn_Slot.cpp">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClCompile>
@@ -2117,6 +2129,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\SpellLearn_Booster.cpp">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\NPC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Player.h"
+#include "CallBack_NonPlayable_Behavior.h"
+#include "CallBack_NonPlayable_HitReport.h"
 
 CNPC_Ollivander::CNPC_Ollivander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -31,14 +33,75 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
+	if (false == m_bEntered) {
+		if (true == CastToPlayer()) {
+			m_vEnteringTimer.x += fTimeDelta;
+			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
+				m_vEnteringTimer.x -= m_vEnteringTimer.y;
+				m_bEntered = true;
+				// Active();
+			}
+#ifdef _DEBUG
+			GUI::Begin("UNIT");
+			if (GUI::CollapsingHeader("Ollivander")) {
+				GUI::Text("Timer :%.1f", m_vEnteringTimer.x);
+				GUI::Text("Hello");
+			}
+			GUI::End();
+#endif // _DEBUG
+		}
+	}
+	else {
+		if (false == CastToPlayer()) {
+			m_vEnteringTimer.x += fTimeDelta;
+			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
+				m_vEnteringTimer.x -= m_vEnteringTimer.y;
+				m_bEntered = false;
+				// DeActive(), Ready To Enter;
+			}
+#ifdef _DEBUG
+			GUI::Begin("UNIT");
+			if (GUI::CollapsingHeader("Ollivander")) {
+				GUI::Text("Timer :%.1f", m_vEnteringTimer.x);
+				GUI::Text("CoolTime");
+			}
+			GUI::End();
+#endif // _DEBUG
+		}
+		else {
+#ifdef _DEBUG
+			GUI::Begin("UNIT");
+			if (GUI::CollapsingHeader("Ollivander")) {
+				GUI::Text("Timer :%.1f", m_vEnteringTimer.x);
+				GUI::Text("You must go Out");
+			}
+			GUI::End();
+#endif // _DEBUG
+		}
+	}
+
+	if (false == CastToPlayer() && false == m_bEntered) {
+#ifdef _DEBUG
+		GUI::Begin("UNIT");
+		if (GUI::CollapsingHeader("Ollivander")) {
+			GUI::Text("Timer :%.1f", m_vEnteringTimer.x);
+			GUI::Text("Waiting For ReEnter");
+		}
+		GUI::End();
+#endif // _DEBUG
+	}
+
+
 	{ // 세트
+		m_pCallBack_HitReport->BeginFrame();
 		m_pCharacter_Controller->Move(fTimeDelta);
+		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 }
 
 void CNPC_Ollivander::Late_Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, m_pTransformCom->Get_EstimatedPositionByMomentum());
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
@@ -148,6 +211,19 @@ HRESULT CNPC_Ollivander::Bind_ShaderResources()
 	return S_OK;
 }
 
+_bool CNPC_Ollivander::CastToPlayer()
+{
+	_vector vCurrentPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vTargetPos = {};
+	pair<CUnit*, CTransform*> pairAllyInfo = m_pInfoInstance->Get_NearestPlayerAlly(m_pTransformCom->Get_State(STATE::POSITION));
+	vTargetPos = pairAllyInfo.second->Get_State(STATE::POSITION);
+	_float fLength = XMVectorGetX(XMVector4Length(vTargetPos - vCurrentPos));
+	if (fLength < m_fEncounterDistance) {
+		return true;
+	}
+	return false;
+}
+
 HRESULT CNPC_Ollivander::Initialize_Prototype()
 {
 	return S_OK;
@@ -162,7 +238,10 @@ HRESULT CNPC_Ollivander::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(40.f, 4.f, 68.9f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(40.f, 4.f, 68.9f, 1.f));
 	m_pModelCom->Set_AnimationIndex(0, true);
+	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	return S_OK;
 }
 
@@ -200,8 +279,8 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		Desc.fStepOffset = { 0.02f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 0.6f;
-		Desc.pCallback_HitReport = nullptr;
-		Desc.pCallback_Behavior = nullptr;
+		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();
+		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_NonPlayable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
@@ -246,6 +325,14 @@ void CNPC_Ollivander::Free()
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;
 	}
+	if (nullptr != m_pCallBack_Behavior) {
+		m_pCallBack_Behavior->Finalize();
+	}
+	if (nullptr != m_pCallBack_HitReport) {
+		m_pCallBack_HitReport->Finalize();
+	}
+	Safe_Delete(m_pCallBack_Behavior);
+	Safe_Delete(m_pCallBack_HitReport);
 }
 #ifdef _DEBUG
 
