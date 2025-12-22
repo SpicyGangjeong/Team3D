@@ -190,6 +190,51 @@ PBR_LIGHT_OUT PBR_Lighting(
 
     return Out;
 }
+bool CalcLighting(
+    in Texture2D SurfaceTexture2D,
+    in float fTagDepthBlue,
+    in float2 uv,
+    in float3 vAlbedo,
+    inout float3 vF0,
+    inout float fMetallic, 
+    inout float fRoughness,
+    inout float fOcclusion, 
+    inout float fAttenuation)
+{
+    bool bResult = false;
+    if (true == AlmostEqual3(fTagDepthBlue * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic Roughness Occ
+    {
+        bResult = true;
+        float3 vMRO = SurfaceTexture2D.Sample(DefaultSampler, uv).rgb;
+        fMetallic = vMRO.r;
+        fRoughness = vMRO.g;
+        fOcclusion = vMRO.b;
+        
+        vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
+    }
+    else if (true == AlmostEqual3(fTagDepthBlue * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular Roughness Occ
+    {
+        bResult = true;
+        fMetallic = 0.f;
+        
+        float3 vSRO = SurfaceTexture2D.Sample(DefaultSampler, uv).rgb;
+        vF0 = vSRO.rrr;
+        fRoughness = vSRO.g;
+        fOcclusion = vSRO.b;
+    }
+    else if (true == AlmostEqual3(fTagDepthBlue * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY)) // Specular Roughness SubSurfaceScattering Occlusion
+    {
+        bResult = true;
+        fMetallic = 0.f;
+        
+        float4 vSRXO = SurfaceTexture2D.Sample(DefaultSampler, uv);
+        vF0 = vSRXO.rrr;
+        fRoughness = vSRXO.g;
+        fOcclusion = vSRXO.a;
+    }
+    return bResult;
+}
+
 float GetBloomCurve(float x, float fThreshold, uint iMethod)
 {
     float fResult = x;
