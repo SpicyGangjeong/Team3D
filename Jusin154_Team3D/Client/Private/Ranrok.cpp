@@ -141,6 +141,11 @@ void CRanrok::Update(_float fTimeDelta)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
 #pragma endregion
+
+	m_vEtherealTimer.x += fTimeDelta * 0.2f;
+	if (m_vEtherealTimer.x > m_vEtherealTimer.y) {
+		m_vEtherealTimer.x -= m_vEtherealTimer.y;
+	}
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -360,7 +365,7 @@ HRESULT CRanrok::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_RANROK"), (CComponent**)&m_pStat))) {
@@ -469,6 +474,10 @@ HRESULT CRanrok::Render_Nonblend()
 }
 HRESULT CRanrok::Render_Blend()
 {
+	_float fDiffuseUVRatio = (m_vEtherealTimer.x / m_vEtherealTimer.y);
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEtherealRatio", &fDiffuseUVRatio, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_HOT_SPINE); i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); ++i)
 	{
 		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",

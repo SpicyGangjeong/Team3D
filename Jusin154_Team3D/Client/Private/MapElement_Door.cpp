@@ -299,7 +299,7 @@ CGameObject* CMapElement_Door::Clone(void* pArg, CGameObject* pOwner)
 void CMapElement_Door::Free()
 {
 	if (nullptr != m_pRigidBody) {
-		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
 	}
 	__super::Free();
 

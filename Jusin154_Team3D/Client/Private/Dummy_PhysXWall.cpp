@@ -151,9 +151,9 @@ CGameObject* CDummy_PhysXWall::Clone(void* pArg, CGameObject* pOwner)
 
 void CDummy_PhysXWall::Free()
 {
-	if (nullptr != m_pRigidBody) {
-		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor());
-	}
+	//if (nullptr != m_pRigidBody) {
+	//	m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
+	//}
 
 	__super::Free();
 

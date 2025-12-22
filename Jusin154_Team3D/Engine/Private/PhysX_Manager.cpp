@@ -16,7 +16,7 @@ CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	SAFE_ADDREF(m_pGameInstance);
 }
 
-PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
+PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
@@ -58,13 +58,13 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 
 
 	PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
-	m_pRestBodies.insert(pActorDynamic);
-	Attach_Actor(*pActorDynamic);
+	m_pRestBodies[iLevel].insert(pActorDynamic);
+	Attach_Actor(*pActorDynamic, iLevel);
 
 	return pActorDynamic;
 }
 
-PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody)
+PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
@@ -80,7 +80,7 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 		break;
 	case ACTOR::TRIANGLEMESH:
 		{ // SetUp Geometry
-			PSX::PxTriangleMesh* pPxMesh = Find_TriangleMesh(RigidBody.Get_PxMeshKey());
+			PSX::PxTriangleMesh* pPxMesh = Find_TriangleMesh(RigidBody.Get_PxMeshKey(), iLevel);
 			PSX::PxTriangleMeshGeometry* pPxMeshGeometry = { nullptr };
 
 			_vector vPos, vRotq, vScale;
@@ -101,26 +101,26 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 			// 유효성 체크
 			PX_ASSERT(pPxMeshGeometry->isValid());
 			pGeometry = pPxMeshGeometry;
-			_bool bEmplaceSuccess = m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry).second;
+			_bool bEmplaceSuccess = m_TriangleMeshGeometry[iLevel].emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry).second;
 			if (false == bEmplaceSuccess) {
 				Safe_Delete(pPxMeshGeometry);
-				pGeometry = (*m_TriangleMeshGeometry.find(RigidBody.Get_PxMeshKey())).second;
+				pGeometry = (*m_TriangleMeshGeometry[iLevel].find(RigidBody.Get_PxMeshKey())).second;
 			}
 		}
 		break;
 	case ACTOR::HEIGHTFIELD:
 	{ // SetUp HeightField
-		PSX::PxHeightField* pHeightField = Find_HeightField(RigidBody.Get_PxMeshKey());
+		PSX::PxHeightField* pHeightField = Find_HeightField(RigidBody.Get_PxMeshKey(), iLevel);
 		PSX::PxHeightFieldGeometry* pPxHeightGeometry = new PSX::PxHeightFieldGeometry(pHeightField);
 		pPxHeightGeometry->heightScale = 0.01f/* 기본 정밀도 100배 0.01 -> 1cm, 1 -> 1m */;
 
 		// 유효성 체크
 		PX_ASSERT(pPxHeightGeometry->isValid());
 		pGeometry = pPxHeightGeometry;
-		_bool bEmplaceSuccess = m_HeightFieldGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry).second;
+		_bool bEmplaceSuccess = m_HeightFieldGeometry[iLevel].emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry).second;
 		if (false == bEmplaceSuccess) {
 			Safe_Delete(pPxHeightGeometry);
-			pGeometry = (*m_HeightFieldGeometry.find(RigidBody.Get_PxMeshKey())).second;
+			pGeometry = (*m_HeightFieldGeometry[iLevel].find(RigidBody.Get_PxMeshKey())).second;
 		}
 	}
 	break;
@@ -135,13 +135,13 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	pShape->setContactOffset(RigidBody.Get_ContactOffset());
 	pShape->setRestOffset(0.f);
 	
-	m_pRestBodies.insert(pActor);
-	Attach_Actor(*pActor);
+	m_pRestBodies[iLevel].insert(pActor);
+	Attach_Actor(*pActor, iLevel);
 
 	return pActor;
 }
 
-PSX::PxRevoluteJoint* CPhysX_Manager::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
+PSX::PxRevoluteJoint* CPhysX_Manager::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel)
 {
 	PSX::PxRevoluteJoint* pJoint = PSX::PxRevoluteJointCreate(*m_pPhysics, pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
 
@@ -229,18 +229,18 @@ bool CPhysX_Manager::RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistan
 }
 
 
-void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) 
+void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh, _uint iLevel)
 {
-	m_TriangleMeshes.emplace(CMyTools::ToWstring(pName), pPxTriMesh);
+	m_TriangleMeshes[iLevel].emplace(CMyTools::ToWstring(pName), pPxTriMesh);
 }
-void CPhysX_Manager::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc)
+void CPhysX_Manager::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel)
 {
 	PSX::PxHeightField* pHeightField = PxCreateHeightField(Desc);
 	if (nullptr == pHeightField) {
 		assert(false);
 	}
 	else {
-		m_HeightFields.emplace(pName, pHeightField);
+		m_HeightFields[iLevel].emplace(pName, pHeightField);
 	}
 
 }
@@ -347,19 +347,19 @@ HRESULT CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangle
 	return S_OK;
 }
 
-PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _tchar* pMeshName)
+PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _tchar* pMeshName, _uint iLevel)
 {
-	map<_wstring, PSX::PxTriangleMesh*>::iterator iter = m_TriangleMeshes.find(pMeshName);
-	if (iter != m_TriangleMeshes.end()) {
+	map<_wstring, PSX::PxTriangleMesh*>::iterator iter = m_TriangleMeshes[iLevel].find(pMeshName);
+	if (iter != m_TriangleMeshes[iLevel].end()) {
 		return iter->second;
 	}
 	return nullptr;
 }
 
-PSX::PxHeightField* CPhysX_Manager::Find_HeightField(const _tchar* pFieldName)
+PSX::PxHeightField* CPhysX_Manager::Find_HeightField(const _tchar* pFieldName, _uint iLevel)
 {
-	map<_wstring, PSX::PxHeightField*>::iterator iter = m_HeightFields.find(pFieldName);
-	if (iter != m_HeightFields.end()) {
+	map<_wstring, PSX::PxHeightField*>::iterator iter = m_HeightFields[iLevel].find(pFieldName);
+	if (iter != m_HeightFields[iLevel].end()) {
 		return iter->second;
 	}
 	return nullptr;
@@ -367,17 +367,19 @@ PSX::PxHeightField* CPhysX_Manager::Find_HeightField(const _tchar* pFieldName)
 
 void CPhysX_Manager::Update_Kinematic()
 {
-	for (auto& pBody : m_pActiveBodys) {
-		PSX::PxRigidDynamic* pActor = pBody->is<PSX::PxRigidDynamic>();
-		if (nullptr == pActor) {
-			continue;
-		}
+	for (_uint iLevel = 0; iLevel < m_iMaxLevel; ++iLevel) {
+		for (auto& pBody : m_pActiveBodys[iLevel]) {
+			PSX::PxRigidDynamic* pActor = pBody->is<PSX::PxRigidDynamic>();
+			if (nullptr == pActor) {
+				continue;
+			}
 
-		if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
-		{
-			const CTransform* pTransform = static_cast<PhsXUserData*>(pBody->userData)->pOwner->Get_Component<CTransform>();
-			
-			pActor->setKinematicTarget(XMWorldToPx_NoScale(pTransform->Get_XMWorldMatrix()));
+			if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
+			{
+				const CTransform* pTransform = static_cast<PhsXUserData*>(pBody->userData)->pOwner->Get_Component<CTransform>();
+
+				pActor->setKinematicTarget(XMWorldToPx_NoScale(pTransform->Get_XMWorldMatrix()));
+			}
 		}
 	}
 }
@@ -429,40 +431,56 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 	}
 }
 
-void CPhysX_Manager::ClearScene()
+void CPhysX_Manager::ClearScene(_uint iLevel)
 {
-	for (auto& pBody : m_pActiveBodys) {
+	for (auto& pBody : m_pActiveBodys[iLevel]) {
 		pBody->release();
-	} m_pActiveBodys.clear();
-	for (auto& pBody : m_pRestBodies) {
+	} m_pActiveBodys[iLevel].clear();
+	for (auto& pBody : m_pRestBodies[iLevel]) {
 		pBody->release();
-	} m_pRestBodies.clear();
+	} m_pRestBodies[iLevel].clear();
+	for (auto& pMeshes : m_TriangleMeshes[iLevel]) {
+		pMeshes.second->release();
+	} m_TriangleMeshes[iLevel].clear();
+
+	for (auto& pGeometry : m_TriangleMeshGeometry[iLevel]) {
+		Safe_Delete(pGeometry.second);
+	} m_TriangleMeshGeometry[iLevel].clear();
+
+	for (auto& pGeometry : m_HeightFieldGeometry[iLevel]) {
+		Safe_Delete(pGeometry.second);
+	} m_HeightFieldGeometry[iLevel].clear();
+
+	for (auto& pField : m_HeightFields[iLevel]) {
+		pField.second->release();
+	} m_HeightFields[iLevel].clear();
+
 }
-void CPhysX_Manager::Attach_Actor(PSX::PxActor& Actor)
+void CPhysX_Manager::Attach_Actor(PSX::PxActor& Actor, _uint iLevel)
 {
-	unordered_set<PSX::PxActor*>::iterator iter = m_pRestBodies.find(&Actor);
-	if (m_pRestBodies.end() == iter) {
+	unordered_set<PSX::PxActor*>::iterator iter = m_pRestBodies[iLevel].find(&Actor);
+	if (m_pRestBodies[iLevel].end() == iter) {
 		return;
 	}
 	else {
-		m_pRestBodies.erase(&Actor);
+		m_pRestBodies[iLevel].erase(&Actor);
 	}
-	m_pActiveBodys.insert(&Actor);
+	m_pActiveBodys[iLevel].insert(&Actor);
 	if (m_pScene != nullptr) {
 		m_pScene->addActor(Actor);
 	}
 }
 
-unordered_set<PSX::PxActor*>::iterator CPhysX_Manager::Detach_Actor(PSX::PxActor& Actor)
+unordered_set<PSX::PxActor*>::iterator CPhysX_Manager::Detach_Actor(PSX::PxActor& Actor, _uint iLevel)
 {
-	unordered_set<PSX::PxActor*>::iterator iterOut = m_pRestBodies.end();
-	unordered_set<PSX::PxActor*>::iterator iter = m_pActiveBodys.find(&Actor);
-	if (m_pActiveBodys.end() != iter) {
-		m_pActiveBodys.erase(iter); // 액터를 활성화 맵에서 분리 해주고
-		iterOut = m_pRestBodies.insert(&Actor).first; // 액터를 다시 쓸 수 있기 때문에 따로 보관해줌
+	unordered_set<PSX::PxActor*>::iterator iterOut = m_pRestBodies[iLevel].end();
+	unordered_set<PSX::PxActor*>::iterator iter = m_pActiveBodys[iLevel].find(&Actor);
+	if (m_pActiveBodys[iLevel].end() != iter) {
+		m_pActiveBodys[iLevel].erase(iter);						// 액터를 활성화 맵에서 분리 해주고
+		iterOut = m_pRestBodies[iLevel].insert(&Actor).first;	// 액터를 다시 쓸 수 있기 때문에 따로 보관해줌
 	}
 
-	PSX::PxScene* pOwnerScene = Actor.getScene();
+	PSX::PxScene* pOwnerScene = Actor.getScene();     
 
 	if (pOwnerScene == nullptr) { // 액터가 씬에 없는 경우 nullptr이 나옴
 		return iterOut;
@@ -476,16 +494,16 @@ unordered_set<PSX::PxActor*>::iterator CPhysX_Manager::Detach_Actor(PSX::PxActor
 	return iterOut;
 }
 
-void CPhysX_Manager::Release_Actor(PSX::PxActor& Actor)
+void CPhysX_Manager::Release_Actor(PSX::PxActor& Actor, _uint iLevel)
 {
 	// 혹시 활성화 맵에 들어있을 수도 있으니 검사
-	unordered_set<PSX::PxActor*>::iterator iterResult = Detach_Actor(Actor);
-	if (m_pRestBodies.end() != iterResult) { // 방금 전까지만 해도 활성화 중이었던 액터 라면
-		m_pRestBodies.erase(iterResult); // 바로 지워줌
+	unordered_set<PSX::PxActor*>::iterator iterResult = Detach_Actor(Actor, iLevel);
+	if (m_pRestBodies[iLevel].end() != iterResult) { // 방금 전까지만 해도 활성화 중이었던 액터 라면
+		m_pRestBodies[iLevel].erase(iterResult); // 바로 지워줌
 	}
 	else {
-		m_pActiveBodys.erase(&Actor);
-		m_pRestBodies.erase(&Actor);
+		m_pActiveBodys[iLevel].erase(&Actor);
+		m_pRestBodies[iLevel].erase(&Actor);
 	}
 	Actor.release();
 }
@@ -535,8 +553,9 @@ HRESULT CPhysX_Manager::PurgeAllController()
 }
 
 
-HRESULT CPhysX_Manager::Initialize()
+HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 {
+	m_iMaxLevel = iLevel;
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_AllocatorCallBack, m_ErrorCallBack);
 	if (nullptr == m_pFoundation) {
 		assert(false);
@@ -633,6 +652,13 @@ HRESULT CPhysX_Manager::Initialize()
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
 	m_pScene->addActor(*pGroundPlane);
 
+	m_pActiveBodys = new unordered_set<PSX::PxActor*>[m_iMaxLevel]();
+	m_pRestBodies = new unordered_set<PSX::PxActor*>[m_iMaxLevel]();
+	m_TriangleMeshes = new map<_wstring, PSX::PxTriangleMesh*>[m_iMaxLevel]();
+	m_TriangleMeshGeometry = new map<_wstring, PSX::PxTriangleMeshGeometry*>[m_iMaxLevel]();
+	m_HeightFields = new map<_wstring, PSX::PxHeightField*>[m_iMaxLevel]();
+	m_HeightFieldGeometry = new map<_wstring, PSX::PxHeightFieldGeometry*>[m_iMaxLevel]();
+
 	return S_OK;
 }
 #ifdef _DEBUG
@@ -660,10 +686,10 @@ HRESULT CPhysX_Manager::Connect_DebugServer()
 
 #endif // _DEBUG
 
-CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iLevel)
 {
 	CPhysX_Manager* pInstance = new CPhysX_Manager(pDevice, pContext);
-	if (FAILED(pInstance->Initialize())) {
+	if (FAILED(pInstance->Initialize(iLevel))) {
 		SAFE_RELEASE(pInstance);
 		assert(false);
 	}
@@ -672,24 +698,22 @@ CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 
 void CPhysX_Manager::Free()
 {
-	ClearScene();
+	for (_uint iLevel = 0; iLevel < m_iMaxLevel; ++iLevel) {
+		ClearScene(iLevel);
+		m_pActiveBodys[iLevel].clear();
+		m_pRestBodies[iLevel].clear();
+		m_TriangleMeshes[iLevel].clear();
+		m_TriangleMeshGeometry[iLevel].clear();
+		m_HeightFields[iLevel].clear();
+		m_HeightFieldGeometry[iLevel].clear();
+	}
+	Safe_Delete_Array(m_pActiveBodys);
+	Safe_Delete_Array(m_pRestBodies);
+	Safe_Delete_Array(m_TriangleMeshes);
+	Safe_Delete_Array(m_TriangleMeshGeometry);
+	Safe_Delete_Array(m_HeightFields);
+	Safe_Delete_Array(m_HeightFieldGeometry);
 	
-	for (auto& pMeshes : m_TriangleMeshes) {
-		pMeshes.second->release(); 
-	} m_TriangleMeshes.clear();
-
-	for (auto& pGeometry : m_TriangleMeshGeometry) {
-		Safe_Delete(pGeometry.second);
-	} m_TriangleMeshGeometry.clear();
-
-	for (auto& pGeometry : m_HeightFieldGeometry) {
-		Safe_Delete(pGeometry.second);
-	} m_HeightFieldGeometry.clear();
-
-	for (auto& pField : m_HeightFields) {
-		pField.second->release();
-	} m_HeightFields.clear();
-
 	if (nullptr != m_pCookingParam) {
 		Safe_Delete(m_pCookingParam);
 	}
