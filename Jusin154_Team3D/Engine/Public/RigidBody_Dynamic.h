@@ -50,6 +50,10 @@ public:
 	void					SetActive(_bool bCondition) { m_bActive = bCondition; }
 
 	_vector					Get_Position();
+	void					Set_Position(_vector vPos);
+	void					Set_Rotation(_vector vRotQ);
+	void					Set_Transform(_vector vPos, _vector vRotQ);
+	void					Set_Transform(PSX::PxTransform pxTransform);
 	_float3					Get_FootPosition();
 	_float3					Get_HeadPosition();
 	PSX::PxTransform		Get_FootPositionPxTransform();
