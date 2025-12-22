@@ -616,7 +616,13 @@ void CRanrok::Behavior_TuckedEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::TUCKED);
  
-	pairAnimInfo = m_Animation[STATEANIM::TUCKED];
+	if (m_iCurrentFlow == 0)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::FLY];
+	}
+	else {
+		pairAnimInfo = m_Animation[STATEANIM::TUCKED];
+	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 }
 
@@ -627,12 +633,11 @@ HRESULT CRanrok::Behavior_TuckedExitCheck(_float fTimeDelta)
 
 	MoveTo(fTimeDelta);
 
-	if (m_bTucked&& iCurrAnimIndex == m_Animation[STATEANIM::TUCKED].first)
+	if (m_bTucked && iCurrAnimIndex !=m_Animation[STATEANIM::FLY_TO_HOVER].first)
 	{
 		m_iCurrentFlow++;
 		pairAnimInfo = m_Animation[STATEANIM::FLY_TO_HOVER];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return S_OK;
 	}
 
 	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::FLY_TO_HOVER].first)
@@ -1011,7 +1016,7 @@ void CRanrok::Set_Anim()
 
 	m_Animation[STATEANIM::PULSE] = { 33,false };
 
-	m_Animation[STATEANIM::TUCKED] = { 21,true };
+	m_Animation[STATEANIM::TUCKED] = { 21,true }; // 21
 	m_Animation[STATEANIM::FLY_TO_HOVER] = { 22,false };
 
 	m_Animation[STATEANIM::LAND] = { 32,false };
@@ -1029,6 +1034,8 @@ void CRanrok::Set_Anim()
 	m_Animation[STATEANIM::HIT_BWD4] = { 36,false }; // Ground Small
 
 	m_Animation[STATEANIM::DEAD] = { 34,false }; 
+
+	m_Animation[STATEANIM::FLY] = { 18,true };
 
 
 

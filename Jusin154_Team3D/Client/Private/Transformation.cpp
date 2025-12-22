@@ -145,7 +145,7 @@ HRESULT CTransformation::Pre_Setting(CGameObject* pObject, void* pArg)
 	/* PJ 월드 구성하기  */
 
 
-	_vector vRight = XMVector3Normalize(vDirection);
+	_vector vRight = XMVector3Normalize(XMLoadFloat3(&m_vCameraLook));
 	_vector vLook = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vRight));
 	_vector vUp = XMVector3Normalize(XMVector3Cross(vRight, vLook));
 	_vector vPos = pWand->Get_WorldPostion();

@@ -314,9 +314,11 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ACCIO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
