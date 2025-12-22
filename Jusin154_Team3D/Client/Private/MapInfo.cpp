@@ -422,8 +422,9 @@ HRESULT CMapInfo::Load_InteractableElements(const _char* pFileName, const _wchar
 		CMapElement_Interactable::ELEMENT_INTERACTABLE_DESC Desc = {};
 
 		/* Model Prototypes */
+		Desc.isPooled = false;
 		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
-		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iInteractableID);
+		Object->QueryUnsignedAttribute("ID", &Desc.iInteractableID);
 
 		string strTag = {};
 		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))

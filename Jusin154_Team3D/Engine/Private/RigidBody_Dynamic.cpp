@@ -164,6 +164,44 @@ _vector CRigidBody_Dynamic::Get_Position()
 	return vPos;
 }
 
+void CRigidBody_Dynamic::Set_Position(_vector vPos)
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	pxTransform.p.x = vPos.m128_f32[0];
+	pxTransform.p.y = vPos.m128_f32[1];
+	pxTransform.p.z = vPos.m128_f32[2];
+	Set_Transform(pxTransform);
+}
+
+void CRigidBody_Dynamic::Set_Rotation(_vector vRotQ)
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	pxTransform.q.x = vRotQ.m128_f32[0];
+	pxTransform.q.y = vRotQ.m128_f32[1];
+	pxTransform.q.z = vRotQ.m128_f32[2];
+	pxTransform.q.w = vRotQ.m128_f32[3];
+	Set_Transform(pxTransform);
+}
+
+void CRigidBody_Dynamic::Set_Transform(_vector vPos, _vector vRotQ)
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	pxTransform.p.x = vPos.m128_f32[0];
+	pxTransform.p.y = vPos.m128_f32[1];
+	pxTransform.p.z = vPos.m128_f32[2];
+
+	pxTransform.q.x = vRotQ.m128_f32[0];
+	pxTransform.q.y = vRotQ.m128_f32[1];
+	pxTransform.q.z = vRotQ.m128_f32[2];
+	pxTransform.q.w = vRotQ.m128_f32[3];
+	Set_Transform(pxTransform);
+}
+
+void CRigidBody_Dynamic::Set_Transform(PSX::PxTransform pxTransform)
+{
+	m_pRigidBody->setGlobalPose(pxTransform);
+}
+
 _float3 CRigidBody_Dynamic::Get_FootPosition()
 {
 	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();

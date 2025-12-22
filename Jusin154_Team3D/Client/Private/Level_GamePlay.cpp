@@ -85,6 +85,8 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	
+	if(FAILED(m_pInfoInstance->Late_Initialize()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -244,21 +246,33 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	// 맵 로드할지 안할지 bool 설정
 	// ---------------------------------
 	_bool isReady_Background = { true };
+	_bool isReady_Hogsmeade = { true };
+	_bool isReady_Hogwart = { true };
 
 #ifdef gimch
 	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 인혁
 	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 
 	
@@ -273,14 +287,17 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #if 진우
 
 #else
-		if (FAILED(Ready_Layer_Hogsmeade()))
-			return E_FAIL;
+		if(isReady_Hogsmeade)
+		{
+			if (FAILED(Ready_Layer_Hogsmeade()))
+				return E_FAIL;
+		}
 
-		if (FAILED(Ready_Layer_Hogwart()))
-			return E_FAIL;
-
-		if (FAILED(Ready_Layer_Unified()))
-			return E_FAIL;
+		if(isReady_Hogwart)
+		{
+			if (FAILED(Ready_Layer_Hogwart()))
+				return E_FAIL;
+		}
 
 		/* 물 오브젝트 */
 		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
@@ -316,36 +333,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogsmeade()
 	/* Chests */
 	CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info", LAYER_HOGSMEADE);
 
-
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Hogwart()
-{
-
-	CInfoInstance::GetInstance()->Load_MapObjects("Hogwart_MapContainer_Data", LAYER_HOGWART);
-
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Unified()
-{
+	/* Hogwart Unified*/
 	CUnified::UNIFIED_DESC Desc = {};
-
-	/* Hogwart Unified*/
-	Desc.fLodSwitchDistnace = 400.f;
-	Desc.vUnifiedCenterPos = _float4(-250.2f, 17.2f, -500.7f, 1.f);
-	Desc.vPosition = _float3(-291.2f, 17.2f, -474.7f);
-	Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Desc.vScale = _float3(1.f, 1.f, 1.f);
-	Desc.srtLayerTag = LAYER_HOGWART;
-	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HW_HogwartsShell_B"));
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED, &Desc)))
-		return E_FAIL;
-
-	Desc.srtModelPrototypeTags.clear();
-	/* Hogwart Unified*/
 	Desc.fLodSwitchDistnace = 500.f;
 	Desc.vUnifiedCenterPos = _float4(62.f, 10.f, 93.f, 1.f);
 	Desc.vPosition = _float3(62.f, 10.f, 93.f);
@@ -357,6 +346,28 @@ HRESULT CLevel_GamePlay::Ready_Layer_Unified()
 	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_2"));
 	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_3"));
 	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_Streets_LOD1_Merged_0"));
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED, &Desc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Hogwart()
+{
+	CInfoInstance::GetInstance()->Load_MapObjects("Hogwart_MapContainer_Data", LAYER_HOGWART);
+	CInfoInstance::GetInstance()->Load_MapObjects("HogwartMap1221", LAYER_HOGWART);
+
+	CUnified::UNIFIED_DESC Desc = {};
+
+	/* Hogwart Unified*/
+	Desc.fLodSwitchDistnace = 400.f;
+	Desc.vUnifiedCenterPos = _float4(-250.2f, 17.2f, -500.7f, 1.f);
+	Desc.vPosition = _float3(-291.2f, 17.2f, -474.7f);
+	Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Desc.srtLayerTag = LAYER_HOGWART;
+	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HW_HogwartsShell_B"));
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED, &Desc)))
 		return E_FAIL;

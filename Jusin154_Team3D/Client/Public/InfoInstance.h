@@ -22,6 +22,7 @@ private:
 	virtual ~CInfoInstance() = default;
 public:
 	HRESULT Initialize_Information(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
+	HRESULT Late_Initialize(); // GamePlay Initialize 할 때
 	void Release_Information();
 	LEVEL Get_RestartLevel();
 public:
@@ -82,6 +83,8 @@ public:
 #pragma endregion
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
+
+	HRESULT ActiveAt_Interactive(_fvector vPosition);
 #pragma endregion
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
