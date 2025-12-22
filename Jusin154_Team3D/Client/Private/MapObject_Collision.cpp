@@ -88,7 +88,7 @@ void CMapObject_Collision::ReadyForPhysX()
 		return;
 	}
 	m_bConverted = true;
-	
+	_uint iLevel = NEXT_LEVEL;
 	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
 	{
 		CModel* pModel = m_pModelComs[iIndexLOD];
@@ -98,7 +98,7 @@ void CMapObject_Collision::ReadyForPhysX()
 		_bool bSkip = { false };
 		for (_int i = 0; i < 4; ++i) {
 			if (false == XMVector4NearEqual(idenMatrix.r[i], parentMatrix.r[i], XMVectorReplicate(FLT_EPSILON5))) {
-				if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix)))) {
+				if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix), iLevel))) {
 					assert(false);
 				}
 				bSkip = true;
@@ -106,7 +106,7 @@ void CMapObject_Collision::ReadyForPhysX()
 			}
 		}
 		if (false == bSkip) {
-			if (FAILED(pModel->Ready_PhysXMeshes(m_pParentTransformCom->Get_XMWorldMatrix()))) {
+			if (FAILED(pModel->Ready_PhysXMeshes(m_pParentTransformCom->Get_XMWorldMatrix(), iLevel))) {
 				assert(false);
 			}
 		}
@@ -226,6 +226,7 @@ void CMapObject_Collision::Free()
 		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
 			SAFE_RELEASE(m_RigidBodies[i][j]);
 		}
+		m_RigidBodies[i].clear();
 	} m_RigidBodies.clear();
 
 	m_ModelPrototypeTags.clear();

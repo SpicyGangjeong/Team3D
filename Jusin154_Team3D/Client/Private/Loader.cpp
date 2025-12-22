@@ -352,7 +352,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
+	isLoad_Hogwart = true;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;

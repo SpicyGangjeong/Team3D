@@ -424,7 +424,7 @@ void CVIBuffer_Terrain::ConvertToHeightField(const _tchar* pStaticKey)
 		assert(false);
 	}
 	else {
-		m_pGameInstance->RegistHeight(pStaticKey, Desc);
+		m_pGameInstance->RegistHeight(pStaticKey, Desc, m_pGameInstance->Get_NextLevelID());
 	}
 	
 }

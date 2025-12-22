@@ -71,8 +71,6 @@ private:
 	_float4x4					m_PreShadowView = {};
 	_float4x4					m_PreShadowProj = {};
 
-
-
 #pragma region TunningParameters
 	/* TunningParam  */
 

@@ -11,7 +11,6 @@ float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_PrevWorldMatrix, g_PrevViewMatrix, g_PrevProjMatrix;
 matrix g_OffsetMatrix[256];
 
-
 int g_bRimLight;
 int g_bUseNormalMap;
 int g_bDisolve;
@@ -24,6 +23,7 @@ float g_fOutLineScale;
 float g_fOutLineThickness;
 float g_fOutLinePower;
 float g_fUsingSurfaceParams;
+float g_fEtherealRatio;
 
 
 Texture2D g_DiffuseTexture                   : register(t00);
@@ -57,7 +57,6 @@ StructuredBuffer<BoneOut> g_BoneBuffer       : register(t26);
 StructuredBuffer<BoneOut> g_PrevBoneBuffer   : register(t27);
 
 Texture2D g_SurfaceParamsTexture;
-
 
 int g_iBinded_Texture[27];
 matrix g_BoneMatrices[512];
@@ -224,7 +223,6 @@ VS_OUT VS_MAIN_OUTLINE_READ(VS_IN In)
     Out.vWorldPos = mul(vPosition, g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
     Out.vPrevProjPos = mul(vPrevPosition, matPrevWVP);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
 
     return Out;
 }
@@ -788,9 +786,11 @@ PS_OUT_BLEND PS_Dragon_Aura(PS_IN In)
 {
     PS_OUT_BLEND Out;
     float2 uv = In.vTexcoord;
+    float2 uvOppacity = uv;
+    uvOppacity.y += g_fEtherealRatio;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
-    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).x;
-    vDiffuse.a = vDiffuse.a * fOppacity.r;
+    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uvOppacity).r;
+    vDiffuse = vDiffuse * (1 - fOppacity);
     Out.vAlbedo = vDiffuse;
     return Out;
 }
@@ -800,7 +800,7 @@ PS_OUT_BLEND PS_Dragon_EtherealEyes(PS_IN In)
     PS_OUT_BLEND Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
-    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).x;
+    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).a;
     float4 vBaseColor = g_DiffuseBlend.Sample(DefaultSampler, uv);
     //TODO 눈알 더 해야함
     Out.vAlbedo = lerp(vDiffuse, vBaseColor, fOppacity);
@@ -811,11 +811,12 @@ PS_OUT_BLEND PS_Dragon_EtherealWings(PS_IN In)
 {
     PS_OUT_BLEND Out;
     float2 uv = In.vTexcoord;
-    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    float2 uvDiffuse = uv; uvDiffuse.y -= g_fEtherealRatio;
+    float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uvDiffuse);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
     vDiffuse += vEmissive;
-    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).x;
-    vDiffuse.a = fOppacity;
+    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uvDiffuse).a;
+    vDiffuse.a =  (1- fOppacity);
     Out.vAlbedo = vDiffuse;
     return Out;
 }
