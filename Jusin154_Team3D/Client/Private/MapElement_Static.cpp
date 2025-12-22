@@ -154,7 +154,7 @@ void CMapElement_Static::ReadyForPhysX()
 	{
 		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		if (FAILED(pModel->Ready_PhysXMeshes(m_pTransformCom->Get_XMWorldMatrix(), iLevel))) {
+		if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
 			assert(false);
 		}
 	}

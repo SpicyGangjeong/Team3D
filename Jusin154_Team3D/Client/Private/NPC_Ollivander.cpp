@@ -25,15 +25,15 @@ void CNPC_Ollivander::Priority_Update(_float fTimeDelta)
 void CNPC_Ollivander::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
-	if (m_pModelCom->IsFinishedAnim()) {
-		m_pModelCom->Set_AnimationIndex(m_pGameInstance->Random_Int(0, 19), false);
-	}
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
 
+	{ // 세트
+		m_pCharacter_Controller->Move(fTimeDelta);
+	}
 }
 
 void CNPC_Ollivander::Late_Update(_float fTimeDelta)
@@ -41,6 +41,8 @@ void CNPC_Ollivander::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, m_pTransformCom->Get_EstimatedPositionByMomentum());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
 	__super::Late_Update(fTimeDelta);
 }
@@ -72,6 +74,7 @@ HRESULT CNPC_Ollivander::Render()
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -159,13 +162,19 @@ HRESULT CNPC_Ollivander::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(40.f, 4.f, 68.9f, 1.f));
-	m_pModelCom->Set_AnimationIndex(m_pGameInstance->Random_Int(0, 19), false);
+	m_pModelCom->Set_AnimationIndex(0, true);
 	return S_OK;
 }
 
 HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 {
-	if (FAILED(__super::Ready_Components(pArg))) {
+	CTransform::TRANSFORM_DESC Desc = {};
+
+	Desc.fSpeedPerSec = 10.f;
+	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+	Desc.fRadius = 10.f;
+
+	if (FAILED(__super::Ready_Components(&Desc))) {
 		return E_FAIL;
 	}
 
@@ -177,6 +186,28 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_GerboldOlivander_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
+	}
+
+	{ // CCT
+		CCharacter_Controller::Character_Controller_DESC Desc{};
+
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
+		Desc.pTransform = m_pTransformCom;
+		Desc.eBodyType = ACTOR::CAPSULE;
+		Desc.fContactOffset = 0.0001f;
+		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
+		Desc.bAutoStepping = { false };
+		Desc.fStepOffset = { 0.02f };
+		Desc.fRadius = 0.5f;
+		Desc.fHeight = 0.6f;
+		Desc.pCallback_HitReport = nullptr;
+		Desc.pCallback_Behavior = nullptr;
+		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
+			return E_FAIL;
+		}
+		m_pCharacter_Controller->SetGravity(true);
 	}
 
 	return S_OK;
@@ -209,30 +240,17 @@ CGameObject* CNPC_Ollivander::Clone(void* pArg, CGameObject* pOwner)
 void CNPC_Ollivander::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pCharacter_Controller);
+	if (nullptr != m_pInfoInstance) {
+		CInfoInstance* pInfo = m_pInfoInstance;
+		m_pInfoInstance = nullptr;
+	}
 }
 #ifdef _DEBUG
 
 void CNPC_Ollivander::Describe_Entity()
 {
-	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	if (GUI::CollapsingHeader("Ollivander")) {
-		m_pModelCom->Describe_Entity();
-		if (ImGui::TreeNode("ANIM STATE")) {
-
-			for (auto& pState : m_States)
-			{
-				if (ImGui::Button(to_string(pState.first).c_str()))
-				{
-					m_pFSM->Change_State(pState.first);
-				}
-			}
-
-			GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
-
-			ImGui::TreePop();
-		}
-	}
-	GUI::End();
 }
 
 #endif // _DEBUG

@@ -358,8 +358,8 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 		return E_FAIL;
 	}
 	
-	m_pGameInstance->Add_Camera(g_iStaticLevel, m_pBinded_Camera, CAMERA_SHOULDER);
-	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, m_pBinded_Camera, CAMERA_SHOULDER);
+	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, true))) {
 		return E_FAIL;
 	}
 

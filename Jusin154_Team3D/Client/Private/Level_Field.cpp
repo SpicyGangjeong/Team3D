@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "InfoInstance.h"
+#include "Player.h"
+#include "EffectPool.h"
 #include "Light_Main.h"
 #include "Layer.h"
 #include "Camera_Debug.h"
@@ -33,6 +35,13 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	if (FAILED(Reday_Layer_EffectPool())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
+		return E_FAIL;
+	}
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}
@@ -157,11 +166,11 @@ HRESULT CLevel_Field::Ready_Camera()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
 
 #endif // _DEBUG
 
-	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
+	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
 	return S_OK;
@@ -208,6 +217,18 @@ HRESULT CLevel_Field::Ready_Markers()
 	return S_OK;
 }
 
+HRESULT CLevel_Field::Ready_Layer_Player(const _wstring& strLayerTag)
+{
+	CPlayer::PLAYERDESC playerDesc = {};
+	playerDesc.vPos = _float4(-17.96f, 18.74f, 9.11f, 1.f);
+	playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &playerDesc))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CLevel_Field::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
 	return S_OK;
@@ -219,6 +240,14 @@ HRESULT CLevel_Field::Ready_Layer_Monster()
 		return E_FAIL;
 	}
 
+	return S_OK;
+}
+
+HRESULT CLevel_Field::Reday_Layer_EffectPool()
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, LAYER_EFFECTPOOL))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

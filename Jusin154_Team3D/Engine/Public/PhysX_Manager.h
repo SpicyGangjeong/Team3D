@@ -51,7 +51,7 @@ public:
 	void ClearScene(_uint iLevel);
 	void Attach_Actor(PSX::PxActor& Actor, _uint iLevel);
 	unordered_set<PSX::PxActor*>::iterator Detach_Actor(PSX::PxActor& Actor, _uint iLevel);
-	void Release_Actor(PSX::PxActor& Actor, _uint iLevel);
+	void Release_Actor(PSX::PxActor& Actor);
 #pragma endregion
 #pragma region CHARACTER_CONTROLLER
 	/* dev-treadmill.tistory.com/158  */

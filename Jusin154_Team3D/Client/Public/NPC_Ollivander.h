@@ -20,6 +20,7 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
+	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;
