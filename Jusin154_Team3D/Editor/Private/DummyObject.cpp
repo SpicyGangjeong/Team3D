@@ -81,19 +81,25 @@ HRESULT CDummyObject::Render()
 		{
 			return E_FAIL;
 		}
-#ifdef 기무리
-		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
-			return E_FAIL;
+
+		if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
+		{
+			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
+				return E_FAIL;
+			}
+
+			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 		}
-#else
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
-			return E_FAIL;
+		else {
+
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+				return E_FAIL;
+			}
+
+			m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 		}
-#endif // 기무리
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -118,18 +124,19 @@ HRESULT CDummyObject::Ready_Components()
 		return E_FAIL;
 	}
 
-#ifdef 기무리
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
-		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
-		return E_FAIL;
+	if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
+	{
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
+			reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+			return E_FAIL;
+		}
 	}
-#else
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
-		return E_FAIL;
+	else {
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+			reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+			return E_FAIL;
 	}
-#endif // 기무리
-
+	}
 
 	return S_OK;
 }
