@@ -175,7 +175,7 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 	}
 
 
-	ComputeAnimation(m_iCurrentAnimIndex, 0);
+	ComputeAnimation(m_iCurrentAnimIndex, m_iIndexAnimPlayableMesh);
 
 	if (m_bIsFinishedAnim)
 	{
@@ -2233,12 +2233,27 @@ HRESULT CModel::Initialize(void* pArg)
 		Create_ParentSrv();
 		Create_BoneLocalSrv();
 
-		if (FAILED(Create_ComputeShaderLocal()))
+		if (FAILED(Create_ComputeShaderLocal())){
 			return E_FAIL;
+		}
 
-		if (FAILED(Create_ComputeShader()))
+		if (FAILED(Create_ComputeShader())){
 			return E_FAIL;
+		}
+
+		for (int i = 0; i < m_Meshes.size(); i++)
+		{
+			if (1 < m_Meshes[i]->Get_NumBone()) {
+				m_iIndexAnimPlayableMesh = i;
+				break;
+			}
+		}
+		if (-1 == m_iIndexAnimPlayableMesh) {
+
+			assert(false);
+		}
 	}
+
 
 
 	return S_OK;

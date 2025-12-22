@@ -41,6 +41,7 @@ public:
 	_float4x4	Get_PreTransformMatrix() const { return m_PreTransformMatrix; };
 	virtual HRESULT Render(_uint iMeshIndex);
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
+	MODEL Get_Type() { return m_eType; }
 #pragma endregion 
 #pragma region Animation
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
@@ -180,6 +181,7 @@ private:
 
 	_float					m_fRadius = { 0.f };			// 컬링용 Radius
 	_int					m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
+	_int					m_iIndexAnimPlayableMesh = { -1 };
 	_vector					m_vector[3];
 
 	vector<_uint>			m_iBoneMask;

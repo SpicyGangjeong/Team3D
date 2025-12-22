@@ -83,6 +83,9 @@ void CGoblin::Priority_Update(_float fTimeDelta)
 
 void CGoblin::Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -135,6 +138,9 @@ void CGoblin::Update(_float fTimeDelta)
 
 void CGoblin::Late_Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	__super::Late_Update(fTimeDelta);
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());

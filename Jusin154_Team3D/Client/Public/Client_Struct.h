@@ -40,6 +40,7 @@ namespace Client
 	typedef struct tagLockOnInfo {
 		CUnit* pUnit = { nullptr };
 		class CMapElement_Interactable* pInteractive = { nullptr };
+		class CMapElement_Chest* pChest = { nullptr };
 	}LOCKON_INFO;
 
 	typedef struct tagUnitInfo

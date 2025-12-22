@@ -125,24 +125,23 @@ VS_OUT VS_MAIN(VS_IN In)
 
     matrix BoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
-    
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
 
     matrix PrevBoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
+            mul(g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
     
 
     
@@ -195,23 +194,23 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
 
     matrix BoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
-    
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
+
     matrix PrevBoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_PrevBoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_PrevBoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_PrevBoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
+            mul(g_PrevBoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vPrevPosition = mul(vector(In.vPosition, 1.f), PrevBoneMatrix);
@@ -322,14 +321,14 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
 
     matrix BoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
-            g_BoneBuffer[In.vBlendIndex.x].LocalCombined) * w.x
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            g_BoneBuffer[In.vBlendIndex.y].LocalCombined) * w.y
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y))
       + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            g_BoneBuffer[In.vBlendIndex.z].LocalCombined) * w.z
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z))
       + mul(g_OffsetMatrix[In.vBlendIndex.w],
-            g_BoneBuffer[In.vBlendIndex.w].LocalCombined) * w.w;
-    
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
+
     /* ?ㅽ궎??*/
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
    

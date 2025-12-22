@@ -13,6 +13,7 @@ private:
 
 public:
 	void	Render();
+	RENDER	Get_CurrentRenderPass();
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
 	void	Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
 	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
@@ -27,6 +28,7 @@ private:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	class CGameInstance* m_pGameInstance = { nullptr };
 	list<class CGameObject*>	m_RenderObjects[ENUM_CLASS(RENDER::END)];
+	RENDER m_eType = RENDER::END;
 
 #ifdef _DEBUG
 	CRenderEventDebugger m_AnnotationHelper = {};
