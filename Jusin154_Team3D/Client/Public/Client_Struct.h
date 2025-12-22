@@ -94,10 +94,14 @@ namespace Client
 
 	typedef struct tagSpellLearnInfo
 	{
-		_wstring pSpellName{};
-		_wstring pImageName{};
-		_float	fSpellSize{};
-		_float2 fStartPosition{};
+		_wstring		pSpellName{};
+		_wstring		pImageName{};
+		_int			iSpellID{};
+		_int			iSpellType{};
+		_float			fSpellSize{};
+		_float2			fStartPosition{};
+		_float2			fEndPosition{};
+		vector<_vector> Booster;
 		vector<_vector> Lines;
 	}SPELLLEARNINFO;
 

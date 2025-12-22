@@ -183,6 +183,19 @@ _bool CPanelObject::Chack_Visible()
 	return m_bVisible;
 }
 
+_bool CPanelObject::Chack_Element(_float2 Position, _float2 Target, _float Scale, _float TargetScale)
+{
+	_vector vPos = XMVectorSet(Position.x, Position.y, 0.f, 1.f);
+	_vector vTarget = XMVectorSet(Target.x, Target.y, 0.f, 1.f);
+
+	_float Dir = XMVectorGetX(XMVector3Length(XMVectorSubtract(vTarget, vPos)));
+
+	if (Dir <= (Scale * 0.5f) + (TargetScale * 0.5f))
+		return true;
+
+	return false;
+}
+
 CGameObject* CPanelObject::Find_Element(const wstring& Name)
 {
 	auto iter = m_Elements_map.find(Name);

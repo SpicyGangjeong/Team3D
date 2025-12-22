@@ -33,10 +33,12 @@ public:
 
 	virtual void Add_Function(wstring Name, function<void(void*)> Evnet) override;
 	virtual void Function_Callback(wstring Name, void* pArg = nullptr) override;
+
 protected:
 	virtual void Add_Element(wstring Name, class CGameObject* pElement);
 	virtual _bool Chack_Visible() override;
 
+	virtual _bool Chack_Element(_float2 Position, _float2 Target, _float Scale, _float TargetScale);
 protected:
 	vector<class CGameObject*>			m_Elements;				// 패널이 엘리먼츠를 관리하기 위해 만듬
 	vector<wstring>						m_ElementName;			// 엘리멘트들의 이름을 전해주기 위해서

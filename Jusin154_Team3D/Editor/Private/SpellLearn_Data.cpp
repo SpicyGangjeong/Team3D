@@ -41,12 +41,34 @@ HRESULT CSpellLearn_Data::Initialize(void* pArg)
 		// 속성 읽기
 		Info.pSpellName = CMyTools::ToWstring(pName->Attribute("SpellName"));
 		Info.pImageName = CMyTools::ToWstring(pName->Attribute("ImageName"));
+		pName->QueryIntAttribute("SpellID", &Info.iSpellID);
+		pName->QueryIntAttribute("SpellType", &Info.iSpellType);
 		pName->QueryFloatAttribute("Size", &Info.fSpellSize);
 
 		_float fX{}, fY{};
 		pName->QueryFloatAttribute("x", &fX);
 		pName->QueryFloatAttribute("y", &fY);
 		Info.fStartPosition = _float2(fX, fY);
+		_float endx{}, endy{};
+		pName->QueryFloatAttribute("endx", &endx);
+		pName->QueryFloatAttribute("endy", &endy);
+		Info.fEndPosition = _float2(endx, endy);
+
+		tinyxml2::XMLElement* pBooster = pName->FirstChildElement("Booster");
+		while (pBooster)
+		{
+			tinyxml2::XMLElement* pPos = pBooster->FirstChildElement("Pos");
+			if (pPos)
+			{
+				_float px{}, py{};
+				pPos->QueryFloatAttribute("x", &px);
+				pPos->QueryFloatAttribute("y", &py);
+				Info.Booster.push_back(XMVectorSet(px, py, 0.f, 1.f));
+			}
+
+			// 다음 Position으로 이동
+			pBooster = pBooster->NextSiblingElement("Booster");
+		}
 
 		// Position 요소 반복
 		tinyxml2::XMLElement* pPosition = pName->FirstChildElement("Position");
