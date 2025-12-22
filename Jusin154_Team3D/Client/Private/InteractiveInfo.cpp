@@ -14,6 +14,19 @@ CInteractiveInfo::CInteractiveInfo()
 void CInteractiveInfo::Update(_float fTimeDelta)
 {
 	Refresh_LockOnTarget();
+
+	auto iter = m_PoolingActiveInteractive.begin();
+
+	for (; iter != m_PoolingActiveInteractive.end();)
+	{
+		if (false == (*iter)->Get_Visible())
+		{
+			m_PoolingInteractive.push_back(*iter);
+			iter = m_PoolingActiveInteractive.erase(iter);
+		}
+		else
+			++iter;
+	}
 }
 void CInteractiveInfo::Change_Level()
 {
@@ -110,6 +123,112 @@ HRESULT CInteractiveInfo::Refresh_LockOnTarget()
 	}
 	return S_OK;
 }
+
+HRESULT CInteractiveInfo::Ready_PoolingInteractive()
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Interactable/E_INTER_EffectObejct.xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Element_Interactable");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Interactable::ELEMENT_INTERACTABLE_DESC Desc = {};
+
+		/* Model Prototypes */
+		Desc.isPooled = true;
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+		Object->QueryUnsignedAttribute("ID", &Desc.iInteractableID);
+
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* HalfGeometryInfo = Object->FirstChildElement("HalfGeometryInfo");
+		HalfGeometryInfo->QueryFloatAttribute("x", &Desc.vBoxSize.x);
+		HalfGeometryInfo->QueryFloatAttribute("y", &Desc.vBoxSize.y);
+		HalfGeometryInfo->QueryFloatAttribute("z", &Desc.vBoxSize.z);
+
+		auto* LocalTranslation = Object->FirstChildElement("LocalTranslation");
+		LocalTranslation->QueryFloatAttribute("x", &Desc.vBoxLocalPosition.x);
+		LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
+		LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
+
+		CMapElement_Interactable* pInteractable = { nullptr };
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, LAYER_INTERACTABLE, &Desc,nullptr, &pInteractable)))
+			return E_FAIL;
+
+		if (nullptr != pInteractable)
+		{
+			m_PoolingInteractive.push_back(pInteractable);
+		}
+		else
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CInteractiveInfo::ActiveAt_Interactive(_fvector vPosition)
+{
+	_uint iSize = (_uint)m_PoolingInteractive.size();
+
+	_uint iRandomIndex = m_pGameInstance->Real_Random_Int(0, max(0, iSize - 1));
+
+	_uint iIndex = {};
+
+	auto iter = m_PoolingInteractive.begin();
+
+	for (; iter != m_PoolingInteractive.end();)
+	{
+		if (iIndex == iRandomIndex)
+		{
+			(*iter)->ActivateAt(vPosition);
+			m_PoolingActiveInteractive.push_back(*iter);
+			iter = m_PoolingInteractive.erase(iter);
+			break;
+		}
+		else
+		{
+			++iter;
+			++iIndex;
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT CInteractiveInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
 	m_pGameInstance = CGameInstance::GetInstance();
@@ -144,6 +263,15 @@ void CInteractiveInfo::Free()
 	for (CMapElement_Interactable* pInteractive : m_ActiveInteractive) {
 		SAFE_RELEASE(pInteractive);
 	} m_ActiveInteractive.clear();
+
+	for (CMapElement_Interactable* pInteractive : m_PoolingInteractive) {
+		SAFE_RELEASE(pInteractive);
+	} m_ActiveInteractive.clear();
+
+	for (CMapElement_Interactable* pInteractive : m_PoolingActiveInteractive) {
+		SAFE_RELEASE(pInteractive);
+	} m_ActiveInteractive.clear();
+
 
 	SAFE_RELEASE(m_pGameInstance);
 	SAFE_RELEASE(m_pInfoInstance);

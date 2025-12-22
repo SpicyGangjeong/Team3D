@@ -69,7 +69,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	// 디버그 모드일 때
 #ifdef _DEBUG
 #ifdef gimch
-	m_isActiveEffectCreate = false;
+	m_isActiveEffectCreate = true;
 	m_isActiveMonsterEffectCreate = false;
 #endif // gimch
 #ifdef Bin

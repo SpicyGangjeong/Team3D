@@ -83,7 +83,7 @@ namespace Client
 		END
 	};
 
-	enum class ELEMENT_INTERACTABLE_ID { BARREL, BOX, TABLE, END };
+	enum class ELEMENT_INTERACTABLE_ID { BARREL, BOX, TABLE, CHAIR, END };
 }
 
 
