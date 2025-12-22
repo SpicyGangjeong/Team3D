@@ -108,7 +108,7 @@ void CSpellLearn_Panel::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_M))
 	{
-		if (Index > m_Info.size() - 1)
+		if (Index >= m_pInfoInstance->Get_SpellLearnIndex() - 1)
 		{
 			Index = 0;
 		}
