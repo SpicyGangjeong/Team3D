@@ -85,6 +85,8 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	
+	if(FAILED(m_pInfoInstance->Late_Initialize()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -249,8 +251,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;

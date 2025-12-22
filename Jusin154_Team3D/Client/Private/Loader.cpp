@@ -338,8 +338,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	_bool isLoad_Hogwart = { false };
 
 #ifdef gimch
-	isLoad_Background = false;
-	isLoad_Hogwart = true;
+	isLoad_Background = true;
+	isLoad_Hogwart = false;
 #endif // gimch
 #ifdef Bin
 	isLoad_Background = false;
@@ -398,6 +398,33 @@ HRESULT CLoader::Loading_For_GamePlay()
 		{	/* Hogsmeade LOD */
 			jobMapModels.emplace_back(Deferred_FolderLoad(
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/HogsmeadeLOD/ProxyAssets",
+				".bin", false
+			));
+		}
+		/* Interactable */
+		{/* Barrel */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Meshes",
+				".bin", false
+			));
+			/* Box */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/MiscProps",
+				".bin", false
+			));
+			/* TeaShop Table */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Tables",
+				".bin", false
+			));
+			/* TeaShop Chair*/
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Chairs",
+				".bin", false
+			));
+			/* Object Interactables (Chest)*/
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Interactables",
 				".bin", false
 			));
 		}
@@ -629,32 +656,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 				));
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/GroundSurfaces",
-					".bin", false
-				));
-			}
-			{/* Barrel */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Meshes",
-					".bin", false
-				));
-				/* Box */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/MiscProps",
-					".bin", false
-				));
-				/* TeaShop Table */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Tables",
-					".bin", false
-				));
-				/* TeaShop Chair*/
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Chairs",
-					".bin", false
-				));
-				/* Object Interactables (Chest)*/
-				jobMapModels.emplace_back(Deferred_FolderLoad(
-					"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Interactables",
 					".bin", false
 				));
 			}
