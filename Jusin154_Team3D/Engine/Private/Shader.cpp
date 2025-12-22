@@ -223,9 +223,6 @@ HRESULT CShader::Begin(_uint iPassIndex)
 
 	m_pContext->IASetInputLayout(m_InputLayouts[iPassIndex]);
 
-	/* Apply를 반드시 호출해야만 쉐이더로 그려진다. */
-	/* Apply이전에 쉐이더에 전달할 모든 데이터들을 다 던져놓아야한다. */
-
 	m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);
 
 	return S_OK;

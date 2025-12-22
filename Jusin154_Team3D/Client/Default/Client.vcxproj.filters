@@ -676,9 +676,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Blink.h">
       <Filter>02.GameObjects\Effect\Effects\Blink</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\State_Skill2.h">
       <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Transformation.h">
+      <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1415,9 +1418,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Blink">
       <UniqueIdentifier>{262cc240-d062-406a-9d47-36702fe6b9f3}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_Skill2">
       <UniqueIdentifier>{785b1fd0-ef6f-43ab-96fc-e233cd93b29d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Transformation">
+      <UniqueIdentifier>{87b1db75-938f-462f-a288-fe9c8d6c689e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2042,9 +2048,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Blink.cpp">
       <Filter>02.GameObjects\Effect\Effects\Blink</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\State_Skill2.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transformation.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

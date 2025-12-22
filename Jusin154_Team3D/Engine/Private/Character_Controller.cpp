@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Character_Controller.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 
 CPhysX_CctQueryFilterCallback CCharacter_Controller::s_QueryFilterCallback_IGNORE_Shield = {};
 
@@ -158,20 +159,25 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 	return S_OK;
 }
 
-void CCharacter_Controller::Set_OnGroundFlag(_bool bOnGround)
+void CCharacter_Controller::Set_OnGroundFlag(_bool bFlag)
 {
 	m_iIsOnGround = iCoyote_Counter;
+	m_bSlide = false;
+	//if (m_fCurrentSlopeDegree < m_fWalkableSlopeDegree * 0.5f) {
+	//	m_bSlide = false;
+	//}
 }
 
-void CCharacter_Controller::Set_CurrentSlope(_float fSlope)
+void CCharacter_Controller::Set_CurrentSlope(_float fSlope, _float3& CurrentSlopeNormal)
 {
 	m_fCurrentSlopeDegree = fSlope;
+	XMStoreFloat3(&m_vLastClimbNormal, XMVector3Normalize(XMLoadFloat3(&CurrentSlopeNormal)));
 }
 
 void CCharacter_Controller::Rewind_Grounded()
 {
 	if (m_eBeforeCollisionFlags.isSet(PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)) {
-		m_iIsOnGround = iCoyote_Counter;
+		Set_OnGroundFlag(true);
 		return;
 	}
 	m_iIsOnGround -= 1;
@@ -233,7 +239,10 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 		_vector vCurrentMomentum = m_pTransform->Get_CurrentMomentum();
 
 		m_pTransform->Set_CurrentMomentum( XMVectorSetY(vCurrentMomentum, fCurrentMomentumY) );
-		m_iIsOnGround = iCoyote_Counter;
+		Set_OnGroundFlag(true);
+		if (m_fCurrentSlopeDegree < m_fWalkableSlopeDegree * 0.5f) {
+			m_bSlide = false;
+		}
 	}
 	break;
 	default:
@@ -257,13 +266,11 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * m_fGravity * fTimeDelta, 0.f, 0.f));
 		}
 		else if ((iCoyote_Counter) >= m_iIsOnGround) {
-			UpdateGroundByCast(fTimeDelta); // 바닥에 플레이어 붙이게 함
+			UpdateGroundByCast(fTimeDelta);// 바닥에 플레이어 붙이게 함
 		}
 		else if (m_fCurrentSlopeDegree > m_fWalkableSlopeDegree) {        // 너무 가파른 경사: 중력
 			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
-		}
-		else {
-			// 아니면 안함
+			m_bSlide = true;
 		}
 	}
 	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
@@ -489,6 +496,8 @@ void CCharacter_Controller::Describe_Entity()
 				GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 			}
 		}
+		GUI::Checkbox("IsSlide", &m_bSlide);
+		GUI::Text("SlopeNormal %.1f, %.1f, %.1f", m_vLastClimbNormal.x, m_vLastClimbNormal.y, m_vLastClimbNormal.z);
 		GUI::Text("%.1f", m_fCurrentSlopeDegree);
 		GUI::Text("%.1f", m_fWalkableSlopeDegree); GUI::SameLine(); if (GUI::SliderFloat("m_fWalkableSlopeDegree", &m_fWalkableSlopeDegree, 0.0f, 90.f)) {
 			m_pController->setSlopeLimit(cosf(XMConvertToRadians(m_fWalkableSlopeDegree)));

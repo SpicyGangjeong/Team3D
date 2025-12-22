@@ -176,6 +176,7 @@
 #include "Stupefy.h"
 #include "Lightning.h"
 #include "LightningSide.h"
+#include "Transformation.h"
 
 #pragma endregion
 
@@ -339,13 +340,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // gimch
 #ifdef Bin
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 진우
 	isLoad_Background = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = flase;
+	isLoad_Background = true;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -1787,6 +1788,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTransformation>(NEXT_LEVEL, CTransformation::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {

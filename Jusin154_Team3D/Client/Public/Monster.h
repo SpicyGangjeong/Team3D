@@ -24,6 +24,7 @@ public:
 	virtual _float2 Get_Hp();
 	virtual CStat* Get_Stat();
 	const _float4x4*  Get_HeadMatrix();
+	void CameraShake(_float ClampValue, _float Min, _float Max, _float Time);
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };

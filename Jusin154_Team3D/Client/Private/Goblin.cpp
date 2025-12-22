@@ -66,8 +66,8 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-30.f, 0.f, -14.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-30.f, 0.f, -14.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -14.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -14.f, 1.f));
 
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
@@ -143,7 +143,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
 	if (true == m_bLookAt) {
-		m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
+		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
@@ -192,6 +192,7 @@ HRESULT CGoblin::Render()
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -286,6 +287,9 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+	if (m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+		return;
+	}
 	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
 
 	m_pGoblinSpector->Set_Visible(false);
@@ -346,9 +350,9 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
-		m_pFSM->Change_State(FSMSTATE::HIT);
-	}
+
+	m_pFSM->Change_State(FSMSTATE::HIT);
+	
 
 }
 
