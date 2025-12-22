@@ -38,6 +38,7 @@
 #include "Lightning.h"
 #include "LightningSide.h"
 #include "Blink.h"
+#include "Transformation.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -408,6 +409,15 @@ HRESULT CEffectPool::Ready_Effect()
 		CBlink* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CBlink>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TRANSFORMATION, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTransformation* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTransformation>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

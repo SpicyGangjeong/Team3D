@@ -234,6 +234,8 @@ public:
 		_float    fRotateAttenuation = {};
 		_float    fRotateAttDelay = {};
 
+		_float4x4  PreWorldMatrix = {};
+
 	}CS_PARTICLE_VALUE_DESC;
 
 public:

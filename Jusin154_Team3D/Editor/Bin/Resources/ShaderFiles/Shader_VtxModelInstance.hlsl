@@ -45,11 +45,15 @@ struct ParticleValue
     
     float fRotateAttenuation;
     float fRotateAttDelay;
+    
+    row_major matrix PreWorldMatrix;
 };
 
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_ProjMatrixInv, g_ViewMatrixInv;
+
+matrix g_PrevWorldMatrix, g_PrevViewMatrix, g_PrevProjMatrix;
 
 Texture2D g_DiffuseTexture : register(t0);
 
@@ -156,16 +160,6 @@ bool g_isNoise;
 bool g_isEmissive;
 bool g_isDistortion;
 
-/* 마스크 블러링*/
-
-bool  g_isTexBlur;
-
-bool  g_isBlurDissolve;
-bool  g_isBlurReverseDissolve;
-
-float g_fBluringStrength;
-
-
 /* 블룸 */
 float g_fBloomStrength;
 int   g_iBloomType;
@@ -185,7 +179,9 @@ float4 g_vRimLightColor;
 
 float g_fModelDistortIntensity;
 
+/* 모델 블러 */
 
+float g_fModelBlurIntensity;
 
 struct VS_IN
 {
@@ -212,7 +208,22 @@ struct VS_OUT
     float2 vLifeTime : TEXCOORD1;
     float4 vWorldPos : TEXCOORD2;
     float4 vProjPos : TEXCOORD3;
+    uint   iGPUIndex : TEXCOORD4;
+};
+
+
+struct VS_BULR_MESH_OUT
+{
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float2 vLifeTime : TEXCOORD1;
+    float4 vWorldPos : TEXCOORD2;
+    float4 vProjPos : TEXCOORD3;
     uint iGPUIndex : TEXCOORD4;
+    float4 vPrevProjPos : TEXCOORD5;
 };
 
 VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
@@ -228,6 +239,7 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matWVP = mul(matWV, g_ProjMatrix);
     
 
+ 
 
     vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     
@@ -240,6 +252,7 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos = vPosition;
+   
     
     return Out;
 }
@@ -256,8 +269,6 @@ VS_OUT VS_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-
-
     vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
@@ -303,11 +314,45 @@ VS_OUT VS_NONPOS(VS_IN In, uint iGPUIndex : SV_InstanceID)
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos = vPosition;
-    
     return Out;
 }
 
+VS_BULR_MESH_OUT VS_BLUR_MESH(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_BULR_MESH_OUT Out = (VS_BULR_MESH_OUT) 0;
 
+    matrix matW, matWV, matWVP;
+    
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    row_major matrix PreTransformMatrix = g_ParticleValue[iGPUIndex].PreWorldMatrix;
+    
+    
+    matW = mul(TransformMatrix, g_WorldMatrix);
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    matrix matPrevW, matPrevWV, matPrevWVP;
+    
+    matPrevW = mul(PreTransformMatrix, g_PrevWorldMatrix);
+    matPrevWV = mul(matPrevW, g_PrevViewMatrix);
+    matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
+    
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    Out.vPosition = vPosition;
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vTexcoord = In.vTexcoord;
+    Out.vLifeTime = In.vLifeTime;
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
+    Out.vPrevProjPos = mul(vector(In.vPosition, 1.f), matPrevWVP);
+    
+    return Out;
+}
 
 struct PS_IN
 {
@@ -461,38 +506,7 @@ float4 DrawEffect(PS_IN In)
         else
             vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
         
-            
-        if (g_isTexBlur)
-        {
-            float4 fAccMask;
-
-            
-            float fTexel = g_fBluringStrength;
-            
-            if (g_isBlurDissolve)
-            {
-                fTexel = saturate(g_fBluringStrength * (In.vLifeTime.x / In.vLifeTime.y));
-            }
-            
-            if (g_isBlurReverseDissolve)
-            {
-                fTexel = saturate(g_fBluringStrength * (1 - (In.vLifeTime.x / In.vLifeTime.y)));
-            }
-            
-            for (int x = -2; x <= 2; x++)
-            {
-                for (int y = -2; y <= 2; y++)
-                {
-                    fAccMask += g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord + float2(x * fTexel, y * fTexel));
-                }
-            }
-            
-            fAccMask = fAccMask / 9.0;
-            
-             /* 연산 마스크 대입*/
-            vMtrlMask.r = fAccMask;
-        }
-  
+           
         
         float fSoftMask;
     
@@ -749,7 +763,6 @@ PS_OUT PS_MAIN(PS_IN In)
     vMtrlDiffuse.rgb += RimLight(In).rgb;
    
     Out.vDiffuse = vMtrlDiffuse;
-    
     return Out;
 }
 
@@ -777,7 +790,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     vMtrlDiffuse += RimLight(In);
 
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
-    
+
     return Out;
 }
    
@@ -869,6 +882,11 @@ struct PS_BLOOM_OUT
     float4 vDiffuse : SV_TARGET0;
 };
 
+struct PS_BLNED_OUT
+{
+    float4 vDiffuse : SV_TARGET0;
+};
+
 PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
 {
     PS_BLUR_OUT Out;
@@ -952,9 +970,9 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
 
 }
 
-PS_BLOOM_OUT PS_BLEND(PS_IN In)
+PS_BLNED_OUT PS_BLEND(PS_IN In)
 {
-    PS_BLOOM_OUT Out;
+    PS_BLNED_OUT Out;
     
     vector vMtrlDiffuse;
     
@@ -967,13 +985,12 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     vMtrlDiffuse += RimLight(In);
 
     Out.vDiffuse = vMtrlDiffuse;
-    
     return Out;
 }
 
-PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
+PS_BLNED_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
 {
-    PS_BLOOM_OUT Out;
+    PS_BLNED_OUT Out;
     
     vector vMtrlDiffuse;
     
@@ -986,7 +1003,6 @@ PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
     vMtrlDiffuse += RimLight(In);
     
     Out.vDiffuse = BlendedWeight(vMtrlDiffuse, In.vProjPos.w).vDiffuse;
-    
     
     return Out;
 }
@@ -1039,6 +1055,65 @@ PS_BLOOM_OUT PS_DISTORTION(PS_IN In)
     return Out;
 }
 
+
+
+struct PS_BLUR_MESH_IN
+{
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float2 vLifeTime : TEXCOORD1;
+    float4 vWorldPos : TEXCOORD2;
+    float4 vProjPos : TEXCOORD3;
+    uint iGPUIndex : TEXCOORD4;
+    float4 vPrevProjPos : TEXCOORD5;
+};
+
+struct PS_BLUR_MESH_OUT
+{
+    float4 vDiffuse : SV_TARGET0;
+    float2 vVelocityUV : SV_TARGET1;
+    float2 vDepth : SV_TARGET2;
+};
+
+PS_BLUR_MESH_OUT PS_BLUR_MESH(PS_BLUR_MESH_IN In)
+{
+    PS_BLUR_MESH_OUT Out;
+    
+    PS_OUT PS_Out;
+    PS_IN PS_In;
+    
+    PS_In.vPosition = In.vPosition;
+    PS_In.vNormal = In.vNormal;
+    PS_In.vTangent = In.vTangent;
+    PS_In.vBinormal = In.vBinormal;
+    PS_In.vTexcoord = In.vTexcoord;
+    PS_In.vLifeTime = In.vLifeTime;
+    PS_In.vWorldPos = In.vWorldPos;
+    PS_In.vProjPos = In.vProjPos;
+    PS_In.iGPUIndex = In.iGPUIndex;
+    
+    vector vMtrlDiffuse;
+    
+    vMtrlDiffuse = DrawEffect(PS_In);
+
+    vMtrlDiffuse.rgb += EmissiveDraw(PS_In, vMtrlDiffuse).rgb;
+    
+    vMtrlDiffuse += RimLight(PS_In);
+
+    Out.vDiffuse = vMtrlDiffuse;
+    
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, vMtrlDiffuse.a * g_fModelBlurIntensity);
+    
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        0.f, // 서페이스 파라미터
+        1.f);
+    
+    return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -1242,6 +1317,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_BLUR_NOPOS();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
+//19
+    pass BLUR_MESH
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_BULR_MESH, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR_MESH();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR_MESH();
     }
 
 }

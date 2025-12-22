@@ -506,6 +506,17 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur"), TEXT("Target_MotionBlur")))) {
 			return E_FAIL;
 		}
+
+
+		/* MRT_Blur_Mesh */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_Mesh"), TEXT("Target_VelocityMap")))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_Mesh"), TEXT("Target_Depth")))) {
+			return E_FAIL;
+		}
+
 	}
 
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);
