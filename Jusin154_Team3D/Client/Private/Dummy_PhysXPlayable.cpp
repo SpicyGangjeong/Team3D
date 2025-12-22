@@ -40,12 +40,12 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
 		if (m_pGameInstance->Key_Down(DIK_V)) {
-			m_pGameInstance->Detach_Actor(*m_pCharacter_Controller->Get_Actor());
+			m_pGameInstance->Detach_Actor(*m_pCharacter_Controller->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
 		}
 	}
 	else {
 		if (m_pGameInstance->Key_Down(DIK_V)) {
-			m_pGameInstance->Attach_Actor(*m_pCharacter_Controller->Get_Actor());
+			m_pGameInstance->Attach_Actor(*m_pCharacter_Controller->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
 		}
 	}
 	m_pCharacter_Controller->Move(fTimeDelta);
@@ -147,7 +147,7 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,

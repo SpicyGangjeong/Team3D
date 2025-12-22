@@ -118,6 +118,11 @@
 #include "SpellLearn_Name.h"
 #include "SpellLearn.h"
 #include "SpellLearn_MovePointer.h"
+#include "SpellLearn_ChaserPointer.h"
+#include "SpellLearn_LookPointer.h"
+#include "SpellLearn_Booster.h"
+#include "SpellLearn_Slot.h"
+#include "SpellLearn_Overlay.h"
 
 #include "IMGUIUI.h"
 
@@ -352,6 +357,12 @@ HRESULT CLoader::Loading_For_Logo()
 			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
+			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_CELL,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_Cell.hlsl"),
@@ -1214,6 +1225,7 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Canvas>(g_iStaticLevel, CSpellLearn_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -1231,6 +1243,26 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_MovePointer>(g_iStaticLevel, CSpellLearn_MovePointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_ChaserPointer>(g_iStaticLevel, CSpellLearn_ChaserPointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_LookPointer>(g_iStaticLevel, CSpellLearn_LookPointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Booster>(g_iStaticLevel, CSpellLearn_Booster::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Slot>(g_iStaticLevel, CSpellLearn_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Overlay>(g_iStaticLevel, CSpellLearn_Overlay::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -1466,6 +1498,17 @@ HRESULT CLoader::Loading_For_Effect()
 
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Lightning", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
+
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Spline", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
@@ -2387,6 +2430,19 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Dragon_Model")
 	));
 
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_ConjuredDragon_Model")
+	));
+
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ConjuredDragon_Model"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f))* XMMatrixIdentity()))))
+	//	return E_FAIL;
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon_Anim.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_ConjuredDragon_Anim_Model")
+	));
+
 #pragma endregion
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2413,7 +2469,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
-
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin",XMMatrixIdentity(),
 		TEXT("Prototype_Component_Wand_Model")

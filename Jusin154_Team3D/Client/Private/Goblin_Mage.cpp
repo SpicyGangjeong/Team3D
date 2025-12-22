@@ -82,6 +82,9 @@ void CGoblin_Mage::Priority_Update(_float fTimeDelta)
 
 void CGoblin_Mage::Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -124,6 +127,9 @@ void CGoblin_Mage::Update(_float fTimeDelta)
 
 void CGoblin_Mage::Late_Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	__super::Late_Update(fTimeDelta);
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
@@ -314,9 +320,11 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ACCIO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
@@ -403,7 +411,7 @@ HRESULT CGoblin_Mage::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN_WIZARD"), (CComponent**)&m_pStat))) {
 		return E_FAIL;

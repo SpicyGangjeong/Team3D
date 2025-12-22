@@ -266,8 +266,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 인혁
 	isReady_Background = false;
@@ -578,11 +578,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 	}
 	
-	/*for (_uint i = 0; i < 1; ++i) {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-		return E_FAIL;
+	for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+			return E_FAIL;
+		}
 	}
-	}*/
 
 	return S_OK;
 }

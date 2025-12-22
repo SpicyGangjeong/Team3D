@@ -483,7 +483,7 @@ HRESULT CPlayer::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
@@ -561,6 +561,11 @@ void CPlayer::ReLockOnTarget()
 	if (nullptr != m_LockOnInfo.pUnit) {
 		if (true == m_LockOnInfo.pUnit->isDead()) {
 			m_LockOnInfo.pUnit = nullptr;
+		}
+	}
+	if (nullptr != m_LockOnInfo.pInteractive) {
+		if (true == m_LockOnInfo.pInteractive->isDead()) {
+			m_LockOnInfo.pInteractive = nullptr;
 		}
 	}
 

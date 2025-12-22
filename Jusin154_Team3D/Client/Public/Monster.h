@@ -8,6 +8,15 @@ NS_BEGIN(Client)
 class CMonster abstract : public CUnit
 {
 protected:
+	enum class HIT_STATE
+	{
+		GROUND,
+		AIR_LEVIOSO,
+		AIR_KNOCKBACK,
+		END
+	};
+
+protected:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMonster(const CMonster& Prototype);
 	virtual ~CMonster() = default;
@@ -43,6 +52,7 @@ protected:
 	_bool			m_bDisolve = { false };
 	_float			m_fDegree = {};
 	_float			m_fCross = {};
+	_int			m_eHitState = { ENUM_CLASS(HIT_STATE::END) };
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

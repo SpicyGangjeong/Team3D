@@ -118,6 +118,11 @@
 #include "SpellLearn_Name.h"
 #include "SpellLearn.h"
 #include "SpellLearn_MovePointer.h"
+#include "SpellLearn_ChaserPointer.h"
+#include "SpellLearn_LookPointer.h"
+#include "SpellLearn_Booster.h"
+#include "SpellLearn_Slot.h"
+#include "SpellLearn_Overlay.h"
 
 #include "Interaction_Key.h"
 
@@ -143,6 +148,7 @@
 #include "DecendoSide.h"
 #include "BombardSide.h"
 #include "LeviosoSide.h"
+#include "TransformationSide.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
@@ -351,7 +357,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
+	isLoad_Hogwart = true;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -1874,7 +1880,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Dragon/Dragon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
 
@@ -1979,6 +1985,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(NEXT_LEVEL, CDecendoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTransformationSide>(NEXT_LEVEL, CTransformationSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -2116,6 +2126,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 
 		return S_OK;
+		});
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Spline", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
 		});
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
@@ -2396,6 +2416,31 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_SpellLearn_MovePointer*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_MovePointer>(g_iStaticLevel, CSpellLearn_MovePointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_ChaserPointer*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_ChaserPointer>(g_iStaticLevel, CSpellLearn_ChaserPointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_SpellLearn_LookPointer*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_LookPointer>(g_iStaticLevel, CSpellLearn_LookPointer::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_SpellLearn_Booster*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Booster>(g_iStaticLevel, CSpellLearn_Booster::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_SpellLearn_Slot*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Slot>(g_iStaticLevel, CSpellLearn_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_SpellLearn_Overlay*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Overlay>(g_iStaticLevel, CSpellLearn_Overlay::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

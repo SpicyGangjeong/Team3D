@@ -151,7 +151,7 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 	m_bActive = false;
 	BodyOriginal.SetActive(true);
 
-	m_pGameInstance->Attach_Actor(*pDOActor); // DO 액터 활성화
+	m_pGameInstance->Attach_Actor(*pDOActor, m_pGameInstance->Get_CurrentLevelID()); // DO 액터 활성화
 
 	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose();
 	pDOActor->setGlobalPose(pxTransform);

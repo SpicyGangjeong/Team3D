@@ -161,17 +161,24 @@ call Update_Resources.bat
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Barral_Splesh.h" />
+    <ClInclude Include="..\Public\TransformationSide.h" />
     <ClInclude Include="..\Public\Transformation.h" />
     <ClInclude Include="..\Public\LightningSide.h" />
     <ClInclude Include="..\Public\Lightning.h" />
     <ClInclude Include="..\Public\Blink.h" />
+    <ClInclude Include="..\Public\NPC_EleazarFig.h" />
     <ClInclude Include="..\Public\SpellLearn.h" />
+    <ClInclude Include="..\Public\SpellLearn_Booster.h" />
     <ClInclude Include="..\Public\SpellLearn_Canvas.h" />
+    <ClInclude Include="..\Public\SpellLearn_ChaserPointer.h" />
     <ClInclude Include="..\Public\SpellLearn_Data.h" />
+    <ClInclude Include="..\Public\SpellLearn_LookPointer.h" />
     <ClInclude Include="..\Public\SpellLearn_MovePointer.h" />
     <ClInclude Include="..\Public\SpellLearn_Name.h" />
+    <ClInclude Include="..\Public\SpellLearn_Overlay.h" />
     <ClInclude Include="..\Public\SpellLearn_Panel.h" />
     <ClInclude Include="..\Public\State_Skill2.h" />
+    <ClInclude Include="..\Public\SpellLearn_Slot.h" />
     <ClInclude Include="..\Public\Stupefy.h" />
     <ClInclude Include="..\Public\BroomRaceManager.h" />
     <ClInclude Include="..\Public\BroomRacerAI.h" />
@@ -382,17 +389,24 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
     <ClCompile Include="..\Private\LightningSide.cpp" />
     <ClCompile Include="..\Private\Lightning.cpp" />
     <ClCompile Include="..\Private\Blink.cpp" />
+    <ClCompile Include="..\Private\NPC_EleazarFig.cpp" />
     <ClCompile Include="..\Private\SpellLearn.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_Booster.cpp" />
     <ClCompile Include="..\Private\SpellLearn_Canvas.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_ChaserPointer.cpp" />
     <ClCompile Include="..\Private\SpellLearn_Data.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_LookPointer.cpp" />
     <ClCompile Include="..\Private\SpellLearn_MovePointer.cpp" />
     <ClCompile Include="..\Private\SpellLearn_Name.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_Overlay.cpp" />
     <ClCompile Include="..\Private\SpellLearn_Panel.cpp" />
     <ClCompile Include="..\Private\State_Skill2.cpp" />
+    <ClCompile Include="..\Private\SpellLearn_Slot.cpp" />
     <ClCompile Include="..\Private\Stupefy.cpp" />
     <ClCompile Include="..\Private\Boss_HpBar.cpp" />
     <ClCompile Include="..\Private\Barral_Splesh.cpp" />

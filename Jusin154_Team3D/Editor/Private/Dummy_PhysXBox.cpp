@@ -164,7 +164,7 @@ CGameObject* CDummy_PhysXBox::Clone(void* pArg, CGameObject* pOwner)
 void CDummy_PhysXBox::Free()
 {
 	if (nullptr != m_pRigidBody) {
-		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
 	}
 
 	__super::Free();

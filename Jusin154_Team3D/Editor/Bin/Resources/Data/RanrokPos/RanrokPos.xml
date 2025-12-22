@@ -65,65 +65,36 @@
 		</Name>
 		<Name Flow="0">
 			<Position>
-				<Pos x="-13.714" y="57.433" z="241.743"/>
+				<Pos x="58.990" y="68.320" z="241.628"/>
 			</Position>
 			<Position>
-				<Pos x="-42.683" y="51.829" z="228.838"/>
+				<Pos x="-108.540" y="-20.997" z="129.920"/>
 			</Position>
 			<Position>
-				<Pos x="-74.956" y="41.403" z="215.839"/>
+				<Pos x="-78.388" y="-7.777" z="23.252"/>
 			</Position>
 			<Position>
-				<Pos x="-88.250" y="36.472" z="187.000"/>
+				<Pos x="-17.085" y="18.315" z="34.801"/>
 			</Position>
 			<Position>
-				<Pos x="-103.679" y="35.008" z="160.582"/>
+				<Pos x="38.669" y="17.004" z="4.037"/>
 			</Position>
 			<Position>
-				<Pos x="-94.757" y="25.640" z="131.275"/>
+				<Pos x="86.242" y="23.649" z="4.595"/>
 			</Position>
 			<Position>
-				<Pos x="-100.794" y="19.290" z="90.624"/>
+				<Pos x="128.830" y="7.499" z="79.664"/>
 			</Position>
 			<Position>
-				<Pos x="-72.688" y="23.021" z="56.054"/>
+				<Pos x="147.229" y="7.463" z="171.466"/>
 			</Position>
 			<Position>
-				<Pos x="-36.936" y="22.230" z="40.324"/>
+				<Pos x="123.945" y="4.664" z="189.885"/>
 			</Position>
 			<Position>
-				<Pos x="-6.871" y="24.247" z="27.440"/>
+				<Pos x="32.682" y=" 7.561" z="131.725"/>
 			</Position>
-			<Position>
-				<Pos x="25.863" y="17.908" z="6.537"/>
-			</Position>
-			<Position>
-				<Pos x="54.920" y="17.365" z="12.338"/>
-			</Position>
-			<Position>
-				<Pos x="78.844" y="19.070" z="23.801"/>
-			</Position>
-			<Position>
-				<Pos x="100.895" y="17.813" z="41.385"/>
-			</Position>
-			<Position>
-				<Pos x="116.327" y="19.300" z="65.012"/>
-			</Position>
-			<Position>
-				<Pos x="124.877" y="21.285" z="88.990"/>
-			</Position>
-			<Position>
-				<Pos x="127.525" y="19.664" z="115.099"/>
-			</Position>
-			<Position>
-				<Pos x="117.939" y="16.548" z="133.479"/>
-			</Position>
-			<Position>
-				<Pos x="100.079" y="12.406" z="139.899"/>
-			</Position>
-			<Position>
-				<Pos x="20.226" y="6.460" z="142.800"/>
-			</Position>
+
 		</Name>
 	</RanrokPosData>
 </RanrokPosInfo>

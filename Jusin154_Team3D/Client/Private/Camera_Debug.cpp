@@ -26,6 +26,7 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 	}
 	Transition(fTimeDelta);
 	_float3 vCamPos = {};
+	_float3 vSetPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
 #ifdef _DEBUG
 	GUI::Text("Cam Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
@@ -197,6 +198,7 @@ void CCamera_Debug::Describe_Entity()
 			GUI::InputFloat3("Pos", (float*)&vPosition);
 		}
 	}
+
 	GUI::End();
 }
 
