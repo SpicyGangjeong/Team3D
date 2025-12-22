@@ -482,9 +482,6 @@ CGameObject* CMapElement_Interactable::Clone(void* pArg, CGameObject* pOwner)
 
 void CMapElement_Interactable::Free()
 {
-	if (nullptr != m_pRigidBody) {
-		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
-	}
 	__super::Free();
 
 	SAFE_RELEASE(m_pRigidBody);
