@@ -331,6 +331,11 @@ HRESULT CInfoInstance::Deregist_ActiveInteractive(CMapElement_Interactable* pInt
 	return m_pInteractiveInfo->Deregist_ActiveInteractive(pInteractive);
 }
 
+HRESULT CInfoInstance::ActiveAt_Interactive(_fvector vPosition)
+{
+	return m_pInteractiveInfo->ActiveAt_Interactive(vPosition);
+}
+
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {
@@ -386,6 +391,14 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	return S_OK;
 }
 
+HRESULT CInfoInstance::Late_Initialize()
+{
+	if (FAILED(m_pInteractiveInfo->Ready_PoolingInteractive()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CInfoInstance::Stat_FileLoad(const _char* pDirectoryPath)
 {
 	filesystem::path pathStatFile = pDirectoryPath;
@@ -427,6 +440,7 @@ void CInfoInstance::Release_Information()
 	SAFE_RELEASE(m_pSkillInfo);
 	SAFE_RELEASE(m_pQuestInfo);
 	SAFE_RELEASE(m_pInteractiveInfo);
+	SAFE_RELEASE(m_pSpellLearn_Data);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);

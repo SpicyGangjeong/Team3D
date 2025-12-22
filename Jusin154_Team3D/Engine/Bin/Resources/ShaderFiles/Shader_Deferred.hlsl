@@ -326,6 +326,13 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     }
     float4 vBlurredColor = vAccColorSum / max(fAccWeight, FLT_EPSILON5);
     float2 vBlurredVelo = vAccVeloSum / max(fAccWeight, FLT_EPSILON5);
+    
+    if (length(vAccVeloSum) < FLT_EPSILON5)
+    {
+        Out.vColor = g_ColorTexture.Sample(ClampLinearSampler, vCenterUV);
+        Out.vVelocity = float2(0.5f, 0.5f);
+        return Out;
+    }
     Out.vColor = vBlurredColor;
     Out.vVelocity = vBlurredVelo * 0.5f + 0.5f;
     return Out;
@@ -448,42 +455,14 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
     
-    
-    
-    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic Roughness Occ
-    {
-        float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        fMetallic = vMRO.r;
-        fRoughness = vMRO.g;
-        fOcclusion = vMRO.b;
-        
-        vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
-    }
-    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular Roughness Occ
-    {
-        fMetallic = 0.f;
-        
-        float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        vF0 = vSRO.rrr;
-        fRoughness = vSRO.g;
-        fOcclusion = vSRO.b;
-    }
-    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
-    {
-        fMetallic = 0.f;
-        
-        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
-        vF0 = vSRXO.rrr;
-        fRoughness = vSRXO.g;
-        fOcclusion = vSRXO.a;
-    }
-    else // basic Lighting(phong blinn) // if you were here, you miss some assets.
+    if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
         Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
         Out.vSpecular.a = 0.f;
         return Out;
     }
+    
     float fTotalOcclusion = saturate(fOcclusion * fSSAO_AmbientOcclusion);
     
     { // 수치조정 // 디렉셔널
@@ -562,37 +541,10 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         return Out;
     }
     
-    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
-        float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        fMetallic = vMRO.r;
-        fRoughness = vMRO.g;
-        fOcclusion = vMRO.b;
-        
-        vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
-    }
-    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular
-    {
-        fMetallic = 0.f;
-        
-        float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        vF0 = vSRO.rrr;
-        fRoughness = vSRO.g;
-        fOcclusion = vSRO.b;
-    }
-    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
-    {
-        fMetallic = 0.f;
-        
-        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
-        vF0 = vSRXO.rrr;
-        fRoughness = vSRXO.g;
-        fOcclusion = vSRXO.a;
-    }
-    else // basic Lighting(phong blinn) // if you were here, you miss some assets.
-    {
-        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
-        Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
+        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
+        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
         Out.vSpecular.a = 0.f;
         return Out;
     }
@@ -690,40 +642,14 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     fSpotAttenenuation *= fSpotAttenenuation;
     fAttenuation *= fSpotAttenenuation;
     
-    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
-        float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        fMetallic = vMRO.r;
-        fRoughness = vMRO.g;
-        fOcclusion = vMRO.b;
-        
-        vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
-    }
-    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular
-    {
-        fMetallic = 0.f;
-        
-        float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        vF0 = vSRO.rrr;
-        fRoughness = vSRO.g;
-        fOcclusion = vSRO.b;
-    }
-    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
-    {
-        fMetallic = 0.f;
-        
-        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
-        vF0 = vSRXO.rrr;
-        fRoughness = vSRXO.g;
-        fOcclusion = vSRXO.a;
-    }
-    else // basic Lighting(phong blinn) // if you were here, you miss some assets.
-    {
-        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
-        Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
+        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
+        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
         Out.vSpecular.a = 0.f;
         return Out;
     }
+    
     float fTotalOcclusion = saturate(fOcclusion * fSSAO_AmbientOcclusion);
     
     { // 수치조정 // 점광원

@@ -37,6 +37,9 @@
 #include "Stupefy.h"
 #include "Lightning.h"
 #include "LightningSide.h"
+#include "Blink.h"
+#include "Transformation.h"
+#include "TransformationSide.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -66,7 +69,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	// 디버그 모드일 때
 #ifdef _DEBUG
 #ifdef gimch
-	m_isActiveEffectCreate = false;
+	m_isActiveEffectCreate = true;
 	m_isActiveMonsterEffectCreate = false;
 #endif // gimch
 #ifdef Bin
@@ -147,7 +150,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 #if 진우
 
 
-	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::ACCIO)].begin())->Describe_Entity();
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::BLINK)].begin())->Describe_Entity();
 
 	Describe_Entity();
 
@@ -397,6 +400,34 @@ HRESULT CEffectPool::Ready_Effect()
 		CLightningSide* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CLightningSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::BLINK, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CBlink* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CBlink>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TRANSFORMATION, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTransformation* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTransformation>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TRANSFORMATION_SIDE, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTransformationSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTransformationSide>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

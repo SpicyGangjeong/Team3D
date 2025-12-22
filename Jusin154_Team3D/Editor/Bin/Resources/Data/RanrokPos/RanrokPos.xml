@@ -1,0 +1,103 @@
+<RanrokPosInfo>
+	<RanrokPosData>
+		<Name Flow="3">
+			<Position>
+				<Pos x="14.121" y="-41.890" z="248.021"/>
+			</Position>
+			<Position>
+				<Pos x="-12.558" y="-28.878" z="236.451"/>
+			</Position>
+			<Position>
+				<Pos x="-20.145" y="-48.688" z="216.771"/>
+			</Position>
+			<Position>
+				<Pos x="11.854" y="-50.864" z="182.233"/>
+			</Position>
+			<Position>
+				<Pos x="44.661" y="-52.001" z="202.435"/>
+			</Position>
+			<Position>
+				<Pos x="29.840" y="-60.349" z="212.004"/>
+			</Position>
+			<Position>
+				<Pos x="23.993" y="-58.307" z="220.465"/>
+			</Position>
+		</Name>
+		<Name Flow="2">
+			<Position>
+				<Pos x="16.141" y="-50.299" z="221.423"/>
+			</Position>
+			<Position>
+				<Pos x="41.967" y="-53.684" z="246.943"/>
+			</Position>
+			<Position>
+				<Pos x="11.950" y="-51.993" z="263.268"/>
+			</Position>
+			<Position>
+				<Pos x="-17.090" y="-51.099" z="236.738"/>
+			</Position>
+			<Position>
+				<Pos x="-13.968" y="-53.362" z="201.439"/>
+			</Position>
+			<Position>
+				<Pos x="-13.968" y="-53.362" z="201.439"/>
+			</Position>
+			<Position>
+				<Pos x="35.842" y="-48.150" z="189.827"/>
+			</Position>
+			<Position>
+				<Pos x="51.975" y="-47.209" z="207.986"/>
+			</Position>
+			<Position>
+				<Pos x="40.875" y="-48.956" z="256.929"/>
+			</Position>
+		</Name>
+		<Name Flow="1">
+			<Position>
+				<Pos x="-23.129" y="5.847" z="120.080"/>
+			</Position>
+			<Position>
+				<Pos x="-35.026" y="2.671" z="144.041"/>
+			</Position>
+			<Position>
+				<Pos x="-0.334" y="-18.565" z="186.488"/>
+			</Position>
+		</Name>
+		<Name Flow="0">
+			<Position>
+				<Pos x="58.990" y="68.320" z="241.628"/>
+			</Position>
+			<Position>
+				<Pos x="-108.540" y="-20.997" z="129.920"/>
+			</Position>
+			<Position>
+				<Pos x="-78.388" y="-7.777" z="23.252"/>
+			</Position>
+			<Position>
+				<Pos x="-17.085" y="18.315" z="34.801"/>
+			</Position>
+			<Position>
+				<Pos x="38.669" y="17.004" z="4.037"/>
+			</Position>
+			<Position>
+				<Pos x="86.242" y="23.649" z="4.595"/>
+			</Position>
+			<Position>
+				<Pos x="128.830" y="7.499" z="79.664"/>
+			</Position>
+			<Position>
+				<Pos x="147.229" y="7.463" z="171.466"/>
+			</Position>
+			<Position>
+				<Pos x="123.945" y="4.664" z="189.885"/>
+			</Position>
+			<Position>
+				<Pos x="32.682" y=" 7.561" z="131.725"/>
+			</Position>
+
+		</Name>
+	</RanrokPosData>
+</RanrokPosInfo>
+
+
+

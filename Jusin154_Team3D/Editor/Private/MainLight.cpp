@@ -159,9 +159,9 @@ HRESULT CMainLight::Ready_Components()
 	m_pGameInstance->Set_Fog(5.f, 30.f);
 	
 #ifdef gimch
-	vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	m_pGameInstance->Set_FogColor(vColor);
-	m_pGameInstance->Set_Fog(10.f, 5.f);
+	//vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	//m_pGameInstance->Set_FogColor(vColor);
+	//m_pGameInstance->Set_Fog(10.f, 5.f);
 #endif // gimch
 
 	return S_OK;

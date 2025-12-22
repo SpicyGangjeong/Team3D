@@ -23,6 +23,7 @@ void CRenderer::Render()
 	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
+	Render_Blur_Mesh();
 	Render_WeightBlend();
 	Render_PostProcessing();
 	Render_LastColor();
@@ -51,6 +52,12 @@ void CRenderer::Render()
 	GUI::End();
 	
 #endif
+	m_eType = RENDER::END;
+}
+
+RENDER CRenderer::Get_CurrentRenderPass()
+{
+	return m_eType;
 }
 
 void CRenderer::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix)
@@ -152,6 +159,8 @@ void CRenderer::Bind_RawValue()
 void CRenderer::Render_Occlusion()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Occlusion");
+	EVENTSCOPE_("Render_Occlusion");
+	m_eType = RENDER::OCCLUSION;
 	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_Combined")))) {
 		return;
 	}
@@ -183,6 +192,7 @@ void CRenderer::Render_Priority()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Priority");
 	EVENTSCOPE_("Render_Priority");
+	m_eType = RENDER::PRIORITY;
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::PRIORITY)])
 	{
 		if (nullptr != pRenderObject) {
@@ -223,6 +233,7 @@ void CRenderer::Render_Shadow()
 			return;
 		}
 
+		m_eType = RENDER::SHADOW_NEAR;
 		D3D11_VIEWPORT			ViewPortDesc;
 		ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 		{
@@ -256,6 +267,7 @@ void CRenderer::Render_Shadow()
 			return;
 		}
 
+		m_eType = RENDER::SHADOW_MIDDLE;
 		D3D11_VIEWPORT			ViewPortDesc;
 		ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 		{
@@ -293,6 +305,7 @@ void CRenderer::Render_NonBlend()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_NonBlend");
 	EVENTSCOPE_("Render_NonBlend");
+	m_eType = RENDER::NONBLEND;
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects")))) {
 		return;
 	}
@@ -598,6 +611,7 @@ void CRenderer::Render_NonLight()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_NonLight");
 	EVENTSCOPE_("Render_NonLight");
+	m_eType = RENDER::NONLIGHT;
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::NONLIGHT)])
 	{
 		if (nullptr != pRenderObject)
@@ -614,6 +628,7 @@ void CRenderer::Render_Blur()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Blur");
 	EVENTSCOPE_("Render_Blur");
+	m_eType = RENDER::BLUR;
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur")))) {
 		return;
 	}
@@ -790,10 +805,10 @@ void CRenderer::Render_Blend()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Blend");
 	EVENTSCOPE_("Render_Blend");
+	m_eType = RENDER::BLEND;
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
-
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BLEND)])
 	{
@@ -808,6 +823,37 @@ void CRenderer::Render_Blend()
 
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].clear();
 	COMPUTE_TIMEDELTA("Timer_Render_Blend");
+}
+
+void CRenderer::Render_Blur_Mesh()
+{
+	COMPUTE_TIMEDELTA("Timer_Render_Blur_Mesh");
+	EVENTSCOPE_("Render_Blur_Mesh");
+
+	m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
+		return pSour->Get_Depth() > pDest->Get_Depth();
+		});
+
+	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(L"MRT_Blur_Mesh", nullptr, false)))
+		return;
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render())) {
+				assert(false);
+			}
+		}
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)].clear();
+	COMPUTE_TIMEDELTA("Timer_Render_Blur_Mesh");
 }
 
 void CRenderer::Render_PostProcessing()
@@ -899,6 +945,7 @@ void CRenderer::Render_PostProcessing()
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Bloom")))) {
 		return;
 	}
+	m_eType = RENDER::BLOOM;
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BLOOM)])
 	{
@@ -962,6 +1009,7 @@ void CRenderer::Render_Distortion()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Distortion");
 	EVENTSCOPE_("Render_Distortion");
+	m_eType = RENDER::DISTORTION;
 
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Distortion")))) {
 		return;
@@ -1024,6 +1072,7 @@ void CRenderer::Render_UI()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_UI");
 	EVENTSCOPE_("Render_UI");
+	m_eType = RENDER::UI;
 	m_RenderObjects[ENUM_CLASS(RENDER::UI)].sort([](CGameObject* pDest, CGameObject* pSrc)->_bool {
 		_float3 vDstPos = {};
 		_float3 vSrcPos = {};
@@ -1053,6 +1102,7 @@ void CRenderer::Render_UI_Overley()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_UI_Overley");
 	EVENTSCOPE_("Render_UI_Overley");
+	m_eType = RENDER::UI_OVERLAY;
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::UI_OVERLAY)])
 	{
 		if (nullptr != pRenderObject) {

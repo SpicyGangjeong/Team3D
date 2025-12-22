@@ -295,6 +295,23 @@ BlendState BS_WeightBlend
 
 };
 
+BlendState BS_BULR_MESH // ADDITIVE_BLEND
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = false;
+    BlendEnable[2] = false;
+    BlendEnable[3] = false;
+    BlendEnable[4] = false;
+    BlendEnable[5] = false;
+    BlendEnable[6] = false;
+    BlendEnable[7] = false;
+
+    // Ac * (1) + Bc * (1);
+    SrcBlend[0] = one;
+    DestBlend[0] = one;
+    BlendOp[0] = Add;
+};
+
 BlendState BS_WhiteMask
 {
     BlendEnable[0] = false;

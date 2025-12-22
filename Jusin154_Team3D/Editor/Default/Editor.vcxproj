@@ -175,6 +175,7 @@ call Update_Shaders.bat
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\public\AlphaMap.h" />
+    <ClInclude Include="..\Public\Blink.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Boss_HpBer.h" />
     <ClInclude Include="..\public\Enemy_Detection.h" />
@@ -404,6 +405,7 @@ call Update_Shaders.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\private\AlphaMap.cpp" />
+    <ClCompile Include="..\Private\Blink.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Boss_HpBer.cpp" />
     <ClCompile Include="..\Private\Enemy_Detection.cpp" />

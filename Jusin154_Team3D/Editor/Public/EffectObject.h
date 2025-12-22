@@ -86,11 +86,12 @@ public:
 		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
 		_bool       isBlurNoEmissive = {};
-		_bool	    isTexBlur = {};
-		_bool       isBlurDissolve = {};
-		_bool       isBlurReverseDissolve = {};
 
-		_float      fBluringStrength = {0.01f};
+
+		_bool	    isMotionBlur = {};
+		_bool       isPadding0 = {};
+		_bool       isPadding1 = {};
+		_float      fModelBlurIntensity = {0.f};
 
 		_bool       isBloom = {};
 		_bool       isBloomDissolve = {};
@@ -114,7 +115,7 @@ public:
 		_float		isLightTime = { 0.f };
 		_bool		isLightDissolve = {};
 
-		_bool		isPadding0 = {};
+		_bool		isPadding2 = {};
 
 		_float4     vDissolveColor = {};
 		_float2     vDissolveColorCut = {};
@@ -132,9 +133,9 @@ public:
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};
-		_bool		isPadding2 = {};
 		_bool		isPadding3 = {};
 		_bool		isPadding4 = {};
+		_bool		isPadding5 = {};
 
 	}EFFECT_INFO;
 

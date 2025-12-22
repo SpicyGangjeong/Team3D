@@ -251,7 +251,7 @@ void SampleLocalTRS_Prev(uint bone, float t, out float3 S, out float4 R, out flo
     
     if (ch.KeyCount < 2)
     {
-        KeyFrame k = g_KeyFrameBuffer[ch.StartIndex];
+        KeyFrame k = g_PrevKeyFrameBuffer[ch.StartIndex];
         S = k.vScale;
         T = k.vTranslation;
         R = QuatNormalize(k.vRotation);
@@ -274,13 +274,13 @@ void SampleLocalTRS_Prev(uint bone, float t, out float3 S, out float4 R, out flo
 
 row_major float4x4 SampleBlendedLocal(uint bone)
 {
-    if (PrevAnimIndex == 0xFFFFFFFFu)
+    if (PrevAnimIndex == -1)
     {
         float3 S;
         float4 R;
         float3 T;
         SampleLocalTRS_Cur(bone, CurrentTime, S, R, T);
-        if ((int) bone == RootBoneIndex)
+        if (bone == RootBoneIndex)
         {
             T = 0;
             R = RootInitRot;
@@ -295,7 +295,7 @@ row_major float4x4 SampleBlendedLocal(uint bone)
         float3 T;
         SampleLocalTRS_Cur(bone, CurrentTime, S, R, T);
 
-        if ((int) bone == RootBoneIndex)
+        if (bone == RootBoneIndex)
         {
             T = 0;
             R = RootInitRot;
@@ -305,38 +305,17 @@ row_major float4x4 SampleBlendedLocal(uint bone)
 
     float br = saturate(BlendRatio);
 
-    if (br <= 0.0f)
-    {
-        float3 S;
-        float4 R;
-        float3 T;
-        SampleLocalTRS_Prev(bone, PrevTime, S, R, T);
-
-        if ((int) bone == RootBoneIndex)
-        {
-            T = 0;
-            R = RootInitRot;
-        }
-        return MakeAffine(S, R, T);
-    }
-
-    if (br >= 1.0f)
-    {
-        float3 S;
-        float4 R;
-        float3 T;
-        SampleLocalTRS_Cur(bone, CurrentTime, S, R, T);
-
-        if ((int) bone == RootBoneIndex)
-        {
-            T = 0;
-            R = RootInitRot;
-        }
-        return MakeAffine(S, R, T);
-    }
-
     float3 sA, sB, tA, tB;
     float4 rA, rB;
+    
+    float prevT = PrevTime;
+
+    if (BlendRatio < 1e-4f)
+    {
+        prevT = CurrentTime;
+    }
+
+
 
     SampleLocalTRS_Prev(bone, PrevTime, sA, rA, tA);
     SampleLocalTRS_Cur(bone, CurrentTime, sB, rB, tB);
@@ -345,7 +324,7 @@ row_major float4x4 SampleBlendedLocal(uint bone)
     float3 T = lerp(tA, tB, br);
     float4 R = QuatSlerp(rA, rB, br);
 
-    if ((int) bone == RootBoneIndex)
+    if (bone == RootBoneIndex)
     {
         T = 0;
         R = RootInitRot;

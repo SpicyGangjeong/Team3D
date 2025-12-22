@@ -569,6 +569,8 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isRandomAniIndex = m_InstanceDesc.isRandomAniIndex;
 		pDesc->isExcludePos = m_InstanceDesc.isExcludePos;
 		pDesc->isStop_Move_For_Depth_Compare = m_InstanceDesc.isStop_Move_For_Depth_Compare;
+		pDesc->isNoPos = m_InstanceDesc.isNoPos;
+		
 
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
@@ -622,6 +624,9 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 {
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
 	D3D11_MAPPED_SUBRESOURCE		ParticleValue_SubResource{};
+
+	_float4x4 IdentityMat = {};
+	XMStoreFloat4x4(&IdentityMat, XMMatrixIdentity());
 
 	if (SUCCEEDED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
 	{
@@ -753,10 +758,14 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				memcpy(&pParticleValues[i].vOriginLook, SRMatrix.m[2], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginTranslation, &pVertices[i].vTranslation, sizeof(_float4));
 
+				memcpy(&pParticleValues[i].PreWorldMatrix, &IdentityMat, sizeof(_float4x4));
+
 				if (m_InstanceDesc.isRandomAniIndex == true)
 				{
 					pParticleValues[i].vAniIndex = _float2((_float)m_pGameInstance->Random_Int(0, (_int)m_InstanceDesc.vAniIndex.y) , m_InstanceDesc.vAniIndex.y);
 				}
+
+
 			}
 
 			m_pContext->Unmap(m_pParticleValueBuffer, 0);
@@ -856,6 +865,13 @@ void CInstance_Model::Describe_Entity()
 		{
 			Instane_Buffer_ReStruct();
 		}
+
+		if (GUI::Checkbox("NoPos", &m_InstanceDesc.isNoPos))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		
 
 		if (GUI::Checkbox("RandomIndex", &m_InstanceDesc.isRandomAniIndex))
 		{

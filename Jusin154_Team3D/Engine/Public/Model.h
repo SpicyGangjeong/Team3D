@@ -41,6 +41,7 @@ public:
 	_float4x4	Get_PreTransformMatrix() const { return m_PreTransformMatrix; };
 	virtual HRESULT Render(_uint iMeshIndex);
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
+	MODEL Get_Type() { return m_eType; }
 #pragma endregion 
 #pragma region Animation
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
@@ -98,6 +99,7 @@ public:
 	void			ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
 	void			ComputeLocal(_uint AnimIndex, _uint MeshIndex);
 	void			Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
+	void			Bind_OutPut_SRV_VS_Prev(_uint iIndex, _uint iBufferIndex);
 	void			ComputeAnimation_Second(_uint AnimIndex);
 	void			InItialize_BoneIndex();
 
@@ -179,6 +181,7 @@ private:
 
 	_float					m_fRadius = { 0.f };			// 컬링용 Radius
 	_int					m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
+	_int					m_iIndexAnimPlayableMesh = { -1 };
 	_vector					m_vector[3];
 
 	vector<_uint>			m_iBoneMask;
@@ -229,17 +232,19 @@ private:
 	ID3D11Buffer* m_pConstantBuffer = { nullptr };
 	ID3D11Buffer* m_pParentBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneMatrixBuffer = { nullptr };
+	ID3D11Buffer* m_pPrevBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneLocalBuffer = { nullptr };
 	ID3D11Buffer* m_pLocalMatrixBuffer = { nullptr };
 
 
-	ID3D11ShaderResourceView* m_pParentSRV = {};
-	ID3D11ShaderResourceView* m_pBoneLocalSRV = {};
-	ID3D11ShaderResourceView* m_pBoneMatrixSRV = {};
-	ID3D11ShaderResourceView* m_pLocalMatrixSRV = {};
+	ID3D11ShaderResourceView* m_pParentSRV = { nullptr };
+	ID3D11ShaderResourceView* m_pBoneLocalSRV = { nullptr };
+	ID3D11ShaderResourceView* m_pBoneMatrixSRV = { nullptr };
+	ID3D11ShaderResourceView* m_pPrevBoneMatrixSRV = { nullptr };
+	ID3D11ShaderResourceView* m_pLocalMatrixSRV = { nullptr };
 
-	ID3D11UnorderedAccessView* m_pBoneMatrixUAV = {}; 
-	ID3D11UnorderedAccessView* m_pLocalMatrixUAV = {};
+	ID3D11UnorderedAccessView* m_pBoneMatrixUAV = { nullptr };
+	ID3D11UnorderedAccessView* m_pLocalMatrixUAV = { nullptr };
 
 
 #pragma endregion

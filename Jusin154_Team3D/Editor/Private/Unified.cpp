@@ -20,18 +20,18 @@ void CUnified::Priority_Update(_float fTimeDelta)
 
 void CUnified::Update(_float fTimeDelta)
 {
-	m_fCamDistance = XMVector3Length(XMLoadFloat4(&m_vUnifiedCenterPos) - XMLoadFloat4(m_pGameInstance->Get_CamPosition())).m128_f32[0];
+	//m_fCamDistance = XMVector3Length(XMLoadFloat4(&m_vUnifiedCenterPos) - XMLoadFloat4(m_pGameInstance->Get_CamPosition())).m128_f32[0];
 
-	if (true == m_isLayerEnable && m_fLodSwitchDistnace <= m_fCamDistance)
-	{ // LOD 전환
-		m_isLayerEnable = false;
-		m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), m_srtLayerTag)->Set_LayerEnabled(false);
-	}
-	else if(false == m_isLayerEnable  && m_fLodSwitchDistnace > m_fCamDistance)
-	{ // LOD 해제
-		m_isLayerEnable = true;
-		m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), m_srtLayerTag)->Set_LayerEnabled(true);
-	}
+	//if (true == m_isLayerEnable && m_fLodSwitchDistnace <= m_fCamDistance)
+	//{ // LOD 전환
+	//	m_isLayerEnable = false;
+	//	m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), m_srtLayerTag)->Set_LayerEnabled(false);
+	//}
+	//else if(false == m_isLayerEnable  && m_fLodSwitchDistnace > m_fCamDistance)
+	//{ // LOD 해제
+	//	m_isLayerEnable = true;
+	//	m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), m_srtLayerTag)->Set_LayerEnabled(true);
+	//}
 }
 
 void CUnified::Late_Update(_float fTimeDelta)
@@ -195,6 +195,7 @@ void CUnified::Describe_Entity()
 		GUI::Text("%f", m_fCamDistance);                                                                                                                                                                                                                                                                                                                                                      
 		GUI::InputFloat("Switch Dist", &m_fLodSwitchDistnace);
 		GUI::InputFloat3("Centor Pos", (_float*)&m_vUnifiedCenterPos);
+
 		m_pTransformCom->Describe_Entity();
 	}
 }

@@ -63,9 +63,9 @@ HRESULT CLevel_MapViewer::Initialize()
 	//	return E_FAIL;
 	//}
 
-	//if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
+		return E_FAIL;
+	}
 
 	/*if (FAILED(Ready_Layer_Door(TEXT("Layer_Door")))) {
 		return E_FAIL;
@@ -172,31 +172,31 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 
 	CMapElement_Lake::MAPOBJECT_LAKE_DESC Lake_Desc = {};
 
-	/*vector<_wstring>		ModelPrototypeTags;
-	vector<_wstring>		ShallowModelPrototypeTags;
-	ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
-	ShallowModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_LakeSurFace"));
-	Lake_Desc.bEdit = true;
-	Lake_Desc.iMaxLodLevel = 0;
-	Lake_Desc.iRenderType = 4;
-	Lake_Desc.vPosition = _float3(-144.f, -61.9f, -115.f);
-	Lake_Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Lake_Desc.vScale = _float3(1.f, 1.f, 1.f);
-	Lake_Desc.fTimeSpeed = _float(0.02f);
-	Lake_Desc.fRefractionStrength = _float();
-	Lake_Desc.fRefractionPow = _float();
-	Lake_Desc.fUVValue1 = _float();
-	Lake_Desc.fUVValue2 = _float();
-	Lake_Desc.fUVValue3 = _float();
-	Lake_Desc.vUVSpeed = _float2();
-	Lake_Desc.vLargeUVSpeed = _float2();
-	Lake_Desc.vSubUVSpeed3 = _float2();
-	Lake_Desc.vRefractionColor = _float4();
-	Lake_Desc.vSurfaceColor = _float4();
-	Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
-	Lake_Desc.ShallowModelPrototypeTags = ShallowModelPrototypeTags;
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Lake_Desc)))
-		return E_FAIL;*/
+	//vector<_wstring>		ModelPrototypeTags;
+	//vector<_wstring>		ShallowModelPrototypeTags;
+	//ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
+	//ShallowModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_LakeSurFace"));
+	//Lake_Desc.bEdit = false;
+	//Lake_Desc.iMaxLodLevel = 0;
+	//Lake_Desc.iRenderType = 4;
+	//Lake_Desc.vPosition = _float3(-144.f, -61.9f, -115.f);
+	//Lake_Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	//Lake_Desc.vScale = _float3(1.f, 1.f, 1.f);
+	//Lake_Desc.fTimeSpeed = _float(0.02f);
+	//Lake_Desc.fRefractionStrength = _float();
+	//Lake_Desc.fRefractionPow = _float();
+	//Lake_Desc.fUVValue1 = _float();
+	//Lake_Desc.fUVValue2 = _float();
+	//Lake_Desc.fUVValue3 = _float();
+	//Lake_Desc.vUVSpeed = _float2();
+	//Lake_Desc.vLargeUVSpeed = _float2();
+	//Lake_Desc.vSubUVSpeed3 = _float2();
+	//Lake_Desc.vRefractionColor = _float4();
+	//Lake_Desc.vSurfaceColor = _float4();
+	//Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
+	//Lake_Desc.ShallowModelPrototypeTags = ShallowModelPrototypeTags;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Lake_Desc)))
+	//	return E_FAIL;
 
 
 	return S_OK;
@@ -436,21 +436,21 @@ HRESULT CLevel_MapViewer::Ready_Layer_Unified(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	Desc.srtModelPrototypeTags.clear();
-	/* Hogwart Unified*/
-	Desc.fLodSwitchDistnace = 550.f;
-	Desc.vUnifiedCenterPos = _float4(62.f, 10.f, 93.f, 1.f);
-	Desc.vPosition = _float3(62.f, 10.f, 93.f);
-	Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Desc.vScale = _float3(1.f, 1.f, 1.f);
-	Desc.srtLayerTag = LAYER_HOGSMEADE;
-	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_0"));
-	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_1"));
-	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_2"));
-	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_3"));
-	Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_Streets_LOD1_Merged_0"));
+	/* Hogsmeade Unified*/
+	//Desc.fLodSwitchDistnace = 550.f;
+	//Desc.vUnifiedCenterPos = _float4(62.f, 10.f, 93.f, 1.f);
+	//Desc.vPosition = _float3(62.f, 5.6f, 93.f);
+	//Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	//Desc.vScale = _float3(1.f, 1.f, 1.f);
+	//Desc.srtLayerTag = LAYER_HOGSMEADE;
+	//Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_0"));
+	//Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_1"));
+	//Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_2"));
+	//Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_LOD1_Baked_3"));
+	//Desc.srtModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Unified_Streets_LOD1_Merged_0"));
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }

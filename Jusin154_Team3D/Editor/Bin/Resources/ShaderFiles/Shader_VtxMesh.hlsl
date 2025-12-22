@@ -321,6 +321,29 @@ PS_OUT PS_MAIN(PS_IN In)
             + g_DiffuseBlend.Sample(DefaultSampler, In.vTexcoord).xyz * 0.4f
             + g_MossDiffuseTexture.Sample(DefaultSampler, In.vTexcoord).xyz * 0.1f, 1.f);
     }
+    if (5 == g_vSRVFlag.x)
+    {
+        float4 vMask = g_Maya_BaseTexture.Sample(DefaultSampler, In.vTexcoord);
+        float fTotalMask = vMask.r + vMask.g + vMask.b + vMask.a;
+        
+        float4 vDiffuseB = g_DiffuseBlend.Sample(DefaultSampler, In.vTexcoord);
+        float4 vDiffuseC = g_MossDiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vDiffuseD = g_ClearcoadTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vFinalColor = (vMtrlDiffuse * vMask.r +
+                                vDiffuseB * vMask.g +
+                                vDiffuseC * vMask.b +
+                                vDiffuseD * vMask.a) / fTotalMask;
+        vMtrlDiffuse = vFinalColor;
+        
+        float4 vSurfaceB = g_SROBlendTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vSurfaceC = g_MossSROTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vSurfaceD = g_SheenTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vFinalSurface = (vSurface * vMask.r +
+                                vSurfaceB * vMask.g +
+                                vSurfaceC * vMask.b +
+                                vSurfaceD * vMask.a) / fTotalMask;
+        vSurface = vFinalSurface;
+    }
     
     if (1 == g_vSRVFlag.y)
     {
@@ -333,7 +356,7 @@ PS_OUT PS_MAIN(PS_IN In)
     else if (3 == g_vSRVFlag.y)
     {
         vNormalDecoded = normalize(vNormalDecoded + DecodeNormalFromRG(g_NormalBlendTexture, DefaultSampler, In.vTexcoord) + DecodeNormalFromRG(g_MossNormalTexture, DefaultSampler, In.vTexcoord));
-    }
+     }
     
     if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
     {
@@ -362,10 +385,12 @@ PS_OUT PS_MAIN(PS_IN In)
     {
         fSurfaceParam = 0.f;
     }
+    
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
         (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
         fSurfaceParam, // 서페이스 파라미터
         1.f);
+    
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
@@ -403,7 +428,8 @@ PS_OUT PS_GLASS(PS_IN In)
     Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
+    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }
@@ -431,7 +457,8 @@ PS_OUT PS_GLASS_CUBE(PS_IN In)
     Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos) * 0.5f + 0.5f;
+    Out.vVelocityUV = float2(0.5f, 0.5f);
+    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
     
     return Out;
 }

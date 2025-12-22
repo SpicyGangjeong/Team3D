@@ -174,6 +174,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
+
+	ComputeAnimation(m_iCurrentAnimIndex, m_iIndexAnimPlayableMesh);
+
 	if (m_bIsFinishedAnim)
 	{
 		if (m_bIsLoop)
@@ -186,7 +189,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 	}
 
-	ComputeAnimation(m_iCurrentAnimIndex, 0);
 
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);
@@ -478,7 +480,8 @@ void CModel::Update_RootBone(_float Amount)
 			XMStoreFloat4(&axis, axisWorld);
 
 			swap(axis.z, axis.y);
-			m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
+			if (m_bRootBone)
+				m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
 
 		}
 		XMStoreFloat4(&m_vPrevRootRot, qCur);
@@ -1503,7 +1506,13 @@ HRESULT CModel::Create_BoneMatrixVB()
 	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 
 	HRESULT hr = m_pDevice->CreateBuffer(&desc, nullptr, &m_pBoneMatrixBuffer);
-
+	if (FAILED(hr)) {
+		return E_FAIL;
+	}
+	hr = m_pDevice->CreateBuffer(&desc, nullptr, &m_pPrevBoneMatrixBuffer);
+	if (FAILED(hr)) {
+		return E_FAIL;
+	}
 
 	D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc{};
 	uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
@@ -1511,11 +1520,9 @@ HRESULT CModel::Create_BoneMatrixVB()
 	uavDesc.Buffer.FirstElement = 0;
 	uavDesc.Buffer.NumElements = (_uint)m_Bones.size();
 
-	m_pDevice->CreateUnorderedAccessView(
-		m_pBoneMatrixBuffer,
-		&uavDesc,
-		&m_pBoneMatrixUAV
-	);
+	if(FAILED(m_pDevice->CreateUnorderedAccessView(m_pBoneMatrixBuffer, &uavDesc, &m_pBoneMatrixUAV))){
+		return E_FAIL;
+	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc1 = {};
 	srvDesc1.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
@@ -1523,8 +1530,13 @@ HRESULT CModel::Create_BoneMatrixVB()
 	srvDesc1.Buffer.FirstElement = 0;
 	srvDesc1.Buffer.NumElements = (_uint)m_Bones.size();
 
-	if (FAILED(m_pDevice->CreateShaderResourceView(m_pBoneMatrixBuffer, &srvDesc1, &m_pBoneMatrixSRV)))
+	if (FAILED(m_pDevice->CreateShaderResourceView(m_pBoneMatrixBuffer, &srvDesc1, &m_pBoneMatrixSRV))){
 		return E_FAIL;
+	}
+
+	if (FAILED(m_pDevice->CreateShaderResourceView(m_pPrevBoneMatrixBuffer, &srvDesc1, &m_pPrevBoneMatrixSRV))){
+		return E_FAIL;
+	}
 
 
 	return S_OK;
@@ -1619,6 +1631,9 @@ HRESULT CModel::Create_Local()
 
 void CModel::ComputeAnimation(_uint AnimIndex,_uint MeshIndex)
 {
+	// MotionBlurr용 버퍼 카피
+	m_pContext->CopyResource(m_pPrevBoneMatrixBuffer, m_pBoneMatrixBuffer);
+
 	ComputeLocal(AnimIndex,MeshIndex);
 
 	if (m_pComputeShader == nullptr)
@@ -1752,6 +1767,13 @@ void CModel::Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex)
 	m_pContext->VSSetShaderResources(iIndex, 
 		1,  // 버퍼 개수
 		&m_pBoneMatrixSRV);
+}
+
+void CModel::Bind_OutPut_SRV_VS_Prev(_uint iIndex, _uint iBufferIndex)
+{
+	m_pContext->VSSetShaderResources(iIndex,
+		1,  // 버퍼 개수
+		&m_pPrevBoneMatrixSRV);
 }
 
 
@@ -2211,12 +2233,27 @@ HRESULT CModel::Initialize(void* pArg)
 		Create_ParentSrv();
 		Create_BoneLocalSrv();
 
-		if (FAILED(Create_ComputeShaderLocal()))
+		if (FAILED(Create_ComputeShaderLocal())){
 			return E_FAIL;
+		}
 
-		if (FAILED(Create_ComputeShader()))
+		if (FAILED(Create_ComputeShader())){
 			return E_FAIL;
+		}
+
+		for (int i = 0; i < m_Meshes.size(); i++)
+		{
+			if (1 < m_Meshes[i]->Get_NumBone()) {
+				m_iIndexAnimPlayableMesh = i;
+				break;
+			}
+		}
+		if (-1 == m_iIndexAnimPlayableMesh) {
+
+			assert(false);
+		}
 	}
+
 
 
 	return S_OK;
@@ -2328,10 +2365,12 @@ void CModel::Free()
 	SAFE_RELEASE(m_pParentBuffer);
 	SAFE_RELEASE(m_pBoneLocalBuffer);
 	SAFE_RELEASE(m_pBoneMatrixBuffer);
+	SAFE_RELEASE(m_pPrevBoneMatrixBuffer);
 	SAFE_RELEASE(m_pLocalMatrixBuffer);
-	SAFE_RELEASE(m_pParentSRV);
+	SAFE_RELEASE(m_pParentSRV); 
 	SAFE_RELEASE(m_pBoneLocalSRV);
 	SAFE_RELEASE(m_pBoneMatrixSRV);
+	SAFE_RELEASE(m_pPrevBoneMatrixSRV);
 	SAFE_RELEASE(m_pBoneMatrixUAV);
 	SAFE_RELEASE(m_pLocalMatrixSRV);
 	SAFE_RELEASE(m_pLocalMatrixUAV);

@@ -9,6 +9,7 @@
 #include "Goblin_Spector.h"
 #include "Effect_Container.h"
 #include "EffectPool.h"
+#include "MapElement_Interactable.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -65,8 +66,8 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-30.f, 0.f, -14.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-30.f, 0.f, -14.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -14.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -14.f, 1.f));
 
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
@@ -82,6 +83,9 @@ void CGoblin::Priority_Update(_float fTimeDelta)
 
 void CGoblin::Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -134,6 +138,9 @@ void CGoblin::Update(_float fTimeDelta)
 
 void CGoblin::Late_Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	__super::Late_Update(fTimeDelta);
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
@@ -142,7 +149,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
 	if (true == m_bLookAt) {
-		m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
+		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
@@ -191,6 +198,7 @@ HRESULT CGoblin::Render()
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -285,6 +293,9 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+	if (m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+		return;
+	}
 	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
 
 	m_pGoblinSpector->Set_Visible(false);
@@ -292,44 +303,64 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 
 	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
 
-	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
-
 	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
+	
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
-	switch (iSkillType)
+	pair<_float, _float> damagePair = {};
+
+	if (pEffect_Container != nullptr)
 	{
-	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::JAP):
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ACCIO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		}
+	}
+	else
 	{
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-	}
-	break;
-	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::ACCIO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
-		break;
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
+		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+		if (pProps != nullptr)
+		{
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
+		}
 	}
 
-	m_DamageInfo.fDamage = damagePair.first;
-	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
-	if (0 == damagePair.second) {
-		m_pFSM->Change_State(FSMSTATE::DEAD);
-		_int ID = m_pStat->Get_Stat().iObjectID;
-		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
-		return;
-	}
 
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
-		m_pFSM->Change_State(FSMSTATE::HIT);
-	}
+	//m_DamageInfo.fDamage = damagePair.first;
+	//m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	//if (0 == damagePair.second) {
+	//	m_pFSM->Change_State(FSMSTATE::DEAD);
+	//	_int ID = m_pStat->Get_Stat().iObjectID;
+	//	m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
+	//	return;
+	//}
+
+
+	m_pFSM->Change_State(FSMSTATE::HIT);
+	
 
 }
 

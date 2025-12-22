@@ -35,7 +35,8 @@ HRESULT CEffectParts::Initialize(void* pArg)
 
 void CEffectParts::Priority_Update(_float fTimeDelta)
 {
-
+	if (m_EffectInfo.isMotionBlur == true)
+		m_pTransformCom->RewindMomentum();
 }
 
 void CEffectParts::Update(_float fTimeDelta)

@@ -68,7 +68,7 @@ public:
 		_float		fMoveLerpOption = {};
 
 		_bool		isDetphCompareStop = {};
-		_bool		isPadding0 = {};
+		_bool		isNoPos = {};
 
 		_float3     vVelocityMin = {};
 		_float3     vVelocityMax = {};
@@ -176,7 +176,7 @@ public:
 		_int     isMoveUp = {};
 		_int     isExcludePos = {};
 		_int     isStop_Move_For_Depth_Compare = {};
-		_int     isPadding2 = {};
+		_int     isNoPos = {};
 
 		_float   fTimeDelta = {};
 		_float	 fSizeLerpOption = {};
@@ -233,6 +233,8 @@ public:
 		_bool     isStop = {};
 		_float    fRotateAttenuation = {};
 		_float    fRotateAttDelay = {};
+
+		_float4x4  PreWorldMatrix = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 

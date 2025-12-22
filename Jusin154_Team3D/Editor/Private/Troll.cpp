@@ -157,7 +157,7 @@ void CTroll::Late_Update(_float fTimeDelta)
 	}
 
 	if (m_bLookAt) {
-		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta, 3.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta, 3.f);
 	}
 	
 
@@ -207,6 +207,7 @@ HRESULT CTroll::Render()
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

@@ -685,6 +685,11 @@ void CGameInstance::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x
 	return m_pRenderer->Render_PreShadow(ViewMatrix, ProjMatrix);
 }
 
+RENDER CGameInstance::Get_CurrentRenderPass()
+{
+	return m_pRenderer->Get_CurrentRenderPass();
+}
+
 HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
 {
 	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);
@@ -840,9 +845,9 @@ HRESULT CGameInstance::Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11Depth
 	return m_pRenderTarget_Manager->Begin_MRT_NonClear(strMRTTag, pDSV);
 }
 
-HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isClear)
 {
-	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV);
+	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV , isClear);
 }
 
 HRESULT CGameInstance::Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag)
@@ -888,6 +893,7 @@ HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTar
 {
 	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
 }
+
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
@@ -1207,6 +1213,11 @@ _float3 CGameInstance::Get_MouseMove()
 		return vMouseMove;
 	}
 	return { 0.f, 0.f, 0.f };
+}
+
+_long CGameInstance::Get_DIMouseMove(MOUSEMOVESTATE eMouseState)
+{
+	return m_pKey_Manager->Get_DIMouseMove(eMouseState);
 }
 
 void    CGameInstance::Picking()

@@ -324,6 +324,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "Diffuse A Map")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
+	else if (!strcmp(FileType.c_str(), "Difuse_1")){
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
 	else if (!strcmp(FileType.c_str(), "Base color")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
@@ -336,7 +339,13 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "Diffuse")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
+	else if (!strcmp(FileType.c_str(), "Lamp")){
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
 	else if (!strcmp(FileType.c_str(), "WindowDiffuse")){
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
+	else if (!strcmp(FileType.c_str(), "Color Glass")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
 	else if (!strcmp(FileType.c_str(), "Window_Surface_Diffuse")){
@@ -353,10 +362,33 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_HEIGHT;
 		m_vSRV_Flag.x += 2.f;
 	}
+	else if (!strcmp(FileType.c_str(), "Diffuse C")) {
+		eTexture = aiTextureType::aiTextureType_HEIGHT;
+		m_vSRV_Flag.x += 2.f;
+	}
+	else if (!strcmp(FileType.c_str(), "Diffuse D")) {
+		eTexture = aiTextureType::aiTextureType_CLEARCOAT;
+		m_vSRV_Flag.x += 4.f;
+	}
+	else if (!strcmp(FileType.c_str(), "Cavity D")) {
+		eTexture = aiTextureType::aiTextureType_HEIGHT;
+		m_vSRV_Flag.x += 2.f;
+	}
 	else if (!strcmp(FileType.c_str(), "Diffuse A")) {
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
+	else if (!strcmp(FileType.c_str(), "Object Diffuse")) {
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
 	else if (!strcmp(FileType.c_str(), "Diffuse B")) {
+		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
+		m_vSRV_Flag.x += 1.f;
+	}
+	else if (!strcmp(FileType.c_str(), "Lichen D")) {
+		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
+		m_vSRV_Flag.x += 1.f;
+	}
+	else if (!strcmp(FileType.c_str(), "Diffuse B Map")) {
 		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
 		m_vSRV_Flag.x += 1.f;
 	}
@@ -365,6 +397,19 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		m_vSRV_Flag.x += 1.f;
 	}
 	else if (!strcmp(FileType.c_str(), "Normal Map")){
+		eTexture = aiTextureType::aiTextureType_NORMALS;
+	}
+	else if (!strcmp(FileType.c_str(), "HRO Map")){
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
+		m_vPBR_Flag.y = PBR_HRO;
+	}
+	else if (!strcmp(FileType.c_str(), "Normal_1")){
+		eTexture = aiTextureType::aiTextureType_NORMALS;
+	}
+	else if (!strcmp(FileType.c_str(), "Object Normal")){
+		eTexture = aiTextureType::aiTextureType_NORMALS;
+	}
+	else if (!strcmp(FileType.c_str(), "Normal A Map")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	}
 	else if (!strcmp(FileType.c_str(), "Base Normal")){
@@ -398,6 +443,10 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_SHININESS;
 		m_vSRV_Flag.y += 2.f;
 	}
+	else if (!strcmp(FileType.c_str(), "Cavity Detail N")) {
+		eTexture = aiTextureType::aiTextureType_SHININESS;
+		m_vSRV_Flag.y += 2.f;
+	}
 	else if (!strcmp(FileType.c_str(), "Moss Normal Map")) {
 		eTexture = aiTextureType::aiTextureType_SHININESS;
 		m_vSRV_Flag.y += 2.f;
@@ -410,6 +459,14 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	}
 	else if (!strcmp(FileType.c_str(), "Normal Map B")){
+		eTexture = aiTextureType::aiTextureType_OPACITY;
+		m_vSRV_Flag.y += 1.f;
+	}
+	else if (!strcmp(FileType.c_str(), "Lichen Detail N")){
+		eTexture = aiTextureType::aiTextureType_OPACITY;
+		m_vSRV_Flag.y += 1.f;
+	}
+	else if (!strcmp(FileType.c_str(), "Normal B Map")){
 		eTexture = aiTextureType::aiTextureType_OPACITY;
 		m_vSRV_Flag.y += 1.f;
 	}
@@ -473,6 +530,10 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 		m_vPBR_Flag.x = PBR_SRO;
 	}
+	else if (!strcmp(FileType.c_str(), "SRO Map D")) {
+		eTexture = aiTextureType::aiTextureType_SHEEN;
+		m_vPBR_Flag.x = PBR_SRO;
+		}
 	else if (!strcmp(FileType.c_str(), "SRO Map B")) {
 		eTexture = Switch_PBR_B(Use);
 		m_vPBR_Flag.y = PBR_SRO;
@@ -482,6 +543,10 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		m_vPBR_Flag.y = PBR_SRO;
 	}
 	else if (!strcmp(FileType.c_str(), "Detail SRO")) {
+		eTexture = Switch_PBR_B(Use);
+		m_vPBR_Flag.y = PBR_SRO;
+	}
+	else if (!strcmp(FileType.c_str(), "SRO B Map")) {
 		eTexture = Switch_PBR_B(Use);
 		m_vPBR_Flag.y = PBR_SRO;
 	}
@@ -502,6 +567,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		m_vPBR_Flag.x = PBR_SROH;
 	}
 	else if (!strcmp(FileType.c_str(), "MROH/SROH Map A")) {
+		eTexture = Switch_PBR(Use);
+	}
+	else if (!strcmp(FileType.c_str(), "Object MRO/SRO")) {
 		eTexture = Switch_PBR(Use);
 	}
 	else if (!strcmp(FileType.c_str(), "MROH/SROH Map B")) {
@@ -527,6 +595,8 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	}
 	else if (!strcmp(FileType.c_str(), "RGBA_Mask")) {
 		eTexture = aiTextureType::aiTextureType_MAYA_BASE;
+		m_vSRV_Flag.x = 5.f;
+		m_vSRV_Flag.y = 5.f;
 	}
 	else if (!strcmp(FileType.c_str(), "exterior_Cube_Map")) {
 		return S_OK;
@@ -538,6 +608,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_EMISSIVE;
 	}
 	else if (!strcmp(FileType.c_str(), "Emissive Map")) {
+		eTexture = aiTextureType::aiTextureType_EMISSIVE;
+	}
+	else if (!strcmp(FileType.c_str(), "Lamp Emissive")) {
 		eTexture = aiTextureType::aiTextureType_EMISSIVE;
 	}
 	else if (!strcmp(FileType.c_str(), "FakeExtDiffuse")) {
@@ -580,7 +653,13 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	{
 		if (!strcmp(FileType.c_str(), "Detail Diffuse A")) 
 				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Cavity-Lichen D Mask"))
+				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Detail Diffuse B")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Detail Albedo")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Top Layer Base Color")) 
 				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Detail Normal A")) 
 				return S_OK;
@@ -599,6 +678,18 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		else if (!strcmp(FileType.c_str(), "Distortion Bottom")) 
 				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Distortion Top")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Albedo")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Displacement")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Material")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Distortion Pattern")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Ground Diffuse")) 
+				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Ground MRO/SRO")) 
 				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Rock_Texture")) {
 			eTexture = aiTextureType::aiTextureType_DIFFUSE;
@@ -704,6 +795,10 @@ aiTextureType CMaterial::Switch_PBR(string FileType)
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 		m_vPBR_Flag.y = PBR_HRO;
 	}
+	else if (!strcmp(FileType.c_str(), "HRO Map")) {
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
+		m_vPBR_Flag.y = PBR_HRO;
+	}
 	else if (!strcmp(FileType.c_str(), "SRO")) {
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 		m_vPBR_Flag.y = PBR_SRO;
@@ -745,10 +840,6 @@ aiTextureType CMaterial::Switch_PBR_B(string FileType)
 	else if (!strcmp(FileType.c_str(), "SROA")) {
 		eTexture = aiTextureType::aiTextureType_DISPLACEMENT;
 		m_vPBR_Flag.y = PBR_SROA;
-	}
-	else if (!strcmp(FileType.c_str(), "HRO")) {
-		eTexture = aiTextureType::aiTextureType_DISPLACEMENT;
-		m_vPBR_Flag.y = PBR_HRO;
 	}
 	else if (!strcmp(FileType.c_str(), "SRO")) {
 		eTexture = aiTextureType::aiTextureType_DISPLACEMENT;
@@ -978,16 +1069,16 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader, MODEL eType)
 		case aiTextureType_UNKNOWN:
 			pConstantName = "g_UnknownTexture";
 			break;
-		case aiTextureType_SHEEN:
+		case aiTextureType_SHEEN: // Rock SRO
 			pConstantName = "g_SheenTexture";
 			break;
-		case aiTextureType_CLEARCOAT:
+		case aiTextureType_CLEARCOAT: // Rock_4 Diffuse
 			pConstantName = "g_ClearcoadTexture";
 			break;
 		case aiTextureType_TRANSMISSION:
 			pConstantName = "g_TransmissionTexture";
 			break;
-		case aiTextureType_MAYA_BASE:
+		case aiTextureType_MAYA_BASE: // Mask
 			pConstantName = "g_Maya_BaseTexture";
 			break;
 		case aiTextureType_MAYA_SPECULAR:

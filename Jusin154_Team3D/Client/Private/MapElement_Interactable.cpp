@@ -33,25 +33,8 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
 		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
 	}
-
-	if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo")
-	{
-		m_eInteractableID = ELEMENT_INTERACTABLE_ID::BARREL;
-	}
-
-	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_OwlPost_Package_B")
-	{
-		m_eInteractableID = ELEMENT_INTERACTABLE_ID::BOX;
-	}
-	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_TeaShop_Table_B")
-	{
-		m_eInteractableID = ELEMENT_INTERACTABLE_ID::TABLE;
-	}
-	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_TeaShop_Chair_B")
-	{
-		m_eInteractableID = ELEMENT_INTERACTABLE_ID::TABLE;
-	}
-
+	m_isPooled = pDesc->isPooled;
+	m_eInteractableID = static_cast<ELEMENT_INTERACTABLE_ID>(pDesc->iInteractableID);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -78,7 +61,16 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
 	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(false);
 
-	m_pInfoInstance->Regist_ActiveInteractive(this);
+	if (false == m_isPooled)
+	{
+		m_bVisible = true;
+		m_pInfoInstance->Regist_ActiveInteractive(this);
+	}
+	else
+	{
+		m_bVisible = false;
+		static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(true);
+	}
 
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
@@ -89,9 +81,12 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 
 void CMapElement_Interactable::Priority_Update(_float fTimeDelta)
 {
-	_float fRadius = m_pModelComs[0]->Get_Radius();
+	if(m_bVisible)
+	{
+		_float fRadius = m_pModelComs[0]->Get_Radius();
 
-	XMStoreFloat4(&m_vStartPos, Get_WorldPostion() + XMVectorSet(0.f , fRadius , 0.f , 0.f ));
+		XMStoreFloat4(&m_vStartPos, Get_WorldPostion() + XMVectorSet(0.f, fRadius, 0.f, 0.f));
+	}
 
 }
 
@@ -102,23 +97,25 @@ void CMapElement_Interactable::Update(_float fTimeDelta)
 
 void CMapElement_Interactable::Late_Update(_float fTimeDelta)
 {
-
-	if (m_isGraped == true)
+	if (m_bVisible)
 	{
-		 _float fRadius = m_pModelComs[0]->Get_Radius();
+		if (m_isGraped == true)
+		{
+			_float fRadius = m_pModelComs[0]->Get_Radius();
 
-		if (false == m_bHit) {
-			_vector vStartPos = XMLoadFloat4(&m_vStartPos);
-			_vector vEndPos = Get_WorldPostion() + XMVectorSet(0.f, fRadius, 0.f, 0.f);
-			ON_COLLISION_INFO CollisionInfo = CollisionCheck(vStartPos, vEndPos, 1.f);
+			if (false == m_bHit) {
+				_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+				_vector vEndPos = Get_WorldPostion() + XMVectorSet(0.f, fRadius, 0.f, 0.f);
+				ON_COLLISION_INFO CollisionInfo = CollisionCheck(vStartPos, vEndPos, 1.f);
 
-			if (m_bHit == true)
-				OnCollision(this, &CollisionInfo);
+				if (m_bHit == true)
+					OnCollision(this, &CollisionInfo);
+			}
 		}
-	}
 
-	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
+			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		}
 	}
 }
 
@@ -191,18 +188,25 @@ void CMapElement_Interactable::OnCollision(CGameObject* pOther, void* pDesc)
 	case Client::ELEMENT_INTERACTABLE_ID::TABLE:
 		m_pEffectPool->Use_Skill(SKILL_TYPE::CHAIL_SPLESH, this);
 		break;
+	case Client::ELEMENT_INTERACTABLE_ID::CHAIR:
+		m_pEffectPool->Use_Skill(SKILL_TYPE::CHAIL_SPLESH, this);
+		break;
 	case Client::ELEMENT_INTERACTABLE_ID::END:
 		break;
 	default:
 		break;
 	}
 
-
-	
-	Set_Dead();
+	if (m_isPooled)
+	{
+		m_bVisible = false;
+		static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(true);
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -999.f, 0.f, 1.f));
+		m_pInfoInstance->Deregist_ActiveInteractive(this);
+	}
+	else
+		Set_Dead();
 }
-
-
 
 HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
 {
@@ -328,6 +332,15 @@ void CMapElement_Interactable::Set_KinematicFlag(_bool bFlag)
 	m_pRigidBody->Set_Kinematic(bFlag);
 }
 
+void CMapElement_Interactable::ActivateAt(_fvector vPos)
+{
+	m_bVisible = true;
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	m_pInfoInstance->Regist_ActiveInteractive(this);
+	m_pRigidBody->Set_Kinematic(false);
+	m_pRigidBody->Set_Position(vPos);
+}
+
 ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _fvector EndPos, _float fRadius)
 {
 
@@ -392,8 +405,6 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 			}
 			}
 		}
-
-
 	}
 
 	if (bHit == false)

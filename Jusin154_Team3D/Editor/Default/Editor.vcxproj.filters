@@ -634,6 +634,9 @@
     <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
       <UniqueIdentifier>{54a92f0d-26f1-49bf-a13b-ab11995968c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\Blink">
+      <UniqueIdentifier>{3b207257-c396-473b-9906-df04b28fb0cd}</UniqueIdentifier>
+         </Filter>
     <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer">
       <UniqueIdentifier>{ea002e2c-481e-4f1f-a16f-4e47e3a48d37}</UniqueIdentifier>
     </Filter>
@@ -1287,6 +1290,9 @@
     <ClInclude Include="..\public\SpellLearn_Slot.h">
       <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Blink.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\Blink</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1929,6 +1935,9 @@
     </ClCompile>
     <ClCompile Include="..\private\SpellLearn_Slot.cpp">
       <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Blink.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\Blink</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

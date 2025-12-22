@@ -39,6 +39,7 @@ HRESULT CDummyObject::Initialize(void* pArg)
 
 void CDummyObject::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->RewindMomentum();
 }
 
 void CDummyObject::Update(_float fTimeDelta)
@@ -49,7 +50,12 @@ void CDummyObject::Update(_float fTimeDelta)
 
 void CDummyObject::Late_Update(_float fTimeDelta)
 {
+#ifdef 기무리
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#else
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+#endif // 기무리
+
 }
 
 HRESULT CDummyObject::Render()
@@ -62,6 +68,7 @@ HRESULT CDummyObject::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
+
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
@@ -75,12 +82,24 @@ HRESULT CDummyObject::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
-			return E_FAIL;
+		if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
+		{
+			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
+				return E_FAIL;
+			}
+
+			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 		}
+		else {
 
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+				return E_FAIL;
+			}
 
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
+		}
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -100,15 +119,24 @@ HRESULT CDummyObject::Ready_Components()
 
 	__super::Ready_Components(&Desc);
 
-	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		reinterpret_cast<CComponent**>(&m_pModelCom)))){
 		return E_FAIL;
+	}
 
-	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
+	{
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
+			reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+			return E_FAIL;
+		}
+	}
+	else {
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+			reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+			return E_FAIL;
+	}
+	}
 
 	return S_OK;
 }
@@ -124,6 +152,17 @@ HRESULT CDummyObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
 		return E_FAIL;
 	}
+#ifdef 기무리
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+#endif // 기무리
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;

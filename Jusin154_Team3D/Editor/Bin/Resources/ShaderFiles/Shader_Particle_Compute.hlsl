@@ -55,6 +55,8 @@ struct ParticleValue
     
     float  fRotateAttenuation;
     float  fRotateAttDelay;
+    
+    row_major matrix PreWorldMatrix;
 };
 
 
@@ -88,7 +90,7 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isMoveUp;
     bool isExcludePos;
     bool isStopMove_For_Depth_Compare;
-    bool isPadding2;
+    bool isNoPos;
 
     float fTimeDelta;
     float fSizeLerpOption; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
@@ -146,15 +148,23 @@ void CS_MAIN(
             particle.vTranslation = CurMat[3].xyzw;
         }
         
+        if (isNoPos)
+        {       
+            particle.vTranslation.xyz += WorldMatrix[3].xyz;
+        }
+        
     }
     
     // 라이프타임 움직임
     particle.vLifeTime.x += fTimeDelta;
     
+    /* 이전 월드를 기록한다 */
+    
+    row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+    particleValue.PreWorldMatrix = CurMat;
+    
     
     /* 내 z가 가려지는 상황이었다면 연산하지않음*/
-    
-    
     if (particle.vLifeTime.x >= particle.vLifeTime.y || particleValue.isStop == true)
     {
 
