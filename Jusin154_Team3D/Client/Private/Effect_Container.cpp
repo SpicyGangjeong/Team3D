@@ -402,7 +402,7 @@ HRESULT CEffect_Container::Create_Effect()
 			return E_FAIL;
 		}
 
-		pEffectParts->Load(EffectInfo, static_cast<LEVEL>(NEXT_LEVEL));
+		pEffectParts->Load(EffectInfo, static_cast<LEVEL>(g_iStaticLevel));
 
 		Safe_Release(pEffectParts);
 	}
@@ -413,7 +413,7 @@ HRESULT CEffect_Container::Create_Effect()
 			return E_FAIL;
 		}
 
-		pTrail->Load_Trail(TrailInfo, static_cast<LEVEL>(NEXT_LEVEL));
+		pTrail->Load_Trail(TrailInfo, static_cast<LEVEL>(g_iStaticLevel));
 
 		Safe_Release(pTrail);
 	}

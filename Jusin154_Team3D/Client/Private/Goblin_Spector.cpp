@@ -223,23 +223,7 @@ HRESULT CGoblin_Spector::Ready_Components()
 		return E_FAIL;
 	}
 
-	CPartObject::PARTOBJECT_DESC PartsDesc{};
 
-	PartsDesc.pParentTransform = m_pTransformCom;
-
-	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeft_Trail, &PartsDesc))) {
-		return E_FAIL;
-	}
-
-	m_pLeft_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pLeft_Trail->Set_Visible(false);
-
-	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRight_Trail, &PartsDesc))) {
-		return E_FAIL;
-	}
-
-	m_pRight_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pRight_Trail->Set_Visible(false);
 
 
 	return S_OK;
@@ -266,6 +250,24 @@ HRESULT CGoblin_Spector::Ready_Parts()
 	{
 		return E_FAIL;
 	}
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeft_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pLeft_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(g_iStaticLevel));
+	m_pLeft_Trail->Set_Visible(false);
+
+	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRight_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pRight_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(g_iStaticLevel));
+	m_pRight_Trail->Set_Visible(false);
 
 	return S_OK;
 }

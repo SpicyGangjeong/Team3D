@@ -462,7 +462,7 @@ HRESULT CGoblin::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pGoblin_Particle->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Particle->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle", static_cast<LEVEL>(g_iStaticLevel));
 	m_pGoblin_Particle->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
 
 
@@ -472,7 +472,7 @@ HRESULT CGoblin::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pGoblin_Particle2->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Particle2->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle2", static_cast<LEVEL>(g_iStaticLevel));
 	m_pGoblin_Particle2->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
 
 
@@ -481,7 +481,7 @@ HRESULT CGoblin::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pSmoke->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pSmoke->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Smoke", static_cast<LEVEL>(g_iStaticLevel));
 	m_pSmoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("Spine2"));
 
 
