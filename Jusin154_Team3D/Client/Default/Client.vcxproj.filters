@@ -710,6 +710,9 @@
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\NPC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Fall.h">
+      <Filter>04.Mechanic\State\Focus\State_Fall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1479,6 +1482,9 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\NPC">
       <UniqueIdentifier>{b265ac30-97f5-4dac-bc6b-b11fba1c5ad8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\Focus\State_Fall">
+      <UniqueIdentifier>{b85f80a2-d88e-4eb0-91af-da93b49bfa09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2135,6 +2141,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Fall.cpp">
+      <Filter>04.Mechanic\State\Focus\State_Fall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

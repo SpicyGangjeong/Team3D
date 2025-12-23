@@ -140,6 +140,8 @@ void CPlayer::Update(_float fTimeDelta)
 	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
+
+	Play_SpellHitAnim();
 /*	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
 	_float ease = 1.f;
