@@ -105,7 +105,7 @@ void CCamera_Gaze::Toggle_Priority()
 	}
 	else {
 		m_iPriority = 55;
-		m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, false);
+		m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, false);
 	}
 }
 

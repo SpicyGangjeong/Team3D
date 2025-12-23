@@ -61,6 +61,8 @@ private:
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	class CEffectPool* m_pEffectPool = nullptr;
 	_float2 m_vStunTimer = { 0.f, 4.f };
+	_float2 m_vAuraTimer = { 0.f, 0.16f };
+	_float2 m_vEtherealTimer = { 0.f, 0.16f };
 	_uint iIndex;
 	DAMAGE_INFO m_DamageInfo;
 

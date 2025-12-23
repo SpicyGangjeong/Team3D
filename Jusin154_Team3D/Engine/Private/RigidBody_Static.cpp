@@ -37,7 +37,7 @@ HRESULT CRigidBody_Static::Initialize(void* pArg)
     m_tagData.pOwner = m_pOwner;
     XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
     m_tagData.pBody = this;
-    m_pRigidBody = m_pGameInstance->Add_StaticActor(*this);
+    m_pRigidBody = m_pGameInstance->Add_StaticActor(*this, m_pGameInstance->Get_NextLevelID());
     m_pRigidBody->userData = &m_tagData;
     m_pRigidBody->setName(CMyTools::ToString(m_wstrMeshName).c_str());
 

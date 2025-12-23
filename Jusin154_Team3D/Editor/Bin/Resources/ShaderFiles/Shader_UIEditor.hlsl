@@ -1733,35 +1733,36 @@ PS_OUT PS_Broomstick(PS_IN In)
     Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
     Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
     Rotation += center;
-            
-    float2 startUV = g_fImageUV.xy;
-    float2 endUV = g_fImageUV.zw;
-
-    float2 atlasUV = startUV + In.vTexcoord * (endUV - startUV);
     
     float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
-    float4 tex2 = g_Texture1.Sample(ClampSampler, atlasUV);
+    float4 tex2 = g_Texture1.Sample(ClampSampler, Rotation);
     tex1.rgb *= 0.4f;
     color = tex1;
     tex2.rgb *= 0.3f;
     
     color = lerp(color, tex2, tex2.a);
 
-       
-    float2 texpos1 = g_fItemPosition1 / g_fCurrent_Size;
-    float2 texsize1 = g_fItemImageSizes1 / g_fCurrent_Size;
+    float2 texpos1 = g_fImageSipos1.xy / g_fCurrent_Size * 0.5f;
+    float2 texsize1 = g_fImageSipos1.zw / g_fCurrent_Size * 0.5;
     float2 texlocal1 = (In.vTexcoord - texpos1) / texsize1;
-    bool inside = all(texlocal1 >= 0.0f && texlocal1 <= 1.0f);
-    if (inside)
+    bool inside1 = all(texlocal1 >= 0.0f && texlocal1 <= 1.0f);
+    if (inside1)
     {
         float4 tex3 = g_Texture2.Sample(ClampSampler, texlocal1);
         color = lerp(color, tex3, tex3.a);
-        
-        float CoolTime = 0.f + g_fDeltaV;
-        float CoolTime2 = 0.f + g_fDeltaV + 0.1f;
-        atlasUV = startUV + texlocal1 * (endUV - startUV);
+    }
     
+    float2 texpos2 = g_fImageSipos2.xy / g_fCurrent_Size;
+    float2 texsize2 = g_fImageSipos2.zw / g_fCurrent_Size;
+    float2 texlocal2 = (In.vTexcoord - texpos2) / texsize2;
+    bool inside2 = all(texlocal2 >= 0.0f && texlocal2 <= 1.0f);
+    if (inside2)
+    {
+        float2 startUV = g_fImageUV.xy;
+        float2 endUV = g_fImageUV.zw;
+        float2 atlasUV = atlasUV = startUV + texlocal2 * (endUV - startUV);
         float4 tex4 = g_Texture3.Sample(DefaultSampler, atlasUV);
+        color = lerp(color, tex4, tex4.a);
     }
 
     color.a *= Alpha;
@@ -1827,8 +1828,8 @@ PS_OUT PS_SpellLearnColor(PS_IN In)
         float2 trailTopLeft = g_Trail[i];
         float2 trailCenter = trailTopLeft + itemSize / 2.0f;
 
-        float halfWidth = itemSize.x / 2.0f + 6.f;
-        float halfHeight = itemSize.y / 2.0f + 6.f;
+        float halfWidth = itemSize.x / 2.0f + 12.f;
+        float halfHeight = itemSize.y / 2.0f + 12.f;
 
         if (pixelPos.x >= trailCenter.x - halfWidth &&
         pixelPos.x <= trailCenter.x + halfWidth &&

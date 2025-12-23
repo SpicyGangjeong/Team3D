@@ -357,7 +357,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
+	isLoad_Hogwart = true;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -1870,7 +1870,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GerboldOlivander_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
 		return E_FAIL;
 	}
 
@@ -1943,131 +1943,131 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CBombard>(NEXT_LEVEL, CBombard::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CBombard>(g_iStaticLevel, CBombard::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CDecendo>(NEXT_LEVEL, CDecendo::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendo>(g_iStaticLevel, CDecendo::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(NEXT_LEVEL, CNomalJap::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(g_iStaticLevel, CNomalJap::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(NEXT_LEVEL, CProtego::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(g_iStaticLevel, CProtego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CRevelio>(NEXT_LEVEL, CRevelio::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CRevelio>(g_iStaticLevel, CRevelio::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJapSide>(NEXT_LEVEL, CNomalJapSide::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJapSide>(g_iStaticLevel, CNomalJapSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(NEXT_LEVEL, CLevioso::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(g_iStaticLevel, CLevioso::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CLumos>(NEXT_LEVEL, CLumos::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CLumos>(g_iStaticLevel, CLumos::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CAccio>(NEXT_LEVEL, CAccio::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(NEXT_LEVEL, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CBombardSide>(NEXT_LEVEL, CBombardSide::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(NEXT_LEVEL, CDecendoSide::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CAccio>(g_iStaticLevel, CAccio::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CTransformationSide>(NEXT_LEVEL, CTransformationSide::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(g_iStaticLevel, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBombardSide>(g_iStaticLevel, CBombardSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(g_iStaticLevel, CDecendoSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CTrollSwing>(NEXT_LEVEL, CTrollSwing::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Nomal_Smoke>(NEXT_LEVEL, CTroll_Nomal_Smoke::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush_Hit>(NEXT_LEVEL, CTroll_Rush_Hit::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(NEXT_LEVEL, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CTransformationSide>(g_iStaticLevel, CTransformationSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Attack>(NEXT_LEVEL, CGoblin_Attack::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CTrollSwing>(g_iStaticLevel, CTrollSwing::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Nomal_Smoke>(g_iStaticLevel, CTroll_Nomal_Smoke::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush_Hit>(g_iStaticLevel, CTroll_Rush_Hit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(g_iStaticLevel, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CMage_Down_Attack>(NEXT_LEVEL, CMage_Down_Attack::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Attack>(g_iStaticLevel, CGoblin_Attack::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CMage_Nomal_Attack>(NEXT_LEVEL, CMage_Nomal_Attack::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CMage_Down_Attack>(g_iStaticLevel, CMage_Down_Attack::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CMageSide>(NEXT_LEVEL, CMageSide::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CMage_Nomal_Attack>(g_iStaticLevel, CMage_Nomal_Attack::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CStunEffect>(NEXT_LEVEL, CStunEffect::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CMageSide>(g_iStaticLevel, CMageSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CBox_Splesh>(NEXT_LEVEL, CBox_Splesh::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CStunEffect>(g_iStaticLevel, CStunEffect::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CBarral_Splesh>(NEXT_LEVEL, CBarral_Splesh::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CBox_Splesh>(g_iStaticLevel, CBox_Splesh::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CChair_Splesh>(NEXT_LEVEL, CChair_Splesh::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CBarral_Splesh>(g_iStaticLevel, CBarral_Splesh::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CWandEnd>(NEXT_LEVEL, CWandEnd::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CChair_Splesh>(g_iStaticLevel, CChair_Splesh::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(NEXT_LEVEL, CStupefy::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CWandEnd>(g_iStaticLevel, CWandEnd::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CLightning>(NEXT_LEVEL, CLightning::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(g_iStaticLevel, CStupefy::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CLightningSide>(NEXT_LEVEL, CLightningSide::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CLightning>(g_iStaticLevel, CLightning::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CLightningSide>(g_iStaticLevel, CLightningSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CTransformation>(NEXT_LEVEL, CTransformation::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(g_iStaticLevel, CBlink::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTransformation>(g_iStaticLevel, CTransformation::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
 
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CScreen_Wind>(NEXT_LEVEL, CScreen_Wind::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CScreen_Wind>(g_iStaticLevel, CScreen_Wind::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	

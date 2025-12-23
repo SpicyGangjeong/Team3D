@@ -674,7 +674,7 @@ HRESULT CModel::Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIn
 
 	return S_OK;
 }
-HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix)
+HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix, _uint iLevel)
 {
 	m_iNumPhysXMeshes = m_iNumMeshes;
 
@@ -683,7 +683,7 @@ HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix)
 	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes, PreTransformMatrix);
 
 	for (_uint i = 0; i < m_iNumMeshes; ++i) {
-		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
+		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i], iLevel);
 	}
 	return S_OK;
 }

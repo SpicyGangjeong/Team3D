@@ -166,14 +166,8 @@ void CInfoInstance::Key_Input(_uint Input)
 	switch (m_eInput)
 	{
 	case ENUM_CLASS(KEYINPUT::INPUT_1):
-		Event_CallBack(TEXT("Spell"), &m_eInput);
-		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_2):
-		Event_CallBack(TEXT("Spell"), &m_eInput);
-		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_3):
-		Event_CallBack(TEXT("Spell"), &m_eInput);
-		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_4):
 		Event_CallBack(TEXT("Spell"), &m_eInput);
 		break;
@@ -440,7 +434,6 @@ void CInfoInstance::Release_Information()
 	SAFE_RELEASE(m_pSkillInfo);
 	SAFE_RELEASE(m_pQuestInfo);
 	SAFE_RELEASE(m_pInteractiveInfo);
-	SAFE_RELEASE(m_pSpellLearn_Data);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);

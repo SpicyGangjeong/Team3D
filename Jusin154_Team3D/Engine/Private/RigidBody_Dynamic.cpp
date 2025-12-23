@@ -145,15 +145,15 @@ HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
 	m_pRigidBody->setAngularVelocity(PSX::PxZERO()); // DO 객체 이동 제거
 	m_pRigidBody->setLinearVelocity(PSX::PxZERO());
 
-	Detach_Actor();
+	Detach_Actor(m_pGameInstance->Get_CurrentLevelID());
 	CCTOriginal.SetActive(true);
 
 	return E_FAIL;
 }
 
-void CRigidBody_Dynamic::Detach_Actor()
+void CRigidBody_Dynamic::Detach_Actor(_uint iLevel)
 {
-	m_pGameInstance->Detach_Actor(*m_pRigidBody); // 현재 액터 비활성화
+	m_pGameInstance->Detach_Actor(*m_pRigidBody, iLevel); // 현재 액터 비활성화
 	m_bActive = false;
 }
 
@@ -286,7 +286,7 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	m_tagData.pOwner = m_pOwner;
 	XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
 	m_tagData.pBody = this;
-	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this);
+	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this, m_pGameInstance->Get_NextLevelID());
 	m_pRigidBody->userData = &m_tagData;
 	m_pRigidBody->setCMassLocalPose(m_PxMassCenter);
 	m_pRigidBody->setRigidDynamicLockFlags(m_eLockFlag);

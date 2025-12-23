@@ -98,7 +98,7 @@ void CSpellLearn_MovePointer::Set_Booster(void* pArg)
 	Booster* Info = static_cast<Booster*>(pArg);
 	m_Booster.iBoosterIndex = Info->iBoosterIndex;
 	m_Booster.bBoosterOn = Info->bBoosterOn;
-	m_bBooster = true;
+	m_bBooster = m_Booster.bBoosterOn;
 }
 
 void CSpellLearn_MovePointer::Priority_Update(_float fTimeDelta)

@@ -206,11 +206,11 @@ public:
 #pragma endregion
 #pragma region PhysX_Manager
 	PSX::PxMaterial* Create_Material(_float3* vMatInfo);
-	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
-	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc);
-	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
-	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody);
-	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
+	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh, _uint iLevel);
+	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel);
+	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel);
+	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 	_bool SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
@@ -221,8 +221,8 @@ public:
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
 	PSX::PxController*	Get_Controller(_uint iControllerIndex);
 	void				ReleaseController(_uint iControllerIndex);
-	void				Attach_Actor(PSX::PxActor& Actor);
-	void				Detach_Actor(PSX::PxActor& pActor);
+	void				Attach_Actor(PSX::PxActor& Actor, _uint iLevel);
+	void				Detach_Actor(PSX::PxActor& pActor, _uint iLevel);
 	void				Release_Actor(PSX::PxActor& Actor);
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 #ifdef EDITOR_PROJECT
