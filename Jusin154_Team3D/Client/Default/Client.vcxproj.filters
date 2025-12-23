@@ -686,6 +686,9 @@
     <ClInclude Include="..\Public\TransformationSide.h">
       <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Avadakedavra.h">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1431,6 +1434,9 @@
     <Filter Include="02.GameObjects\Effect\Effects\Transformation\TransformationSide">
       <UniqueIdentifier>{064b5e2f-dcde-47fd-a43d-43e25800393d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra">
+      <UniqueIdentifier>{575f6ef3-7013-448a-b448-e94f1ddc5647}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2063,6 +2069,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TransformationSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Avadakedavra.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
