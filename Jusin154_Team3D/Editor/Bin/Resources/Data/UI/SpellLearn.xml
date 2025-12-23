@@ -1,28 +1,256 @@
 ﻿<SpellLearnInfo>
 	<SpellLearnData>
-		<Name SpellName="봄바르다" ImageName="Bombarda" Size="550" x="730" y="200">
+		<Name SpellName="봄바르다" ImageName="Bombarda" SpellID="11" SpellType="2" Size="550" x="730" y="200" endx="522" endy="-42">
+			<Booster>
+				<Pos x="622" y="60"/>
+			</Booster>
+			<Booster>
+				<Pos x="810" y="-187"/>
+			</Booster>
+			<Booster>
+				<Pos x="390" y="-187"/>
+			</Booster>
 			<Position>
-				<Pos x="625" y="60"/>
+				<Pos x="730" y="200"/>
 			</Position>
 			<Position>
-				<Pos x="810" y="-185"/>
+				<Pos x="707" y="170"/>
 			</Position>
 			<Position>
-				<Pos x="395" y="-185"/>
+				<Pos x="683.5" y="140"/>
 			</Position>
 			<Position>
-				<Pos x="515" y="-45"/>
+				<Pos x="668" y="120"/>
+			</Position>
+			<Position>
+				<Pos x="652.5" y="100"/>
+			</Position>
+			<Position>
+				<Pos x="636" y="80"/>
+			</Position>
+			<Position>
+				<Pos x="622" y="60"/>
+			</Position>
+			<Position>
+				<Pos x="636.5" y="40"/>
+			</Position>
+			<Position>
+				<Pos x="652" y="20"/>
+			</Position>
+			<Position>
+				<Pos x="666.5" y="0"/>
+			</Position>
+			<Position>
+				<Pos x="682.5" y="-20"/>
+			</Position>
+			<Position>
+				<Pos x="698" y="-40"/>
+			</Position>
+			<Position>
+				<Pos x="713.5" y="-60"/>
+			</Position>
+			<Position>
+				<Pos x="728.5" y="-80"/>
+			</Position>
+			<Position>
+				<Pos x="744" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="759" y="-120"/>
+			</Position>
+			<Position>
+				<Pos x="774.5" y="-140"/>
+			</Position>
+			<Position>
+				<Pos x="790" y="-160"/>
+			</Position>
+			<Position>
+				<Pos x="805.5" y="-180"/>
+			</Position>
+			<Position>
+				<Pos x="811.5" y="-189"/>
+			</Position>
+			<Position>
+				<Pos x="790" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="760" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="730" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="700" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="670" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="640" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="610" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="580" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="550" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="520" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="490" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="460" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="430" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="400" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="390" y="-187"/>
+			</Position>
+			<Position>
+				<Pos x="416" y="-157"/>
+			</Position>
+			<Position>
+				<Pos x="441.5" y="-130"/>
+			</Position>
+			<Position>
+				<Pos x="468" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="496" y="-70"/>
+			</Position>
+			<Position>
+				<Pos x="516" y="-50"/>
+			</Position>
+			<Position>
+				<Pos x="522" y="-42"/>
 			</Position>
 		</Name>
-		<Name SpellName="루모스" ImageName="Lumos" Size="520" x="410" y="-210">
+		<Name SpellName="루모스" ImageName="Lumos" SpellID="14" SpellType="3" Size="520" x="408.5" y="-218" endx="791.5" endy="-235">
+			<Booster>
+				<Pos x="501.5" y="-10"/>
+			</Booster>
+			<Booster>
+				<Pos x="598.5" y="205"/>
+			</Booster>
+			<Booster>
+				<Pos x="693" y="-10"/>
+			</Booster>
 			<Position>
-				<Pos x="600" y="200"/>
+				<Pos x="408.5" y="-218"/>
 			</Position>
 			<Position>
-				<Pos x="790" y="-230"/>
+				<Pos x="420" y="-192"/>
+			</Position>
+			<Position>
+				<Pos x="434.5" y="-160"/>
+			</Position>
+			<Position>
+				<Pos x="448" y="-130"/>
+			</Position>
+			<Position>
+				<Pos x="461.5" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="475" y="-70"/>
+			</Position>
+			<Position>
+				<Pos x="488.5" y="-40"/>
+			</Position>
+			<Position>
+				<Pos x="501.5" y="-10"/>
+			</Position>
+			<Position>
+				<Pos x="515" y="20"/>
+			</Position>
+			<Position>
+				<Pos x="529" y="50"/>
+			</Position>
+			<Position>
+				<Pos x="542" y="80"/>
+			</Position>
+			<Position>
+				<Pos x="556" y="110"/>
+			</Position>
+			<Position>
+				<Pos x="565" y="130"/>
+			</Position>
+			<Position>
+				<Pos x="574" y="150"/>
+			</Position>
+			<Position>
+				<Pos x="587" y="180"/>
+			</Position>
+			<Position>
+				<Pos x="598.5" y="205"/>
+			</Position>
+			<Position>
+				<Pos x="609.5" y="180"/>
+			</Position>
+			<Position>
+				<Pos x="622.5" y="150"/>
+			</Position>
+			<Position>
+				<Pos x="630.5" y="130"/>
+			</Position>
+			<Position>
+				<Pos x="640" y="110"/>
+			</Position>
+			<Position>
+				<Pos x="653.5" y="80"/>
+			</Position>
+			<Position>
+				<Pos x="666.5" y="50"/>
+			</Position>
+			<Position>
+				<Pos x="679.5" y="20"/>
+			</Position>
+			<Position>
+				<Pos x="693" y="-10"/>
+			</Position>
+			<Position>
+				<Pos x="706" y="-40"/>
+			</Position>
+			<Position>
+				<Pos x="719.5" y="-70"/>
+			</Position>
+			<Position>
+				<Pos x="732.5" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="746" y="-130"/>
+			</Position>
+			<Position>
+				<Pos x="759" y="-160"/>
+			</Position>
+			<Position>
+				<Pos x="772.5" y="-190"/>
+			</Position>
+			<Position>
+				<Pos x="785.5" y="-220"/>
+			</Position>
+			<Position>
+				<Pos x="791.5" y="-235"/>
 			</Position>
 		</Name>
-		<Name SpellName="아씨오" ImageName="Accio" Size="520" x="852" y="-120">
+		<Name SpellName="아씨오" ImageName="Accio" SpellID="4" SpellType="1" Size="520" x="852" y="-120" endx="347" endy="-71">
+			<Booster>
+				<Pos x="794" y="18"/>
+			</Booster>
+			<Booster>
+				<Pos x="623" y="109"/>
+			</Booster>
+			<Booster>
+				<Pos x="431" y="56"/>
+			</Booster>
 			<Position>
 				<Pos x="848" y="-100"/>
 			</Position>
@@ -87,9 +315,60 @@
 				<Pos x="347" y="-71"/>
 			</Position>
 		</Name>
-		<Name SpellName="디센도" ImageName="Descendo" Size="520" 	x="453" y="-245">
+		<Name SpellName="디센도" ImageName="Descendo" SpellID="6" SpellType="1" Size="520" x="453" y="-245" endx="580" endy="-68">
+			<Booster>
+				<Pos x="453" y="0"/>
+			</Booster>
+			<Booster>
+				<Pos x="550" y="222"/>
+			</Booster>
+			<Booster>
+				<Pos x="744" y="101"/>
+			</Booster>
 			<Position>
-				<Pos x="453" y="90"/>
+				<Pos x="453" y="-222.5"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-200"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-177.5"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-155"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-132.5"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-110"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-87.5"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-65"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-42.5"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="-20"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="2.5"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="25"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="47.5"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="70"/>
+			</Position>
+			<Position>
+				<Pos x="453" y="92.5"/>
 			</Position>
 			<Position>
 				<Pos x="458" y="122"/>
@@ -158,7 +437,58 @@
 				<Pos x="580" y="-68"/>
 			</Position>
 		</Name>
-		<Name SpellName="레벨리오" ImageName="Revelio" Size="550" x="454" y="-240">
+		<Name SpellName="레벨리오" ImageName="Revelio" SpellID="26" SpellType="3" Size="550" x="454" y="-240" endx="710" endy="-189">
+			<Booster>
+				<Pos x="454" y="0"/>
+			</Booster>
+			<Booster>
+				<Pos x="550" y="222"/>
+			</Booster>
+			<Booster>
+				<Pos x="738" y="36"/>
+			</Booster>
+			<Position>
+				<Pos x="454" y="-218"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-196"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-174"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-152"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-130"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-108"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-86"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-64"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-42"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="-20"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="2"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="24"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="46"/>
+			</Position>
+			<Position>
+				<Pos x="454" y="68"/>
+			</Position>
 			<Position>
 				<Pos x="454" y="90"/>
 			</Position>
@@ -244,9 +574,57 @@
 				<Pos x="710" y="-189"/>
 			</Position>
 		</Name>
-		<Name SpellName="레비오소" ImageName="Levioso" Size="550" x="476" y="-253">
+		<Name SpellName="레비오소" ImageName="Levioso" SpellID="2" SpellType="0" Size="550" x="476" y="-253" endx="528" endy="265">
+			<Booster>
+				<Pos x="735" y="-172"/>
+			</Booster>
+			<Booster>
+				<Pos x="475" y="-45"/>
+			</Booster>
+			<Booster>
+				<Pos x="475" y="120"/>
+			</Booster>
+			<Position>
+				<Pos x="502" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="528" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="554" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="580" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="606" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="632" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="658" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="684" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="710" y="-253"/>
+			</Position>
 			<Position>
 				<Pos x="735" y="-253"/>
+			</Position>
+			<Position>
+				<Pos x="735" y="-237"/>
+			</Position>
+			<Position>
+				<Pos x="735" y="-221"/>
+			</Position>
+			<Position>
+				<Pos x="735" y="-205"/>
+			</Position>
+			<Position>
+				<Pos x="735" y="-189"/>
 			</Position>
 			<Position>
 				<Pos x="735" y="-172"/>
@@ -334,6 +712,163 @@
 			</Position>
 			<Position>
 				<Pos x="528" y="265"/>
+			</Position>
+		</Name>
+		<Name SpellName="변 신" ImageName="Transformation" SpellID="3" SpellType="0" Size="520" x="827.5" y="95" endx="372" endy="75">
+			<Booster>
+				<Pos x="776" y="-10"/>
+			</Booster>
+			<Booster>
+				<Pos x="600" y="-89.5"/>
+			</Booster>
+			<Booster>
+				<Pos x="420" y="-16"/>
+			</Booster>
+			<Position>
+				<Pos x="821" y="75"/>
+			</Position>
+			<Position>
+				<Pos x="812" y="50"/>
+			</Position>
+			<Position>
+				<Pos x="796.5" y="20"/>
+			</Position>
+			<Position>
+				<Pos x="776" y="-10"/>
+			</Position>
+			<Position>
+				<Pos x="750" y="-37.5"/>
+			</Position>
+			<Position>
+				<Pos x="720" y="-59.5"/>
+			</Position>
+			<Position>
+				<Pos x="690" y="-74.5"/>
+			</Position>
+			<Position>
+				<Pos x="660" y="-84"/>
+			</Position>
+			<Position>
+				<Pos x="630" y="-88.5"/>
+			</Position>
+			<Position>
+				<Pos x="600" y="-89.5"/>
+			</Position>
+			<Position>
+				<Pos x="570" y="-87.5"/>
+			</Position>
+			<Position>
+				<Pos x="540" y="-83"/>
+			</Position>
+			<Position>
+				<Pos x="510" y="-74.5"/>
+			</Position>
+			<Position>
+				<Pos x="480" y="-61.5"/>
+			</Position>
+			<Position>
+				<Pos x="450" y="-44"/>
+			</Position>
+			<Position>
+				<Pos x="420" y="-16"/>
+			</Position>
+			<Position>
+				<Pos x="400.5" y="10"/>
+			</Position>
+			<Position>
+				<Pos x="384" y="40"/>
+			</Position>
+			<Position>
+				<Pos x="378" y="55"/>
+			</Position>
+			<Position>
+				<Pos x="372" y="75"/>
+			</Position>
+		</Name>
+		<Name SpellName="아바다 케다브라" ImageName="AvadaKedavra" SpellID="20" SpellType="5" Size="640" x="627.5" y="214" endx="624" endy="-213">
+			<Booster>
+				<Pos x="481" y="-12"/>
+			</Booster>
+			<Booster>
+				<Pos x="725" y="51"/>
+			</Booster>
+			<Booster>
+				<Pos x="667.5" y="-100"/>
+			</Booster>
+			<Position>
+				<Pos x="612.5" y="190"/>
+			</Position>
+			<Position>
+				<Pos x="593" y="160"/>
+			</Position>
+			<Position>
+				<Pos x="573.5" y="130"/>
+			</Position>
+			<Position>
+				<Pos x="554.5" y="100"/>
+			</Position>
+			<Position>
+				<Pos x="534.5" y="70"/>
+			</Position>
+			<Position>
+				<Pos x="515" y="40"/>
+			</Position>
+			<Position>
+				<Pos x="496" y="10"/>
+			</Position>
+			<Position>
+				<Pos x="481" y="-12"/>
+			</Position>
+			<Position>
+				<Pos x="520" y="-2.5"/>
+			</Position>
+			<Position>
+				<Pos x="550" y="6.5"/>
+			</Position>
+			<Position>
+				<Pos x="580" y="14"/>
+			</Position>
+			<Position>
+				<Pos x="610" y="21.5"/>
+			</Position>
+			<Position>
+				<Pos x="640" y="29"/>
+			</Position>
+			<Position>
+				<Pos x="670" y="37"/>
+			</Position>
+			<Position>
+				<Pos x="700" y="45"/>
+			</Position>
+			<Position>
+				<Pos x="725" y="51"/>
+			</Position>
+			<Position>
+				<Pos x="714" y="21"/>
+			</Position>
+			<Position>
+				<Pos x="702" y="-10"/>
+			</Position>
+			<Position>
+				<Pos x="690" y="-40"/>
+			</Position>
+			<Position>
+				<Pos x="679" y="-70"/>
+			</Position>
+			<Position>
+				<Pos x="667.5" y="-100"/>
+			</Position>
+			<Position>
+				<Pos x="656" y="-130"/>
+			</Position>
+			<Position>
+				<Pos x="644" y="-160"/>
+			</Position>
+			<Position>
+				<Pos x="633" y="-190"/>
+			</Position>
+			<Position>
+				<Pos x="624" y="-213"/>
 			</Position>
 		</Name>
 	</SpellLearnData>

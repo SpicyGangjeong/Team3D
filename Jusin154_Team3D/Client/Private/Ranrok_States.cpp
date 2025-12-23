@@ -616,13 +616,14 @@ void CRanrok::Behavior_TuckedEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::TUCKED);
  
-	if (m_iCurrentFlow == 0)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::FLY];
-	}
-	else {
-		pairAnimInfo = m_Animation[STATEANIM::TUCKED];
-	}
+	//if (m_iCurrentFlow == 0)
+	//{
+	//	pairAnimInfo = m_Animation[STATEANIM::FLY];
+	//}
+	//else {
+	//	pairAnimInfo = m_Animation[STATEANIM::TUCKED];
+	//}
+	pairAnimInfo = m_Animation[STATEANIM::FLY];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 }
 

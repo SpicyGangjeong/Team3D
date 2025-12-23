@@ -9,8 +9,8 @@
 #include "Wand.h"
 #include "Item_Potion.h"
 #include "Character_Controller.h"
-#include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
+#include "CallBack_Playable_Behavior.h"
 #include "CallBack_Playable_HitReport.h"
 #include "Monster.h"
 #include "Broom.h"
@@ -95,10 +95,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pInfoInstance->Regist_PlayerAlly(this);
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
-
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-21.f, 0.f, -14.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-21.f, 0.f, -14.f, 1.f));
-
+	{
+		PLAYERDESC* pDesc = static_cast<PLAYERDESC*>(pArg);
+		_vector vPos = XMLoadFloat4(&pDesc->vPos);
+		_vector vRotQ = XMLoadFloat4(&pDesc->vRotQ);
+		m_pCharacter_Controller->Set_Position(vPos);
+		m_pTransformCom->Set_State(STATE::POSITION, vPos);
+		m_pTransformCom->Rotation(vRotQ);
+	}
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -136,6 +140,8 @@ void CPlayer::Update(_float fTimeDelta)
 	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
+
+	Play_SpellHitAnim();
 /*	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
 	_float ease = 1.f;
@@ -483,7 +489,7 @@ HRESULT CPlayer::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
@@ -561,6 +567,11 @@ void CPlayer::ReLockOnTarget()
 	if (nullptr != m_LockOnInfo.pUnit) {
 		if (true == m_LockOnInfo.pUnit->isDead()) {
 			m_LockOnInfo.pUnit = nullptr;
+		}
+	}
+	if (nullptr != m_LockOnInfo.pInteractive) {
+		if (true == m_LockOnInfo.pInteractive->isDead()) {
+			m_LockOnInfo.pInteractive = nullptr;
 		}
 	}
 

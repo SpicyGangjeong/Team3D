@@ -324,6 +324,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::JAP):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			m_fTumbleTimer = 0.f;
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
@@ -418,7 +419,7 @@ HRESULT CGoblin::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {

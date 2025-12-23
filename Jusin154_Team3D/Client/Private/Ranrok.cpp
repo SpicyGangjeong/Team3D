@@ -141,6 +141,11 @@ void CRanrok::Update(_float fTimeDelta)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
 #pragma endregion
+
+	m_vEtherealTimer.x += fTimeDelta * 0.2f;
+	if (m_vEtherealTimer.x > m_vEtherealTimer.y) {
+		m_vEtherealTimer.x -= m_vEtherealTimer.y;
+	}
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -161,89 +166,28 @@ void CRanrok::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
 
 HRESULT CRanrok::Render()
 {
-	if (!m_bVisible)
+	if (!m_bVisible){
 		return S_OK;
-
+	}
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	_uint iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT);
-	if (true == m_bDrawOutLine) {
-		iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_WRITE);
+	RENDER eCurrentPass = m_pGameInstance->Get_CurrentRenderPass();
+	HRESULT hr = E_FAIL;
+	if (RENDER::NONBLEND == eCurrentPass) {
+		hr = Render_Nonblend();
 	}
-	if (FAILED(Render_DeadDisolve())) {
-		return E_FAIL;
+	else if (RENDER::BLEND == eCurrentPass) {
+		//hr = Render_Blend();
+		hr = S_OK;
 	}
-
-	if (FAILED(Render_Disolve())) {
-		return E_FAIL;
-	}
-
-	for (_uint i = 0; i < iNumMeshes; i++)
-	{
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_OffsetMatrix",
-			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
-		)))
-		{
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Begin(iShaderPass))) {
-			return E_FAIL;
-		}
-
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
-
-		if (FAILED(m_pModelCom->Render(i))) {
-			return E_FAIL;
-		}
-	}
-
-	if (m_bDrawOutLine) {
-		Render_OutLine();
-	}
-
-#ifdef _DEBUG
-	if (true == m_pCharacter_Controller->IsActive()) {
-		if (FAILED(m_pCharacter_Controller->Render())) {
-			return E_FAIL;
-		}
-	}
-	else if (true == m_pRigidBody->IsActive()) {
-		if (FAILED(m_pRigidBody->Render())) {
-			return E_FAIL;
-		}
-	}
-#endif
-
-	if (0.f < m_fDeadRatio) {
-		_bool bDisolve = false;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
-			return E_FAIL;
-		}
-	}
-
-	{
-		_bool bDisolve = false;
-		_float zero = 0.f;
-		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
-		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
-	}
-
-	return S_OK;
+	return hr;
 }
 
 HRESULT CRanrok::Render_Shadow(SHADOW eType)
@@ -273,7 +217,8 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 			return E_FAIL;
 		}
 
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -378,6 +323,12 @@ HRESULT CRanrok::Ready_Components()
 	Desc.fRadius = 10.f;
 
 	__super::Ready_Components(&Desc);
+	SAFE_RELEASE(m_pShaderCom);
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+		return E_FAIL;
+	}
 
 	m_strModelPrototypeTag = TEXT("Prototype_Component_Ranrok_Model");
 
@@ -416,7 +367,7 @@ HRESULT CRanrok::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_RANROK"), (CComponent**)&m_pStat))) {
@@ -457,6 +408,104 @@ HRESULT CRanrok::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+HRESULT CRanrok::Render_Nonblend()
+{
+	if (FAILED(Render_DeadDisolve())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Render_Disolve())) {
+		return E_FAIL;
+	}
+
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices( "g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size() )))
+		{
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
+			return E_FAIL;
+		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
+
+	if (m_bDrawOutLine) {
+		Render_OutLine();
+	}
+
+#ifdef _DEBUG
+	if (true == m_pCharacter_Controller->IsActive()) {
+		if (FAILED(m_pCharacter_Controller->Render())) {
+			return E_FAIL;
+		}
+	}
+	else if (true == m_pRigidBody->IsActive()) {
+		if (FAILED(m_pRigidBody->Render())) {
+			return E_FAIL;
+		}
+	}
+#endif
+
+	if (0.f < m_fDeadRatio) {
+		_bool bDisolve = false;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+	}
+
+	{
+		_bool bDisolve = false;
+		_float zero = 0.f;
+		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
+	}
+	return S_OK;
+}
+HRESULT CRanrok::Render_Blend()
+{
+	_float fDiffuseUVRatio = (m_vEtherealTimer.x / m_vEtherealTimer.y);
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEtherealRatio", &fDiffuseUVRatio, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_HOT_SPINE); i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); ++i)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
+		{
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
+			return E_FAIL;
+		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
 
 void CRanrok::MoveTo(_float fTimeDelta)
 {
@@ -470,15 +519,22 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		m_iCurrentFlow = 0;
 
 	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+	_vector NextTarget;
+	if (m_iCurrentPoint + 1 <= m_Points[m_iCurrentFlow].size())
+	{
+		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
+	}
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
-	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	_float Speed = 50.f;
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
-	GUI::Text("Dist %.2f", fDist);
+
 	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 	{
-		if (fDist < 10.f)
+		if (fDist < 15.f)
 		{
 			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 			{
@@ -490,7 +546,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 			return;
 		}
 	}
-	else if (fDist < 10.f)
+	else if (fDist < 50.f)
 	{
 		if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 		{
@@ -502,38 +558,9 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		return;
 	}
 
-	//_float4x4 CurMat, TargetMat, LerpMat;
+	m_pTransformCom->LookAt_Lerp(Target, fTimeDelta, 1.f);
 
-	//XMStoreFloat4x4(&CurMat,XMMatrixTranslationFromVector(CurPos));
-
-	//XMStoreFloat4x4(&TargetMat,XMMatrixTranslationFromVector(Target));
-
-	//_float fLerpRatio = fTimeDelta * 2.f;
-	//fLerpRatio = min(fLerpRatio, 1.f);
-
-	//CMyTools::MatrixLerp(&CurMat, &TargetMat, LerpMat, fLerpRatio);
-
-	//_vector vNextPos = XMVectorSet(LerpMat._41, LerpMat._42, LerpMat._43, 1.f);
-
-
-	//m_pTransformCom->Set_WorldMatrix(LerpMat);
-
-	//m_pCharacter_Controller->Set_Position(vNextPos);
-
-	static _vector vMoveDir = m_pTransformCom->Get_State(STATE::LOOK);
-
-	_vector vDir = XMVector3Normalize(Target - CurPos);
-
-	vMoveDir = XMVectorLerp(vMoveDir, vDir, fTimeDelta * 2.f);
-	vMoveDir = XMVector3Normalize(vMoveDir);
-
-	m_pTransformCom->LookAt_Horizontal_Lerp(CurPos + vMoveDir, fTimeDelta, 1.f);
-
-	_float Speed = 35.f;
-	m_pCharacter_Controller->Set_Position(
-		CurPos + vMoveDir * Speed * fTimeDelta
-	);
-
+	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
 }
 
 void CRanrok::AroundPoint(_float fTimeDelta)
@@ -672,8 +699,6 @@ void CRanrok::Describe_Entity()
 
 		GUI::Text("Degree %.2f", m_fDegree);
 		GUI::Text("CurrFlow %d", m_iCurrentFlow);
-
-
 
 		_float3 Pos;
 		XMStoreFloat3(&Pos, Get_WorldPostion());

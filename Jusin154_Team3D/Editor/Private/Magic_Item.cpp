@@ -51,7 +51,7 @@ HRESULT CMagic_Item::Initialize(void* pArg)
 
 void CMagic_Item::Compute_UV(_uint iItemID)
 {
-	_float2 fImage_Size = { 320.f, 384.f};
+	_float2 fImage_Size = { 320.f, 384.f };
 
 	_uint iCountX = 5;
 	_uint iCountY = 6;
@@ -76,8 +76,8 @@ void CMagic_Item::Compute_UV(_uint iItemID)
 
 void CMagic_Item::Compute_Image()
 {
-	m_vImagePos1 = _float2(72.f, 0.f);
-	m_vImageSize1 = _float2(30.f, 30.f);
+	m_vImageposi1 = _float4(30.f, 30.f, 120.f, 120.f);
+	m_vImageposi2 = _float4(70.f, 0.f, 30.f, 30.f);
 }
 
 void CMagic_Item::Priority_Update(_float fTimeDelta)
@@ -119,19 +119,6 @@ void CMagic_Item::Update(_float fTimeDelta)
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
 		}
-	}
-
-	if (m_vUVScale.y >= 1.f)
-	{
-		if (m_pGameInstance->Key_Down(DIK_TAB))
-		{
-			m_vUVScale.y = 0.f;
-		}
-	}
-
-	if (m_vUVScale.y <= 1)
-	{
-		m_vUVScale.y += fTimeDelta * (1.f / m_fCoolTime);
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -236,11 +223,11 @@ HRESULT CMagic_Item::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fItemPosition1", &m_vImagePos1, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos1", &m_vImageposi1, sizeof(_float4))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fItemImageSizes1", &m_vImageSize1, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos2", &m_vImageposi2, sizeof(_float4))))
 	{
 		return E_FAIL;
 	}
@@ -248,6 +235,7 @@ HRESULT CMagic_Item::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 

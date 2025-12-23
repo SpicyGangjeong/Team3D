@@ -64,12 +64,20 @@ Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
 
 int g_iHover;
+int g_iBoosterOn;
+int g_iBoosterOff;
 int g_iClick;
 int g_iColor;
+int g_Count;
+int g_ChaseCount;
 
 int g_iStep1 = 0;
 int g_iStep2 = 0;
 int g_iStep3 = 0;
+
+float2 g_Trail[200];
+float2 g_ChaseTrail[200];
+
 
 struct VS_IN
 {
@@ -1725,35 +1733,36 @@ PS_OUT PS_Broomstick(PS_IN In)
     Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
     Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
     Rotation += center;
-            
-    float2 startUV = g_fImageUV.xy;
-    float2 endUV = g_fImageUV.zw;
-
-    float2 atlasUV = startUV + In.vTexcoord * (endUV - startUV);
     
     float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
-    float4 tex2 = g_Texture1.Sample(ClampSampler, atlasUV);
+    float4 tex2 = g_Texture1.Sample(ClampSampler, Rotation);
     tex1.rgb *= 0.4f;
     color = tex1;
     tex2.rgb *= 0.3f;
     
     color = lerp(color, tex2, tex2.a);
 
-       
-    float2 texpos1 = g_fItemPosition1 / g_fCurrent_Size;
-    float2 texsize1 = g_fItemImageSizes1 / g_fCurrent_Size;
+    float2 texpos1 = g_fImageSipos1.xy / g_fCurrent_Size * 0.5f;
+    float2 texsize1 = g_fImageSipos1.zw / g_fCurrent_Size * 0.5;
     float2 texlocal1 = (In.vTexcoord - texpos1) / texsize1;
-    bool inside = all(texlocal1 >= 0.0f && texlocal1 <= 1.0f);
-    if (inside)
+    bool inside1 = all(texlocal1 >= 0.0f && texlocal1 <= 1.0f);
+    if (inside1)
     {
         float4 tex3 = g_Texture2.Sample(ClampSampler, texlocal1);
         color = lerp(color, tex3, tex3.a);
-        
-        float CoolTime = 0.f + g_fDeltaV;
-        float CoolTime2 = 0.f + g_fDeltaV + 0.1f;
-        atlasUV = startUV + texlocal1 * (endUV - startUV);
+    }
     
+    float2 texpos2 = g_fImageSipos2.xy / g_fCurrent_Size;
+    float2 texsize2 = g_fImageSipos2.zw / g_fCurrent_Size;
+    float2 texlocal2 = (In.vTexcoord - texpos2) / texsize2;
+    bool inside2 = all(texlocal2 >= 0.0f && texlocal2 <= 1.0f);
+    if (inside2)
+    {
+        float2 startUV = g_fImageUV.xy;
+        float2 endUV = g_fImageUV.zw;
+        float2 atlasUV = atlasUV = startUV + texlocal2 * (endUV - startUV);
         float4 tex4 = g_Texture3.Sample(DefaultSampler, atlasUV);
+        color = lerp(color, tex4, tex4.a);
     }
 
     color.a *= Alpha;
@@ -1795,32 +1804,105 @@ PS_OUT PS_SpellLearnColor(PS_IN In)
     Color = tex;
     
     Color.rgb *= tex1.rgb;
-    
-    float2 rectPos = g_fPosition;
+
+    float2 rectPos = g_fPosition - float2(256.f, 259.f);
     float2 rectSize = g_fCurrent_Size;
 
     float2 itemPos = g_fItemPosition1;
     float2 itemSize = g_fItemImageSizes1;
 
-    float x0 = max(rectPos.x, itemPos.x);
-    float x1 = min(rectPos.x + rectSize.x, itemPos.x + itemSize.x);
-    float y0 = max(rectPos.y, itemPos.y);
-    float y1 = min(rectPos.y + rectSize.y, itemPos.y + itemSize.y);
+    float2 pixelPos;
+    pixelPos.x = rectPos.x + In.vTexcoord.x * rectSize.x;
+    pixelPos.y = rectPos.y + (1.0f - In.vTexcoord.y) * rectSize.y;
 
-    float uMin = (x0 - rectPos.x) / rectSize.x;
-    float uMax = (x1 - rectPos.x) / rectSize.x;
-    float vMin = (y0 - rectPos.y) / rectSize.y;
-    float vMax = (y1 - rectPos.y) / rectSize.y;
-
-    vMin = 1.0f - vMin;
-    vMax = 1.0f - vMax;
-
-    if (In.vTexcoord.x >= min(uMin, uMax) && In.vTexcoord.x <= max(uMin, uMax) &&
-    In.vTexcoord.y >= min(vMin, vMax) && In.vTexcoord.y <= max(vMin, vMax))
+    if (pixelPos.x >= itemPos.x &&
+    pixelPos.x <= itemPos.x + itemSize.x &&
+    pixelPos.y >= itemPos.y &&
+    pixelPos.y <= itemPos.y + itemSize.y)
     {
         Color.rgb = float3(0.f, 0.f, 1.f);
     }
+
+    for (int i = 0; i < g_Count; ++i)
+    {
+        float2 trailTopLeft = g_Trail[i];
+        float2 trailCenter = trailTopLeft + itemSize / 2.0f;
+
+        float halfWidth = itemSize.x / 2.0f + 12.f;
+        float halfHeight = itemSize.y / 2.0f + 12.f;
+
+        if (pixelPos.x >= trailCenter.x - halfWidth &&
+        pixelPos.x <= trailCenter.x + halfWidth &&
+        pixelPos.y >= trailCenter.y - halfHeight &&
+        pixelPos.y <= trailCenter.y + halfHeight)
+        {
+            Color.rgb = float3(20.f, 100.f, 180.f) / 255.f;
+            break;
+        }
+    }
     
+    for (int j = 0; j < g_ChaseCount; ++j)
+    {
+        float2 ChaseTopLeft = g_ChaseTrail[j];
+        float2 ChaseCenter = ChaseTopLeft + itemSize / 2.0f;
+
+        float halfWidth = itemSize.x * 0.7f;
+        float halfHeight = itemSize.y * 0.7f;
+
+        if (pixelPos.x >= ChaseCenter.x - halfWidth &&
+        pixelPos.x <= ChaseCenter.x + halfWidth &&
+        pixelPos.y >= ChaseCenter.y - halfHeight &&
+        pixelPos.y <= ChaseCenter.y + halfHeight)
+        {
+            Color.rgb = float3(110.f, 5.f, 5.f) / 255.f;
+            break;
+        }
+    }
+
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_SpellLearnBooster(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 tex = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Color = tex;
+    
+    float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+    float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+    float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+    bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+    
+    if (g_iBoosterOn == 0 && g_iBoosterOff == 0)
+    {
+        if (inside1)
+        {
+            float4 tex1 = g_Texture1.Sample(DefaultSampler, Imagelocal);
+            Color = lerp(Color, tex1, tex1.a);
+        }
+    }
+    else if (g_iBoosterOn != 0 && g_iBoosterOff == 0)
+    {
+
+        float4 tex3 = g_Texture3.Sample(DefaultSampler, In.vTexcoord);
+        Color = lerp(Color, tex3, tex3.a);
+    }    
+    else if (g_iBoosterOn == 0 && g_iBoosterOff != 0)
+    {
+        float4 tex2 = g_Texture2.Sample(DefaultSampler, In.vTexcoord);
+    
+        tex2.rgb *= float3(1.f, 0.f, 0.f);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Color = tex;
+        
+        Color = lerp(Color, tex2, tex2.a);
+    }
+
     Color.a *= Alpha;
     Out.vColor = Color;
     return Out;
@@ -2414,6 +2496,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SpellLearnColor();
+    }
+
+    pass SpellLearnBooster
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SpellLearnBooster();
     }
 
     pass Enemy_Detection

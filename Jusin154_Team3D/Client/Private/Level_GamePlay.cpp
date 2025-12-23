@@ -266,8 +266,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 인혁
 	isReady_Background = false;
@@ -549,11 +549,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
 
 #endif // _DEBUG
 
-	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
+	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, true))) {
 		return E_FAIL;
 	}
 
@@ -573,16 +573,17 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+	CPlayer::PLAYERDESC playerDesc = {};
+	playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
+	playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &playerDesc))) {
 		return E_FAIL;
 
 	}
 	
-	/*for (_uint i = 0; i < 1; ++i) {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
 		return E_FAIL;
 	}
-	}*/
 
 	return S_OK;
 }

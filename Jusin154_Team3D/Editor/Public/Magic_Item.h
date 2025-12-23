@@ -39,8 +39,8 @@ private:
 
 	_float4 m_vUV{};
 	_uint	m_iArratCount{};
-	_float2 m_vImageSize1 = {};
-	_float2 m_vImagePos1 = {};
+	_float4 m_vImageposi1 = {};
+	_float4 m_vImageposi2 = {};
 
 public:
 	static CMagic_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

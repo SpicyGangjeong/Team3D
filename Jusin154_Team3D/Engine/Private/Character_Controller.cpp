@@ -151,7 +151,7 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 	m_bActive = false;
 	BodyOriginal.SetActive(true);
 
-	m_pGameInstance->Attach_Actor(*pDOActor); // DO 액터 활성화
+	m_pGameInstance->Attach_Actor(*pDOActor, m_pGameInstance->Get_CurrentLevelID()); // DO 액터 활성화
 
 	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose();
 	pDOActor->setGlobalPose(pxTransform);
@@ -252,7 +252,10 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 	return bHit;
 }
 
-
+_bool CCharacter_Controller::IsOnGround()
+{
+	return m_eBeforeCollisionFlags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN;
+}
 
 void CCharacter_Controller::Move(_float fTimeDelta)
 {

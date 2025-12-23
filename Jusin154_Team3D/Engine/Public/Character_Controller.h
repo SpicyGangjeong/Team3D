@@ -81,6 +81,7 @@ public:
 	void			Set_GravityAmount(_float Amount) { m_fGravity = Amount; }
 	void			Reset_GravityAmount() { m_fGravity = 0.450f; }
 	_float			Get_GravityAmount() { return m_fGravity; }
+	_bool			IsOnGround();
 
 private:
 	ACTOR					m_eBodyType = { ACTOR::END };

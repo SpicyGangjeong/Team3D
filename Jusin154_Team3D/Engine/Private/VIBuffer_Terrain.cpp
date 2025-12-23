@@ -393,9 +393,11 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 
 void CVIBuffer_Terrain::ConvertToHeightField(const _tchar* pStaticKey)
 {
+	PSX::PxHeightFieldDesc Desc{};
+	Desc.format = PSX::PxHeightFieldFormat::eS16_TM;
+
 	vector<PSX::PxHeightFieldSample> pxSamples = {};
 	pxSamples.resize(m_iNumVerticesZ * m_iNumVerticesX);
-
 	for (_uint iRow = 0; iRow < m_iNumVerticesZ; ++iRow) {
 		for (_uint iCol = 0; iCol < m_iNumVerticesX; ++iCol) {
 			_uint iIndex = iRow * m_iNumVerticesX + iCol;
@@ -411,11 +413,9 @@ void CVIBuffer_Terrain::ConvertToHeightField(const _tchar* pStaticKey)
 			pxSample.clearTessFlag();
 		}
 	}
+	Desc.nbRows		= m_iNumVerticesX;
+	Desc.nbColumns	= m_iNumVerticesZ;
 
-	PSX::PxHeightFieldDesc Desc{};
-	Desc.format = PSX::PxHeightFieldFormat::eS16_TM;
-	Desc.nbRows = m_iNumVerticesZ;
-	Desc.nbColumns = m_iNumVerticesX;
 
 	Desc.samples.data = pxSamples.data();
 	Desc.samples.stride = sizeof(PSX::PxHeightFieldSample);
@@ -424,9 +424,8 @@ void CVIBuffer_Terrain::ConvertToHeightField(const _tchar* pStaticKey)
 		assert(false);
 	}
 	else {
-		m_pGameInstance->RegistHeight(pStaticKey, Desc);
+		m_pGameInstance->RegistHeight(pStaticKey, Desc, m_pGameInstance->Get_NextLevelID());
 	}
-	
 }
 
 _bool CVIBuffer_Terrain::Picking(_fmatrix WorldMatrix, _float3* pOut)

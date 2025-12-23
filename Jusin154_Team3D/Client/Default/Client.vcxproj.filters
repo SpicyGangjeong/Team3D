@@ -680,6 +680,9 @@
     <ClInclude Include="..\Public\State_Skill2.h">
       <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\NPC_EleazarFig.h">
+      <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Transformation.h">
       <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
     </ClInclude>
@@ -688,6 +691,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\Avadakedavra.h">
       <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Slot.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Overlay.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_LookPointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_ChaserPointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Booster.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Fall.h">
+      <Filter>04.Mechanic\State\Focus\State_Fall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1431,11 +1458,38 @@
     <Filter Include="02.GameObjects\Effect\Effects\Transformation">
       <UniqueIdentifier>{87b1db75-938f-462f-a288-fe9c8d6c689e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\GateKeeper">
+      <UniqueIdentifier>{cef7b9f7-3bb3-4782-a1a8-09751fa538d8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Transformation\TransformationSide">
       <UniqueIdentifier>{064b5e2f-dcde-47fd-a43d-43e25800393d}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra">
       <UniqueIdentifier>{575f6ef3-7013-448a-b448-e94f1ddc5647}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
+      <UniqueIdentifier>{d9c0bcb6-64f6-4b58-a68d-ff04c91b9861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer">
+      <UniqueIdentifier>{61024044-17a9-45ed-a6f9-73385290846d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster">
+      <UniqueIdentifier>{b512f128-fcec-4db4-8cd2-08abfc56e000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay">
+      <UniqueIdentifier>{2af08f38-aff0-4632-acb8-492111ff88f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot">
+      <UniqueIdentifier>{dd7d2910-1d3d-42c4-9390-ac60685357ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\Behavior\NPC">
+      <UniqueIdentifier>{954ad10f-edc4-4dda-a2e1-741a418831e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\NPC">
+      <UniqueIdentifier>{b265ac30-97f5-4dac-bc6b-b11fba1c5ad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\State_Fall">
+      <UniqueIdentifier>{b85f80a2-d88e-4eb0-91af-da93b49bfa09}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2072,6 +2126,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\Avadakedavra.cpp">
       <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\NPC_EleazarFig.cpp">
+      <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Slot.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Overlay.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_LookPointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_ChaserPointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Booster.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Fall.cpp">
+      <Filter>04.Mechanic\State\Focus\State_Fall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

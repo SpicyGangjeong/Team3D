@@ -175,7 +175,7 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 	}
 
 
-	ComputeAnimation(m_iCurrentAnimIndex, 0);
+	ComputeAnimation(m_iCurrentAnimIndex, m_iIndexAnimPlayableMesh);
 
 	if (m_bIsFinishedAnim)
 	{
@@ -674,7 +674,7 @@ HRESULT CModel::Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIn
 
 	return S_OK;
 }
-HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix)
+HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix, _uint iLevel)
 {
 	m_iNumPhysXMeshes = m_iNumMeshes;
 
@@ -683,7 +683,7 @@ HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix)
 	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes, PreTransformMatrix);
 
 	for (_uint i = 0; i < m_iNumMeshes; ++i) {
-		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
+		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i], iLevel);
 	}
 	return S_OK;
 }
@@ -2233,12 +2233,27 @@ HRESULT CModel::Initialize(void* pArg)
 		Create_ParentSrv();
 		Create_BoneLocalSrv();
 
-		if (FAILED(Create_ComputeShaderLocal()))
+		if (FAILED(Create_ComputeShaderLocal())){
 			return E_FAIL;
+		}
 
-		if (FAILED(Create_ComputeShader()))
+		if (FAILED(Create_ComputeShader())){
 			return E_FAIL;
+		}
+
+		for (int i = 0; i < m_Meshes.size(); i++)
+		{
+			if (1 < m_Meshes[i]->Get_NumBone()) {
+				m_iIndexAnimPlayableMesh = i;
+				break;
+			}
+		}
+		if (-1 == m_iIndexAnimPlayableMesh) {
+
+			assert(false);
+		}
 	}
+
 
 
 	return S_OK;

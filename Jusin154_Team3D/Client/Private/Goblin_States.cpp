@@ -697,18 +697,6 @@ void CGoblin::Behavior_DeadEnter()
 
 	_bool bStrongerKnockDown = { false };
 
-	switch (m_eHitSpell)
-	{
-	case STATEANIM::KNOCKDOWN_FWD:
-		bStrongerKnockDown = true;
-		break;
-	case STATEANIM::TUMBLE2:
-		bStrongerKnockDown = true;
-		break;
-	default:
-		break;
-	}
-
 	_float fabsRadius = fabsf(m_fHitRadius);
 	_uint iState = { UINT_MAX };
 

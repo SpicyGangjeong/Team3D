@@ -100,7 +100,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pCollider_Manager) {
 		return E_FAIL;
 	}
-	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext);
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, EngineDesc.iNumLevels);
 	if (nullptr == m_pPhysX_Manager) {
 		return E_FAIL;
 	}
@@ -177,6 +177,7 @@ void CGameInstance::Clear_Resources(_uint iLevelIndex)
 	m_pObject_Manager->Clear(iLevelIndex);
 	m_pLight_Manager->Light_Clear(iLevelIndex);
 	m_pResource_Manager->Clear_LevelResources(iLevelIndex);
+	m_pPhysX_Manager->ClearScene(iLevelIndex);
 }
 
 _float CGameInstance::Random_Normal()
@@ -685,6 +686,11 @@ void CGameInstance::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x
 	return m_pRenderer->Render_PreShadow(ViewMatrix, ProjMatrix);
 }
 
+RENDER CGameInstance::Get_CurrentRenderPass()
+{
+	return m_pRenderer->Get_CurrentRenderPass();
+}
+
 HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
 {
 	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);
@@ -976,27 +982,27 @@ PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)
 	return m_pPhysX_Manager->Create_Material(vMatInfo);
 }
 
-void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh)
+void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh, _uint iLevel)
 {
-	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
+	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh, iLevel);
 }
 
-void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc)
+void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel)
 {
-	return m_pPhysX_Manager->RegistHeight(pName, Desc);
+	return m_pPhysX_Manager->RegistHeight(pName, Desc, iLevel);
 }
 
-PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
+PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel)
 {
-	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
+	return m_pPhysX_Manager->Add_DynamicActor(RigidBody, iLevel);
 	}
-PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
+PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel)
 {
-	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
+	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel);
 }
-PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
+PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel)
 {
-	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
+	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame, iLevel);
 }
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
@@ -1030,17 +1036,17 @@ void CGameInstance::ReleaseController(_uint iControllerIndex)
 {
 	m_pPhysX_Manager->ReleaseController(iControllerIndex);
 }
-void CGameInstance::Attach_Actor(PSX::PxActor& Actor)
+void CGameInstance::Attach_Actor(PSX::PxActor& Actor, _uint iLevel)
 {
-	m_pPhysX_Manager->Attach_Actor(Actor);
+	m_pPhysX_Manager->Attach_Actor(Actor, iLevel);
 }
-void CGameInstance::Detach_Actor(PSX::PxActor& Actor)
+void CGameInstance::Detach_Actor(PSX::PxActor& Actor, _uint iLevel)
 {
-	m_pPhysX_Manager->Detach_Actor(Actor);
+	m_pPhysX_Manager->Detach_Actor(Actor, iLevel);
 }
 void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
-	m_pPhysX_Manager->Detach_Actor(Actor);
+	m_pPhysX_Manager->Release_Actor(Actor);
 }
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
