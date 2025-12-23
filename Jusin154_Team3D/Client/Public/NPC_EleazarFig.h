@@ -7,6 +7,11 @@ NS_BEGIN(Client)
 
 class CNPC_EleazarFig final : public CUnit
 {
+public:
+	typedef struct tagNpcInitDesc {
+		_float4 vPos;
+		_float4 vRotQ;
+	}NPCDESC;
 protected:
 	CNPC_EleazarFig(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CNPC_EleazarFig(const CNPC_EleazarFig& Prototype);
@@ -20,12 +25,21 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
+	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
+	class CCallBack_NonPlayable_Behavior* m_pCallBack_Behavior = { nullptr };
+	class CCallBack_NonPlayable_HitReport* m_pCallBack_HitReport = { nullptr };
+	CUnit* m_pPlayerAllyUnit = { nullptr };
 
+
+	_bool					m_bEntered = { false };
+	_float2					m_vEnteringTimer = { 0.f, 1.f };
+	_float					m_fEncounterDistance = { 10.f };
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources() override;
+	_bool CastToPlayer();
 
 public:
 	static CNPC_EleazarFig* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
