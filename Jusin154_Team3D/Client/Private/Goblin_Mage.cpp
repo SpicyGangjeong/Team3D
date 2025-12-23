@@ -432,7 +432,7 @@ HRESULT CGoblin_Mage::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(g_iStaticLevel));
 	Get_PartObject<CEffectParts>()->Set_Visible(true);
 
 	return S_OK;

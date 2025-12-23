@@ -689,6 +689,9 @@
     <ClInclude Include="..\Public\TransformationSide.h">
       <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Avadakedavra.h">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\SpellLearn_Slot.h">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClInclude>
@@ -1461,6 +1464,9 @@
     <Filter Include="02.GameObjects\Effect\Effects\Transformation\TransformationSide">
       <UniqueIdentifier>{064b5e2f-dcde-47fd-a43d-43e25800393d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra">
+      <UniqueIdentifier>{575f6ef3-7013-448a-b448-e94f1ddc5647}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
       <UniqueIdentifier>{d9c0bcb6-64f6-4b58-a68d-ff04c91b9861}</UniqueIdentifier>
     </Filter>
@@ -2118,6 +2124,9 @@
     <ClCompile Include="..\Private\TransformationSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Avadakedavra.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\NPC_EleazarFig.cpp">
       <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
     </ClCompile>
