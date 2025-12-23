@@ -39,7 +39,7 @@ HRESULT CAvadakedavra::Initialize(void* pArg)
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
-	m_iSkillType = ENUM_CLASS(SKILL_TYPE::AVADA_KEDAVRA);
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
 
 	m_wstrEffectName = L"Avadakedavra";
 
@@ -102,73 +102,82 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 		return E_FAIL;
 
 
+	_vector vDirection = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+
+	/*완드 포지션*/
+
+	_vector vWandPos = pWand->Get_WorldPostion();
+
+	XMStoreFloat3(&m_vCameraLook, vDirection);
+
+	//_vector vStartPos = vWandPos;
+	XMStoreFloat4(&m_vStartPos, vWandPos);
+
+	{ /* 대상 위치 지정 */
+
+		m_pInfoInstance->Get_LockOnInfo(m_Info);
+
+		if (nullptr != m_Info.pUnit) {
+
+			XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
+
+			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
+		}
+		else {
+			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
+			XMStoreFloat4(&m_vTargetPos, vWandPos + vDirection * m_fLinearSpeed * 0.5f);
+		}
+	}
 
 
-	//_vector vDirection = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+	CEffectParts* pCircle_0 = Get_PartObject<CEffectParts>("Circle_0");
+	CEffectParts* pCircle_Blur = Get_PartObject<CEffectParts>("Circle_Blur");
+	CEffectParts* pCircle_1 = Get_PartObject<CEffectParts>("Circle_1");
+	CEffectParts* pCircle_Blur_Big = Get_PartObject<CEffectParts>("Circle_Blur_Big");
 
-	///*완드 포지션*/
+	CEffectParts* pHit_Light = Get_PartObject<CEffectParts>("Hit_Light");
+	CEffectParts* pHit_PT_G = Get_PartObject<CEffectParts>("Hit_PT_G");
+	CEffectParts* pHit_PT_G_Small = Get_PartObject<CEffectParts>("Hit_PT_G_Small");
+	CEffectParts* pRay_G = Get_PartObject<CEffectParts>("Ray_G");
+	CEffectParts* pSmoke_Black = Get_PartObject<CEffectParts>("Smoke_Black");
 
-	//_vector vWandPos = pWand->Get_WorldPostion();
+	pCircle_0->Get_Component<CTransform>()->Set_State(STATE::POSITION , XMLoadFloat4(&m_vTargetPos));
+	pCircle_Blur->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
+	pHit_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
+	pHit_PT_G->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
+	pSmoke_Black->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 
-	//pStupefy_PJ0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
-	//pStupefy_PJ1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
-
-	//m_pStupefy_PJ_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
-
-	//pStupefy_Light_Long->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
-	//pBodyFlare->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
-	////
-	///*몸통 포지션*/
-
-	//_vector vPlayerPos = m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position() + vDirection * -0.1f;
-
-	//pWand_Distortion->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerPos);
-	///*발 포지션*/
-
-	//_vector vPlayerFootPos = m_pOwner->Get_Component<CCharacter_Controller>()->Get_FootPosition();
-
-	//pStupefy_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerFootPos + XMVectorSet(0.f ,1.f ,0.f ,0.f));
+	pCircle_1->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
+	pCircle_Blur_Big->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
+	pHit_PT_G_Small->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos) - 1.f * XMLoadFloat3(&m_vCameraLook));
 
 
+	pCircle_0->Set_Visible(true);
+	pCircle_Blur->Set_Visible(true);
+	pHit_Light->Set_Visible(true);
+	pHit_PT_G->Set_Visible(true);
+	pSmoke_Black->Set_Visible(true);
+	pRay_G->Set_Visible(true);
+	pHit_PT_G_Small->Set_Visible(true);
 
 
-	//XMStoreFloat3(&m_vCameraLook, vDirection);
+	pCircle_1->Set_Visible(true);
+	pCircle_Blur_Big->Set_Visible(true);
 
-	////_vector vStartPos = vWandPos;
-	//XMStoreFloat4(&m_vStartPos, vStartPos);
+	/* RAY 월드 구성하기  */
 
-	//{ /* 대상 위치 지정 */
+	_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - vWandPos)) * 0.5f;
 
-	//	m_pInfoInstance->Get_LockOnInfo(m_Info);
-	//	if (nullptr != m_Info.pUnit) {
+	CTransform* pRay_Transform = pRay_G->Get_Component<CTransform>();
 
-	//		XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
+	_vector vRight = XMVector3Normalize(XMLoadFloat3(&m_vCameraLook)) * fLength * -1.f;
+	_vector vUp = XMVector3Normalize( XMVector3Cross(XMVectorSet(0.f, 0.f, 1.f, 0.f) , vRight));
+	_vector vLook = XMVector3Normalize(XMVector3Cross(vRight , vUp));
+	_vector vPos = vWandPos;
 
-	//		XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
-	//	}
-	//	else {
-	//		// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
-	//		XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);
-	//	}
-	//}
+	_matrix PJ_WorldMat = { vRight , vUp ,vLook , vPos };
 
-
-	/* PJ 월드 구성하기  */
-
-	//_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - vPlayerPos));
-
-	//CTransform* pPJ0_Transform = pStupefy_PJ0->Get_Component<CTransform>();
-	//CTransform* pPJ1_Transform = pStupefy_PJ1->Get_Component<CTransform>();
-
-	//_vector vUp = XMVector3Normalize(vDirection) * fLength;
-	//_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 0.f, 1.f, 0.f) , vUp));
-	//_vector vLook = XMVector3Normalize(XMVector3Cross(vUp, vRight));
-	//_vector vPos = vPlayerPos;
-
-	//_matrix PJ_WorldMat = { vRight , vUp ,vLook , vPos };
-
-	//pPJ0_Transform->Set_WorldMatrix(PJ_WorldMat);
-	//pPJ1_Transform->Set_WorldMatrix(PJ_WorldMat);
+	pRay_Transform->Set_WorldMatrix(PJ_WorldMat);
 
 	return S_OK;
 }
@@ -223,20 +232,7 @@ void CAvadakedavra::OnCollision(CGameObject* pOther, void* pDesc)
 
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
-	CEffectParts* pStupefy_Hit_PT = Get_PartObject<CEffectParts>("Stupefy_Hit_PT");
-	CEffectParts* pStupefy_Circle0 = Get_PartObject<CEffectParts>("Stupefy_Circle0");
-	CEffectParts* pHitFlare = Get_PartObject<CEffectParts>("HitFlare");
-	
 
-	pStupefy_Hit_PT->Set_Visible(true);
-	pStupefy_Hit_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
-	pStupefy_Circle0->Set_Visible(true);
-	pStupefy_Circle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
-	pHitFlare->Set_Visible(true);
-	pHitFlare->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
-
-
-	//
 	//m_pProjectile0->Set_Visible(false);
 	//m_pProjectile1->Set_Visible(false);
 

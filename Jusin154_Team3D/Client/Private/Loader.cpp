@@ -149,6 +149,7 @@
 #include "BombardSide.h"
 #include "LeviosoSide.h"
 #include "TransformationSide.h"
+#include "AvadakedavraSide.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
@@ -158,6 +159,7 @@
 #include "Lumos.h"
 #include "Accio.h"
 #include "Blink.h"
+#include "Avadakedavra.h"
 #include "Goblin_Teleport.h"
 
 
@@ -1992,6 +1994,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CAvadakedavraSide>(g_iStaticLevel, CAvadakedavraSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CTrollSwing>(g_iStaticLevel, CTrollSwing::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2058,6 +2064,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CTransformation>(g_iStaticLevel, CTransformation::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CAvadakedavra>(g_iStaticLevel, CAvadakedavra::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

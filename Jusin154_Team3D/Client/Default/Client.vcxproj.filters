@@ -691,7 +691,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Avadakedavra.h">
       <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\SpellLearn_Slot.h">
       <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClInclude>
@@ -715,6 +715,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Fall.h">
       <Filter>04.Mechanic\State\Focus\State_Fall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AvadakedavraSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1466,7 +1469,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra">
       <UniqueIdentifier>{575f6ef3-7013-448a-b448-e94f1ddc5647}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
       <UniqueIdentifier>{d9c0bcb6-64f6-4b58-a68d-ff04c91b9861}</UniqueIdentifier>
     </Filter>
@@ -1490,6 +1493,9 @@
     </Filter>
     <Filter Include="04.Mechanic\State\Focus\State_Fall">
       <UniqueIdentifier>{b85f80a2-d88e-4eb0-91af-da93b49bfa09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide">
+      <UniqueIdentifier>{f9c3f711-4032-4455-9d70-b81c5320f8c8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2126,7 +2132,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Avadakedavra.cpp">
       <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\NPC_EleazarFig.cpp">
       <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
     </ClCompile>
@@ -2153,6 +2159,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Fall.cpp">
       <Filter>04.Mechanic\State\Focus\State_Fall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AvadakedavraSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

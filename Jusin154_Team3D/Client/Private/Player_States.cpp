@@ -2482,9 +2482,18 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_ENTER];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		break;
-	case ENUM_CLASS(SKILL_TYPE::AVADA_KEDAVRA):
+	case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
 		pairAnimInfo = m_Animation[STATEANIM::AVADA_KEDAVRA];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::AVADAKEDAVRA, this); },
+			0.45f);
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::AVADAKEDAVRA_SIDE, Get_PartObject<CWand>()); },
+			0.f);
+
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LUMOS):
 		if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)

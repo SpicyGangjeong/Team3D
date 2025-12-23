@@ -8,12 +8,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CAvadakedavra final : public CEffect_Container
+class CAvadakedavraSide final : public CEffect_Container
 {
 private:
-	CAvadakedavra(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAvadakedavra(const CAvadakedavra& rhs);
-	virtual ~CAvadakedavra() = default;
+	CAvadakedavraSide(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAvadakedavraSide(const CAvadakedavraSide& rhs);
+	virtual ~CAvadakedavraSide() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -30,18 +30,20 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
-
 private:
-	class  CInfoInstance*			  m_pInfoInstance = { nullptr };
-private:
-	_wstring						  m_wstrEffectName = {};
+	_wstring			m_wstrEffectName = {};
 
-	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
-	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
-	_float							  m_fLinearSpeed = 10.f;
-	_float3							  m_vCameraLook = {};
+	_bool				m_isParticleEnd = {};
+	_bool				m_isTrailEnd = {};
+	_float4x4			m_TrailStopMat = {};
+
+	class CEffectParts* m_pWandLight = { nullptr };
+	class CTrailObject* m_pWandTrail = { nullptr };
+	class CEffectParts* m_pWandParticle = { nullptr };
+	class CEffectParts* m_pWandGoo = { nullptr };
+
 public:
-	static CAvadakedavra* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CAvadakedavraSide* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 #ifdef _DEBUG
