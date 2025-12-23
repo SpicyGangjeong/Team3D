@@ -341,8 +341,9 @@ HRESULT CInstance_Model::Load_InstanceModel(INSTANCE_DESC InstanceDesc)
 
 	m_InstanceDesc = InstanceDesc;
 
-	if (m_InstanceDesc.fTimeMult >= 0)
+	if (m_InstanceDesc.fTimeMult <= 0)
 		m_InstanceDesc.fTimeMult = 1.f;
+
 
 	Change_NumInstance();
 
@@ -357,8 +358,9 @@ HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
 		return E_FAIL;
 	}
 
-	if (m_InstanceDesc.fTimeMult >= 0)
+	if (m_InstanceDesc.fTimeMult <= 0)
 		m_InstanceDesc.fTimeMult = 1.f;
+
 
 	Change_NumInstance();
 

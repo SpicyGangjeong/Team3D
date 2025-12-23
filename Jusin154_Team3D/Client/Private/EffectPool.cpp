@@ -14,6 +14,8 @@
 #include "BombardSide.h"
 #include "LeviosoSide.h"
 #include "DecendoSide.h"
+#include "AvadakedavraSide.h"
+#include "TransformationSide.h"
 
 #include "NomalJapSide.h"
 #include "Lumos.h"
@@ -39,7 +41,8 @@
 #include "LightningSide.h"
 #include "Blink.h"
 #include "Transformation.h"
-#include "TransformationSide.h"
+#include "Avadakedavra.h"
+
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -78,7 +81,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 #endif // 
 #ifdef 진우
 	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
+	m_isActiveMonsterEffectCreate = false;
 #endif // 
 #ifdef 기무리
 	m_isActiveEffectCreate = true;
@@ -428,6 +431,24 @@ HRESULT CEffectPool::Ready_Effect()
 		CTransformationSide* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CTransformationSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::AVADAKEDAVRA, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CAvadakedavra* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CAvadakedavra>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::AVADAKEDAVRA_SIDE, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CAvadakedavraSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CAvadakedavraSide>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;
