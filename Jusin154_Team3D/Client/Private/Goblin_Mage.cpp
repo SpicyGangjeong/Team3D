@@ -317,6 +317,7 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::JAP):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			m_fTumbleTimer = 0.f;
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);

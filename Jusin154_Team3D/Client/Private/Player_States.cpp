@@ -22,6 +22,7 @@
 #include "State_Blink.h"
 #include "State_Jump.h"
 #include "State_Land.h"
+#include "State_Fall.h"
 #include "State_Slide.h"
 #include "State_Move.h"
 #include "State_Combat.h"
@@ -821,6 +822,9 @@ void CPlayer::Behavior_LandEnter()
 	{
 		pairAnimInfo = m_Animation[STATEANIM::LAND_TO_JOG];
 	}
+	else {
+		pairAnimInfo = m_Animation[STATEANIM::LAND];
+	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -854,9 +858,30 @@ void CPlayer::Behavior_LandExit()
 	m_fGravityAmount = 0.f;
 }
 
+void CPlayer::Behavior_FallEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+	m_pFSM->Enable_State(FSMSTATE::FALL);
+	pairAnimInfo = m_Animation[STATEANIM::FALL_LOOP];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_FallExitCheck(_float fTimeDelta)
+{
+	
+		m_pFSM->Change_State(FSMSTATE::LAND);
+		return E_FAIL;
+	
+	return S_OK;
+}
+
+void CPlayer::Behavior_FallExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::FALL);
+}
+
 void CPlayer::Behavior_DodgeEnter()
 {
-	// 혹시 @@ to Dodge 있으면 여기에
 	m_pFSM->Enable_State(FSMSTATE::DODGE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::DODGE];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.3f);
@@ -1039,11 +1064,8 @@ void CPlayer::Behavior_CombatEnter()
 		return;
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Z)) {
-		if (nullptr != m_pGrapInteractive) {
-			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
-			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
-		}
-		else if (nullptr != m_LockOnInfo.pInteractive) {
+
+		if (nullptr != m_LockOnInfo.pInteractive) {
 			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 			m_pGrapInteractive = m_LockOnInfo.pInteractive;
@@ -1094,23 +1116,16 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Z)) {
-
-			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
-			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-
-			if (nullptr != m_pGrapInteractive) {
-				m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
-				pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			}
-			else if (nullptr != m_LockOnInfo.pInteractive) {
+			if (nullptr != m_LockOnInfo.pInteractive) {
 				m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 				pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 				m_pGrapInteractive = m_LockOnInfo.pInteractive;
 				SAFE_ADDREF(m_pGrapInteractive);
 				m_pGrapInteractive->Set_KinematicFlag(true);
 				m_vGrapInteratableLerp.x = 0.f;
+			}
+			else {
+				return S_OK;
 			}
 			Add_Event(pairAnimInfo.first,
 				[this]() { m_bLookAt = true; },
@@ -1171,6 +1186,7 @@ void CPlayer::Behavior_LightAttackEnter()
 	pair<_uint, _bool> pairAnimInfo;
 	m_pModelCom->Set_BlendDuration(0.1f);
 	m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
+	_float fRatio = 0.07f;
 	
 	if (m_LockOnInfo.pUnit)
 	{
@@ -1214,6 +1230,7 @@ void CPlayer::Behavior_LightAttackEnter()
 		else
 		{
 			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_180_R];
+			fRatio = 0.18f;
 		}
 	}
 	else {
@@ -1226,7 +1243,7 @@ void CPlayer::Behavior_LightAttackEnter()
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iIndex);  },
-		0.07f);
+		fRatio);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  },
@@ -1335,6 +1352,8 @@ void CPlayer::Behavior_LightAttackExit()
 
 void CPlayer::Behavior_SpellEnter()
 {
+	if (m_bSpellHit)
+		return;
 	pair<_uint, _bool> pairAnimInfo;
 
 	m_pModelCom->Set_BlendDuration(0.1f);
@@ -1382,13 +1401,15 @@ void CPlayer::Behavior_SpellEnter()
 			pairAnimInfo = m_Animation[STATEANIM::SPELL_180_R];
 			fRatio = 0.23f;
 		}
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}
 	else {
-		pairAnimInfo = m_Animation[STATEANIM::SPELL];
 		fRatio = 0.2f;
+		pairAnimInfo = m_Animation[STATEANIM::SPELL];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}
 
-	if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != -1)
+	if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != 0)
 	{
 		Add_SpellEvent(pairAnimInfo.first,fRatio);
 	}
@@ -1399,8 +1420,8 @@ void CPlayer::Behavior_SpellEnter()
 		Add_Event(pairAnimInfo.first,
 			[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },
 			0.2f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 }
 
 HRESULT CPlayer::Behavior_SpellExitCheck()
@@ -1421,20 +1442,14 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 
 		if (iCurr >= iStart && iCurr < iStart + 3)
 		{
-			if (fRatio >= 0.15f)
+			if (fRatio >= 0.2f)
 			{
 				_uint iNext = iCurr + 1;
 				pairAnimInfo = m_Animation[STATEANIM::SPELL];
 				pairAnimInfo.first = iNext;
-
-				Add_Event(pairAnimInfo.first,
-					[this]() {m_bLookAt = true;
-					},
-					0.01f);
-
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-				if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != -1)
+				if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != 0)
 				{
 					_float fAttackRatio = 0.2f;
 					if (iNext - iStart == 2) {
@@ -1452,7 +1467,30 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 					pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
 					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true);
 				}
+
+				if (iCurr != iStart + 2)
+				{
+					Add_Event(pairAnimInfo.first,
+						[this]() {m_bLookAt = true;
+						},
+						0.01f);
+				
+				}
+				else {
+					m_bLookAt = false;
+				}
+
+		
 			}
+		}
+		else if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell()))
+		{
+			if (fRatio >= 0.3f)
+			{
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			return E_FAIL;
+			}
+			return S_OK;
 		}
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
@@ -1467,41 +1505,20 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
-
-	if (m_bSpellHit)
-	{
-		if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
-		{
-			m_bLookAt = true;
-			switch (m_eSpell)
-			{
-			case ENUM_CLASS(SKILL_TYPE::ACCIO):
-				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
-				break;
-			case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
-				break;
-			default:
-				m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
-				return S_OK;
-				break;
-			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		}
-	}
-
-
-	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell()))
+	else if (SUCCEEDED(InputAction()))
 	{
 		if (fRatio >= 0.3f)
 		{
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 			return E_FAIL;
 		}
+		return S_OK;
 	}
 
+	Play_SpellHitAnim();
+
 	if (SUCCEEDED(InputMove())) {
-		if (fRatio >= 0.3f) {
+		if (fRatio >= 0.4f) {
 			m_pFSM->Change_State(FSMSTATE::MOVE);
 			return E_FAIL;
 		}
@@ -1650,7 +1667,7 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 					Add_Event(pairAnimInfo.first,
 						[this]() {m_bLookAt = true;
 						},
-						0.01f);
+						0.8f);
 				}
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::PARRY_180];
@@ -2373,7 +2390,7 @@ void CPlayer::Throwing_Interactive()
 {
 	if (nullptr == m_pGrapInteractive) {
 		return;
-	} _vector vDir = {}; _float vDistance = 60.f;
+	} _vector vDir = {}; _float vDistance = 100.f;
 	CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
 	if (nullptr != m_LockOnInfo.pUnit) {
 		vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
@@ -2459,9 +2476,15 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		break;
 	case ENUM_CLASS(SKILL_TYPE::DIFFINDO):
 		pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::DISILLUSIONMENT):
 		pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_ENTER];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::AVADA_KEDAVRA):
+		pairAnimInfo = m_Animation[STATEANIM::AVADA_KEDAVRA];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LUMOS):
 		if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
@@ -2511,10 +2534,46 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },
 			0.2f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		break;
 	}
 }
 
+void CPlayer::Play_SpellHitAnim()
+{
+	if (m_bSpellHit)
+	{
+		pair<_uint, _bool> pairAnimInfo;
+		if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
+		{
+			m_bLookAt = true;
+			switch (m_eSpell)
+			{
+			case ENUM_CLASS(SKILL_TYPE::ACCIO):
+				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
+				break;
+			case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
+				break;
+			}
+			m_pFSM->Change_State(FSMSTATE::SPELL);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_bSpellHit = false;
+
+			if (m_pModelCom->IsFinishedAnim())
+			{
+				if (SUCCEEDED(InputMove()))
+				{
+					m_pFSM->Change_State(FSMSTATE::MOVE);
+				}
+				else
+				{
+					m_pFSM->Change_State(FSMSTATE::IDLE);
+				}
+			}
+		}
+	}
+}
 
 void CPlayer::Add_FSM()
 {
@@ -2578,6 +2637,17 @@ void CPlayer::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_LandExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_LandExit(); };
 		m_States.emplace(FSMSTATE::LAND, CState_Land::Create(&Desc));
+	}
+
+	{
+		CState_Fall::STATE_FALL_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_FallEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_FallExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_FallExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::FALL, CState_Fall::Create(&Desc));
 	}
 	{
 		CState_Dodge::STATE_DODGE_DESC Desc{};
@@ -2927,6 +2997,9 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::LAND] = { 259,false }; // 259
 	m_Animation[STATEANIM::LAND_TO_JOG] = {247,false};
 	m_Animation[STATEANIM::LAND_TO_SPRINT] = { 249 ,false};
+	m_Animation[STATEANIM::LAND_HARD] = { 255 ,false };
+	m_Animation[STATEANIM::LAND_MID] = { 257 ,false };
+	m_Animation[STATEANIM::LAND_SOFT] = { 259 ,false };
 
 	m_Animation[STATEANIM::SLIDE_STOP_R] = { 568,false };
 	m_Animation[STATEANIM::SLIDE_START_R] = { 566,false };
@@ -2961,6 +3034,8 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::DISILLUSION_ENTER] = { 585,false };
 	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 586,false };
 	m_Animation[STATEANIM::ANCIENT_THROW] = { 919,false };
+	m_Animation[STATEANIM::AVADA_KEDAVRA] = { 863,false };
+
 
 	m_Animation[STATEANIM::ANCIENT_LIGHTNING] = { 1001,false }; // 859
 
@@ -3050,6 +3125,8 @@ void CPlayer::Set_Anim()
 
 	//874
 	//1277 1281
+
+	//255 하드 257 중간 259 소프트
 }
 
 
