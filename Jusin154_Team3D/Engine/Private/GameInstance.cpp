@@ -1044,9 +1044,9 @@ void CGameInstance::Detach_Actor(PSX::PxActor& Actor, _uint iLevel)
 {
 	m_pPhysX_Manager->Detach_Actor(Actor, iLevel);
 }
-void CGameInstance::Release_Actor(PSX::PxActor& Actor, _uint iLevel)
+void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
-	m_pPhysX_Manager->Detach_Actor(Actor, iLevel);
+	m_pPhysX_Manager->Release_Actor(Actor);
 }
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {

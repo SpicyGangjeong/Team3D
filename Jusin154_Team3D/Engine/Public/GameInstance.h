@@ -223,7 +223,7 @@ public:
 	void				ReleaseController(_uint iControllerIndex);
 	void				Attach_Actor(PSX::PxActor& Actor, _uint iLevel);
 	void				Detach_Actor(PSX::PxActor& pActor, _uint iLevel);
-	void				Release_Actor(PSX::PxActor& Actor, _uint iLevel);
+	void				Release_Actor(PSX::PxActor& Actor);
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 #ifdef EDITOR_PROJECT
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);

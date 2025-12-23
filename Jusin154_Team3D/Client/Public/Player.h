@@ -7,6 +7,11 @@ NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
+public:
+	typedef struct tagPlayerInitDesc {
+		_float4 vPos;
+		_float4 vRotQ;
+	}PLAYERDESC;
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
