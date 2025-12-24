@@ -1167,6 +1167,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
  
     return Out;
 }
+
 PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
@@ -1276,37 +1277,8 @@ PS_OUT_SSAO_BLUR PS_SSAO_BLUR(PS_IN In)
     return Out;
 }
 
-struct PS_OUT_DECAL
-{
-    float4 vDiffuse : SV_TARGET0;
-};
 
-PS_OUT_DECAL PS_DECAL(PS_IN In)
-{
-    PS_OUT_DECAL Out;
 
-    float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
-
-    float fViewZ = vDepthDesc.y * g_fFar;
-    
-    
-    float4 vPosition, vPreShadowPosition;
-    
-    /* (로컬위치 * 월드 * 뷰 * 투영 / w) -> (로컬위치 * 월드)   */
-    vPosition.x = In.vTexcoord.x * 2.f - 1.f;
-    vPosition.y = In.vTexcoord.y * -2.f + 1.f;
-    vPosition.z = vDepthDesc.x;
-    vPosition.w = 1.f;
-    
-    vPosition = vPosition * fViewZ;
-    
-    vPosition = mul(vPosition, g_invmatProj);
-    vPosition = mul(vPosition, g_invMatView);
-    vPreShadowPosition = vPosition;
-    
-    
-    return Out;
-}
 technique11 DefaultTechnique
 {
     pass DebugPass // 0
@@ -1520,15 +1492,5 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MOTIONBLUR_TENTSAMPLE();
-    }
-
-    pass DecalPass // 22
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_DECAL();
     }
 }

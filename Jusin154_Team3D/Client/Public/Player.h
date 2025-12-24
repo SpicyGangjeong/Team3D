@@ -7,6 +7,18 @@ NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
+	enum class PLAYER_MESH_ORDER {
+		ETHEREAL_HOT_SPINE,
+		ETHEREAL_HOT_WINGS,
+		ETHEREAL_HOT_ARMS,
+		ETHEREAL_HOT_SHELL,
+		ETHEREAL_AURA,
+		ETHEREAL_EYES,
+		ETHEREAL_WINGS,
+		WINGS,
+		BODY,
+		END
+	};
 public:
 	typedef struct tagPlayerInitDesc {
 		_float4 vPos;

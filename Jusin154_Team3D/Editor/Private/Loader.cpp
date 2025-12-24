@@ -2631,6 +2631,50 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_GerboldOlivander_Model")
 	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_Playable_Model")
+	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_AvadaKedavra.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_AvadaKedavra_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Bm.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Bm_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Broom.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Broom_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Cmbt.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Cmbt_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Lightning.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Lightning_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Protego.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Protego_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Rct.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Rct_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Sneak.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Sneak_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Spawn.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Spawn_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Spell_Learning.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Spell_Learning_Model")
+	//));
 
 
 	for (auto& job : futures) {
@@ -2766,6 +2810,17 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Rift_Veins_N.dds"), 0)))) {
 		return E_FAIL;
 	}
+	/* Decal_Fade */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_Fade"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_Noise08_D.png"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_MaskNoise */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_MaskNoise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_TankMoteNoiseVinceTest_D.png"), 0)))) {
+		return E_FAIL;
+	}
+	
 
 	/* Terrain_Diffuse */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Diffuse"),
@@ -3396,69 +3451,69 @@ if(bHogwartLoad)
 
 
 #pragma region DUNGEON
-///* Cave Wall */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Wall",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-///* Props */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Props",
-//		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-///* Rocks */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Cavern_Dungeon\\Mesh\\Rocks",
-//		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-//
-///*Sanctum_Dungeon_Floors */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ArenaFloor",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-///*Sanctum_Dungeon_BoH_Area5_Scaffolding */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BoH_Area5_Scaffolding",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-//
-///*Sanctum_Dungeon_Center_Structure_AnteChamber */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\AnteChamber",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-//
-///*Sanctum_Dungeon_Center_Structure_Core */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\Core",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-//
-///*Sanctum_Dungeon_ConjuredDragonAttackZones */ // 바닥 충돌용
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ConjuredDragonAttackZones",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-//
-///*Sanctum_Dungeon_Rock_Barriers */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Rock_Barriers",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-///*Sanctum_Dungeon_Rock_SM_Repository_FloatingGround */ //평평한 작은돌
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\SM_Repository_FloatingGround",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-///*Sanctum_Dungeon_Rock_SM_Repository_Stage3MoveableRocks*/  // 채우기용
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Stage3MoveableRocks",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-///*Sanctum_Dungeon_Rock_Interactables*/ // 입구쪽
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Interactables",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-//
-///*Sanctum_Dungeon_Rock_SM_Repository_BreakingRocks*/ // 큰돌
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BreakingRocks\\LG_E",
-//		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-//		return E_FAIL;
-//
-///*Sanctum_Dungeon_Rock_Main*/ // 기본 모델들
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository",
-//	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-//	return E_FAIL;
+/* Cave Wall */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Wall",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/* Props */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Props",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/* Rocks */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Cavern_Dungeon\\Mesh\\Rocks",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Floors */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ArenaFloor",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/*Sanctum_Dungeon_BoH_Area5_Scaffolding */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BoH_Area5_Scaffolding",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Center_Structure_AnteChamber */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\AnteChamber",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Center_Structure_Core */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Center_Structure\\Core",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_ConjuredDragonAttackZones */ // 바닥 충돌용
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\ConjuredDragonAttackZones",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Rock_Barriers */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Rock_Barriers",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/*Sanctum_Dungeon_Rock_SM_Repository_FloatingGround */ //평평한 작은돌
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\SM_Repository_FloatingGround",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/*Sanctum_Dungeon_Rock_SM_Repository_Stage3MoveableRocks*/  // 채우기용
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\Stage3MoveableRocks",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+/*Sanctum_Dungeon_Rock_Interactables*/ // 입구쪽
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Interactables",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Rock_SM_Repository_BreakingRocks*/ // 큰돌
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository\\BreakingRocks\\LG_E",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+/*Sanctum_Dungeon_Rock_Main*/ // 기본 모델들
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
 
 #pragma endregion
 
