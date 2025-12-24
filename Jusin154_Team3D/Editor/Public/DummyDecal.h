@@ -10,12 +10,12 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CDummy_Cube final : public CGameObject
+class CDummyDecal final : public CGameObject
 {
 private:
-	CDummy_Cube(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CDummy_Cube(const CDummy_Cube& rhs);
-	virtual ~CDummy_Cube() = default;
+	CDummyDecal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CDummyDecal(const CDummyDecal& rhs);
+	virtual ~CDummyDecal() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -24,10 +24,20 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CModel*			m_pModelCom = { nullptr };
-	CShader*		m_pShaderCom = { nullptr };
-	CTexture*		m_pTextureCom = { nullptr };
+	CShader*			m_pShaderCom = { nullptr };
+	CModel*				m_pModelCom = { nullptr };
+	CTexture*			m_pMaskTextureCom = { nullptr };
+	CTexture*			m_pNormalTextureCom = { nullptr };
+	CTexture*			m_pSurfaceTextureCom = { nullptr };
 
+	_float				m_fNormalThreshold = {};
+
+	_float				m_fWinSizeX = {};
+	_float				m_fWinSizeY = {};
+
+	_float4				m_vMaskRed = {};
+	_float4				m_vMaskGreen = {};
+	_float4				m_vMaskBlue = {};
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -36,7 +46,7 @@ private:
 	virtual HRESULT Bind_ShaderResources() override;
 
 public:
-	static CDummy_Cube* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CDummyDecal* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
