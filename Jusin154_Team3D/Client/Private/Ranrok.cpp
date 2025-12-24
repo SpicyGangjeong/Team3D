@@ -184,7 +184,8 @@ HRESULT CRanrok::Render()
 		hr = Render_Nonblend();
 	}
 	else if (RENDER::BLEND == eCurrentPass) {
-		hr = Render_Blend();
+		//hr = Render_Blend();
+		hr = S_OK;
 	}
 	return hr;
 }
@@ -216,7 +217,8 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 			return E_FAIL;
 		}
 
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -517,15 +519,22 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		m_iCurrentFlow = 0;
 
 	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+	_vector NextTarget;
+	if (m_iCurrentPoint + 1 <= m_Points[m_iCurrentFlow].size())
+	{
+		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
+	}
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
-	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	_float Speed = 50.f;
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
-	GUI::Text("Dist %.2f", fDist);
+
 	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 	{
-		if (fDist < 10.f)
+		if (fDist < 15.f)
 		{
 			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 			{
@@ -537,7 +546,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 			return;
 		}
 	}
-	else if (fDist < 10.f)
+	else if (fDist < 50.f)
 	{
 		if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 		{
@@ -549,38 +558,9 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		return;
 	}
 
-	//_float4x4 CurMat, TargetMat, LerpMat;
+	m_pTransformCom->LookAt_Lerp(Target, fTimeDelta, 1.f);
 
-	//XMStoreFloat4x4(&CurMat,XMMatrixTranslationFromVector(CurPos));
-
-	//XMStoreFloat4x4(&TargetMat,XMMatrixTranslationFromVector(Target));
-
-	//_float fLerpRatio = fTimeDelta * 2.f;
-	//fLerpRatio = min(fLerpRatio, 1.f);
-
-	//CMyTools::MatrixLerp(&CurMat, &TargetMat, LerpMat, fLerpRatio);
-
-	//_vector vNextPos = XMVectorSet(LerpMat._41, LerpMat._42, LerpMat._43, 1.f);
-
-
-	//m_pTransformCom->Set_WorldMatrix(LerpMat);
-
-	//m_pCharacter_Controller->Set_Position(vNextPos);
-
-	static _vector vMoveDir = m_pTransformCom->Get_State(STATE::LOOK);
-
-	_vector vDir = XMVector3Normalize(Target - CurPos);
-
-	vMoveDir = XMVectorLerp(vMoveDir, vDir, fTimeDelta * 2.f);
-	vMoveDir = XMVector3Normalize(vMoveDir);
-
-	m_pTransformCom->LookAt_Horizontal_Lerp(CurPos + vMoveDir, fTimeDelta, 1.f);
-
-	_float Speed = 35.f;
-	m_pCharacter_Controller->Set_Position(
-		CurPos + vMoveDir * Speed * fTimeDelta
-	);
-
+	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
 }
 
 void CRanrok::AroundPoint(_float fTimeDelta)
@@ -719,8 +699,6 @@ void CRanrok::Describe_Entity()
 
 		GUI::Text("Degree %.2f", m_fDegree);
 		GUI::Text("CurrFlow %d", m_iCurrentFlow);
-
-
 
 		_float3 Pos;
 		XMStoreFloat3(&Pos, Get_WorldPostion());

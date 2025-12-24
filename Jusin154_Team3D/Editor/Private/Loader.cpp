@@ -2479,6 +2479,12 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc_AvadaKedavra.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Npc_Model")
+	));
+
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin",XMMatrixIdentity(),
 		TEXT("Prototype_Component_Wand_Model")

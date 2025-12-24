@@ -229,7 +229,7 @@ void CAction_Panel::Use_Spell(_int Index)
 	if (m_fTime >= 0.f)
 		return;
 
-	m_fTime = 1.f;
+	m_fTime = 0.5f;
 	switch (Index)
 	{
 	case 1:

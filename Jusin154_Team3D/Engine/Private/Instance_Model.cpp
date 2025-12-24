@@ -341,6 +341,10 @@ HRESULT CInstance_Model::Load_InstanceModel(INSTANCE_DESC InstanceDesc)
 
 	m_InstanceDesc = InstanceDesc;
 
+	if (m_InstanceDesc.fTimeMult <= 0)
+		m_InstanceDesc.fTimeMult = 1.f;
+
+
 	Change_NumInstance();
 
 	return S_OK;
@@ -353,6 +357,10 @@ HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
 	if (!ReadFile(hFile, &m_InstanceDesc, sizeof(INSTANCE_DESC), &dwByte, nullptr)) {
 		return E_FAIL;
 	}
+
+	if (m_InstanceDesc.fTimeMult <= 0)
+		m_InstanceDesc.fTimeMult = 1.f;
+
 
 	Change_NumInstance();
 
@@ -552,7 +560,7 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 	{
 		CS_PARTICLE_DESC* pDesc = static_cast<CS_PARTICLE_DESC*>(ConstantSubResource.pData);
 
-		pDesc->fTimeDelta = fTimeDelta * m_fTimeMult;
+		pDesc->fTimeDelta = fTimeDelta * m_InstanceDesc.fTimeMult;
 
 		pDesc->isLoop = m_InstanceDesc.isLoop;
 		pDesc->isDrop = m_InstanceDesc.isDrop;
@@ -570,6 +578,7 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isExcludePos = m_InstanceDesc.isExcludePos;
 		pDesc->isStop_Move_For_Depth_Compare = m_InstanceDesc.isStop_Move_For_Depth_Compare;
 		pDesc->isNoPos = m_InstanceDesc.isNoPos;
+		pDesc->isNoResetTime = m_InstanceDesc.isNoResetTime;
 		
 
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
@@ -1154,6 +1163,17 @@ void CInstance_Model::Describe_Entity()
 
 		if (GUI::TreeNode("Time"))
 		{
+
+			if (GUI::Checkbox("NoResetTime", &m_InstanceDesc.isNoResetTime))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat("TimeMult", reinterpret_cast<_float*>(&m_InstanceDesc.fTimeMult)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
 			if (ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
 			{
 				Instane_Buffer_ReStruct();

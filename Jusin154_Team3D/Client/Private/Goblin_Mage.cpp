@@ -317,6 +317,7 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::JAP):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			m_fTumbleTimer = 0.f;
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
@@ -431,7 +432,7 @@ HRESULT CGoblin_Mage::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(g_iStaticLevel));
 	Get_PartObject<CEffectParts>()->Set_Visible(true);
 
 	return S_OK;

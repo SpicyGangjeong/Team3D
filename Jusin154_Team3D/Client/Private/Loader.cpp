@@ -150,6 +150,7 @@
 #include "BombardSide.h"
 #include "LeviosoSide.h"
 #include "TransformationSide.h"
+#include "AvadakedavraSide.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
@@ -159,6 +160,7 @@
 #include "Lumos.h"
 #include "Accio.h"
 #include "Blink.h"
+#include "Avadakedavra.h"
 #include "Goblin_Teleport.h"
 
 
@@ -1533,7 +1535,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1550,7 +1552,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_string strFilePath = pFilePath;
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1565,7 +1567,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1580,7 +1582,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1595,7 +1597,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1998,6 +2000,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CAvadakedavraSide>(g_iStaticLevel, CAvadakedavraSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CTrollSwing>(g_iStaticLevel, CTrollSwing::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2067,6 +2073,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CAvadakedavra>(g_iStaticLevel, CAvadakedavra::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
@@ -2087,7 +2097,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Box", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -2097,7 +2107,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/ParticleMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -2107,7 +2117,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Goo", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -2117,7 +2127,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/NomalMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -2127,7 +2137,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Lightning", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -2136,7 +2146,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Spline", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
