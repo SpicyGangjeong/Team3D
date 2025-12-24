@@ -688,7 +688,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
-
+    if (0.f == vDiffuse.a) { discard; }
     
     float4 vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -773,26 +773,6 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     float fShadowMultiplier = lerp(fMinShadowBrightness, 1.0f, saturate(fVisibilityCombined));
 
     Out.vBackBuffer.rgb *= fShadowMultiplier;
-    
-    
-////////////////////////////
-    // 블러 추가
-    float3 vColor = { 0.f, 0.f, 0.f };
-    
-    /* (로컬위치 * 월드 * 광원의 뷰 * 광원의 투영 ) -> (로컬위치 * 월드 * 광원의 뷰 * 광원의 투영 * (/w) */
-    float2 vTexcoord;
-    vTexcoord.x = (vNearShadowPos.x / vNearShadowPos.w) * 0.5f + 0.5f;
-    vTexcoord.y = (vNearShadowPos.y / vNearShadowPos.w) * -0.5f + 0.5f;
-    
-    for (int i = -63; i < 64; ++i)
-    {
-        vTexcoord.x = In.vTexcoord.x;
-        vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
-        
-        vColor += g_fWeights_128[i + 63] * g_BlurXTexture.Sample(BorderZeroSampler, vTexcoord).rgb;
-    }
-    
-    Out.vBackBuffer.rgb += vColor;
     Out.vEnvironment = Out.vBackBuffer;
     
     return Out;
@@ -1163,7 +1143,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     if (0.f == g_fFogPow)
     {
         if (1 == vDepthDesc.y)
-            Out.vFirstTarget = float4(vColor.rgb, 1.f);
+            Out.vFirstTarget = float4(vColor.rgb, 0.f);
         else
             Out.vFirstTarget = float4(vColor.rgb, 1.f);
         return Out;
@@ -1181,7 +1161,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     
     if (1.f == vDepthDesc.y)
     {
-        vFinalColor = float4(vColor);
+        vFinalColor = float4(g_vFogColor);
     }
     Out.vFirstTarget = vFinalColor;
  

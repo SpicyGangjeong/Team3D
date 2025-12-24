@@ -825,6 +825,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse += RimLight(In);
 
+
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
 
     return Out;
@@ -954,6 +955,8 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     vMtrlDiffuse = DrawEffect(In);
     
     vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
     vMtrlDiffuse.a *= 5.f;
     
@@ -1366,6 +1369,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUR_MESH();
     }
 
+//20
     pass Blur_Culling
     {
         SetRasterizerState(RS_Default);
@@ -1376,6 +1380,16 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUR();
     }
 
+//21
+    pass Blur_Culling_No_Emissive
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR_NOEMISSIVE();
+    }
 }
 
 

@@ -110,6 +110,19 @@ HRESULT CEffectObject::Render_Blur()
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS)
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NONPOS_BLUR;
 
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
+	{
+		if (m_EffectInfo.isBlurNoEmissive == false)
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_CULLING;
+		}
+		else
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_CULLING;
+		}
+
+	}
+
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
 
