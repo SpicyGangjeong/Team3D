@@ -2620,6 +2620,50 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_GerboldOlivander_Model")
 	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_Playable_Model")
+	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_AvadaKedavra.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_AvadaKedavra_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Bm.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Bm_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Broom.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Broom_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Cmbt.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Cmbt_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Lightning.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Lightning_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Protego.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Protego_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Rct.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Rct_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Sneak.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Sneak_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Spawn.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Spawn_Model")
+	//));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Spell_Learning.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Spell_Learning_Model")
+	//));
 
 
 	for (auto& job : futures) {
