@@ -661,6 +661,9 @@
     <Filter Include="02.GameObjects\Monster\Ranrok\RanrokState">
       <UniqueIdentifier>{0c039454-c5e4-4fbc-832e-06acb0f86f43}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyDecal">
+      <UniqueIdentifier>{ebd7a1c2-4914-4956-ad9c-a0fc2e857f56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1343,6 +1346,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_FireBreath.h">
       <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DummyDecal.h">
+      <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2031,6 +2037,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_FireBall.cpp">
       <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DummyDecal.cpp">
+      <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

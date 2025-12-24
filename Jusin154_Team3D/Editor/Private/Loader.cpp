@@ -6,6 +6,7 @@
 
 #include "Camera_Debug.h"
 #include "DummyRect.h"
+#include "DummyDecal.h"
 #include "MainApp.h"
 #include "Dummy_Cube.h"
 #include "MainLight.h"
@@ -208,6 +209,7 @@
 #pragma region BLOOM_HEADER
 
 #include "Dummy_Globe.h"
+
 
 #pragma endregion
 
@@ -1618,6 +1620,105 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Static>(g_iStaticLevel, CMapElement_Static::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Interactable>(g_iStaticLevel, CMapElement_Interactable::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_LOD>(g_iStaticLevel, CMapObject_LOD::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Collision>(g_iStaticLevel, CMapObject_Collision::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_VTXPOS,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"),
+			VTXPOS::Elements, VTXPOS::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Box */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Box"),
+		CVIBuffer_Box::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_OcclusionQuery */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_OcclusionQuery"),
+		COcclusionQuery::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_BuildingContainer */
+	if (FAILED(m_pGameInstance->Add_Prototype<CBuildingContainer>(g_iStaticLevel, CBuildingContainer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* Lake_Cube_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Lake_Cube_D"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Models/Lake/SkyCube.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+#pragma region DUNGEON_MAP
+	vector<_wstring> ModelPrototypeTags = {};
+	vector<filesystem::path> ModelPrototypePath = {};
+	/* Cave Wall */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Wall",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Props */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Props",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* ArenaFloor */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/ArenaFloor",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_Center_Structure_AnteChamber */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Center_Structure/AnteChamber",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_Center_Structure_Core */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Center_Structure/Core",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_ConjuredDragonAttackZones */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/ConjuredDragonAttackZones",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_Rock_Barriers */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Rock_Barriers",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_Rock_SM_Repository_FloatingGround */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/SM_Repository_FloatingGround",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_Rock_SM_Repository_Stage3MoveableRocks */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Stage3MoveableRocks",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_Rock_Interactables */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/BreakingRocks/LG_E",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_Rock_Main */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Sanctum_Dungeon_Rock_Main */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Interactables",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	/* Cavern_Dungeon_Rocks */
+	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Cavern_Dungeon/Mesh/Rocks",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+#pragma endregion
+
+
+
+
 
 	m_strMessage = TEXT("Shader Loading..");
 
@@ -2639,6 +2740,21 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures//T_LandscapeStreamingProxy_0_LOD1_Summer_D.png"), 0)))) {
 		return E_FAIL;
 	}
+	/* Base_MRO */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_MSK */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_MSK"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Rift_Material_MSK.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_Noraml */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_Noraml"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Rift_Veins_N.dds"), 0)))) {
+		return E_FAIL;
+	}
 
 	/* Terrain_Diffuse */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Diffuse"),
@@ -2738,6 +2854,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_DecalBox */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_DecalBox"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
 #pragma region MAP_LANDS
 	/* For.Prototype_Component_Hogsmead_Land */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_Land"),
@@ -2797,7 +2918,6 @@ HRESULT CLoader::Loading_For_MapViewer()
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\HogsmeadeLOD\\ProxyAssets",
 		".bin", false, ModelPrototypeTags, ModelPrototypePath))) 
 		return E_FAIL;
-
 
 	/* Terrain*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
@@ -3045,7 +3165,7 @@ if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactabl
 
 
 #pragma region HOGWART
-_bool bHogwartLoad = { true };
+_bool bHogwartLoad = { false };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
@@ -3913,6 +4033,10 @@ if(isLoad_Map)
 
 	/* For.Prototype_GameObject_Unified */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Lake>(g_iStaticLevel, CMapElement_Lake::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CDummyDecal */
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummyDecal>(g_iStaticLevel, CDummyDecal::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapObject_Manager */
