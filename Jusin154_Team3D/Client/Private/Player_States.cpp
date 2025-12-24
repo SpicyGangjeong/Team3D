@@ -1751,22 +1751,26 @@ void CPlayer::Behavior_HitEnter()
 		break;
 	}
 
-	if (m_fHitDegree >= 90.f)
+	if (!m_bMeleeHit)
 	{
-		pairAnimInfo = m_Animation[STATEANIM::FLINCH_BWD];
-	}
-	else if (m_fHitDegree >= 45.f) {
+		if (m_fHitDegree >= 90.f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::FLINCH_BWD];
+		}
+		else if (m_fHitDegree >= 45.f) {
 
-		if (m_fHitCross > 0.f) {
-			pairAnimInfo = m_Animation[STATEANIM::FLINCH_LEFT];
+			if (m_fHitCross > 0.f) {
+				pairAnimInfo = m_Animation[STATEANIM::FLINCH_LEFT];
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::FLINCH_RIGHT];
+			}
 		}
-		else {
-			pairAnimInfo = m_Animation[STATEANIM::FLINCH_RIGHT];
+		else  if (m_fHitDegree >= 0.f) {
+			pairAnimInfo = m_Animation[STATEANIM::FLINCH_FWD];
 		}
 	}
-	else  if(m_fHitDegree>=0.f){
-		pairAnimInfo = m_Animation[STATEANIM::FLINCH_FWD];
-	}
+
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }

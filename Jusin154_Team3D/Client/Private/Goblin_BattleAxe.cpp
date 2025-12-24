@@ -270,6 +270,18 @@ void CGoblin_BattleAxe::SwingHit(_bool& bPlayerHit)
 			PSX::PxActor* pxHitActor = pxHits[i].actor;
 			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
 				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+
+				ON_COLLISION_INFO tagCollInfo = {};
+
+				tagCollInfo.vWorldPos.w = 1.f;
+
+				memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &pxHits[i].position, sizeof(pxHits[i].position));
+
+				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &pxHits[i].normal, sizeof(pxHits[i].normal));
+				_vector vHitDir = pUserData->pOwner->Get_WorldPostion() - this->Get_WorldPostion();
+				vHitDir = XMVector3Normalize(vHitDir);
+				XMStoreFloat4(&tagCollInfo.vHitDir, vHitDir);
+				tagCollInfo.fLength = pxHits[i].distance;
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case PXOBJECT::PLAYER:
@@ -280,7 +292,7 @@ void CGoblin_BattleAxe::SwingHit(_bool& bPlayerHit)
 					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
 					pStat->Get_Damage(20.f);
 					bPlayerHit = true;
-					pUserData->pOwner->OnCollision(this);
+					pUserData->pOwner->OnCollision(this,&tagCollInfo);
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
 					break;

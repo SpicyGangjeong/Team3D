@@ -27,7 +27,7 @@ typedef struct tagKeyFrame
 	_float3		vScale = {};
 	_float4		vRotation = {};
 	_float3		vTranslation = {};
-	_float			fTrackPosition = {};
+	_float		fTrackPosition = {};
 
 }KEYFRAME;
 
@@ -395,6 +395,7 @@ typedef struct tagOnCollsionInfo
 	_float4 vWorldNomal = {};	// 접촉노말
 	_float4 vHitDir = {};		// 시도한 move 방향
 	_float  fLength = {};		// 작용된 힘
+	_bool	bIsMelee = {};		// 근접공격인지 아닌지
 	class CGameObject* pObject = { nullptr }; // 시전자
 }ON_COLLISION_INFO;
 

@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include "Client_Define.h"
+#include "Editor_Define.h"
 #include "Monster.h"
 #include "CallBack_Monster_Behavior.h"
 #include "CallBack_Ranrok_HitReport.h"
 
-NS_BEGIN(Client)
+NS_BEGIN(Editor)
 
 class CRanrok final : public CMonster
 {
@@ -64,7 +64,6 @@ private:
 	_float2 m_vAuraTimer = { 0.f, 0.16f };
 	_float2 m_vEtherealTimer = { 0.f, 0.16f };
 	_uint iIndex;
-	DAMAGE_INFO m_DamageInfo;
 	_bool m_bCollisionPlayer = { false };
 
 private:

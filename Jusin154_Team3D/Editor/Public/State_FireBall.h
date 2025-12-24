@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Editor_Defines.h"
+#include "Editor_Define.h"
 #include "State_Root.h"
 
 NS_BEGIN(Editor)
