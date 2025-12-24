@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include "Editor_Defines.h"
+#include "Client_Define.h"
 #include "State_Root.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
 class CState_FireBall final : public CState_Root
 {
