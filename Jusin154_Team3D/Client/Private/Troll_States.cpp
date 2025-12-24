@@ -101,7 +101,6 @@ void CTroll::Behavior_IdleBreakEnter()
 		break;
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-	m_pModelCom->Set_BlendDuration(0.6f);
 }
 
 HRESULT CTroll::Behavior_IdleBreakExitCheck()
@@ -117,7 +116,6 @@ HRESULT CTroll::Behavior_IdleBreakExitCheck()
 void CTroll::Behavior_IdleBreakExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
-	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
 void CTroll::Behavior_MoveEnter()
@@ -442,6 +440,8 @@ void CTroll::Behavior_SwingEnter()
 			m_pWeaponTrail->Set_Visible(false);
 		},
 		0.6f);
+
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.3f);
 }
 
 HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
@@ -538,6 +538,7 @@ void CTroll::Behavior_SlamEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
 		}, 0.3f);
 
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.3f);
 }
 
 HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
@@ -558,7 +559,7 @@ HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
 
 		return S_OK;
 	}
-	else if (fRatio >= 0.4f) {
+	else if (fRatio >= 0.6f) {
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 		return E_FAIL;
@@ -597,6 +598,8 @@ void CTroll::Behavior_BackHandSwingEnter()
 			m_pWeaponTrail->Set_Visible(false);
 		},
 		0.9f);
+
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.3f);
 }
 
 HRESULT CTroll::Behavior_BackHandSwingExitCheck(_float fTimeDelta)
