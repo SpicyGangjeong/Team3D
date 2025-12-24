@@ -113,6 +113,7 @@ private:
 	void Render_Priority();
 	void Render_Shadow();
 	void Render_NonBlend();
+	void Render_Decal();
 	void Render_Blur(); 
 	void Render_SSAO();
 	void Render_SSAO_BLUR();

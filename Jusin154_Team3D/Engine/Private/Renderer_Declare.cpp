@@ -517,6 +517,17 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* MRT_Decal */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Decal"), TEXT("Target_Diffuse")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Decal"), TEXT("Target_Normal")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Decal"), TEXT("Target_Surface")))) {
+			return E_FAIL;
+		}
+
 	}
 
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);

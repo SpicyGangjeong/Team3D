@@ -56,8 +56,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 	}
 	GUI::End();
 #ifdef gimch
-	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::MAP))))
+	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::EFFECT))))
 		return;
+	//if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::MAP))))
+	//	return;
 #endif // gimch
 #ifdef 기무리
 	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::OBJECT))))

@@ -10,6 +10,7 @@ void CRenderer::Render()
 	Render_Priority();
 	Render_Shadow();
 	Render_NonBlend();
+	Render_Decal();
 	Render_SSAO();
 	Render_SSAO_BLUR();
 	Render_LightAcc();
@@ -326,6 +327,30 @@ void CRenderer::Render_NonBlend()
 		return;
 	}
 	COMPUTE_TIMEDELTA("Timer_Render_NonBlend");
+}
+
+void CRenderer::Render_Decal()
+{
+	EVENTSCOPE_("Render_Decal");
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_Decal")))) {
+		return;
+	}
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::DECAL)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render())) {
+				assert(false);
+			}
+		}
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::DECAL)].clear();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 }
 
 void CRenderer::Render_LightAcc()
@@ -1150,9 +1175,9 @@ void CRenderer::Render_Tone_Mapping()
 		SAFE_RELEASE(pBackBuffer);
 	}
 
-	m_pLastColorShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
-	m_pLastColorShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
-	m_pLastColorShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
+	m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 	
 	if (FAILED(m_pShader->Bind_RawValue("g_iToneMappingType", &m_iToneMappingType, sizeof(_uint)))) {
 		assert(false);
