@@ -5,7 +5,6 @@
 #include "InfoInstance.h"
 #include "CallBack_Ranrok_HitReport.h"
 #include "Effect_Container.h"
-#include "EffectParts.h"
 #include "EffectPool.h"
 #include "Layer.h"
 #include "TrailObject.h"
@@ -65,16 +64,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 	//m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	//SAFE_ADDREF(m_pEffectPool);
 
-	if (NEXT_LEVEL == ENUM_CLASS(LEVEL::FIELD))
-	{
-		m_pCharacter_Controller->Set_Position(XMVectorSet(58.990f, 71.321f, 241.628f, 1.f));
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(58.990f, 71.321f, 241.628f, 1.f));
-	}
-	else {
-
-		m_pCharacter_Controller->Set_Position(XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
-	}
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
 
 	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
 
@@ -241,73 +232,73 @@ _vector CRanrok::Get_LockOnPos()
 
 void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	if (true == m_bDead) {
-		return;
-	}
-	if (m_bFireBurst)
-		return;
+	//if (true == m_bDead) {
+	//	return;
+	//}
+	//if (m_bFireBurst)
+	//	return;
 
-	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-
-
-	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
-
-	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
-
-	pair<_float, _float> damagePair = {};
-
-	if (pEffect_Container != nullptr)
-	{
-		_uint iSkillType = pEffect_Container->Get_SkillType();
-		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
-
-		switch (iSkillType)
-		{
-		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::JAP):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::ACCIO):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
-			break;
-		}
-	}
-	else
-	{
-		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
-
-		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
-
-		if (pProps != nullptr)
-		{
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
-		}
-	}
+	//ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
-	m_DamageInfo.fDamage = damagePair.first;
-	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
-	if (0 == damagePair.second) {
-		m_pFSM->Change_State(FSMSTATE::DEAD);
-		return;
-	}
-	if (damagePair.second <= Get_Hp().y / 2.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
-	{
-		m_pFSM->Change_State(FSMSTATE::LAND);
-		return;
-	}
-	m_pFSM->Change_State(FSMSTATE::HIT);
+	////m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+
+	//CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	//pair<_float, _float> damagePair = {};
+
+	//if (pEffect_Container != nullptr)
+	//{
+	//	_uint iSkillType = pEffect_Container->Get_SkillType();
+	//	//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+	//	switch (iSkillType)
+	//	{
+	//	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+	//		break;
+	//	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
+	//		break;
+	//	case ENUM_CLASS(SKILL_TYPE::JAP):
+	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+	//		break;
+	//	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+	//		break;
+	//	case ENUM_CLASS(SKILL_TYPE::ACCIO):
+	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+	//		break;
+	//	case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+	//		break;
+	//	}
+	//}
+	//else
+	//{
+	//	//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
+
+	//	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+
+	//	if (pProps != nullptr)
+	//	{
+	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
+	//	}
+	//}
+
+
+	///*m_DamageInfo.fDamage = damagePair.first;
+	//m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	//if (0 == damagePair.second) {
+	//	m_pFSM->Change_State(FSMSTATE::DEAD);
+	//	return;
+	//}
+	//if (damagePair.second <= Get_Hp().y / 2.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
+	//{
+	//	m_pFSM->Change_State(FSMSTATE::LAND);
+	//	return;
+	//}*/
+	//m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
 void CRanrok::OnHit(CGameObject* pOther, CGameObject* pCaller)
@@ -370,9 +361,6 @@ HRESULT CRanrok::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_RANROK"), (CComponent**)&m_pStat))) {
-		return E_FAIL;
-	}
 
 	return S_OK;
 }
@@ -410,13 +398,13 @@ HRESULT CRanrok::Bind_ShaderResources()
 }
 HRESULT CRanrok::Render_Nonblend()
 {
-	if (FAILED(Render_DeadDisolve())) {
+	/*if (FAILED(Render_DeadDisolve())) {
 		return E_FAIL;
 	}
 
 	if (FAILED(Render_Disolve())) {
 		return E_FAIL;
-	}
+	}*/
 
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
 	{
@@ -667,7 +655,6 @@ void CRanrok::Describe_Entity()
 		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
 		GUI::Text("AnimSpeed %.2f", m_pModelCom->Get_AnimSpeed());
 
-		GUI::Text("Degree %.2f", m_fDegree);
 		GUI::Text("CurrFlow %d", m_iCurrentFlow);
 
 		_float3 Pos;

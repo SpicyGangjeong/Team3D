@@ -1,19 +1,19 @@
 ﻿#pragma once
-#include "Editor_Defines.h"
+#include "Editor_Define.h"
 #include "State_Root.h"
 
 NS_BEGIN(Editor)
 
-class CState_FireBall final : public CState_Root
+class CState_FireSweep final : public CState_Root
 {
 public:
-    typedef struct tagFireBall : public CState_Root::STATE_ROOT_DESC {
+    typedef struct tagFireSweep : public CState_Root::STATE_ROOT_DESC {
         function<void(_float fTimeDelta)> funcPriorityUpdate = { nullptr };
         function<void(_float fTimeDelta)> funcLateUpdate = { nullptr };
-    }STATE_FIREBALL_DESC;
+    }STATE_FIRESWEEP_DESC;
 private:
-    CState_FireBall();
-    virtual ~CState_FireBall() = default;
+    CState_FireSweep();
+    virtual ~CState_FireSweep() = default;
 
 public:
     virtual void Enter();
@@ -25,10 +25,10 @@ private:
     function<void(_float fTimeDelta)> m_funcLateUpdate = { nullptr };
 
 private:
-    HRESULT Initialize(STATE_FIREBALL_DESC* pDesc);
+    HRESULT Initialize(STATE_FIRESWEEP_DESC* pDesc);
 
 public:
-    static CState_FireBall* Create(STATE_FIREBALL_DESC* pDesc);
+    static CState_FireSweep* Create(STATE_FIRESWEEP_DESC* pDesc);
     virtual void Free() override;
     virtual void Describe_Entity();
 };
