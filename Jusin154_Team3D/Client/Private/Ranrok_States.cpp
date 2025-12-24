@@ -456,17 +456,15 @@ void CRanrok::Behavior_SwipeEnter()
 	m_pFSM->Enable_State(FSMSTATE::SWIPE);
 	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
 	{
-		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
-
-		switch (iRand)
+		if (m_fCross > 0)
 		{
-		case 0:
 			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_L];
-			break;
-		case 1:
-			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_R];
-			break;
 		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_R];
+		}
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 	}
 
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)];
@@ -532,23 +530,9 @@ HRESULT CRanrok::Behavior_RushExitCheck(_float fTimeDelta)
 	m_fRushTime += fTimeDelta;
 	if (m_fRushTime >= 2.5f && iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
 	{
-		if (m_fDegree >= 60.f)
-		{
-			if (m_fCross < 0)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_L];
-			}
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_R];
-			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		}
-		else
-		{
-			m_pFSM->Change_State(FSMSTATE::GROUND);
+			m_pFSM->Change_State(FSMSTATE::SWIPE);
 			return E_FAIL;
-		}
-			
+
 	}
 	else if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
 	{

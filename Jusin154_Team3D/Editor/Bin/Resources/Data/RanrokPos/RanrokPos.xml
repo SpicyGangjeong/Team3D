@@ -1,28 +1,5 @@
 <RanrokPosInfo>
 	<RanrokPosData>
-		<Name Flow="3">
-			<Position>
-				<Pos x="14.121" y="-41.890" z="248.021"/>
-			</Position>
-			<Position>
-				<Pos x="-12.558" y="-28.878" z="236.451"/>
-			</Position>
-			<Position>
-				<Pos x="-20.145" y="-48.688" z="216.771"/>
-			</Position>
-			<Position>
-				<Pos x="11.854" y="-50.864" z="182.233"/>
-			</Position>
-			<Position>
-				<Pos x="44.661" y="-52.001" z="202.435"/>
-			</Position>
-			<Position>
-				<Pos x="29.840" y="-60.349" z="212.004"/>
-			</Position>
-			<Position>
-				<Pos x="23.993" y="-58.307" z="220.465"/>
-			</Position>
-		</Name>
 		<Name Flow="2">
 			<Position>
 				<Pos x="16.141" y="-50.299" z="221.423"/>

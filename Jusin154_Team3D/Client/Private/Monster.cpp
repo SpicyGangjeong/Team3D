@@ -253,6 +253,18 @@ HRESULT CMonster::Render_Disolve()
 	return S_OK;
 }
 
+void CMonster::Set_Easing(_uint iAnimIndex,_float fEasingStartRatio,_float fEasingEndRatio,_float fEasingTime)
+{
+	Add_Event(iAnimIndex,
+		[this, fEasingTime]() {m_fEasing = fEasingTime;},
+		fEasingStartRatio);
+
+	Add_Event(iAnimIndex,
+		[this]() {m_fEasing = 1.f; },
+		fEasingEndRatio);
+}
+
+
 void CMonster::Free()
 {
 	__super::Free();

@@ -75,7 +75,6 @@ private:
 	HRESULT Render_Nonblend();
 	HRESULT Render_Blend();
 	void MoveTo(_float fTimeDelta);
-	void AroundPoint(_float fTimeDelta);
 	HRESULT Load_RanrokPos(const _char* pFilePath);
 public:
 	static CRanrok* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
