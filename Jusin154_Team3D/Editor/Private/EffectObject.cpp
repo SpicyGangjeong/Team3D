@@ -1039,6 +1039,27 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fModelBlurIntensity", &m_EffectInfo.fModelBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMask_G", &m_EffectInfo.isMask_G, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMask_B", &m_EffectInfo.isMask_B, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoise_G", &m_EffectInfo.isNoise_G, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoise_B", &m_EffectInfo.isNoise_B, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve_G", &m_EffectInfo.isDissolve_G, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve_B", &m_EffectInfo.isDissolve_B, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
 	
 
 

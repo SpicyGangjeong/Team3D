@@ -46,11 +46,19 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	_float4 vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	m_pGameInstance->Set_FogColor(vColor);
-	m_pGameInstance->Set_Fog(10.f, 5.f);
+	CTerrain::TERRAIN_DESC Desc = {};
+	/* Hogsmeade */
 
-	CInfoInstance::GetInstance()->Load_MapObjects("Dungeon_Map_Data", LAYER_BACKGROUND);
+	Desc.isEdit = false;
+	Desc.iAlphaSizeX = 2048;
+	Desc.iAlphaSizeY = 2048;
+	Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
+	Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Terrain"), &Desc)))
+		return E_FAIL;
 
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!

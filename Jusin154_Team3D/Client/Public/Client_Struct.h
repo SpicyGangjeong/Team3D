@@ -178,8 +178,10 @@ namespace Client
 
 
 		_bool	    isMotionBlur = {};
-		_bool       isPadding0 = {};
-		_bool       isPadding1 = {};
+
+		_bool       isNoise_G = {};
+		_bool       isNoise_B = {};
+
 		_float      fModelBlurIntensity = { 0.f };
 
 		_bool       isBloom = {};
@@ -204,7 +206,7 @@ namespace Client
 		_float		isLightTime = { 0.f };
 		_bool		isLightDissolve = {};
 
-		_bool		isPadding2 = {};
+		_bool		isDissolve_G = {};
 
 		_float4     vDissolveColor = {};
 		_float2     vDissolveColorCut = {};
@@ -222,9 +224,9 @@ namespace Client
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};
-		_bool		isPadding3 = {};
-		_bool		isPadding4 = {};
-		_bool		isPadding5 = {};
+		_bool		isMask_G = {};
+		_bool		isMask_B = {};
+		_bool		isDissolve_B = {};
 
 	}EFFECT_INFO;
 	

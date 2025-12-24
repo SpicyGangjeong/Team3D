@@ -746,6 +746,10 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("MASKING"))
 		{
+			GUI::Checkbox("Mask G", &m_EffectInfo.isMask_G);
+			GUI::SameLine();
+			GUI::Checkbox("Mask B", &m_EffectInfo.isMask_B);
+
 
 			GUI::InputFloat2("MaskUVCutting", (_float*)&m_EffectInfo.vUVMaskCutting);
 			GUI::Checkbox("MaskUVMove", &m_EffectInfo.isMaskUVMove);
@@ -797,6 +801,10 @@ void CEditEffect::Describe_Entity()
 		{
 			if (GUI::TreeNode("DISSOLV_TEX"))
 			{
+				GUI::Checkbox("Dissolve G", &m_EffectInfo.isDissolve_G);
+				GUI::SameLine();
+				GUI::Checkbox("Dissolve B", &m_EffectInfo.isDissolve_B);
+
 				GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
@@ -895,6 +903,10 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("NOISE"))
 		{
+			GUI::Checkbox("Noise G", &m_EffectInfo.isNoise_G);
+			GUI::SameLine();
+			GUI::Checkbox("Noise B", &m_EffectInfo.isNoise_B);
+
 			GUI::Checkbox("NoiseColor", &m_EffectInfo.isNoiseColor);
 			GUI::Checkbox("NoiseAlpha", &m_EffectInfo.isNoiseAlpha);
 			GUI::Checkbox("NoiseMove", &m_EffectInfo.isNoiseUVMove);
