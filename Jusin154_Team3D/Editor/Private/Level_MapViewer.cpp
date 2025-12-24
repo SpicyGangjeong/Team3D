@@ -48,9 +48,9 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
+	//	return E_FAIL;
+	//}
 
 	//if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
 	//	return E_FAIL;
@@ -64,9 +64,9 @@ HRESULT CLevel_MapViewer::Initialize()
 	//	return E_FAIL;
 	//}
 
-	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
+	//	return E_FAIL;
+	//}
 
 	/*if (FAILED(Ready_Layer_Door(TEXT("Layer_Door")))) {
 		return E_FAIL;

@@ -29,7 +29,10 @@ private:
 	CTexture*			m_pMaskTextureCom = { nullptr };
 	CTexture*			m_pNormalTextureCom = { nullptr };
 	CTexture*			m_pSurfaceTextureCom = { nullptr };
+	CTexture*			m_pFadeTextureCom = { nullptr };
 
+	_float2				m_fTimeAcc = {};
+	_float2				m_vUVSpeed = {};
 	_float				m_fNormalThreshold = {};
 
 	_float				m_fWinSizeX = {};
