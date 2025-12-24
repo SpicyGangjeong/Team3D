@@ -184,7 +184,7 @@ HRESULT CRanrok::Render()
 		hr = Render_Nonblend();
 	}
 	else if (RENDER::BLEND == eCurrentPass) {
-		//hr = Render_Blend();
+		hr = Render_Blend();
 		hr = S_OK;
 	}
 	return hr;
