@@ -30,7 +30,7 @@
 	</MI_Professor_EleazarFig_Hair>
 	<MI_HUM_N_Heads_Eye	ShaderIndex = "2" OutLineWrite="2">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Eye_Iris_D" Extension=".dds"/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Eye_Iris_D" Extension=".png"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
@@ -57,17 +57,17 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HUM_N_Heads_Eye>
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "0" OutLineWrite="0">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "5" OutLineWrite="5">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Old_M_Hair_Fig_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
 		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_DefaultGrey_D" Extension=".png"/>
 		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
 		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="T_Old_M_Hair_Fig_THV_MSK" Extension=".dds"/>
 		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
 		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
 		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
@@ -231,4 +231,63 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_Professor_EleazarFig_Lower_02>
+	<MI_Old_M_Head_Professor_Fig_Head	ShaderIndex = "6" OutLineWrite="16">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Professor_EleazarFig_Head_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_Professor_EleazarFig_Head_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="T_Professor_EleazarFig_Head_SRXO" Extension=".dds"/>
+	</MI_Old_M_Head_Professor_Fig_Head>
+	<MI_ClothSim	ShaderIndex = "3" OutLineWrite="3">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Professor_EleazarFig_Lower_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="" Extension=""/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_ClothSim>
+
 </Material>

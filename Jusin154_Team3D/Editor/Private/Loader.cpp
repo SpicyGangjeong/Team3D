@@ -357,11 +357,6 @@ HRESULT CLoader::Loading_For_Logo()
 			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
-			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
-		return E_FAIL;
-	}
 
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_CELL,
@@ -2286,6 +2281,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 {
 	m_strMessage = TEXT("Texture Loading..");
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
+			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
 		return E_FAIL;
@@ -2433,6 +2433,16 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_ConjuredDragon_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Professor_EleazarFig_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig_Anim.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Professor_EleazarFig_Model")
 	));
 
 	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ConjuredDragon_Model"),

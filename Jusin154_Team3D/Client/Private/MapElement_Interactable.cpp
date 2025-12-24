@@ -487,7 +487,7 @@ void CMapElement_Interactable::Free()
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pEffectPool);
-
+	 
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;
