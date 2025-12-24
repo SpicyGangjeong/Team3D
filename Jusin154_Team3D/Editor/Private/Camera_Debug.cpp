@@ -14,6 +14,7 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
+	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
 	if (false == m_bActive) {
 		return;
 	}
@@ -73,7 +74,6 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 	}
 	__super::Bind_Matrices();
 
-	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
 }
 
 void CCamera_Debug::Update(_float fTimeDelta)

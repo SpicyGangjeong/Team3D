@@ -688,7 +688,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
-    if (0.f == vDiffuse.a) { discard; }
+
     
     float4 vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -1163,7 +1163,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     if (0.f == g_fFogPow)
     {
         if (1 == vDepthDesc.y)
-            Out.vFirstTarget = float4(vColor.rgb, 0.f);
+            Out.vFirstTarget = float4(vColor.rgb, 1.f);
         else
             Out.vFirstTarget = float4(vColor.rgb, 1.f);
         return Out;
@@ -1181,7 +1181,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     
     if (1.f == vDepthDesc.y)
     {
-        vFinalColor = float4(g_vFogColor);
+        vFinalColor = float4(vColor);
     }
     Out.vFirstTarget = vFinalColor;
  

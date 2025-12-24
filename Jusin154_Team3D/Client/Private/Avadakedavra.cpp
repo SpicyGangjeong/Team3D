@@ -187,6 +187,8 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	pRay_Transform->Set_WorldMatrix(PJ_WorldMat);
 
+	static_cast<CPlayer*>(m_pOwner)->Start_CameraShake(0.5f, 1.2f);
+
 	return S_OK;
 }
 

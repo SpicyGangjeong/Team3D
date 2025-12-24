@@ -702,6 +702,7 @@ void CRenderer::Render_Blur()
 	}
 	COMPUTE_TIMEDELTA("Timer_Render_Blur");
 }
+
 void CRenderer::Render_SSAO()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO");
@@ -797,6 +798,7 @@ void CRenderer::Render_SSAO()
 	}
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO");
 }
+
 void CRenderer::Render_SSAO_BLUR()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO_BLUR");
@@ -826,6 +828,7 @@ void CRenderer::Render_SSAO_BLUR()
 	}
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO_BLUR");
 }
+
 void CRenderer::Render_Blend()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Blend");

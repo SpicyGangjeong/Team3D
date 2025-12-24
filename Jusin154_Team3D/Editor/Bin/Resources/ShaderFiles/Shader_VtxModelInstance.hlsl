@@ -1366,6 +1366,16 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUR_MESH();
     }
 
+    pass Blur_Culling
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
 }
 
 
