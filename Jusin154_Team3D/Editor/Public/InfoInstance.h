@@ -40,6 +40,8 @@ public:
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 #pragma endregion
 #pragma region MAP_INFO
+
+	HRESULT Load_MapObjects(const _char* pFilePath, const _wchar* pLayerTag);
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);

@@ -141,6 +141,10 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEffectParts* pRay_G = Get_PartObject<CEffectParts>("Ray_G");
 	CEffectParts* pSmoke_Black = Get_PartObject<CEffectParts>("Smoke_Black");
 
+	CEffectParts* pWand_Light = Get_PartObject<CEffectParts>("Wand_Light");
+
+	CEffectParts* pWand_Lightning_G = Get_PartObject<CEffectParts>("Wand_Lightning_G");
+
 	pCircle_0->Get_Component<CTransform>()->Set_State(STATE::POSITION , XMLoadFloat4(&m_vTargetPos));
 	pCircle_Blur->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pHit_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
@@ -151,6 +155,8 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 	pCircle_Blur_Big->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pHit_PT_G_Small->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos) - 1.f * XMLoadFloat3(&m_vCameraLook));
 
+	pWand_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
+	pWand_Lightning_G->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
 
 	pCircle_0->Set_Visible(true);
 	pCircle_Blur->Set_Visible(true);
@@ -159,14 +165,16 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 	pSmoke_Black->Set_Visible(true);
 	pRay_G->Set_Visible(true);
 	pHit_PT_G_Small->Set_Visible(true);
-
+	pWand_Lightning_G->Set_Visible(true);
 
 	pCircle_1->Set_Visible(true);
 	pCircle_Blur_Big->Set_Visible(true);
 
+	pWand_Light->Set_Visible(true);
+
 	/* RAY 월드 구성하기  */
 
-	_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - vWandPos)) * 0.5f;
+	_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - vWandPos)) * 0.35f;
 
 	CTransform* pRay_Transform = pRay_G->Get_Component<CTransform>();
 
@@ -233,11 +241,6 @@ void CAvadakedavra::OnCollision(CGameObject* pOther, void* pDesc)
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
 
-	//m_pProjectile0->Set_Visible(false);
-	//m_pProjectile1->Set_Visible(false);
-
-	///*맞는순간 위로 올리기*/
-	//m_pStupefy_PJ_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 500.f, 0.f, 1.f)); 
 
 
 }
