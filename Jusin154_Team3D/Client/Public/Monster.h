@@ -52,6 +52,7 @@ protected:
 	_bool			m_bDisolve = { false };
 	_float			m_fDegree = {};
 	_float			m_fCross = {};
+	_float			m_fEasing = { 1.f };
 	_int			m_eHitState = { ENUM_CLASS(HIT_STATE::END) };
 
 protected:
@@ -60,6 +61,7 @@ protected:
 	HRESULT Ready_Components(void* pArg);
 	void Set_Target(CUnit& pTarget, CTransform& pTransform);
 	virtual HRESULT Render_Disolve();
+	void Set_Easing(_uint iAnimIndex, _float fEasingStartRatio, _float fEasingEndRatio, _float fEasingTime);
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;

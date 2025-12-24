@@ -101,7 +101,6 @@ void CTroll::Behavior_IdleBreakEnter()
 		break;
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-	m_pModelCom->Set_BlendDuration(0.6f);
 }
 
 HRESULT CTroll::Behavior_IdleBreakExitCheck()
@@ -117,7 +116,6 @@ HRESULT CTroll::Behavior_IdleBreakExitCheck()
 void CTroll::Behavior_IdleBreakExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
-	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
 void CTroll::Behavior_MoveEnter()
@@ -442,6 +440,8 @@ void CTroll::Behavior_SwingEnter()
 			m_pWeaponTrail->Set_Visible(false);
 		},
 		0.6f);
+
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.3f);
 }
 
 HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
@@ -462,48 +462,6 @@ HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
 void CTroll::Behavior_SwingExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SWING);
-}
-
-void CTroll::SwingHit(_bool& bPlayerHit)
-{
-	vector<PSX::PxSweepHit> pxHits;
-	_uint iHitCount = 0;
-	_float Damage = 0.f;
-	CheckHammerHits(iHitCount, pxHits);
-	{
-		for (_uint i = 0; i < pxHits.size(); ++i) {
-			PSX::PxActor* pxHitActor = pxHits[i].actor;
-			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
-				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::PLAYER:
-				{
-					if (true == bPlayerHit) {
-						continue;
-					}
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(20.f);
-					Damage = 7.f;
-					bPlayerHit = true;
-					pUserData->pOwner->OnCollision(this);
-				} break;
-				case PXOBJECT::ALLY_HITBOX:
-					break;
-				case PXOBJECT::ENVIRIONMENT:
-					break;
-				case PXOBJECT::TERRAIN:
-					break;
-				case PXOBJECT::BOX:
-					break;
-				case PXOBJECT::NPC:
-					break;
-				default:
-					break;
-				}
-			}
-		}
-	}
 }
 
 void CTroll::Behavior_SlamEnter()
@@ -538,6 +496,7 @@ void CTroll::Behavior_SlamEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
 		}, 0.3f);
 
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.3f);
 }
 
 HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
@@ -558,7 +517,7 @@ HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
 
 		return S_OK;
 	}
-	else if (fRatio >= 0.4f) {
+	else if (fRatio >= 0.6f) {
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 		return E_FAIL;
@@ -597,6 +556,8 @@ void CTroll::Behavior_BackHandSwingEnter()
 			m_pWeaponTrail->Set_Visible(false);
 		},
 		0.9f);
+
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.3f);
 }
 
 HRESULT CTroll::Behavior_BackHandSwingExitCheck(_float fTimeDelta)
@@ -891,10 +852,11 @@ void CTroll::Add_FSM()
 
 }
 
-void CTroll::SlamHit(_bool& bPlayerHit)
+void CTroll::SwingHit(_bool& bPlayerHit)
 {
 	vector<PSX::PxSweepHit> pxHits;
 	_uint iHitCount = 0;
+	_float Damage = 0.f;
 	CheckHammerHits(iHitCount, pxHits);
 	{
 		for (_uint i = 0; i < pxHits.size(); ++i) {
@@ -910,8 +872,62 @@ void CTroll::SlamHit(_bool& bPlayerHit)
 					}
 					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
 					pStat->Get_Damage(20.f);
+					Damage = 7.f;
 					bPlayerHit = true;
 					pUserData->pOwner->OnCollision(this);
+				} break;
+				case PXOBJECT::ALLY_HITBOX:
+					break;
+				case PXOBJECT::ENVIRIONMENT:
+					break;
+				case PXOBJECT::TERRAIN:
+					break;
+				case PXOBJECT::BOX:
+					break;
+				case PXOBJECT::NPC:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+}
+
+void CTroll::SlamHit(_bool& bPlayerHit)
+{
+	vector<PSX::PxSweepHit> pxHits;
+	_uint iHitCount = 0;
+	CheckHammerHits(iHitCount, pxHits);
+	{
+		for (_uint i = 0; i < pxHits.size(); ++i) {
+			PSX::PxActor* pxHitActor = pxHits[i].actor;
+			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
+				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+
+				ON_COLLISION_INFO tagCollInfo = {};
+
+				tagCollInfo.vWorldPos.w = 1.f;
+
+				memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &pxHits[i].position, sizeof(pxHits[i].position));
+
+				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &pxHits[i].normal, sizeof(pxHits[i].normal));
+				_vector vHitDir = pUserData->pOwner->Get_WorldPostion() - this->Get_WorldPostion();
+				vHitDir = XMVector3Normalize(vHitDir);
+				XMStoreFloat4(&tagCollInfo.vHitDir, vHitDir);
+				tagCollInfo.fLength = pxHits[i].distance;
+				tagCollInfo.bIsMelee = true;
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::PLAYER:
+				{
+					if (true == bPlayerHit) {
+						continue;
+					}
+					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
+					pStat->Get_Damage(20.f);
+					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this,&tagCollInfo);
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
 					break;

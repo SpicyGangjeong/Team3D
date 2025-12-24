@@ -142,15 +142,15 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();
-/*	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	_float ease = 1.f;
-	if (ratio < 0.4f)
-		ease = 1.15f;      
-	else if (ratio > 0.85f)
-		ease = 0.85f; */     
+	_float ease = 1.f + powf(fRatio, 3.f) * 0.6f;
 
-	m_pModelCom->Play_Animation(fTimeDelta /** ease*/, m_pTransformCom);
+	if (m_pFSM->IsEnable(FSMSTATE::SPELL | FSMSTATE::LIGHT_ATTACK | FSMSTATE::COMBAT | FSMSTATE::ANCIENT_SPELL))
+		m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
+	else {
+		m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+	}
 
 	Play_Event();
 	
@@ -346,6 +346,7 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+		m_bMeleeHit = CollisionDesc->bIsMelee;
 	}
 	else {
 		m_fHitDegree = -1.f;

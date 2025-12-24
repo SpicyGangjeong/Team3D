@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "InfoInstance.h"
-#include "CallBack_Monster_HitReport.h"
+#include "CallBack_Ranrok_HitReport.h"
 #include "Effect_Container.h"
 #include "EffectParts.h"
 #include "EffectPool.h"
@@ -60,7 +60,7 @@ HRESULT CRanrok::Initialize(void* pArg)
 	}
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
-	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody,&m_bCollisionPlayer);
 
 	//m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	//SAFE_ADDREF(m_pEffectPool);
@@ -350,7 +350,7 @@ HRESULT CRanrok::Ready_Components()
 		Desc.fStepOffset = { 0.12f };
 		Desc.fRadius = 2.f;
 		Desc.fHeight = 2.f;
-		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
+		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Ranrok_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		Desc.fWalkableSlope = 45.f;
@@ -520,10 +520,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
 	_vector NextTarget;
-	if (m_iCurrentPoint + 1 <= m_Points[m_iCurrentFlow].size())
-	{
-		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
-	}
+
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
 
@@ -532,9 +529,17 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
 
+	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 30.f)
+	{
+		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
+	}
+	else {
+		NextTarget = Target;
+	}
+
 	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 	{
-		if (fDist < 15.f)
+		if (fDist < 20.f)
 		{
 			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 			{
@@ -546,7 +551,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 			return;
 		}
 	}
-	else if (fDist < 50.f)
+	else if (fDist < 20.f)
 	{
 		if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 		{
@@ -558,46 +563,11 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		return;
 	}
 
-	m_pTransformCom->LookAt_Lerp(Target, fTimeDelta, 1.f);
+	_vector LerpTarget = XMVectorLerp(Target, NextTarget, 0.5f);
+
+	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.f);
 
 	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
-}
-
-void CRanrok::AroundPoint(_float fTimeDelta)
-{
-	m_fAroundTime += fTimeDelta;
-	if (m_fAroundTime >= 6.f)
-	{
-		m_fAroundTime = 0.f;
-		m_iCurrentFlow++;
-	}
-	else {
-		_vector Center = XMVectorSet(16.141f, -50.299f, 221.423f, 1.f);
-
-		m_fAroundAngle += m_fAroundSpeed * fTimeDelta;
-		if (m_fAroundAngle > XM_2PI) m_fAroundAngle -= XM_2PI;
-
-		_float x = cosf(m_fAroundAngle) * m_fAroundRadius;
-		_float z = sinf(m_fAroundAngle) * m_fAroundRadius;
-
-		_vector TargetPos = Center + XMVectorSet(x, 0.f, z, 0.f);
-
-		_vector CurPos = m_pCharacter_Controller->Get_Position();
-		_vector vDir = TargetPos - CurPos;
-		_float dist = XMVectorGetX(XMVector3Length(vDir));
-
-		if (dist > 0.001f)
-		{
-			vDir = XMVector3Normalize(vDir);
-
-			_float moveSpeed = 50.f;
-			_vector NextPos = CurPos + vDir * (moveSpeed * fTimeDelta);
-
-			m_pCharacter_Controller->Set_Position(NextPos);
-		}
-
-		m_pTransformCom->LookAt_Horizontal_Lerp(Center, fTimeDelta, 3.f);
-	}
 }
 
 HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
@@ -711,10 +681,12 @@ void CRanrok::Describe_Entity()
 		GUI::SameLine();
 
 		if (GUI::SmallButton("Copy"))
-		{
-			char buf[64];
-			sprintf_s(buf, "%.3ff, %.3ff, %.3ff", Pos.x, Pos.y, Pos.z);
+		{	
+			char buf[128];
+			sprintf_s(buf, "<Pos x=\"%.3f\" y=\"%.3f\" z=\"%.3f\"/>", Pos.x, Pos.y, Pos.z);
+
 			GUI::SetClipboardText(buf);
+
 			m_Points[0].push_back(XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
 		}
 

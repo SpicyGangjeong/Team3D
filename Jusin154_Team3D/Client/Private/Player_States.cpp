@@ -1314,9 +1314,9 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell()))
+	if ( SUCCEEDED(InputSpell()))
 	{
-		if (fRatio >= 0.3f)
+		if (fRatio >= 0.1f)
 		{
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 			return E_FAIL;
@@ -1395,7 +1395,6 @@ void CPlayer::Behavior_SpellEnter()
 					0.01f);
 				fRatio = 0.2f;
 			}
-
 		}
 		else {
 			pairAnimInfo = m_Animation[STATEANIM::SPELL_180_R];
@@ -1430,7 +1429,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 	_uint iIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	if (SUCCEEDED(InputSpell()))
+	if (SUCCEEDED(InputSpell())&&!m_bSpellHit)
 	{
 		_uint iCurr = m_pModelCom->Get_AnimIndex();
 		_uint iStart = m_Animation[STATEANIM::SPELL].first;
@@ -1485,7 +1484,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 		}
 		else if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell()))
 		{
-			if (fRatio >= 0.3f)
+			if (fRatio >= 0.5f)
 			{
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 			return E_FAIL;
@@ -1752,22 +1751,26 @@ void CPlayer::Behavior_HitEnter()
 		break;
 	}
 
-	if (m_fHitDegree >= 90.f)
+	if (!m_bMeleeHit)
 	{
-		pairAnimInfo = m_Animation[STATEANIM::FLINCH_BWD];
-	}
-	else if (m_fHitDegree >= 45.f) {
+		if (m_fHitDegree >= 90.f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::FLINCH_BWD];
+		}
+		else if (m_fHitDegree >= 45.f) {
 
-		if (m_fHitCross > 0.f) {
-			pairAnimInfo = m_Animation[STATEANIM::FLINCH_LEFT];
+			if (m_fHitCross > 0.f) {
+				pairAnimInfo = m_Animation[STATEANIM::FLINCH_LEFT];
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::FLINCH_RIGHT];
+			}
 		}
-		else {
-			pairAnimInfo = m_Animation[STATEANIM::FLINCH_RIGHT];
+		else  if (m_fHitDegree >= 0.f) {
+			pairAnimInfo = m_Animation[STATEANIM::FLINCH_FWD];
 		}
 	}
-	else  if(m_fHitDegree>=0.f){
-		pairAnimInfo = m_Animation[STATEANIM::FLINCH_FWD];
-	}
+
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -2560,13 +2563,14 @@ void CPlayer::Play_SpellHitAnim()
 			{
 			case ENUM_CLASS(SKILL_TYPE::ACCIO):
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f);
 				break;
 			case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f);
 				break;
 			}
 			m_pFSM->Change_State(FSMSTATE::SPELL);
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_bSpellHit = false;
 
 			if (m_pModelCom->IsFinishedAnim())

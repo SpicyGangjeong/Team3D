@@ -88,7 +88,7 @@ void CTroll::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta * m_fEasing, m_pTransformCom);
 
 	__super::Update(fTimeDelta);
 
