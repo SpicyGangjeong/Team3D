@@ -281,9 +281,12 @@ void CGoblin::Behavior_SwingEnter()
 	m_bStep = true;
 	m_pGoblinSpector->Set_Visible(false);
 	m_pGoblinSpector->Spector_Trail_Visible(false);
-
 	m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
+
+	Set_Easing(pairAnimInfo.first, 0.01f, 0.15f, 0.8f);
+
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.4f);
 }
 
 HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)

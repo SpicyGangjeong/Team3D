@@ -23,6 +23,7 @@ private:
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Effect(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_PhysX(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);
 
 	PhsXUserData		 m_PlaneData = {};
 	class CInfoInstance* m_pInfoInstance = { nullptr };

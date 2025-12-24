@@ -605,9 +605,6 @@
     <ClInclude Include="..\Public\State_FireBreath.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_FireBall.h">
-      <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\State_Pulse.h">
       <Filter>04.Mechanic\State\State_Combat\State_Pulse</Filter>
     </ClInclude>
@@ -718,6 +715,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\AvadakedavraSide.h">
       <Filter>02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireBall.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1497,6 +1500,9 @@
     <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide">
       <UniqueIdentifier>{f9c3f711-4032-4455-9d70-b81c5320f8c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok">
+      <UniqueIdentifier>{93545681-c4c5-4a6a-9496-7b2e7b8a9302}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2162,6 +2168,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AvadakedavraSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -97,6 +97,7 @@ private:
 	_float m_fRushTime = {};
 	_float m_fAttackDelay = {};
 
+
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
