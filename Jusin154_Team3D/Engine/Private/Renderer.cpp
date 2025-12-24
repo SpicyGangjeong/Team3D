@@ -1150,9 +1150,9 @@ void CRenderer::Render_Tone_Mapping()
 		SAFE_RELEASE(pBackBuffer);
 	}
 
-	m_pLastColorShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
-	m_pLastColorShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
-	m_pLastColorShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
+	m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 	
 	if (FAILED(m_pShader->Bind_RawValue("g_iToneMappingType", &m_iToneMappingType, sizeof(_uint)))) {
 		assert(false);
