@@ -605,9 +605,6 @@
     <ClInclude Include="..\Public\State_FireBreath.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_FireBall.h">
-      <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\State_Pulse.h">
       <Filter>04.Mechanic\State\State_Combat\State_Pulse</Filter>
     </ClInclude>
@@ -721,6 +718,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireBall.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
