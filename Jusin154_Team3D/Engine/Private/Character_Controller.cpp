@@ -252,7 +252,10 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 	return bHit;
 }
 
-
+_bool CCharacter_Controller::IsOnGround()
+{
+	return m_eBeforeCollisionFlags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN;
+}
 
 void CCharacter_Controller::Move(_float fTimeDelta)
 {

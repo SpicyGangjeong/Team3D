@@ -80,6 +80,7 @@ protected:
 
 	_float m_fHitDegree = {};
 	_float m_fHitCross = {};
+	_bool	m_bMeleeHit = {};
 
 private:
 	virtual void Add_FSM() {};

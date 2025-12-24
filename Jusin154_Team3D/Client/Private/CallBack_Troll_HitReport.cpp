@@ -143,6 +143,7 @@ void CCallBack_Troll_HitReport::onControllerHit(const PSX::PxControllersHit& hit
 					if (false == *m_pCollisionPlayer) {
 						*m_pCollisionPlayer = true;
 						pTargetActorData->pCharacter->Get_Owner()->Get_Component<CStat>()->Get_Damage(30.f);
+						pTargetActorData->pCharacter->Get_Owner()->OnCollision(pOwner);
 					}
 				}
 			}

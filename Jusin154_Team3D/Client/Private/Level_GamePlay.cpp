@@ -27,6 +27,7 @@
 #include "Goblin_Mage.h"
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
+#include "NPC_EleazarFig.h"
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
 #pragma endregion
@@ -549,11 +550,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
 
 #endif // _DEBUG
 
-	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
+	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, true))) {
 		return E_FAIL;
 	}
 
@@ -573,13 +574,26 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+	CPlayer::PLAYERDESC playerDesc = {};
+	playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
+	playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &playerDesc))) {
 		return E_FAIL;
 
 	}
-	
-	for (_uint i = 0; i < 1; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+	{
+		CNPC_Ollivander::NPCDESC NPCDesc{};
+		NPCDesc.vPos = _float4(40.f, 4.f, 68.9f, 1.f);
+		NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
+			return E_FAIL;
+		}
+	}
+	{
+		CNPC_EleazarFig::NPCDESC NPCDesc{};
+		NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
+		NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
 			return E_FAIL;
 		}
 	}

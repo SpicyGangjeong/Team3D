@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "InfoInstance.h"
-#include "CallBack_Monster_HitReport.h"
+#include "CallBack_Ranrok_HitReport.h"
 #include "Effect_Container.h"
 #include "EffectParts.h"
 #include "EffectPool.h"
@@ -60,7 +60,7 @@ HRESULT CRanrok::Initialize(void* pArg)
 	}
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
-	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody,&m_bCollisionPlayer);
 
 	//m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	//SAFE_ADDREF(m_pEffectPool);
@@ -184,7 +184,8 @@ HRESULT CRanrok::Render()
 		hr = Render_Nonblend();
 	}
 	else if (RENDER::BLEND == eCurrentPass) {
-		hr = Render_Blend();
+		//hr = Render_Blend();
+		hr = S_OK;
 	}
 	return hr;
 }
@@ -216,7 +217,8 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 			return E_FAIL;
 		}
 
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -348,7 +350,7 @@ HRESULT CRanrok::Ready_Components()
 		Desc.fStepOffset = { 0.12f };
 		Desc.fRadius = 2.f;
 		Desc.fHeight = 2.f;
-		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
+		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Ranrok_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		Desc.fWalkableSlope = 45.f;
@@ -517,15 +519,27 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		m_iCurrentFlow = 0;
 
 	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+	_vector NextTarget;
+
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
-	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	_float Speed = 50.f;
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
-	GUI::Text("Dist %.2f", fDist);
+
+	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 30.f)
+	{
+		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
+	}
+	else {
+		NextTarget = Target;
+	}
+
 	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 	{
-		if (fDist < 10.f)
+		if (fDist < 20.f)
 		{
 			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 			{
@@ -537,7 +551,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 			return;
 		}
 	}
-	else if (fDist < 10.f)
+	else if (fDist < 20.f)
 	{
 		if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 		{
@@ -549,75 +563,11 @@ void CRanrok::MoveTo(_float fTimeDelta)
 		return;
 	}
 
-	//_float4x4 CurMat, TargetMat, LerpMat;
+	_vector LerpTarget = XMVectorLerp(Target, NextTarget, 0.5f);
 
-	//XMStoreFloat4x4(&CurMat,XMMatrixTranslationFromVector(CurPos));
+	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.f);
 
-	//XMStoreFloat4x4(&TargetMat,XMMatrixTranslationFromVector(Target));
-
-	//_float fLerpRatio = fTimeDelta * 2.f;
-	//fLerpRatio = min(fLerpRatio, 1.f);
-
-	//CMyTools::MatrixLerp(&CurMat, &TargetMat, LerpMat, fLerpRatio);
-
-	//_vector vNextPos = XMVectorSet(LerpMat._41, LerpMat._42, LerpMat._43, 1.f);
-
-
-	//m_pTransformCom->Set_WorldMatrix(LerpMat);
-
-	//m_pCharacter_Controller->Set_Position(vNextPos);
-
-	static _vector vMoveDir = m_pTransformCom->Get_State(STATE::LOOK);
-
-	_vector vDir = XMVector3Normalize(Target - CurPos);
-
-	vMoveDir = XMVectorLerp(vMoveDir, vDir, fTimeDelta * 2.f);
-	vMoveDir = XMVector3Normalize(vMoveDir);
-
-	m_pTransformCom->LookAt_Horizontal_Lerp(CurPos + vMoveDir, fTimeDelta, 1.f);
-
-	_float Speed = 35.f;
-	m_pCharacter_Controller->Set_Position(
-		CurPos + vMoveDir * Speed * fTimeDelta
-	);
-
-}
-
-void CRanrok::AroundPoint(_float fTimeDelta)
-{
-	m_fAroundTime += fTimeDelta;
-	if (m_fAroundTime >= 6.f)
-	{
-		m_fAroundTime = 0.f;
-		m_iCurrentFlow++;
-	}
-	else {
-		_vector Center = XMVectorSet(16.141f, -50.299f, 221.423f, 1.f);
-
-		m_fAroundAngle += m_fAroundSpeed * fTimeDelta;
-		if (m_fAroundAngle > XM_2PI) m_fAroundAngle -= XM_2PI;
-
-		_float x = cosf(m_fAroundAngle) * m_fAroundRadius;
-		_float z = sinf(m_fAroundAngle) * m_fAroundRadius;
-
-		_vector TargetPos = Center + XMVectorSet(x, 0.f, z, 0.f);
-
-		_vector CurPos = m_pCharacter_Controller->Get_Position();
-		_vector vDir = TargetPos - CurPos;
-		_float dist = XMVectorGetX(XMVector3Length(vDir));
-
-		if (dist > 0.001f)
-		{
-			vDir = XMVector3Normalize(vDir);
-
-			_float moveSpeed = 50.f;
-			_vector NextPos = CurPos + vDir * (moveSpeed * fTimeDelta);
-
-			m_pCharacter_Controller->Set_Position(NextPos);
-		}
-
-		m_pTransformCom->LookAt_Horizontal_Lerp(Center, fTimeDelta, 3.f);
-	}
+	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
 }
 
 HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
@@ -720,8 +670,6 @@ void CRanrok::Describe_Entity()
 		GUI::Text("Degree %.2f", m_fDegree);
 		GUI::Text("CurrFlow %d", m_iCurrentFlow);
 
-
-
 		_float3 Pos;
 		XMStoreFloat3(&Pos, Get_WorldPostion());
 
@@ -733,10 +681,12 @@ void CRanrok::Describe_Entity()
 		GUI::SameLine();
 
 		if (GUI::SmallButton("Copy"))
-		{
-			char buf[64];
-			sprintf_s(buf, "%.3ff, %.3ff, %.3ff", Pos.x, Pos.y, Pos.z);
+		{	
+			char buf[128];
+			sprintf_s(buf, "<Pos x=\"%.3f\" y=\"%.3f\" z=\"%.3f\"/>", Pos.x, Pos.y, Pos.z);
+
 			GUI::SetClipboardText(buf);
+
 			m_Points[0].push_back(XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
 		}
 

@@ -526,9 +526,6 @@
     <Filter Include="02.GameObjects\Monster\Troll">
       <UniqueIdentifier>{2e89850b-eb23-46a7-9c3b-9c2965aa0b76}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\Troll\Troll_State">
-      <UniqueIdentifier>{ed83440e-f038-4fe2-b005-4ba4093e8462}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Monster\Troll\Rock">
       <UniqueIdentifier>{d5debb7c-5bea-456a-8c70-f44b5fc9e51e}</UniqueIdentifier>
     </Filter>
@@ -636,7 +633,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\Blink">
       <UniqueIdentifier>{3b207257-c396-473b-9906-df04b28fb0cd}</UniqueIdentifier>
-         </Filter>
+    </Filter>
     <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer">
       <UniqueIdentifier>{ea002e2c-481e-4f1f-a16f-4e47e3a48d37}</UniqueIdentifier>
     </Filter>
@@ -648,6 +645,21 @@
     </Filter>
     <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay">
       <UniqueIdentifier>{268e67a6-fa77-4a34-84d9-b3e6f6e46a00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Ranrok">
+      <UniqueIdentifier>{a1cd7b60-8dcc-4a44-98c1-e33bd8185421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Monster\Ranrok">
+      <UniqueIdentifier>{7f9672aa-71b3-4b77-9c3b-790014eccdba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Troll_State">
+      <UniqueIdentifier>{ed83440e-f038-4fe2-b005-4ba4093e8462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat\State_Rush">
+      <UniqueIdentifier>{0a3dcff9-5567-4984-a8e7-b1d2ee8d6bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Ranrok\RanrokState">
+      <UniqueIdentifier>{0c039454-c5e4-4fbc-832e-06acb0f86f43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1141,10 +1153,10 @@
       <Filter>02.GameObjects\Monster\Troll</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_State_Rush.h">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Rock.h">
       <Filter>02.GameObjects\Monster\Troll\Rock</Filter>
@@ -1153,19 +1165,19 @@
       <Filter>02.GameObjects\Monster\Troll\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_IdleBreak.h">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Hit.h">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Slam.h">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Throw.h">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Swing.h">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Nomal_Smoke.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
@@ -1292,6 +1304,45 @@
     </ClInclude>
     <ClInclude Include="..\Public\Blink.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Magic\Blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok.h">
+      <Filter>02.GameObjects\Monster\Ranrok</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Monster\Ranrok</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Rush.h">
+      <Filter>80.State\State_Combat\State_Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireSweep.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Fly.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Ground.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hover.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Pulse.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Skill.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Swipe.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Tucked.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireBall.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireBreath.h">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1793,13 +1844,13 @@
       <Filter>02.GameObjects\Monster\Troll</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_State_Rush.cpp">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_States.cpp">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Rock.cpp">
       <Filter>02.GameObjects\Monster\Troll\Rock</Filter>
@@ -1808,19 +1859,19 @@
       <Filter>02.GameObjects\Monster\Troll\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Hit.cpp">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Throw.cpp">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_IdleBreak.cpp">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Slam.cpp">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Swing.cpp">
-      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+      <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
@@ -1938,6 +1989,48 @@
     </ClCompile>
     <ClCompile Include="..\Private\Blink.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Magic\Blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_States.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Rush.cpp">
+      <Filter>80.State\State_Combat\State_Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireBreath.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireSweep.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Fly.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Ground.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Hover.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Pulse.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Swipe.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Tucked.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireBall.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok\RanrokState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

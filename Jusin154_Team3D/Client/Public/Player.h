@@ -7,6 +7,11 @@ NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
+public:
+	typedef struct tagPlayerInitDesc {
+		_float4 vPos;
+		_float4 vRotQ;
+	}PLAYERDESC;
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -75,6 +80,7 @@ private:
 	void ReLockOnTarget();
 	void SetGravity();
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
+	void Play_SpellHitAnim();
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
@@ -162,6 +168,10 @@ private:
 	void	Behavior_LandEnter();
 	HRESULT Behavior_LandExitCheck(_float fTimeDelta);
 	void	Behavior_LandExit();
+
+	void	Behavior_FallEnter();
+	HRESULT Behavior_FallExitCheck(_float fTimeDelta);
+	void	Behavior_FallExit();
 
 	void	Behavior_DodgeEnter();
 	HRESULT Behavior_DodgeExitCheck(_float fTimeDelta);

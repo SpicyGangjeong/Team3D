@@ -220,17 +220,6 @@ void CSpell_Overlay::Update(_float fTimeDelta)
 		m_pInfoInstance->Event_CallBack(TEXT("NoCooL"), &Nocool);
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_N))
-	{
-		Nocool = true;
-		m_pInfoInstance->Event_CallBack(TEXT("NoCooL"), &Nocool);
-	}
-	if (m_pGameInstance->Key_Down(DIK_M))
-	{
-		Nocool = false;
-		m_pInfoInstance->Event_CallBack(TEXT("NoCooL"), &Nocool);
-	}
-
 	m_vUVScale.y = m_fCoolTime;
 
 	m_fTime += fTimeDelta * m_fTimeMult;

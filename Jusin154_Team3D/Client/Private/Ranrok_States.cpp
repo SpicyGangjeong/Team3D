@@ -21,7 +21,7 @@
 #include "State_FireBall.h"
 #include "State_Swipe.h"
 #include "State_Skill.h"
-#include "State_Skill2.h"
+#include "State_Rush.h"
 #include "State_Pulse.h"
 #include "State_Tucked.h"
 #include "State_Hit.h"
@@ -456,17 +456,15 @@ void CRanrok::Behavior_SwipeEnter()
 	m_pFSM->Enable_State(FSMSTATE::SWIPE);
 	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
 	{
-		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
-
-		switch (iRand)
+		if (m_fCross > 0)
 		{
-		case 0:
 			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_L];
-			break;
-		case 1:
-			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_R];
-			break;
 		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_R];
+		}
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 	}
 
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)];
@@ -532,23 +530,9 @@ HRESULT CRanrok::Behavior_RushExitCheck(_float fTimeDelta)
 	m_fRushTime += fTimeDelta;
 	if (m_fRushTime >= 2.5f && iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
 	{
-		if (m_fDegree >= 60.f)
-		{
-			if (m_fCross < 0)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_L];
-			}
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_R];
-			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		}
-		else
-		{
-			m_pFSM->Change_State(FSMSTATE::GROUND);
+			m_pFSM->Change_State(FSMSTATE::SWIPE);
 			return E_FAIL;
-		}
-			
+
 	}
 	else if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
 	{
@@ -616,13 +600,14 @@ void CRanrok::Behavior_TuckedEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::TUCKED);
  
-	if (m_iCurrentFlow == 0)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::FLY];
-	}
-	else {
-		pairAnimInfo = m_Animation[STATEANIM::TUCKED];
-	}
+	//if (m_iCurrentFlow == 0)
+	//{
+	//	pairAnimInfo = m_Animation[STATEANIM::FLY];
+	//}
+	//else {
+	//	pairAnimInfo = m_Animation[STATEANIM::TUCKED];
+	//}
+	pairAnimInfo = m_Animation[STATEANIM::FLY];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 }
 
@@ -898,14 +883,13 @@ void CRanrok::Add_FSM()
 	}
 
 	{
-		CState_Skill2::STATE_SKILL2_DESC Desc{};
+		CState_Rush::STATE_RUSH_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_RushEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_RushExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_RushExit(); };
-		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::RUSH, CState_Skill2::Create(&Desc));
+		Desc.pCollisionPlayer = &m_bCollisionPlayer;
+		m_States.emplace(FSMSTATE::RUSH, CState_Rush::Create(&Desc));
 	}
 
 	{

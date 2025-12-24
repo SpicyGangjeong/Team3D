@@ -297,7 +297,7 @@ HRESULT CSpellLearn_Overlay::Ready_Components(void* pArg)
 
 void CSpellLearn_Overlay::Clear()
 {
-	m_vUVScale.y = 1.2f;
+	m_vUVScale.y = 1.5f;
 	m_bClear = true;
 }
 
@@ -328,7 +328,7 @@ void CSpellLearn_Overlay::Compute_UI(_uint SpellID)
 
 void CSpellLearn_Overlay::Update_Trail(_float fTimeaDalta)
 {
-	m_vUVScale.y = CMyTools::Lerp_f1D(m_vUVScale.y, m_fTrail / m_fSpellLearn * 1.05f, fTimeaDalta * m_fMoveSpeed);
+	m_vUVScale.y = CMyTools::Lerp_f1D(m_vUVScale.y, m_fTrail / m_fSpellLearn * 1.06f, fTimeaDalta * m_fMoveSpeed);
 }
 
 void CSpellLearn_Overlay::SizeUp(_float fSizeX)

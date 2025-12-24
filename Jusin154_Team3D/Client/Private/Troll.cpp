@@ -88,7 +88,7 @@ void CTroll::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta * m_fEasing, m_pTransformCom);
 
 	__super::Update(fTimeDelta);
 
@@ -515,7 +515,7 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pTroll_Particle->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pTroll_Particle->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle", static_cast<LEVEL>(g_iStaticLevel));
 	m_pTroll_Particle->FollowParents(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
 
 
@@ -525,7 +525,7 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pTroll_Particle2->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pTroll_Particle2->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle2", static_cast<LEVEL>(g_iStaticLevel));
 	m_pTroll_Particle2->FollowParents(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
 
 
@@ -534,7 +534,7 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pRight_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRight_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(g_iStaticLevel));
 	m_pRight_Smoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightArm"));
 
 	if (FAILED(Add_PartObject<CEffectParts>("Troll_Left_Smoke", g_iStaticLevel, &m_pLeft_Smoke, &PartsDesc)))
@@ -542,7 +542,7 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pLeft_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeft_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(g_iStaticLevel));
 	m_pLeft_Smoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
 
 
@@ -550,21 +550,21 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pLeftTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeftTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(g_iStaticLevel));
 	m_pLeftTrail->Set_Visible(false);
 
 	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRightTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
 
-	m_pRightTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRightTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(g_iStaticLevel));
 	m_pRightTrail->Set_Visible(false);
 
 	if (FAILED(Add_PartObject<CTrailObject>("Weapon_Trail", g_iStaticLevel, &m_pWeaponTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
 
-	m_pWeaponTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Swing_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pWeaponTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Swing_Trail", static_cast<LEVEL>(g_iStaticLevel));
 	m_pWeaponTrail->Set_Visible(false);
 
 

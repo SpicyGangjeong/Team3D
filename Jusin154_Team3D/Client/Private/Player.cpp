@@ -9,8 +9,8 @@
 #include "Wand.h"
 #include "Item_Potion.h"
 #include "Character_Controller.h"
-#include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
+#include "CallBack_Playable_Behavior.h"
 #include "CallBack_Playable_HitReport.h"
 #include "Monster.h"
 #include "Broom.h"
@@ -95,10 +95,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pInfoInstance->Regist_PlayerAlly(this);
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
-
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-21.f, 0.f, -14.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-21.f, 0.f, -14.f, 1.f));
-
+	{
+		PLAYERDESC* pDesc = static_cast<PLAYERDESC*>(pArg);
+		_vector vPos = XMLoadFloat4(&pDesc->vPos);
+		_vector vRotQ = XMLoadFloat4(&pDesc->vRotQ);
+		m_pCharacter_Controller->Set_Position(vPos);
+		m_pTransformCom->Set_State(STATE::POSITION, vPos);
+		m_pTransformCom->Rotation(vRotQ);
+	}
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -136,15 +140,17 @@ void CPlayer::Update(_float fTimeDelta)
 	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
-/*	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	_float ease = 1.f;
-	if (ratio < 0.4f)
-		ease = 1.15f;      
-	else if (ratio > 0.85f)
-		ease = 0.85f; */     
+	Play_SpellHitAnim();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	m_pModelCom->Play_Animation(fTimeDelta /** ease*/, m_pTransformCom);
+	_float ease = 1.f + powf(fRatio, 3.f) * 0.6f;
+
+	if (m_pFSM->IsEnable(FSMSTATE::SPELL | FSMSTATE::LIGHT_ATTACK | FSMSTATE::COMBAT | FSMSTATE::ANCIENT_SPELL))
+		m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
+	else {
+		m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+	}
 
 	Play_Event();
 	
@@ -340,6 +346,7 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+		m_bMeleeHit = CollisionDesc->bIsMelee;
 	}
 	else {
 		m_fHitDegree = -1.f;

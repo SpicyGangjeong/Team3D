@@ -52,6 +52,7 @@ enum ESTATE : _u64Flag
     GROUND                      = 1ULL << 45,
     SWIPE                       = 1ULL << 46,
     SLIDE                       = 1ULL << 47,
+    FALL                        = 1ULL << 48,
     END
 };
 NS_END

@@ -67,7 +67,8 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
-	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
+	 PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
+
 
 	// PxRigidStatic		씬의 정적 바디 인터페이스
 	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
@@ -494,18 +495,24 @@ unordered_set<PSX::PxActor*>::iterator CPhysX_Manager::Detach_Actor(PSX::PxActor
 	return iterOut;
 }
 
-void CPhysX_Manager::Release_Actor(PSX::PxActor& Actor, _uint iLevel)
+void CPhysX_Manager::Release_Actor(PSX::PxActor& Actor)
 {
 	// 혹시 활성화 맵에 들어있을 수도 있으니 검사
-	unordered_set<PSX::PxActor*>::iterator iterResult = Detach_Actor(Actor, iLevel);
-	if (m_pRestBodies[iLevel].end() != iterResult) { // 방금 전까지만 해도 활성화 중이었던 액터 라면
-		m_pRestBodies[iLevel].erase(iterResult); // 바로 지워줌
+	unordered_set<PSX::PxActor*>::iterator iterResult = {};
+	_uint iReleasedLevel = UINT_MAX;
+	for (_uint iLevel = 0; iLevel < m_iMaxLevel; ++iLevel) {
+		iterResult = Detach_Actor(Actor, iLevel);
+		if (m_pRestBodies[iLevel].end() != iterResult) { // 방금 전까지만 해도 활성화 중이었던 액터 라면
+			m_pRestBodies[iLevel].erase(iterResult); // 바로 지워줌
+			iReleasedLevel = iLevel;
+			break;
+		}
 	}
-	else {
-		m_pActiveBodys[iLevel].erase(&Actor);
-		m_pRestBodies[iLevel].erase(&Actor);
+	if (UINT_MAX == iReleasedLevel) {
+		m_pActiveBodys[iReleasedLevel].erase(&Actor);
+		m_pRestBodies[iReleasedLevel].erase(&Actor);
 	}
-	Actor.release();
+	//Actor.release();
 }
 
 PSX::PxController* CPhysX_Manager::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
@@ -647,7 +654,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 50), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 85), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
 	m_pScene->addActor(*pGroundPlane);

@@ -86,7 +86,7 @@ void CAction_Panel::Update(_float fTimeDelta)
 	}
 
 	Magic_Meter_Move();
-
+	m_fTime -= fTimeDelta;
 	__super::Update(fTimeDelta);
 }
 
@@ -226,6 +226,10 @@ void CAction_Panel::Ancient_Magic_Throw()
 
 void CAction_Panel::Use_Spell(_int Index)
 {
+	if (m_fTime >= 0.f)
+		return;
+
+	m_fTime = 0.5f;
 	switch (Index)
 	{
 	case 1:

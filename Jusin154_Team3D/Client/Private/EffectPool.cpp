@@ -14,6 +14,8 @@
 #include "BombardSide.h"
 #include "LeviosoSide.h"
 #include "DecendoSide.h"
+#include "AvadakedavraSide.h"
+#include "TransformationSide.h"
 
 #include "NomalJapSide.h"
 #include "Lumos.h"
@@ -39,7 +41,8 @@
 #include "LightningSide.h"
 #include "Blink.h"
 #include "Transformation.h"
-#include "TransformationSide.h"
+#include "Avadakedavra.h"
+
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -78,7 +81,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 #endif // 
 #ifdef 진우
 	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
+	m_isActiveMonsterEffectCreate = false;
 #endif // 
 #ifdef 기무리
 	m_isActiveEffectCreate = true;
@@ -214,7 +217,7 @@ HRESULT CEffectPool::Bind_ShaderResources()
 
 HRESULT CEffectPool::Ready_Effect()
 {
-	if (FAILED(Create_Effect(SKILL_TYPE::JAP, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::JAP, 10, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 		CNomalJap* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CNomalJap>(iPrototypeLevel, nullptr);
@@ -223,7 +226,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CBombard* pEffect = nullptr;
 
@@ -232,7 +235,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CDecendo* pEffect = nullptr;
 
@@ -241,7 +244,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CProtego* pEffect = nullptr;
 
@@ -250,7 +253,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CRevelio* pEffect = nullptr;
 
@@ -259,7 +262,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::JAP_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::JAP_SIDE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CNomalJapSide* pEffect = nullptr;
 
@@ -268,7 +271,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CLevioso* pEffect = nullptr;
 
@@ -278,7 +281,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::LUMOS, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::LUMOS, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CLumos* pEffect = nullptr;
 
@@ -288,7 +291,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::ACCIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::ACCIO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CAccio* pEffect = nullptr;
 
@@ -298,7 +301,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA_SIDE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CBombardSide* pEffect = nullptr;
 
@@ -307,7 +310,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO_SIDE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CLeviosoSide* pEffect = nullptr;
 
@@ -317,7 +320,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO_SIDE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CDecendoSide* pEffect = nullptr;
 
@@ -327,7 +330,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::WAND_END, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::WAND_END, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CWandEnd* pEffect = nullptr;
 
@@ -337,7 +340,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::BOX_SPLESH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BOX_SPLESH, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CBox_Splesh* pEffect = nullptr;
 
@@ -347,7 +350,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::CHAIL_SPLESH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::CHAIL_SPLESH, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CChair_Splesh* pEffect = nullptr;
 
@@ -357,7 +360,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::BARRAL_SPLASH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BARRAL_SPLASH, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CBarral_Splesh* pEffect = nullptr;
 
@@ -367,7 +370,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::SCREEN_WIND, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::SCREEN_WIND, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CScreen_Wind* pEffect = nullptr;
 
@@ -377,7 +380,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::STUPEFY, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::STUPEFY, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CStupefy* pEffect = nullptr;
 
@@ -386,7 +389,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::LIGHTNING, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::LIGHTNING, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CLightning* pEffect = nullptr;
 
@@ -395,7 +398,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::LIGHTNING_SIDE, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::LIGHTNING_SIDE, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CLightningSide* pEffect = nullptr;
 
@@ -405,7 +408,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::BLINK, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BLINK, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CBlink* pEffect = nullptr;
 
@@ -414,7 +417,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::TRANSFORMATION, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::TRANSFORMATION, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CTransformation* pEffect = nullptr;
 
@@ -423,11 +426,29 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::TRANSFORMATION_SIDE, 3, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::TRANSFORMATION_SIDE, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CTransformationSide* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CTransformationSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::AVADAKEDAVRA, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CAvadakedavra* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CAvadakedavra>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::AVADAKEDAVRA_SIDE, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CAvadakedavraSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CAvadakedavraSide>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;
@@ -440,7 +461,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 {
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_ATTACK, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_ATTACK, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CTrollSwing* pEffect = nullptr;
 
@@ -449,7 +470,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_NOMAL_SMOKE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_NOMAL_SMOKE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CTroll_Nomal_Smoke* pEffect = nullptr;
 
@@ -458,7 +479,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_RUSH_HIT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_RUSH_HIT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CTroll_Rush_Hit* pEffect = nullptr;
 
@@ -468,7 +489,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_PROTEGO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CGoblin_Protego* pEffect = nullptr;
 
@@ -477,7 +498,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_ATTACK, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_ATTACK, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CGoblin_Attack* pEffect = nullptr;
 
@@ -487,7 +508,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_ATTACK, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_ATTACK, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CMage_Nomal_Attack* pEffect = nullptr;
 
@@ -497,7 +518,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_DOWN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_DOWN, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CMage_Down_Attack* pEffect = nullptr;
 
@@ -508,7 +529,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_SIDE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CMageSide* pEffect = nullptr;
 
@@ -519,7 +540,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::STUN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::STUN, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CStunEffect* pEffect = nullptr;
 
@@ -529,7 +550,7 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::GOBILN_TELEPORT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBILN_TELEPORT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CGoblin_Teleport* pEffect = nullptr;
 

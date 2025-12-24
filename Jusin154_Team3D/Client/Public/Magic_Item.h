@@ -34,27 +34,19 @@ private:
 private:
 	void Compute_UV(_uint iItemID);
 	void Compute_Image();
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CTexture* m_pDiffuse_TextureCom3 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom4 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom5 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom6 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_float4 m_vUV{};
 	_uint	m_iArratCount{};
-	_float2 m_vImageSize1 = {};
-	_float2 m_vImagePos1 = {};
-	_float2 m_vImageSize2 = {};
-	_float2 m_vImagePos2 = {};
-
-	_int	m_iPotionIndex{};
-	_int	m_iPerPotionIndex{};
-	_wstring m_strPotion;
+	_float4 m_vImageposi1 = {};
+	_float4 m_vImageposi2 = {};
 public:
 	static CMagic_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

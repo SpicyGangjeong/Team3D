@@ -30,6 +30,7 @@
 #include "CamPosition_Shoulder.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
+#include "Ranrok.h"
 
 
 #pragma endregion
@@ -354,11 +355,6 @@ HRESULT CLoader::Loading_For_Logo()
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_ANIMMESH,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxAnimMesh.hlsl"),
-			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
 			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
 		return E_FAIL;
 	}
@@ -1283,7 +1279,12 @@ HRESULT CLoader::Loading_For_UI()
 }
 HRESULT CLoader::Loading_For_Effect()
 {
-
+	m_strMessage = TEXT("Shader Loading..");
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
+			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
+		return E_FAIL;
+	}
 	m_strMessage = TEXT("PhysX Meshes Loading..");
 	{
 
@@ -1589,6 +1590,11 @@ HRESULT CLoader::Loading_For_Effect()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/Troll_Rock_Big.bin", XMMatrixScaling(0.00004f, 0.00004f, 0.00004f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
+
 	{
 		CVIBuffer_Terrain* pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "Hogsmeade_HeightMap.bin", 512, 512);
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade"), pTerrain))) {
@@ -1741,6 +1747,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok>(g_iStaticLevel, CRanrok::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -2286,6 +2295,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 {
 	m_strMessage = TEXT("Texture Loading..");
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
+			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
 		return E_FAIL;
@@ -2325,7 +2339,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 
 	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SK_ConjuredDragon_Model"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Characters\\Creatures\\Dragons\\ConjuredDragon\\SK_ConjuredDragon.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity())))) {
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Wands\\CharacterWands\\SK_Wands_Amit.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity())))) {
 	//	return E_FAIL;
 	//}
 
@@ -2435,6 +2449,16 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_ConjuredDragon_Model")
 	));
 
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Professor_EleazarFig_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig_Anim.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Professor_EleazarFig_Model")
+	));
+
 	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ConjuredDragon_Model"),
 	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f))* XMMatrixIdentity()))))
 	//	return E_FAIL;
@@ -2469,6 +2493,12 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc_AvadaKedavra.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Npc_Model")
+	));
+
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin",XMMatrixIdentity(),
 		TEXT("Prototype_Component_Wand_Model")
@@ -2533,7 +2563,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	/* For.Prototype_GameObject_DummySkyBox */
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummySkyBox>(g_iStaticLevel, CDummySkyBox::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
 
 	///* For.Prototype_GameObject_Terrain */
 	//if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
