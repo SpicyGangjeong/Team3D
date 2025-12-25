@@ -14,17 +14,19 @@ matrix g_OffsetMatrix[256];
 int g_bRimLight;
 int g_bUseNormalMap;
 int g_bDisolve;
+uint g_iPackedBlendColor;
+int g_iColorMixerMethod;
 
 float4 g_vDisolveEdgeColor;
 float4 g_vCamPosition;
 float4 g_vOutLineColor;
-float3 g_vBlendColor;
 float g_fFar;
 float g_fOutLineScale;
 float g_fOutLineThickness;
 float g_fOutLinePower;
 float g_fUsingSurfaceParams;
 float g_fEtherealRatio;
+float g_fMixerFactor;
 
 
 Texture2D g_DiffuseTexture                   : register(t00);
@@ -38,7 +40,7 @@ Texture2D g_NormalBlendTexture               : register(t07); // OPACITY
 Texture2D g_SROBlendTexture                  : register(t08);
 Texture2D g_LightMapTexture                  : register(t09);
 Texture2D g_ReflectionTexture                : register(t10);
-Texture2D g_DiffuseBlend                     : register(t11);// BASE_COLOR
+Texture2D g_DiffuseBlend                     : register(t11); // BASE_COLOR
 Texture2D g_NormalCameraTexture              : register(t12);
 Texture2D g_EmissionColorTexture             : register(t13);
 Texture2D g_MetalnessTexture                 : register(t14);
@@ -634,7 +636,7 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb;
+    vDiffuse.rgb += vEmissive.rgb * 3.f;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -663,7 +665,7 @@ PS_OUT PS_DNMRO_ToMRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb;
+    vDiffuse.rgb += vEmissive.rgb * 3.f;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -692,7 +694,7 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb;
+    vDiffuse.rgb += vEmissive.rgb * 3.f;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -757,7 +759,7 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vAmbient = g_AmbientTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb;
+    vDiffuse.rgb += vEmissive.rgb * 3.f;
     vDiffuse.rgb += vAmbient.rgb;
     if (vDiffuse.a < 0.2f) {
         discard;
@@ -789,28 +791,33 @@ PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
 {
     PS_OUT Out;
     float2 uv = In.vTexcoord;
+    float2 center = float2(0.5f, 0.5f);
+    float2 p = uv - center;
+    float2 uvRot90 = frac(float2(p.x, p.y) + center);
     float4 vDAOColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     float4 vTHVColor = g_DiffuseBlend.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
-    float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).r;
-    
+    float fAlpha = g_NormalBlendTexture.Sample(DefaultSampler, uvRot90).r;
+    float3 vHairBaseColor = g_NormalBlendTexture.Sample(DefaultSampler, uvRot90).rrr;
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    float fDiffuseMask = vDAOColor.r;
-    float AlphaMask = vDAOColor.g;
     float AoMask_Dao = vDAOColor.b;
     float RootTip = vTHVColor.r;
     float SpecMask = vTHVColor.g;
     float AoMask_Thv = vTHVColor.b;
-    
-    float3 vColorRoot = vDAOColor * 0.6f;
-    float3 vColorTip = vDAOColor;
+    float3 vColorHair = clamp(ColorMixer(vHairBaseColor, UnpackRGB8(g_iPackedBlendColor), g_fMixerFactor, g_iColorMixerMethod), 0.f, 1.f);
+    float3 vColorRoot = vColorHair * 0.6f;
+    float3 vColorTip = vColorHair;
     float3 vBaseColor = lerp(vColorRoot, vColorTip, RootTip);
     
-    Out.vAlbedo = float4(vBaseColor, (1 - fOppacity));
+    if (fAlpha < 0.3f)
+    {
+        discard;
+    }
+    Out.vAlbedo = float4(vBaseColor, fAlpha);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w),
         (In.vProjPos.w / g_fFar),
@@ -829,7 +836,7 @@ PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     float4 vSubSurfaceColor = g_ReflectionTexture.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
-    float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv).r;
+    float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
@@ -853,10 +860,10 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuseColor.rgb += vEmissive.r * vEmissive.g;
+    vDiffuseColor.rg += (vEmissive.rg) * 3.f;
     
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
-    float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv).r;
+    float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
@@ -886,8 +893,7 @@ PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    vDiffuseColor.rgb += g_vBlendColor.rgb;
-    
+    vDiffuseColor.rgb = clamp(ColorMixer(vDiffuseColor.rrr, UnpackRGB8(g_iPackedBlendColor), g_fMixerFactor, g_iColorMixerMethod), 0.f, 1.f);
     Out.vAlbedo = vDiffuseColor;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w),
@@ -905,7 +911,7 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDAOColor    = g_DiffuseTexture.Sample(DefaultSampler, uv);
-    float4 vHairColor   = g_EmissiveTexture.Sample(DefaultSampler, uv);
+    float3 vHairBaseColor = g_NormalBlendTexture.Sample(DefaultSampler, uv).rrr;
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vTHVColor    = g_DiffuseBlend.Sample(DefaultSampler, uv);
     
@@ -913,18 +919,26 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    float fDiffuseMask  = vDAOColor.r;
     float AlphaMask     = vDAOColor.g;
     float AoMask_Dao    = vDAOColor.b;
     float RootTip       = vTHVColor.r;
     float SpecMask      = vTHVColor.g;
-    float AoMask_Thv    = vTHVColor.b;
+    float AoMask_Thv    = vTHVColor.b; // Volume
     
-    float3 vColorRoot = vDAOColor * 0.6f;
-    float3 vColorTip = vDAOColor;
+    float3 vColorHair = clamp(ColorMixer(vHairBaseColor, UnpackRGB8(g_iPackedBlendColor), g_fMixerFactor, g_iColorMixerMethod), 0.f, 1.f);
+    float3 vColorRoot = vColorHair * 0.6f;
+    float3 vColorTip = vColorHair;
     float3 vBaseColor = lerp(vColorRoot, vColorTip, RootTip);
     
-    Out.vAlbedo = float4(vBaseColor, AlphaMask);
+    float fAlphaTip = AlphaMask * 0.6f;
+    float fAlphaRoot = AlphaMask;
+    float fBaseAlpha = lerp(fAlphaRoot, fAlphaTip, (1.f - RootTip));
+    float fAlpha = (fBaseAlpha);
+    if (fAlpha < 0.2f)
+    {
+        discard;
+    }
+    Out.vAlbedo = float4(vBaseColor, fAlpha);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w),
         (In.vProjPos.w / g_fFar),
@@ -969,7 +983,7 @@ PS_OUT_BLEND PS_Dragon_EtherealWings(PS_IN In)
     float2 uvDiffuse = uv; uvDiffuse.y -= g_fEtherealRatio;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uvDiffuse);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuse += vEmissive;
+    vDiffuse += vEmissive * 3.f;
     float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uvDiffuse).a;
     vDiffuse.a =  (1- fOppacity);
     Out.vAlbedo = vDiffuse;
@@ -1014,7 +1028,7 @@ PS_OUT PS_Dragon_Wings(PS_IN In)
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuse += vEmissive;
+    vDiffuse += vEmissive * 3.f;
 
     if (vDiffuse.a < 0.2f)
     {
@@ -1120,7 +1134,7 @@ technique11 DefaultTechnique
     pass EYE_OCC // 3
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

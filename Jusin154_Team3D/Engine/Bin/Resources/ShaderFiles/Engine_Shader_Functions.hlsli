@@ -374,6 +374,26 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
 
 }
 
+float3 UnpackRGB8(int iPacked)
+{
+    return float3((iPacked >> 16) & 255, (iPacked >> 8) & 255, iPacked & 255) / 255.0f;
+}
+float3 ColorMixer(float3 vSlotA, float3 vSlotB, float fAToBFactor, int iMethod)
+{
+    float3 vResult = { 0.f, 0.f, 0.f };
+    switch (iMethod)
+    {
+        case 1:
+            vResult = (fAToBFactor) * vSlotA + (1.f - fAToBFactor) * vSlotB;
+            break;
+        case 0:
+            vResult = (fAToBFactor) * vSlotA * (1.f - fAToBFactor) * vSlotB;
+            break;
+    }
+    return vResult;
+}
+
+
 float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
 {
     if (iSelectOption < 0)
