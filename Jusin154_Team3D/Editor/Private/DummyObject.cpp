@@ -204,4 +204,11 @@ void CDummyObject::Describe_Entity()
 	if (nullptr != m_pModelCom) {
 		m_pModelCom->Describe_Entity();
 	}
+	if (nullptr != m_pShaderCom) {
+		if (GUI::Button("RefreshShader")) {
+			if (FAILED(m_pShaderCom->Shader_Refresh())) {
+				assert(false);
+			}
+		}
+	}
 }

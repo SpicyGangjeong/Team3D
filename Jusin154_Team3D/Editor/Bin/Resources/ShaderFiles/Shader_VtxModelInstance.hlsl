@@ -89,10 +89,17 @@ bool   g_isDiffuseUVMove;
 bool   g_isNoiseColor;
 bool   g_isNoiseAlpha;
 bool   g_isNoiseUVMove;
+
+bool   g_isNoise_B;
+bool   g_isNoise_G;
+
 float4 g_vNoiseColor;
 float2 g_vNoiseUVGainAmount;
 int    g_iNoiseMoveLerpOption;
 /* 마스크 */
+
+bool   g_isMask_G;
+bool   g_isMask_B;
 
 bool   g_isMaskClampSample;
 bool   g_isMaskUVMove;
@@ -114,6 +121,9 @@ bool   g_isDissolve;
 bool   g_isDissolveMove;
 bool   g_isReverseDissolve;
 bool   g_isNomalDissolve;
+
+bool   g_isDissolve_B;
+bool   g_isDissolve_G;
 
 float  g_fDissolveMaskEdge;
 float  g_fDissolveSoftMask;
@@ -452,7 +462,18 @@ float4 DrawEffect(PS_IN In)
         vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
         
         if (g_isNoiseAlpha)
-            vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
+            {
+                    
+            float fNoiseValue = vMtrlNoise.r;
+        
+            if (g_isNoise_G == true)
+                fNoiseValue = vMtrlNoise.g;
+        
+            if (g_isNoise_B == true)
+                fNoiseValue = vMtrlNoise.b;
+            
+            vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fNoiseValue.r);
+        }
         
         if (g_isNoiseColor)
         {
@@ -506,21 +527,27 @@ float4 DrawEffect(PS_IN In)
         else
             vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
         
-           
+        float fMaskValue = vMtrlMask.r;
+        
+        if (g_isMask_G == true)
+            fMaskValue = vMtrlMask.g;
+        
+        if (g_isMask_B == true)
+            fMaskValue = vMtrlMask.b;
         
         float fSoftMask;
     
         if (g_fSoftMask > FLT_EPSILON5)
-            fSoftMask = saturate((vMtrlMask.r - g_fSoftMaskEdge) * g_fSoftMask);
+            fSoftMask = saturate((fMaskValue - g_fSoftMaskEdge) * g_fSoftMask);
         else
-            fSoftMask = vMtrlMask.r;
+            fSoftMask = fMaskValue;
         
         vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fSoftMask);
         
    
     }
     else
-    {
+    {        
         vMtrlMask.r = 1.f;
     }
 
@@ -570,12 +597,21 @@ float4 DrawEffect(PS_IN In)
             vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
          
         /* */
+        
+        float fDissolveValue = vMtrlDissolve.r;
+        
+        if (g_isDissolve_G == true)
+            fDissolveValue = vMtrlDissolve.g;
+        
+        if (g_isDissolve_B == true)
+            fDissolveValue = vMtrlDissolve.b;
+        
         float fSoftDissolve;
     
         if (g_fDissolveSoftMask > FLT_EPSILON5)
-            fSoftDissolve = saturate((vMtrlDissolve.r - g_fDissolveMaskEdge) * g_fDissolveSoftMask);
+            fSoftDissolve = saturate((fDissolveValue - g_fDissolveMaskEdge) * g_fDissolveSoftMask);
         else
-            fSoftDissolve = vMtrlDissolve.r;
+            fSoftDissolve = fDissolveValue;
         
         vMtrlDissolve.r = fSoftDissolve;
        
@@ -789,6 +825,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse += RimLight(In);
 
+
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
 
     return Out;
@@ -918,6 +955,8 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     vMtrlDiffuse = DrawEffect(In);
     
     vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
     vMtrlDiffuse.a *= 5.f;
     
@@ -1202,7 +1241,7 @@ technique11 DefaultTechnique
     pass BLOOM
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -1330,6 +1369,27 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUR_MESH();
     }
 
+//20
+    pass Blur_Culling
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
+//21
+    pass Blur_Culling_No_Emissive
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR_NOEMISSIVE();
+    }
 }
 
 

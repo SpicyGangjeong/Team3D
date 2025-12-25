@@ -65,6 +65,10 @@ void CEffect_Container::OnCollision(CGameObject* pOther, void* pDesc)
 
 HRESULT CEffect_Container::Load_Directory(const _char* pPath)
 {
+	if (filesystem::exists(pPath) == false) {
+		MessageBox(NULL, L"존재하지 않는 경로", L"System Message", MB_OK);
+		return E_FAIL;
+	}
 
 	for (const auto& file : filesystem::directory_iterator(pPath))
 	{

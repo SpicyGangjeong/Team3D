@@ -21,6 +21,7 @@ float g_fOutLinePower;
 vector g_vCamPosition;
 uint g_iIndexU;
 uint g_iIndexV;
+float2 g_vTime;
 
 float g_fDisolveRatio;
 float g_fUsingSurfaceParams;
@@ -67,6 +68,7 @@ Texture2D g_Maya_Specular_ColorTexture;
 Texture2D g_Maya_Specular_RoughnessTexture;
 Texture2D g_AnisotropyTexture;
 
+
 int g_iBinded_Texture[AI_TEXTURE_TYPE_MAX];
 
 Texture2D g_MaskingTexture;
@@ -81,6 +83,7 @@ Texture2D g_NormalSubTexture;
 Texture2D g_DeadDisolveTexture;
 
 Texture2D g_DepthTexture;
+Texture2D g_MaskNoiseTexture;
 
 float g_fNormalValue1;
 float g_fNormalValue2;
@@ -109,6 +112,15 @@ float g_fWinSizeY;
 float4 g_vMaskColorRed;
 float4 g_vMaskColorGreen;
 float4 g_vMaskColorBlue;
+
+float   g_fFogDensity;
+float   g_fFogPow;
+float   g_fNormalThreshold;
+bool    g_bFogVisible;
+vector  g_vFogColor;
+
+float g_fSoftMask;
+float g_fSoftMaskEdge;
 
 struct VS_IN
 {
@@ -516,6 +528,29 @@ struct PS_OUT_BLUR
     float4 vDiffuse : SV_TARGET0;
 };
 
+PS_OUT_BLUR PS_MAIN_SKYBOX(PS_IN In)
+{
+    PS_OUT_BLUR Out;
+    
+    float4 vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    //if (0.f == g_fFogPow)
+    //{
+    //    Out.vDiffuse = vColor;
+    //    return Out;
+    //}
+    
+    //vector vFinalColor;
+    //float fRatio;
+    
+    //fRatio = pow(1.f - saturate(exp(-1.f * g_fFar * g_fFogDensity)), g_fFogPow);
+    //vFinalColor = lerp(vColor, g_vFogColor, fRatio);
+    //vFinalColor.a = 1.f;
+    
+    Out.vDiffuse = vColor;
+    
+    return Out;
+}
 
 PS_OUT_BLUR PS_MAIN_BLUR(PS_IN_BLUR In)
 {
@@ -930,7 +965,7 @@ PS_OUT_DELCAL PS_MAIN_DECAL(PS_IN_DECAL In)
     
     clip(0.5f - ObjectAbsPos);
     
-    float2 vDecalUV = vLocalPos.xz + 0.5f;
+    float2 vDecalUV =( vLocalPos.xz + 0.5f) * 2.f;
     
     float4 vMaskColor = g_MaskingTexture.Sample(DefaultSampler, vDecalUV);
     if (vMaskColor.a < 0.2f)
@@ -938,23 +973,27 @@ PS_OUT_DELCAL PS_MAIN_DECAL(PS_IN_DECAL In)
         discard;
     }
     
+    vector vNoise = g_NoiseTexture.Sample(DefaultSampler, vDecalUV + g_vTime);
+    
     float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, vDecalUV);
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, vDecalUV);
     
     float fMaskWeight = vMaskColor.r + vMaskColor.g + vMaskColor.b;
     
-    float4 vDiffuseColor = vMaskColor.r * g_vMaskColorRed +
+    float4 vDiffuseColor = vMaskColor.r * g_vMaskColorRed * 2.f * vNoise.r + 
                             vMaskColor.g * g_vMaskColorGreen +
-                            vMaskColor.b * g_vMaskColorBlue;
-   
+                            vMaskColor.b * g_vMaskColorBlue * 2.f * vNoise.r;
+    
     vDiffuseColor /= fMaskWeight;
-   
+        
+    vDiffuseColor.a = max(0.001f, vDiffuseColor.a);
+    
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
-   
+    
     Out.vAlbedo = vDiffuseColor;
-    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.5f);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.1f);
     float fSurfaceParam = g_fUsingSurfaceParams;
     if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
     {
@@ -996,7 +1035,7 @@ technique11 MeshTechnique11
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_SKYBOX();
     }
 
     pass ALPHABlendPass // 3
