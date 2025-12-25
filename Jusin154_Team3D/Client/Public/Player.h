@@ -7,6 +7,25 @@ NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
+	enum class PLAYER_MESH_ORDER {
+		HEAD_EYE_OCC,
+		HEAD_FACE,
+		HEAD_TEETH,
+		HEAD_EYELASH,
+		HEAD_EYES,
+		BODY_ARMS,
+		HAIR_MAIN,
+		HAIR_MAIN_CLOTH,
+		LOWER,
+		SHOES,
+		UPPER,
+		HAIR_SUB,
+		HAIR_SUB_CLOTH,
+		ROBE_SKIRT,
+		ROBE_FUR,
+		ROBE_CLOTH,
+		END
+	};
 public:
 	typedef struct tagPlayerInitDesc {
 		_float4 vPos;
@@ -56,9 +75,8 @@ private:
 	_float m_fOriginGravityAmount = {};
 	_float m_fGravityAmount = {};
 
-	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
-	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
 	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
+	class CCamPosition_Head* m_pCamPosition_HeadPart = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -77,6 +95,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
 	void ReLockOnTarget();
 	void SetGravity();
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
@@ -141,6 +160,9 @@ private:
 	_float			m_fAccel = { 1.f };
 	_float			m_fSlideSpeed = {};
 	_float			m_fTargetSpeed = { 7.f };
+	_float			m_fMoveTime = {};
+	_float			m_fCross = 0.f;
+	_float			m_fabsDir = 0.f;
 	/* 무적 불 변수*/
 #ifdef _DEBUG
 	_bool			m_isDebugMode = { false };

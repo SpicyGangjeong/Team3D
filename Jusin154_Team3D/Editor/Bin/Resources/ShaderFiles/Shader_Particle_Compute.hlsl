@@ -91,6 +91,11 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isExcludePos;
     bool isStopMove_For_Depth_Compare;
     bool isNoPos;
+    
+    bool isNoResetTime;
+    bool isPadding0;
+    bool isPadding1;
+    bool isPadding2;
 
     float fTimeDelta;
     float fSizeLerpOption; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
@@ -189,14 +194,19 @@ void CS_MAIN(
         particleValue.vDelay.x = 0.f;
         particleValue.isStop = false;
         
-        particleValue.vMaskingUVMoveTime.x = 0.f;
-        particleValue.vDiffuseUVMoveTime.x = 0.f;
-        particleValue.vNoiseUVMoveTime.x = 0.f;
-        particleValue.vDistortionUVMoveTime.x = 0.f;
-        particleValue.vDissolveUVMoveTime.x = 0.f;
-        
-        if (isRandomAniIndex == false)
-            particleValue.vAniIndex.x = 0.f;
+        if (isNoResetTime == false)
+        {
+            particleValue.vMaskingUVMoveTime.x = 0.f;
+            particleValue.vDiffuseUVMoveTime.x = 0.f;
+            particleValue.vNoiseUVMoveTime.x = 0.f;
+            particleValue.vDistortionUVMoveTime.x = 0.f;
+            particleValue.vDissolveUVMoveTime.x = 0.f;
+            
+            if (isRandomAniIndex == false)
+                particleValue.vAniIndex.x = 0.f;
+        }
+
+
         
         g_VBInstanceOutput[iIndex] = particle;
         g_ParticleValueOutput[iIndex] = particleValue;

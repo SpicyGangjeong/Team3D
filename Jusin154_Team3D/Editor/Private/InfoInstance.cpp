@@ -84,6 +84,10 @@ pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)
 {
 	return m_pMonsterInfo->Get_NearestPlayerAlly(vPos);
 }
+HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
+{
+	return m_pMapInfo->Load_MapObjects(pFilePath);
+}
 #pragma endregion
 #pragma region MAP_INFO
 

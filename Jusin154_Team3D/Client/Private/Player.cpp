@@ -121,6 +121,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 
+	m_pModelCom->Set_Temp(true);
+
 	return S_OK;
 }
 
@@ -142,15 +144,8 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();
-/*	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	_float ease = 1.f;
-	if (ratio < 0.4f)
-		ease = 1.15f;      
-	else if (ratio > 0.85f)
-		ease = 0.85f; */     
-
-	m_pModelCom->Play_Animation(fTimeDelta /** ease*/, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
 	
@@ -229,7 +224,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	if (m_bLookAt && m_LockOnInfo.pUnit)
 	{
-		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 8.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 10.f);
 	}
 	////////////////////////////////////////////////////////////////////////////
 	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
@@ -272,13 +267,16 @@ HRESULT CPlayer::Render()
 		{
 			return E_FAIL;
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
 			return E_FAIL;
 		}
 
 
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+		if (FAILED(Bind_ShaderParameters(i))) {
+			return E_FAIL;
+		}
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -316,11 +314,12 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 		{
 			return E_FAIL;
 		}
+
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 
 
 		if (FAILED(m_pModelCom->Render(i))) {
@@ -337,6 +336,8 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		m_bShield = true;
 	}
+	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) && m_bShield)
+		return;
 
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
@@ -346,14 +347,14 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+		m_eHitType = CollisionDesc->eHitType;
+		m_pStat->Get_Damage(CollisionDesc->fDamage);
 	}
 	else {
 		m_fHitDegree = -1.f;
 	}
-
-
-	if(!m_pFSM->IsEnable(FSMSTATE::DODGE|FSMSTATE::BLINK) && !m_bShield)
-		m_pFSM->Change_State(FSMSTATE::HIT);
+	
+	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
@@ -432,7 +433,7 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 	}
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+	m_strModelPrototypeTag = TEXT("Prototype_Component_Playable_Model");
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
@@ -441,7 +442,7 @@ HRESULT CPlayer::Ready_Components()
 	}
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
@@ -561,6 +562,62 @@ HRESULT CPlayer::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+
+HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
+{
+	_bool bUseColorMixer = false;
+
+	_uint iColorParam = { UINT_MAX };
+	_float fMixerFactor = { FLT_MAX };
+	_uint iColorMixerMethod = { 0 };
+
+	switch (PLAYER_MESH_ORDER(iMeshOrder))
+	{
+	case PLAYER_MESH_ORDER::HAIR_MAIN:
+	case PLAYER_MESH_ORDER::HEAD_EYELASH:
+	case PLAYER_MESH_ORDER::HAIR_SUB:
+		bUseColorMixer = true;
+		iColorParam = 0x2E2E2E;
+		fMixerFactor = 0.9f;
+		iColorMixerMethod = 1;
+		break;
+	case PLAYER_MESH_ORDER::LOWER:
+		bUseColorMixer = true;
+		iColorParam = 0x292557;
+		fMixerFactor = 0.5f;
+		iColorMixerMethod = 1;
+		break;
+	case PLAYER_MESH_ORDER::SHOES:
+		bUseColorMixer = true;
+		iColorParam = 0x614242;
+		fMixerFactor = 0.5f;
+		iColorMixerMethod = 1;
+		break;
+	case PLAYER_MESH_ORDER::UPPER:
+		bUseColorMixer = true;
+		iColorParam = 0xBFAC29;
+		fMixerFactor = 0.658333f;
+		iColorMixerMethod = 1;
+		break;
+	default:
+		break;
+	}
+	if (true == bUseColorMixer) {
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iPackedBlendColor", &iColorParam, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fMixerFactor", &fMixerFactor, sizeof(_float)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMixerMethod", &iColorMixerMethod, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
 void CPlayer::ReLockOnTarget()
 {
 	m_pInfoInstance->Get_LockOnInfo(m_LockOnInfo);
@@ -664,8 +721,6 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pStat);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
-	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
-	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
 	SAFE_RELEASE(m_pEffectPool);
 	SAFE_RELEASE(m_pBroomModel);

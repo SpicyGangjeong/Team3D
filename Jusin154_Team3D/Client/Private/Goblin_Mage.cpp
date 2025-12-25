@@ -236,6 +236,8 @@ HRESULT CGoblin_Mage::Render()
 
 HRESULT CGoblin_Mage::Render_Shadow(SHADOW eType)
 {
+	if (!m_bVisible)
+		return S_OK;
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
@@ -432,7 +434,7 @@ HRESULT CGoblin_Mage::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(g_iStaticLevel));
 	Get_PartObject<CEffectParts>()->Set_Visible(true);
 
 	return S_OK;

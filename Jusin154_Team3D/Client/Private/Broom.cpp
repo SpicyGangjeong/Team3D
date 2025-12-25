@@ -204,7 +204,7 @@ HRESULT CBroom::Ready_Child()
 		return E_FAIL;
 	}
 
-	m_pWindEffect->Load("../Bin/Resources/Data/Effect/ScreenFX/Wind", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pWindEffect->Load("../Bin/Resources/Data/Effect/ScreenFX/Wind", static_cast<LEVEL>(g_iStaticLevel));
 
 	return S_OK;
 }

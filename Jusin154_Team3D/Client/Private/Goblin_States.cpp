@@ -281,9 +281,12 @@ void CGoblin::Behavior_SwingEnter()
 	m_bStep = true;
 	m_pGoblinSpector->Set_Visible(false);
 	m_pGoblinSpector->Spector_Trail_Visible(false);
-
 	m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
+
+	Set_Easing(pairAnimInfo.first, 0.01f, 0.15f, 0.8f);
+
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.4f);
 }
 
 HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
@@ -473,7 +476,7 @@ void CGoblin::Behavior_HitEnter()
 			0.3f);
 
 		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-			[&]() {
+			[this]() {
 				CameraShake(10.f, 1.f, 2.f, 0.3f);
 			},
 			0.27f);
@@ -496,7 +499,7 @@ void CGoblin::Behavior_HitEnter()
 			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
-			[&]() {m_bLookAt = true; },
+			[this]() {m_bLookAt = true; },
 			0.7f);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
@@ -762,7 +765,7 @@ void CGoblin::HitState_Behavior(_float fTimeDelta)
 				0.3f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-				[&]() {
+				[this]() {
 					CameraShake(10.f, 1.f, 2.f, 0.3f);
 				},
 				0.27f);
@@ -785,7 +788,7 @@ void CGoblin::HitState_Behavior(_float fTimeDelta)
 				0.95f);
 
 			Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
-				[&]() {m_bLookAt = true; },
+				[this]() {m_bLookAt = true; },
 				0.7f);
 		}
 		break;
@@ -795,7 +798,7 @@ void CGoblin::HitState_Behavior(_float fTimeDelta)
 			m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
 			_vector vCameraLook = m_pGameInstance->Get_CameraLook();
 			vCameraLook = XMVector3Normalize(vCameraLook);
-			m_pRigidBody->Add_Force(vCameraLook*30.f, physx::PxForceMode::eIMPULSE);
+			m_pRigidBody->Add_Force(vCameraLook * 30.f, PSX::PxForceMode::eIMPULSE);
 			m_fAirTime = 0.f;
 		}
 		break;

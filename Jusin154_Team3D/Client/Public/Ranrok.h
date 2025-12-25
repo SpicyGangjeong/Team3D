@@ -3,7 +3,7 @@
 #include "Client_Define.h"
 #include "Monster.h"
 #include "CallBack_Monster_Behavior.h"
-#include "CallBack_Monster_HitReport.h"
+#include "CallBack_Ranrok_HitReport.h"
 
 NS_BEGIN(Client)
 
@@ -55,7 +55,7 @@ public:
 
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
-	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
+	CCallBack_Ranrok_HitReport* m_pCallBack_HitReport = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -65,6 +65,7 @@ private:
 	_float2 m_vEtherealTimer = { 0.f, 0.16f };
 	_uint iIndex;
 	DAMAGE_INFO m_DamageInfo;
+	_bool m_bCollisionPlayer = { false };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -75,7 +76,6 @@ private:
 	HRESULT Render_Nonblend();
 	HRESULT Render_Blend();
 	void MoveTo(_float fTimeDelta);
-	void AroundPoint(_float fTimeDelta);
 	HRESULT Load_RanrokPos(const _char* pFilePath);
 public:
 	static CRanrok* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

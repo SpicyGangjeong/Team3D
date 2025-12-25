@@ -208,18 +208,10 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
-			return E_FAIL;
-		}
 
 		/* Target_Blur_X */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_X_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
 			return E_FAIL;
 		}
 
@@ -449,9 +441,6 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur")))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
-			return E_FAIL;
-		}
 
 		/* MRT_Bloom */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_Input")))) {
@@ -462,9 +451,7 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_X"), TEXT("Target_Blur_X")))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_X"), TEXT("Target_Blur_X_Weight")))) {
-			return E_FAIL;
-		}
+
 
 		/* MRT_ENV_Blur_X */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_ENV_Blur_X"), TEXT("Target_ENV_Blur_X")))) {
@@ -517,6 +504,17 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* MRT_Decal */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Decal"), TEXT("Target_Diffuse")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Decal"), TEXT("Target_Normal")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Decal"), TEXT("Target_Surface")))) {
+			return E_FAIL;
+		}
+
 	}
 
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);
@@ -524,9 +522,9 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	}
 
-	m_pLastColorShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_LASTCOLOR, nullptr, nullptr);
+	m_pBlurShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_BLUR, nullptr, nullptr);
 
-	if (nullptr == m_pLastColorShader) {
+	if (nullptr == m_pBlurShader) {
 		return E_FAIL;
 	}
 
@@ -599,7 +597,7 @@ void CRenderer::Free()
 	SAFE_RELEASE(m_pShadowDSV_MIDDLE);
 	SAFE_RELEASE(m_pShadowDSV_FAR);
 	SAFE_RELEASE(m_pShader);
-	SAFE_RELEASE(m_pLastColorShader);
+	SAFE_RELEASE(m_pBlurShader);
 	SAFE_RELEASE(m_pWeightBlendShader);
 	SAFE_RELEASE(m_pDistortionShader);
 	SAFE_RELEASE(m_pVIBuffer);

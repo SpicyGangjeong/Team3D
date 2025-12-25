@@ -31,6 +31,7 @@
 #include "Goblin_Spector.h"
 #include "Troll.h"
 #include "NPC_Ollivander.h"
+#include "NPC_EleazarFig.h"
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
 
@@ -149,6 +150,7 @@
 #include "BombardSide.h"
 #include "LeviosoSide.h"
 #include "TransformationSide.h"
+#include "AvadakedavraSide.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
@@ -158,6 +160,7 @@
 #include "Lumos.h"
 #include "Accio.h"
 #include "Blink.h"
+#include "Avadakedavra.h"
 #include "Goblin_Teleport.h"
 
 
@@ -1418,7 +1421,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1435,7 +1438,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_string strFilePath = pFilePath;
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1450,7 +1453,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1465,7 +1468,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1480,7 +1483,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
@@ -1488,6 +1491,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return S_OK;
 
 		});
+
+
 
 #pragma endregion
 
@@ -1737,8 +1742,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 #pragma region ACTOR
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Npc_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin",XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VictorRookWood_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
 
@@ -1760,6 +1775,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Professor_EleazarFig_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
 		return E_FAIL;
@@ -1775,7 +1795,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma region ITEM
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Wand_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/SK_Wands_Amit.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Potion_Model"),
@@ -1878,6 +1898,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CAvadakedavraSide>(g_iStaticLevel, CAvadakedavraSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CTrollSwing>(g_iStaticLevel, CTrollSwing::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -1947,6 +1971,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CAvadakedavra>(g_iStaticLevel, CAvadakedavra::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
@@ -1967,7 +1995,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Box", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -1977,7 +2005,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/ParticleMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -1987,7 +2015,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Goo", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -1997,7 +2025,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/NomalMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -2007,7 +2035,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Lightning", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -2016,7 +2044,17 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Spline", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/DragonMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
@@ -2647,6 +2685,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Ollivander */
 	if (FAILED(m_pGameInstance->Add_Prototype<CNPC_Ollivander>(g_iStaticLevel, CNPC_Ollivander::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_EleazarFig */
+	if (FAILED(m_pGameInstance->Add_Prototype<CNPC_EleazarFig>(g_iStaticLevel, CNPC_EleazarFig::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
 

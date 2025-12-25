@@ -161,9 +161,13 @@ call Update_Resources.bat
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Barral_Splesh.h" />
+    <ClInclude Include="..\Public\Avadakedavra.h" />
+    <ClInclude Include="..\Public\AvadakedavraSide.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
+    <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
+    <ClInclude Include="..\Public\State_FireBall.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
     <ClInclude Include="..\Public\Transformation.h" />
     <ClInclude Include="..\Public\LightningSide.h" />
@@ -240,7 +244,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\RaceRing.h" />
     <ClInclude Include="..\Public\State_AncientSpell.h" />
     <ClInclude Include="..\Public\State_Broom_TurboFly.h" />
-    <ClInclude Include="..\Public\State_FireBall.h" />
     <ClInclude Include="..\Public\State_FireBreath.h" />
     <ClInclude Include="..\Public\State_FireSweep.h" />
     <ClInclude Include="..\Public\State_Ground.h" />
@@ -392,8 +395,11 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\Avadakedavra.cpp" />
+    <ClCompile Include="..\Private\AvadakedavraSide.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
+    <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />

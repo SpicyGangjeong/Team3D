@@ -41,7 +41,7 @@ private:
 #endif
 private:
 	class CShader* m_pShader = { nullptr };
-	class CShader* m_pLastColorShader = { nullptr };
+	class CShader* m_pBlurShader = { nullptr };
 	class CShader* m_pWeightBlendShader = { nullptr };
 	class CShader* m_pDistortionShader = { nullptr };
 	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
@@ -113,7 +113,9 @@ private:
 	void Render_Priority();
 	void Render_Shadow();
 	void Render_NonBlend();
+	void Render_Decal();
 	void Render_Blur(); 
+	void Combine_Blur();
 	void Render_SSAO();
 	void Render_SSAO_BLUR();
 	void Render_LightAcc();
@@ -128,7 +130,6 @@ private:
 	void Render_PostProcessing();
 	void Render_Distortion();
 	void Render_DistortionAcc();
-	void Render_LastColor();
 	void Render_Tone_Mapping();
 	void Render_UI();
 	void Render_UI_Overley();

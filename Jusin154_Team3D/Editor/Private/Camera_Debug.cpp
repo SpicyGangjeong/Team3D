@@ -15,10 +15,6 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
 	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
-}
-
-void CCamera_Debug::Update(_float fTimeDelta)
-{
 	if (false == m_bActive) {
 		return;
 	}
@@ -40,7 +36,7 @@ void CCamera_Debug::Update(_float fTimeDelta)
 	}
 #endif // gimch
 
-	
+
 	if (m_bMovable) {
 #pragma region Position
 		_float fSpeed = 5.f;
@@ -77,6 +73,12 @@ void CCamera_Debug::Update(_float fTimeDelta)
 
 	}
 	__super::Bind_Matrices();
+
+}
+
+void CCamera_Debug::Update(_float fTimeDelta)
+{
+	
 }
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)

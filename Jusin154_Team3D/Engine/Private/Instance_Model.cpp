@@ -341,6 +341,10 @@ HRESULT CInstance_Model::Load_InstanceModel(INSTANCE_DESC InstanceDesc)
 
 	m_InstanceDesc = InstanceDesc;
 
+	if (m_InstanceDesc.fTimeMult <= 0)
+		m_InstanceDesc.fTimeMult = 1.f;
+
+
 	Change_NumInstance();
 
 	return S_OK;
@@ -353,6 +357,10 @@ HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
 	if (!ReadFile(hFile, &m_InstanceDesc, sizeof(INSTANCE_DESC), &dwByte, nullptr)) {
 		return E_FAIL;
 	}
+
+	if (m_InstanceDesc.fTimeMult <= 0)
+		m_InstanceDesc.fTimeMult = 1.f;
+
 
 	Change_NumInstance();
 
@@ -552,7 +560,7 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 	{
 		CS_PARTICLE_DESC* pDesc = static_cast<CS_PARTICLE_DESC*>(ConstantSubResource.pData);
 
-		pDesc->fTimeDelta = fTimeDelta * m_fTimeMult;
+		pDesc->fTimeDelta = fTimeDelta * m_InstanceDesc.fTimeMult;
 
 		pDesc->isLoop = m_InstanceDesc.isLoop;
 		pDesc->isDrop = m_InstanceDesc.isDrop;
@@ -570,6 +578,7 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isExcludePos = m_InstanceDesc.isExcludePos;
 		pDesc->isStop_Move_For_Depth_Compare = m_InstanceDesc.isStop_Move_For_Depth_Compare;
 		pDesc->isNoPos = m_InstanceDesc.isNoPos;
+		pDesc->isNoResetTime = m_InstanceDesc.isNoResetTime;
 		
 
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
@@ -736,7 +745,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].vDiffuseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDiffuseUVMoveTime.x, m_InstanceDesc.vDiffuseUVMoveTime.y));
 				pParticleValues[i].vDistortionUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDistortionUVMoveTime.x, m_InstanceDesc.vDistortionUVMoveTime.y));
 				pParticleValues[i].vNoiseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
-				pParticleValues[i].vDissolveUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
+				pParticleValues[i].vDissolveUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDissolveUVMoveTime.x, m_InstanceDesc.vDissolveUVMoveTime.y));
 				pParticleValues[i].fSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vSpeed.x, m_InstanceDesc.vSpeed.y);
 				pParticleValues[i].fRotaionSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vRotationSpeed.x, m_InstanceDesc.vRotationSpeed.y);
 				pParticleValues[i].vAniIndex = _float2(0.f, m_InstanceDesc.vAniIndex.y);
@@ -1154,6 +1163,17 @@ void CInstance_Model::Describe_Entity()
 
 		if (GUI::TreeNode("Time"))
 		{
+
+			if (GUI::Checkbox("NoResetTime", &m_InstanceDesc.isNoResetTime))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat("TimeMult", reinterpret_cast<_float*>(&m_InstanceDesc.fTimeMult)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
 			if (ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
 			{
 				Instane_Buffer_ReStruct();
@@ -1181,6 +1201,11 @@ void CInstance_Model::Describe_Entity()
 			}
 
 			if (ImGui::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("DissolveUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDissolveUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}

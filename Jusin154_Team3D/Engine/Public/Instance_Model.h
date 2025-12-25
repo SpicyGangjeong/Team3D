@@ -75,7 +75,13 @@ public:
 
 		_float2      vAcceleration = {};
 
-		_float4     vPadding4 = {};
+		_bool       isNoResetTime = {};
+		_bool       isPadding1 = {};
+		_bool       isPadding2 = {};
+		_bool       isPadding3 = {};
+
+		_float		fTimeMult = { 1.f };
+		_float2     fPadding4 = {};
 		_float4     vPadding5 = {};
 		_float4     vPadding6 = {};
 
@@ -178,6 +184,11 @@ public:
 		_int     isStop_Move_For_Depth_Compare = {};
 		_int     isNoPos = {};
 
+		_int	 isNoResetTime = {};
+		_int	 isPadding0 = {};
+		_int	 isPadding1 = {};
+		_int	 isPadding2 = {};
+
 		_float   fTimeDelta = {};
 		_float	 fSizeLerpOption = {};
 		_float   fMoveLerpOption = {};
@@ -263,7 +274,7 @@ public:
 	HRESULT			Load_InstanceModel(HANDLE hFile);
 	HRESULT         Bind_CS_Output(_uint Index, _uint iBufferIndex);
 public:
-	void			Set_TimeMult(_float fTimeMult) { m_fTimeMult = fTimeMult; }
+	void			Set_TimeMult(_float fTimeMult) { m_InstanceDesc.fTimeMult = fTimeMult; }
 private:
 		bool		LoadData(const _char* filename);
 
@@ -315,7 +326,7 @@ private:
 	ID3D11ShaderResourceView*   m_pParticleValue_Srv = { nullptr };
 
 private:
-	_float					m_fTimeMult = { 1.f };
+
 
 public:
 	static CInstance_Model* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);

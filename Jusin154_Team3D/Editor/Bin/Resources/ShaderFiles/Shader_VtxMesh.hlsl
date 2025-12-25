@@ -2,6 +2,7 @@
 #include "Engine_Shader_Defines.hlsli"
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4x4 g_WorldMatrixInv, g_ViewMatrixInv, g_ProjMatrixInv;
 float4x4 g_PrevWorldMatrix, g_PrevViewMatrix, g_PrevProjMatrix;
 
 int g_bUVTargetDiffuse;
@@ -20,6 +21,7 @@ float g_fOutLinePower;
 vector g_vCamPosition;
 uint g_iIndexU;
 uint g_iIndexV;
+float2 g_vTime;
 
 float g_fDisolveRatio;
 float g_fUsingSurfaceParams;
@@ -66,6 +68,7 @@ Texture2D g_Maya_Specular_ColorTexture;
 Texture2D g_Maya_Specular_RoughnessTexture;
 Texture2D g_AnisotropyTexture;
 
+
 int g_iBinded_Texture[AI_TEXTURE_TYPE_MAX];
 
 Texture2D g_MaskingTexture;
@@ -78,6 +81,9 @@ TextureCube g_CubeTexture;
 Texture2D g_NormalLargeTexture;
 Texture2D g_NormalSubTexture;
 Texture2D g_DeadDisolveTexture;
+
+Texture2D g_DepthTexture;
+Texture2D g_MaskNoiseTexture;
 
 float g_fNormalValue1;
 float g_fNormalValue2;
@@ -100,6 +106,21 @@ float   g_fRimPower;
 float   g_fRimStrength;
 float4  g_vRimColor;
 
+float g_fWinSizeX;
+float g_fWinSizeY;
+
+float4 g_vMaskColorRed;
+float4 g_vMaskColorGreen;
+float4 g_vMaskColorBlue;
+
+float   g_fFogDensity;
+float   g_fFogPow;
+float   g_fNormalThreshold;
+bool    g_bFogVisible;
+vector  g_vFogColor;
+
+float g_fSoftMask;
+float g_fSoftMaskEdge;
 
 struct VS_IN
 {
@@ -131,6 +152,14 @@ struct VS_OUT_BLUR
 struct VS_OUT_SHADOW
 {
     float4 vPosition : SV_POSITION;
+};
+
+struct VS_OUT_DECAL
+{
+    float4 vPosition : SV_POSITION;
+    float3 vNormal : NORMAL;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
 };
 
 
@@ -182,6 +211,22 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
     Out.vPrevProjPos = mul(float4(In.vPosition, 1.f), matPrevWVP);
+    return Out;
+}
+
+VS_OUT_DECAL VS_MAIN_DECAL(VS_IN In)
+{
+    VS_OUT_DECAL Out;
+    
+    matrix matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix)).xyz;
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), g_WorldMatrix)).xyz;
+    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), g_WorldMatrix)).xyz;
+
     return Out;
 }
 
@@ -483,6 +528,29 @@ struct PS_OUT_BLUR
     float4 vDiffuse : SV_TARGET0;
 };
 
+PS_OUT_BLUR PS_MAIN_SKYBOX(PS_IN In)
+{
+    PS_OUT_BLUR Out;
+    
+    float4 vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    //if (0.f == g_fFogPow)
+    //{
+    //    Out.vDiffuse = vColor;
+    //    return Out;
+    //}
+    
+    //vector vFinalColor;
+    //float fRatio;
+    
+    //fRatio = pow(1.f - saturate(exp(-1.f * g_fFar * g_fFogDensity)), g_fFogPow);
+    //vFinalColor = lerp(vColor, g_vFogColor, fRatio);
+    //vFinalColor.a = 1.f;
+    
+    Out.vDiffuse = vColor;
+    
+    return Out;
+}
 
 PS_OUT_BLUR PS_MAIN_BLUR(PS_IN_BLUR In)
 {
@@ -853,6 +921,90 @@ PS_OUT PS_LEVIOSO(PS_IN In)
     return Out;
 }
 
+struct PS_IN_DECAL
+{
+    float4 vPosition : SV_POSITION;
+    float3 vNormal : NORMAL;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+};
+struct PS_OUT_DELCAL
+{
+    float4 vAlbedo : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vSurface : SV_Target2;
+};
+
+PS_OUT_DELCAL PS_MAIN_DECAL(PS_IN_DECAL In)
+{
+    PS_OUT_DELCAL Out;
+    
+    float2 vDepthUV;
+    vDepthUV.x = In.vPosition.x / g_fWinSizeX;
+    vDepthUV.y = In.vPosition.y / g_fWinSizeY;
+    
+    float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vDepthUV);
+
+    float fViewZ = vDepthDesc.y * g_fFar;
+    
+    float4 vPosition;
+    
+    vPosition.x = vDepthUV.x * 2.f - 1.f;
+    vPosition.y = vDepthUV.y * -2.f + 1.f;
+    vPosition.z = vDepthDesc.x;
+    vPosition.w = 1.f;
+    
+    float4 vViewPos = mul(vPosition, g_ProjMatrixInv);
+    vViewPos /= vViewPos.w;
+    
+    float4 vWorldPos = mul(vViewPos, g_ViewMatrixInv);
+
+    vector vLocalPos = mul(vWorldPos, g_WorldMatrixInv);
+
+    float3 ObjectAbsPos = abs(vLocalPos.xyz);
+    
+    clip(0.5f - ObjectAbsPos);
+    
+    float2 vDecalUV =( vLocalPos.xz + 0.5f) * 2.f;
+    
+    float4 vMaskColor = g_MaskingTexture.Sample(DefaultSampler, vDecalUV);
+    if (vMaskColor.a < 0.2f)
+    {
+        discard;
+    }
+    
+    vector vNoise = g_NoiseTexture.Sample(DefaultSampler, vDecalUV + g_vTime);
+    
+    float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, vDecalUV);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, vDecalUV);
+    
+    float fMaskWeight = vMaskColor.r + vMaskColor.g + vMaskColor.b;
+    
+    float4 vDiffuseColor = vMaskColor.r * g_vMaskColorRed * 2.f * vNoise.r + 
+                            vMaskColor.g * g_vMaskColorGreen +
+                            vMaskColor.b * g_vMaskColorBlue * 2.f * vNoise.r;
+    
+    vDiffuseColor /= fMaskWeight;
+        
+    vDiffuseColor.a = max(0.001f, vDiffuseColor.a);
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    Out.vAlbedo = vDiffuseColor;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.1f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0.f;
+    }
+    
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+
 
 technique11 MeshTechnique11
 {
@@ -883,7 +1035,7 @@ technique11 MeshTechnique11
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_SKYBOX();
     }
 
     pass ALPHABlendPass // 3
@@ -1070,5 +1222,15 @@ technique11 MeshTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_LEVIOSO();
+    }
+
+    pass DecalPass // 22
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_DECAL();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DECAL();
     }
 }

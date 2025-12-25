@@ -1,0 +1,263 @@
+﻿#include "pch.h"
+#include "DummyDecal.h"
+
+#include "GameInstance.h"
+
+
+CDummyDecal::CDummyDecal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CGameObject{ pDevice, pContext }
+{
+}
+
+CDummyDecal::CDummyDecal(const CDummyDecal& rhs)
+	: CGameObject(rhs)
+	, m_fWinSizeX{rhs.m_fWinSizeX}
+	, m_fWinSizeY{rhs.m_fWinSizeY}
+{
+}
+
+HRESULT CDummyDecal::Initialize_Prototype()
+{
+	m_fWinSizeX = g_iWinSizeX;
+	m_fWinSizeY = g_iWinSizeY;
+
+	return S_OK;
+}
+
+HRESULT CDummyDecal::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
+
+	m_vMaskRed = _float4(1.f, 0.f, 0.f, 1.f);
+	m_vMaskGreen = _float4(0.f, 0.f, 0.f, 0.f);
+	m_vMaskBlue = _float4(1.f, 0.f, 0.f, 1.f);
+
+	m_vUVSpeed = _float2(0.1f, 0.1f);
+
+	return S_OK;
+}
+
+void CDummyDecal::Priority_Update(_float fTimeDelta)
+{
+}
+
+void CDummyDecal::Update(_float fTimeDelta)
+{
+	m_fTimeAcc.x += fTimeDelta * m_vUVSpeed.x;
+	m_fTimeAcc.y += fTimeDelta * m_vUVSpeed.y;
+
+	Describe_Entity();
+}
+
+void CDummyDecal::Late_Update(_float fTimeDelta)
+{
+	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::DECAL, this);
+	//}
+}
+
+HRESULT CDummyDecal::Render()
+{
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+	
+	_uint iNumMesh = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMesh; i++)
+	{
+		if (FAILED(m_pShaderCom->Bind_SRV("g_MaskingTexture", m_pMaskTextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_SRV("g_NormalTexture", m_pNormalTextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_SRV("g_SurfaceParamsTexture", m_pSurfaceTextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_SRV("g_NoiseTexture", m_pFadeTextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Begin(22))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
+	
+	return S_OK;
+}
+
+HRESULT CDummyDecal::Ready_Components(void* pArg)
+{
+	if (FAILED(__super::Ready_Components(pArg))) {
+		return E_FAIL;
+	}
+
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Decal_MSK"),
+		reinterpret_cast<CComponent**>(&m_pMaskTextureCom))))
+		return E_FAIL;
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Decal_Noraml"),
+		reinterpret_cast<CComponent**>(&m_pNormalTextureCom))))
+		return E_FAIL;
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Base_MRO"),
+		reinterpret_cast<CComponent**>(&m_pSurfaceTextureCom))))
+		return E_FAIL;
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Decal_Fade"),
+		reinterpret_cast<CComponent**>(&m_pFadeTextureCom))))
+		return E_FAIL;
+
+
+	/* Com_Model */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_DecalBox"),
+		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
+	/* Com_Shader */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
+		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CDummyDecal::Bind_ShaderResources()
+{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
+		return E_FAIL;
+	}
+
+	_float4x4 WorldInv = {};
+	
+	XMStoreFloat4x4(&WorldInv, m_pTransformCom->Get_WorldMatrixInv());
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrixInv", &WorldInv))) {
+		return E_FAIL;
+	}
+
+	// Base MRO
+	// g_fUsingSurfaceParams 15.f / 27.f;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNormalThreshold", &m_fNormalThreshold, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeX", &m_fWinSizeX, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeY", &m_fWinSizeY, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vTime", &m_fTimeAcc, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vMaskColorRed", &m_vMaskRed, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vMaskColorGreen", &m_vMaskGreen, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vMaskColorBlue", &m_vMaskBlue, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+CDummyDecal* CDummyDecal::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CDummyDecal* pInstance = new CDummyDecal(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CDummyDecal");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+CGameObject* CDummyDecal::Clone(void* pArg, CGameObject* pOwner)
+{
+	CDummyDecal* pInstance = new CDummyDecal(*this);
+	pInstance->m_pOwner = pOwner;
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CDummyDecal");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CDummyDecal::Free()
+{
+	__super::Free();
+
+	SAFE_RELEASE(m_pFadeTextureCom);
+	SAFE_RELEASE(m_pMaskTextureCom);
+	SAFE_RELEASE(m_pNormalTextureCom);
+	SAFE_RELEASE(m_pSurfaceTextureCom);
+	SAFE_RELEASE(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+}
+
+void CDummyDecal::Describe_Entity()
+{
+	GUI::Begin("TEST DECAL");
+
+	_float fAgle = XMConvertToDegrees(m_fNormalThreshold);
+
+	GUI::InputFloat("m_fNormalThreshold", &fAgle);
+	GUI::InputFloat2("m_fSpeed", (_float*)(&m_vUVSpeed));
+
+	GUI::ColorEdit4("Mask Red", (_float*)&m_vMaskRed);
+	GUI::ColorEdit4("Mask Green", (_float*)&m_vMaskGreen);
+	GUI::ColorEdit4("Mask Blue", (_float*)&m_vMaskBlue);
+
+	m_fNormalThreshold = XMConvertToRadians(fAgle);
+
+	m_pTransformCom->Describe_Entity();
+
+	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		_float3 vPosition = {};
+		if (m_pGameInstance->isPicking(&vPosition))
+		{
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+		}
+	}
+
+
+	GUI::End();
+}

@@ -89,8 +89,10 @@ public:
 
 
 		_bool	    isMotionBlur = {};
-		_bool       isPadding0 = {};
-		_bool       isPadding1 = {};
+
+		_bool       isNoise_G = {};
+		_bool       isNoise_B= {};
+
 		_float      fModelBlurIntensity = {0.f};
 
 		_bool       isBloom = {};
@@ -105,20 +107,20 @@ public:
 		_float2		vDissolveUVGainAmount = {};
 		_bool		isDissolveMove = {};
 
-		_float3		vDissolveValue = {};
+		_float3		vDissolveValue = {}; /* Soft Mask , Cut Ratio*/
 
 		_float      fModelDistortIntensity = {};
-		_float		vPadding0 = {};
+		_float		fPadding0 = {};
 
 		_float      fLightDeley = {};
 		_float		fLightIntensity = {};
 		_float		isLightTime = { 0.f };
 		_bool		isLightDissolve = {};
 
-		_bool		isPadding2 = {};
+		_bool		isDissolve_G = {};
 
-		_float4     vDissolveColor = {};
-		_float2     vDissolveColorCut = {};
+		_float4     vBlurColor = {};
+		_float2     vUVNoiseCutting = { 1.f ,1.f };
 
 		_float		fEmissiveColorCut = {};
 
@@ -129,13 +131,22 @@ public:
 		_float4     vRimLightColor = {};
 
 		_float2     vMaskOffset = {};
-		_float2     vPadding4 = {};
+
+		_bool       isDiffuse_R = {};
+		_bool       isDiffuse_G = {};
+		_bool       isDiffuse_B = {};
+		_bool       isBlurColor = {};
+
+		_bool       isBlurDissolve = {};
+		_bool       isPadding1 = {};
+		_bool       isPadding2 = {};
+		_bool       isPadding3 = {};
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};
-		_bool		isPadding3 = {};
-		_bool		isPadding4 = {};
-		_bool		isPadding5 = {};
+		_bool		isMask_G = {};
+		_bool		isMask_B = {};
+		_bool		isDissolve_B = {};
 
 	}EFFECT_INFO;
 

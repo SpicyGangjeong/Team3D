@@ -48,11 +48,17 @@ void CTroll::Behavior_IdleExit()
 
 void CTroll::Behavior_IdleBreakEnter()
 {
-
 	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
 	m_bLookAt = true;
-	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 3);
+	_int RandIndex = 0;
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE))
+	{
+		RandIndex = 3;
+	}
+	else {
+		RandIndex = m_pGameInstance->Real_Random_Int(0, 3);
+	}
 	switch (RandIndex)
 	{
 	case 0: //땅 두번구르기 왼발 오른발
@@ -98,17 +104,28 @@ void CTroll::Behavior_IdleBreakEnter()
 		break;
 	case 3: //소리지르기
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
+		Add_Event(pairAnimInfo.first,
+			[this]() {CameraShake(5.f, 1.f, 2.f, 0.5f);},
+			0.3f);
 		break;
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-	m_pModelCom->Set_BlendDuration(0.6f);
 }
 
 HRESULT CTroll::Behavior_IdleBreakExitCheck()
 {
-	if (m_pModelCom->IsFinishedAnim()){
-		m_pFSM->Change_State(FSMSTATE::MOVE);
-		return E_FAIL;
+	if (m_fTargetDistance >= 6.f)
+	{
+		if (m_pModelCom->IsFinishedAnim()) {
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
+		}
+	}
+	else {
+		if (m_pModelCom->IsFinishedAnim()) {
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -117,7 +134,6 @@ HRESULT CTroll::Behavior_IdleBreakExitCheck()
 void CTroll::Behavior_IdleBreakExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
-	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
 void CTroll::Behavior_MoveEnter()
@@ -360,6 +376,9 @@ void CTroll::Behavior_ThrowEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {Get_PartObject<CTroll_Rock>()->Set_Visible(true); },
 		0.95f);
+
+	Set_Easing(m_Animation[STATEANIM::THROW_ROCK].first, 0.1f, 0.47f, 1.5f);
+	Set_Easing(m_Animation[STATEANIM::THROW_ROCK].first, 0.47f, 0.5f, 0.5f);
 }
 
 HRESULT CTroll::Behavior_ThrowExitCheck(_float fTimeDelta)
@@ -442,12 +461,17 @@ void CTroll::Behavior_SwingEnter()
 			m_pWeaponTrail->Set_Visible(false);
 		},
 		0.6f);
+
+
+	Set_Easing(pairAnimInfo.first, 0.1f, 0.47f, 1.5f);
+	Set_Easing(pairAnimInfo.first, 0.47f, 0.5f, 0.5f);
 }
 
 HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
@@ -462,48 +486,6 @@ HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
 void CTroll::Behavior_SwingExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SWING);
-}
-
-void CTroll::SwingHit(_bool& bPlayerHit)
-{
-	vector<PSX::PxSweepHit> pxHits;
-	_uint iHitCount = 0;
-	_float Damage = 0.f;
-	CheckHammerHits(iHitCount, pxHits);
-	{
-		for (_uint i = 0; i < pxHits.size(); ++i) {
-			PSX::PxActor* pxHitActor = pxHits[i].actor;
-			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
-				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::PLAYER:
-				{
-					if (true == bPlayerHit) {
-						continue;
-					}
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(20.f);
-					Damage = 7.f;
-					bPlayerHit = true;
-					pUserData->pOwner->OnCollision(this);
-				} break;
-				case PXOBJECT::ALLY_HITBOX:
-					break;
-				case PXOBJECT::ENVIRIONMENT:
-					break;
-				case PXOBJECT::TERRAIN:
-					break;
-				case PXOBJECT::BOX:
-					break;
-				case PXOBJECT::NPC:
-					break;
-				default:
-					break;
-				}
-			}
-		}
-	}
 }
 
 void CTroll::Behavior_SlamEnter()
@@ -538,6 +520,10 @@ void CTroll::Behavior_SlamEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
 		}, 0.3f);
 
+	Set_Easing(pairAnimInfo.first, 0.1f, 0.42f, 1.5f);
+
+	Set_Easing(pairAnimInfo.first, 0.42f, 0.45f, 0.5f);
+
 }
 
 HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
@@ -546,20 +532,9 @@ HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	if (m_fDegree >= 90.f)
-	{
-		m_bLookAt = true;
-		if (m_pModelCom->IsFinishedAnim())
-		{
-			m_bLookAt = true;
-			m_pFSM->Change_State(FSMSTATE::COMBAT);
-			return E_FAIL;
-		}
 
-		return S_OK;
-	}
-	else if (fRatio >= 0.4f) {
-		m_bLookAt = true;
+	if (m_pModelCom->IsFinishedAnim())
+	{
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 		return E_FAIL;
 	}
@@ -597,12 +572,16 @@ void CTroll::Behavior_BackHandSwingEnter()
 			m_pWeaponTrail->Set_Visible(false);
 		},
 		0.9f);
+
+	Set_Easing(pairAnimInfo.first, 0.1f, 0.45f, 1.5f);
+	Set_Easing(pairAnimInfo.first, 0.65f, 0.7f, 0.5f);
 }
 
 HRESULT CTroll::Behavior_BackHandSwingExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_bLookAt = true;
@@ -668,6 +647,9 @@ void CTroll::Behavior_HitEnter()
 	if (iCurrAnimIndex == m_Animation[STATEANIM::SLAM].first)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
+		Add_Event(pairAnimInfo.first,
+			[this]() {CameraShake(10.f, 2.f, 3.f, 0.3f); },
+			0.1f);
 	}
 	else {
 		_int RandIndex = m_pGameInstance->Real_Random_Int(0, 2);
@@ -733,8 +715,9 @@ void CTroll::Behavior_DeadEnter()
 
 HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
 {
-	if (m_pModelCom->IsFinishedAnim()) {
-		m_bDead = true;
+	if (FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
+
+		return E_PENDING;
 	}
 	return S_OK;
 }
@@ -891,6 +874,57 @@ void CTroll::Add_FSM()
 
 }
 
+void CTroll::SwingHit(_bool& bPlayerHit)
+{
+	vector<PSX::PxSweepHit> pxHits;
+	_uint iHitCount = 0;
+	CheckHammerHits(iHitCount, pxHits);
+	{
+		for (_uint i = 0; i < pxHits.size(); ++i) {
+			PSX::PxActor* pxHitActor = pxHits[i].actor;
+			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
+				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+				ON_COLLISION_INFO tagCollInfo = {};
+
+				tagCollInfo.vWorldPos.w = 1.f;
+
+				memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &pxHits[i].position, sizeof(pxHits[i].position));
+
+				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &pxHits[i].normal, sizeof(pxHits[i].normal));
+				_vector vHitDir = pUserData->pOwner->Get_WorldPostion() - this->Get_WorldPostion();
+				vHitDir = XMVector3Normalize(vHitDir);
+				XMStoreFloat4(&tagCollInfo.vHitDir, vHitDir);
+				tagCollInfo.fLength = pxHits[i].distance;
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
+				tagCollInfo.fDamage = 15.f;
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::PLAYER:
+				{
+					if (true == bPlayerHit) {
+						continue;
+					}
+					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this,&tagCollInfo);
+				} break;
+				case PXOBJECT::ALLY_HITBOX:
+					break;
+				case PXOBJECT::ENVIRIONMENT:
+					break;
+				case PXOBJECT::TERRAIN:
+					break;
+				case PXOBJECT::BOX:
+					break;
+				case PXOBJECT::NPC:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+}
+
 void CTroll::SlamHit(_bool& bPlayerHit)
 {
 	vector<PSX::PxSweepHit> pxHits;
@@ -901,6 +935,20 @@ void CTroll::SlamHit(_bool& bPlayerHit)
 			PSX::PxActor* pxHitActor = pxHits[i].actor;
 			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
 				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+
+				ON_COLLISION_INFO tagCollInfo = {};
+
+				tagCollInfo.vWorldPos.w = 1.f;
+
+				memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &pxHits[i].position, sizeof(pxHits[i].position));
+
+				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &pxHits[i].normal, sizeof(pxHits[i].normal));
+				_vector vHitDir = pUserData->pOwner->Get_WorldPostion() - this->Get_WorldPostion();
+				vHitDir = XMVector3Normalize(vHitDir);
+				XMStoreFloat4(&tagCollInfo.vHitDir, vHitDir);
+				tagCollInfo.fLength = pxHits[i].distance;
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
+				tagCollInfo.fDamage = 20.f;
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case PXOBJECT::PLAYER:
@@ -908,10 +956,8 @@ void CTroll::SlamHit(_bool& bPlayerHit)
 					if (true == bPlayerHit) {
 						continue;
 					}
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(20.f);
 					bPlayerHit = true;
-					pUserData->pOwner->OnCollision(this);
+					pUserData->pOwner->OnCollision(this,&tagCollInfo);
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
 					break;

@@ -16,6 +16,7 @@
 #include "MapElement_Lake.h"
 #include "MapElement_Door.h"
 #include "MapElement_Chest.h"
+#include "DummyDecal.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -47,9 +48,9 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
+	//	return E_FAIL;
+	//}
 
 	//if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
 	//	return E_FAIL;
@@ -63,9 +64,9 @@ HRESULT CLevel_MapViewer::Initialize()
 	//	return E_FAIL;
 	//}
 
-	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
+	//	return E_FAIL;
+	//}
 
 	/*if (FAILED(Ready_Layer_Door(TEXT("Layer_Door")))) {
 		return E_FAIL;
@@ -120,6 +121,9 @@ HRESULT CLevel_MapViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 
 HRESULT CLevel_MapViewer::Ready_Layer_Background(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummyDecal>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 

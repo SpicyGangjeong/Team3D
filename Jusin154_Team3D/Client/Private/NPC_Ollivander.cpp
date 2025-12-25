@@ -237,8 +237,14 @@ HRESULT CNPC_Ollivander::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
 	}
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(40.f, 4.f, 68.9f, 1.f));
-	m_pCharacter_Controller->Set_Position(XMVectorSet(40.f, 4.f, 68.9f, 1.f));
+
+	NPCDESC* pDesc = static_cast<NPCDESC*>(pArg);
+
+	_vector vPos = XMLoadFloat4(&pDesc->vPos);
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	m_pCharacter_Controller->Set_Position(vPos);
+	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
+
 	m_pModelCom->Set_AnimationIndex(0, true);
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);

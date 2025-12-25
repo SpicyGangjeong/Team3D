@@ -7,6 +7,11 @@ NS_BEGIN(Client)
 
 class CNPC_Ollivander final : public CUnit
 {
+public:
+	typedef struct tagNpcInitDesc {
+		_float4 vPos;
+		_float4 vRotQ;
+	}NPCDESC;
 protected:
 	CNPC_Ollivander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CNPC_Ollivander(const CNPC_Ollivander& Prototype);

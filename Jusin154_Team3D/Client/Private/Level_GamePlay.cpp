@@ -27,6 +27,7 @@
 #include "Goblin_Mage.h"
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
+#include "NPC_EleazarFig.h"
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
 #pragma endregion
@@ -580,9 +581,21 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	}
-	
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-		return E_FAIL;
+	{
+		CNPC_Ollivander::NPCDESC NPCDesc{};
+		NPCDesc.vPos = _float4(40.f, 4.f, 68.9f, 1.f);
+		NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
+			return E_FAIL;
+		}
+	}
+	{
+		CNPC_EleazarFig::NPCDESC NPCDesc{};
+		NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
+		NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -590,11 +603,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
 {
-	//for (_uint i = 0; i < 1; ++i) {
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
-	//		return E_FAIL;
-	//	}
-	//}
+	for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 

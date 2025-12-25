@@ -85,14 +85,27 @@ int    g_iDiffuseMoveLerpOption;
 
 bool   g_isDiffuseUVMove;
 
+bool   g_isDiffuse_R;
+bool   g_isDiffuse_G;
+bool   g_isDiffuse_B;
+
 /* 노이즈 */
 bool   g_isNoiseColor;
 bool   g_isNoiseAlpha;
 bool   g_isNoiseUVMove;
+
+bool   g_isNoise_B;
+bool   g_isNoise_G;
+
 float4 g_vNoiseColor;
 float2 g_vNoiseUVGainAmount;
+float2 g_vUVNoiseCutting;
+
 int    g_iNoiseMoveLerpOption;
 /* 마스크 */
+
+bool   g_isMask_G;
+bool   g_isMask_B;
 
 bool   g_isMaskClampSample;
 bool   g_isMaskUVMove;
@@ -115,12 +128,12 @@ bool   g_isDissolveMove;
 bool   g_isReverseDissolve;
 bool   g_isNomalDissolve;
 
+bool   g_isDissolve_B;
+bool   g_isDissolve_G;
+
 float  g_fDissolveMaskEdge;
 float  g_fDissolveSoftMask;
 float  g_fDissolveCutRatio;
-
-float4 g_vDissolveColor;
-float2 g_vDissolveColorCut;
 
 /* 디스토션 */
 
@@ -130,10 +143,14 @@ int     g_iDiffuseDistortionMoveLerpOption;
 float2  g_vDistortionTime;
 
 /* 블러 */
-int   g_iBlurWeight; // 블러 강도
 float g_fBlurIntensity; //블러 세기
 float g_fNoiseDistortionIntensity; // 디스토션 왜곡 세기
+
 bool  g_isBlurNoEmissive;
+bool  g_isBlurColor;
+bool  g_isBlurDissolve;
+
+float4  g_vBlurColor;
 
 /* 이미시브 */
 float4 g_vEmissive;
@@ -375,7 +392,7 @@ struct PS_OUT
 
 float4 DrawEffect(PS_IN In)
 {
-    vector vMtrlDiffuse;
+    vector vMtrlDiffuse = vector(0.f ,0.f ,0.f ,0.f);
     vector vMtrlMask;
     vector vMtrlNoise;
     vector vMtrlDissolve;
@@ -426,10 +443,21 @@ float4 DrawEffect(PS_IN In)
 
             
         }
-               
-        vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
-       
         
+        vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
+        
+        if (g_isDiffuse_R)
+            vMtrlDiffuse.r = vDiffuse.r;
+        
+        if (g_isDiffuse_G)
+            vMtrlDiffuse.g = vDiffuse.g;
+        
+        if (g_isDiffuse_B)
+            vMtrlDiffuse.b = vDiffuse.b;
+        
+        if ((g_isDiffuse_R || g_isDiffuse_G || g_isDiffuse_B) == false) // RGB중 하나도 켜지지 않았더라면 
+            vMtrlDiffuse = vDiffuse;
+       
         if (g_vColor.a > 0)
             vMtrlDiffuse = saturate(g_vColor + vMtrlDiffuse);
         
@@ -444,7 +472,12 @@ float4 DrawEffect(PS_IN In)
    
     if (g_isNoise)
     {
-        float2 vNoiseUV = In.vTexcoord;
+        float2 vNoiseCut = g_vUVNoiseCutting;
+        
+        if (length(vNoiseCut) < FLT_EPSILON3)
+            vNoiseCut = float2(1.f, 1.f);
+        
+        float2 vNoiseUV = UV_Cutting(In.vTexcoord, vNoiseCut, int(fAnimIndex));
         
         if (g_isNoiseUVMove == true)
             vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
@@ -452,11 +485,30 @@ float4 DrawEffect(PS_IN In)
         vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
         
         if (g_isNoiseAlpha)
-            vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
+            {
+                    
+            float fNoiseValue = vMtrlNoise.r;
+        
+            if (g_isNoise_G == true)
+                fNoiseValue = vMtrlNoise.g;
+        
+            if (g_isNoise_B == true)
+                fNoiseValue = vMtrlNoise.b;
+            
+            vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fNoiseValue.r);
+        }
         
         if (g_isNoiseColor)
         {
-            vMtrlDiffuse.rgb *= vMtrlNoise.rgb;
+            float fNoiseValue = vMtrlNoise.rgb;
+        
+            if (g_isNoise_G == true)
+                fNoiseValue = vMtrlNoise.g;
+        
+            if (g_isNoise_B == true)
+                fNoiseValue = vMtrlNoise.b;
+            
+            vMtrlDiffuse.rgb *= fNoiseValue;
         }
         
         if (length(g_vNoiseColor) > FLT_EPSILON5)
@@ -506,21 +558,27 @@ float4 DrawEffect(PS_IN In)
         else
             vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
         
-           
+        float fMaskValue = vMtrlMask.r;
+        
+        if (g_isMask_G == true)
+            fMaskValue = vMtrlMask.g;
+        
+        if (g_isMask_B == true)
+            fMaskValue = vMtrlMask.b;
         
         float fSoftMask;
     
         if (g_fSoftMask > FLT_EPSILON5)
-            fSoftMask = saturate((vMtrlMask.r - g_fSoftMaskEdge) * g_fSoftMask);
+            fSoftMask = saturate((fMaskValue - g_fSoftMaskEdge) * g_fSoftMask);
         else
-            fSoftMask = vMtrlMask.r;
+            fSoftMask = fMaskValue;
         
         vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fSoftMask);
         
    
     }
     else
-    {
+    {        
         vMtrlMask.r = 1.f;
     }
 
@@ -570,12 +628,21 @@ float4 DrawEffect(PS_IN In)
             vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
          
         /* */
+        
+        float fDissolveValue = vMtrlDissolve.r;
+        
+        if (g_isDissolve_G == true)
+            fDissolveValue = vMtrlDissolve.g;
+        
+        if (g_isDissolve_B == true)
+            fDissolveValue = vMtrlDissolve.b;
+        
         float fSoftDissolve;
     
         if (g_fDissolveSoftMask > FLT_EPSILON5)
-            fSoftDissolve = saturate((vMtrlDissolve.r - g_fDissolveMaskEdge) * g_fDissolveSoftMask);
+            fSoftDissolve = saturate((fDissolveValue - g_fDissolveMaskEdge) * g_fDissolveSoftMask);
         else
-            fSoftDissolve = vMtrlDissolve.r;
+            fSoftDissolve = fDissolveValue;
         
         vMtrlDissolve.r = fSoftDissolve;
        
@@ -603,15 +670,7 @@ float4 DrawEffect(PS_IN In)
             vMtrlDiffuse.a *= fFade;
 
         }
-        
-        if (g_vDissolveColorCut.y > 0.f)
-        {
-            if (vMtrlDiffuse.a > g_vDissolveColorCut.x && vMtrlDiffuse.a <= g_vDissolveColorCut.y)
-            {
-                vMtrlDiffuse.rgb += g_vDissolveColor.rgb;
-            }
-        }
-        
+       
         if (vMtrlDiffuse.a <= FLT_EPSILON5)
             discard;
     }
@@ -789,6 +848,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse += RimLight(In);
 
+
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
 
     return Out;
@@ -874,7 +934,6 @@ VS_OUT VS_BLUR_NOPOS(VS_IN In, uint iGPUIndex : SV_InstanceID)
 struct PS_BLUR_OUT
 {
     float4 vDiffuse : SV_TARGET0;
-    float4 vBlurWeight : SV_TARGET1;
 };
 
 struct PS_BLOOM_OUT
@@ -895,16 +954,33 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
-    //// 색깔 추가할 처리 (이미시브)    
+    if (g_isBlurColor == true)
+    {
+        if (length(vMtrlDiffuse.rgb) < FLT_EPSILON5)
+        {
+            discard;
+        }
+        
+        vMtrlDiffuse = vector(g_vBlurColor.rgb, vMtrlDiffuse.a);
+
+    }
+    
     vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
     
     vMtrlDiffuse.a *= 5.f;
    
     vMtrlDiffuse.a = saturate(vMtrlDiffuse.a);
 
+    float fBulrIntensity = g_fBlurIntensity;
+    
+    if (g_isBlurDissolve == true)
+    {
+        fBulrIntensity *= 1.f - (In.vLifeTime.x / In.vLifeTime.y);
+               
+        fBulrIntensity = saturate(fBulrIntensity);
+    }
    
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a);
-    Out.vBlurWeight = g_iBlurWeight / 128.f;
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBulrIntensity, vMtrlDiffuse.a);
     
     return Out;
 }
@@ -917,15 +993,36 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
+    if(g_isBlurColor == true)
+    {
+        if (length(vMtrlDiffuse.rgb) < FLT_EPSILON5)
+        {
+            discard;
+        }
+        
+        vMtrlDiffuse = vector(g_vBlurColor.rgb, vMtrlDiffuse.a);
+
+    }
+
+    
     vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
     vMtrlDiffuse.a *= 5.f;
     
     vMtrlDiffuse.a = saturate(vMtrlDiffuse.a);
     
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a);
+    float fBulrIntensity = g_fBlurIntensity;
     
-    Out.vBlurWeight = g_iBlurWeight / 128.f;
+    if (g_isBlurDissolve == true)
+    {
+        fBulrIntensity *= 1.f - (In.vLifeTime.x / In.vLifeTime.y);
+       
+        fBulrIntensity = saturate(fBulrIntensity);
+    }
+   
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBulrIntensity, vMtrlDiffuse.a);
     
     return Out;
 }
@@ -1202,7 +1299,7 @@ technique11 DefaultTechnique
     pass BLOOM
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -1330,6 +1427,38 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUR_MESH();
     }
 
+//20
+    pass Blur_Culling
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
+//21
+    pass Blur_Culling_No_Emissive
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR_NOEMISSIVE();
+    }
+
+//22
+    pass Bloom_Culling
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLOOM();
+    }
 }
 
 
