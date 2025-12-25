@@ -42,6 +42,7 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 	MODEL Get_Type() { return m_eType; }
+	void Set_Temp(_bool Temp) { m_bTemp = Temp; }
 #pragma endregion 
 #pragma region Animation
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
@@ -193,6 +194,7 @@ private:
 	_bool					m_bRatio = { false };
 	_bool					m_bRootBone = {};
 	_float4x4				m_RootMatrix = {};
+	_bool					m_bTemp = {false};
 
 
 private:

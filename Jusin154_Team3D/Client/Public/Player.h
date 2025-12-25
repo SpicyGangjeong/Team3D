@@ -96,6 +96,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
 	void ReLockOnTarget();
 	void SetGravity();
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
