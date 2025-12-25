@@ -178,6 +178,9 @@ HRESULT CTroll::Render()
 		return E_FAIL;
 	}
 
+	if (FAILED(Render_DeadDisolve())) {
+		return E_FAIL;
+	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
@@ -222,6 +225,13 @@ HRESULT CTroll::Render()
 	//	}
 	//}
 #endif
+
+	if (0.f < m_fDeadRatio) {
+		_bool bDisolve = false;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }

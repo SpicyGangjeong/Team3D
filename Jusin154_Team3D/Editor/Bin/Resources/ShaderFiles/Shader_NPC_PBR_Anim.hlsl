@@ -636,7 +636,7 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb * 3.f;
+    vDiffuse.rgb += vEmissive.rgb;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -665,7 +665,7 @@ PS_OUT PS_DNMRO_ToMRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb * 3.f;
+    vDiffuse.rgb += vEmissive.rgb;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -694,7 +694,7 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb * 3.f;
+    vDiffuse.rgb += vEmissive.rgb;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -759,7 +759,7 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vAmbient = g_AmbientTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb * 3.f;
+    vDiffuse.rgb += vEmissive.rgb;
     vDiffuse.rgb += vAmbient.rgb;
     if (vDiffuse.a < 0.2f) {
         discard;
@@ -860,7 +860,7 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuseColor.rg += (vEmissive.rg) * 3.f;
+    vDiffuseColor.rgb += vEmissive.r * vEmissive.g;
     
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);
@@ -983,7 +983,7 @@ PS_OUT_BLEND PS_Dragon_EtherealWings(PS_IN In)
     float2 uvDiffuse = uv; uvDiffuse.y -= g_fEtherealRatio;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uvDiffuse);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuse += vEmissive * 3.f;
+    vDiffuse += vEmissive;
     float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uvDiffuse).a;
     vDiffuse.a =  (1- fOppacity);
     Out.vAlbedo = vDiffuse;
@@ -1028,7 +1028,7 @@ PS_OUT PS_Dragon_Wings(PS_IN In)
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuse += vEmissive * 3.f;
+    vDiffuse += vEmissive;
 
     if (vDiffuse.a < 0.2f)
     {

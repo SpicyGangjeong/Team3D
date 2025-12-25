@@ -374,11 +374,11 @@ PS_OUT PS_MAIN(PS_IN In)
     //if (vMtrlDiffuse.a < 0.3f){
     //    discard;
     //}
-        if (true == g_bDisolve)
-        {
-            float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
-            vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
-        }
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
+    }
     if (g_iBinded_Texture[21] != 0)
     {
         float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);

@@ -216,6 +216,26 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 
 	//m_pCharacter_Controller->Move(fTimeDelta);
 
+	PhsXUserData* pUserData = static_cast<PhsXUserData*>(pCCT->Get_Actor()->userData);
+	switch (pUserData->eKind)
+	{
+	case PHYSX_KIND::CCTActor:
+	{
+		switch (PXOBJECT(pUserData->iSubKind))
+		{
+		case PXOBJECT::TROLL:
+		{
+			return;
+		}
+		break;
+		case PXOBJECT::RANROK:
+		{
+			return;
+		}
+		}
+	}
+	}
+
 	m_pInfoInstance->ActiveAt_Interactive(XMLoadFloat4(&vCCTPos));
 
 	CollisionDesc.pObject->Set_Visible(false);

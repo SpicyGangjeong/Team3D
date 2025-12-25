@@ -75,9 +75,8 @@ private:
 	_float m_fOriginGravityAmount = {};
 	_float m_fGravityAmount = {};
 
-	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
-	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
 	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
+	class CCamPosition_Head* m_pCamPosition_HeadPart = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -161,6 +160,9 @@ private:
 	_float			m_fAccel = { 1.f };
 	_float			m_fSlideSpeed = {};
 	_float			m_fTargetSpeed = { 7.f };
+	_float			m_fMoveTime = {};
+	_float			m_fCross = 0.f;
+	_float			m_fabsDir = 0.f;
 	/* 무적 불 변수*/
 #ifdef _DEBUG
 	_bool			m_isDebugMode = { false };

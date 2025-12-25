@@ -2455,77 +2455,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	return E_FAIL;
 	//}
 
-#pragma region BODY
-
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DADA/M_DADA.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_M_DADA_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardSoldier/M_DarkWizardSoldier.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_M_DarkWizardSoldier_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardGrunt/M_DarkWizardGrunt.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_M_DarkWizardGrunt_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardTank/M_DarkWizardTank.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_M_DarkWizardTank_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/FeMale/F_DarkWizardMage/F_DarkWizardMage.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_F_DarkWizardMage_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/FeMale/F_DarkWizardSniper/F_DarkWizardSniper.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_F_DarkWizardSniper_Model")
-	));
-
-#pragma endregion
-
-#pragma region HEAD
-
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Male/Young_M_Head_Ivory.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Young_M_Head_Ivory_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Head/FeMale/T_NPC_F_Head_Eye_Honey.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_T_NPC_F_Head_Eye_Honey_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Head/FeMale/F_Head.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_F_Head_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Male/M_Head.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_M_Head_Model")
-	));
-
-#pragma endregion
-
-#pragma region HAIR
-
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair1/M_Hair1.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_M_Hair1_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair2/M_Hair2.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_M_Hair2_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair3/M_Hair3.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_M_Hair3_Model")
-	));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/FeMale/F_Hair1/F_Hair1.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_F_Hair1_Model")
-	));
-
-#pragma endregion
-
 #pragma region MONSTER
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2625,6 +2554,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_GerboldOlivander_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_VictorRookWood_Model")
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(

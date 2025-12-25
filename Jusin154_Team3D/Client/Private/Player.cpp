@@ -224,7 +224,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	if (m_bLookAt && m_LockOnInfo.pUnit)
 	{
-		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 8.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 10.f);
 	}
 	////////////////////////////////////////////////////////////////////////////
 	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
@@ -314,6 +314,7 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 		{
 			return E_FAIL;
 		}
+
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
@@ -720,8 +721,6 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pStat);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
-	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
-	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
 	SAFE_RELEASE(m_pEffectPool);
 	SAFE_RELEASE(m_pBroomModel);
