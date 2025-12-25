@@ -151,7 +151,7 @@
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
 		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="T_Cav_Spid_ThickWeb_N" Extension=".dds"/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_Adult_F_Arms_Ivory02_N" Extension=".dds"/>
 		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
 		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
 		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
