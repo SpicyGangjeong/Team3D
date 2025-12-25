@@ -7,6 +7,7 @@
 #include "Navigation.h"
 #include "RigidBody_Dynamic.h"
 #include "RigidBody_Static.h"
+#include "Dynamic_Joint.h"
 #include "Texture.h"
 #include "Cell.h"
 #include "Model.h"

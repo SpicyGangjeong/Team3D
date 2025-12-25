@@ -118,9 +118,16 @@ enum class PHYSX_KIND {
     OBSTACLEActor,
 };
 
+enum class PHYSX_JOINT {
+	D6,
+	DISTANCE,
+	END
+};
+
 enum class PXOBJECT : _uint {
 #pragma region NOT_DEFINE
-	NOT_DEFINE = 000,
+	NOT_DEFINE = 0,
+	LEG,
 #pragma endregion
 #pragma region PLAYER
 	PLAYER = 10,
@@ -214,6 +221,7 @@ enum class PXOBJECT : _uint {
 #pragma region NOCOLLIDE
 	NOCOLLIDE = 900,
 	GAIL,
+	JOINT_ROUTE,
 
 #pragma endregion
 	END = 999

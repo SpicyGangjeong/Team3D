@@ -111,6 +111,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_BasicEffect->SetProjection(m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ));
 
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
+	m_pBoneShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.05f, 10, false, false));
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+	depthStencilDesc.DepthEnable = FALSE;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.StencilEnable = FALSE;
+
+	HRESULT result = m_pDevice->CreateDepthStencilState(&depthStencilDesc, &m_pDepthStencilStateNone);
+	if (FAILED(result))
+		return E_FAIL;
 #endif // _DEBUG
 
 	// UI 연동 추가
@@ -159,6 +169,9 @@ __super::Update(fTimeDelta);
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
+
+	Update_LegsPosition();
+
 	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)){
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
 	}
@@ -284,9 +297,15 @@ HRESULT CPlayer::Render()
 	}
 
 #ifdef _DEBUG
+	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
+		m_pRobeJointRoute[i]->Render();
+	}
 	m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
+	m_pLeftLeg->Render();
+	m_pRightLeg->Render();
 	Render_CameraCoordinateSystem();
+	Render_BonePhysX();
 #endif
 
 	return S_OK;
@@ -418,6 +437,30 @@ void CPlayer::Render_CameraCoordinateSystem()
 	);
 	m_Batch->End();
 }
+HRESULT CPlayer::Render_BonePhysX()
+{
+	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xffffff, 1.f);
+	_fmatrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	_cmatrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+	ID3D11DepthStencilState* pPrevDSS = nullptr;
+	UINT iPrevStencilRef = 0;
+	m_pContext->OMGetDepthStencilState(&pPrevDSS, &iPrevStencilRef);
+
+	for (_uint iBoneIndex = 0; iBoneIndex < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++iBoneIndex)
+	{
+		_matrix WorldMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr(PLAYER_JOINT_BONE_NAMES[iBoneIndex]));
+
+		m_pBoneShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
+			[this]() {
+				m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+			});
+	}
+	m_pContext->OMSetDepthStencilState(pPrevDSS, iPrevStencilRef);
+	if (pPrevDSS != nullptr){
+		pPrevDSS->Release();
+	}
+	return S_OK;
+}
 #endif // _DEBUG
 
 HRESULT CPlayer::Ready_Components()
@@ -492,6 +535,29 @@ HRESULT CPlayer::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
+	{ // 
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::LEG);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_Player_Leg"), (CComponent**)&m_pLeftLeg, &Desc))) {
+			return E_FAIL;
+		}
+	}
+	{ // 
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::LEG);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_Player_Leg"), (CComponent**)&m_pRightLeg, &Desc))) {
+			return E_FAIL;
+		}
+	}
+	{ // RobeSocket
+		for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
+			CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+			Desc.iSubKind = ENUM_CLASS(PXOBJECT::JOINT_ROUTE);
+			if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[i], &Desc))) {
+				return E_FAIL;
+			}
+		}
+	}
 	return S_OK;
 }
 
@@ -700,6 +766,14 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+#ifdef _DEBUG
+	SAFE_RELEASE(m_pDepthStencilStateNone);
+#endif // _DEBUG
+	SAFE_RELEASE(m_pRightLeg);
+	SAFE_RELEASE(m_pLeftLeg);
+	for (_uint i = 0; i < ENUM_CLASS(PXOBJECT::JOINT_ROUTE); ++i) {
+		SAFE_RELEASE(m_pRobeJointRoute[i]);
+	}
 
 	SAFE_RELEASE(m_pGrapInteractive);
 	if (nullptr != m_pInfoInstance) {

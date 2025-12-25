@@ -53,6 +53,7 @@ public:
 	void					Set_Position(_vector vPos);
 	void					Set_Rotation(_vector vRotQ);
 	void					Set_Transform(_vector vPos, _vector vRotQ);
+	void					Set_CenterTransform(_matrix CenterMatrix, _vector StartMatrix, _vector EndMatrix);
 	void					Set_Transform(PSX::PxTransform pxTransform);
 	_float3					Get_FootPosition();
 	_float3					Get_HeadPosition();

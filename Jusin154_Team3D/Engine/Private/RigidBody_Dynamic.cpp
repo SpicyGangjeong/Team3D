@@ -21,7 +21,8 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
 #ifdef _DEBUG
 HRESULT CRigidBody_Dynamic::Render()
 {
-	_matrix  WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z) * m_pTransform->Get_XMWorldMatrix();
+	PSX::PxTransform pxTranform = m_pRigidBody->getGlobalPose();
+	_matrix WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z) * XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
@@ -35,8 +36,8 @@ HRESULT CRigidBody_Dynamic::Render()
 	case ACTOR::CAPSULE:
 	{
 		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
-		_matrix WorldUp = XMMatrixTranslationFromVector(m_pTransform->Get_State(STATE::UP) * m_vhalfGeometryInfo.y);
-		_matrix WorldDown = XMMatrixTranslationFromVector(m_pTransform->Get_State(STATE::UP) * -m_vhalfGeometryInfo.y);
+		_matrix WorldUp = XMMatrixTranslationFromVector(WorldMatrix.r[1] * m_vhalfGeometryInfo.y);
+		_matrix WorldDown = XMMatrixTranslationFromVector(WorldMatrix.r[1] * -m_vhalfGeometryInfo.y);
 		m_pSubShape->Draw(WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
 		m_pSubShape->Draw(WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
 	} break;
@@ -195,6 +196,19 @@ void CRigidBody_Dynamic::Set_Transform(_vector vPos, _vector vRotQ)
 	pxTransform.q.z = vRotQ.m128_f32[2];
 	pxTransform.q.w = vRotQ.m128_f32[3];
 	Set_Transform(pxTransform);
+}
+
+void CRigidBody_Dynamic::Set_CenterTransform(_matrix CenterMatrix, _vector StartMatrix, _vector EndMatrix)
+{
+	_vector vCenterWorldPos = (StartMatrix + EndMatrix) * 0.5f;
+	_vector vRotQ = XMQuaternionIdentity();
+	_vector vDir = XMVectorSetW(EndMatrix - StartMatrix, 0.f);
+	_float vLength = XMVectorGetX(XMVector3Length(vDir));
+	if (vLength > FLT_EPSILON5) {
+		vDir = XMVector3Normalize(vDir);
+		vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(0.f, 1.f, 0.f, 0.f), vDir);
+	}
+	Set_Transform(vCenterWorldPos, vRotQ);
 }
 
 void CRigidBody_Dynamic::Set_Transform(PSX::PxTransform pxTransform)

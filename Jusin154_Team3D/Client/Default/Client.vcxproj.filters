@@ -722,6 +722,9 @@
     <ClInclude Include="..\Public\State_FireBall.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_ENUM.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

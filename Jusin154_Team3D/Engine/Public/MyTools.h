@@ -267,6 +267,40 @@ public:
 			vAccumulateRadianPitchYaw.x = -fPitchLimitRadian;
 		}
 	}
+	static inline _vector MakeQuaternionFromTo(_vector vAOrigin, _vector vBDest)
+	{
+		vAOrigin = XMVector3Normalize(vAOrigin);
+		vBDest = XMVector3Normalize(vBDest);
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vAOrigin, vBDest));
+
+		if ( 1.f - fDot < FLT_EPSILON) { // 같은 방향 제외
+			return XMQuaternionIdentity();
+		}
+		if (fDot < -1.f + FLT_EPSILON) { // 반대방향 제외
+			_vector vTempAxis = XMVector3Cross(vAOrigin, XMVectorSet(1.f, 0.f, 0.f, 0.f));
+			_float fTempLength = XMVectorGetX(XMVector3Length(vTempAxis));
+
+			if (fTempLength < FLT_EPSILON5) {
+				vTempAxis = XMVector3Cross(vAOrigin, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+			}
+
+			vTempAxis = XMVector3Normalize(vTempAxis);
+			return XMQuaternionRotationAxis(vTempAxis, XM_PI);
+		}
+
+		_vector vRotAxis = XMVector3Cross(vAOrigin, vBDest);
+		_float  fRotLength = XMVectorGetX(XMVector3Length(vRotAxis));
+		if (fRotLength < FLT_EPSILON5) {
+			return XMQuaternionIdentity();
+		}
+		vRotAxis = XMVector3Normalize(vRotAxis);
+
+		_float fRotAngle = acosf(Saturate(fDot));
+		_vector vRotQ = XMQuaternionRotationAxis(vRotAxis, fRotAngle);
+		return XMQuaternionNormalize(vRotQ);
+	}
+
 
 	inline static void SortHitsByDistance(vector<PSX::PxRaycastHit>& hits)
 	{

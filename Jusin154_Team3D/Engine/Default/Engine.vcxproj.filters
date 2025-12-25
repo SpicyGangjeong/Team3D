@@ -292,9 +292,6 @@
     <Filter Include="02.Element\02.Component\09.Light">
       <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Management\04. Font_Manager">
-      <UniqueIdentifier>{bba1e91b-87a8-4a7b-8e4e-b42d2041d8eb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\01.GameObject\01. Font">
       <UniqueIdentifier>{7eab7292-025e-40d7-aa71-73e7a3c71ea7}</UniqueIdentifier>
     </Filter>
@@ -309,6 +306,9 @@
     </Filter>
     <Filter Include="01.Utility\01.Renderer\RenderEventDebugger">
       <UniqueIdentifier>{fd18d84d-d656-4dbd-9859-436191a27b91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\04.Font_Manager">
+      <UniqueIdentifier>{bba1e91b-87a8-4a7b-8e4e-b42d2041d8eb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -540,9 +540,6 @@
     <ClCompile Include="..\private\VIBuffer_Instance.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
-      <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Trail.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
     </ClCompile>
@@ -571,7 +568,7 @@
       <Filter>03.Management\02.Resource_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Font_Manager.cpp">
-      <Filter>03.Management\04. Font_Manager</Filter>
+      <Filter>03.Management\04.Font_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Font.cpp">
       <Filter>02.Element\01.GameObject\01. Font</Filter>
@@ -590,6 +587,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_QueryFilterCallback.cpp">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dynamic_Joint.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1184,9 +1184,6 @@
     <ClInclude Include="..\public\VIBuffer_Instance.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
-      <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Trail.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
     </ClInclude>
@@ -1218,7 +1215,7 @@
       <Filter>03.Management\02.Resource_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Font_Manager.h">
-      <Filter>03.Management\04. Font_Manager</Filter>
+      <Filter>03.Management\04.Font_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Font.h">
       <Filter>02.Element\01.GameObject\01. Font</Filter>
@@ -1237,6 +1234,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CallBack_QueryFilterCallback.h">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dynamic_Joint.h">
+      <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

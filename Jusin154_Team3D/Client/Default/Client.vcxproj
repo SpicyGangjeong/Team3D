@@ -166,6 +166,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
+    <ClInclude Include="..\Public\Player_ENUM.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />

@@ -13,8 +13,17 @@ public:
 
             if (physxUserData->eKind == PHYSX_KIND::BODY_DYNAMIC)
             {
-                if (PXOBJECT(physxUserData->iSubKind) == PXOBJECT::SKILL_PROTEGO)
+                switch (PXOBJECT(physxUserData->iSubKind))
+                {
+                case Engine::PXOBJECT::LEG:
                     return PSX::PxQueryHitType::eNONE;
+                    break;
+                case Engine::PXOBJECT::SKILL_PROTEGO:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
+                default:
+                    break;
+                }
             }
         }
 

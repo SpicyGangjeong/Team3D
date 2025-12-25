@@ -142,13 +142,29 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	return pActor;
 }
 
-PSX::PxRevoluteJoint* CPhysX_Manager::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel)
+PSX::PxJoint* CPhysX_Manager::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1)
 {
-	PSX::PxRevoluteJoint* pJoint = PSX::PxRevoluteJointCreate(*m_pPhysics, pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
+	PSX::PxJoint* pOut = { nullptr };
+	switch (eType)
+	{
+	case PHYSX_JOINT::D6:
+	{
+		PSX::PxD6Joint* pJoint = PSX::PxD6JointCreate(*m_pPhysics, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
+		pOut = pJoint;
+	}
+		break;
+	case PHYSX_JOINT::DISTANCE:
+	{
+		PSX::PxDistanceJoint* pJoint = PSX::PxDistanceJointCreate(*m_pPhysics, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
+		pOut = pJoint;
+	}
+		break;
+	default:
+		break;
+	}
+	assert(nullptr != pOut);
 
-	assert(nullptr != pJoint);
-
-	return pJoint;
+	return pOut;
 }
 
 PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
@@ -585,6 +601,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 #ifndef _DEBUG
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
 #endif // _DEBUG
+		PxInitExtensions(*m_pPhysics, m_pPvd);
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
@@ -740,7 +757,7 @@ void CPhysX_Manager::Free()
 	if (nullptr != m_pDispatcher) {
 		m_pDispatcher->release(); m_pDispatcher = nullptr;
 	}
-
+	PxCloseExtensions();
 	if (nullptr != m_pPhysics) {
 		m_pPhysics->release(); m_pPhysics = nullptr;
 	}

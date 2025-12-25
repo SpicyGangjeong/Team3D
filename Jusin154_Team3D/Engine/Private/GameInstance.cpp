@@ -1000,9 +1000,9 @@ PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody,
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel);
 }
-PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel)
+PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1)
 {
-	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame, iLevel);
+	return m_pPhysX_Manager->Create_PxJoint(eType, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
 }
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {

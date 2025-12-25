@@ -359,8 +359,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
-	isLoad_Hogwart = true;
+	isLoad_Background = false;
+	isLoad_Hogwart = false;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -1762,7 +1762,44 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &Quest_Slot_Desc)))) {
 		return E_FAIL;
 	}
-
+	{
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		Desc.eType = ACTOR::BOX;
+		Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = { 0.01f };
+		Desc.vhalfGeometryInfo = { 0.0025f, 0.15f, 0.0025f };
+		Desc.fDensity = 1.f;
+		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+		Desc.eLockFlag = {};
+		Desc.vAutoDamping = { 1.f, 1.f };
+		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	}
+	{
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		Desc.eType = ACTOR::CAPSULE;
+		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = { 0.01f };
+		Desc.vhalfGeometryInfo = { 0.06f, 0.25f, 0.f };
+		Desc.fDensity = 1.f;
+		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+		Desc.eLockFlag = {};
+		Desc.vAutoDamping = { 1.f, 1.f };
+		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_Player_Leg"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	}
 	{ // LIGHT PHYSX DYNAMIC
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
@@ -1802,7 +1839,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
-
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
