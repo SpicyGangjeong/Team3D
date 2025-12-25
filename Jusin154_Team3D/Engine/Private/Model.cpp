@@ -443,7 +443,8 @@ void CModel::Update_RootBone(_float Amount)
 
 		_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
 
-		vDeltaWorld *= 0.01f;
+		if(!m_bTemp)
+			vDeltaWorld *= 0.01f;
 		vDeltaWorld *= Amount;
 
 		vDeltaWorld = XMVectorSetW(vDeltaWorld, 1.f);
