@@ -282,6 +282,8 @@ void CGoblin_BattleAxe::SwingHit(_bool& bPlayerHit)
 				vHitDir = XMVector3Normalize(vHitDir);
 				XMStoreFloat4(&tagCollInfo.vHitDir, vHitDir);
 				tagCollInfo.fLength = pxHits[i].distance;
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_MEDIUM);
+				tagCollInfo.fDamage = 10.f;
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case PXOBJECT::PLAYER:
@@ -289,8 +291,6 @@ void CGoblin_BattleAxe::SwingHit(_bool& bPlayerHit)
 					if (true == bPlayerHit) {
 						continue;
 					}
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(20.f);
 					bPlayerHit = true;
 					pUserData->pOwner->OnCollision(this,&tagCollInfo);
 				} break;

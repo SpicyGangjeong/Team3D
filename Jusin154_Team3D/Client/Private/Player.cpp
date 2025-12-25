@@ -144,15 +144,8 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();
-	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	_float ease = 1.f + powf(fRatio, 3.f) * 0.6f;
-
-	if (m_pFSM->IsEnable(FSMSTATE::SPELL | FSMSTATE::LIGHT_ATTACK | FSMSTATE::COMBAT | FSMSTATE::ANCIENT_SPELL))
-		m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
-	else {
-		m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
-	}
+	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
 	
@@ -342,6 +335,8 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		m_bShield = true;
 	}
+	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) && m_bShield)
+		return;
 
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
@@ -351,15 +346,14 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
-		m_bMeleeHit = CollisionDesc->bIsMelee;
+		m_eHitType = CollisionDesc->eHitType;
+		m_pStat->Get_Damage(CollisionDesc->fDamage);
 	}
 	else {
 		m_fHitDegree = -1.f;
 	}
-
-
-	if(!m_pFSM->IsEnable(FSMSTATE::DODGE|FSMSTATE::BLINK) && !m_bShield)
-		m_pFSM->Change_State(FSMSTATE::HIT);
+	
+	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {

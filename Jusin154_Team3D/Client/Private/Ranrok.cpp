@@ -539,7 +539,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 	{
-		if (fDist < 20.f)
+		if (fDist < 10.f)
 		{
 			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 			{
@@ -565,7 +565,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector LerpTarget = XMVectorLerp(Target, NextTarget, 0.5f);
 
-	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.f);
+	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,3.f);
 
 	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
 }
