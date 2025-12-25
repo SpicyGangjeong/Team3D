@@ -829,7 +829,7 @@ PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     float4 vSubSurfaceColor = g_ReflectionTexture.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
-    float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv).r;
+    float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
@@ -856,7 +856,7 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
     vDiffuseColor.rgb += vEmissive.r * vEmissive.g;
     
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
-    float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv).r;
+    float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
@@ -905,7 +905,7 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDAOColor    = g_DiffuseTexture.Sample(DefaultSampler, uv);
-    float4 vHairColor   = g_EmissiveTexture.Sample(DefaultSampler, uv);
+    float fOppacityColor = g_NormalBlendTexture.Sample(DefaultSampler, uv).r;
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vTHVColor    = g_DiffuseBlend.Sample(DefaultSampler, uv);
     
@@ -923,8 +923,12 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
     float3 vColorRoot = vDAOColor * 0.6f;
     float3 vColorTip = vDAOColor;
     float3 vBaseColor = lerp(vColorRoot, vColorTip, RootTip);
-    
-    Out.vAlbedo = float4(vBaseColor, AlphaMask);
+    float fAlpha = (AlphaMask - fOppacityColor);
+    if (fAlpha < 0.2f)
+    {
+        discard;
+    }
+    Out.vAlbedo = float4(vBaseColor, fAlpha);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w),
         (In.vProjPos.w / g_fFar),
@@ -1120,7 +1124,7 @@ technique11 DefaultTechnique
     pass EYE_OCC // 3
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
