@@ -75,10 +75,6 @@ HRESULT CEffectObject::Render_Blur()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBlurWeight", &m_EffectInfo.iBlurWeight, sizeof(_int)))) {
-		return E_FAIL;
-	}
-
 	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
 
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
@@ -176,6 +172,11 @@ HRESULT CEffectObject::Render_Bloom()
 	else
 	{
 		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM;
+	}
+
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM_CULLING;
 	}
 
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
@@ -1008,12 +1009,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColor", &m_EffectInfo.vDissolveColor, sizeof(_float4)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurColor", &m_EffectInfo.isBlurColor, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColorCut", &m_EffectInfo.vDissolveColorCut, sizeof(_float2)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vBlurColor", &m_EffectInfo.vBlurColor, sizeof(_float4)))) {
 		return E_FAIL;
 	}
 
@@ -1050,9 +1050,18 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVNoiseCutting", &m_EffectInfo.vUVNoiseCutting, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fModelBlurIntensity", &m_EffectInfo.fModelBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+	
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMask_G", &m_EffectInfo.isMask_G, sizeof(_bool)))) {
 		return E_FAIL;
@@ -1073,8 +1082,20 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve_B", &m_EffectInfo.isDissolve_B, sizeof(_bool)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_R", &m_EffectInfo.isDiffuse_R, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_G", &m_EffectInfo.isDiffuse_G, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_B", &m_EffectInfo.isDiffuse_B, sizeof(_bool)))) {
+		return E_FAIL;
+	}
 
-	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurDissolve", &m_EffectInfo.isBlurDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (m_pDiffuse_TextureCom != nullptr)

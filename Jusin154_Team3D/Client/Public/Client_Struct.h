@@ -208,8 +208,8 @@ namespace Client
 
 		_bool		isDissolve_G = {};
 
-		_float4     vDissolveColor = {};
-		_float2     vDissolveColorCut = {};
+		_float4     vBlurColor = {};
+		_float2     vUVNoiseCutting = { 1.f ,1.f };
 
 		_float		fEmissiveColorCut = {};
 
@@ -220,7 +220,13 @@ namespace Client
 		_float4     vRimLightColor = {};
 
 		_float2     vMaskOffset = {};
-		_float2     vPadding4 = {};
+
+		_bool       isDiffuse_R = {};
+		_bool       isDiffuse_G = {};
+		_bool       isDiffuse_B = {};
+		_bool       isBlurColor = {};
+
+		_float      vPadding4 = {};
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};

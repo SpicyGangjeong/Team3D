@@ -435,7 +435,7 @@ void CEditEffect::Describe_Entity()
 
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", 
-		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" };
+		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" ,"BLUR_CULLING_NO_EMISSIVE" , "BLOOM_CULLING"};
 
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -515,13 +515,16 @@ void CEditEffect::Describe_Entity()
 
 			GUI::Checkbox("OnlyBlur", &m_EffectInfo.isOnlyBlur);
 			GUI::Checkbox("BlurNoEmissive", &m_EffectInfo.isBlurNoEmissive);
-
+			GUI::Checkbox("BlurDissolve", &m_EffectInfo.isBlurDissolve);
+			
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
 			GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 2.f, 0, 128);
 
 
+			GUI::Checkbox("BlurColor", &m_EffectInfo.isBlurColor);
 			ImGui::PopItemWidth();
+			GUI::ColorEdit4("BlurColor", (_float*)&m_EffectInfo.vBlurColor);
 
 			GUI::TreePop();
 		}
@@ -700,6 +703,10 @@ void CEditEffect::Describe_Entity()
 		if (GUI::TreeNode("DIFFUSE"))
 		{
 
+			GUI::Checkbox("Diffuse_R", &m_EffectInfo.isDiffuse_R);
+			GUI::Checkbox("Diffuse_G", &m_EffectInfo.isDiffuse_G);
+			GUI::Checkbox("Diffuse_B", &m_EffectInfo.isDiffuse_B);
+
 			GUI::DragFloat("Diffuse Alpha", &m_EffectInfo.fDiffuseAlpha , 0.01f, 0.f, 1.f);
 
 			ImGui::PushItemWidth(80);
@@ -825,12 +832,9 @@ void CEditEffect::Describe_Entity()
 
 				GUI::Spacing();
 
-		
-				GUI::DragFloat2("DissolveColorCut", (_float*)& m_EffectInfo.vDissolveColorCut, 0.005f);
-				
 				ImGui::PopItemWidth();
 
-				GUI::ColorEdit4("DissolveColor", (_float*)&m_EffectInfo.vDissolveColor);
+
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {
@@ -915,6 +919,8 @@ void CEditEffect::Describe_Entity()
 			GUI::ColorEdit4("NoiseColor", (_float*)&m_EffectInfo.vNoiseColor);
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("NoiseUVGainAmount", (_float*)&m_EffectInfo.vNoiseUVGainAmount, 0.01f);
+			GUI::DragFloat2("UVNoiseCutting", (_float*)&m_EffectInfo.vUVNoiseCutting, 0.01f);
+			
 			ImGui::PopItemWidth();
 
 
