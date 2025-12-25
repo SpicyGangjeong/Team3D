@@ -860,7 +860,7 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuseColor.rgb += vEmissive.r * vEmissive.g;
+    vDiffuseColor.rg += (vEmissive.rg) * 3.f;
     
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);

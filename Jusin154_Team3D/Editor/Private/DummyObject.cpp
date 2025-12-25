@@ -188,7 +188,7 @@ HRESULT CDummyObject::Bind_ShaderParameters(_uint iMeshOrder)
 	case CDummyObject::HEAD_EYELASH:
 	case CDummyObject::HAIR_SUB:
 		bUseColorMixer = true;
-		iColorParam = 0x302717;
+		iColorParam = 0x2E2E2E;
 		fMixerFactor = 0.9f;
 		iColorMixerMethod = 1;
 		break;

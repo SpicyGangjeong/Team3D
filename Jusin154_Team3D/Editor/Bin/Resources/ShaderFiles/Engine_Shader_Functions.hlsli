@@ -374,7 +374,7 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
 
 }
 
-float3 UnpackRGB8(uint iPacked)
+float3 UnpackRGB8(int iPacked)
 {
     return float3((iPacked >> 16) & 255, (iPacked >> 8) & 255, iPacked & 255) / 255.0f;
 }
@@ -384,13 +384,10 @@ float3 ColorMixer(float3 vSlotA, float3 vSlotB, float fAToBFactor, int iMethod)
     switch (iMethod)
     {
         case 1:
-            vResult = lerp(vSlotA, vSlotB, fAToBFactor);
+            vResult = (fAToBFactor) * vSlotA + (1.f - fAToBFactor) * vSlotB;
             break;
         case 0:
-            {
-                float3 tintedColor = vSlotA * vSlotB;
-                vResult = lerp(vSlotA, vSlotB, fAToBFactor);
-            }
+            vResult = (fAToBFactor) * vSlotA * (1.f - fAToBFactor) * vSlotB;
             break;
     }
     return vResult;
