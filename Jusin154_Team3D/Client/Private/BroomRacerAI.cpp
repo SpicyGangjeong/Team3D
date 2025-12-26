@@ -113,15 +113,7 @@ void CBroomRacerAI::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
 
-	float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
-
-	float ease = 1.f;
-	if (ratio < 0.4f)
-		ease = 1.15f;
-	else if (ratio > 0.85f)
-		ease = 0.85f;
-
-	m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
 
@@ -155,15 +147,40 @@ HRESULT CBroomRacerAI::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-			return E_FAIL;
-		}
-
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
+
+		}
+		if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
+		{
+			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
+				return E_FAIL;
+			}
+
+			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+			if (FAILED(Bind_ShaderParameters(i))) {
+				return E_FAIL;
+			}
+
+		}
+		else {
+
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+				return E_FAIL;
+			}
+
+			m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 		}
 
 		if (FAILED(m_pModelCom->Render(i))) {
@@ -202,7 +219,7 @@ HRESULT CBroomRacerAI::Render_Shadow(SHADOW eType)
 			return E_FAIL;
 		}
 
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -230,7 +247,8 @@ HRESULT CBroomRacerAI::Ready_Components()
 		return E_FAIL;
 	}
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+	m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
+	//m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
@@ -238,11 +256,20 @@ HRESULT CBroomRacerAI::Ready_Components()
 		return E_FAIL;
 	}
 
-	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
-		return E_FAIL;
+	if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
+	{
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
+			reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+			return E_FAIL;
+		}
 	}
+	else {
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+			reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+			return E_FAIL;
+		}
+	}
+
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.fRange = 10.f;
 	LightDesc.iLevel = NEXT_LEVEL;
@@ -282,6 +309,61 @@ HRESULT CBroomRacerAI::Bind_ShaderResources()
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT CBroomRacerAI::Bind_ShaderParameters(_uint iMeshOrder)
+{
+	_bool bUseColorMixer = false;
+
+	_uint iColorParam = { UINT_MAX };
+	_float fMixerFactor = { FLT_MAX };
+	_uint iColorMixerMethod = { 0 };
+
+	switch (MESH_ORDER(iMeshOrder))
+	{
+	case MESH_ORDER::HAIR_MAIN:
+	case MESH_ORDER::HEAD_EYELASH:
+	case MESH_ORDER::HAIR_SUB:
+		bUseColorMixer = true;
+		iColorParam = 0x2E2E2E;
+		fMixerFactor = 0.9f;
+		iColorMixerMethod = 1;
+		break;
+	case MESH_ORDER::LOWER:
+		bUseColorMixer = true;
+		iColorParam = 0x292557;
+		fMixerFactor = 0.5f;
+		iColorMixerMethod = 1;
+		break;
+	case MESH_ORDER::SHOES:
+		bUseColorMixer = true;
+		iColorParam = 0x614242;
+		fMixerFactor = 0.5f;
+		iColorMixerMethod = 1;
+		break;
+	case MESH_ORDER::UPPER:
+		bUseColorMixer = true;
+		iColorParam = 0xBFAC29;
+		fMixerFactor = 0.658333f;
+		iColorMixerMethod = 1;
+		break;
+	default:
+		break;
+	}
+	if (true == bUseColorMixer) {
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iPackedBlendColor", &iColorParam, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fMixerFactor", &fMixerFactor, sizeof(_float)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMixerMethod", &iColorMixerMethod, sizeof(_uint)))) {
+			return E_FAIL;
+		}
 	}
 	return S_OK;
 }
@@ -626,31 +708,32 @@ void CBroomRacerAI::Add_FSM()
 
 void CBroomRacerAI::Set_Anim()
 {
-	m_Animation[STATEANIM::BROOM_IDLE] = { 710,true };
-	m_Animation[STATEANIM::BROOM_FWD] = { 711,true };
-	m_Animation[STATEANIM::BROOM_LEFT] = { 713,true };
-	m_Animation[STATEANIM::BROOM_RIGHT] = { 714,true };
-	m_Animation[STATEANIM::BROOM_DOWN] = { 712,true };
-	m_Animation[STATEANIM::BROOM_UP] = { 715,true };
-	m_Animation[STATEANIM::BROOM_REVELIO] = { 678,false };
+	m_Animation[STATEANIM::BROOM_IDLE] = { 35,  true };
+	m_Animation[STATEANIM::BROOM_FWD] = { 36,  true };
+	m_Animation[STATEANIM::BROOM_LEFT] = { 38,  true };
+	m_Animation[STATEANIM::BROOM_RIGHT] = { 39,  true };
+	m_Animation[STATEANIM::BROOM_DOWN] = { 37,  true };
+	m_Animation[STATEANIM::BROOM_UP] = { 40,  true };
+	m_Animation[STATEANIM::BROOM_REVELIO] = { 3,   false };
 
-	m_Animation[STATEANIM::BROOM_MOUNT] = { 734,false };
-	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 737,false };
-	m_Animation[STATEANIM::BROOM_HOVER_START] = { 699,false };
-	m_Animation[STATEANIM::BROOM_DISMOUNT] = { 738,false };
+	m_Animation[STATEANIM::BROOM_MOUNT] = { 59,  false };
+	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 62,  false };
+	m_Animation[STATEANIM::BROOM_HOVER_START] = { 24,  false };
+	m_Animation[STATEANIM::BROOM_DISMOUNT] = { 63,  false };
+
+	m_Animation[STATEANIM::BROOM_HOVER_IDLE] = { 28,  true };
+	m_Animation[STATEANIM::BROOM_HOVER_FWD] = { 25,  true };
+	m_Animation[STATEANIM::BROOM_HOVER_LEFT] = { 26,  true };
+	m_Animation[STATEANIM::BROOM_HOVER_RIGHT] = { 27,  true };
+	m_Animation[STATEANIM::BROOM_HOVER_REVELIO] = { 46,  false };
+
+	m_Animation[STATEANIM::BROOM_TURBO_DOWN] = { 41,  true };
+	m_Animation[STATEANIM::BROOM_TURBO_FWD] = { 42,  true };
+	m_Animation[STATEANIM::BROOM_TURBO_LEFT] = { 43,  true };
+	m_Animation[STATEANIM::BROOM_TURBO_RIGHT] = { 44,  true };
+	m_Animation[STATEANIM::BROOM_TURBO_UP] = { 45,  true };
 
 
-	m_Animation[STATEANIM::BROOM_HOVER_IDLE] = { 703,true };
-	m_Animation[STATEANIM::BROOM_HOVER_FWD] = { 700,true };
-	m_Animation[STATEANIM::BROOM_HOVER_LEFT] = { 701,true };
-	m_Animation[STATEANIM::BROOM_HOVER_RIGHT] = { 702,true };
-	m_Animation[STATEANIM::BROOM_HOVER_REVELIO] = { 721,false };
-
-	m_Animation[STATEANIM::BROOM_TURBO_DOWN] = { 716,true };
-	m_Animation[STATEANIM::BROOM_TURBO_FWD] = { 717,true };
-	m_Animation[STATEANIM::BROOM_TURBO_LEFT] = { 718,true };
-	m_Animation[STATEANIM::BROOM_TURBO_RIGHT] = { 719,true };
-	m_Animation[STATEANIM::BROOM_TURBO_UP] = { 720,true };
 }
 
 void CBroomRacerAI::Set_Input(_float fTimeDelta)

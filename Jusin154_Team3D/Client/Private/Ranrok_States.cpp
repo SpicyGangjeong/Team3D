@@ -605,6 +605,7 @@ void CRanrok::Behavior_TuckedEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::TUCKED);
+	m_pCharacter_Controller->SetGravity(true);
  
 	//if (m_iCurrentFlow == 0)
 	//{

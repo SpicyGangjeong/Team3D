@@ -242,6 +242,9 @@ HRESULT CGoblin::Render()
 
 HRESULT CGoblin::Render_Shadow(SHADOW eType)
 {
+	if (!m_bVisible)
+		return S_OK;
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
