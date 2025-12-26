@@ -235,6 +235,11 @@ HRESULT CEffect_Editor::ReSaveFile(const _char* pDirectoryPath)
 {
 	_uint iIndex = {};
 
+	if (filesystem::exists(pDirectoryPath) == false) {
+		MessageBox(NULL, L"존재하지 않는 경로", L"System Message", MB_OK);
+		return E_FAIL;
+	}
+
 	for (const auto& file : filesystem::directory_iterator(pDirectoryPath))
 	{
 		if (file.is_directory())

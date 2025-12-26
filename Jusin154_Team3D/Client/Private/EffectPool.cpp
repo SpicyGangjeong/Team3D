@@ -153,7 +153,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 #if 진우
 
 
-	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::BLINK)].begin())->Describe_Entity();
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA_SIDE)].begin())->Describe_Entity();
 
 	Describe_Entity();
 

@@ -124,6 +124,8 @@ void CTroll_Rock::RockHit()
 				tagCollInfo.fLength = fLength;
 				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
+				tagCollInfo.fDamage = 10.f;
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case Engine::PXOBJECT::PLAYER:
@@ -132,8 +134,6 @@ void CTroll_Rock::RockHit()
 						break;
 					}
 					m_bVisible = false;
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(10.f);
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 				}
 				break;
@@ -190,7 +190,7 @@ HRESULT CTroll_Rock::Ready_Components()
 
 	CTransform::TRANSFORM_DESC Desc = {};
 
-	Desc.fSpeedPerSec = 18.f;
+	Desc.fSpeedPerSec = 25.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 

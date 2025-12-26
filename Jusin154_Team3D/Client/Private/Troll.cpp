@@ -178,6 +178,9 @@ HRESULT CTroll::Render()
 		return E_FAIL;
 	}
 
+	if (FAILED(Render_DeadDisolve())) {
+		return E_FAIL;
+	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
@@ -222,6 +225,13 @@ HRESULT CTroll::Render()
 	//	}
 	//}
 #endif
+
+	if (0.f < m_fDeadRatio) {
+		_bool bDisolve = false;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
@@ -342,6 +352,9 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
+	if (m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::RUSH_LOOP].first)
+		return;
+
 	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -396,9 +409,9 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
 	}
-	m_pFSM->Change_State(FSMSTATE::HIT);
 
-
+	if(m_eHitSpell != ENUM_CLASS(SKILL_TYPE::JAP))
+		m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)

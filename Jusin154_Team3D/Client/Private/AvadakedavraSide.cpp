@@ -54,19 +54,19 @@ HRESULT CAvadakedavraSide::Initialize(void* pArg)
 
 	m_fDuration = 3.f;
 
-	m_Events.emplace(1.f, [&]() {
-		m_isParticleEnd = true;
-		m_pWandParticle->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+	//m_Events.emplace(1.5f, [&]() {
+	//	m_isParticleEnd = true;
+	//	m_pWandParticle->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
 
-		CWand* pWand = static_cast<CWand*>(m_pOwner);
+	//	CWand* pWand = static_cast<CWand*>(m_pOwner);
 
-		if (pWand == nullptr)
-			return;
+	//	if (pWand == nullptr)
+	//		return;
 
-		m_isTrailEnd = true;
+	//	m_isTrailEnd = true;
 
-		XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
-		});
+	//	XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
+	//	});
 
 	return S_OK;
 }
@@ -207,7 +207,10 @@ void CAvadakedavraSide::Free()
 
 void CAvadakedavraSide::Describe_Entity()
 {
-
+	GUI::Begin("AvrakedavraSide");
+	m_pWandTrail->Describe_Entity();
+	m_pWandTrail->Get_Component<CTrail>()->Describe_Entity();
+	GUI::End();
 }
 
 #endif // _DEBUG

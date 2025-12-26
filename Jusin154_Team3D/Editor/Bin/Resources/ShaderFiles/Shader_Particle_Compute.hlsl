@@ -201,10 +201,12 @@ void CS_MAIN(
             particleValue.vNoiseUVMoveTime.x = 0.f;
             particleValue.vDistortionUVMoveTime.x = 0.f;
             particleValue.vDissolveUVMoveTime.x = 0.f;
+            
+            if (isRandomAniIndex == false)
+                particleValue.vAniIndex.x = 0.f;
         }
 
-        if (isRandomAniIndex == false)
-            particleValue.vAniIndex.x = 0.f;
+
         
         g_VBInstanceOutput[iIndex] = particle;
         g_ParticleValueOutput[iIndex] = particleValue;

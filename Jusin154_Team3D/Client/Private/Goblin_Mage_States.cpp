@@ -612,25 +612,9 @@ void CGoblin_Mage::Behavior_DeadEnter()
 	m_bLookAt = false;
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::DEAD);
-	PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
-	PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
-	m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
-	m_pRigidBody->SetActive(false);
-	m_pCharacter_Controller->SetActive(false);
+	m_pCharacter_Controller->SetGravity(true);
 
 	_bool bStrongerKnockDown = { false };
-
-	switch (m_eHitSpell)
-	{
-	case STATEANIM::KNOCKDOWN_FWD:
-		bStrongerKnockDown = true;
-		break;
-	case STATEANIM::TUMBLE2:
-		bStrongerKnockDown = true;
-		break;
-	default:
-		break;
-	}
 
 	_float fabsRadius = fabsf(m_fHitRadius);
 	_uint iState = { UINT_MAX };
@@ -872,6 +856,11 @@ void CGoblin_Mage::Add_FSM()
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
 			m_fDeadRatio = fDeadRatio;
 			if (m_fDeadRatio > 1.f) {
+				PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
+				PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
+				m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+				m_pRigidBody->SetActive(false);
+				m_pCharacter_Controller->SetActive(false);
 				m_bDead = true;
 			}
 			};

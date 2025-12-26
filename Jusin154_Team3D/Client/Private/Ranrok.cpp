@@ -172,9 +172,6 @@ void CRanrok::Late_Update(_float fTimeDelta)
 
 HRESULT CRanrok::Render()
 {
-	if (!m_bVisible){
-		return S_OK;
-	}
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -244,7 +241,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
-	if (m_bFireBurst)
+
+	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED))
 		return;
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -524,7 +522,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
 
-	_float Speed = 50.f;
+	_float Speed = 40.f;
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
@@ -539,7 +537,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 	{
-		if (fDist < 20.f)
+		if (fDist < 10.f)
 		{
 			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 			{
@@ -565,7 +563,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector LerpTarget = XMVectorLerp(Target, NextTarget, 0.5f);
 
-	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.f);
+	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.5f);
 
 	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
 }

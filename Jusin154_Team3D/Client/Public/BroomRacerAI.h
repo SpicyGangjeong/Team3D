@@ -7,6 +7,25 @@ NS_BEGIN(Client)
 
 class CBroomRacerAI final : public CUnit
 {
+	enum MESH_ORDER {
+		HEAD_EYE_OCC,
+		HEAD_FACE,
+		HEAD_TEETH,
+		HEAD_EYELASH,
+		HEAD_EYES,
+		BODY_ARMS,
+		HAIR_MAIN,
+		HAIR_MAIN_CLOTH,
+		LOWER,
+		SHOES,
+		UPPER,
+		HAIR_SUB,
+		HAIR_SUB_CLOTH,
+		ROBE_SKIRT,
+		ROBE_FUR,
+		ROBE_CLOTH,
+		END
+	};
 private:
 	CBroomRacerAI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBroomRacerAI(const CBroomRacerAI& Prototype);
@@ -36,6 +55,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
 
 	_float ComputeTurnToRing();
 	_float ComputeHeightAdjust();
