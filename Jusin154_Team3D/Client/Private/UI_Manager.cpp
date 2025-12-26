@@ -8,6 +8,7 @@
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
 #include "Damage_Font.h"
+#include "Dialogue_Font.h"
 #include "SpellLearn_Canvas.h"
 #include "Interaction_Key.h"
 
@@ -29,14 +30,30 @@ HRESULT CUI_Manager::Initialize_Prototype()
 
 HRESULT CUI_Manager::Initialize(void* pArg)
 {
+	CUIObject::UIOBJECT_DESC	Desc{};
+
+	Desc.fX = 960.f;
+	Desc.fY = 540.f;
+	Desc.fSizeX = g_iWinSizeX;
+	Desc.fSizeY = g_iWinSizeY;
+
+	if (FAILED(__super::Initialize(&Desc)))
+	{
+		return E_FAIL;
+	}
+
 	if (FAILED(Ready_Components(pArg)))
 	{
 		return E_FAIL;
 	}
+
 	m_bCanvas_Change = false;
 	m_eType = UI_STATE::GAMEPLAYER;
 	m_pGameInstance->Toggle_MouseCenter();
 	//ShowCursor(false);
+	m_fAlpha = 0.f;
+	m_fAlphaTime = 1.f;
+	m_fSortZ = 0.f;
 	m_pInfoInstance->Set_UISTATE(m_eType);
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Canvas_Change(*reinterpret_cast<UI_STATE*>(p)); });
 	return S_OK;
@@ -64,7 +81,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 		break;
 
-	case UI_STATE::QUEST_CANVES:
+	case UI_STATE::QUEST:
 		m_pMouse_Cursor->Set_Visible(true);
 		m_pCamera_LockOn->Set_Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(true);
@@ -74,7 +91,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 	case UI_STATE::INVENTORY:
 		break;
 
-	case UI_STATE::SPELLNEARN:
+	case UI_STATE::SPELLLNEARN:
 		m_pMouse_Cursor->Set_Visible(true);
 		m_pCamera_LockOn->Set_Visible(false);
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(true);
@@ -118,15 +135,125 @@ void CUI_Manager::Priority_Update(_float fTimeDelta)
 
 void CUI_Manager::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_T))
+	{
+		if (m_eType == UI_STATE::GAMEPLAYER)
+			Canvas_Change(UI_STATE::SPELL);
+		else if (m_eType == UI_STATE::SPELL)
+			Canvas_Change(UI_STATE::GAMEPLAYER);
+	}
 
+	if (m_eType == UI_STATE::GAMEPLAYER || m_eType == UI_STATE::QUEST)
+	{
+		if (m_pGameInstance->Key_Down(DIK_TAB))
+		{
+			if (m_bActive == false)
+			{
+				m_bActive = true;
+				if (m_eType == UI_STATE::GAMEPLAYER)
+				{
+					m_eType = UI_STATE::QUEST;
+
+				}
+				else if (m_eType == UI_STATE::QUEST)
+				{
+					m_eType = UI_STATE::GAMEPLAYER;
+				}
+			}
+		}
+	}
+	if (m_eType == UI_STATE::GAMEPLAYER || m_eType == UI_STATE::SPELLLNEARN)
+	{
+		if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+		{
+			if (m_bActive == false)
+			{
+				m_bActive = true;
+				if (m_eType == UI_STATE::GAMEPLAYER)
+				{
+					m_eType = UI_STATE::SPELLLNEARN;
+				}
+				else if (m_eType == UI_STATE::SPELLLNEARN)
+				{
+					m_eType = UI_STATE::GAMEPLAYER;
+				}
+			}
+		}
+	}
+
+	if (m_bActive == true && m_bHover == false)
+	{
+		if (m_fAlpha <= 1.f)
+		{
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+		}
+
+		if (m_fAlpha > 1.f)
+		{
+			m_fAlpha = 1.f;
+			m_bFadeIn = true;
+			Canvas_Change(m_eType);
+		}
+	}
+
+	if (m_bFadeIn == true)
+	{
+		m_fTime += fTimeDelta;
+	}
+
+	if (m_fTime >= 1.f)
+	{
+		m_bHover = true;
+		m_bFadeIn = false;
+		m_fTime = 0.f;
+	}
+
+	if (m_bActive == true && m_bHover == true)
+	{
+		if (m_bCgangede == false)
+		{
+			m_bCgangede = true;
+		}
+
+		if (m_fAlpha < 0.f)
+		{
+			m_fAlpha = 0.f;
+			m_bActive = false;
+			m_bHover = false;
+			m_bCgangede = false;
+		}
+
+		if (m_fAlpha > 0.f)
+		{
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;
+		}
+	}
+
+	__super::Update(fTimeDelta);
 }
 
 void CUI_Manager::Late_Update(_float fTimeDelta)
 {
+	if (m_bActive == true)
+		m_pGameInstance->Add_RenderGroup(RENDER::UI_OVERLAY, this);
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CUI_Manager::Render()
 {
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::CANVASFADE)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Render())) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -137,7 +264,28 @@ _vector CUI_Manager::Get_WorldPostion()
 
 HRESULT CUI_Manager::Bind_ShaderResources()
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	{
 		return E_FAIL;
 	}
 
@@ -147,6 +295,17 @@ HRESULT CUI_Manager::Bind_ShaderResources()
 HRESULT CUI_Manager::Ready_Components(void* pArg)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canves)))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UIChange"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("GamePlay_Canvas"), m_pGamePlay_Canves);
@@ -175,6 +334,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Camera_LockOn"), m_pDamage_Font);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDialogue_Font>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CDialogue_Font**>(&m_pDialogue_Font)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Dialogue_Font"), m_pDialogue_Font);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInteraction_Key>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CInteraction_Key**>(&m_pInteraction_Key)))) {
 		return E_FAIL;
@@ -248,6 +412,8 @@ void CUI_Manager::Free()
 
 	m_Event_map.clear();
 	SAFE_RELEASE(m_pVIBufferCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pShaderCom);
 }
 #ifdef _DEBUG
 

@@ -310,6 +310,9 @@
     <Filter Include="01.Utility\01.Renderer\RenderEventDebugger">
       <UniqueIdentifier>{fd18d84d-d656-4dbd-9859-436191a27b91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\13.NPCStat">
+      <UniqueIdentifier>{a564976c-cade-4f34-85c8-891b28d96b93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -590,6 +593,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_QueryFilterCallback.cpp">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NPCStat.cpp">
+      <Filter>02.Element\02.Component\13.NPCStat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1237,6 +1243,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CallBack_QueryFilterCallback.h">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NPCStat.h">
+      <Filter>02.Element\02.Component\13.NPCStat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
