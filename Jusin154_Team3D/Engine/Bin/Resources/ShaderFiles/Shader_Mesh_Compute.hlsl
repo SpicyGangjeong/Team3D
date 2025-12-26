@@ -24,7 +24,9 @@ cbuffer AnimCB : register(b0)
     float BlendRatio;
 
     int RootBoneIndex;
-    float3 _pad0;
+    int SkipCount;
+    int _pad0;
+    int _pad1;
 
     row_major float4x4 PreTransformMatrix;
     float4 RootInitRot;

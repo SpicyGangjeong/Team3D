@@ -297,9 +297,9 @@ HRESULT CPlayer::Render()
 	}
 
 #ifdef _DEBUG
-	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
-		m_pRobeJointRoute[i]->Render();
-	}
+	//for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
+	//	m_pRobeJointRoute[i]->Render();
+	//}
 	m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
 	m_pLeftLeg->Render();
@@ -549,15 +549,15 @@ HRESULT CPlayer::Ready_Components()
 			return E_FAIL;
 		}
 	}
-	{ // RobeSocket
-		for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
-			CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-			Desc.iSubKind = ENUM_CLASS(PXOBJECT::JOINT_ROUTE);
-			if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[i], &Desc))) {
-				return E_FAIL;
-			}
-		}
-	}
+	//{ // RobeSocket
+	//	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
+	//		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+	//		Desc.iSubKind = ENUM_CLASS(PXOBJECT::JOINT_ROUTE);
+	//		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[i], &Desc))) {
+	//			return E_FAIL;
+	//		}
+	//	}
+	//}
 	return S_OK;
 }
 
@@ -771,9 +771,9 @@ void CPlayer::Free()
 #endif // _DEBUG
 	SAFE_RELEASE(m_pRightLeg);
 	SAFE_RELEASE(m_pLeftLeg);
-	for (_uint i = 0; i < ENUM_CLASS(PXOBJECT::JOINT_ROUTE); ++i) {
-		SAFE_RELEASE(m_pRobeJointRoute[i]);
-	}
+	//for (_uint i = 0; i < ENUM_CLASS(PXOBJECT::JOINT_ROUTE); ++i) {
+	//	SAFE_RELEASE(m_pRobeJointRoute[i]);
+	//}
 
 	SAFE_RELEASE(m_pGrapInteractive);
 	if (nullptr != m_pInfoInstance) {

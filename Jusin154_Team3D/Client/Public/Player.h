@@ -76,7 +76,7 @@ private:
 	CStat* m_pStat = { nullptr };
 	CRigidBody_Dynamic* m_pRightLeg = { nullptr };
 	CRigidBody_Dynamic* m_pLeftLeg = { nullptr };
-	CRigidBody_Dynamic* m_pRobeJointRoute[ENUM_CLASS(PXOBJECT::JOINT_ROUTE)] = {nullptr};
+//	CRigidBody_Dynamic* m_pRobeJointRoute[ENUM_CLASS(PXOBJECT::JOINT_ROUTE)] = {nullptr};
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

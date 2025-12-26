@@ -20,7 +20,9 @@ public:
 		_float BlendRatio;
 
 		_int RootBoneIndex;
-		_float3 padding;
+		_int SkipCount;
+		_int padding;
+		_int padding1;
 
 		_float4x4 PreTransformMatrix;
 		_float4 RootInitRot;
@@ -43,6 +45,7 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 	MODEL Get_Type() { return m_eType; }
 	void Set_Temp(_bool Temp) { m_bTemp = Temp; }
+	_int Get_SkipBoneIndex(_int Index) { return m_SkipBoneindex[Index]; }
 #pragma endregion 
 #pragma region Animation
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
@@ -164,7 +167,7 @@ private:
 
 	_float						m_fRatio = {};
 	_int						m_iCurrSecondAnimIndex = { -1 };
-	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1 };
+	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1,-1 };
 	vector<vector<_uint>>		m_BoneMask;
 	vector<_bool>				m_CPUBoneMask;
 
@@ -195,6 +198,8 @@ private:
 	_bool					m_bRootBone = {};
 	_float4x4				m_RootMatrix = {};
 	_bool					m_bTemp = {false};
+	_int					m_iSkipBoneCount = {};
+	vector<_int>			m_SkipBoneindex = {};
 
 
 private:
@@ -211,6 +216,7 @@ private:
 	HRESULT			Create_ComputeShaderLocal();
 	HRESULT			Create_ParentVB();
 	HRESULT			Create_BoneLocalVB();
+	HRESULT			Create_SkipBoneVB();
 	HRESULT			Create_Temp();
 	HRESULT			Create_BoneMatrixVB();
 	HRESULT			Create_Const();
@@ -221,11 +227,10 @@ private:
 
 	_uint				m_iNumBuffer = {};
 
-	vector<_int>		m_Parent = {};
+	vector<_int>	m_Parent = {};
 	vector<_float4x4>	m_BoneLocal = {};
 
 	vector<ANIMSTATE_DESC> m_AnimRanges;
-
 	vector<_float4x4> m_BoneMatrixCPU;
 
 	class CComputeShader* m_pComputeShader = nullptr;
@@ -236,6 +241,7 @@ private:
 	ID3D11Buffer* m_pBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pPrevBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneLocalBuffer = { nullptr };
+	ID3D11Buffer* m_pSkipBoneBuffer = { nullptr };
 	ID3D11Buffer* m_pLocalMatrixBuffer = { nullptr };
 
 
@@ -244,6 +250,7 @@ private:
 	ID3D11ShaderResourceView* m_pBoneMatrixSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pPrevBoneMatrixSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pLocalMatrixSRV = { nullptr };
+	ID3D11ShaderResourceView* m_pSkipBoneSRV = { nullptr };
 
 	ID3D11UnorderedAccessView* m_pBoneMatrixUAV = { nullptr };
 	ID3D11UnorderedAccessView* m_pLocalMatrixUAV = { nullptr };

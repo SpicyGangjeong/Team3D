@@ -1341,6 +1341,10 @@ void CModel::InItialize_BoneIndex()
 		{
 			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::NECK)] = i;
 		}
+		if (m_Bones[i]->Compare_Name("Hips_Cloth"))
+		{
+			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)] = i;
+		}
 	}
 }
 
@@ -1373,6 +1377,19 @@ void CModel::Initialize_BoneMasks()
 	BuildMask(m_iBoneIndex[ENUM_CLASS(BLEND_BONE::SHOULDER_L)], m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_L)]);
 	BuildMask(m_iBoneIndex[ENUM_CLASS(BLEND_BONE::SHOULDER_R)], m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_R)]);
 	BuildMask(m_iBoneIndex[ENUM_CLASS(BLEND_BONE::NECK)], m_BoneMask[ENUM_CLASS(BLEND_BONE::NECK)]);
+	BuildMask(m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)], m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)]);
+
+	if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)] != -1)
+	{
+		for (_uint i = 0; i < (_uint)m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)].size(); i++)
+		{
+			if (m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)][i] == 1)
+			{
+				m_iSkipBoneCount++;
+				m_SkipBoneindex.push_back(i);
+			}
+		}
+	}
 
 	for (_uint i = 0; i < m_Bones.size(); i++)
 	{
@@ -1421,9 +1438,10 @@ HRESULT CModel::Create_ComputeShaderLocal()
 	sizeof(CHANNEL_DESC), // 채널
 	sizeof(KEYFRAME_DESC), // 이전애님 키프레임
 	sizeof(CHANNEL_DESC), // 이전애님 채널
-	sizeof(int),          // 부모 인덱스
+	sizeof(_int),          // 부모 인덱스
 	sizeof(_float4x4), // 로컬좌표
-	sizeof(_uint)
+	sizeof(_uint),
+	sizeof(_int)	//스킵본 인덱스
 	};
 
 	_uint		CS_OutputStrides[] = {
@@ -1433,7 +1451,7 @@ HRESULT CModel::Create_ComputeShaderLocal()
 	CComputeShader::CS_INFO CS_Desc = {};
 
 	CS_Desc.iNumElement = (_uint)m_Bones.size();
-	CS_Desc.iNumInputBuffer = 7;
+	CS_Desc.iNumInputBuffer = 8;
 	CS_Desc.iNumOutputBuffer = 1;
 
 	CS_Desc.iInputStructStride = CS_InputStrides;
@@ -1489,6 +1507,33 @@ HRESULT CModel::Create_BoneLocalVB()
 	init.pSysMem = m_BoneLocal.data();
 
 	m_pDevice->CreateBuffer(&desc, &init, &m_pBoneLocalBuffer);
+
+	return S_OK;
+}
+
+HRESULT CModel::Create_SkipBoneVB()
+{
+	D3D11_BUFFER_DESC desc{};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(_int) * (_uint)m_Bones.size();
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = sizeof(_int);
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	D3D11_SUBRESOURCE_DATA init{};
+	init.pSysMem = m_SkipBoneindex.data();
+
+	m_pDevice->CreateBuffer(&desc, &init, &m_pSkipBoneBuffer);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	srvDesc.Buffer.FirstElement = 0;
+	srvDesc.Buffer.NumElements = (_uint)m_Bones.size();
+
+	if (FAILED(m_pDevice->CreateShaderResourceView(m_pSkipBoneBuffer, &srvDesc, &m_pSkipBoneSRV)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -1702,6 +1747,9 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->PrevTime = m_Animations[m_iPreAnimIndex]->Get_CurrentTrackPosition();
 		pDesc->BlendRatio = m_fRatio;
 		pDesc->RootBoneIndex = m_iRootBoneIndex;
+		pDesc->SkipCount = m_iSkipBoneCount;
+		pDesc->padding = 0;
+		pDesc->padding1 = 0;
 		pDesc->PreTransformMatrix = m_PreTransformMatrix;
 		pDesc->RootInitRot = m_vInitialRootRot;
 		m_pContext->Unmap(m_pConstantBuffer, 0);
@@ -1721,7 +1769,8 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		m_Animations[m_iPreAnimIndex]->Get_ChannelBuffer(),
 		m_pParentBuffer,
 		m_pBoneLocalBuffer,
-		m_Meshes[MeshIndex]->Get_BoneRemapBuffer()
+		m_Meshes[MeshIndex]->Get_BoneRemapBuffer(),
+		m_pSkipBoneBuffer
 	};
 
 	ID3D11ShaderResourceView* srvs[] =
@@ -1732,7 +1781,8 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		m_Animations[m_iPreAnimIndex]->Get_ChannelSrv(),
 		m_pParentSRV,
 		m_pBoneLocalSRV,
-		m_Meshes[MeshIndex]->Get_BoneRemapSRV()
+		m_Meshes[MeshIndex]->Get_BoneRemapSRV(),
+		m_pSkipBoneSRV
 	};
 
 	ID3D11UnorderedAccessView* uavs[] =
@@ -1745,7 +1795,7 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		0,
 		_float3((_float)iGroupCountX, 1.f, 1.f),
 		srvs,
-		7,
+		8,
 		uavs,
 		1,
 		m_pConstantBuffer
@@ -1755,9 +1805,9 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 	UINT counts[1] = { 0 };
 	m_pContext->CSSetUnorderedAccessViews(0, 1, nullUAV, counts);
 
-	ID3D11ShaderResourceView* nullSRV[7] = { nullptr };
+	ID3D11ShaderResourceView* nullSRV[8] = { nullptr };
 
-	m_pContext->CSSetShaderResources(0, 7, nullSRV);
+	m_pContext->CSSetShaderResources(0, 8, nullSRV);
 
 
 }
@@ -2231,6 +2281,7 @@ HRESULT CModel::Initialize(void* pArg)
 		Create_BoneMatrixVB();
 		Create_ParentVB();
 		Create_BoneLocalVB();
+		Create_SkipBoneVB();
 		Create_ParentSrv();
 		Create_BoneLocalSrv();
 
@@ -2367,11 +2418,13 @@ void CModel::Free()
 	SAFE_RELEASE(m_pBoneLocalBuffer);
 	SAFE_RELEASE(m_pBoneMatrixBuffer);
 	SAFE_RELEASE(m_pPrevBoneMatrixBuffer);
+	SAFE_RELEASE(m_pSkipBoneBuffer);
 	SAFE_RELEASE(m_pLocalMatrixBuffer);
 	SAFE_RELEASE(m_pParentSRV); 
 	SAFE_RELEASE(m_pBoneLocalSRV);
 	SAFE_RELEASE(m_pBoneMatrixSRV);
 	SAFE_RELEASE(m_pPrevBoneMatrixSRV);
+	SAFE_RELEASE(m_pSkipBoneSRV);
 	SAFE_RELEASE(m_pBoneMatrixUAV);
 	SAFE_RELEASE(m_pLocalMatrixSRV);
 	SAFE_RELEASE(m_pLocalMatrixUAV);

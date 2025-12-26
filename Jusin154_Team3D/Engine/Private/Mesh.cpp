@@ -422,6 +422,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 
 HRESULT CMesh::Create_BoneRemapBuffer()
 {
+	
 	D3D11_BUFFER_DESC desc{};
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.ByteWidth = sizeof(_uint) * (_uint)m_BoneRemap.size();
