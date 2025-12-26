@@ -137,19 +137,12 @@ _vector CDialogue::Get_WorldPostion()
 
 void CDialogue::SizeUpX(_float fSizeX)
 {
-	_float fX = (fSizeX - m_vScale.x) * 0.5f;
 	m_fSizeX = fSizeX;
-	//m_fX -= fX;
-	m_fLerpX += fX;
-	//m_fFontX -= fX;
-	//m_fFontSize.x -= fX;
 }
 
 void CDialogue::SizeUpY(_float fSizeY)
 {
-	_float fY = (fSizeY - m_vScale.x) * 0.5f;
 	m_fSizeY = fSizeY;
-	m_fY -= fY;
 }
 
 void CDialogue::Up()
@@ -161,19 +154,29 @@ void CDialogue::Up()
 
 void CDialogue::SizeUpdate(_wstring pName, _wstring pText)
 {
+	m_fSizeX = 74.f;
+	m_fSizeY = 74.f;
+
 	m_fX = 960.f;
-	m_fY = 850.f;
+	m_fY = 985.f;
+
 	SizeUpY(80);
+
 	m_FinalName = pName + TEXT(":");
 	m_pText = pText;
 	m_fFontSizeOffset1 = m_pGameInstance->FontSizeX(TEXT("Font_size15"), m_FinalName.c_str());
 	m_fFontSizeOffset2 = m_pGameInstance->FontSizeX(TEXT("Font_size15"), m_pText.c_str());
+
+	SizeUpX(m_fFontSizeOffset1 + m_fFontSizeOffset2 + 100.f);
+
+	m_fOffSetX = m_fX - m_fSizeX * 0.5f;
 	m_fOffSetY = 0.f;
-	m_fFontX = 800.f;
-	m_fFontY = 975.f;
+
+	m_fFontX = m_fOffSetX + 50.f;
+	m_fFontY = m_fY - 10.f;
+
 	m_fFontSize.x = m_fFontX + m_fFontSizeOffset1 + 10.f;
 	m_fFontSize.y = m_fFontY;
-	SizeUpX(m_fFontSizeOffset1 + m_fFontSizeOffset2 + 80.f);
 }
 
 void CDialogue::Set_Time(_float fTime)

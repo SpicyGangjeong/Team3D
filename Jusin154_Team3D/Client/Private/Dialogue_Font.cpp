@@ -30,7 +30,7 @@ HRESULT CDialogue_Font::Initialize(void* pArg)
             return E_FAIL;
         }
 
-        m_pDialogue->Visible(false);
+        m_pDialogue->Visible(true);
         m_DialoguInfo.push_back(m_pDialogue);
     }
 
