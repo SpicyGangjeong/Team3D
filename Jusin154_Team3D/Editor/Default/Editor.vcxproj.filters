@@ -664,6 +664,9 @@
     <Filter Include="02.GameObjects\Dummys\DummyDecal">
       <UniqueIdentifier>{ebd7a1c2-4914-4956-ad9c-a0fc2e857f56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Env\08.LightSpawner">
+      <UniqueIdentifier>{48e893e6-2374-44a3-b091-814ad89451c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1349,6 +1352,9 @@
     </ClInclude>
     <ClInclude Include="..\public\DummyDecal.h">
       <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LightSpawner.h">
+      <Filter>02.GameObjects\Env\08.LightSpawner</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2040,6 +2046,9 @@
     </ClCompile>
     <ClCompile Include="..\private\DummyDecal.cpp">
       <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LightSpawner.cpp">
+      <Filter>02.GameObjects\Env\08.LightSpawner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

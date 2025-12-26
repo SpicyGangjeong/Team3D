@@ -105,13 +105,13 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
-	m_pFog = CFog::Create();
-	if (nullptr == m_pFog) {
+	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000, EngineDesc.iNumLevels);
+	if (nullptr == m_pResource_Manager) {
 		return E_FAIL;
 	}
 
-	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000, EngineDesc.iNumLevels);
-	if (nullptr == m_pResource_Manager) {
+	m_pFog = CFog::Create();
+	if (nullptr == m_pFog) {
 		return E_FAIL;
 	}
 
@@ -893,6 +893,11 @@ HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* p
 HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag)
 {
 	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
+}
+
+HRESULT CGameInstance::Clear_RenderTarget(const _wstring& strRenderTargetKey)
+{
+	return m_pRenderTarget_Manager->Clear_RenderTarget(strRenderTargetKey);
 }
 
 #ifdef _DEBUG

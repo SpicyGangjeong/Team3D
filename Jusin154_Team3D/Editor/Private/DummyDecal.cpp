@@ -18,6 +18,7 @@ CDummyDecal::CDummyDecal(const CDummyDecal& rhs)
 
 HRESULT CDummyDecal::Initialize_Prototype()
 {
+
 	m_fWinSizeX = g_iWinSizeX;
 	m_fWinSizeY = g_iWinSizeY;
 
@@ -43,6 +44,7 @@ HRESULT CDummyDecal::Initialize(void* pArg)
 
 void CDummyDecal::Priority_Update(_float fTimeDelta)
 {
+	
 }
 
 void CDummyDecal::Update(_float fTimeDelta)
@@ -82,6 +84,9 @@ HRESULT CDummyDecal::Render()
 		if (FAILED(m_pShaderCom->Bind_SRV("g_NoiseTexture", m_pFadeTextureCom->Get_SRV(0)))) {
 			return E_FAIL;
 		}
+		if (FAILED(m_pShaderCom->Bind_SRV("g_DiffsueMaskTexture", m_pDiffuseMaskTextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
 		if (FAILED(m_pShaderCom->Begin(22))) {
 			return E_FAIL;
 		}
@@ -114,6 +119,10 @@ HRESULT CDummyDecal::Ready_Components(void* pArg)
 	/* Com_Texture */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Decal_Fade"),
 		reinterpret_cast<CComponent**>(&m_pFadeTextureCom))))
+		return E_FAIL;
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Decal_DiffuseMask"),
+		reinterpret_cast<CComponent**>(&m_pDiffuseMaskTextureCom))))
 		return E_FAIL;
 
 
@@ -163,7 +172,7 @@ HRESULT CDummyDecal::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNormalThreshold", &m_fNormalThreshold, sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeX", &m_fWinSizeX, sizeof(_float)))) {
@@ -174,6 +183,9 @@ HRESULT CDummyDecal::Bind_ShaderResources()
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vTime", &m_fTimeAcc, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVTiling", &m_fUVTiling, sizeof(_float)))) {
 		return E_FAIL;
 	}
 
@@ -188,6 +200,9 @@ HRESULT CDummyDecal::Bind_ShaderResources()
 	}
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_NormalCopy"), m_pShaderCom, "g_NormalMapTexture"))) {
 		return E_FAIL;
 	}
 
@@ -224,6 +239,7 @@ void CDummyDecal::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pDiffuseMaskTextureCom);
 	SAFE_RELEASE(m_pFadeTextureCom);
 	SAFE_RELEASE(m_pMaskTextureCom);
 	SAFE_RELEASE(m_pNormalTextureCom);
@@ -236,16 +252,12 @@ void CDummyDecal::Describe_Entity()
 {
 	GUI::Begin("TEST DECAL");
 
-	_float fAgle = XMConvertToDegrees(m_fNormalThreshold);
-
-	GUI::InputFloat("m_fNormalThreshold", &fAgle);
+	GUI::InputFloat("m_fUVTiling", (_float*)(&m_fUVTiling));
 	GUI::InputFloat2("m_fSpeed", (_float*)(&m_vUVSpeed));
 
 	GUI::ColorEdit4("Mask Red", (_float*)&m_vMaskRed);
 	GUI::ColorEdit4("Mask Green", (_float*)&m_vMaskGreen);
 	GUI::ColorEdit4("Mask Blue", (_float*)&m_vMaskBlue);
-
-	m_fNormalThreshold = XMConvertToRadians(fAgle);
 
 	m_pTransformCom->Describe_Entity();
 
