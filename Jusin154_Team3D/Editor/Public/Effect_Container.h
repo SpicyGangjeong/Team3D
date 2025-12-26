@@ -37,6 +37,7 @@ protected:
 	void			Update_Event(_float fTimeDelta);
 	_int            CollisionCheck();
 	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	MonsterSweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
 protected:
 
 	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);

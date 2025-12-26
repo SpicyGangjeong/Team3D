@@ -21,6 +21,7 @@
 #include "TrollSwing.h"
 #include "StunEffect.h"
 #include "Blink.h"
+#include "Ranrok_FireBall.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -55,8 +56,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
 #ifdef 진우
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 기무리
 	m_isActiveEffectCreate = false;
@@ -101,7 +102,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 #if 진우
 
 
-	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::BLINK)].begin())->Describe_Entity();
+	//(*m_EffectList[ENUM_CLASS(SKILL_TYPE::BLINK)].begin())->Describe_Entity();
 
 	Describe_Entity();
 
@@ -302,16 +303,30 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::STUN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	//if (FAILED(Create_Effect(SKILL_TYPE::STUN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	\
+	//	CStunEffect* pEffect = nullptr;
 
-		CStunEffect* pEffect = nullptr;
+	//	pEffect = m_pGameInstance->Clone_Prototype<CStunEffect>(iPrototypeLevel, nullptr);
 
-		pEffect = m_pGameInstance->Clone_Prototype<CStunEffect>(iPrototypeLevel, nullptr);
+	//	return pEffect; }
+	//))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_FIREBALL, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_FireBall* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_FireBall>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	
 	return S_OK;
+
+
 }
 
 HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg)
@@ -375,6 +390,9 @@ HRESULT CEffectPool::Reset_Pool()
 
 
 	if (FAILED(Ready_Effect()))
+		return E_FAIL;
+
+	if (FAILED(Ready_MonsterEffect()))
 		return E_FAIL;
 
 	return S_OK;

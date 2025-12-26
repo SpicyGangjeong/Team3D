@@ -404,6 +404,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    
     float fSurfaceParam = g_fUsingSurfaceParams;
     if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
     {

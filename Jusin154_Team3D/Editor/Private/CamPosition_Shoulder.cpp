@@ -101,6 +101,13 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
+
+	if (true == m_bMovable) {
+		m_vAccRotDegrees.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
+		m_vAccRotDegrees.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
+		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccRotDegrees);
+	}
+
 	if (m_pGameInstance->Key_Up(DIK_P)) {
 		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio;
 		m_vShoulderStartRatio.x *= -1.f;
@@ -147,6 +154,13 @@ HRESULT CCamPosition_Shoulder::Ready_Components(void* pArg)
 	}
 	return S_OK;
 }
+
+void CCamPosition_Shoulder::Set_CameraShake(_float fXShock, _float fYShock)
+{
+	m_vAccRealDegrees.x = fXShock;
+	m_vAccRealDegrees.y = fYShock;
+}
+
 HRESULT CCamPosition_Shoulder::Ready_SubParts()
 {
 	{

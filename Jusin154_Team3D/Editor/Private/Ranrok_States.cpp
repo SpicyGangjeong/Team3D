@@ -398,11 +398,26 @@ void CRanrok::Behavior_FireBallEnter()
 		{
 		case 0:
 			pairAnimInfo = m_Animation[STATEANIM::FIREBALL1_A];
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_FIREBALL, this);
+				}, 0.38f);
+
 			break;
 		case 1:
 			pairAnimInfo = m_Animation[STATEANIM::FIREBALL2_A];
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_FIREBALL, this);
+				}, 0.5f);
+
 			break;
 		}
+
+
+		
 	}
 	else if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
 	{
@@ -412,11 +427,25 @@ void CRanrok::Behavior_FireBallEnter()
 		{
 		case 0:
 			pairAnimInfo = m_Animation[STATEANIM::FIREBALL1_G];
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_FIREBALL, this);
+				}, 0.4f);
+
 			break;
 		case 1:
 			pairAnimInfo = m_Animation[STATEANIM::FIREBALL2_G];
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_FIREBALL, this);
+				}, 0.45f);
 			break;
 		}
+
+
+
 	}
 
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBALL)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBALL)];

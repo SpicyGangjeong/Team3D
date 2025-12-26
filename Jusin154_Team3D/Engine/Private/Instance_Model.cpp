@@ -988,6 +988,11 @@ void CInstance_Model::Describe_Entity()
 			if (GUI::TreeNode("Pivot Move"))
 			{
 
+				if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
 				if (GUI::Checkbox("PivotMove", &m_InstanceDesc.isPivotMove))
 				{
 					Instane_Buffer_ReStruct();
@@ -1075,12 +1080,6 @@ void CInstance_Model::Describe_Entity()
 			{
 
 				if (GUI::Checkbox("AxisTurn", &m_InstanceDesc.isAxisTurn))
-				{
-					Instane_Buffer_ReStruct();
-				}
-
-
-				if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
 				{
 					Instane_Buffer_ReStruct();
 				}

@@ -28,7 +28,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-
+	void			Set_CameraShake(_float fXShock, _float fYShock);
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -49,6 +49,8 @@ private:
 	_bool m_bLerp = { false };
 	_float2 m_vLerpTimer = { 0.f, 1.f };
 
+	_float2		m_vAccRotDegrees = { 0.f, 0.f };
+	_float2		m_vAccRealDegrees = { 0.f, 0.f };
 
 	CCamPosition_Target* m_pTarget_LookPart = { nullptr };
 	CCamPosition_Target* m_pTarget_FollowPart = { nullptr };

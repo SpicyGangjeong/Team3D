@@ -657,6 +657,7 @@ void CRenderer::Render_Blur()
 	COMPUTE_TIMEDELTA("Timer_Render_Blur");
 	EVENTSCOPE_("Render_Blur");
 	m_eType = RENDER::BLUR;
+
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur")))) {
 		return;
 	}
@@ -700,6 +701,29 @@ void CRenderer::Render_Blur()
 		return;
 	}
 
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur_Y")))) {
+		return;
+	}
+
+	m_pBlurShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pBlurShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pBlurShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pBlurShader, "g_BlurXTexture"))) {
+		return;
+	}
+
+	m_pBlurShader->Begin(ENUM_CLASS(SHADER_PASS_BLUR::BLUR_Y));
+
+	m_pVIBuffer->Bind_Resources();
+
+	m_pVIBuffer->Render();
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+	{
+		return;
+	}
+
 	COMPUTE_TIMEDELTA("Timer_Render_Blur");
 }
 
@@ -708,7 +732,7 @@ void CRenderer::Combine_Blur()
 	COMPUTE_TIMEDELTA("Timer_Combine_Blur");
 	EVENTSCOPE_("Combine_Blur");
 
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pBlurShader, "g_BlurXTexture"))) {
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Y"), m_pBlurShader, "g_BlurYTexture"))) {
 		return;
 	}
 
@@ -726,7 +750,7 @@ void CRenderer::Combine_Blur()
 	m_pBlurShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 
 
-	m_pBlurShader->Begin(ENUM_CLASS(SHADER_PASS_BLUR::BLUR_Y));
+	m_pBlurShader->Begin(ENUM_CLASS(SHADER_PASS_BLUR::COMBINED));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
