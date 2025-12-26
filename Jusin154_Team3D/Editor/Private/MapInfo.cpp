@@ -10,6 +10,7 @@
 #include "MapElement_Interactable.h"
 #include "MapObject_LOD.h"
 #include "LightSpawner.h"
+#include "DummyDecal.h"
 
 CMapInfo::CMapInfo()
 {
@@ -312,6 +313,77 @@ HRESULT CMapInfo::Load_PointLights(const _char* pFilePath)
 		Info->QueryUnsignedAttribute("Pow", &iPow);
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLightSpawner>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_LightSpawer"), &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_Decal(const _char* pFilePath)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Decal/" + string(pFilePath) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Decal");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CDummyDecal::DUMMY_DECAL_DESC Desc = {};
+
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Scale");
+		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Scale = Object->FirstChildElement("Rotation");
+		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		/* Decal Desc */
+		auto* Shader_Value = Object->FirstChildElement("Shader_Value");
+		Shader_Value->QueryFloatAttribute("UVTiling", &Desc.fUVTiling);
+		Shader_Value->QueryFloatAttribute("UVSpeedX", &Desc.vUVSpeed.x);
+		Shader_Value->QueryFloatAttribute("UVSpeedY", &Desc.vUVSpeed.y);
+
+		/* MaskRed */
+		auto* MaskRed = Object->FirstChildElement("MaskRed");
+		MaskRed->QueryFloatAttribute("r", &Desc.vMaskRed.x);
+		MaskRed->QueryFloatAttribute("g", &Desc.vMaskRed.y);
+		MaskRed->QueryFloatAttribute("b", &Desc.vMaskRed.z);
+		MaskRed->QueryFloatAttribute("a", &Desc.vMaskRed.w);
+
+		/* MaskGreen */
+		auto* MaskGreen = Object->FirstChildElement("MaskGreen");
+		MaskGreen->QueryFloatAttribute("r", &Desc.vMaskGreen.x);
+		MaskGreen->QueryFloatAttribute("g", &Desc.vMaskGreen.y);
+		MaskGreen->QueryFloatAttribute("b", &Desc.vMaskGreen.z);
+		MaskGreen->QueryFloatAttribute("a", &Desc.vMaskGreen.w);
+
+		/* MaskBlue */
+		auto* MaskBlue = Object->FirstChildElement("MaskBlue");
+		MaskBlue->QueryFloatAttribute("r", &Desc.vMaskBlue.x);
+		MaskBlue->QueryFloatAttribute("g", &Desc.vMaskBlue.y);
+		MaskBlue->QueryFloatAttribute("b", &Desc.vMaskBlue.z);
+		MaskBlue->QueryFloatAttribute("a", &Desc.vMaskBlue.w);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummyDecal>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Decal"), &Desc)))
 			return E_FAIL;
 	}
 

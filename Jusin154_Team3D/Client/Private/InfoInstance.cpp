@@ -134,6 +134,14 @@ HRESULT CInfoInstance::Load_ChestElemet(const _char* pFileName, const _wchar* pL
 {
 	return m_pMapInfo->Load_ChestElemet(pFileName, pLayerTag);
 }
+HRESULT CInfoInstance::Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag)
+{
+	return m_pMapInfo->Load_WorldDecal(pFileName, pLayerTag);
+}
+HRESULT CInfoInstance::Load_PointLights(const _char* pFileName, const _wchar* pLayerTag)
+{
+	return m_pMapInfo->Load_PointLights(pFileName, pLayerTag);;
+}
 #pragma endregion
 
 #pragma region SPELL_INFO

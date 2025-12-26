@@ -169,6 +169,7 @@ call Update_Resources.bat
     <ClInclude Include="..\public\Dialogue.h" />
     <ClInclude Include="..\public\Dialogue_Font.h" />
     <ClInclude Include="..\public\NPCInteraction.h" />
+    <ClInclude Include="..\public\PointLight.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
@@ -391,6 +392,7 @@ call Update_Resources.bat
     <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\Unified.h" />
     <ClInclude Include="..\Public\Wand.h" />
+    <ClInclude Include="..\public\WorldDecal.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -406,6 +408,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\private\Dialogue_Font.cpp" />
     <ClCompile Include="..\private\NPCInteraction.cpp" />
+    <ClCompile Include="..\private\PointLight.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
@@ -635,6 +638,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\Unified.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
+    <ClCompile Include="..\private\WorldDecal.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

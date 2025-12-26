@@ -121,11 +121,10 @@ HRESULT CLevel_MapViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 
 HRESULT CLevel_MapViewer::Ready_Layer_Background(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummyDecal>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
+
+
 
 	return S_OK;
 }
