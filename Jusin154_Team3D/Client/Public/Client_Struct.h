@@ -105,6 +105,13 @@ namespace Client
 		vector<_vector> Lines;
 	}SPELLLEARNINFO;
 
+	typedef struct tagDialougeInfo
+	{
+		_wstring	pName;
+		_wstring	pText;
+		_float		fTime = 1.f;
+	}DIALOGUEINFO;
+
 	typedef struct tagEffectInfo
 	{
 		_float4 vColor = { 0.f ,0.f ,0.f ,1.f };

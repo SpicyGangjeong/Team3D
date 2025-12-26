@@ -666,6 +666,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Env\08.LightSpawner">
       <UniqueIdentifier>{48e893e6-2374-44a3-b091-814ad89451c4}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\NPCInteraction">
+      <UniqueIdentifier>{ee491ec4-bc46-48de-8cfb-396a29d2c98b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Dialogue">
+      <UniqueIdentifier>{3b9768b5-8c85-4465-b0ad-2d14722d88ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1355,6 +1361,12 @@
     </ClInclude>
     <ClInclude Include="..\public\LightSpawner.h">
       <Filter>02.GameObjects\Env\08.LightSpawner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NPCInteraction.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\NPCInteraction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue.h">
+      <Filter>50.UI\Dialogue</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2049,6 +2061,12 @@
     </ClCompile>
     <ClCompile Include="..\private\LightSpawner.cpp">
       <Filter>02.GameObjects\Env\08.LightSpawner</Filter>
+     </ClCompile>
+    <ClCompile Include="..\private\NPCInteraction.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\NPCInteraction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue.cpp">
+      <Filter>50.UI\Dialogue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

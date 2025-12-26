@@ -50,7 +50,7 @@
       <Filter>02.GameObjects\Cameras\Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Light_Main.h">
-      <Filter>02.GameObjects\Environment\Lights\Main</Filter>
+      <Filter>02.GameObjects\Environment\99.Lights\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerInfo.h">
       <Filter>03.InfoInstance\00.PlayerInfo</Filter>
@@ -722,6 +722,21 @@
     <ClInclude Include="..\Public\State_FireBall.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\NPCInteraction.h">
+      <Filter>02.GameObjects\UI\NPCInteraction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue_Font.h">
+      <Filter>04.Mechanic\Dialogue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue.h">
+      <Filter>04.Mechanic\Dialogue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WorldDecal.h">
+      <Filter>02.GameObjects\Environment\98,WorldDecal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PointLight.h">
+      <Filter>02.GameObjects\Environment\99.Lights\PointLight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -792,14 +807,8 @@
     <Filter Include="01.Levels\99.Restart">
       <UniqueIdentifier>{e12b3048-dd6d-41bf-b346-e4abdaa4f215}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Environment\Lights">
-      <UniqueIdentifier>{74f21f9b-30bf-412e-ba4e-526958ab2a52}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Cameras\Debug">
       <UniqueIdentifier>{8d89a59c-fbd2-4a4a-ab01-a70abb80cc49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Lights\Main">
-      <UniqueIdentifier>{b24c78ef-dccc-41f0-a086-053ae6b7fbf4}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Environment\Plane">
       <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
@@ -1503,6 +1512,24 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok">
       <UniqueIdentifier>{93545681-c4c5-4a6a-9496-7b2e7b8a9302}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\NPCInteraction">
+      <UniqueIdentifier>{09764279-bf54-48e4-853a-45b5a65c92a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Dialogue">
+      <UniqueIdentifier>{11c35878-12b4-4c55-b872-004fed9a4fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\99.Lights">
+      <UniqueIdentifier>{74f21f9b-30bf-412e-ba4e-526958ab2a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\99.Lights\Main">
+      <UniqueIdentifier>{b24c78ef-dccc-41f0-a086-053ae6b7fbf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\98,WorldDecal">
+      <UniqueIdentifier>{511923f0-d74a-4e9e-9fc6-30ae8ddf8d53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\99.Lights\PointLight">
+      <UniqueIdentifier>{4151af66-59d0-496d-a9a0-0c0603166192}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1539,7 +1566,7 @@
       <Filter>02.GameObjects\Cameras\Debug</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Light_Main.cpp">
-      <Filter>02.GameObjects\Environment\Lights\Main</Filter>
+      <Filter>02.GameObjects\Environment\99.Lights\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerInfo.cpp">
       <Filter>03.InfoInstance\00.PlayerInfo</Filter>
@@ -2171,6 +2198,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NPCInteraction.cpp">
+      <Filter>02.GameObjects\UI\NPCInteraction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue_Font.cpp">
+      <Filter>04.Mechanic\Dialogue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue.cpp">
+      <Filter>04.Mechanic\Dialogue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WorldDecal.cpp">
+      <Filter>02.GameObjects\Environment\98,WorldDecal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PointLight.cpp">
+      <Filter>02.GameObjects\Environment\99.Lights\PointLight</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

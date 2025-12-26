@@ -92,6 +92,11 @@ HRESULT CInfoInstance::Load_PointLights(const _char* pFilePath)
 {
 	return m_pMapInfo->Load_PointLights(pFilePath);
 }
+HRESULT CInfoInstance::Load_Decal(const _char* pFilePath)
+{
+	return m_pMapInfo->Load_Decal(pFilePath);
+}
+
 #pragma endregion
 #pragma region MAP_INFO
 

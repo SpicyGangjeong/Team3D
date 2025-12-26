@@ -83,6 +83,7 @@ private:
 	HRESULT		Load_WaterObject(const _char* pFileName);
 
 	HRESULT		Save_PointLightObject(const _char* pFileName);
+	HRESULT		Save_Decal(const _char* pFileName);
 #pragma endregion
 
 	void		Update_PrototypeList();
@@ -91,6 +92,7 @@ private:
 	void		Update_ContainerObject();
 	void		Update_Unified();
 	void 		Update_LightSpawer();
+	void 		Update_Decal();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
 	void		Create_Elemnt(_wstring& strPrototypeTag);

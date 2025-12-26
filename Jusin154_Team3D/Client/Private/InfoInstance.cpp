@@ -9,14 +9,15 @@
 #include "Quest_Data.h"
 #include "Damage_Font.h"
 #include "SpellLearn_Data.h"
+#include "NPCStat.h"
 #include "Player.h"
+#include "Dialogue_Font.h"
 
 IMPLEMENT_SINGLETON(CInfoInstance)
 
 CInfoInstance::CInfoInstance()
 {
 }
-
 
 void CInfoInstance::Update(_float fTimeDelta)
 {
@@ -133,6 +134,14 @@ HRESULT CInfoInstance::Load_ChestElemet(const _char* pFileName, const _wchar* pL
 {
 	return m_pMapInfo->Load_ChestElemet(pFileName, pLayerTag);
 }
+HRESULT CInfoInstance::Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag)
+{
+	return m_pMapInfo->Load_WorldDecal(pFileName, pLayerTag);
+}
+HRESULT CInfoInstance::Load_PointLights(const _char* pFileName, const _wchar* pLayerTag)
+{
+	return m_pMapInfo->Load_PointLights(pFileName, pLayerTag);;
+}
 #pragma endregion
 
 #pragma region SPELL_INFO
@@ -154,6 +163,7 @@ _float CInfoInstance::Get_CoolTime(_int SpellID)
 {
 	return m_pSkillInfo->Get_CoolTime(SpellID);
 }
+
 void CInfoInstance::Change_Canvas()
 {
 
@@ -171,31 +181,31 @@ void CInfoInstance::Key_Input(_uint Input)
 	case ENUM_CLASS(KEYINPUT::INPUT_4):
 		Event_CallBack(TEXT("Spell"), &m_eInput);
 		break;
-	case ENUM_CLASS(KEYINPUT::INPUT_T):
-		if (m_eUI_State == UI_STATE::GAMEPLAYER)
-		{
-			m_eUI_State = UI_STATE::SPELL;
-			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
-		}
-		else if (m_eUI_State == UI_STATE::SPELL)
-		{
-			m_eUI_State = UI_STATE::GAMEPLAYER;
-			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
-		}
-		break;
+	//case ENUM_CLASS(KEYINPUT::INPUT_T):
+	//	if (m_eUI_State == UI_STATE::GAMEPLAYER)
+	//	{
+	//		m_eUI_State = UI_STATE::SPELL;
+	//		Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
+	//	}
+	//	else if (m_eUI_State == UI_STATE::SPELL)
+	//	{
+	//		m_eUI_State = UI_STATE::GAMEPLAYER;
+	//		Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
+	//	}
+	//	break;
 	case ENUM_CLASS(KEYINPUT::INPUT_X):
 		Event_CallBack(TEXT("Ancient_Magic_Throw"));
 		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_G):
 		Event_CallBack(TEXT("Use_Potion"));
 		break;
-	case ENUM_CLASS(KEYINPUT::INPUT_TAB):
+	/*case ENUM_CLASS(KEYINPUT::INPUT_TAB):
 		if (m_eUI_State == UI_STATE::GAMEPLAYER)
 		{
-			m_eUI_State = UI_STATE::QUEST_CANVES;
+			m_eUI_State = UI_STATE::QUEST;
 			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
 		}
-		else if (m_eUI_State == UI_STATE::QUEST_CANVES)
+		else if (m_eUI_State == UI_STATE::QUEST)
 		{
 			m_eUI_State = UI_STATE::GAMEPLAYER;
 			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
@@ -212,7 +222,7 @@ void CInfoInstance::Key_Input(_uint Input)
 			m_eUI_State = UI_STATE::GAMEPLAYER;
 			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
 		}
-		break;
+		break;*/
 
 	default:
 		break;
@@ -236,8 +246,6 @@ void CInfoInstance::Mouse_Input(_uint Input)
 	default:
 		break;
 	}
-
-
 }
 
 void CInfoInstance::Set_UISTATE(UI_STATE eState)
@@ -309,6 +317,11 @@ _int CInfoInstance::Get_SpellLearnIndex()
 	return m_pSpellLearn_Data->Get_Index();
 }
 
+void CInfoInstance::Set_Font(void* pArg)
+{
+	m_pDialogue_Font->Add_Text(pArg);
+}
+
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
 {
 	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
@@ -355,6 +368,9 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 		if (FAILED(Stat_FileLoad("../Bin/Resources/Data/Stat/Stat.xml"))) {
 			return E_FAIL;
 		}
+		if (FAILED(Stat_FileLoad("../Bin/Resources/Data/Stat/NpcStat.xml"))) {
+			return E_FAIL;
+		}
 #pragma endregion
 		m_pPlayerInfo = CPlayerInfo::Create(pDevice, pContext);
 		if (nullptr == m_pPlayerInfo) {
@@ -379,6 +395,10 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	}
 	m_pSpellLearn_Data = CSpellLearn_Data::Create(pDevice, pContext);
 	if (nullptr == m_pSpellLearn_Data) {
+		return E_FAIL;
+	}
+	m_pDialogue_Font = CDialogue_Font::Create(pDevice, pContext);
+	if (nullptr == m_pDialogue_Font) {
 		return E_FAIL;
 	}
 
@@ -420,13 +440,42 @@ HRESULT CInfoInstance::Stat_FileLoad(const _char* pDirectoryPath)
 
 	return S_OK;
 }
+
+HRESULT CInfoInstance::NPC_FileLoad(const _char* pDirectoryPath)
+{
+	filesystem::path pathStatFile = pDirectoryPath;
+
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError Error = doc.LoadFile(pathStatFile.string().c_str());
+	if (Error != tinyxml2::XML_SUCCESS) {
+		return E_FAIL;
+	}
+
+	tinyxml2::XMLElement* pStatInfo = doc.FirstChildElement("StatInfo");
+	if (!pStatInfo) {
+		return E_FAIL;
+	}
+
+	_uint iNumChild = pStatInfo->ChildElementCount();
+	tinyxml2::XMLNode* pChild = pStatInfo->FirstChildElement();
+	for (_uint i = 0; i < iNumChild; ++i) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(pChild->Value()),
+			CNPCStat::Create(m_pDevice, m_pContext, pChild)))) {
+			return E_FAIL;
+		}
+		pChild = pChild->NextSiblingElement();
+	}
+
+	return S_OK;
+}
+
 void CInfoInstance::Release_Information()
 {
 	UI_Event.clear();
 
 	DestroyInstance();
 
-
+	SAFE_RELEASE(m_pDialogue_Font);
 	SAFE_RELEASE(m_pSpellLearn_Data);
 	SAFE_RELEASE(m_pMapInfo);
 	SAFE_RELEASE(m_pPlayerInfo);
