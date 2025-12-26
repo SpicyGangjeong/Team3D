@@ -166,6 +166,9 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
+    <ClInclude Include="..\public\Dialogue.h" />
+    <ClInclude Include="..\public\Dialogue_Font.h" />
+    <ClInclude Include="..\public\NPCInteraction.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
@@ -400,6 +403,9 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
+    <ClCompile Include="..\private\Dialogue.cpp" />
+    <ClCompile Include="..\private\Dialogue_Font.cpp" />
+    <ClCompile Include="..\private\NPCInteraction.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
