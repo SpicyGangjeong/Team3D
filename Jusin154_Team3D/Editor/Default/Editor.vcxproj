@@ -186,6 +186,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
     <ClInclude Include="..\public\Interaction_Panel.h" />
+    <ClInclude Include="..\public\LightSpawner.h" />
     <ClInclude Include="..\public\MapElement_Chest.h" />
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
@@ -430,6 +431,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\private\Interaction_Panel.cpp" />
+    <ClCompile Include="..\private\LightSpawner.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />

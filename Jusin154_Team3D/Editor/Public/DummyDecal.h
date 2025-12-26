@@ -30,13 +30,16 @@ private:
 	CTexture*			m_pNormalTextureCom = { nullptr };
 	CTexture*			m_pSurfaceTextureCom = { nullptr };
 	CTexture*			m_pFadeTextureCom = { nullptr };
-
-	_float2				m_fTimeAcc = {};
-	_float2				m_vUVSpeed = {};
-	_float				m_fNormalThreshold = {};
+	CTexture*			m_pDiffuseMaskTextureCom = { nullptr };
+	
+	_float				m_fUVTiling = {1.f};
+	_float				m_fUsingSurfaceParams = {};
 
 	_float				m_fWinSizeX = {};
 	_float				m_fWinSizeY = {};
+
+	_float2				m_fTimeAcc = {};
+	_float2				m_vUVSpeed = {};
 
 	_float4				m_vMaskRed = {};
 	_float4				m_vMaskGreen = {};
