@@ -43,6 +43,8 @@
 #include "UI_Manager.h"
 
 #include "Damage_Font.h"
+#include "Dialogue.h"
+#include "Dialogue_Font.h"
 
 #include "Logo.h"
 #include "Logo_Text.h"
@@ -126,6 +128,8 @@
 #include "SpellLearn_Overlay.h"
 
 #include "Interaction_Key.h"
+
+#include "NPCInteraction.h"
 
 #pragma endregion
 
@@ -2186,10 +2190,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CBoss_HpBar>(g_iStaticLevel, CBoss_HpBar::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-	///* For.Prototype_GameObject_Enemy_Detection*/
-	//if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Detection>(g_iStaticLevel, CEnemy_Detection::Create(m_pDevice, m_pContext)))) {
-	//	return E_FAIL;
-	//}
+	/* For.Prototype_GameObject_Enemy_Detection*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Detection>(g_iStaticLevel, CEnemy_Detection::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_Spell_Canvas*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Canvas>(g_iStaticLevel, CSpell_Canvas::Create(m_pDevice, m_pContext))))
@@ -2375,8 +2379,24 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_GameObject_NPCInteraction*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
 	/* For.Prototype_GameObject_Damage_Font*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CDamage_Font>(g_iStaticLevel, CDamage_Font::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Dialogue*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue>(g_iStaticLevel, CDialogue::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Dialogue_Font*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue_Font>(g_iStaticLevel, CDialogue_Font::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

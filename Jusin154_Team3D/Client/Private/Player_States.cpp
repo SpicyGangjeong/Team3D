@@ -57,8 +57,9 @@ void CPlayer::Get_UIState(_int UIState)
 
 HRESULT CPlayer::InputAction()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) && 
-	m_eUIState !=ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
+	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) && 
+		m_eUIState !=ENUM_CLASS(UI_STATE::QUEST) && 
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
 		if (
 			m_pGameInstance->Key_Down(DIK_SPACE)
 			|| m_pGameInstance->Key_Down(DIK_LCONTROL)
@@ -73,31 +74,31 @@ HRESULT CPlayer::InputAction()
 			|| m_pGameInstance->Key_Down(DIK_Z)
 			|| m_pGameInstance->Key_Down(DIK_G)
 			|| m_pGameInstance->Key_Down(DIK_B)
-			|| m_pGameInstance->Key_Down(DIK_T)
-			|| m_pGameInstance->Key_Down(DIK_TAB)
-			|| m_pGameInstance->Key_Down(DIK_ESCAPE)
+			//|| m_pGameInstance->Key_Down(DIK_T)
+			//|| m_pGameInstance->Key_Down(DIK_TAB)
+			//|| m_pGameInstance->Key_Down(DIK_ESCAPE)
 			)
 		{
-			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
-			if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
+			//if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
+			//if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
 			if (m_pGameInstance->Key_Down(DIK_X)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_X));
 			if (m_pGameInstance->Key_Down(DIK_G)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_G));
 			if (m_pGameInstance->Key_Down(DIK_Z)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_Z));
-			if (m_pGameInstance->Key_Down(DIK_ESCAPE)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_ESPACE));
+			//if (m_pGameInstance->Key_Down(DIK_ESCAPE)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_ESPACE));
 			return S_OK;
 		}
 	}
 	else {
-		if (m_pGameInstance->Key_Down(DIK_T))
-		{
-			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
-			return S_OK;
-		}
-		if (m_pGameInstance->Key_Down(DIK_TAB))
-		{
-			if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
-			return S_OK;
-		}
+		//if (m_pGameInstance->Key_Down(DIK_T))
+		//{
+		//	if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
+		//	return S_OK;
+		//}
+		//if (m_pGameInstance->Key_Down(DIK_TAB))
+		//{
+		//	if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
+		//	return S_OK;
+		//}
 	}
 
 	return E_FAIL;
@@ -105,8 +106,9 @@ HRESULT CPlayer::InputAction()
 
 HRESULT CPlayer::InputMove()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
+	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
 
 		if (m_pGameInstance->Key_Pressing(DIK_W)
 			|| m_pGameInstance->Key_Pressing(DIK_A)
@@ -122,8 +124,9 @@ HRESULT CPlayer::InputMove()
 
 HRESULT CPlayer::InputKeyUpMove()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
+	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
 		if (m_pGameInstance->Key_Up(DIK_W)
 			|| m_pGameInstance->Key_Up(DIK_A)
 			|| m_pGameInstance->Key_Up(DIK_S)
@@ -137,8 +140,9 @@ HRESULT CPlayer::InputKeyUpMove()
 
 HRESULT CPlayer::InputSpell()
 {
-	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST_CANVES))) {
+	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
 		if (
 			m_pGameInstance->Key_Down(DIK_1)
 			|| m_pGameInstance->Key_Down(DIK_2)
@@ -2564,6 +2568,8 @@ void CPlayer::Attach_Broom()
 void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 {
 	pair<_uint, _bool> pairAnimInfo;
+	DIALOGUEINFO Info;
+	Info.pName = m_pStat->Get_Stat().pUnit_Name;
 	switch (m_eSpell)
 	{
 	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
@@ -2573,7 +2579,10 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
 			0.f);
+		Info.pText = TEXT("봄바르다!");
+		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
+
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
@@ -2581,7 +2590,10 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
 			0.f);
+		Info.pText = TEXT("디센도!");
+		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
+
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
@@ -2589,12 +2601,18 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 			0.f);
+		Info.pText = TEXT("레벨리오!");
+		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
+
 	case ENUM_CLASS(SKILL_TYPE::ACCIO):
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
 			fRatio);
+		Info.pText = TEXT("아씨오!");
+		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
+
 	case ENUM_CLASS(SKILL_TYPE::TRANSFORMATION):
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::TRANSFORMATION, this); },
@@ -2603,12 +2621,17 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::TRANSFORMATION_SIDE, Get_PartObject<CWand>()); },
 			0.f);
-
+		Info.pText = TEXT("봄바르다");
+		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
+
 	case ENUM_CLASS(SKILL_TYPE::DIFFINDO):
 		pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		Info.pText = TEXT("디핀도!");
+		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
+
 	case ENUM_CLASS(SKILL_TYPE::DISILLUSIONMENT):
 		pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_ENTER];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
@@ -2626,7 +2649,8 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(pairAnimInfo.first,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::AVADAKEDAVRA_SIDE, Get_PartObject<CWand>()); },
 			0.f);
-
+		Info.pText = TEXT("아바다 케다브라!");
+		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LUMOS):
 		if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
@@ -2649,6 +2673,8 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 			Add_Event(AnimIndex,
 				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
 				0.f);
+			Info.pText = TEXT("루모스!");
+			m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 			//m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
 		}
 		else

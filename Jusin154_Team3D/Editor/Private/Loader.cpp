@@ -126,6 +126,10 @@
 #include "SpellLearn_Slot.h"
 #include "SpellLearn_Overlay.h"
 
+#include "NPCInteraction.h"
+
+#include "Dialogue.h"
+
 #include "IMGUIUI.h"
 
 #pragma endregion
@@ -1142,6 +1146,16 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Overlay>(g_iStaticLevel, CSpellLearn_Overlay::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	
+	if (FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue>(g_iStaticLevel, CDialogue::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

@@ -51,6 +51,8 @@ private:
 	CGameObject* m_pSpell_UI		= { nullptr };
 	CGameObject* m_pPotion			= { nullptr };
 	CGameObject* m_pMagic_Item		= { nullptr };
+	CGameObject* m_pNPCInteraction	= { nullptr };
+	CGameObject* m_pDialogue		= { nullptr };
 
 public:
 	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

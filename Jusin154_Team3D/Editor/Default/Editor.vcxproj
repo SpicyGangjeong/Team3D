@@ -180,6 +180,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Boss_HpBer.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\public\DummyDecal.h" />
+    <ClInclude Include="..\public\Dialogue.h" />
     <ClInclude Include="..\public\Enemy_Detection.h" />
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
@@ -189,6 +190,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\MapElement_Chest.h" />
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
+    <ClInclude Include="..\public\NPCInteraction.h" />
     <ClInclude Include="..\public\QuestInstance.h" />
     <ClInclude Include="..\public\Quest_Canvas.h" />
     <ClInclude Include="..\public\Quest_Data.h" />
@@ -422,6 +424,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Blink.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Boss_HpBer.cpp" />
+    <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\private\DummyDecal.cpp" />
     <ClCompile Include="..\Private\Enemy_Detection.cpp" />
@@ -433,6 +436,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
+    <ClCompile Include="..\private\NPCInteraction.cpp" />
     <ClCompile Include="..\private\QuestInstance.cpp" />
     <ClCompile Include="..\private\Quest_Canvas.cpp" />
     <ClCompile Include="..\private\Quest_Data.cpp" />

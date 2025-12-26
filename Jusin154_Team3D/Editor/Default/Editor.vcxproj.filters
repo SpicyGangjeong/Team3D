@@ -664,6 +664,12 @@
     <Filter Include="02.GameObjects\Dummys\DummyDecal">
       <UniqueIdentifier>{ebd7a1c2-4914-4956-ad9c-a0fc2e857f56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\NPCInteraction">
+      <UniqueIdentifier>{ee491ec4-bc46-48de-8cfb-396a29d2c98b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Dialogue">
+      <UniqueIdentifier>{3b9768b5-8c85-4465-b0ad-2d14722d88ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1349,6 +1355,12 @@
     </ClInclude>
     <ClInclude Include="..\public\DummyDecal.h">
       <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NPCInteraction.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\NPCInteraction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue.h">
+      <Filter>50.UI\Dialogue</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2040,6 +2052,12 @@
     </ClCompile>
     <ClCompile Include="..\private\DummyDecal.cpp">
       <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NPCInteraction.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\NPCInteraction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue.cpp">
+      <Filter>50.UI\Dialogue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
