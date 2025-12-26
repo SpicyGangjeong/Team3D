@@ -1,33 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MapLightObjects>
     <Object>
-        <Position x="22.502481" y="27.118675" z="36.93272"/>
+        <Position x="14.413321" y="-0.74579668" z="123.6903"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
         <Diffuse x="1" y="0" z="0"/>
         <Ambient x="1" y="0" z="0"/>
         <Specular x="0.2" y="0" z="0"/>
         <PosOffset x="0" y="0" z="0"/>
-        <Info Range="33" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+        <Info Range="12" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
     </Object>
     <Object>
-        <Position x="-17.661867" y="0.62647653" z="110.38875"/>
+        <Position x="23.764732" y="17.500727" z="36.780281"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
         <Diffuse x="1" y="0" z="0"/>
         <Ambient x="1" y="0" z="0"/>
         <Specular x="0.2" y="0" z="0"/>
         <PosOffset x="0" y="0" z="0"/>
-        <Info Range="17" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+        <Info Range="7" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
     </Object>
     <Object>
-        <Position x="26.202196" y="-59.652584" z="295.25424"/>
+        <Position x="24.508326" y="7.4453187" z="66.289886"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
         <Diffuse x="1" y="0" z="0"/>
         <Ambient x="1" y="0" z="0"/>
         <Specular x="0.2" y="0" z="0"/>
         <PosOffset x="0" y="0" z="0"/>
-        <Info Range="25" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+        <Info Range="11" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="-14.094388" y="1.1009431" z="80.09259"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="0.2" y="0" z="0"/>
+        <PosOffset x="0" y="0" z="0"/>
+        <Info Range="10" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="-56.559349" y="14.785403" z="101.42036"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="0.2" y="0" z="0"/>
+        <PosOffset x="0" y="0" z="0"/>
+        <Info Range="22" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="81.734085" y="57.872528" z="173.21597"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="1" y="0" z="0"/>
+        <PosOffset x="7" y="9" z="7"/>
+        <Info Range="61" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="-49.58091" y="-3.5738029" z="160.27904"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="0.2" y="0" z="0"/>
+        <PosOffset x="0" y="0" z="0"/>
+        <Info Range="19" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="3.1544192" y="-55.74688" z="328.32199"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="0.2" y="0" z="0"/>
+        <PosOffset x="0" y="0" z="0"/>
+        <Info Range="49" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="139.00926" y="-25.585093" z="331.18787"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="0.2" y="0" z="0"/>
+        <PosOffset x="0" y="0" z="0"/>
+        <Info Range="40" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="140.63963" y="-19.12134" z="208.22488"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="1" y="0" z="0"/>
+        <PosOffset x="0" y="0" z="0"/>
+        <Info Range="64" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="18.077103" y="-49.567036" z="147.19336"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="0.2" y="0" z="0"/>
+        <PosOffset x="0" y="0" z="0"/>
+        <Info Range="55" LightAttRange="1.5" LightAttSpeed="1" Pow="1"/>
+    </Object>
+    <Object>
+        <Position x="-93.278625" y="26.359657" z="307.81937"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Diffuse x="1" y="0" z="0"/>
+        <Ambient x="1" y="0" z="0"/>
+        <Specular x="0.2" y="0" z="0"/>
+        <PosOffset x="0" y="0" z="0"/>
+        <Info Range="106" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
     </Object>
 </MapLightObjects>

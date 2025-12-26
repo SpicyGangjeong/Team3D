@@ -212,6 +212,8 @@
 #include "MapElement_Chest.h"
 #include "MapElement_Chest_Lid.h"
 #include "MapElement_Static.h"
+#include "WorldDecal.h"
+#include "PointLight.h"
 
 #pragma endregion
 
@@ -2830,8 +2832,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 HRESULT CLoader::Loading_For_Field()
 {
-	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
-
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
 #pragma region DUNGEON
@@ -2922,7 +2922,6 @@ HRESULT CLoader::Loading_For_Field()
 
 #pragma endregion
 
-
 	{ // MapModels
 		_uint iIndex = 0;
 		for (auto& JobMapModels : jobMapModels)
@@ -2946,11 +2945,60 @@ HRESULT CLoader::Loading_For_Field()
 		}
 	}
 
+	/* For.Prototype_Component_DecalBox */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_DecalBox"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
+
+#pragma region MAP_TEXTURE
+	/* Base_MRO */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_MSK */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_MSK"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Rift_Material_MSK.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_Noraml */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_Noraml"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Rift_Veins_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_Fade */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_Fade"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_Noise08_D.png"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_MaskNoise */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_MaskNoise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_TankMoteNoiseVinceTest_D.png"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_MaskNoise */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_DiffuseMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/VFX_T_DementorTatter_D.dds"), 0)))) {
+		return E_FAIL;
+	}
+#pragma endregion
+
+
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	/* For.Prototype_GameObject_PointLight */
+	if (FAILED(m_pGameInstance->Add_Prototype<CPointLight>(ENUM_CLASS(LEVEL::FIELD), CPointLight::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_WorldDecal */
+	if (FAILED(m_pGameInstance->Add_Prototype<CWorldDecal>(ENUM_CLASS(LEVEL::FIELD), CWorldDecal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
@@ -8,12 +8,12 @@ class CModel;
 class CShader;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CDummyDecal final : public CGameObject
+class CWorldDecal final : public CGameObject
 {
 public:
-	typedef struct tagDummyDecalDesc
+	typedef struct tagWorldDecalDesc
 	{
 		_float3				vPosition = {};
 		_float3				vRotation = {};
@@ -23,16 +23,17 @@ public:
 		_float4				vMaskRed = {};
 		_float4				vMaskGreen = {};
 		_float4				vMaskBlue = {};
-	}DUMMY_DECAL_DESC;
+	}WORLD_DECAL_DESC;
+
 private:
-	CDummyDecal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CDummyDecal(const CDummyDecal& rhs);
-	virtual ~CDummyDecal() = default;
+	CWorldDecal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CWorldDecal(const CWorldDecal& rhs);
+	virtual ~CWorldDecal() = default;
 
 public:
-	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void	Priority_Update(_float fTimeDelta) override;
+	virtual void	Update(_float fTimeDelta) override;
+	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
 private:
@@ -44,8 +45,8 @@ private:
 	CTexture*			m_pSurfaceTextureCom = { nullptr };
 	CTexture*			m_pFadeTextureCom = { nullptr };
 	CTexture*			m_pDiffuseMaskTextureCom = { nullptr };
-	
-	_float				m_fUVTiling = {1.f};
+
+	_float				m_fUVTiling = { 1.f };
 	_float				m_fUsingSurfaceParams = {};
 
 	_float				m_fWinSizeX = {};
@@ -58,6 +59,8 @@ private:
 	_float4				m_vMaskGreen = {};
 	_float4				m_vMaskBlue = {};
 
+	_float4x4			m_WorldMatrixInv = {};
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -65,11 +68,12 @@ private:
 	virtual HRESULT Bind_ShaderResources() override;
 
 public:
-	static CDummyDecal* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CWorldDecal* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
-	HRESULT Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root);
+#endif // _DEBUG
 };
 
 NS_END

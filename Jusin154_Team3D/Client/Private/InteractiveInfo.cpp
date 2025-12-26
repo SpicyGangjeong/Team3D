@@ -34,6 +34,14 @@ void CInteractiveInfo::Change_Level()
 	for (CMapElement_Interactable* pInteractive : m_ActiveInteractive) {
 		SAFE_RELEASE(pInteractive);
 	} m_ActiveInteractive.clear();
+
+	for (CMapElement_Interactable* pInteractive : m_PoolingInteractive) {
+		SAFE_RELEASE(pInteractive);
+	} m_PoolingInteractive.clear();
+
+	for (CMapElement_Interactable* pInteractive : m_PoolingActiveInteractive) {
+		SAFE_RELEASE(pInteractive);
+	} m_PoolingActiveInteractive.clear();
 }
 
 HRESULT CInteractiveInfo::Regist_ActiveInteractive(CMapElement_Interactable* pUnit)
@@ -191,6 +199,7 @@ HRESULT CInteractiveInfo::Ready_PoolingInteractive()
 
 		if (nullptr != pInteractable)
 		{
+			SAFE_ADDREF(pInteractable);
 			m_PoolingInteractive.push_back(pInteractable);
 		}
 		else

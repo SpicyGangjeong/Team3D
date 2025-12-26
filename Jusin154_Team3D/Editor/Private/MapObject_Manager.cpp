@@ -14,6 +14,7 @@
 #include "MapElement_Light.h"
 #include "MapElement_Lake.h"
 #include "LightSpawner.h"
+#include "DummyDecal.h"
 
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -87,6 +88,8 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
 	//	return E_FAIL;
 
+	m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
 
 #pragma region Light
 	m_Light_Desc.eType = LIGHT::POINT;
@@ -200,6 +203,7 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	Update_Edit();
 
 	Update_LightSpawer();
+	//Update_Decal();
 
 	Update_Unified();
 
@@ -1892,6 +1896,51 @@ HRESULT CMapObject_Manager::Save_PointLightObject(const _char* pFileName)
 	return S_OK;
 }
 
+HRESULT CMapObject_Manager::Save_Decal(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Decal"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/Decal/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("Decal");
+	doc.InsertEndChild(root);
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CDummyDecal* pLightSpawner = dynamic_cast<CDummyDecal*>(pGamObject);
+
+			if (nullptr == pLightSpawner)
+				return E_FAIL;
+
+			if (FAILED(pLightSpawner->Save_XML(doc, root)))
+				return E_FAIL;
+		}
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save DummyDecals");
+	}
+
+	return S_OK;
+}
+
 void CMapObject_Manager::Update_PrototypeList()
 {
 	GUI::Begin("Model Prototype List");
@@ -2186,6 +2235,40 @@ void CMapObject_Manager::Update_LightSpawer()
 		for (auto& pLightSpawner : *pLayer->Get_Objects())
 		{
 			if(m_iSelectedIndex == iIndex)
+				pLightSpawner->Describe_Entity();
+
+			++iIndex;
+		}
+	}
+
+	GUI::End();
+}
+
+void CMapObject_Manager::Update_Decal()
+{
+	GUI::Begin("Map Decal");
+	if (GUI::Button("Save Decals"))
+	{
+		Save_Decal("Duengon_Decal_Data");
+	}
+	if (GUI::Button("Load Decals"))
+	{
+		m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	}
+	if (GUI::Button("Add Decals"))
+	{
+		m_pGameInstance->Add_GameObject_ToLayer<CDummyDecal>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Decal"));
+	}
+
+	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Decal"));
+
+	if (nullptr != pLayer)
+	{
+		_uint iIndex = {};
+		for (auto& pLightSpawner : *pLayer->Get_Objects())
+		{
+			if (m_iSelectedIndex == iIndex)
 				pLightSpawner->Describe_Entity();
 
 			++iIndex;
