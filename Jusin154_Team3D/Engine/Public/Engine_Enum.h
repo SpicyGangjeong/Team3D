@@ -121,6 +121,7 @@ enum class PHYSX_KIND {
 enum class PHYSX_JOINT {
 	D6,
 	DISTANCE,
+	REVOLUTE,
 	END
 };
 

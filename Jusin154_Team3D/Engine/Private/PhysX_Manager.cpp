@@ -159,6 +159,12 @@ PSX::PxJoint* CPhysX_Manager::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActo
 		pOut = pJoint;
 	}
 		break;
+	case PHYSX_JOINT::REVOLUTE:
+	{
+		PSX::PxRevoluteJoint* pJoint = PSX::PxRevoluteJointCreate(*m_pPhysics, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
+		pOut = pJoint;
+	}
+		break;
 	default:
 		break;
 	}
@@ -671,7 +677,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 85), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
 	m_pScene->addActor(*pGroundPlane);

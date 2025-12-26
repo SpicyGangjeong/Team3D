@@ -2661,20 +2661,6 @@ void CPlayer::Play_SpellHitAnim()
 	}
 }
 
-HRESULT CPlayer::Update_LegsPosition()
-{
-	_matrix WorldMatrix = m_pTransformCom->Get_XMWorldMatrix();
-	_matrix FootMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("LeftFoot")) * WorldMatrix;
-	_matrix LegMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("LeftLeg")) * WorldMatrix;
-	m_pLeftLeg->Set_CenterTransform(WorldMatrix, FootMatrix.r[3], LegMatrix.r[3]);
-
-	FootMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("RightFoot")) * WorldMatrix;
-	LegMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("RightLeg")) * WorldMatrix;
-	m_pRightLeg->Set_CenterTransform(WorldMatrix, FootMatrix.r[3], LegMatrix.r[3]);
-
-	return S_OK;
-}
-
 void CPlayer::Add_FSM()
 {
 #pragma region Behavior_Movement_NotFocus

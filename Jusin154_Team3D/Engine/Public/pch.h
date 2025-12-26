@@ -79,7 +79,7 @@ using namespace FMOD;
 #pragma warning(push)
 #pragma warning(disable: 26495)
 #pragma warning(disable: 33010)
-
+#include "PhysX/foundation/PxMath.h"
 #include "PhysX/PxPhysicsAPI.h"
 #include "PhysX/extensions/PxExtensionsAPI.h"
 #pragma warning(pop)

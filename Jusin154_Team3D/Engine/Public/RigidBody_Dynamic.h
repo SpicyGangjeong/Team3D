@@ -57,6 +57,8 @@ public:
 	void					Set_Transform(PSX::PxTransform pxTransform);
 	_float3					Get_FootPosition();
 	_float3					Get_HeadPosition();
+	PSX::PxTransform		Get_GlobalPosition();
+	PSX::PxTransform		Get_HeadPositionPxTransform();
 	PSX::PxTransform		Get_FootPositionPxTransform();
 private:
 	PSX::PxRigidDynamic*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체

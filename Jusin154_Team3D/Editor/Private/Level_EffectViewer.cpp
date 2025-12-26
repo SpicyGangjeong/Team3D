@@ -97,11 +97,6 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	//ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
-	//m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	//m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
-
 	return S_OK;
 }
 

@@ -5,14 +5,15 @@ NS_BEGIN(Engine)
 class CTransform;
 class CMesh;
 
-class ENGINE_DLL CDynamic_Joint abstract : public CComponent
+class ENGINE_DLL CDynamic_Joint final : public CComponent
 {
+public:
 	typedef struct tagDynamicJointDesc {
 		PHYSX_JOINT			eType;
-		PSX::PxActor*		pActor0;
-		PSX::PxTransform*	pLocalFrame0;
-		PSX::PxActor*		pActor1;
-		PSX::PxTransform*	pLocalFrame1;
+		PSX::PxRigidActor*	pActor0;
+		PSX::PxTransform	pLocalFrame0;
+		PSX::PxRigidActor*	pActor1;
+		PSX::PxTransform	pLocalFrame1;
 	}DYNAMICJOINT_DESC;
 private:
 	CDynamic_Joint(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -23,8 +24,8 @@ public:
 #ifdef _DEBUG
 	virtual HRESULT Render()override;
 #endif // _DEBUG
-
 private:
+	PSX::PxJoint* m_pJoint = { nullptr };
 
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };

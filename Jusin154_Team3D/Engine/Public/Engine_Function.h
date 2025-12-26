@@ -59,6 +59,33 @@ static PSX::PxTransform XMWorldToPx_NoScale(const _fmatrix& WorldMatrix)
 	XMStoreFloat4((_float4*)&out.q, vRotq);
 	return out;
 }
+// 주의, XMWorldToPx_NoScale 만들었을 때는 lh rh 변환을 생각안하고 했었음
+// 지금 쓰는 이 함수는 lh -> rh 자동 변환임
+static _matrix PxToXMWorld_NoScale(const PSX::PxTransform& pxTransform)
+{
+	_vector vPos = XMVectorSet(
+		pxTransform.p.x,
+		pxTransform.p.y,
+		pxTransform.p.z,
+		1.f
+	);
+
+	_vector vRotQ = XMVectorSet(
+		-pxTransform.q.x,
+		-pxTransform.q.y,
+		pxTransform.q.z,
+		pxTransform.q.w
+	);
+
+	vRotQ = XMQuaternionNormalize(vRotQ);
+
+	_matrix rotationMatrix = XMMatrixRotationQuaternion(vRotQ);
+	_matrix translationMatrix = XMMatrixTranslationFromVector(vPos);
+
+	_matrix worldMatrix = rotationMatrix * translationMatrix;
+	return worldMatrix;
+}
+
 
 static void GUIHelpMarker(const char* desc)
 {

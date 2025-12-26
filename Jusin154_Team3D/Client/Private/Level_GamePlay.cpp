@@ -646,6 +646,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
+#ifdef 기무리
+#else
 	for (_uint i = 0; i <1; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
@@ -664,7 +666,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
-
+#endif
 #if 진우
 #else
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {

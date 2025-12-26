@@ -11,35 +11,35 @@ public:
 #pragma region Color
 	// [(255, 255, 255, xx), alpha] -> [(0~1, 0~1, 0~1, alpha)]
 	// 0xRRGGBBxx, alpha -> _float4( 0~1, 0~1, 0~1, alpha )
-	static _float4 ColorRGB_A_HEXtoFLOAT4(_uint hexCode, _float alpha) {
+	inline static _float4 ColorRGB_A_HEXtoFLOAT4(_uint hexCode, _float alpha) {
 		float r, g, b, a; DecodeRGBA(hexCode, r, g, b, a, false); a = alpha;
 		return _float4(r, g, b, a);
 	}
 
 	// [(255, 255, 255, 255)] -> [(0~1, 0~1, 0~1, 0~1)]
 	// 0xRRGGBBAA -> _float4( 0~1, 0~1, 0~1, 0~1 )
-	static _float4 ColorRGBA_HEXtoFLOAT4(_uint hexCode) {
+	inline static _float4 ColorRGBA_HEXtoFLOAT4(_uint hexCode) {
 		float r, g, b, a; DecodeRGBA(hexCode, r, g, b, a, true);
 		return _float4(r, g, b, a);
 	}
 
 	// [(255, 255, 255, xx), alpha] -> [(0~1, 0~1, 0~1, alpha)]
 	// 0xRRGGBBxx, alpha -> _vector( 0~1, 0~1, 0~1, alpha )
-	static _vector ColorRGB_A_HEXtoVECTOR(_uint hexCode, _float alpha) {
+	inline static _vector ColorRGB_A_HEXtoVECTOR(_uint hexCode, _float alpha) {
 		float r, g, b, a; DecodeRGBA(hexCode, r, g, b, a, false); a = alpha;
 		return XMVectorSet(r, g, b, a);
 	}
 
 	// [(255, 255, 255, 255)] -> [(0~1, 0~1, 0~1, 0~1)]
 	// 0xRRGGBBAA -> _vector( 0~1, 0~1, 0~1, 0~1 )
-	static _vector ColorRGBA_HEXtoVECTOR(_uint hexCode) {
+	inline static _vector ColorRGBA_HEXtoVECTOR(_uint hexCode) {
 		float r, g, b, a; DecodeRGBA(hexCode, r, g, b, a, true);
 		return XMVectorSet(r, g, b, a);
 	}
 #pragma endregion
 #pragma region String
 	// wstring --> string 변환
-	static _string ToString(const _wstring& var)
+	inline static _string ToString(const _wstring& var)
 	{
 		int size_needed = WideCharToMultiByte(CP_UTF8, 0, var.c_str(),
 			(int)var.size(), nullptr, 0, nullptr, nullptr);
@@ -52,7 +52,7 @@ public:
 	}
 
 	// string --> wstring 변환
-	static _wstring ToWstring(const _string& var)
+	inline static _wstring ToWstring(const _string& var)
 	{
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, var.c_str(),
 			(int)var.size(), nullptr, 0);
@@ -65,7 +65,7 @@ public:
 	}
 
 	// source에 keyword가 있는지 검사
-	static _bool ContainsString(const char* source, const char* keyword) {
+	inline static _bool ContainsString(const char* source, const char* keyword) {
 		if (!source || !keyword || *keyword == '\0') {
 			return false;
 		}
@@ -75,13 +75,13 @@ public:
 #pragma endregion
 #pragma region Mathematics
 	// ratio로 현재 value 가져오기
-	static _float Lerp_f1D(_float fA, _float fB, _float fRatio)
+	inline static _float Lerp_f1D(_float fA, _float fB, _float fRatio)
 	{
 		return fA + (fB - fA) * fRatio;
 	}
 
 	// value로 현재 ratio 가져오기
-	static _float InverseLerp_f1D(_float fA, _float fB, _float fValue)
+	inline static _float InverseLerp_f1D(_float fA, _float fB, _float fValue)
 	{
 		if (fA == fB) {
 			return 0.0f;
@@ -101,7 +101,7 @@ public:
 	}
 
 	// dx9에 있던 IntersectTri
-	static _bool IntersectTri(
+	inline static _bool IntersectTri(
 		const _fvector& vPos, const _fvector& vDir,
 		const _fvector& vertexA, const _gvector& vertexB, const _hvector& vertexC,
 		_float& t, _float& u, _float& v)
@@ -130,17 +130,24 @@ public:
 
 		return t >= 0.f;
 	}
-
 	// 매트릭스 럴프
-	static void MatrixLerp(	_In_ _float4x4* pMatOrigin, // Origin -> 0
+	inline static void MatrixLerp(	_In_ _float4x4* pMatOrigin, // Origin -> 0
 							_In_ _float4x4* pMatTarget, // Target -> 1
+							_Out_ _float4x4& matOut, _float fRatio) {
+		_matrix matOrigin = XMLoadFloat4x4(pMatOrigin);
+		_matrix matTarget = XMLoadFloat4x4(pMatTarget);
+		MatrixLerp(&matOrigin, &matTarget, matOut, fRatio);
+	}
+	
+	inline static void MatrixLerp(	_In_ _matrix* pMatOrigin, // Origin -> 0
+							_In_ _matrix* pMatTarget, // Target -> 1
 							_Out_ _float4x4& matOut, _float fRatio) {
 		fRatio = Saturate(fRatio);
 
 		_vector vTargetScale{}, vTargetRotq{}, vTargetTrans{};
 		_vector vOriginScale{}, vOriginRotq{}, vOriginTrans{};
-		XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, XMLoadFloat4x4(pMatTarget));
-		XMMatrixDecompose(&vOriginScale, &vOriginRotq, &vOriginTrans, XMLoadFloat4x4(pMatOrigin));
+		XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, *pMatTarget);
+		XMMatrixDecompose(&vOriginScale, &vOriginRotq, &vOriginTrans, *pMatOrigin);
 
 		vTargetScale = XMVectorLerp(vOriginScale, vTargetScale, fRatio);
 		vTargetRotq = XMQuaternionSlerp(vOriginRotq, vTargetRotq, fRatio);
@@ -150,7 +157,7 @@ public:
 	}
 
 	// 비슷하면 1 직교하면 0 완전 반대방향일수록 -1
-	static _float DirectionCompare(_vector a, _vector b)
+	inline static _float DirectionCompare(_vector a, _vector b)
 	{
 		_vector vNormalA = XMVector3Normalize(a);
 		_vector vNormalB = XMVector3Normalize(b);
@@ -158,7 +165,7 @@ public:
 	}
 
 	// hlsl에 있는 Saturate 
-	static _float Saturate(_float fValue) {
+	inline static _float Saturate(_float fValue) {
 		if (fValue > 1.f) {
 			fValue = 1.f;
 		}
@@ -169,7 +176,7 @@ public:
 	}
 
 	// 입력 라디안이 들어오면 -PI ~ +PI로 정규화된 라디안으로 변경
-	static _float NormalizeRadian(_float fRadian)
+	inline static _float NormalizeRadian(_float fRadian)
 	{
 		fRadian = fmodf(fRadian, XM_2PI);
 		if (fRadian <= -XM_PI) {

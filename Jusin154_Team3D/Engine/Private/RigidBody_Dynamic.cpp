@@ -22,7 +22,8 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
 HRESULT CRigidBody_Dynamic::Render()
 {
 	PSX::PxTransform pxTranform = m_pRigidBody->getGlobalPose();
-	_matrix WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z) * XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
+	_matrix WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z)
+		* XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
@@ -35,6 +36,7 @@ HRESULT CRigidBody_Dynamic::Render()
 	} break;
 	case ACTOR::CAPSULE:
 	{
+		WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
 		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
 		_matrix WorldUp = XMMatrixTranslationFromVector(WorldMatrix.r[1] * m_vhalfGeometryInfo.y);
 		_matrix WorldDown = XMMatrixTranslationFromVector(WorldMatrix.r[1] * -m_vhalfGeometryInfo.y);
@@ -206,7 +208,7 @@ void CRigidBody_Dynamic::Set_CenterTransform(_matrix CenterMatrix, _vector Start
 	_float vLength = XMVectorGetX(XMVector3Length(vDir));
 	if (vLength > FLT_EPSILON5) {
 		vDir = XMVector3Normalize(vDir);
-		vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(0.f, 1.f, 0.f, 0.f), vDir);
+		vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(1.f, 0.f, 0.f, 0.f), vDir);
 	}
 	Set_Transform(vCenterWorldPos, vRotQ);
 }
@@ -256,6 +258,19 @@ _float3 CRigidBody_Dynamic::Get_HeadPosition()
 	}
 	_float3 vOut = { pxTransform.p.x , pxTransform.p.y , pxTransform.p.z };
 	return vOut;
+}
+
+PSX::PxTransform CRigidBody_Dynamic::Get_GlobalPosition()
+{
+	return m_pRigidBody->getGlobalPose();
+}
+
+PSX::PxTransform CRigidBody_Dynamic::Get_HeadPositionPxTransform()
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	_float3 vFootPos = Get_HeadPosition();
+	pxTransform.p = { vFootPos.x, vFootPos.y, vFootPos.z };
+	return pxTransform;
 }
 
 PSX::PxTransform CRigidBody_Dynamic::Get_FootPositionPxTransform()
