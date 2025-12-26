@@ -42,7 +42,7 @@
 #include "Blink.h"
 #include "Transformation.h"
 #include "Avadakedavra.h"
-
+#include "Ranrok_FireBall.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -560,6 +560,17 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_FIREBALL, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_FireBall* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_FireBall>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+	
 	return S_OK;
 }
 

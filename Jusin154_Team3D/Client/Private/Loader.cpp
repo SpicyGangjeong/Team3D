@@ -176,6 +176,7 @@
 #include "Mage_Down_Attack.h"
 #include "Mage_Nomal_Attack.h"
 #include "MageSide.h"
+#include "Ranrok_FireBall.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -2076,6 +2077,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CAvadakedavra>(g_iStaticLevel, CAvadakedavra::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_FireBall>(g_iStaticLevel, CRanrok_FireBall::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

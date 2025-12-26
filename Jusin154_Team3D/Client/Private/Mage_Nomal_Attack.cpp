@@ -21,8 +21,6 @@ CMage_Nomal_Attack::CMage_Nomal_Attack(const CMage_Nomal_Attack& rhs)
 
 HRESULT CMage_Nomal_Attack::Initialize_Prototype()
 {
-
-
 	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinMage/NomalAttack")))
 		return E_FAIL;
 
