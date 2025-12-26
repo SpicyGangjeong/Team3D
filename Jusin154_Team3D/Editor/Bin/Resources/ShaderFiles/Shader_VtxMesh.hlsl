@@ -83,7 +83,9 @@ Texture2D g_NormalSubTexture;
 Texture2D g_DeadDisolveTexture;
 
 Texture2D g_DepthTexture;
+Texture2D g_NormalMapTexture;
 Texture2D g_MaskNoiseTexture;
+Texture2D g_DiffsueMaskTexture;
 
 float g_fNormalValue1;
 float g_fNormalValue2;
@@ -121,6 +123,8 @@ vector  g_vFogColor;
 
 float g_fSoftMask;
 float g_fSoftMaskEdge;
+
+float g_fUVTiling;
 
 struct VS_IN
 {
@@ -944,7 +948,9 @@ PS_OUT_DELCAL PS_MAIN_DECAL(PS_IN_DECAL In)
     vDepthUV.y = In.vPosition.y / g_fWinSizeY;
     
     float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vDepthUV);
-
+    float3 vNormalDesc = g_NormalMapTexture.Sample(DefaultSampler, vDepthUV).xyz;
+    vNormalDesc = normalize(vNormalDesc * 2.f -1.f);
+    
     float fViewZ = vDepthDesc.y * g_fFar;
     
     float4 vPosition;
@@ -965,35 +971,61 @@ PS_OUT_DELCAL PS_MAIN_DECAL(PS_IN_DECAL In)
     
     clip(0.5f - ObjectAbsPos);
     
-    float2 vDecalUV =( vLocalPos.xz + 0.5f) * 2.f;
     
-    float4 vMaskColor = g_MaskingTexture.Sample(DefaultSampler, vDecalUV);
+    float3 vAbsNormal = abs(vNormalDesc);
+    
+    int iAxisIndex = 0;
+    
+    if (vAbsNormal.y > vAbsNormal.x && vAbsNormal.y > vAbsNormal.z)
+        iAxisIndex = 1;
+    else if (vAbsNormal.z > vAbsNormal.x && vAbsNormal.z > vAbsNormal.y)
+        iAxisIndex = 2;
+
+    float2 vDecalUV;
+    
+    if (0 == iAxisIndex)
+        vDecalUV = vLocalPos.zy + 0.5f * 2.f;
+    else if (1 == iAxisIndex)
+        vDecalUV = vLocalPos.xz + 0.5f * 2.f;
+    else
+        vDecalUV = vLocalPos.xy + 0.5f * 2.f;
+    
+    
+    float2 vTileUV = vDecalUV * g_fUVTiling;
+    
+    float4 vMaskColor = g_MaskingTexture.Sample(DefaultSampler, vTileUV);
     if (vMaskColor.a < 0.2f)
     {
         discard;
     }
     
-    vector vNoise = g_NoiseTexture.Sample(DefaultSampler, vDecalUV + g_vTime);
+    vector vNoise = g_NoiseTexture.Sample(DefaultSampler, vTileUV + g_vTime);
     
-    float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, vDecalUV);
-    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, vDecalUV);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, vTileUV);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, vTileUV);
     
     float fMaskWeight = vMaskColor.r + vMaskColor.g + vMaskColor.b;
     
-    float4 vDiffuseColor = vMaskColor.r * g_vMaskColorRed * 2.f * vNoise.r + 
+    float4 vDiffuseColor = vMaskColor.r * g_vMaskColorRed * 2.f * vNoise.r +
                             vMaskColor.g * g_vMaskColorGreen +
                             vMaskColor.b * g_vMaskColorBlue * 2.f * vNoise.r;
     
     vDiffuseColor /= fMaskWeight;
         
     vDiffuseColor.a = max(0.001f, vDiffuseColor.a);
-    
+ 
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
-    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    float3 vNormal = normalize(vNormalDesc);
+    
+    float fMask = g_DiffsueMaskTexture.Sample(DefaultSampler, vDecalUV *0.5f).r;
+    
+    if (0.f == fMask)
+        discard;
     
     Out.vAlbedo = vDiffuseColor;
-    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.1f);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
+    
     float fSurfaceParam = g_fUsingSurfaceParams;
     if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
     {

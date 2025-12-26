@@ -33,6 +33,7 @@ float g_fSSAO_BIAS;
 float g_fSSAOStrength;
 
 Texture2D   g_Texture;
+Texture2D   g_NoiseTexture;
 Texture2D   g_SSAONoiseTexture;
 Texture2D   g_SSAOInputTexture;
 uint        g_iKernelSize;
@@ -90,6 +91,7 @@ vector g_vLightSpecular;
 
 float g_fFogDensity;
 float g_fFogPow;
+float g_fFogHeightValue;
 bool  g_bFogVisible;
 vector g_vFogColor;
 
@@ -1149,8 +1151,24 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
         return Out;
     }
     
-    vector vFinalColor;
     float fViewZ = vDepthDesc.y * g_fFar;
+    
+    float4 vPosition, vPreShadowPosition;
+    vPosition.x = In.vTexcoord.x * 2.f - 1.f;
+    vPosition.y = In.vTexcoord.y * -2.f + 1.f;
+    vPosition.z = vDepthDesc.x;
+    vPosition.w = 1.f;
+    
+    vPosition = vPosition * fViewZ;
+    
+    vPosition = mul(vPosition, g_invmatProj);
+    vPosition = mul(vPosition, g_invMatView);
+    
+    float2 NoiseUV = vPosition.xz * 0.01f;
+    
+    float fNoise = g_NoiseTexture.Sample(DefaultSampler, NoiseUV).r;
+    
+    vector vFinalColor;
     
     float fRatio;
     

@@ -156,6 +156,7 @@
 #include "MapElement_Lake.h"
 #include "MapElement_Chest.h"
 #include "MapElement_Chest_Lid.h"
+#include "LightSpawner.h"
 #pragma endregion
 
 
@@ -2649,6 +2650,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_TankMoteNoiseVinceTest_D.png"), 0)))) {
 		return E_FAIL;
 	}
+	/* Decal_MaskNoise */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_DiffuseMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/VFX_T_DementorTatter_D.dds"), 0)))) {
+		return E_FAIL;
+	}
 	
 
 	/* Terrain_Diffuse */
@@ -3667,6 +3673,8 @@ if(isLoad_Map)
 	}
 }
 	
+	
+#pragma region SHADER
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
@@ -3680,6 +3688,8 @@ if(isLoad_Map)
 			VTXPOS::Elements, VTXPOS::iNumElements)))) {
 		return E_FAIL;
 	}
+#pragma endregion
+
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
@@ -3928,6 +3938,10 @@ if(isLoad_Map)
 
 	/* For.Prototype_GameObject_Unified */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Lake>(g_iStaticLevel, CMapElement_Lake::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_LightSpawner */
+	if (FAILED(m_pGameInstance->Add_Prototype<CLightSpawner>(g_iStaticLevel, CLightSpawner::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_CDummyDecal */

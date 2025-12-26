@@ -9,6 +9,7 @@
 #include "MapElement_Static.h"
 #include "MapElement_Interactable.h"
 #include "MapObject_LOD.h"
+#include "LightSpawner.h"
 
 CMapInfo::CMapInfo()
 {
@@ -251,6 +252,68 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFilePath)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interactable"), &Desc);
 	}
 
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_PointLights(const _char* pFilePath)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Light/" + string(pFilePath) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("MapLightObjects");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CLightSpawner::LIGHTSPAWNER_DESC Desc = {};
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		/* Light Desc */
+		auto* Diffuse = Object->FirstChildElement("Diffuse");
+		Diffuse->QueryFloatAttribute("x", &Desc.vDiffuse.x);
+		Diffuse->QueryFloatAttribute("y", &Desc.vDiffuse.y);
+		Diffuse->QueryFloatAttribute("z", &Desc.vDiffuse.z);
+
+		auto* Ambient = Object->FirstChildElement("Ambient");
+		Ambient->QueryFloatAttribute("x", &Desc.vAmbient.x);
+		Ambient->QueryFloatAttribute("y", &Desc.vAmbient.y);
+		Ambient->QueryFloatAttribute("z", &Desc.vAmbient.z);
+
+		auto* Specular = Object->FirstChildElement("Specular");
+		Specular->QueryFloatAttribute("x", &Desc.vSpecular.x);
+		Specular->QueryFloatAttribute("y", &Desc.vSpecular.y);
+		Specular->QueryFloatAttribute("z", &Desc.vSpecular.z);
+
+		auto* PosOffset = Object->FirstChildElement("PosOffset");
+		PosOffset->QueryFloatAttribute("x", &Desc.vPosOffset.x);
+		PosOffset->QueryFloatAttribute("y", &Desc.vPosOffset.y);
+		PosOffset->QueryFloatAttribute("z", &Desc.vPosOffset.z);
+
+		auto* Info = Object->FirstChildElement("Info");
+		Info->QueryFloatAttribute("LightAttRange", &Desc.fLightAttRange);
+		Info->QueryFloatAttribute("LightAttSpeed", &Desc.fLightAttSpeed);
+		Info->QueryFloatAttribute("Range", &Desc.fRange);
+		_uint iPow = {};
+		Info->QueryUnsignedAttribute("Pow", &iPow);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLightSpawner>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_LightSpawer"), &Desc)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
