@@ -84,11 +84,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+	//	return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+	//	return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 		return E_FAIL;

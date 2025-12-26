@@ -196,10 +196,10 @@ namespace Client
 		_float2		vDissolveUVGainAmount = {};
 		_bool		isDissolveMove = {};
 
-		_float3		vDissolveValue = {};
+		_float3		vDissolveValue = {}; /* Soft Mask , Cut Ratio*/
 
 		_float      fModelDistortIntensity = {};
-		_float		vPadding0 = {};
+		_float		fPadding0 = {};
 
 		_float      fLightDeley = {};
 		_float		fLightIntensity = {};
@@ -226,7 +226,11 @@ namespace Client
 		_bool       isDiffuse_B = {};
 		_bool       isBlurColor = {};
 
-		_float      vPadding4 = {};
+		_bool       isBlurDissolve = {};
+		_bool       isNomalMap = {};
+		_bool       isPadding2 = {};
+		_bool       isPadding3 = {};
+
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};

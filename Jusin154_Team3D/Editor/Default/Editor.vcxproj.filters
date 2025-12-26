@@ -664,6 +664,12 @@
     <Filter Include="02.GameObjects\Dummys\DummyDecal">
       <UniqueIdentifier>{ebd7a1c2-4914-4956-ad9c-a0fc2e857f56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok">
+      <UniqueIdentifier>{8ac1faba-2669-44f3-9de3-75850d0b0fb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\FireBall">
+      <UniqueIdentifier>{4070f5a1-7f80-42da-afa0-f7f0500376f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1349,6 +1355,9 @@
     </ClInclude>
     <ClInclude Include="..\public\DummyDecal.h">
       <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_FireBall.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\FireBall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2040,6 +2049,9 @@
     </ClCompile>
     <ClCompile Include="..\private\DummyDecal.cpp">
       <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_FireBall.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\FireBall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

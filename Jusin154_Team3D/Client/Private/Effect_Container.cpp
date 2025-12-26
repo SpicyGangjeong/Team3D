@@ -349,6 +349,30 @@ HRESULT CEffect_Container::Load_Data(const _char* pPath)
 
 	}
 
+	if (EffectSaveInfo.EffectInfo.isNomalMap)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
+			EffectSaveInfo.wstrNomalName = CMyTools::ToWstring(szName);
+		}
+
+
+	}
+
 	size_t iComponentLength = {};
 
 

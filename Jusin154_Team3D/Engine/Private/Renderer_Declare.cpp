@@ -215,6 +215,12 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_Blur_Y */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Y"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
 
 		/* Target_ENV_Blur_X */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_ENV_Blur_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -452,6 +458,10 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* MRT_Blur_Y*/
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_Y"), TEXT("Target_Blur_Y")))) {
+			return E_FAIL;
+		}
 
 		/* MRT_ENV_Blur_X */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_ENV_Blur_X"), TEXT("Target_ENV_Blur_X")))) {

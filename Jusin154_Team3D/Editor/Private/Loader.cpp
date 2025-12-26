@@ -188,6 +188,7 @@
 #include "Goblin_Spector.h"
 #include "StunEffect.h"
 #include "Blink.h"
+#include "Ranrok_FireBall.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1363,6 +1364,12 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_MRO"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_MRO_%d.dds"), 4)))) {
 		return E_FAIL;
+	} 
+
+	/* Base_MRO */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
 	}
 
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Noises", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
@@ -1433,6 +1440,21 @@ HRESULT CLoader::Loading_For_Effect()
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/Nomal", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0 , L"NOMAL")))) {
 			return E_FAIL;
 		}
 
@@ -1579,6 +1601,10 @@ HRESULT CLoader::Loading_For_Effect()
 		TEXT("Prototype_Component_Wand_Model")
 	));
 
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Playable_Model")
+	));
 
 	for (auto& job : futures) {
 
@@ -1864,6 +1890,10 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_FireBall>(NEXT_LEVEL, CRanrok_FireBall::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

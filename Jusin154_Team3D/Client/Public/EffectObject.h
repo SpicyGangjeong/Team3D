@@ -48,6 +48,8 @@ protected:
 	CTexture* m_pDissolve_TextureCom = { nullptr };
 	CTexture* m_pEmissive_TextureCom = { nullptr };
 	CTexture* m_pDistortion_TextureCom = { nullptr };
+	CTexture* m_pNormal_TextureCom = { nullptr };
+	CTexture* m_pSurface_TextureCom = { nullptr };
 
 	CShader* m_pShaderCom = { nullptr };
 	CLight*  m_pLightCom = { nullptr };
@@ -66,6 +68,7 @@ protected:
 	_wstring	 m_strModelName = {};
 	_wstring     m_strEmissiveName = {};
 	_wstring     m_strDistortionName = {};
+	_wstring     m_strNomalMapName = {};
 
 public:
 	virtual void Free() override;
