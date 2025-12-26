@@ -331,6 +331,7 @@ void CRenderer::Render_NonBlend()
 
 void CRenderer::Render_Decal()
 {
+	m_pGameInstance->Copy_RenderTargetAToB(TEXT("Target_Normal"), TEXT("Target_NormalCopy"));
 	EVENTSCOPE_("Render_Decal");
 	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_Decal")))) {
 		return;
@@ -351,6 +352,8 @@ void CRenderer::Render_Decal()
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
 	}
+
+	m_pGameInstance->Clear_RenderTarget(TEXT("Target_NormalCopy"));
 }
 
 void CRenderer::Render_LightAcc()

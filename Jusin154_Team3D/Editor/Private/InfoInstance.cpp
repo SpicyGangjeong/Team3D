@@ -88,6 +88,10 @@ HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
 {
 	return m_pMapInfo->Load_MapObjects(pFilePath);
 }
+HRESULT CInfoInstance::Load_PointLights(const _char* pFilePath)
+{
+	return m_pMapInfo->Load_PointLights(pFilePath);
+}
 #pragma endregion
 #pragma region MAP_INFO
 
