@@ -10,6 +10,8 @@
 #include "Spell_UI.h"
 #include "Potion.h"
 #include "Magic_Item.h"
+#include "NPCInteraction.h"
+#include "Dialogue.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -266,6 +268,16 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Magic_Item"), m_pMagic_Item);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CNPCInteraction**>(&m_pNPCInteraction))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("NPCInteraction "), m_pNPCInteraction);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDialogue>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CDialogue**>(&m_pDialogue))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Dialogue "), m_pDialogue);
 	return S_OK;
 }
 

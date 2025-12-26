@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "CallBack_NonPlayable_Behavior.h"
 #include "CallBack_NonPlayable_HitReport.h"
+#include "NPCInteraction.h"
 
 CNPC_Ollivander::CNPC_Ollivander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -32,13 +33,28 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+	
+	if (false == m_bHasInteracted)
+	{
+		if (true == InteractWithPlayer()) {
+			m_vEnteringTimer.x += fTimeDelta;
+			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
+				m_vEnteringTimer.x -= m_vEnteringTimer.y;
+				m_bHasInteracted = true;
+				// Active();
+			}
+		}
+	}
 
-	if (false == m_bEntered) {
+
+	if (false == m_bEntered) 
+	{
 		if (true == CastToPlayer()) {
 			m_vEnteringTimer.x += fTimeDelta;
 			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
 				m_vEnteringTimer.x -= m_vEnteringTimer.y;
 				m_bEntered = true;
+				m_bHasInteracted = false;
 				// Active();
 			}
 #ifdef _DEBUG
@@ -57,6 +73,7 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
 				m_vEnteringTimer.x -= m_vEnteringTimer.y;
 				m_bEntered = false;
+				m_bHasInteracted = false;
 				// DeActive(), Ready To Enter;
 			}
 #ifdef _DEBUG
@@ -97,6 +114,18 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
+
+	m_pNPCInteraction->Set_Visible(m_bEntered);
+	m_pNPCInteraction->Interaction(m_bHasInteracted);
+
+	if (m_bHasInteracted == true)
+	{
+		if (m_pGameInstance->Key_Down(DIK_F))
+		{
+
+		}
+	}
+
 }
 
 void CNPC_Ollivander::Late_Update(_float fTimeDelta)
@@ -224,6 +253,19 @@ _bool CNPC_Ollivander::CastToPlayer()
 	return false;
 }
 
+_bool CNPC_Ollivander::InteractWithPlayer()
+{
+	_vector vCurrentPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vTargetPos = {};
+	pair<CUnit*, CTransform*> pairAllyInfo = m_pInfoInstance->Get_NearestPlayerAlly(m_pTransformCom->Get_State(STATE::POSITION));
+	vTargetPos = pairAllyInfo.second->Get_State(STATE::POSITION);
+	_float fLength = XMVectorGetX(XMVector4Length(vTargetPos - vCurrentPos));
+	if (fLength < m_fInteractionDistance) {
+		return true;
+	}
+	return false;
+}
+
 HRESULT CNPC_Ollivander::Initialize_Prototype()
 {
 	return S_OK;
@@ -295,6 +337,16 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		m_pCharacter_Controller->SetGravity(true);
 	}
 
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("OLLIVENDER"), (CComponent**)&m_pStat))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, nullptr, this, &m_pNPCInteraction))) {
+		return E_FAIL;
+	}
+
+	m_pNPCInteraction->NpcInfo(m_pStat->Get_Stat().pNpc_Name);
+
 	return S_OK;
 }
 
@@ -327,6 +379,7 @@ void CNPC_Ollivander::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pCharacter_Controller);
+	SAFE_RELEASE(m_pStat);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

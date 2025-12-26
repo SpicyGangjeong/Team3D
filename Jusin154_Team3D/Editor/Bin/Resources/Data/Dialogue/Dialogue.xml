@@ -1,0 +1,6 @@
+﻿<Dialogue>
+	<Npc NpcName="Ollivander" NpcID="0" >
+		<Text ID="0" Size="0" NpcName="올리벤더:" Text="반갑네 친구 나는 올리벤더 라고 하네"></Text>
+		<Text ID="1" Size="0" NpcName="올리벤더:" Text="나는 여기서 지팡이를 팔고있어"></Text>
+	</Npc>
+</Dialogue>
