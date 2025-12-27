@@ -39,6 +39,8 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	void Set_RaceRing(class CRaceRing* pRaceRing) {m_pRaceRing = pRaceRing;}
+	class CBroom* Get_Broom() { return m_pBroom; }
 private:
 	CLight* m_pLightCom = { nullptr };
 	LIGHT_DESC LightDesc = {};
@@ -48,7 +50,7 @@ private:
 	class CBroom* m_pBroom = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
-	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
+	class CCamPosition_AI* m_pCamPosition_AIPart = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -56,6 +58,8 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
+
+	_vector Get_RingForwardTarget();
 
 	_float ComputeTurnToRing();
 	_float ComputeHeightAdjust();
@@ -95,8 +99,6 @@ private:
 	_float			m_fScaleSmoothSpeed = 2.5f;
 	_float			m_fAnimTime = {};
 	_bool			m_bTurbo = {};
-	_float			m_fSmoothX = {};
-	_float			m_fSmoothY = {};
 
 	void	Behavior_Broom_Ride_MoveEnter();
 	HRESULT Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta);

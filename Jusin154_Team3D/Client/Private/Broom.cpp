@@ -35,8 +35,6 @@ HRESULT CBroom::Initialize(void* pArg)
 	}
 
 
-
-
 	Add_FSM();
 
 	Set_Anim();
@@ -50,7 +48,7 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f,-100.f, 0.f, 1.f));
 
 	m_pParentUnit = dynamic_cast<CUnit*>(m_pOwner);
 
@@ -62,8 +60,6 @@ HRESULT CBroom::Initialize(void* pArg)
 
 		m_pWindEffect->Get_Effect_Info()->isBillboard = false;
 	}
-
-
 
 
 	return S_OK;
@@ -295,7 +291,6 @@ void CBroom::PlayerInput()
 	m_Input.bTurbo = m_pGameInstance->Mouse_Pressing(DIM_LBUTTON);
 	m_bTurbo = m_Input.bTurbo;
 }
-
 
 CBroom* CBroom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

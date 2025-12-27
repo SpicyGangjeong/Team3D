@@ -4,6 +4,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
+Texture2D g_BlurYTexture;
 
 float2 g_vResolution;
 
@@ -79,6 +80,11 @@ struct PS_OUT_BLUR_Y
     float4 vBlurY : SV_TARGET0;
 };
 
+struct PS_OUT_COMBINED
+{
+    float4 vBackBuffer : SV_TARGET0;
+};
+
 PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
 {
     PS_OUT_BLUR_X Out;
@@ -120,10 +126,25 @@ PS_OUT_BLUR_Y PS_MAIN_BLUR_Y(PS_IN In)
         vColor += g_fWeights_32[i + 15] * g_BlurXTexture.Sample(BorderZeroSampler, vTexcoord);
     }
     
+    Out.vBlurY = vColor;
+    
+    return Out;
+}
+
+PS_OUT_COMBINED PS_COMBINED(PS_IN In)
+{
+    PS_OUT_COMBINED Out;
+    
+    
+    float4 vColor = { 0.f, 0.f, 0.f, 0.f };
+    
+
+    vColor = g_BlurYTexture.Sample(DefaultSampler, In.vTexcoord);
+    
     if (vColor.a <= FLT_EPSILON5)
         discard;
     
-    Out.vBlurY = vColor;
+    Out.vBackBuffer = vColor;
     
     return Out;
 }
@@ -131,7 +152,7 @@ PS_OUT_BLUR_Y PS_MAIN_BLUR_Y(PS_IN In)
 
 technique11 DefaultTechnique
 {
-    pass BlurXPass// 4
+    pass BlurXPass// 0
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -141,7 +162,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_BLUR_X();
     }
 
-    pass BlurYPass // 4
+    pass BlurYPass // 1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -151,5 +172,14 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_BLUR_Y();
     }
 
+    pass Combined // 2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_COMBINED();
+    }
  
 }

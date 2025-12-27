@@ -317,7 +317,7 @@ row_major float4x4 SampleBlendedLocal(uint bone)
 
 
 
-    SampleLocalTRS_Prev(bone, PrevTime, sA, rA, tA);
+    SampleLocalTRS_Prev(bone, prevT, sA, rA, tA);
     SampleLocalTRS_Cur(bone, CurrentTime, sB, rB, tB);
 
     float3 S = lerp(sA, sB, br);

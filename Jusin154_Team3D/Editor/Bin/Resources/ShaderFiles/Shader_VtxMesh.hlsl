@@ -1037,7 +1037,6 @@ PS_OUT_DELCAL PS_MAIN_DECAL(PS_IN_DECAL In)
     return Out;
 }
 
-
 technique11 MeshTechnique11
 {
     pass MeshPass // 0
