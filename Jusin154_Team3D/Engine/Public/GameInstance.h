@@ -231,7 +231,7 @@ public:
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
-	void Add_Editor_Plane(PhsXUserData& PlaneData);
+	void Add_Editor_Plane(PHYSX_USERDATA& PlaneData);
 #pragma endregion
 #pragma region THREADHOLDER
 	template<class Function, class... Args>

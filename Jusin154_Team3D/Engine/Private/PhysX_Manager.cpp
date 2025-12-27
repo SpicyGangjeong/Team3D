@@ -337,7 +337,7 @@ HRESULT CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangle
 	assert(ok);
 	return (ok ? S_OK : E_FAIL);
 }
-void CPhysX_Manager::Add_Editor_Plane(PhsXUserData& PlaneData)
+void CPhysX_Manager::Add_Editor_Plane(PHYSX_USERDATA& PlaneData)
 {
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
 	PlaneData.iSubKind = UINT_MAX;
@@ -417,7 +417,7 @@ void CPhysX_Manager::Update_Kinematic()
 
 			if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
 			{
-				PhsXUserData* pUserData = (PhsXUserData*)pBody->userData;
+				PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)pBody->userData;
 				if (false == pUserData->bAutoOwnerTranslation) {
 					continue;
 				}
@@ -458,7 +458,7 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 	PSX::PxActor** ppActiveActors = m_pScene->getActiveActors(iNumActiveActor);
 
 	for (PSX::PxU32 i = 0; i < iNumActiveActor; ++i) {
-		PhsXUserData* pUserData = (PhsXUserData*)ppActiveActors[i]->userData;
+		PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)ppActiveActors[i]->userData;
 		PSX::PxRigidDynamic* pActorDynamic = ppActiveActors[i]->is<PSX::PxRigidDynamic>();
 		if (nullptr != pActorDynamic) {
 			if (nullptr == ppActiveActors[i]->userData) {
@@ -514,7 +514,7 @@ void CPhysX_Manager::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
 		return;
 	}
 
-	PhsXUserData* physxUserData = reinterpret_cast<PhsXUserData*>(pRigidActor->userData);
+	PHYSX_USERDATA* physxUserData = reinterpret_cast<PHYSX_USERDATA*>(pRigidActor->userData);
 	if (physxUserData == nullptr){
 		return;
 	}

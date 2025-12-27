@@ -9,7 +9,7 @@ public:
     {
         if (actor != nullptr && actor->userData != nullptr)
         {
-            PhsXUserData* physxUserData = (PhsXUserData*)actor->userData;
+            PHYSX_USERDATA* physxUserData = (PHYSX_USERDATA*)actor->userData;
 
             if (physxUserData->eKind == PHYSX_KIND::BODY_DYNAMIC)
             {

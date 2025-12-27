@@ -39,7 +39,7 @@ public:
 	PSX::PxShapeFlags		Get_ShapeFlags()		const { return m_ePxShapeFlags; }
 	PSX::PxRigidBodyFlags	Get_RigidBodyFlags()	const { return m_ePxRigidBodyFlags; }
 
-	const PhsXUserData*		Get_UserDataPtr() const { return &m_tagData; };
+	const PHYSX_USERDATA*		Get_UserDataPtr() const { return &m_tagData; };
 
 protected:
 	ACTOR					m_eActorType = ACTOR::END;
@@ -51,7 +51,7 @@ protected:
 	_float3					m_vLocalTranslation = { 0.f, 0.f, 0.f };
 
 	CTransform*				m_pTransform = { nullptr };
-	PhsXUserData			m_tagData = {};
+	PHYSX_USERDATA			m_tagData = {};
 
 protected:
 	virtual HRESULT Initialize(void* pArg);

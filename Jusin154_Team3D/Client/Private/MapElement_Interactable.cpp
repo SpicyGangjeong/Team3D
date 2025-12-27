@@ -372,7 +372,7 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
@@ -432,7 +432,7 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 
 			if (nullptr != pActor && nullptr != pActor->userData)
 			{
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 
 				switch (PXOBJECT(pUserData->iSubKind))

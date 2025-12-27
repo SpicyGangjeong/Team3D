@@ -388,7 +388,11 @@ typedef struct tagPhsXUserData {
 		class CObstacle_Controller* pObstacle = { nullptr };
 	};
 
-}PhsXUserData;
+}PHYSX_USERDATA;
+
+typedef struct tagD6JointDesc {
+
+}PHYSX_JOINT_D6Desc;
 
 typedef struct tagOnCollsionInfo
 {

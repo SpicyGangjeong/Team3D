@@ -33,8 +33,8 @@ void CCallBack_Monster_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hi
 	PSX::PxRigidActor*		pActor = hit.actor;
 
 	if (nullptr != pController && nullptr != pActor) {
-		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
-		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		PHYSX_USERDATA* pTargetActorData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		PHYSX_USERDATA* pOwnerActorData = static_cast<PHYSX_USERDATA*>(pController->getActor()->userData);
 		if (nullptr == pTargetActorData) { // missing user data
 			return;
 		}
@@ -105,8 +105,8 @@ void CCallBack_Monster_HitReport::onControllerHit(const PSX::PxControllersHit& h
 	ON_COLLISION_INFO CollisionDesc = {};
 
 	if (nullptr != pController && nullptr != pOtherController) {
-		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
-		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		PHYSX_USERDATA* pTargetActorData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		PHYSX_USERDATA* pOwnerActorData = static_cast<PHYSX_USERDATA*>(pController->getActor()->userData);
 		assert(nullptr != pTargetActorData); // missing user data
 
 		switch (pTargetActorData->eKind)

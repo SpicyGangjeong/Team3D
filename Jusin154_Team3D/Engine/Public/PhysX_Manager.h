@@ -53,7 +53,7 @@ public:
 #ifdef EDITOR_PROJECT
 
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
-	void Add_Editor_Plane(PhsXUserData& PlaneData);
+	void Add_Editor_Plane(PHYSX_USERDATA& PlaneData);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	//HRESULT LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
@@ -115,7 +115,7 @@ private:
 	map<_wstring, PSX::PxHeightFieldGeometry*>* m_HeightFieldGeometry = { nullptr };
 
 
-	PhsXUserData PlaneData = {};
+	PHYSX_USERDATA PlaneData = {};
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = { UINT_MAX };

@@ -1065,7 +1065,7 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
 }
-void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
+void CGameInstance::Add_Editor_Plane(PHYSX_USERDATA& PlaneData)
 {
 	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
 }

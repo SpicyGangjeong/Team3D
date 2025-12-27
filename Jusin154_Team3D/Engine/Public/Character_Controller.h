@@ -93,7 +93,7 @@ private:
 	_float					m_fCurrentSlopeDegree = { 0.f };
 	_int					m_iIsOnGround = { 0 };
 	_float4					m_vAccHeight = { 0.f, 0.16f, 0.f, 0.01f };
-	PhsXUserData			m_tagData = {};
+	PHYSX_USERDATA			m_tagData = {};
 
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
 	_bool					m_bActive = { true };

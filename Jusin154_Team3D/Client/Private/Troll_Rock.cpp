@@ -122,7 +122,7 @@ void CTroll_Rock::RockHit()
 				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
 				XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
 				tagCollInfo.fLength = fLength;
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
 				tagCollInfo.fDamage = 10.f;
