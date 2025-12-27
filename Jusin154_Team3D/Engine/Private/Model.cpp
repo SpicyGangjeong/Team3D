@@ -1405,7 +1405,7 @@ HRESULT CModel::Create_ComputeShader()
 	CS_Desc.iInputStructStride = CS_InputStrides;
 	CS_Desc.iOutputStructStride = CS_OutputStrides;
 
-	m_pComputeShader = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("CS_Model"), &CS_Desc, nullptr);
+	m_pComputeShader = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, CS_MODEL, &CS_Desc, nullptr);
 
 	if (nullptr == m_pComputeShader) {
 		return E_FAIL;
@@ -1439,7 +1439,7 @@ HRESULT CModel::Create_ComputeShaderLocal()
 	CS_Desc.iInputStructStride = CS_InputStrides;
 	CS_Desc.iOutputStructStride = CS_OutputStrides;
 
-	m_pCS_AnimLocal = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("CS_Local"), &CS_Desc, nullptr);
+	m_pCS_AnimLocal = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, CS_LOCAL, &CS_Desc, nullptr);
 
 	if (nullptr == m_pCS_AnimLocal) {
 		return E_FAIL;

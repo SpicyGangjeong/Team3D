@@ -10,7 +10,8 @@ class CBroomRaceManager final : public CGameObject
 public:
 	struct RacerInfo
 	{
-		CGameObject* pRacer = nullptr;
+		class CPlayer* pRacer = nullptr;
+		class CBroomRacerAI* pAI = nullptr;
 		_uint       curRing = 0;
 		_vector      prevPos = XMVectorZero();
 	};
@@ -24,18 +25,14 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
-	class CRaceRing* GetTargetRing(CGameObject* pRacer);
+	void SetTargetRing(CGameObject* pRacer);
 	void Push_BroomRacer(RacerInfo Info);
-	void Push_RaceRing(CRaceRing* Ring);
+	void Push_RaceRing(class CRaceRing* Ring);
 private:
 	vector<class CRaceRing*>			m_pRaceRings = {};
 	vector<RacerInfo>					m_Racers = {};
 
 
-#ifdef _DEBUG
-	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
-	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-#endif // _DEBUG
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

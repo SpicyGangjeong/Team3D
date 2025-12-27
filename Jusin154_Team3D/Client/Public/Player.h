@@ -30,6 +30,7 @@ public:
 	typedef struct tagPlayerInitDesc {
 		_float4 vPos;
 		_float4 vRotQ;
+		class CBroomRaceManager* pBroomRaceManager;
 	}PLAYERDESC;
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -49,6 +50,8 @@ public:
 	void Set_Shield(_bool bShield) { m_bShield = bShield; }
 	void Start_CameraShake(_float fTime, _float fIntense);
 	_int Get_UIState() { return m_eUIState; }
+	void	Set_RaceRing(class CRaceRing* pRaceRing) { m_pRaceRing = pRaceRing; }
+	class CBroom* Get_Broom() { return m_pBroom; }
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -89,6 +92,9 @@ private:
 	class CTransform* m_pBroomTransform = { nullptr };
 	class CBroom* m_pBroom = { nullptr };
 	CStat* m_pStat = { nullptr };
+
+	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
+	class CRaceRing* m_pRaceRing = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -163,6 +169,10 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
+	_float			m_fNoInputTime = 0.f;
+	_float			m_fNeutralTime = 0.f; 
+
+
 	/* 무적 불 변수*/
 #ifdef _DEBUG
 	_bool			m_isDebugMode = { false };

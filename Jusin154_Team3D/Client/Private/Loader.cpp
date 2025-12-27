@@ -13,6 +13,7 @@
 #include "CamPosition_Shoulder.h"
 #include "CamPosition_Socket.h"
 #include "CamPosition_Target.h"
+#include "CamPosition_AI.h"
 #include "SkyBox.h"
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
@@ -1696,7 +1697,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
-
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
@@ -1815,7 +1815,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_RaceRing_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/RaceRing/SM_BRR_RaceRing_01.bin", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/RaceRing/SM_BRR_RaceRing_01.bin", XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
@@ -2747,6 +2747,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_CamPosition_Shoulder */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Shoulder>(g_iStaticLevel, CCamPosition_Shoulder::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_AI */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_AI>(g_iStaticLevel, CCamPosition_AI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_CamPosition_Target */

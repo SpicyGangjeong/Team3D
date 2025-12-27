@@ -900,15 +900,6 @@ void CBroom::Set_Anim()
 	m_Animation[STATEANIM::BROOM_FLY_LEFT_B] = { 15,true };
 	m_Animation[STATEANIM::BROOM_FLY_RIGHT_B] = { 16,true };
 	m_Animation[STATEANIM::BROOM_FLY_UP_B] = { 17,true }; 
-	//Mount 29
-	//호버 스탑 6
-	//호버 제자리 24
-	//플라이 업 17 다운 13 왼쪽15 오른쪽 16
-
-	//호버 다운		25
-	//호버 왼쪽 26
-	// 호버 오른쪽 27
-	//호버 업 28
 }
 #pragma endregion State
 
