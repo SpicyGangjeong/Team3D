@@ -563,14 +563,21 @@ void CRenderer::Render_Fog()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Fog");
 	EVENTSCOPE_("Render_Fog");
+
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_Texture"))) {
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG));
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
+	m_pShader->Bind_RawValue("g_fDepthPackExponent", m_pGameInstance->Get_DepthPackExponentPtr(), sizeof(_float));
 
 	if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
 		assert(false);
-	}
-
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_OriginalTexture"))) {
-		return;
 	}
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
