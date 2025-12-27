@@ -47,9 +47,9 @@ public:
 	virtual void			Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType = PSX::PxForceMode::Enum::eFORCE); // 속도 + 방향
 	virtual void			Add_Torque(_fvector vDirection, PSX::PxForceMode::Enum eType = PSX::PxForceMode::Enum::eFORCE); // 방향 ( 회전축은 MassCenter )
 	void					Set_Kinematic(_bool bKinematic);
-	void					Move_Kinematic(_fmatrix xmTransform);
-	void					Move_Kinematic(_fvector vPos, _gvector vRotq);
-	void					Move_Kinematic(PSX::PxTransform& pxDestination);
+	void					Move_Kinematic(_fmatrix xmTransform, _bool bTeleport = true);
+	void					Move_Kinematic(_fvector vPos, _gvector vRotq, _bool bTeleport = true);
+	void					Move_Kinematic(PSX::PxTransform& pxDestination, _bool bTeleport = true);
 
 	HRESULT					ConvertToCCT(class CCharacter_Controller& CCTOriginal);
 	void					Detach_Actor(_uint iLevel);
@@ -57,14 +57,16 @@ public:
 	void					SetActive(_bool bCondition) { m_bActive = bCondition; }
 
 	_vector					Get_Position();
-	void					Set_Position(_vector vPos);
-	void					Set_Rotation(_vector vRotQ);
+	void					Set_Position(_vector vPos, _bool bTeleport);
+	void					Set_Rotation(_vector vRotQ, _bool bTeleport);
 	void					Set_AutoOwnerTranlation(_bool bAutoOwnerTranslation) { m_tagData.bAutoOwnerTranslation = bAutoOwnerTranslation; };
 	_bool					Get_AutoOwnerTranlation() { return m_tagData.bAutoOwnerTranslation; };
-	void					Set_Transform(_matrix WorldMatrix);
-	void					Set_Transform(_vector vPos, _vector vRotQ);
-	void					Set_Transform(PSX::PxTransform pxTransform);
-	void					Set_CenterTransform(_vector vStart, _vector vEnd);
+
+	void					Set_Transform(_matrix WorldMatrix, _bool bTeleport);
+	void					Set_Transform(_vector vPos, _vector vRotQ, _bool bTeleport);
+	void					Set_Transform(PSX::PxTransform pxTransform, _bool bTeleport);
+
+	void					Set_CenterTransform(_vector vStart, _vector vEnd, _bool bTeleport);
 	_float3					Get_FootPosition();
 	_float3					Get_HeadPosition();
 	PSX::PxTransform		Get_GlobalPosition();
@@ -88,6 +90,7 @@ private:
 private:
 	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPE_DYNAMIC_DESC& Desc);
 	virtual HRESULT Initialize(void* pArg) override;
+//	void Move(PSX::PxTransform& pxTransform, _bool bTeleport);
 
 #ifdef _DEBUG
 	HRESULT Add_DebugShape();

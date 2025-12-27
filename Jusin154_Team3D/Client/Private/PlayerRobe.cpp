@@ -19,7 +19,7 @@ void CPlayerRobe::Update(_float fTimeDelta)
 {
 	_matrix OwnerMatrix = XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr());
 	m_pTransformCom->Set_WorldMatrix(OwnerMatrix);
-	m_pRobeMainAnchor->Set_Transform(XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix);
+	m_pRobeMainAnchor->Move_Kinematic(XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix, true);
 	Update_LegsPosition();
 }
 
@@ -48,7 +48,7 @@ HRESULT CPlayerRobe::Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DY
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[Desc_Route.iTargetRouteIndex], &Desc_Body))) {
 		return E_FAIL;
 	}
-	m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(xmAnchorMatricesWorld[Desc_Route.iStartBoneIndex].r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3]);
+	m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(xmAnchorMatricesWorld[Desc_Route.iStartBoneIndex].r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3], true);
 	{ // Joint
 		assert(!m_pDynamicJoints[Desc_Route.iStartJointIndex]);
 		m_pDynamicJoints[Desc_Route.iStartJointIndex]	= m_pGameInstance->Create_PxD6Joint(m_pRobeJointAnchor[Desc_Route.iStartBoneIndex]->Get_Actor(), m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iStartBoneIndex]->Get_GlobalPosition());
@@ -66,7 +66,7 @@ HRESULT CPlayerRobe::Update_LegsPosition()
 		
 		_vector vFootPos	= XMVector4Transform(XMLoadFloat4((_float4*)&m_pLeftFootLocalMatrix->m[3][0]), WorldMatrix);
 		_vector vLegPos		= XMVector4Transform(XMLoadFloat4((_float4*)&m_pLeftLegLocalMatrix->m[3][0]), WorldMatrix);
-		m_pLeftLeg->Set_CenterTransform(vFootPos, vLegPos);
+		m_pLeftLeg->Set_CenterTransform(vFootPos, vLegPos, false);
 
 #ifdef _DEBUG
 		{
@@ -84,7 +84,7 @@ HRESULT CPlayerRobe::Update_LegsPosition()
 
 		vFootPos	= XMVector4Transform(XMLoadFloat4((_float4*)&m_pRightFootLocalMatrix->m[3][0]), WorldMatrix);
 		vLegPos		= XMVector4Transform(XMLoadFloat4((_float4*)&m_pRightLegLocalMatrix->m[3][0]), WorldMatrix);
-		m_pRightLeg->Set_CenterTransform(vFootPos, vLegPos);
+		m_pRightLeg->Set_CenterTransform(vFootPos, vLegPos, false);
 
 #ifdef _DEBUG
 		{
@@ -244,7 +244,7 @@ HRESULT CPlayerRobe::Ready_Components()
 				return E_FAIL;
 			}
 			m_pRobeMainAnchor->Set_Kinematic(true);
-			m_pRobeMainAnchor->Set_Transform(socketWorld);
+			m_pRobeMainAnchor->Set_Transform(socketWorld, true);
 #ifdef _DEBUG
 			m_pRobeMainAnchor->Set_Name("MainAnchor");
 #endif // _DEBUG
@@ -257,8 +257,8 @@ HRESULT CPlayerRobe::Ready_Components()
 			if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ANCHOR"), (CComponent**)&m_pRobeJointAnchor[i], &Desc))) {
 				return E_FAIL;
 			}
-
-			m_pRobeJointAnchor[i]->Set_Transform(xmAnchorMatricesWorld[i]);
+			
+			m_pRobeJointAnchor[i]->Set_Transform(xmAnchorMatricesWorld[i], true);
 #ifdef _DEBUG
 			m_pRobeJointAnchor[i]->Set_Name(PLAYER_JOINT_BONE_NAMES[i]);
 #endif // _DEBUG
@@ -280,7 +280,7 @@ HRESULT CPlayerRobe::Ready_Components()
 				if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[Desc_Route.iTargetRouteIndex], &Desc_Body))) {
 					return E_FAIL;
 				}
-				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(socketWorld.r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3]);
+				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(socketWorld.r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3], true);
 #ifdef _DEBUG
 				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_Name("Origin_Linked_Routes");
 #endif // _DEBUG
@@ -298,7 +298,7 @@ HRESULT CPlayerRobe::Ready_Components()
 				if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[Desc_Route.iTargetRouteIndex], &Desc_Body))) {
 					return E_FAIL;
 				}
-				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(socketWorld.r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3]);
+				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(socketWorld.r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3], true);
 #ifdef _DEBUG
 				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_Name("Origin_Linked_Routes");
 #endif // _DEBUG
@@ -316,7 +316,7 @@ HRESULT CPlayerRobe::Ready_Components()
 				if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[Desc_Route.iTargetRouteIndex], &Desc_Body))) {
 					return E_FAIL;
 				}
-				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(socketWorld.r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3]);
+				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(socketWorld.r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3], true);
 #ifdef _DEBUG
 				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_Name("Origin_Linked_Routes");
 #endif // _DEBUG
@@ -487,8 +487,12 @@ void CPlayerRobe::Free()
 #endif // _DEBUG
 	SAFE_RELEASE(m_pRightLeg);
 	SAFE_RELEASE(m_pLeftLeg);
+	SAFE_RELEASE(m_pRobeMainAnchor);
 	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
 		SAFE_RELEASE(m_pRobeJointRoute[i]);
+	}
+	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
+		SAFE_RELEASE(m_pRobeJointAnchor[i]);
 	}
 }
 #ifdef _DEBUG

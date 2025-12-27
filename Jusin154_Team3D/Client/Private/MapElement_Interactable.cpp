@@ -338,7 +338,7 @@ void CMapElement_Interactable::ActivateAt(_fvector vPos)
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pInfoInstance->Regist_ActiveInteractive(this);
 	m_pRigidBody->Set_Kinematic(false);
-	m_pRigidBody->Set_Position(vPos);
+	m_pRigidBody->Set_Position(vPos, true);
 }
 
 ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _fvector EndPos, _float fRadius)

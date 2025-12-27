@@ -156,24 +156,29 @@ void CRigidBody_Dynamic::Set_Kinematic(_bool bKinematic)
 	m_pRigidBody->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, bKinematic);
 }
 
-void CRigidBody_Dynamic::Move_Kinematic(_fmatrix xmTransform)
+void CRigidBody_Dynamic::Move_Kinematic(_fmatrix xmTransform, _bool bTeleport)
 {
 	_vector vScale, vPos, vRotQ;
 	XMMatrixDecompose(&vScale, &vRotQ, &vPos, xmTransform);
-	Move_Kinematic(vPos, vRotQ);
+	Move_Kinematic(vPos, vRotQ, bTeleport);
 }
 
-void CRigidBody_Dynamic::Move_Kinematic(_fvector vPos, _gvector vRotq)
+void CRigidBody_Dynamic::Move_Kinematic(_fvector vPos, _gvector vRotq, _bool bTeleport)
 {
 	PSX::PxTransform pxTransform = {};
 	XMStoreFloat3((_float3*)&pxTransform.p, vPos);
 	XMStoreFloat4((_float4*)&pxTransform.q, vRotq);
-	Move_Kinematic(pxTransform);
+	Move_Kinematic(pxTransform, bTeleport);
 }
 
-void CRigidBody_Dynamic::Move_Kinematic(PSX::PxTransform& pxDestination)
+void CRigidBody_Dynamic::Move_Kinematic(PSX::PxTransform& pxDestination, _bool bTeleport)
 {
-	m_pRigidBody->setKinematicTarget(pxDestination);
+	if (true == bTeleport) {
+		Set_Transform(pxDestination, bTeleport);
+	}
+	else {
+		m_pRigidBody->setKinematicTarget(pxDestination);
+	}
 }
 
 HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
@@ -203,33 +208,33 @@ _vector CRigidBody_Dynamic::Get_Position()
 	return vPos;
 }
 
-void CRigidBody_Dynamic::Set_Position(_vector vPos)
+void CRigidBody_Dynamic::Set_Position(_vector vPos, _bool bTeleport)
 {
 	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
 	pxTransform.p.x = vPos.m128_f32[0];
 	pxTransform.p.y = vPos.m128_f32[1];
 	pxTransform.p.z = vPos.m128_f32[2];
-	Set_Transform(pxTransform);
+	Set_Transform(pxTransform, bTeleport);
 }
 
-void CRigidBody_Dynamic::Set_Rotation(_vector vRotQ)
+void CRigidBody_Dynamic::Set_Rotation(_vector vRotQ, _bool bTeleport)
 {
 	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
 	pxTransform.q.x = vRotQ.m128_f32[0];
 	pxTransform.q.y = vRotQ.m128_f32[1];
 	pxTransform.q.z = vRotQ.m128_f32[2];
 	pxTransform.q.w = vRotQ.m128_f32[3];
-	Set_Transform(pxTransform);
+	Set_Transform(pxTransform, bTeleport);
 }
 
-void CRigidBody_Dynamic::Set_Transform(_matrix WorldMatrix)
+void CRigidBody_Dynamic::Set_Transform(_matrix WorldMatrix, _bool bTeleport)
 {
 	_vector vScale, vPos, vRotQ;
 	XMMatrixDecompose(&vScale, &vRotQ, &vPos, WorldMatrix);
-	Set_Transform(vPos, vRotQ);
+	Set_Transform(vPos, vRotQ, bTeleport);
 }
 
-void CRigidBody_Dynamic::Set_Transform(_vector vPos, _vector vRotQ)
+void CRigidBody_Dynamic::Set_Transform(_vector vPos, _vector vRotQ, _bool bTeleport)
 {
 	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
 	pxTransform.p.x = vPos.m128_f32[0];
@@ -240,10 +245,10 @@ void CRigidBody_Dynamic::Set_Transform(_vector vPos, _vector vRotQ)
 	pxTransform.q.y = vRotQ.m128_f32[1];
 	pxTransform.q.z = vRotQ.m128_f32[2];
 	pxTransform.q.w = vRotQ.m128_f32[3];
-	Set_Transform(pxTransform);
+	Set_Transform(pxTransform, bTeleport);
 }
 
-void CRigidBody_Dynamic::Set_CenterTransform(_vector vStart, _vector vEnd)
+void CRigidBody_Dynamic::Set_CenterTransform(_vector vStart, _vector vEnd, _bool bTeleport)
 {
 	_vector vCenterWorldPos = (vStart + vEnd) * 0.5f;
 	_vector vRotQ = XMQuaternionIdentity();
@@ -253,17 +258,29 @@ void CRigidBody_Dynamic::Set_CenterTransform(_vector vStart, _vector vEnd)
 		vDir = XMVector3Normalize(vDir);
 		vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(1.f, 0.f, 0.f, 0.f), vDir);
 	}
-	if (m_pRigidBody->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC) {
-		Move_Kinematic(vCenterWorldPos, vRotQ);
+	if (true == bTeleport) {
+		Set_Transform(vCenterWorldPos, vRotQ, bTeleport);
 	}
 	else {
-		Set_Transform(vCenterWorldPos, vRotQ);
+		if (m_pRigidBody->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC) {
+			Move_Kinematic(vCenterWorldPos, vRotQ);
+		}
+		else {
+			Set_Transform(vCenterWorldPos, vRotQ, bTeleport);
+		}
 	}
 }
 
-void CRigidBody_Dynamic::Set_Transform(PSX::PxTransform pxTransform)
+void CRigidBody_Dynamic::Set_Transform(PSX::PxTransform pxTransform, _bool bTeleport)
 {
-	m_pRigidBody->setGlobalPose(pxTransform);
+	m_pRigidBody->setGlobalPose(pxTransform, true);
+
+	if (true == bTeleport) {
+		m_pRigidBody->setLinearVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+		m_pRigidBody->setAngularVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+		m_pRigidBody->clearForce();
+		m_pRigidBody->clearTorque();
+	}
 }
 
 _float3 CRigidBody_Dynamic::Get_FootPosition()
@@ -377,6 +394,23 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 
 	return S_OK;
 }
+
+//void CRigidBody_Dynamic::Move(PSX::PxTransform& pxTransform, _bool bTeleport)
+//{
+//	if (m_pRigidBody->getRigidBodyFlags().isSet(PSX::PxRigidBodyFlag::eKINEMATIC)) {
+//		m_pRigidBody->setKinematicTarget(pxTransform);
+//	}
+//	else {
+//		m_pRigidBody->setGlobalPose(pxTransform, true);
+//
+//		if (true == bTeleport) {
+//			m_pRigidBody->setLinearVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+//			m_pRigidBody->setAngularVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+//			m_pRigidBody->clearForce();
+//			m_pRigidBody->clearTorque();
+//		}
+//	}
+//}
 
 #ifdef _DEBUG
 HRESULT CRigidBody_Dynamic::Add_DebugShape()
