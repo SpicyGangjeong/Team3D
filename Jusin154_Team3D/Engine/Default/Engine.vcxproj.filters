@@ -313,6 +313,9 @@
     <Filter Include="02.Element\02.Component\13.NPCStat">
       <UniqueIdentifier>{a564976c-cade-4f34-85c8-891b28d96b93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\08.Volumetric">
+      <UniqueIdentifier>{950977f0-f3c9-42f1-83f1-270b4bebf7ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -596,6 +599,9 @@
     </ClCompile>
     <ClCompile Include="..\private\NPCStat.cpp">
       <Filter>02.Element\02.Component\13.NPCStat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Volumetric.cpp">
+      <Filter>01.Utility\08.Volumetric</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1247,6 +1253,9 @@
     <ClInclude Include="..\public\NPCStat.h">
       <Filter>02.Element\02.Component\13.NPCStat</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Volumetric.h">
+      <Filter>01.Utility\08.Volumetric</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\Assimp\color4.inl">
@@ -1339,6 +1348,12 @@
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Local_Compute.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Volumetric_Compute.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Volumetric_Accumulate.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>
