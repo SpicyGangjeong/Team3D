@@ -46,8 +46,8 @@ private:
 	CRigidBody_Dynamic* m_pLeftLeg = { nullptr };
 	CRigidBody_Dynamic* m_pRobeMainAnchor = { nullptr };
 	CRigidBody_Dynamic* m_pRobeJointRoute[ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END)] = { nullptr };
-	CRigidBody_Dynamic* m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_ANCHOR_ORDER::END)] = { nullptr };
-	PSX::PxD6Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
+	CRigidBody_Dynamic* m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
+	PSX::PxD6Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
