@@ -740,6 +740,9 @@
     <ClInclude Include="..\public\PointLight.h">
       <Filter>02.GameObjects\Environment\99.Lights\PointLight</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_AI.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1536,6 +1539,9 @@
     <Filter Include="02.GameObjects\Environment\99.Lights\PointLight">
       <UniqueIdentifier>{4151af66-59d0-496d-a9a0-0c0603166192}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\AI">
+      <UniqueIdentifier>{a24f4687-f540-44e5-ae47-fe176c4c9042}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2222,6 +2228,9 @@
     </ClCompile>
     <ClCompile Include="..\private\PointLight.cpp">
       <Filter>02.GameObjects\Environment\99.Lights\PointLight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_AI.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

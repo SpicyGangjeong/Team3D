@@ -23,6 +23,7 @@ public:
 	void Enable_FollowLerp();
 	void Enable_LookLerp();
 	void Toggle_Priority();
+	void Toggle_AIPriority();
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 

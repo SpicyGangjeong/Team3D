@@ -4,7 +4,7 @@
 #include "GameInstance.h"
 #include "Broom.h"
 #include "RaceRing.h"
-#include "CamPosition_Shoulder.h"
+#include "CamPosition_AI.h"
 #include "BroomRaceManager.h"
 
 #pragma region STATE
@@ -71,10 +71,11 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	}
 
 	_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Y = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Z = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
+	_float Y = m_pGameInstance->Real_Random_Float(-5.f, 5.f);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(X, Y, Z, 1.f));
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-200.f, Y, 0.f, 1.f));
+
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -93,7 +94,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	CBroomRaceManager::RacerInfo Info;
 
-	Info.pRacer = this;
+	Info.pAI = this;
 	Info.curRing = 0;
 	Info.prevPos = Get_WorldPostion();
 
@@ -105,8 +106,6 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 void CBroomRacerAI::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
-
-	m_pRaceRing = m_pBroomRaceManager->GetTargetRing(this);
 }
 
 void CBroomRacerAI::Update(_float fTimeDelta)
@@ -189,6 +188,7 @@ HRESULT CBroomRacerAI::Render()
 	}
 
 
+
 	return S_OK;
 }
 HRESULT CBroomRacerAI::Render_Shadow(SHADOW eType)
@@ -247,8 +247,16 @@ HRESULT CBroomRacerAI::Ready_Components()
 		return E_FAIL;
 	}
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
-	//m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+	_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+	if (iRand == 0)
+	{
+		m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
+	}
+	else {
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+	}
+
+
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
@@ -368,39 +376,60 @@ HRESULT CBroomRacerAI::Bind_ShaderParameters(_uint iMeshOrder)
 	return S_OK;
 }
 
+_vector CBroomRacerAI::Get_RingForwardTarget()
+{
+	_vector ringPos = m_pRaceRing->Get_WorldPostion();
+	_vector ringFwd = m_pRaceRing->Get_Component<CTransform>()
+		->Get_State(STATE::RIGHT);
+	ringFwd = XMVector3Normalize(ringFwd);
+
+	_vector targetPos = ringPos + ringFwd;
+
+	return targetPos;
+}
 
 _float CBroomRacerAI::ComputeTurnToRing()
 {
-	_vector toRing = m_pRaceRing->Get_WorldPostion() - m_pBroom->Get_WorldPostion();
-	toRing = XMVector3Normalize(XMVectorSetY(toRing, 0.f));
+	_vector targetPos = Get_RingForwardTarget();
 
-	_vector myLook = m_pBroom->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+	_vector toTarget = targetPos - m_pBroom->Get_WorldPostion();
+	toTarget = XMVector3Normalize(XMVectorSetY(toTarget, 0.f));
+
+	_vector myLook = m_pBroom->Get_Component<CTransform>()
+		->Get_State(STATE::LOOK);
 	myLook = XMVector3Normalize(XMVectorSetY(myLook, 0.f));
 
-	_vector cross = XMVector3Cross(myLook, toRing);
-	_float turn = XMVectorGetY(cross);
+	_float turn = XMVectorGetY(XMVector3Cross(myLook, toTarget));
 
-	_float DEAD = 0.05f;
-	if (fabsf(turn) < DEAD)
+	_float dist =
+		XMVectorGetX(XMVector3Length(targetPos - m_pBroom->Get_WorldPostion()));
+
+	_float atten = clamp(dist / 40.f, 0.f, 1.f);
+
+	if (fabsf(turn) < 0.02f)
 		return 0.f;
 
-	return clamp(turn, -1.f, 1.f);
+	return clamp(turn * atten, -1.f, 1.f);
 }
+
 
 _float CBroomRacerAI::ComputeHeightAdjust()
 {
-	_float dy = (XMVectorGetY(m_pRaceRing->Get_WorldPostion()) + 15.f)
-		- XMVectorGetY(m_pBroom->Get_WorldPostion());
+	_vector targetPos = Get_RingForwardTarget();
+	_vector broomPos = m_pBroom->Get_WorldPostion();
 
-	_float DEAD = 5.f;
-	_float RANGE = 40.f;
+	_float dy = XMVectorGetY(targetPos) - XMVectorGetY(broomPos);
 
-	if (fabsf(dy) < DEAD)
+	_float dist =
+		XMVectorGetX(XMVector3Length(targetPos - broomPos));
+
+	_float atten = clamp(dist / 40.f, 0.f, 1.f);
+
+	if (fabsf(dy) < 1.f)
 		return 0.f;
 
-	return clamp(dy / RANGE, -1.f, 1.f);
+	return clamp((dy / 20.f) * atten, -1.f, 1.f);
 }
-
 
 
 CBroomRacerAI* CBroomRacerAI::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -435,7 +464,7 @@ void CBroomRacerAI::Free()
 	SAFE_RELEASE(m_pBroomModel);
 	SAFE_RELEASE(m_pBroomTransform);
 	SAFE_RELEASE(m_pBroom);
-	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
+	SAFE_RELEASE(m_pCamPosition_AIPart);
 }
 #ifdef _DEBUG
 
@@ -520,34 +549,19 @@ HRESULT CBroomRacerAI::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	if (!m_pBroom->Get_Hover())
 	{
 
-		if (Y > 0.f)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-		}
-		else if (Y < 0.f)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
-		}
-
 		_float ax = fabsf(X);
 		_float ay = fabsf(Y);
 		_float az = fabsf(Z);
 
 		if (ay > ax && ay > az)
 		{
-			if (Y > 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-			else
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 		}
 		else if (ax >= az)
 		{
 			if (ay >= ax)
 			{
-				if (Y > 0)
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-				else
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 			}
 			else {
 				if (X < 0)
@@ -561,13 +575,7 @@ HRESULT CBroomRacerAI::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 		}
 		else
 		{
-			if (Y > 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-			else if (Y< 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
-			}
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 		}
 		
 
@@ -741,15 +749,10 @@ void CBroomRacerAI::Set_Input(_float fTimeDelta)
 	_float targetX = ComputeTurnToRing();
 	_float targetY = ComputeHeightAdjust();
 
-	_float SMOOTH = 6.f;
-
-	m_fSmoothX += (targetX - m_fSmoothX) * SMOOTH * fTimeDelta;
-	m_fSmoothY += (targetY - m_fSmoothY) * SMOOTH * fTimeDelta;
-
 	CBroom::BroomInput InputDesc;
 	InputDesc.Z = 1.f;
-	InputDesc.X = m_fSmoothX;
-	InputDesc.Y = m_fSmoothY;
+	InputDesc.X = targetX;
+	InputDesc.Y = targetY;
 	InputDesc.bHoverToggle = false;
 	InputDesc.bTurbo = false;
 

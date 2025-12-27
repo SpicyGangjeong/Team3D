@@ -1,23 +1,23 @@
 ﻿#include "pch.h"
-#include "CamPosition_Shoulder.h"
+#include "CamPosition_AI.h"
 #include "CamPosition_Target.h"
 #include "GameInstance.h"
 #include "Camera_Gaze.h"
 #include "Player.h"
 
-CCamPosition_Shoulder::CCamPosition_Shoulder(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCamPosition_AI::CCamPosition_AI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamPosition(pDevice, pContext)
 {
 }
-CCamPosition_Shoulder::CCamPosition_Shoulder(const CCamPosition_Shoulder& rhs)
+CCamPosition_AI::CCamPosition_AI(const CCamPosition_AI& rhs)
 	: CCamPosition(rhs)
 {
 }
-HRESULT CCamPosition_Shoulder::Initialize_Prototype()
+HRESULT CCamPosition_AI::Initialize_Prototype()
 {
 	return S_OK;
 }
-HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
+HRESULT CCamPosition_AI::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
@@ -29,7 +29,7 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	CAMERA_SHOULDER_DESC* pDesc = static_cast<CAMERA_SHOULDER_DESC*>(pArg);
+	CAMERA_AI_DESC* pDesc = static_cast<CAMERA_AI_DESC*>(pArg);
 	{
 		m_pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
 		m_pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
@@ -49,9 +49,9 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
+void CCamPosition_AI::Priority_Update(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
+	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_AI))) {
 		return;
 	}
 	{
@@ -89,66 +89,23 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 	}
 }
 
-void CCamPosition_Shoulder::Update(_float fTimeDelta)
+void CCamPosition_AI::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_INSERT)) {
-
-		m_pBinded_Camera->Toggle_Priority();
-	}
 	if (m_pGameInstance->Key_Up(DIK_HOME)) {
 
 		m_pBinded_Camera->Toggle_AIPriority();
 	}
-	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
+	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_AI))) {
 		return;
 	}
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
-	if (dynamic_cast<CPlayer*>(m_pOwner)->Get_UIState() == ENUM_CLASS(UI_STATE::GAMEPLAYER))
-	{
-		m_bMovable = true;
-	}
-	else {
-		m_bMovable = false;
-	}
-	if (m_pGameInstance->Key_Up(DIK_PGDN)) {
-		m_bDampingParentPos = !m_bDampingParentPos;
-	}
-	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
-		m_bMovable = !m_bMovable;
-	}
-	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
-		m_pGameInstance->Toggle_MouseCenter();
-	}
-	if (m_pGameInstance->Key_Up(DIK_P)) {
-		m_bRightShoulderActive = !m_bRightShoulderActive;
-
-		m_vShoulderLerpDegree.x = m_fFollowTargetIncludedAngleDegree;
-		if (true == m_bRightShoulderActive) {
-			m_vShoulderLerpDegree.y = m_vShoulderLerpIncludedAngleDegree.y;
-		}
-		else {
-			m_vShoulderLerpDegree.y = m_vShoulderLerpIncludedAngleDegree.x;
-		}
-
-		m_vShoulderLerpTimer.x = 0.f;
-		m_bShoulderLerp = true;
-	}
-	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {
-		m_pBinded_Camera->ZoomIn(fTimeDelta);
-		m_bZoomIn = true;
-	}
-	else if(m_bZoomIn)
-	{
-		m_pBinded_Camera->Set_Fov(XMConvertToRadians(60.f),fTimeDelta, m_bZoomIn);
-	}
 }
 
-void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
+void CCamPosition_AI::Late_Update(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
+	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_AI))) {
 		return;
 	}
 	if (true == m_bShoulderLerp)
@@ -178,17 +135,17 @@ void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CCamPosition_Shoulder::Render()
+HRESULT CCamPosition_AI::Render()
 {
 	return S_OK;
 }
 
-_vector CCamPosition_Shoulder::Get_WorldPostion()
+_vector CCamPosition_AI::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-_vector CCamPosition_Shoulder::Calc_LookTargetPos()
+_vector CCamPosition_AI::Calc_LookTargetPos()
 {
 	_vector vDestPos = Calc_DampingParentPos();
 
@@ -201,7 +158,7 @@ _vector CCamPosition_Shoulder::Calc_LookTargetPos()
 
 	return XMVectorLerp(vHeadPos, vFowardPos, m_vFocalRatio.x);
 }
-_vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
+_vector CCamPosition_AI::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
 {
 	_float fBestFollowTargetDistance = m_fCameraBarrelLength * (1.f - m_fDefaultCameraBackToFrontRatio);
 
@@ -282,7 +239,7 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
 
 	return vLookTargetWorldPos + vDir * fFinalTargetDistance;
 }
-_vector CCamPosition_Shoulder::Calc_DampingParentPos()
+_vector CCamPosition_AI::Calc_DampingParentPos()
 {
 	_float duration = max(m_vDampingLerpTimer.y, FLT_EPSILON);
 	_float fTime = m_vDampingLerpTimer.x / duration;
@@ -290,12 +247,12 @@ _vector CCamPosition_Shoulder::Calc_DampingParentPos()
 
 	return XMVectorLerp(XMLoadFloat4(&m_vDampingStartPosition), XMLoadFloat4(&m_vDampingDestPosition), fTime);
 }
-void CCamPosition_Shoulder::Set_CameraShake(_float fXShock, _float fYShock)
+void CCamPosition_AI::Set_CameraShake(_float fXShock, _float fYShock)
 {
 	m_vAccRealDegrees.x = fXShock;
 	m_vAccRealDegrees.y = fYShock;
 }
-_vector CCamPosition_Shoulder::Get_ShoulderGlobalPos()
+_vector CCamPosition_AI::Get_ShoulderGlobalPos()
 {
 	// Right/Left 숄더를 로컬 X 부호로 결정
 	_float shoulderSideSign = (true == m_bRightShoulderActive) ? 1.f : -1.f;
@@ -318,7 +275,7 @@ _vector CCamPosition_Shoulder::Get_ShoulderGlobalPos()
 }
 
 
-HRESULT CCamPosition_Shoulder::Ready_Components(void* pArg)
+HRESULT CCamPosition_AI::Ready_Components(void* pArg)
 {
 	CTransform::TRANSFORM_DESC DescTransfrom = {};
 	DescTransfrom.fRadius = 30.f;
@@ -329,7 +286,7 @@ HRESULT CCamPosition_Shoulder::Ready_Components(void* pArg)
 	}
 	return S_OK;
 }
-HRESULT CCamPosition_Shoulder::Ready_SubParts()
+HRESULT CCamPosition_AI::Ready_SubParts()
 {
 	{
 		CCamPosition_Target::CAMERAPOSITION_TARGET_DESC Desc{};
@@ -348,8 +305,8 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
 	CameraDesc.pFollowTarget = m_pTarget_FollowPart;
 	CameraDesc.pLookTarget = m_pTarget_LookPart;
-	CameraDesc.iPriority = 55;
-	CameraDesc.pCameraKey = CAMERA_SHOULDER;
+	CameraDesc.iPriority = 102;
+	CameraDesc.pCameraKey = CAMERA_AI;
 	CameraDesc.bEnableTransitionLerp = true;
 	CameraDesc.bEnableFollowLerp = false;
 	CameraDesc.bEnableLookLerp = false;
@@ -362,39 +319,39 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 		return E_FAIL;
 	}
 	
-	m_pGameInstance->Add_Camera(NEXT_LEVEL, m_pBinded_Camera, CAMERA_SHOULDER);
-	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, true))) {
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, m_pBinded_Camera, CAMERA_AI);
+	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_AI, true))) {
 		return E_FAIL;
 	}
 
 	return S_OK;
 }
 
-CCamPosition_Shoulder* CCamPosition_Shoulder::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCamPosition_AI* CCamPosition_AI::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCamPosition_Shoulder* pInstance = new CCamPosition_Shoulder(pDevice, pContext);
+	CCamPosition_AI* pInstance = new CCamPosition_AI(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CCamPosition_Shoulder");
+		MSG_BOX("Failed to Created : CCamPosition_AI");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
-CCamPosition_Shoulder* CCamPosition_Shoulder::Clone(void* pArg, class CGameObject* pOWner)
+CCamPosition_AI* CCamPosition_AI::Clone(void* pArg, class CGameObject* pOWner)
 {
-	CCamPosition_Shoulder* pInstance = new CCamPosition_Shoulder(*this);
+	CCamPosition_AI* pInstance = new CCamPosition_AI(*this);
 	pInstance->m_pOwner = pOWner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CCamPosition_Shoulder");
+		MSG_BOX("Failed to Cloned : CCamPosition_AI");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
-void CCamPosition_Shoulder::Free()
+void CCamPosition_AI::Free()
 {
 	__super::Free();
 
@@ -403,7 +360,7 @@ void CCamPosition_Shoulder::Free()
 }
 #ifdef _DEBUG
 
-void CCamPosition_Shoulder::Describe_Entity()
+void CCamPosition_AI::Describe_Entity()
 {
 	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Cam_Shoulder")) {

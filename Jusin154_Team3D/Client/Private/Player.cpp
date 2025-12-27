@@ -15,6 +15,8 @@
 #include "Monster.h"
 #include "Broom.h"
 #include "MapElement_Interactable.h"
+#include "BroomRaceManager.h"
+#include "RaceRing.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -102,6 +104,19 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pCharacter_Controller->Set_Position(vPos);
 		m_pTransformCom->Set_State(STATE::POSITION, vPos);
 		m_pTransformCom->Rotation(vRotQ);
+
+		m_pBroomRaceManager = pDesc->pBroomRaceManager;
+
+		if (m_pBroomRaceManager)
+		{
+			CBroomRaceManager::RacerInfo Info;
+
+			Info.pRacer = this;
+			Info.curRing = 0;
+			Info.prevPos = Get_WorldPostion();
+
+			m_pBroomRaceManager->Push_BroomRacer(Info);
+		}
 	}
 
 #ifdef _DEBUG
@@ -122,6 +137,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 
 	m_pModelCom->Set_Temp(true);
+
+
+
 
 	return S_OK;
 }
@@ -726,6 +744,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pBroomModel);
 	SAFE_RELEASE(m_pBroomTransform);
 	SAFE_RELEASE(m_pBroom);
+	SAFE_RELEASE(m_pRaceRing);
 }
 #ifdef _DEBUG
 
