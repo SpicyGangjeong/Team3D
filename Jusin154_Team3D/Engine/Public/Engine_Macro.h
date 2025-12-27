@@ -112,7 +112,8 @@
 
 #define			SSAO_SAMPLE_NUMBER			64
 #define			TIMER_SHORT_LERP			0.16f
-
+#define         MRO_PARAMETER				2.f/ 27.f
+#define         SRO_PARAMETER				15.f/ 27.f
 
 constexpr unsigned int g_iNearShadowWidth		= 8192;
 constexpr unsigned int g_iNearShadowHeight		= 4096;

@@ -722,6 +722,9 @@
     <ClInclude Include="..\Public\State_FireBall.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_FireBall.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok</Filter>
+	</ClInclude>
     <ClInclude Include="..\public\NPCInteraction.h">
       <Filter>02.GameObjects\UI\NPCInteraction</Filter>
     </ClInclude>
@@ -1512,6 +1515,9 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok">
       <UniqueIdentifier>{93545681-c4c5-4a6a-9496-7b2e7b8a9302}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok">
+      <UniqueIdentifier>{087ad9ea-445d-4bf7-8ec4-0f29a0c2dd53}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\UI\NPCInteraction">
       <UniqueIdentifier>{09764279-bf54-48e4-853a-45b5a65c92a7}</UniqueIdentifier>
     </Filter>
@@ -2199,6 +2205,9 @@
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_FireBall.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok</Filter>
+	</ClCompile>
     <ClCompile Include="..\private\NPCInteraction.cpp">
       <Filter>02.GameObjects\UI\NPCInteraction</Filter>
     </ClCompile>

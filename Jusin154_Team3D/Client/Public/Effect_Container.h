@@ -25,6 +25,7 @@ public:
 		_wstring    wstrDissolveName = {};
 		_wstring    wstrEmissiveName = {};
 		_wstring    wstrDistortionName = {};
+		_wstring    wstrNomalName = {};
 		_wstring    wstrModelName = {};
 
 		_wstring    wstrEffectName = {};

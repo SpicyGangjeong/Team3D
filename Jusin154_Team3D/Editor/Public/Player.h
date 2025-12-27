@@ -31,6 +31,8 @@ public:
 #endif // _DEBUG
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
+	void	Start_CameraShake(_float fTime, _float fIntense);
+	void	Update_CameraShake(_float fTimeDelta);
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
 	CUnit* m_pLockOnMonster = { nullptr };
@@ -42,6 +44,11 @@ private:
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
+
+	_float2 m_vCameraShakeTimer = { 0.f, TIMER_SHORT_LERP };
+	_float  m_fCameraShakeTime = TIMER_SHORT_LERP;
+	_float  m_fCameraShakeIntense = 5.f;
+	_bool   m_bCameraShake = { false };
 
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };

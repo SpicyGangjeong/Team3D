@@ -67,6 +67,11 @@ namespace Client
 
 		/*고블린 메이지*/
 		GOBLIN_MAGE_ATTACK , GOBLIN_MAGE_DOWN , GOBLIN_MAGE_SIDE,
+
+		/*란록*/
+
+		RANROK_FIREBALL,
+
 		END
 	};
 

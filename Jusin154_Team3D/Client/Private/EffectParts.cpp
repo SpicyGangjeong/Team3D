@@ -119,6 +119,12 @@ HRESULT CEffectParts::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Base_MRO"),
+		reinterpret_cast<CComponent**>(&m_pSurface_TextureCom))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

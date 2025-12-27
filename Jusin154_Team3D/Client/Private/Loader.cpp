@@ -180,6 +180,7 @@
 #include "Mage_Down_Attack.h"
 #include "Mage_Nomal_Attack.h"
 #include "MageSide.h"
+#include "Ranrok_FireBall.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -1419,6 +1420,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+
 #pragma region EFFECT
 
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Trails", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
@@ -1978,6 +1984,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CAvadakedavra>(g_iStaticLevel, CAvadakedavra::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_FireBall>(g_iStaticLevel, CRanrok_FireBall::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
