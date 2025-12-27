@@ -15,10 +15,16 @@ public:
             {
                 switch (PXOBJECT(physxUserData->iSubKind))
                 {
-                case Engine::PXOBJECT::LEG:
+                case PXOBJECT::LEG:
                     return PSX::PxQueryHitType::eNONE;
                     break;
-                case Engine::PXOBJECT::SKILL_PROTEGO:
+                case PXOBJECT::SKILL_PROTEGO:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
+                case PXOBJECT::JOINT_ROUTE:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
+                case PXOBJECT::JOINT_ANCHOR:
                     return PSX::PxQueryHitType::eNONE;
                     break;
                 default:

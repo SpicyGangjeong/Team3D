@@ -1004,6 +1004,10 @@ PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor
 {
 	return m_pPhysX_Manager->Create_PxJoint(eType, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
 }
+PSX::PxD6Joint* CGameInstance::Create_PxD6Joint(PSX::PxRigidActor* pActor0, PSX::PxRigidActor* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	return m_pPhysX_Manager->Create_PxD6Joint(pActor0, pActor1, pxJointWorldPos);
+}
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
@@ -1047,6 +1051,10 @@ void CGameInstance::Detach_Actor(PSX::PxActor& Actor, _uint iLevel)
 void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
 	m_pPhysX_Manager->Release_Actor(Actor);
+}
+void CGameInstance::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
+{
+	m_pPhysX_Manager->ApplyFilterData(pRigidActor);
 }
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {

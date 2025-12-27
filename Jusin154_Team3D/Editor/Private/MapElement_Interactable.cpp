@@ -54,7 +54,7 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 	m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
 	
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
-	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
+	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat3(&pDesc->vBoxLocalPosition));
 
 	return S_OK;
 }

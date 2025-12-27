@@ -16,7 +16,7 @@ void CCamPosition_Socket::Priority_Update(_float fTimeDelta)
 {
 	/*_matrix socketMatrix = {};
 
-	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
+	socketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
 
 	for (int i = 0; i < 3; ++i) {
 		socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
@@ -40,7 +40,7 @@ HRESULT CCamPosition_Socket::Initialize_Prototype()
 HRESULT CCamPosition_Socket::Initialize(void* pArg)
 {
 	CAMERAPOSITION_PLAYER_DESC* pDesc = static_cast<CAMERAPOSITION_PLAYER_DESC*> (pArg);
-	//m_pSocketMatrices = pDesc->pSocketMatrices;
+	//m_pSocketMatrix = pDesc->pSocketMatrix;
 	if (FAILED(__super::Initialize(pArg))) 
 	{
 		return E_FAIL;

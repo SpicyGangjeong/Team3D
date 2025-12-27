@@ -376,6 +376,7 @@ typedef struct tagVertexInstance_UIDesc
 typedef struct tagPhsXUserData {
 
 	PHYSX_KIND			eKind = PHYSX_KIND::NOT_DEFINED;
+	_bool				bAutoOwnerTranslation = true;
 
 	class CGameObject* pOwner = { nullptr };
 	_float4x4			BeforeMatrix = { };

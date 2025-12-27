@@ -15,6 +15,7 @@
 #include "Monster.h"
 #include "Broom.h"
 #include "MapElement_Interactable.h"
+#include "PlayerRobe.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -111,18 +112,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_BasicEffect->SetProjection(m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ));
 
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
-	m_pBoneShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.05f, 22, false, false));
-	m_pSubShape	 = (GeometricPrimitive::CreateSphere(m_pContext, 0.05f, 22, false, false));
-	m_pMainShape = (GeometricPrimitive::CreateCylinder(m_pContext, 0.3f, 0.075f, 22, false));
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
-	depthStencilDesc.DepthEnable = FALSE;
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	depthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
-	depthStencilDesc.StencilEnable = FALSE;
-
-	HRESULT result = m_pDevice->CreateDepthStencilState(&depthStencilDesc, &m_pDepthStencilStateNone);
-	if (FAILED(result))
-		return E_FAIL;
 #endif // _DEBUG
 
 	// UI 연동 추가
@@ -171,8 +160,6 @@ __super::Update(fTimeDelta);
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
-
-	Update_LegsPosition();
 
 	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)){
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
@@ -257,7 +244,17 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::LOOK, look);
 	////////////////////////////////////////////////////////////////////////////
 	
-
+	if (nullptr == m_pRobePart) {
+		{
+			CPlayerRobe::PlayerRobe_DESC Desc{};
+			Desc.pModel = m_pModelCom;
+			Desc.pParentTransform = m_pTransformCom;
+			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
+			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
+				assert(false);
+			}
+		}
+	}
 }
 
 HRESULT CPlayer::Render()
@@ -304,13 +301,9 @@ HRESULT CPlayer::Render()
 	}
 #ifdef _DEBUG
 	if (RENDER::NONLIGHT == eType) {
-		//for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
-		//	m_pRobeJointRoute[i]->Render();
-		//}
 		//m_pCharacter_Controller->Render();
 		//m_pRigidBody->Render();
 		Render_CameraCoordinateSystem();
-		Render_BonePhysX();
 	}
 #endif
 
@@ -391,7 +384,6 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_fCameraShakeIntense = fIntense;
 	m_bCameraShake = true;
 }
-#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
@@ -443,143 +435,6 @@ void CPlayer::Render_CameraCoordinateSystem()
 	);
 	m_Batch->End();
 }
-HRESULT CPlayer::Update_LegsPosition()
-{
-	_matrix WorldMatrix = m_pTransformCom->Get_XMWorldMatrix();
-	_matrix FootMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("LeftFoot")) * WorldMatrix;
-	_matrix LegMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("LeftLeg")) * WorldMatrix;
-	m_pLeftLeg->Set_CenterTransform(WorldMatrix, FootMatrix.r[3], LegMatrix.r[3]);
-	
-#ifdef _DEBUG
-	{
-		_vector vCenterWorldPos = (FootMatrix.r[3] + LegMatrix.r[3]) * 0.5f;
-		_vector vRotQ = XMQuaternionIdentity();
-		_vector vDir = XMVectorSetW(LegMatrix.r[3] - FootMatrix.r[3], 0.f);
-		_float vLength = XMVectorGetX(XMVector3Length(vDir));
-		if (vLength > FLT_EPSILON5) {
-			vDir = XMVector3Normalize(vDir);
-			vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(0.f, 1.f, 0.f, 0.f), vDir);
-		}
-		XMStoreFloat4x4(&m_LeftLegMatrix, XMMatrixRotationQuaternion(vRotQ) * XMMatrixTranslationFromVector(vCenterWorldPos));
-	}
-#endif // _DEBUG
-
-	FootMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("RightFoot")) * WorldMatrix;
-	LegMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("RightLeg")) * WorldMatrix;
-	m_pRightLeg->Set_CenterTransform(WorldMatrix, FootMatrix.r[3], LegMatrix.r[3]);
-
-#ifdef _DEBUG
-	{
-		_vector vCenterWorldPos = (FootMatrix.r[3] + LegMatrix.r[3]) * 0.5f;
-		_vector vRotQ = XMQuaternionIdentity();
-		_vector vDir = XMVectorSetW(LegMatrix.r[3] - FootMatrix.r[3], 0.f);
-		_float vLength = XMVectorGetX(XMVector3Length(vDir));
-		if (vLength > FLT_EPSILON5) {
-			vDir = XMVector3Normalize(vDir);
-			vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(0.f, 1.f, 0.f, 0.f), vDir);
-		}
-		XMStoreFloat4x4(&m_RightLegMatrix, XMMatrixRotationQuaternion(vRotQ) * XMMatrixTranslationFromVector(vCenterWorldPos));
-	}
-#endif // _DEBUG
-	return S_OK;
-}
-
-HRESULT CPlayer::Render_Legs()
-{
-	_float fHeight = 0.25f;
-
-	_matrix WorldMatrix = XMLoadFloat4x4(&m_LeftLegMatrix);
-	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
-	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0000, 1.f);
-
-	m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-		[this]() {
-			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-		});
-	_matrix WorldUp = XMMatrixTranslationFromVector(WorldMatrix.r[1] * fHeight);
-	_matrix WorldDown = XMMatrixTranslationFromVector(WorldMatrix.r[1] * -fHeight);
-	m_pSubShape->Draw(WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-		[this]() {
-			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-		});
-	m_pSubShape->Draw(WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-		[this]() {
-			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-		});
-
-	WorldMatrix = XMLoadFloat4x4(&m_RightLegMatrix);
-
-	m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-		[this]() {
-			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-		});
-	WorldUp = XMMatrixTranslationFromVector(WorldMatrix.r[1] * fHeight);
-	WorldDown = XMMatrixTranslationFromVector(WorldMatrix.r[1] * -fHeight);
-	m_pSubShape->Draw(WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-		[this]() {
-			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-		});
-	m_pSubShape->Draw(WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-		[this]() {
-			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-		});
-
-	return S_OK;
-}
-
-//HRESULT CPlayer::Helper_JointGenerater(CDynamic_Joint::DYNAMICJOINT_DESC& Desc, _uint iRoute0, _bool bUseHead0, _uint iRoute1, _bool bUseHead1, _uint iJoint)
-//{
-//	Desc.pActor0 = m_pRobeJointRoute[iRoute0]->Get_Actor();
-//	if (true == bUseHead0) {
-//		Desc.pLocalFrame0 = m_pRobeJointRoute[iRoute0]->Get_HeadPositionPxTransform();
-//	}
-//	else {
-//		Desc.pLocalFrame0 = m_pRobeJointRoute[iRoute0]->Get_FootPositionPxTransform();
-//	}
-//
-//	Desc.pActor1 = m_pRobeJointRoute[iRoute1]->Get_Actor();
-//	if (true == bUseHead1) {
-//		Desc.pLocalFrame1 = m_pRobeJointRoute[iRoute1]->Get_HeadPositionPxTransform();
-//	}
-//	else {
-//		Desc.pLocalFrame1 = m_pRobeJointRoute[iRoute1]->Get_FootPositionPxTransform();
-//	}
-//	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DynamicJoint"), (CComponent**)&m_pDynamicJoints[iJoint], &Desc))) {
-//		return E_FAIL;
-//	}
-//	return S_OK;
-//}
-
-HRESULT CPlayer::Render_BonePhysX()
-{
-	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f);
-	_fmatrix OwnerMatrix = m_pTransformCom->Get_XMWorldMatrix();
-	_cmatrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
-	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-	ID3D11DepthStencilState* pPrevDSS = nullptr;
-	UINT iPrevStencilRef = 0;
-	m_pContext->OMGetDepthStencilState(&pPrevDSS, &iPrevStencilRef);
-
-	for (_uint iBoneIndex = 0; iBoneIndex < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++iBoneIndex)
-	{
-		_matrix WorldMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr(PLAYER_JOINT_BONE_NAMES[iBoneIndex])) * OwnerMatrix;
-
-		m_pBoneShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-			[this]() {
-				m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-			});
-	}
-	Render_Legs();
-
-	m_pContext->OMSetDepthStencilState(pPrevDSS, iPrevStencilRef);
-	if (pPrevDSS != nullptr){
-		pPrevDSS->Release();
-	}
-	return S_OK;
-}
-#endif // _DEBUG
-
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -652,128 +507,6 @@ HRESULT CPlayer::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
-	{ // 
-		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::LEG);
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_Player_Leg"), (CComponent**)&m_pLeftLeg, &Desc))) {
-			return E_FAIL;
-		}
-	}
-	{ // 
-		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::LEG);
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_Player_Leg"), (CComponent**)&m_pRightLeg, &Desc))) {
-			return E_FAIL;
-		}
-	}
-	//{ // RobeSocket
-	//	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
-	//		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-	//		Desc.iSubKind = ENUM_CLASS(PXOBJECT::JOINT_ROUTE);
-	//		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[i], &Desc))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//}
-	//{
-	//	CDynamic_Joint::DYNAMICJOINT_DESC Desc{}; // 조인트 실제 본이랑연결해야함
-	//	Desc.eType = PHYSX_JOINT::D6;
-	//	_uint iRoute0	= 0;
-	//	_bool bHead0	= 0;
-	//	_uint iRoute1	= 0;
-	//	_bool bHead1	= 0;
-	//	_uint iJoint	= 0;
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::RIGHTUP);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::UP_R_T);
-	//		bHead0 = false;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::UP_MIDDLE_R);
-	//		bHead1 = false;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::LEFTUP);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::UP_T_L);
-	//		bHead0 = false;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::UP_MIDDLE_L);
-	//		bHead1 = false;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::RIGHT);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_R_T);
-	//		bHead0 = false;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_DOWN_TR);
-	//		bHead1 = false;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::LEFT);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_T_L);
-	//		bHead0 = false;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_DOWN_TL);
-	//		bHead1 = false;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::TAIL);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_DOWN_TR);
-	//		bHead0 = false;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_DOWN_TL);
-	//		bHead1 = false;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::RIGHTDOWNRIGHT);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_DOWN_RR);
-	//		bHead0 = true;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::DOWN_RR_TR);
-	//		bHead1 = true;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::LEFTDOWNLEFT);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_DOWN_LL);
-	//		bHead0 = true;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::DOWN_TL_L);
-	//		bHead1 = true;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::RIGHTDOWN);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_DOWN_R);
-	//		bHead0 = true;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::DOWN_R_RR);
-	//		bHead1 = true;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	{
-	//		iJoint = ENUM_CLASS(PLAYER_JOINT_ORDER::LEFTDOWN);
-	//		iRoute0 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::MIDDLE_DOWN_L);
-	//		bHead0 = true;
-	//		iRoute1 = ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::DOWN_L_LL);
-	//		bHead1 = true;
-	//		if (FAILED(Helper_JointGenerater(Desc, iRoute0, bHead0, iRoute1, bHead1, iJoint))) {
-	//			return E_FAIL;
-	//		}
-	//	}
-	//}
 	return S_OK;
 }
 
@@ -812,8 +545,6 @@ HRESULT CPlayer::Ready_Parts()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this,&m_pBroom))) {
 		return E_FAIL;
 	}
-
-
 
 	return S_OK;
 }
@@ -982,18 +713,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-#ifdef _DEBUG
-	SAFE_RELEASE(m_pDepthStencilStateNone);
-#endif // _DEBUG
-	SAFE_RELEASE(m_pRightLeg);
-	SAFE_RELEASE(m_pLeftLeg);
-	//for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
-	//	SAFE_RELEASE(m_pRobeJointRoute[i]);
-	//}
-	//for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
-	//	SAFE_RELEASE(m_pDynamicJoints[i]);
-	//}
-
+	SAFE_RELEASE(m_pRobePart);
 	SAFE_RELEASE(m_pGrapInteractive);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;

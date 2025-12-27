@@ -588,7 +588,7 @@
     <ClCompile Include="..\Private\CallBack_QueryFilterCallback.cpp">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Dynamic_Joint.cpp">
+    <ClCompile Include="..\Private\Dynamic_D6Joint.cpp">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1235,7 +1235,7 @@
     <ClInclude Include="..\Public\CallBack_QueryFilterCallback.h">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Dynamic_Joint.h">
+    <ClInclude Include="..\Public\Dynamic_D6Joint.h">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClInclude>
   </ItemGroup>

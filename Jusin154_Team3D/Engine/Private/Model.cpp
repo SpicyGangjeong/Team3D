@@ -551,6 +551,21 @@ const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName)
 	return m_Bones[boneIdx]->Get_CombinedTransformationMatrixPtr();
 }
 
+const _float4x4* CModel::Get_BoneLocalMatrixPtr(const _char* pBoneName)
+{
+	_int boneIdx = Get_BoneIndex(pBoneName);
+
+	if (boneIdx < 0) {
+		return nullptr;
+	}
+
+	//Mark_CPUChain(boneIdx);
+
+	//Apply_CPUMask_ToBones();
+
+	return m_Bones[boneIdx]->Get_TransformationMatrixPtr();
+}
+
 _matrix CModel::Get_BoneMatrix(const _char* pBoneName) const
 {
 	vector<CBone*>::const_iterator	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
@@ -594,6 +609,18 @@ void CModel::Combined_BoneMatrix()
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+	}
+}
+
+void CModel::Combined_BoneMatrix(_int iStartBoneIndex, _uint iBoneCount)
+{
+	if (iStartBoneIndex < 0) {
+		return;
+	}
+	_matrix IdenMatrix =  XMMatrixIdentity();
+	_uint iEndIndex = (_uint)iStartBoneIndex + iBoneCount;
+	for (_uint i = iStartBoneIndex; i < iEndIndex; ++i) {
+		m_Bones[i]->Update_CombinedTransformationMatrix(m_Bones, IdenMatrix);
 	}
 }
 

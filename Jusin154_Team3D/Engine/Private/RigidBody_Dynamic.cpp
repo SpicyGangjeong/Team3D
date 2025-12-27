@@ -21,31 +21,34 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
 #ifdef _DEBUG
 HRESULT CRigidBody_Dynamic::Render()
 {
+	return Render(nullptr);
+}
+HRESULT CRigidBody_Dynamic::Render(function<void()> custumState)
+{
 	PSX::PxTransform pxTranform = m_pRigidBody->getGlobalPose();
 	_matrix WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z)
 		* XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
-
 	switch (m_eActorType)
 	{
 	case ACTOR::BOX:
 	{
-		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
 	} break;
 	case ACTOR::CAPSULE:
 	{
-		WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
-		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMQuaternionMultiply(XMQuaternionRotationAxis(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(90.f)), XMLoadFloat4((_float4*)&pxTranform.q)), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
 		_matrix WorldUp = XMMatrixTranslationFromVector(WorldMatrix.r[1] * m_vhalfGeometryInfo.y);
 		_matrix WorldDown = XMMatrixTranslationFromVector(WorldMatrix.r[1] * -m_vhalfGeometryInfo.y);
-		m_pSubShape->Draw(WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
-		m_pSubShape->Draw(WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		m_pSubShape->Draw(WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
+		m_pSubShape->Draw(WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
 	} break;
 	case ACTOR::SPHERE:
 	{
-		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
 	} break;
 	default:
 		break;
@@ -53,6 +56,10 @@ HRESULT CRigidBody_Dynamic::Render()
 	return S_OK;
 }
 #endif 
+void CRigidBody_Dynamic::Set_Name(const _char* szName)
+{
+	m_pRigidBody->setName(szName);
+}
 void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
 {
 	m_vhalfGeometryInfo = vhalfGeometryInfo;
@@ -104,17 +111,26 @@ void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
 	Add_DebugShape();
 #endif // _DEBUG
 }
-void CRigidBody_Dynamic::Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation)
+void CRigidBody_Dynamic::Move_LocalPos(_matrix newLocalPos)
 {
-	m_vLocalRotQ = vNewRotQ;
-	m_vLocalTranslation = vNewTranslation;
+	_vector vScale, vPos, vRotQ;
+	XMMatrixDecompose(&vScale, &vRotQ, &vPos, newLocalPos);
+	Move_LocalPos(vPos, vRotQ);
+}
+void CRigidBody_Dynamic::Move_LocalPos(_float4& vNewRotQ, _float3& vNewTranslation)
+{
+	Move_LocalPos(XMLoadFloat4(&vNewRotQ), XMLoadFloat3(&vNewTranslation));
+}
+void CRigidBody_Dynamic::Move_LocalPos(_fvector vNewRotQ, _gvector vNewTranslation)
+{
+	XMStoreFloat4(&m_vLocalRotQ, vNewRotQ);
+	XMStoreFloat3(&m_vLocalTranslation, vNewTranslation);
 	PSX::PxShape* pShape = { nullptr };
 	m_pRigidBody->getShapes(&pShape, m_pRigidBody->getNbShapes());
-	pShape->setLocalPose(PSX::PxTransform(vNewTranslation.x, vNewTranslation.y, vNewTranslation.z, PSX::PxQuat(vNewRotQ.x, vNewRotQ.y, vNewRotQ.z, vNewRotQ.w)));
+	pShape->setLocalPose(PSX::PxTransform(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z, PSX::PxQuat(m_vLocalRotQ.x, m_vLocalRotQ.y, m_vLocalRotQ.z, m_vLocalRotQ.w)));
 #ifdef _DEBUG
 	Add_DebugShape();
 #endif // _DEBUG
-
 }
 _float CRigidBody_Dynamic::Get_Mass()
 {
@@ -138,6 +154,26 @@ void CRigidBody_Dynamic::Add_Torque(_fvector vDirection, PSX::PxForceMode::Enum 
 void CRigidBody_Dynamic::Set_Kinematic(_bool bKinematic)
 {
 	m_pRigidBody->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, bKinematic);
+}
+
+void CRigidBody_Dynamic::Move_Kinematic(_fmatrix xmTransform)
+{
+	_vector vScale, vPos, vRotQ;
+	XMMatrixDecompose(&vScale, &vRotQ, &vPos, xmTransform);
+	Move_Kinematic(vPos, vRotQ);
+}
+
+void CRigidBody_Dynamic::Move_Kinematic(_fvector vPos, _gvector vRotq)
+{
+	PSX::PxTransform pxTransform = {};
+	XMStoreFloat3((_float3*)&pxTransform.p, vPos);
+	XMStoreFloat4((_float4*)&pxTransform.q, vRotq);
+	Move_Kinematic(pxTransform);
+}
+
+void CRigidBody_Dynamic::Move_Kinematic(PSX::PxTransform& pxDestination)
+{
+	m_pRigidBody->setKinematicTarget(pxDestination);
 }
 
 HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
@@ -186,6 +222,13 @@ void CRigidBody_Dynamic::Set_Rotation(_vector vRotQ)
 	Set_Transform(pxTransform);
 }
 
+void CRigidBody_Dynamic::Set_Transform(_matrix WorldMatrix)
+{
+	_vector vScale, vPos, vRotQ;
+	XMMatrixDecompose(&vScale, &vRotQ, &vPos, WorldMatrix);
+	Set_Transform(vPos, vRotQ);
+}
+
 void CRigidBody_Dynamic::Set_Transform(_vector vPos, _vector vRotQ)
 {
 	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
@@ -200,17 +243,22 @@ void CRigidBody_Dynamic::Set_Transform(_vector vPos, _vector vRotQ)
 	Set_Transform(pxTransform);
 }
 
-void CRigidBody_Dynamic::Set_CenterTransform(_matrix CenterMatrix, _vector StartMatrix, _vector EndMatrix)
+void CRigidBody_Dynamic::Set_CenterTransform(_vector vStart, _vector vEnd)
 {
-	_vector vCenterWorldPos = (StartMatrix + EndMatrix) * 0.5f;
+	_vector vCenterWorldPos = (vStart + vEnd) * 0.5f;
 	_vector vRotQ = XMQuaternionIdentity();
-	_vector vDir = XMVectorSetW(EndMatrix - StartMatrix, 0.f);
+	_vector vDir = XMVectorSetW(vEnd - vStart, 0.f);
 	_float vLength = XMVectorGetX(XMVector3Length(vDir));
 	if (vLength > FLT_EPSILON5) {
 		vDir = XMVector3Normalize(vDir);
 		vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(1.f, 0.f, 0.f, 0.f), vDir);
 	}
-	Set_Transform(vCenterWorldPos, vRotQ);
+	if (m_pRigidBody->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC) {
+		Move_Kinematic(vCenterWorldPos, vRotQ);
+	}
+	else {
+		Set_Transform(vCenterWorldPos, vRotQ);
+	}
 }
 
 void CRigidBody_Dynamic::Set_Transform(PSX::PxTransform pxTransform)
@@ -312,9 +360,11 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 		return E_FAIL;
 	}
 #endif // _DEBUG
+	RIGIDBODY_DYNAMIC_DESC* pDesc = static_cast<RIGIDBODY_DYNAMIC_DESC*>(pArg);
 	m_tagData.pOwner = m_pOwner;
 	XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
 	m_tagData.pBody = this;
+	m_tagData.bAutoOwnerTranslation = pDesc->bAutoOwnerTranslation;
 	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this, m_pGameInstance->Get_NextLevelID());
 	m_pRigidBody->userData = &m_tagData;
 	m_pRigidBody->setCMassLocalPose(m_PxMassCenter);
@@ -322,8 +372,8 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	m_pRigidBody->setLinearDamping(m_vDamping.x);
 	m_pRigidBody->setAngularDamping(m_vDamping.y);
 	Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
-	//m_pRigidBody->joint;
-	//PSX::PxRevol
+
+
 
 	return S_OK;
 }

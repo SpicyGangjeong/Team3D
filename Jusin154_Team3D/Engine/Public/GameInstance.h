@@ -211,6 +211,7 @@ public:
 	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel);
 	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel);
 	PSX::PxJoint* Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1);
+	PSX::PxD6Joint* Create_PxD6Joint(PSX::PxRigidActor* pActor0, PSX::PxRigidActor* pActor1, const PSX::PxTransform& pxJointWorldPos);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 	_bool SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
@@ -224,6 +225,7 @@ public:
 	void				Attach_Actor(PSX::PxActor& Actor, _uint iLevel);
 	void				Detach_Actor(PSX::PxActor& pActor, _uint iLevel);
 	void				Release_Actor(PSX::PxActor& Actor);
+	void				ApplyFilterData(PSX::PxRigidActor* pRigidActor);
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 #ifdef EDITOR_PROJECT
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);

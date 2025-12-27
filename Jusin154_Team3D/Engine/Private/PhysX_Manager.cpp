@@ -59,6 +59,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 
 	PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
 	m_pRestBodies[iLevel].insert(pActorDynamic);
+	ApplyFilterData(pActorDynamic);
 	Attach_Actor(*pActorDynamic, iLevel);
 
 	return pActorDynamic;
@@ -71,7 +72,7 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 
 
 	// PxRigidStatic		씬의 정적 바디 인터페이스
-	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
+	PSX::PxRigidStatic* pActorStatic = m_pPhysics->createRigidStatic(pxWorldMatrix);
 	PSX::PxShape* pShape = { nullptr };
 	PSX::PxGeometry* pGeometry = { nullptr };
 
@@ -130,16 +131,17 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 		break;
 	}
 
-	pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
+	pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorStatic, *pGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 
 	pShape->setFlags(RigidBody.Get_ShapeFlags());
 	pShape->setContactOffset(RigidBody.Get_ContactOffset());
 	pShape->setRestOffset(0.f);
 	
-	m_pRestBodies[iLevel].insert(pActor);
-	Attach_Actor(*pActor, iLevel);
+	m_pRestBodies[iLevel].insert(pActorStatic);
+	ApplyFilterData(pActorStatic);
+	Attach_Actor(*pActorStatic, iLevel);
 
-	return pActor;
+	return pActorStatic;
 }
 
 PSX::PxJoint* CPhysX_Manager::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1)
@@ -171,6 +173,22 @@ PSX::PxJoint* CPhysX_Manager::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActo
 	assert(nullptr != pOut);
 
 	return pOut;
+}
+
+PSX::PxD6Joint* CPhysX_Manager::Create_PxD6Joint(PSX::PxRigidActor* pActor0, PSX::PxRigidActor* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	const PSX::PxTransform pxWorldParentPos = pActor0->getGlobalPose();
+	const PSX::PxTransform pxWorldChildPos = pActor1->getGlobalPose();
+
+	const PSX::PxTransform pxLocalParentPOs = pxWorldParentPos.transformInv(pxJointWorldPos);
+	const PSX::PxTransform pxLocalChildPos = pxWorldChildPos.transformInv(pxJointWorldPos);
+
+	PSX::PxD6Joint* pJoint = PSX::PxD6JointCreate(*m_pPhysics, pActor0, pxLocalParentPOs, pActor1, pxLocalChildPos);
+	for (_uint i = PSX::PxD6Axis::Enum::eTWIST; i < PSX::PxD6Axis::eCOUNT; ++i) {
+		pJoint->setMotion((PSX::PxD6Axis::Enum)i, PSX::PxD6Motion::eFREE);
+	}
+	pJoint->setBreakForce(1e30f, 1e30f);
+	return pJoint;
 }
 
 PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
@@ -399,7 +417,11 @@ void CPhysX_Manager::Update_Kinematic()
 
 			if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
 			{
-				const CTransform* pTransform = static_cast<PhsXUserData*>(pBody->userData)->pOwner->Get_Component<CTransform>();
+				PhsXUserData* pUserData = (PhsXUserData*)pBody->userData;
+				if (false == pUserData->bAutoOwnerTranslation) {
+					continue;
+				}
+				const CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
 
 				pActor->setKinematicTarget(XMWorldToPx_NoScale(pTransform->Get_XMWorldMatrix()));
 			}
@@ -442,6 +464,9 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			if (nullptr == ppActiveActors[i]->userData) {
 				continue;
 			}
+			if (false == pUserData->bAutoOwnerTranslation) {
+				continue;
+			}
 			CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
 
 			PSX::PxTransform pPxTransform = pActorDynamic->getGlobalPose();
@@ -452,6 +477,85 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			pTransform->Set_WorldMatrix(WorldMatrix);
 		}
 	}
+}
+
+uint32_t CPhysX_Manager::ConvertPhysxKindToBit(PHYSX_KIND physxKind)
+{
+	switch (physxKind)
+	{
+	case PHYSX_KIND::BODY_STATIC: return COLLISIONCATERGORY_BIT32::WorldStatic;
+	case PHYSX_KIND::BODY_DYNAMIC: return COLLISIONCATERGORY_BIT32::WorldDynamic;
+	case PHYSX_KIND::CCTActor: return COLLISIONCATERGORY_BIT32::CharacterController;
+	default: return 0u;
+	}
+}
+
+uint32_t CPhysX_Manager::BuildCollisionMaskFromCategoryBit(uint32_t iMyBit)
+{
+	if (iMyBit == COLLISIONCATERGORY_BIT32::CharacterController)
+	{
+		// CCT는 조인트 파츠 충돌x
+		return COLLISIONCATERGORY_BIT32::WorldStatic | COLLISIONCATERGORY_BIT32::WorldDynamic;
+	}
+
+	if (iMyBit == COLLISIONCATERGORY_BIT32::JointedParts)
+	{
+		// 조인트 파츠도 CCT 충돌x
+		return COLLISIONCATERGORY_BIT32::WorldStatic | COLLISIONCATERGORY_BIT32::WorldDynamic | COLLISIONCATERGORY_BIT32::JointedParts;
+	}
+
+	// 기본값
+	return COLLISIONCATERGORY_BIT32::WorldStatic | COLLISIONCATERGORY_BIT32::WorldDynamic | COLLISIONCATERGORY_BIT32::CharacterController | COLLISIONCATERGORY_BIT32::JointedParts;
+}
+
+void CPhysX_Manager::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
+{
+	if (pRigidActor == nullptr){
+		return;
+	}
+
+	PhsXUserData* physxUserData = reinterpret_cast<PhsXUserData*>(pRigidActor->userData);
+	if (physxUserData == nullptr){
+		return;
+	}
+
+	const uint32_t CategoryBit = ConvertPhysxKindToBit(physxUserData->eKind); // who am i
+	const uint32_t MaskBits = BuildCollisionMaskFromCategoryBit(CategoryBit); // for what
+
+	PSX::PxFilterData simulationFilterData = {};
+	simulationFilterData.word0 = CategoryBit; // “나는 누구인가”
+	simulationFilterData.word1 = MaskBits;    // “누구와 부딪힐 것인가”
+
+	const PSX::PxU32 shapeCount = pRigidActor->getNbShapes();
+	vector<PSX::PxShape*> shapes(shapeCount);
+	pRigidActor->getShapes(shapes.data(), shapeCount);
+
+	for (PSX::PxShape* shape : shapes)
+	{
+		shape->setSimulationFilterData(simulationFilterData);
+	}
+}
+
+PSX::PxFilterFlags CPhysX_Manager::SimulationFilterShader(PSX::PxFilterObjectAttributes pxAttributes0, PSX::PxFilterData pxFilterData0, PSX::PxFilterObjectAttributes pxAttributes1, PSX::PxFilterData pxFilterData1, PSX::PxPairFlags& pxPairFlags, const void* pConstantBlock, PSX::PxU32 iConstantBlockSize)
+{
+	_bool bFilter0_1 = (pxFilterData0.word0 & pxFilterData1.word1) != 0u;
+	_bool bFilter1_0 = (pxFilterData1.word0 & pxFilterData0.word1) != 0u;
+
+	if (!bFilter0_1 || !bFilter1_0)
+	{
+		// Event. 접촉제거
+		return PSX::PxFilterFlag::eSUPPRESS;
+	}
+
+	if (PSX::PxFilterObjectIsTrigger(pxAttributes0) || PSX::PxFilterObjectIsTrigger(pxAttributes1))
+	{
+		// 트리거 처리
+		pxPairFlags = PSX::PxPairFlag::eTRIGGER_DEFAULT;
+		return PSX::PxFilterFlag::eDEFAULT;
+	}
+
+	pxPairFlags = PSX::PxPairFlag::eCONTACT_DEFAULT;
+	return PSX::PxFilterFlag::eDEFAULT;
 }
 
 void CPhysX_Manager::ClearScene(_uint iLevel)
@@ -622,7 +726,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 		}
 		sceneDesc.cpuDispatcher = m_pDispatcher;
 		//sceneDesc.simulationEventCallback = ; // fetchResults 때 불림. 아래 필터랑, pair랑 같이 짝꿍임. 좀 더 공부해야 쓸 수 있을듯;;
-		sceneDesc.filterShader = PSX::PxDefaultSimulationFilterShader; // 레이어 충돌, 오브젝트에 속성을 주고 복잡한 필터링 충돌 식
+		sceneDesc.filterShader = &SimulationFilterShader;// PSX::PxDefaultSimulationFilterShader; // 레이어 충돌, 오브젝트에 속성을 주고 복잡한 필터링 충돌 식
 		sceneDesc.flags =
 			PSX::PxSceneFlag::eENABLE_PCM // 기본 true, 현대적인 충돌시스템 적용
 			| PSX::PxSceneFlag::eENABLE_ACTIVE_ACTORS // 현재 움직임이 있는 액터만 가져옴
@@ -651,7 +755,6 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 		}
 
 		m_pScene = m_pPhysics->createScene(sceneDesc);
-
 		// CCT
 		m_pCCTManager = PxCreateControllerManager(*m_pScene);
 		m_pCCTManager->setOverlapRecoveryModule(true); // 복구모듈은 하이트필드에는 적용되지 않음, 오직 스태틱만 대상

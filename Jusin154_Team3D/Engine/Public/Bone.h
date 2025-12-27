@@ -11,12 +11,10 @@ private:
 	CBone(const CBone& other);
 	virtual ~CBone() = default;
 public:
-	_matrix Get_CombinedTransformationMatrix() const {
-		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);
-	}
-	_float4x4* Get_CombinedTransformationMatrixPtr() {
-		return &m_CombinedTransformationMatrix;
-	}
+	_matrix Get_CombinedTransformationMatrix() const { return XMLoadFloat4x4(&m_CombinedTransformationMatrix); }
+	_float4x4* Get_CombinedTransformationMatrixPtr() { return &m_CombinedTransformationMatrix; }
+	_float4x4* Get_TransformationMatrixPtr() { return &m_TransformationMatrix; };
+
 	void Set_CombinedTransformationMatrixPtr(_matrix& newMatrix) {
 		return XMStoreFloat4x4(&m_CombinedTransformationMatrix, newMatrix);
 	}

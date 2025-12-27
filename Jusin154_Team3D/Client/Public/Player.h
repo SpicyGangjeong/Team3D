@@ -13,7 +13,6 @@ public:
 		_float4 vPos;
 		_float4 vRotQ;
 	}PLAYERDESC;
-
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -34,7 +33,6 @@ public:
 	_int Get_UIState() { return m_eUIState; }
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
-	HRESULT Render_BonePhysX();
 #endif // _DEBUG
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
@@ -74,10 +72,8 @@ private:
 	class CTransform* m_pBroomTransform = { nullptr };
 	class CBroom* m_pBroom = { nullptr };
 	CStat* m_pStat = { nullptr };
-	CRigidBody_Dynamic* m_pRightLeg = { nullptr };
-	CRigidBody_Dynamic* m_pLeftLeg = { nullptr };
-	//CRigidBody_Dynamic* m_pRobeJointRoute[ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END)] = { nullptr };
-	//CDynamic_Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
+	class CPlayerRobe* m_pRobePart = { nullptr };
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -90,21 +86,10 @@ private:
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
 	void Play_SpellHitAnim();
 
-	HRESULT Update_LegsPosition();
-	HRESULT Render_Legs();
-	//HRESULT Helper_JointGenerater(CDynamic_Joint::DYNAMICJOINT_DESC& Desc, _uint iRoute0, _bool bUseHead0, _uint iRoute1, _bool bUseHead1, _uint iJoint);
-
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
 	unique_ptr<BasicEffect> m_BasicEffect;
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
-	unique_ptr<GeometricPrimitive> m_pBoneShape = { nullptr };
-	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
-	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-	ID3D11DepthStencilState* m_pDepthStencilStateNone = { nullptr };
-	_float4x4 m_LeftLegMatrix = {};
-	_float4x4 m_RightLegMatrix = {};
-
 #endif // _DEBUG
 
 

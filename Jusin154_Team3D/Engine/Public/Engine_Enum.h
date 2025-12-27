@@ -223,6 +223,7 @@ enum class PXOBJECT : _uint {
 	NOCOLLIDE = 900,
 	GAIL,
 	JOINT_ROUTE,
+	JOINT_ANCHOR,
 
 #pragma endregion
 	END = 999

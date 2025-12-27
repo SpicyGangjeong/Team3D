@@ -581,6 +581,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	}
+#ifdef 기무리
+#else
 	{
 		CNPC_Ollivander::NPCDESC NPCDesc{};
 		NPCDesc.vPos = _float4(40.f, 4.f, 68.9f, 1.f);
@@ -597,6 +599,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			return E_FAIL;
 		}
 	}
+#endif // !기무리
 
 	return S_OK;
 }
@@ -666,13 +669,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
-#endif
 #if 진우
 #else
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
 #endif 
+#endif
 	
 
 

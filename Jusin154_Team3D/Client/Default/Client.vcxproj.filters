@@ -725,6 +725,9 @@
     <ClInclude Include="..\Public\Player_ENUM.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerRobe.h">
+      <Filter>02.GameObjects\Player\Robe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1506,6 +1509,9 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok">
       <UniqueIdentifier>{93545681-c4c5-4a6a-9496-7b2e7b8a9302}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\Robe">
+      <UniqueIdentifier>{f3c7cf8d-2b83-49d3-85da-fe135e376a11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2174,6 +2180,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerRobe.cpp">
+      <Filter>02.GameObjects\Player\Robe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

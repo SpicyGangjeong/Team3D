@@ -208,7 +208,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\ComputeShader.cpp" />
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
-    <ClCompile Include="..\Private\Dynamic_Joint.cpp" />
+    <ClCompile Include="..\Private\Dynamic_D6Joint.cpp" />
     <ClCompile Include="..\private\Fog.cpp" />
     <ClCompile Include="..\private\Font.cpp" />
     <ClCompile Include="..\private\Font_Manager.cpp" />
@@ -421,7 +421,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
     <ClInclude Include="..\Public\CallBack_QueryFilterCallback.h" />
-    <ClInclude Include="..\Public\Dynamic_Joint.h" />
+    <ClInclude Include="..\Public\Dynamic_D6Joint.h" />
     <ClInclude Include="..\public\Fog.h" />
     <ClInclude Include="..\public\Font.h" />
     <ClInclude Include="..\public\Font_Manager.h" />

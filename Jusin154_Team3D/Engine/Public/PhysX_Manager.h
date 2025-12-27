@@ -12,6 +12,16 @@ class CMesh;
 class CPhysX_Manager final : public CBase
 {
 private:
+	// 주의: 피직스 내부 플래그 전용. 건드리려면 먼저 말하고 건드리기
+	// 가장 기본이 되는 필터 플래그
+	enum COLLISIONCATERGORY_BIT32 : uint32_t 
+	{
+			CharacterController		= 1u << 0
+		,	JointedParts			= 1u << 1
+		,	WorldStatic				= 1u << 2
+		,	WorldDynamic			= 1u << 3
+	};
+private:
 	CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPhysX_Manager() = default;
 #pragma region RIGID_BODY
@@ -26,6 +36,7 @@ public:
 	
 	// https://documentation.help/nvidia-physx-sdk-guide/Joints.html
 	PSX::PxJoint* Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1);
+	PSX::PxD6Joint* Create_PxD6Joint(PSX::PxRigidActor* pActor0, PSX::PxRigidActor* pActor1, const PSX::PxTransform& pxJointWorldPos);
 	
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh, _uint iLevel);
 	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel);
@@ -61,6 +72,7 @@ public:
 public:
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
+	void				ApplyFilterData(PSX::PxRigidActor* pRigidActor);
 
 	PSX::PxController*	Get_Controller(_uint iControllerIndex);
 	void				ReleaseController(_uint iControllerIndex);
@@ -115,7 +127,12 @@ private:
 
 	void Update_Kinematic();
 	void Update_Dynamic_ActiveActors();
-	//void Update_Dynamic_AllActors();
+	uint32_t ConvertPhysxKindToBit(PHYSX_KIND physxKind);
+	uint32_t BuildCollisionMaskFromCategoryBit(uint32_t iMyBit);
+	static PSX::PxFilterFlags SimulationFilterShader(PSX::PxFilterObjectAttributes pxAttributes0, PSX::PxFilterData pxFilterData0,
+		PSX::PxFilterObjectAttributes pxAttributes1, PSX::PxFilterData pxFilterData1,
+		PSX::PxPairFlags& pxPairFlags, const void* pConstantBlock, PSX::PxU32 iConstantBlockSize);
+
 
 public:
 	static CPhysX_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iLevel);

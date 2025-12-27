@@ -86,12 +86,14 @@ public:
 #pragma region Bone
 	HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
 	const _float4x4*		Get_BoneMatrixPtr(const _char* pBoneName);
+	const _float4x4*		Get_BoneLocalMatrixPtr(const _char* pBoneName);
 	_matrix					Get_BoneMatrix(const _char* pBoneName) const;
 	_matrix					Get_BoneLocalMatrix(const _char* pBoneName) const;
 	static _int				Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
 	_int					Get_BoneIndex(const _char* pBoneName) const;
 	_matrix					Get_BoneMatrix(_uint iBoneIndex);
 	void					Combined_BoneMatrix();
+	void					Combined_BoneMatrix(_int iStartBoneIndex, _uint iBoneCount);
 	_int					Find_BoneIndex(const _char* pBoneName);
 
 #pragma endregion
