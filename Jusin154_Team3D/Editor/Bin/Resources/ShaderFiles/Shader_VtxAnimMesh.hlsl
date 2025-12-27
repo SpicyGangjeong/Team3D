@@ -29,6 +29,7 @@ float g_fOutLinePower;
 float g_fDisolveRatio;
 float g_fDisolveAmount;
 float g_fDisolveEdgeWidth;
+float g_fMBIntensity = 1.f;
 
 float4 g_vDisolveEdgeColor;
 float4 g_vCamPosition;
@@ -416,7 +417,7 @@ PS_OUT PS_MAIN(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }
@@ -480,7 +481,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
     (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // 서페이스 파라미터
     1.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }

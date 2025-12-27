@@ -10,6 +10,7 @@ Texture2D g_SurfaceParamsTexture;
 float4 g_vCamPosition;
 float g_fFar;
 float g_fUsingSurfaceParams;
+float g_fMBIntensity = 1.f;
 
 
 struct VS_IN
@@ -112,7 +113,7 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, g_fUsingSurfaceParams, 0.0f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord).xy, 1.f, 1.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
 }

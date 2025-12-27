@@ -3124,7 +3124,7 @@ void CPlayer::Add_FSM()
 			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 			if (!m_bOnce) {
 				m_pBroomTransform->Set_WorldMatrix(m_pTransformCom->Get_XMWorldMatrix());
-				m_pBroomTransform->Set_State(STATE::POSITION, m_pBroomTransform->Get_State(STATE::POSITION) + XMVectorSet(0.f,2.f,0.f,0.f));
+				m_pBroomTransform->Set_State(STATE::POSITION, m_pTransformCom->Get_State(STATE::POSITION) + XMVectorSet(0.f,2.f,0.f,0.f));
 				_float3 vScale = { 0.3f,0.3f,0.3f };
 				m_pBroomTransform->Set_Scale(vScale);
 				m_bOnce = true;
