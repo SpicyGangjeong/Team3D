@@ -19,7 +19,8 @@ void CPlayerRobe::Update(_float fTimeDelta)
 {
 	_matrix OwnerMatrix = XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr());
 	m_pTransformCom->Set_WorldMatrix(OwnerMatrix);
-	m_pRobeMainAnchor->Move_Kinematic(XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix, true);
+	m_pRobeMainAnchor->Move_Kinematic(XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix, false);
+	m_pRobeMainAnchor->Get_Actor()->wakeUp();
 	Update_LegsPosition();
 }
 
@@ -27,6 +28,13 @@ void CPlayerRobe::Late_Update(_float fTimeDelta)
 {
 	Update_RobeSocketPosition();
 #ifdef _DEBUG
+	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
+		PSX::PxConstraintFlags pxConstraintFlags = m_pDynamicJoints[i]->getConstraintFlags();
+		const bool bBroken = (pxConstraintFlags.isSet(PSX::PxConstraintFlag::eBROKEN));
+		if (true == bBroken) {
+			assert(false);
+		}
+	}
 	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
 #endif // _DEBUG
 }
@@ -167,15 +175,15 @@ HRESULT CPlayerRobe::Render_BonePhysX()
 	UINT iPrevStencilRef = 0;
 	m_pContext->OMGetDepthStencilState(&pPrevDSS, &iPrevStencilRef);
 
-	//for (_uint iBoneIndex = 0; iBoneIndex < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++iBoneIndex)
-	//{
-	//	_matrix WorldMatrix = XMLoadFloat4x4(m_RobeJointAnchorMatrices[iBoneIndex]) * PreTransformMatrix * OwnerMatrix;
+	for (_uint iBoneIndex = 0; iBoneIndex < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++iBoneIndex)
+	{
+		_matrix WorldMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr(PLAYER_JOINT_BONE_NAMES[iBoneIndex])) * OwnerMatrix;
 
-	//	m_pSubShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-	//		[this]() {
-	//			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-	//		});
-	//}
+		m_pSubShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
+			[this]() {
+				m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+			});
+	}
 	_matrix MainAnchorMatrix = XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix;
 	m_pSubShape->Draw(MainAnchorMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
 		[this]() {
@@ -212,7 +220,7 @@ HRESULT CPlayerRobe::Ready_Components()
 
 	_matrix PreTransformMatrix = XMLoadFloat4x4(&m_PreTransformMatrix);
 	_matrix parentWorld = m_pParentTransformCom->Get_XMWorldMatrix();
-	_matrix socketMatrix = XMLoadFloat4x4(m_pSocketMatrix);
+	_matrix socketMatrix = XMMatrixRotationZ(XMConvertToRadians(90.f)) * XMLoadFloat4x4(m_pSocketMatrix);
 	_matrix socketWorld = socketMatrix * parentWorld;
 	_matrix xmAnchorMatricesWorld[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { };
 	for (_uint iBoneIndex = 0; iBoneIndex < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++iBoneIndex) {
@@ -424,7 +432,9 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 	m_pRightFootLocalMatrix	= m_pModelCom->Get_BoneMatrixPtr("RightFoot");
 	m_pRightLegLocalMatrix	= m_pModelCom->Get_BoneMatrixPtr("RightLeg");
 
-	m_PreTransformMatrix = *m_pModelCom->Get_PreTransformMatrixPtr();
+	XMStoreFloat4x4(&m_PreTransformMatrix, 
+		XMMatrixRotationZ(XMConvertToRadians(90.f)) * XMLoadFloat4x4(m_pModelCom->Get_PreTransformMatrixPtr()));
+
 	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
 		m_RobeJointAnchorMatrices[i] = m_pModelCom->Get_BoneLocalMatrixPtr(PLAYER_JOINT_BONE_NAMES[i]);
 	}

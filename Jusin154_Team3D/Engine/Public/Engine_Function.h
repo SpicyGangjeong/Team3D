@@ -47,7 +47,7 @@ unsigned long Safe_Release(T& pInstance)
 	return dwRefCnt;
 }
 
-static PSX::PxTransform XMWorldToPx_NoScale(const _fmatrix& WorldMatrix)
+static PSX::PxTransform XMWorldToPx_NoScaleNoFlip(const _fmatrix& WorldMatrix)
 {
 	_vector vPos, vRotq, vScale;
 	XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);

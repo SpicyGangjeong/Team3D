@@ -10,8 +10,8 @@ class ENGINE_DLL CDynamic_D6Joint final : public CComponent
 public:
 	typedef struct tagDynamicJointDesc {
 		PHYSX_JOINT				eType;
-		PSX::PxRigidActor*		pActor0;
-		PSX::PxRigidActor*		pActor1;
+		PSX::PxRigidDynamic*		pActor0;
+		PSX::PxRigidDynamic*		pActor1;
 		const PSX::PxTransform* pxJointWorldPos;
 	}DYNAMICJOINT_DESC;
 private:

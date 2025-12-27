@@ -1769,12 +1769,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.001f };
-		Desc.fContactOffset = { 0.001f };
-		Desc.vhalfGeometryInfo = { 0.025f, 0.025f, 0.025f };
-		Desc.fDensity = 100000.f;
+		Desc.fContactOffset = { 0.1f };
+		Desc.vhalfGeometryInfo = { 0.055f, 0.055f, 0.055f };
+		Desc.fDensity = 100.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
-		Desc.vAutoDamping = { 100.f, 100.f };
+		Desc.vAutoDamping = { 12.f, 12.f };
 		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_JOINT_ANCHOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
@@ -1788,12 +1788,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.001f };
-		Desc.fContactOffset = { 0.001f };
-		Desc.vhalfGeometryInfo = { 0.006f, 0.035f, 0.f };
-		Desc.fDensity = 100000.f;
+		Desc.fContactOffset = { 0.1f };
+		Desc.vhalfGeometryInfo = { 0.035f, 0.15f, 0.f };
+		Desc.fDensity = 100.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
-		Desc.vAutoDamping = { 100.f, 100.f };
+		Desc.vAutoDamping = { 12.f, 12.f };
 		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
@@ -1809,7 +1809,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.01f };
 		Desc.fContactOffset = { 0.01f };
 		Desc.vhalfGeometryInfo = { 0.06f, 0.25f, 0.f };
-		Desc.fDensity = 1.f;
+		Desc.fDensity = 122.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
 		Desc.vAutoDamping = { 1.f, 1.f };

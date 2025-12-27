@@ -1004,7 +1004,7 @@ PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor
 {
 	return m_pPhysX_Manager->Create_PxJoint(eType, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
 }
-PSX::PxD6Joint* CGameInstance::Create_PxD6Joint(PSX::PxRigidActor* pActor0, PSX::PxRigidActor* pActor1, const PSX::PxTransform& pxJointWorldPos)
+PSX::PxD6Joint* CGameInstance::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
 {
 	return m_pPhysX_Manager->Create_PxD6Joint(pActor0, pActor1, pxJointWorldPos);
 }

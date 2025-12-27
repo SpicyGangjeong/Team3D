@@ -36,7 +36,7 @@ public:
 	
 	// https://documentation.help/nvidia-physx-sdk-guide/Joints.html
 	PSX::PxJoint* Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1);
-	PSX::PxD6Joint* Create_PxD6Joint(PSX::PxRigidActor* pActor0, PSX::PxRigidActor* pActor1, const PSX::PxTransform& pxJointWorldPos);
+	PSX::PxD6Joint* Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos);
 	
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh, _uint iLevel);
 	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel);
@@ -127,7 +127,7 @@ private:
 
 	void Update_Kinematic();
 	void Update_Dynamic_ActiveActors();
-	uint32_t ConvertPhysxKindToBit(PHYSX_KIND physxKind);
+	uint32_t ConvertPhysxKindToBit(const PHYSX_USERDATA&  physxKind);
 	uint32_t BuildCollisionMaskFromCategoryBit(uint32_t iMyBit);
 	static PSX::PxFilterFlags SimulationFilterShader(PSX::PxFilterObjectAttributes pxAttributes0, PSX::PxFilterData pxFilterData0,
 		PSX::PxFilterObjectAttributes pxAttributes1, PSX::PxFilterData pxFilterData1,
