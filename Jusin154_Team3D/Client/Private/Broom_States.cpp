@@ -123,6 +123,9 @@ void CBroom::Behavior_MoveEnter()
 
 HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 {
+	if (false == m_bMove)
+		return S_OK;
+
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 
@@ -183,6 +186,8 @@ void CBroom::Behavior_Broom_HoverEnter()
 
 HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 {
+	if (false == m_bMove)
+		return S_OK;
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 	_bool bFwd = m_Input.Z > 0.f;
@@ -317,15 +322,6 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
 		}
 
-		if (bShift)
-		{
-			m_bHoverToggle = false;
-		}
-		if (bTurbo)
-		{
-			m_bTurbo = true;
-		}
-
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 	}
 
@@ -376,6 +372,7 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 
 		if (SUCCEEDED(InputAction()) || SUCCEEDED(InputMove()))
 		{
+		
 			if (bFwd) {
 				m_fTargetSpeed = m_fFlyMaxSpeed;
 			}
@@ -387,7 +384,13 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 			m_fTargetSpeed = m_fFlyMaxSpeed;
 		}
 
-		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fFlyAccel;
+		if (m_pParentUnit->IsAI())
+		{
+			m_fTargetSpeed *= m_fAICondition;
+			m_fTargetSpeed *= m_fAISpeedMul;
+		}
+
+		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fFlyAccel* m_fAIAccelMul;
 		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
 
 		_float fTargetVertSpeed = 0.f;
@@ -495,15 +498,6 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (bShift)
-	{
-		m_bHoverToggle = true;
-	}
-	if (bTurbo)
-	{
-		m_bTurbo = true;
-	}
-
 	if (m_bHoverToggle)
 	{
 		m_fTargetSpeed = 0.f;
@@ -515,17 +509,17 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 		pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 
-		if (bShift && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)
+		/*if (bShift && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)
 		{
 			m_bHoverToggle = false;
-		}
+		}*/
 		if (SUCCEEDED(InputAction()) || SUCCEEDED(InputMove()))
 		{
 			if (fRatio >= 0.5f && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)
 			{
 				m_pFSM->Change_State(FSMSTATE::HOVER);
+				return E_FAIL;
 			}
-			return E_FAIL;
 		}
 		if (m_pModelCom->IsFinishedAnim())
 		{
@@ -572,19 +566,6 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 	_bool bDown = m_Input.Y < 0.f;
 	_bool bShift = m_Input.bHoverToggle;
 	_bool bTurbo = m_Input.bTurbo;
-
-	if (bShift)
-	{
-		m_bHoverToggle = true;
-	}
-
-	if (bTurbo)
-	{
-		m_bTurbo = true;
-	}
-	else {
-		m_bTurbo = false;
-	}
 
 	if (!m_bHoverToggle)
 	{
@@ -649,20 +630,20 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 			{
 				if (vInput.z <= 0.f)
 				{
-					Camera_InterpTurn(fTimeDelta * 0.3f);
+					Camera_InterpTurn(fTimeDelta * 0.35f);
 				}
 				else {
-					Camera_InterpTurn(fTimeDelta * 0.15f);
+					Camera_InterpTurn(fTimeDelta * 0.2f);
 				}
 			}
 			else if (vInput.x > 0.f)
 			{
 				if (vInput.z <= 0.f)
 				{
-					Camera_InterpTurn(fTimeDelta * 0.3f);
+					Camera_InterpTurn(fTimeDelta * 0.35f);
 				}
 				else {
-					Camera_InterpTurn(fTimeDelta * 0.15f);
+					Camera_InterpTurn(fTimeDelta * 0.2f);
 				}
 			}
 
@@ -837,7 +818,7 @@ void CBroom::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
-			if (m_bHoverToggle)
+			if (m_bHoverToggle && m_bMove)
 			{
 				_float3	fMove = m_pGameInstance->Get_MouseMove();
 				m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.x * 0.02f);

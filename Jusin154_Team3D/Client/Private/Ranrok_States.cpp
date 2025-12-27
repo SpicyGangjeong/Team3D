@@ -405,10 +405,10 @@ void CRanrok::Behavior_FireBallEnter()
 			break;
 		}
 
-		Add_Event(pairAnimInfo.first,
-			[this]() {
-				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_FIREBALL, this);
-			}, 0.1f);
+		//Add_Event(pairAnimInfo.first,
+		//	[this]() {
+		//		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_FIREBALL, this);
+		//	}, 0.1f);
 
 	}
 	else if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))

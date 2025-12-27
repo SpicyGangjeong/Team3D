@@ -29,11 +29,12 @@ HRESULT CRaceRing::Initialize(void* pArg)
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
+
 	m_pBroomRaceManager = static_cast<RACERING_DESC*>(pArg)->pBroomRaceManager;
 	m_iIndex = static_cast<RACERING_DESC*>(pArg)->iIndex;
 	_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Y = m_pGameInstance->Real_Random_Float(15.f, 45.f);
-	_float Z = m_pGameInstance->Real_Random_Float(-15.f, 15.f);
+	_float Y = m_pGameInstance->Real_Random_Float(15.f, 60.f);
+	_float Z = m_pGameInstance->Real_Random_Float(-50.f, 50.f);
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet((_float)m_iIndex *100.f, Y, Z, 1.f));
 
