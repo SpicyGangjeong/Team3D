@@ -1769,9 +1769,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.001f };
-		Desc.fContactOffset = { 0.1f };
-		Desc.vhalfGeometryInfo = { 0.055f, 0.055f, 0.055f };
-		Desc.fDensity = 100.f;
+		Desc.fContactOffset = { 0.005f };
+		Desc.vhalfGeometryInfo = { 0.025f, 0.025f, 0.025f };
+		Desc.fDensity = 0.01f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
 		Desc.vAutoDamping = { 12.f, 12.f };
@@ -1788,9 +1788,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.001f };
-		Desc.fContactOffset = { 0.1f };
-		Desc.vhalfGeometryInfo = { 0.035f, 0.15f, 0.f };
-		Desc.fDensity = 100.f;
+		Desc.fContactOffset = { 0.005f };
+		Desc.vhalfGeometryInfo = { 0.025f, 0.075f, 0.f };
+		Desc.fDensity = 0.01f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
 		Desc.vAutoDamping = { 12.f, 12.f };

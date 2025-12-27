@@ -303,7 +303,7 @@ public:
 		}
 		vRotAxis = XMVector3Normalize(vRotAxis);
 
-		_float fRotAngle = acosf(Saturate(fDot));
+		_float fRotAngle = acosf(clamp(fDot, -1.f, 1.f));
 		_vector vRotQ = XMQuaternionRotationAxis(vRotAxis, fRotAngle);
 		return XMQuaternionNormalize(vRotQ);
 	}
@@ -336,6 +336,24 @@ public:
 			return 0;
 
 		return (Alphabet - 'A');
+	}
+
+	inline static PSX::PxTransform MakeJointWorldPoseFromRouteEnd(PSX::PxRigidActor* routeRigidActor, _float3 vCapsuleHalfLengths, bool isHeadEnd)
+	{
+		PSX::PxShape* shapeArray[1] = {};
+		routeRigidActor->getShapes(shapeArray, 1);
+
+		PSX::PxShape* routeShape = shapeArray[0];
+
+		const PSX::PxTransform pxRouteWorldTransfom = PSX::PxShapeExt::getGlobalPose(*routeShape, *routeRigidActor);
+
+		const PSX::PxVec3 capsuleAxisWorld = pxRouteWorldTransfom.q.rotate(PSX::PxVec3(1.f, 0.f, 0.f));
+
+		PSX::PxTransform jointWorldPose;
+		jointWorldPose.q = pxRouteWorldTransfom.q;
+		jointWorldPose.p = pxRouteWorldTransfom.p + (isHeadEnd ? 1.f : -1.f) * capsuleAxisWorld * (vCapsuleHalfLengths.y + vCapsuleHalfLengths.x);
+
+		return jointWorldPose;
 	}
 #pragma endregion
 #pragma region FileSystem

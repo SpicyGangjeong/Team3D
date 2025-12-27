@@ -40,6 +40,7 @@ private:
 	const _float4x4* m_pRightFootLocalMatrix	= { nullptr };
 	const _float4x4* m_pRightLegLocalMatrix		= { nullptr };
 	const _float4x4* m_RobeJointAnchorMatrices[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
+	_float4x4 m_ReconstructedJointAnchorMatirces[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { };
 
 	CModel* m_pModelCom = { nullptr };
 	CRigidBody_Dynamic* m_pRightLeg = { nullptr };

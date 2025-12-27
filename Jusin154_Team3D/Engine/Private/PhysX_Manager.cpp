@@ -36,6 +36,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 	case ACTOR::CAPSULE:
 		geoHolder = PSX::PxCapsuleGeometry(vVolume.x, vVolume.y);
 		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
+		FixCapsuleShapeAxisToY(pShape);
 		break;
 	case ACTOR::SPHERE:
 		geoHolder = PSX::PxSphereGeometry(vVolume.x);
@@ -59,6 +60,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 
 	PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
 	m_pRestBodies[iLevel].insert(pActorDynamic);
+	pActorDynamic->userData = RigidBody.Get_UserDataPtr();
 	ApplyFilterData(pActorDynamic);
 	Attach_Actor(*pActorDynamic, iLevel);
 
@@ -185,8 +187,8 @@ PSX::PxD6Joint* CPhysX_Manager::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, P
 
 	PSX::PxD6Joint* pJoint = PSX::PxD6JointCreate(*m_pPhysics, pActor0, pxLocalParentPOs, pActor1, pxLocalChildPos);
 
-	pActor0->setSolverIterationCounts(8, 2);
-	pActor1->setSolverIterationCounts(8, 2);
+	pActor0->setSolverIterationCounts(42, 6);
+	pActor1->setSolverIterationCounts(42, 6);
 
 	pJoint->setMotion(PSX::PxD6Axis::eX, PSX::PxD6Motion::eLOCKED);
 	pJoint->setMotion(PSX::PxD6Axis::eY, PSX::PxD6Motion::eLOCKED);
@@ -195,10 +197,11 @@ PSX::PxD6Joint* CPhysX_Manager::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, P
 	pJoint->setMotion(PSX::PxD6Axis::eSWING1, PSX::PxD6Motion::eLIMITED);
 	pJoint->setMotion(PSX::PxD6Axis::eSWING2, PSX::PxD6Motion::eLIMITED);
 
-	pJoint->setTwistLimit(PSX::PxJointAngularLimitPair(-0.35f, 0.35f)); // 20도
-	pJoint->setSwingLimit(PSX::PxJointLimitCone(0.70f, 0.70f));         // 40도
 
-	pJoint->setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(500.0f, 100.0f, FLT_MAX, true));
+	pJoint->setTwistLimit(PSX::PxJointAngularLimitPair(-0.35f, 0.35f)); // 20도
+	pJoint->setSwingLimit(PSX::PxJointLimitCone(0.10f, 0.10f));         // 40도
+
+	pJoint->setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(50.0f, 10.0f, FLT_MAX, true));
 	pJoint->setDrivePosition(PSX::PxTransform(PSX::PxIdentity)); //생성 시 프레임 기준
 	//pJoint->setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(0.0f, 0.0f, 0.0f, false));
 
@@ -496,6 +499,16 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			pTransform->Set_WorldMatrix(WorldMatrix);
 		}
 	}
+}
+
+void CPhysX_Manager::FixCapsuleShapeAxisToY(PSX::PxShape* pShape)
+{
+	PSX::PxTransform shapeLocalPose = pShape->getLocalPose();
+
+	// X -> Y : Z축 기준 +90도 회전
+	shapeLocalPose.q = PSX::PxQuat(PSX::PxHalfPi, PSX::PxVec3(0.f, 0.f, 1.f)) * shapeLocalPose.q;
+
+	pShape->setLocalPose(shapeLocalPose);
 }
 
 uint32_t CPhysX_Manager::ConvertPhysxKindToBit(const PHYSX_USERDATA& physxUserData)

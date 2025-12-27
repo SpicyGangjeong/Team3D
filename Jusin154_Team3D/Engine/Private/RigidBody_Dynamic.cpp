@@ -39,7 +39,7 @@ HRESULT CRigidBody_Dynamic::Render(function<void()> custumState)
 	} break;
 	case ACTOR::CAPSULE:
 	{
-		WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMQuaternionMultiply(XMQuaternionRotationAxis(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(90.f)), XMLoadFloat4((_float4*)&pxTranform.q)), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
+		WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMQuaternionMultiply(XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f)), XMLoadFloat4((_float4*)&pxTranform.q)), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
 		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
 		_matrix WorldUp = XMMatrixTranslationFromVector(WorldMatrix.r[1] * m_vhalfGeometryInfo.y);
 		_matrix WorldDown = XMMatrixTranslationFromVector(WorldMatrix.r[1] * -m_vhalfGeometryInfo.y);
@@ -256,7 +256,7 @@ void CRigidBody_Dynamic::Set_CenterTransform(_vector vStart, _vector vEnd, _bool
 	_float vLength = XMVectorGetX(XMVector3Length(vDir));
 	if (vLength > FLT_EPSILON5) {
 		vDir = XMVector3Normalize(vDir);
-		vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(1.f, 0.f, 0.f, 0.f), vDir);
+		vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(0.f, 1.f, 0.f, 0.f), vDir);
 	}
 	if (true == bTeleport) {
 		Set_Transform(vCenterWorldPos, vRotQ, bTeleport);
@@ -383,12 +383,13 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	m_tagData.pBody = this;
 	m_tagData.bAutoOwnerTranslation = pDesc->bAutoOwnerTranslation;
 	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this, m_pGameInstance->Get_NextLevelID());
-	m_pRigidBody->userData = &m_tagData;
 	m_pRigidBody->setCMassLocalPose(m_PxMassCenter);
 	m_pRigidBody->setRigidDynamicLockFlags(m_eLockFlag);
 	m_pRigidBody->setLinearDamping(m_vDamping.x);
 	m_pRigidBody->setAngularDamping(m_vDamping.y);
-	Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
+	if (ACTOR::CAPSULE != m_eActorType) {
+		Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
+	}
 
 
 

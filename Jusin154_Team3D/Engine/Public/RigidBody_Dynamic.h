@@ -38,9 +38,11 @@ public:
 	void					Set_Name(const _char* szName);
 	_float3					Get_HalfGeometryInfo()	const { return m_vhalfGeometryInfo; }
 	void					Set_HalfGeometryInfo(_float3 vhalfGeometryInfo);
-	void					Move_LocalPos(_matrix newLocalPos);
-	void					Move_LocalPos(_fvector vNewRotQ, _gvector vNewTranslation);
-	void					Move_LocalPos(_float4& vNewRotQ, _float3& vNewTranslation);
+
+	
+	void					Move_LocalPos(_matrix newLocalPos);// 캡슐은 이 함수 쓸 거면 말하고 써야함
+	void					Move_LocalPos(_fvector vNewRotQ, _gvector vNewTranslation);// 캡슐은 이 함수 쓸 거면 말하고 써야함
+	void					Move_LocalPos(_float4& vNewRotQ, _float3& vNewTranslation);// 캡슐은 이 함수 쓸 거면 말하고 써야함
 	_float					Get_Density()			const { return m_fDensity; }
 	_float					Get_Mass();
 

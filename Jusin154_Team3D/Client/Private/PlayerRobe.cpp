@@ -17,9 +17,9 @@ void CPlayerRobe::Priority_Update(_float fTimeDelta)
 
 void CPlayerRobe::Update(_float fTimeDelta)
 {
-	_matrix OwnerMatrix = XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr());
-	m_pTransformCom->Set_WorldMatrix(OwnerMatrix);
-	m_pRobeMainAnchor->Move_Kinematic(XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix, false);
+	_matrix SocketMatrixFixed = (XMMatrixRotationZ(XM_PI) * XMLoadFloat4x4(m_pSocketMatrix)) *
+		XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr());
+	m_pRobeMainAnchor->Move_Kinematic(SocketMatrixFixed, false);
 	m_pRobeMainAnchor->Get_Actor()->wakeUp();
 	Update_LegsPosition();
 }
@@ -33,6 +33,24 @@ void CPlayerRobe::Late_Update(_float fTimeDelta)
 		const bool bBroken = (pxConstraintFlags.isSet(PSX::PxConstraintFlag::eBROKEN));
 		if (true == bBroken) {
 			assert(false);
+		}
+
+		const PSX::PxU32 shapeCount = m_pRobeJointRoute[i]->Get_Actor()->getNbShapes();
+		std::vector<PSX::PxShape*> shapePointerArray(shapeCount, nullptr);
+
+		// (out) shapePointerArray에 shape 포인터들이 채워짐
+		const PSX::PxU32 writtenCount = m_pRobeJointRoute[i]->Get_Actor()->getShapes(shapePointerArray.data(), shapeCount);
+
+		for (PSX::PxU32 shapeIndex = 0; shapeIndex < writtenCount; ++shapeIndex) {
+			PSX::PxShape* shapePointer = shapePointerArray[shapeIndex];
+			if (shapePointer == nullptr) {
+				continue;
+			}
+
+			PSX::PxTransform shapeLocalPose = shapePointer->getLocalPose();
+			shapeLocalPose.p;
+			shapeLocalPose.q;
+			// 여기서 shapeLocalPose.p / shapeLocalPose.q 를 찍어서 확인
 		}
 	}
 	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
@@ -53,16 +71,24 @@ HRESULT CPlayerRobe::Update_RobeSocketPosition()
 
 HRESULT CPlayerRobe::Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld)
 {
+
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), (CComponent**)&m_pRobeJointRoute[Desc_Route.iTargetRouteIndex], &Desc_Body))) {
 		return E_FAIL;
 	}
 	m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_CenterTransform(xmAnchorMatricesWorld[Desc_Route.iStartBoneIndex].r[3], xmAnchorMatricesWorld[Desc_Route.iEndBoneIndex].r[3], true);
-	{ // Joint
-		assert(!m_pDynamicJoints[Desc_Route.iStartJointIndex]);
-		m_pDynamicJoints[Desc_Route.iStartJointIndex]	= m_pGameInstance->Create_PxD6Joint(m_pRobeJointAnchor[Desc_Route.iStartBoneIndex]->Get_Actor(), m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iStartBoneIndex]->Get_GlobalPosition());
-		assert(!m_pDynamicJoints[Desc_Route.iEndJointIndex]);
-		m_pDynamicJoints[Desc_Route.iEndJointIndex]		= m_pGameInstance->Create_PxD6Joint(m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_GlobalPosition());
-	}
+
+
+	PSX::PxRigidDynamic* startAnchorRigidActor = m_pRobeJointAnchor[Desc_Route.iStartBoneIndex]->Get_Actor();
+	PSX::PxRigidDynamic* routeRigidActor = m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor();
+	PSX::PxRigidDynamic* endAnchorRigidActor = m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_Actor();
+
+	PSX::PxTransform startJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), false); // start y--
+	PSX::PxTransform endJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), true); // end y++
+
+	m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
+
+	m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
+
 	return S_OK;
 }
 
@@ -108,13 +134,6 @@ HRESULT CPlayerRobe::Update_LegsPosition()
 		}
 #endif // _DEBUG
 	}
-
-	//_matrix PreTransformMatrix = XMLoadFloat4x4(&m_PreTransformMatrix);
-	//_matrix SocketMatrix = {};
-	//for (_uint i = ENUM_CLASS(PLAYER_JOINT_ORDER::RUP_TO_RMIDDLE_START); i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
-	//	SocketMatrix = XMLoadFloat4x4(m_RobeJointAnchorMatrices[(i - ENUM_CLASS(PLAYER_JOINT_ORDER::RUP_TO_RMIDDLE_START)) /2]);
-	//	m_pRobeJointAnchor[i]->Move_Kinematic((SocketMatrix * PreTransformMatrix * WorldMatrix));
-	//}
 
 	return S_OK;
 }
@@ -168,7 +187,6 @@ HRESULT CPlayerRobe::Render_BonePhysX()
 {
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f);
 	_fmatrix OwnerMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
-	_matrix PreTransformMatrix = XMLoadFloat4x4(&m_PreTransformMatrix);
 	_cmatrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
 	ID3D11DepthStencilState* pPrevDSS = nullptr;
@@ -184,7 +202,7 @@ HRESULT CPlayerRobe::Render_BonePhysX()
 				m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
 			});
 	}
-	_matrix MainAnchorMatrix = XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix;
+	_matrix MainAnchorMatrix = /*XMMatrixRotationZ(XM_PIDIV2) * */XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix;
 	m_pSubShape->Draw(MainAnchorMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
 		[this]() {
 			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
@@ -194,13 +212,13 @@ HRESULT CPlayerRobe::Render_BonePhysX()
 		});
 	Render_Legs();
 	_vector vRouteColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x0000ff, 1.f);
-	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
-		if (nullptr != m_pRobeJointRoute[i]) {
-			m_pRobeJointRoute[i]->Render([this]() {
-				m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-				});
-		}
-	}
+	//for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
+	//	if (nullptr != m_pRobeJointRoute[i]) {
+	//		m_pRobeJointRoute[i]->Render([this]() {
+	//			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+	//			});
+	//	}
+	//}
 	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
 		m_pRobeJointAnchor[i]->Render([this]() {
 			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
@@ -218,13 +236,10 @@ HRESULT CPlayerRobe::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
 
-	_matrix PreTransformMatrix = XMLoadFloat4x4(&m_PreTransformMatrix);
-	_matrix parentWorld = m_pParentTransformCom->Get_XMWorldMatrix();
-	_matrix socketMatrix = XMMatrixRotationZ(XMConvertToRadians(90.f)) * XMLoadFloat4x4(m_pSocketMatrix);
-	_matrix socketWorld = socketMatrix * parentWorld;
+	_matrix socketWorld = /*XMMatrixRotationZ(XM_PIDIV2) * */XMLoadFloat4x4(m_pSocketMatrix) * m_pParentTransformCom->Get_XMWorldMatrix();
 	_matrix xmAnchorMatricesWorld[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { };
 	for (_uint iBoneIndex = 0; iBoneIndex < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++iBoneIndex) {
-		xmAnchorMatricesWorld[iBoneIndex] = XMLoadFloat4x4(m_RobeJointAnchorMatrices[iBoneIndex]) * PreTransformMatrix * parentWorld;
+		xmAnchorMatricesWorld[iBoneIndex] = XMLoadFloat4x4(&m_ReconstructedJointAnchorMatirces[iBoneIndex]) * socketWorld;
 	}
 
 	{ // 
@@ -293,8 +308,15 @@ HRESULT CPlayerRobe::Ready_Components()
 				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_Name("Origin_Linked_Routes");
 #endif // _DEBUG
 				{ // Joint
-					m_pDynamicJoints[Desc_Route.iStartJointIndex]	= m_pGameInstance->Create_PxD6Joint(m_pRobeMainAnchor->Get_Actor(), m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeMainAnchor->Get_GlobalPosition());
-					m_pDynamicJoints[Desc_Route.iEndJointIndex]	= m_pGameInstance->Create_PxD6Joint(m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_GlobalPosition());
+					PSX::PxRigidDynamic* startAnchorRigidActor = m_pRobeMainAnchor->Get_Actor();
+					PSX::PxRigidDynamic* routeRigidActor = m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor();
+					PSX::PxRigidDynamic* endAnchorRigidActor = m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_Actor();
+
+					PSX::PxTransform startJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), false); // start y--
+					PSX::PxTransform endJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), true); // end y++
+
+					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
 				}
 			}
 			{
@@ -311,8 +333,15 @@ HRESULT CPlayerRobe::Ready_Components()
 				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_Name("Origin_Linked_Routes");
 #endif // _DEBUG
 				{ // Joint
-					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(m_pRobeMainAnchor->Get_Actor(), m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeMainAnchor->Get_GlobalPosition());
-					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_GlobalPosition());
+					PSX::PxRigidDynamic* startAnchorRigidActor = m_pRobeMainAnchor->Get_Actor();
+					PSX::PxRigidDynamic* routeRigidActor = m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor();
+					PSX::PxRigidDynamic* endAnchorRigidActor = m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_Actor();
+
+					PSX::PxTransform startJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), false); // start y--
+					PSX::PxTransform endJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), true); // end y++
+
+					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
 				}
 			}
 			{
@@ -329,8 +358,15 @@ HRESULT CPlayerRobe::Ready_Components()
 				m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Set_Name("Origin_Linked_Routes");
 #endif // _DEBUG
 				{ // Joint
-					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(m_pRobeMainAnchor->Get_Actor(), m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeMainAnchor->Get_GlobalPosition());
-					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_Actor(), m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_GlobalPosition());
+					PSX::PxRigidDynamic* startAnchorRigidActor = m_pRobeMainAnchor->Get_Actor();
+					PSX::PxRigidDynamic* routeRigidActor = m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_Actor();
+					PSX::PxRigidDynamic* endAnchorRigidActor = m_pRobeJointAnchor[Desc_Route.iEndBoneIndex]->Get_Actor();
+
+					PSX::PxTransform startJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), false); // start y--
+					PSX::PxTransform endJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), true); // end y++
+
+					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
 				}
 			}
 		}
@@ -432,11 +468,62 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 	m_pRightFootLocalMatrix	= m_pModelCom->Get_BoneMatrixPtr("RightFoot");
 	m_pRightLegLocalMatrix	= m_pModelCom->Get_BoneMatrixPtr("RightLeg");
 
-	XMStoreFloat4x4(&m_PreTransformMatrix, 
-		XMMatrixRotationZ(XMConvertToRadians(90.f)) * XMLoadFloat4x4(m_pModelCom->Get_PreTransformMatrixPtr()));
+	XMStoreFloat4x4(&m_PreTransformMatrix, XMLoadFloat4x4(m_pModelCom->Get_PreTransformMatrixPtr()));
 
 	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
 		m_RobeJointAnchorMatrices[i] = m_pModelCom->Get_BoneLocalMatrixPtr(PLAYER_JOINT_BONE_NAMES[i]);
+	}
+	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i)
+	{
+		_uint iParentIndex = UINT_MAX;
+		_bool bCopyPreTransform = false;
+
+		switch ((PLAYER_JOINT_BONE_ORDER)i)
+		{
+		case PLAYER_JOINT_BONE_ORDER::RIGHTUP:
+		case PLAYER_JOINT_BONE_ORDER::TAILUP:
+		case PLAYER_JOINT_BONE_ORDER::LEFTUP:
+			bCopyPreTransform = true;
+			break;
+
+		case PLAYER_JOINT_BONE_ORDER::RIGHT:
+			iParentIndex = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::RIGHTUP);
+			break;
+		case PLAYER_JOINT_BONE_ORDER::TAIL:
+			iParentIndex = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::TAILUP);
+			break;
+		case PLAYER_JOINT_BONE_ORDER::LEFT:
+			iParentIndex = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::LEFTUP);
+			break;
+		case PLAYER_JOINT_BONE_ORDER::RIGHTDOWNRIGHT:
+		case PLAYER_JOINT_BONE_ORDER::RIGHTDOWN:
+			iParentIndex = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::RIGHT);
+			break;
+		case PLAYER_JOINT_BONE_ORDER::TAILRIGHTDOWN:
+		case PLAYER_JOINT_BONE_ORDER::TAILLEFTDOWN:
+			iParentIndex = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::TAIL);
+			break;
+		case PLAYER_JOINT_BONE_ORDER::LEFTDOWN:
+		case PLAYER_JOINT_BONE_ORDER::LEFTDOWNLEFT:
+			iParentIndex = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::LEFT);
+			break;
+		default:
+			assert(false);
+			break;
+		}
+
+		if (true == bCopyPreTransform)
+		{
+			_matrix constructedMatrix = XMLoadFloat4x4(m_RobeJointAnchorMatrices[i]) * XMLoadFloat4x4(&m_PreTransformMatrix);
+
+			XMStoreFloat4x4(&m_ReconstructedJointAnchorMatirces[i], constructedMatrix);
+			continue;
+		}
+
+		_matrix constructedMatrix = XMLoadFloat4x4(m_RobeJointAnchorMatrices[i]) 
+			* XMLoadFloat4x4(&m_ReconstructedJointAnchorMatirces[iParentIndex]);
+
+		XMStoreFloat4x4(&m_ReconstructedJointAnchorMatirces[i], constructedMatrix);
 	}
 
 	if (FAILED(__super::Initialize(pArg))) {

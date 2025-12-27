@@ -127,6 +127,7 @@ private:
 
 	void Update_Kinematic();
 	void Update_Dynamic_ActiveActors();
+	void FixCapsuleShapeAxisToY(PSX::PxShape* pShape);
 	uint32_t ConvertPhysxKindToBit(const PHYSX_USERDATA&  physxKind);
 	uint32_t BuildCollisionMaskFromCategoryBit(uint32_t iMyBit);
 	static PSX::PxFilterFlags SimulationFilterShader(PSX::PxFilterObjectAttributes pxAttributes0, PSX::PxFilterData pxFilterData0,

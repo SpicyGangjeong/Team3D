@@ -39,7 +39,7 @@ public:
 	PSX::PxShapeFlags		Get_ShapeFlags()		const { return m_ePxShapeFlags; }
 	PSX::PxRigidBodyFlags	Get_RigidBodyFlags()	const { return m_ePxRigidBodyFlags; }
 
-	const PHYSX_USERDATA*		Get_UserDataPtr() const { return &m_tagData; };
+	PHYSX_USERDATA*		Get_UserDataPtr() { return &m_tagData; };
 
 protected:
 	ACTOR					m_eActorType = ACTOR::END;
