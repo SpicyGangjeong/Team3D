@@ -181,6 +181,7 @@
 #include "Mage_Nomal_Attack.h"
 #include "MageSide.h"
 #include "Ranrok_FireBall.h"
+#include "Ranrok_Breath.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -1991,7 +1992,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Breath>(g_iStaticLevel, CRanrok_Breath::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
+	
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;

@@ -645,6 +645,84 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 
 	return tagCollInfo;
 }
+
+ON_COLLISION_INFO CEffect_Container::MonsterRayCast(_vector StartPos, _vector _vDir, _float _fLength, _uint iMaxHitCapacity)
+{
+	_vector vStartPos = StartPos;
+	_vector vDir = _vDir;
+
+	_float fLength = _fLength;
+
+	vector<PSX::PxRaycastHit> Raycasts = {};
+	Raycasts.resize(iMaxHitCapacity);
+
+	_bool bHit = m_pGameInstance->RayCast(vStartPos, vDir, fLength, Raycasts.data(), iMaxHitCapacity, m_iHitCount);
+
+	ON_COLLISION_INFO tagCollInfo = {};
+
+	for (_uint i = 0; i < iMaxHitCapacity; i++)
+	{
+		PSX::PxRigidActor* pActor = Raycasts[i].actor;
+		PSX::PxShape* pShape = Raycasts[i].shape;
+
+
+		tagCollInfo.vWorldPos.w = 1.f;
+
+		if (bHit) {
+
+			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &Raycasts[i].position, sizeof(Raycasts[i].position));
+
+			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &Raycasts[i].normal, sizeof(Raycasts[i].normal));
+			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+			tagCollInfo.fLength = fLength;
+
+			if (nullptr != pActor && nullptr != pActor->userData)
+			{
+				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				tagCollInfo.pObject = pUserData->pOwner;
+
+				switch (pUserData->eKind)
+				{
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+
+					case PXOBJECT::PLAYER:
+					{
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+						m_bHit = true;
+					}
+					break;
+					case PXOBJECT::SKILL_PROTEGO:
+					{
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+						m_bHit = true;
+					}
+					}
+				}
+				}
+
+
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::TERRAIN:
+				{
+
+					m_bHit = true;
+					break;
+				}
+				}
+			}
+
+		}
+
+		return tagCollInfo;
+	}
+
+	return tagCollInfo;
+}
+
 _int CEffect_Container::CollisionCheck()
 {
 	_bool bIsCollide = { false };
@@ -702,3 +780,5 @@ _int CEffect_Container::CollisionCheck()
 	return -1;
 
 }
+
+

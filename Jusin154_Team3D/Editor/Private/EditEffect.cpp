@@ -456,7 +456,7 @@ void CEditEffect::Describe_Entity()
 
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", 
-		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" ,"BLUR_CULLING_NO_EMISSIVE" , "BLOOM_CULLING"};
+		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" ,"BLUR_CULLING_NO_EMISSIVE" , "BLOOM_CULLING" , "DEFAULT_NONPOS"};
 
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -852,6 +852,8 @@ void CEditEffect::Describe_Entity()
 
 			GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
 			GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
+			GUI::Checkbox("StopDissolveSmoothStep", &m_EffectInfo.isNoDissolveSmoothStep);
+			
 
 			ImGui::PushItemWidth(80);
 			GUI::Spacing();

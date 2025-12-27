@@ -130,6 +130,8 @@ bool   g_isDissolveMove;
 bool   g_isReverseDissolve;
 bool   g_isNomalDissolve;
 
+bool   g_isNoDissolveSmoothStep;
+
 bool   g_isDissolve_B;
 bool   g_isDissolve_G;
 
@@ -299,8 +301,64 @@ VS_BULR_MESH_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
     return Out;
 }
 
+VS_BULR_MESH_OUT VS_MAIN_NO_POS(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_BULR_MESH_OUT Out = (VS_BULR_MESH_OUT) 0;
+
+    matrix matW, matWV, matWVP;
+    
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    
+    row_major matrix Wolrd_NonPosMatrix = g_WorldMatrix;
+    
+    
+    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    
+    matW = mul(TransformMatrix, Wolrd_NonPosMatrix);
+    
+    matW[3] = In.vTranslation;
+    
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    /* PRE MAT */
+    
+    row_major matrix PreTransformMatrix = g_ParticleValue[iGPUIndex].PreWorldMatrix;
+    
+    row_major matrix PreWolrd_NonPosMatrix = g_PrevWorldMatrix;
+    
+    
+    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    
+    matrix matPrevW, matPrevWV, matPrevWVP;
+    
+    matPrevW = mul(PreTransformMatrix, PreWolrd_NonPosMatrix);
+    
+    matPrevW[3] = g_ParticleValue[iGPUIndex].PreWorldMatrix[3];
+    
+    matPrevWV = mul(matPrevW, g_PrevViewMatrix);
+    matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
+    
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    Out.vPosition = vPosition;
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vTexcoord = In.vTexcoord;
+    Out.vLifeTime = In.vLifeTime;
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
+    Out.vPrevProjPos = mul(vector(In.vPosition, 1.f), matPrevWVP);
+    
+    return Out;
+}
+
 VS_OUT VS_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
+    
     VS_OUT Out = (VS_OUT) 0;
 
     matrix matW, matWV, matWVP;
@@ -695,13 +753,14 @@ float4 DrawEffect(PS_IN In)
 
             }
             
-            //if (vMtrlDissolve.r <= fTimeRatio + 0.1f)
-            //    discard;
-               
-          
-            //fTimeRatio = 1 - pow(1 - fTimeRatio, 3);
             
             float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
+            
+            if (g_isNoDissolveSmoothStep == true)
+            {
+                fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
+
+            }
             
             vMtrlDiffuse.a *= fFade;
 
@@ -1517,6 +1576,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
+    }
+//23
+    pass Default_NonPos
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_NO_POS();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 }
 
