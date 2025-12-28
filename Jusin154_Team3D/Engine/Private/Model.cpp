@@ -1382,8 +1382,6 @@ void CModel::InItialize_BoneIndex()
 		{
 			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] = i;
 		}
-	}
-}
 		if (m_Bones[i]->Compare_Name("Hips_Cloth"))
 		{
 			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)] = i;
@@ -1787,33 +1785,40 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->Duration = anim->Get_Duration();
 		pDesc->MeshBoneCount = m_Meshes[MeshIndex]->Get_NumBone();
 		pDesc->BoneCount = (_uint)m_Bones.size();
+
 		pDesc->CurrentAnimIndex = m_iCurrentAnimIndex;
 		pDesc->PrevAnimIndex = m_iPreAnimIndex;
 		pDesc->PrevTime = m_Animations[m_iPreAnimIndex]->Get_CurrentTrackPosition();
 		pDesc->BlendRatio = m_fRatio;
+
 		pDesc->RootBoneIndex = m_iRootBoneIndex;
 		pDesc->PlayHeadBone = m_bHeadBone;
 		pDesc->HeadBoneIndex = m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)];
 		pDesc->HeadAimWeight = m_fHeadAimWeight;
+
+		pDesc->SkipCount = m_iSkipBoneCount;
+		pDesc->padding0 = 0;
+		pDesc->padding1 = 0;
+		pDesc->padding2 = 0;
+
 		if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] != -1)
 		{
 			_vector dirWS = XMVector3Normalize(m_vTargetPos - m_pTransform->Get_State(STATE::POSITION));
 
 			_matrix worldInv = m_pTransform->Get_WorldMatrixInv();
 
-			_vector dirLocal =XMVector3Normalize(XMVector3TransformNormal(dirWS, worldInv));
+			_vector dirLocal = XMVector3Normalize(XMVector3TransformNormal(dirWS, worldInv));
 
 			XMStoreFloat3(&pDesc->TargetDir_Local, dirLocal);
 		}
 		else {
 			pDesc->TargetDir_Local = _float3(0.f, 0.f, 0.f);
 		}
-		pDesc->padding = 0.f;
-		pDesc->SkipCount = m_iSkipBoneCount;
-		pDesc->padding = 0;
-		pDesc->padding1 = 0;
+		pDesc->padding3 = 0.f;
+
 		pDesc->PreTransformMatrix = m_PreTransformMatrix;
 		pDesc->RootInitRot = m_vInitialRootRot;
+
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
 

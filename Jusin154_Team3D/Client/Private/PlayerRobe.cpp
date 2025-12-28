@@ -200,13 +200,13 @@ HRESULT CPlayerRobe::Render_BonePhysX()
 		});
 	Render_Legs();
 	_vector vRouteColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x0000ff, 1.f);
-	//for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
-	//	if (nullptr != m_pRobeJointRoute[i]) {
-	//		m_pRobeJointRoute[i]->Render([this]() {
-	//			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-	//			});
-	//	}
-	//}
+	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END); ++i) {
+		if (nullptr != m_pRobeJointRoute[i]) {
+			m_pRobeJointRoute[i]->Render([this]() {
+				m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+				});
+		}
+	}
 	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
 		m_pRobeJointAnchor[i]->Render([this]() {
 			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);

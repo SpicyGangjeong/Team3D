@@ -27,13 +27,14 @@ cbuffer AnimCB : register(b0)
     int PlayHeadBone;
     int HeadBoneIndex;
     float HeadAimWeight;
-  
 
-    float3 TargetDir_Local;
-    float padding;
     int SkipCount;
     int _pad0;
     int _pad1;
+    int _pad2;
+
+    float3 TargetDir_Local;
+    float padding3;
 
     row_major float4x4 PreTransformMatrix;
     float4 RootInitRot;

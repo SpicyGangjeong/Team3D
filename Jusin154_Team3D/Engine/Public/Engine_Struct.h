@@ -373,7 +373,7 @@ typedef struct tagVertexInstance_UIDesc
 
 }VTX_POSTEX_INSTANCE_UI;
 
-typedef struct tagPhsXUserData {
+typedef struct tagPHYSX_USERDATA {
 
 	PHYSX_KIND			eKind = PHYSX_KIND::NOT_DEFINED;
 	_bool				bAutoOwnerTranslation = true;

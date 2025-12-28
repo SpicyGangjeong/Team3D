@@ -50,13 +50,13 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_isDay = true;
 #endif // 
 #ifdef 진우
-	isDay = true;
+	m_isDay = true;
 #endif // 
 #ifdef 기무리
-	isDay = true;
+	m_isDay = true;
 #endif // 
 #ifdef 인혁
-	isDay = true;
+	m_isDay = true;
 #endif // 
 
 	if (FAILED(Ready_Lights())) {

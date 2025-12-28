@@ -23,12 +23,14 @@ public:
 		_int PlayHeadBone;
 		_int   HeadBoneIndex;
 		_float HeadAimWeight;
+
 		_int SkipCount;
-		_int padding;
+		_int padding0;
 		_int padding1;
+		_int padding2;
 
 		_float3 TargetDir_Local;
-		_float padding;
+		_float padding3;
 
 		_float4x4 PreTransformMatrix;
 		_float4 RootInitRot;
@@ -181,7 +183,7 @@ private:
 
 	_float						m_fRatio = {};
 	_int						m_iCurrSecondAnimIndex = { -1 };
-	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1,-1 };
+	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1,-1,-1 };
 	vector<vector<_uint>>		m_BoneMask;
 	vector<_bool>				m_CPUBoneMask;
 
