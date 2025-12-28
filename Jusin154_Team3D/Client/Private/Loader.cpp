@@ -360,8 +360,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = false;
-	isLoad_Hogwart = false;
+	isLoad_Background = true;
+	isLoad_Hogwart = true;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -1920,8 +1920,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
 		return E_FAIL;
 	}
-#ifdef 기무리
-#else
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/Goblin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 		return E_FAIL;
@@ -1954,7 +1953,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
-#endif
 
 #pragma endregion
 

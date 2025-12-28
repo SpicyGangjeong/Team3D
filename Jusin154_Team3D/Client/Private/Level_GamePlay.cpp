@@ -266,9 +266,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 인혁
 	isReady_Background = false;
@@ -581,8 +581,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	}
-#ifdef 기무리
-#else
 	{
 		CNPC_Ollivander::NPCDESC NPCDesc{};
 		NPCDesc.vPos = _float4(40.f, 4.f, 68.9f, 1.f);
@@ -599,8 +597,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			return E_FAIL;
 		}
 	}
-#endif // !기무리
-
 	return S_OK;
 }
 
@@ -649,8 +645,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-#ifdef 기무리
-#else
+
 	for (_uint i = 0; i <1; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
@@ -675,9 +670,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		return E_FAIL;
 	}
 #endif 
-#endif
-	
-
 
 	return S_OK;
 }

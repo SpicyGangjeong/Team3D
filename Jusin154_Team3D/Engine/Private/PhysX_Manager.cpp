@@ -187,8 +187,8 @@ PSX::PxD6Joint* CPhysX_Manager::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, P
 
 	PSX::PxD6Joint* pJoint = PSX::PxD6JointCreate(*m_pPhysics, pActor0, pxLocalParentPOs, pActor1, pxLocalChildPos);
 
-	pActor0->setSolverIterationCounts(42, 6);
-	pActor1->setSolverIterationCounts(42, 6);
+	pActor0->setSolverIterationCounts(8, 2);
+	pActor1->setSolverIterationCounts(8, 2);
 
 	pJoint->setMotion(PSX::PxD6Axis::eX, PSX::PxD6Motion::eLOCKED);
 	pJoint->setMotion(PSX::PxD6Axis::eY, PSX::PxD6Motion::eLOCKED);
@@ -833,7 +833,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 80), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
 	m_pScene->addActor(*pGroundPlane);
