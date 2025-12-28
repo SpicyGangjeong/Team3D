@@ -235,7 +235,7 @@ namespace Client
 
 		_bool       isBlurDissolve = {};
 		_bool       isNomalMap = {};
-		_bool       isPadding2 = {};
+		_bool       isNoDissolveSmoothStep = {};
 		_bool       isPadding3 = {};
 
 		_float4     vPadding5 = {};
