@@ -71,10 +71,10 @@ private:
 	ID3D11ComputeShader*		m_pCSVolumeAccumulate = { nullptr };
 	ID3DBlob*					m_pCSBlobAccumulate = { nullptr };
 
-	_float						m_fDensity = { 0.5f };
-	_float						m_fLightIntensity = { 1.f };
-	_float						m_fAsymmetryParameter = { 0.2f };
-	_float						m_fDepthPackExponent = { 2.f };
+	_float						m_fDensity = { 0.953f };				// 밀도
+	_float						m_fLightIntensity = { 0.01f };		// 광원 강도
+	_float						m_fAsymmetryParameter = { 0.5344f };	//  이방성 계수 값이 클 수록 들어오는 방향으로 나가는 빛의 양이 많아짐
+	_float						m_fDepthPackExponent = { 1.f };		// 깊이 비선형 분포 지수
 
 #ifdef _DEBUG
 	class CRenderEventDebugger	m_AnnotationHelper = {};

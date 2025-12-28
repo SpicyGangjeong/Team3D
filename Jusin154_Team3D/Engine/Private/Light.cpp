@@ -220,7 +220,14 @@ void CLight::Describe_Entity()
 
 		GUI::Spacing();
 
+		if (m_LightDesc.eType == LIGHT::DIRECTIONAL)
+		{
+			GUI::Text("Direction:");
+			GUI::InputFloat3("##Direction", (_float*)m_LightDesc.pDirection);
+		}
 		m_pOwner->Get_Component<CTransform>()->Describe_Entity();
+		
+		
 
 		GUI::TreePop();
 	}
