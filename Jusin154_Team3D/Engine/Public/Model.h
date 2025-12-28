@@ -95,6 +95,7 @@ public:
 	void					Combined_BoneMatrix();
 	void					Combined_BoneMatrix(_int iStartBoneIndex, _uint iBoneCount);
 	_int					Find_BoneIndex(const _char* pBoneName);
+	HRESULT					Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix newTransformation);
 
 #pragma endregion
 #pragma region Material

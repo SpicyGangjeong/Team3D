@@ -559,9 +559,9 @@ const _float4x4* CModel::Get_BoneLocalMatrixPtr(const _char* pBoneName)
 		return nullptr;
 	}
 
-	//Mark_CPUChain(boneIdx);
+	Mark_CPUChain(boneIdx);
 
-	//Apply_CPUMask_ToBones();
+	Apply_CPUMask_ToBones();
 
 	return m_Bones[boneIdx]->Get_TransformationMatrixPtr();
 }
@@ -636,6 +636,16 @@ _int CModel::Find_BoneIndex(const _char* pBoneName)
 	}
 
 	return -1;
+}
+
+HRESULT CModel::Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix newTransformation)
+{
+	_int iBoneIndex = Find_BoneIndex(pBoneName);
+	if (iBoneIndex < 0) {
+		return E_FAIL;
+	}
+	m_Bones[iBoneIndex]->Set_CombinedTransformationMatrix(newTransformation);
+	return S_OK;
 }
 
 

@@ -15,12 +15,8 @@ public:
 	_float4x4* Get_CombinedTransformationMatrixPtr() { return &m_CombinedTransformationMatrix; }
 	_float4x4* Get_TransformationMatrixPtr() { return &m_TransformationMatrix; };
 
-	void Set_CombinedTransformationMatrixPtr(_matrix& newMatrix) {
-		return XMStoreFloat4x4(&m_CombinedTransformationMatrix, newMatrix);
-	}
-	_bool Compare_Name(const _char* pBoneName) const {
-		return !strcmp(pBoneName, m_strName.c_str());
-	}
+	void Set_CombinedTransformationMatrix(_fmatrix newMatrix) { return XMStoreFloat4x4(&m_CombinedTransformationMatrix, newMatrix); }
+	_bool Compare_Name(const _char* pBoneName) const { return !strcmp(pBoneName, m_strName.c_str()); }
 	void Get_KeyFrame(KEYFRAME& kf, _bool bIsCurrentFrame);	// 현재 본의 로컬매트릭스를 캡쳐해서 키프레임으로 성분 분해하여 올려보낸다.
 	const _char* Get_Name() const { return m_strName.c_str(); }
 	_float3 Get_LocalPosition();

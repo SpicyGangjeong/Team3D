@@ -34,24 +34,6 @@ void CPlayerRobe::Late_Update(_float fTimeDelta)
 		if (true == bBroken) {
 			assert(false);
 		}
-
-		const PSX::PxU32 shapeCount = m_pRobeJointRoute[i]->Get_Actor()->getNbShapes();
-		std::vector<PSX::PxShape*> shapePointerArray(shapeCount, nullptr);
-
-		// (out) shapePointerArray에 shape 포인터들이 채워짐
-		const PSX::PxU32 writtenCount = m_pRobeJointRoute[i]->Get_Actor()->getShapes(shapePointerArray.data(), shapeCount);
-
-		for (PSX::PxU32 shapeIndex = 0; shapeIndex < writtenCount; ++shapeIndex) {
-			PSX::PxShape* shapePointer = shapePointerArray[shapeIndex];
-			if (shapePointer == nullptr) {
-				continue;
-			}
-
-			PSX::PxTransform shapeLocalPose = shapePointer->getLocalPose();
-			shapeLocalPose.p;
-			shapeLocalPose.q;
-			// 여기서 shapeLocalPose.p / shapeLocalPose.q 를 찍어서 확인
-		}
 	}
 	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
 #endif // _DEBUG
@@ -65,7 +47,13 @@ HRESULT CPlayerRobe::Render()
 
 HRESULT CPlayerRobe::Update_RobeSocketPosition()
 {
-
+	PSX::PxTransform pxTransform = {};
+	_matrix WorldMatrix = {};
+	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
+		pxTransform  = m_pRobeJointAnchor[i]->Get_GlobalPosition();
+		WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTransform.p), 1.f));
+		m_pModelCom->Set_BoneCombinedTransformation(PLAYER_JOINT_BONE_NAMES[i], WorldMatrix);
+	}
 	return S_OK;
 }
 

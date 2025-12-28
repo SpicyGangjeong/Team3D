@@ -1789,7 +1789,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.001f };
 		Desc.fContactOffset = { 0.005f };
-		Desc.vhalfGeometryInfo = { 0.025f, 0.075f, 0.f };
+		Desc.vhalfGeometryInfo = { 0.025f, 0.085f, 0.f };
 		Desc.fDensity = 0.01f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
@@ -1808,7 +1808,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.01f };
 		Desc.fContactOffset = { 0.01f };
-		Desc.vhalfGeometryInfo = { 0.06f, 0.25f, 0.f };
+		Desc.vhalfGeometryInfo = { 0.12f, 0.25f, 0.f };
 		Desc.fDensity = 122.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
