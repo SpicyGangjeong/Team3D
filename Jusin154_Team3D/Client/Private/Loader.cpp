@@ -14,6 +14,7 @@
 #include "CamPosition_Socket.h"
 #include "CamPosition_Target.h"
 #include "CamPosition_AI.h"
+#include "Camera_Model.h"
 #include "SkyBox.h"
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
@@ -1751,7 +1752,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
-			Desc1.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+			Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
 			Desc1.fDensity = 1.f;
 			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc1.eLockFlag = {};
@@ -1911,6 +1912,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_CCL_CameraRig.001_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/CCL_CameraRig.001.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_SkyboxModel */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SkyboxModel"),
@@ -2833,6 +2837,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_CamPosition_Arm */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Arm>(g_iStaticLevel, CCamPosition_Arm::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Camera_Model */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Model>(g_iStaticLevel, CCamera_Model::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Wand */
