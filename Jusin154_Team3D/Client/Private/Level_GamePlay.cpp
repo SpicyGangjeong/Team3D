@@ -670,11 +670,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		return E_FAIL;
 	}
 
-#if 진우
-#else
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
+
+#if 진우
+#else
+
 #endif 
 	
 

@@ -722,9 +722,6 @@
     <ClInclude Include="..\Public\State_FireBall.h">
       <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Ranrok_FireBall.h">
-      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok</Filter>
-	</ClInclude>
     <ClInclude Include="..\public\NPCInteraction.h">
       <Filter>02.GameObjects\UI\NPCInteraction</Filter>
     </ClInclude>
@@ -740,8 +737,14 @@
     <ClInclude Include="..\public\PointLight.h">
       <Filter>02.GameObjects\Environment\99.Lights\PointLight</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_FireBall.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_FireBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Breath.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\CamPosition_AI.h">
-      <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
+	<Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1520,7 +1523,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok">
       <UniqueIdentifier>{087ad9ea-445d-4bf7-8ec4-0f29a0c2dd53}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\NPCInteraction">
       <UniqueIdentifier>{09764279-bf54-48e4-853a-45b5a65c92a7}</UniqueIdentifier>
     </Filter>
@@ -1539,6 +1542,12 @@
     <Filter Include="02.GameObjects\Environment\99.Lights\PointLight">
       <UniqueIdentifier>{4151af66-59d0-496d-a9a0-0c0603166192}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_FireBall">
+      <UniqueIdentifier>{a682b36b-cead-4c0d-abda-466b0a5f52c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath">
+      <UniqueIdentifier>{a3b5e707-dbb3-47da-a77b-b0ca62b89e99}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition\AI">
       <UniqueIdentifier>{a24f4687-f540-44e5-ae47-fe176c4c9042}</UniqueIdentifier>
     </Filter>
@@ -2211,9 +2220,6 @@
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Ranrok_FireBall.cpp">
-      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok</Filter>
-	</ClCompile>
     <ClCompile Include="..\private\NPCInteraction.cpp">
       <Filter>02.GameObjects\UI\NPCInteraction</Filter>
     </ClCompile>
@@ -2229,6 +2235,12 @@
     <ClCompile Include="..\private\PointLight.cpp">
       <Filter>02.GameObjects\Environment\99.Lights\PointLight</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_FireBall.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_FireBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Breath.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\CamPosition_AI.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
     </ClCompile>

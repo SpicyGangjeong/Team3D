@@ -100,7 +100,7 @@ HRESULT CEffectObject::Render_Blur()
 		}
 	}
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT_NONPOS)
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NONPOS_BLUR;
 
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
@@ -1056,7 +1056,9 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoDissolveSmoothStep", &m_EffectInfo.isNoDissolveSmoothStep, sizeof(_bool)))) {
+		return E_FAIL;
+	}
 
 
 	if (m_pDiffuse_TextureCom != nullptr)
