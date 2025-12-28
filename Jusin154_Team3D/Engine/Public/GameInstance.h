@@ -267,8 +267,9 @@ public:
 #pragma endregion
 
 #pragma region VOLUMETRIC
-		ID3D11ShaderResourceView* Get_VolumeSRV();
-		_float* Get_DepthPackExponentPtr();
+		ID3D11ShaderResourceView*	Get_VolumeSRV();
+		_float*						Get_DepthPackExponentPtr();
+		void						Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent);
 #pragma endregion
 
 
