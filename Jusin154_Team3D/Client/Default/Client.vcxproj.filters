@@ -731,6 +731,9 @@
     <ClInclude Include="..\public\Dialogue.h">
       <Filter>04.Mechanic\Dialogue</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Dialogue_Data.h">
+      <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1518,6 +1521,9 @@
     <Filter Include="04.Mechanic\Dialogue">
       <UniqueIdentifier>{11c35878-12b4-4c55-b872-004fed9a4fb2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
+      <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2195,6 +2201,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Dialogue.cpp">
       <Filter>04.Mechanic\Dialogue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue_Data.cpp">
+      <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
