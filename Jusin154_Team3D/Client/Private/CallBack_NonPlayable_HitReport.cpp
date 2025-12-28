@@ -31,8 +31,8 @@ void CCallBack_NonPlayable_HitReport::onShapeHit(const PSX::PxControllerShapeHit
 	PSX::PxRigidActor* pActor = hit.actor;
 
 	if (nullptr != pController && nullptr != pActor) {
-		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
-		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		PHYSX_USERDATA* pTargetActorData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		PHYSX_USERDATA* pOwnerActorData = static_cast<PHYSX_USERDATA*>(pController->getActor()->userData);
 		if (nullptr == pTargetActorData) { // missing user data
 			return;
 		}
@@ -110,7 +110,7 @@ void CCallBack_NonPlayable_HitReport::onControllerHit(const PSX::PxControllersHi
 	PSX::PxController* pOtherController = hit.other;		// 다른 컨트롤러
 
 	if (nullptr != pController && nullptr != pOtherController) {
-		PhsXUserData* pActorData = static_cast<PhsXUserData*>(pOtherController->getActor()->userData);
+		PHYSX_USERDATA* pActorData = static_cast<PHYSX_USERDATA*>(pOtherController->getActor()->userData);
 		assert(nullptr != pActorData); // missing user data
 
 		switch (pActorData->eKind)

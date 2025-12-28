@@ -9,12 +9,27 @@ public:
     {
         if (actor != nullptr && actor->userData != nullptr)
         {
-            PhsXUserData* physxUserData = (PhsXUserData*)actor->userData;
+            PHYSX_USERDATA* physxUserData = (PHYSX_USERDATA*)actor->userData;
 
             if (physxUserData->eKind == PHYSX_KIND::BODY_DYNAMIC)
             {
-                if (PXOBJECT(physxUserData->iSubKind) == PXOBJECT::SKILL_PROTEGO)
+                switch (PXOBJECT(physxUserData->iSubKind))
+                {
+                case PXOBJECT::LEG:
                     return PSX::PxQueryHitType::eNONE;
+                    break;
+                case PXOBJECT::SKILL_PROTEGO:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
+                case PXOBJECT::JOINT_ROUTE:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
+                case PXOBJECT::JOINT_ANCHOR:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
+                default:
+                    break;
+                }
             }
         }
 

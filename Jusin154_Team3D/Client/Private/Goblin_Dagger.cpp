@@ -202,7 +202,7 @@ void CGoblin_Dagger::Dagger_Hit()
 				XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
 				tagCollInfo.fLength = fLength;
 				
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 				switch (PXOBJECT(pUserData->iSubKind))
 				{

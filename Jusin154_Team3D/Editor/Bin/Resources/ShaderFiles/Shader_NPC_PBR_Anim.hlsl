@@ -28,6 +28,9 @@ float g_fUsingSurfaceParams;
 float g_fEtherealRatio;
 float g_fMixerFactor;
 float g_fMBIntensity = 1.f;
+float g_fDisolveEdgeWidth;
+float g_fDisolveAmount;
+float g_fDisolveRatio;
 
 
 
@@ -65,6 +68,8 @@ StructuredBuffer<BoneOut> g_PrevBoneBuffer   : register(t27);
 
 
 Texture2D g_SurfaceParamsTexture;
+Texture2D g_DeadDisolveTexture;
+Texture2D g_DeadDisolveBurnTexture;
 
 int g_iBinded_Texture[27];
 matrix g_BoneMatrices[512];
@@ -338,7 +343,11 @@ PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAO_Mask = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAO_Mask, In.vTexcoord);
+    }
     float fDiffuseMask = vDAO_Mask.r;
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
@@ -378,7 +387,11 @@ PS_OUT PS_TEETH_SRXO_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -407,7 +420,11 @@ PS_OUT PS_EYE_DN_SRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -442,7 +459,11 @@ PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAO_Mask = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAO_Mask, In.vTexcoord);
+    }
     float fDiffuseMask = vDAO_Mask.r;
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
@@ -484,7 +505,11 @@ PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAO_Mask = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAO_Mask, In.vTexcoord);
+    }
     float fDiffuseMask = vDAO_Mask.r;
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
@@ -525,7 +550,11 @@ PS_OUT PS_HEADwtHAND_DSRXON_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -553,7 +582,11 @@ PS_OUT PS_LOWER_DSRON_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -581,7 +614,11 @@ PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -609,7 +646,11 @@ PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -638,7 +679,12 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb;
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
+    vDiffuse.rgb += vEmissive.rgb * 3.f;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -667,7 +713,12 @@ PS_OUT PS_DNMRO_ToMRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb;
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
+    vDiffuse.rgb += vEmissive.rgb * 3.f;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -695,6 +746,11 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     vDiffuse.rgb += vEmissive.rgb;
     if (vDiffuse.a < 0.2f) {
@@ -724,6 +780,11 @@ PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float4 vAlpha = g_TransmissionTexture.Sample(DefaultSampler, In.vTexcoord);
     if (vAlpha.r < 0.2f)
     {
@@ -759,6 +820,11 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vAmbient = g_AmbientTexture.Sample(DefaultSampler, In.vTexcoord);
     vDiffuse.rgb += vEmissive.rgb;
@@ -797,6 +863,11 @@ PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
     float2 p = uv - center;
     float2 uvRot90 = frac(float2(p.x, p.y) + center);
     float4 vDAOColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAOColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAOColor, In.vTexcoord);
+    }
     float4 vTHVColor = g_DiffuseBlend.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float fAlpha = g_NormalBlendTexture.Sample(DefaultSampler, uvRot90).r;
@@ -836,6 +907,11 @@ PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuseColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuseColor, In.vTexcoord);
+    }
     float4 vSubSurfaceColor = g_ReflectionTexture.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);
@@ -861,6 +937,11 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuseColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuseColor, In.vTexcoord);
+    }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
     vDiffuseColor.rgb += vEmissive.r * vEmissive.g;
     
@@ -888,6 +969,11 @@ PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuseColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuseColor, In.vTexcoord);
+    }
     float4 vSROColor = g_SpecularTexture.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     
@@ -912,7 +998,12 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
 {
     PS_OUT Out;
     float2 uv = In.vTexcoord;
-    float4 vDAOColor    = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    float4 vDAOColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAOColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAOColor, In.vTexcoord);
+    }
     float3 vHairBaseColor = g_NormalBlendTexture.Sample(DefaultSampler, uv).rrr;
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vTHVColor    = g_DiffuseBlend.Sample(DefaultSampler, uv);
@@ -997,6 +1088,11 @@ PS_OUT PS_Dragon_Body(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).r;
     vDiffuse.a = fOppacity;
     if (vDiffuse.a < 0.2f)
@@ -1029,6 +1125,11 @@ PS_OUT PS_Dragon_Wings(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
     vDiffuse += vEmissive;
 

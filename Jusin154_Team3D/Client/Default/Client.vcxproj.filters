@@ -749,6 +749,12 @@
     <ClInclude Include="..\public\Dialogue_Data.h">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_ENUM.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerRobe.h">
+      <Filter>02.GameObjects\Player\Robe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1557,6 +1563,9 @@
     <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
       <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\Robe">
+      <UniqueIdentifier>{f3c7cf8d-2b83-49d3-85da-fe135e376a11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2252,6 +2261,9 @@
         </ClCompile>
     <ClCompile Include="..\private\Dialogue_Data.cpp">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerRobe.cpp">
+      <Filter>02.GameObjects\Player\Robe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

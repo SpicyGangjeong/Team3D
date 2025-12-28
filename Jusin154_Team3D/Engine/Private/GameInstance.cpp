@@ -1017,9 +1017,13 @@ PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody,
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel);
 }
-PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel)
+PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1)
 {
-	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame, iLevel);
+	return m_pPhysX_Manager->Create_PxJoint(eType, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
+}
+PSX::PxD6Joint* CGameInstance::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	return m_pPhysX_Manager->Create_PxD6Joint(pActor0, pActor1, pxJointWorldPos);
 }
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
@@ -1065,6 +1069,10 @@ void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
 	m_pPhysX_Manager->Release_Actor(Actor);
 }
+void CGameInstance::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
+{
+	m_pPhysX_Manager->ApplyFilterData(pRigidActor);
+}
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
@@ -1074,7 +1082,7 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
 }
-void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
+void CGameInstance::Add_Editor_Plane(PHYSX_USERDATA& PlaneData)
 {
 	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
 }

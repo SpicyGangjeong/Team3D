@@ -214,7 +214,7 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 
 	PSX::PxRigidActor* hitActor = sweepHit.actor;
 
-	PhsXUserData* hitUserData = static_cast<PhsXUserData*>(hitActor->userData);
+	PHYSX_USERDATA* hitUserData = static_cast<PHYSX_USERDATA*>(hitActor->userData);
 
 	switch (PXOBJECT(hitUserData->iSubKind))
 	{
@@ -323,7 +323,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		m_pTransform = pDesc->pTransform;
 		m_fWalkableSlopeDegree = pDesc->fWalkableSlope;
 	}
-	{ // PhsXUserData
+	{ // PHYSX_USERDATA
 		m_tagData.eKind = PHYSX_KIND::CCTActor;
 		m_tagData.pOwner = m_pOwner;
 		XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
@@ -347,7 +347,6 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_BoxController(Desc);
 		m_pController->setUserData(&m_tagData);
-		m_pController->getActor()->userData = &m_tagData;
 	} break;
 	case ACTOR::CAPSULE:
 	{
@@ -363,14 +362,16 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_CapsuleController(Desc);
 		m_pController->setUserData(&m_tagData);
-		m_pController->getActor()->userData = &m_tagData;
 	} break;
 	default:
 		assert(false); // PhysX에서 불가능
 		return E_FAIL;
 		break;
 	}
-	
+
+	PSX::PxRigidDynamic* pActor = m_pController->getActor();
+	pActor->userData = &m_tagData;
+	m_pGameInstance->ApplyFilterData(pActor);
 	m_pController->setStepOffset(pDesc->fStepOffset);
 
 	if (nullptr == m_pController) {

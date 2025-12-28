@@ -1,0 +1,126 @@
+﻿#pragma once
+#include "Client_Define.h"
+
+NS_BEGIN(Client)
+
+enum class PLAYER_MESH_ORDER {
+	HEAD_EYE_OCC,
+	HEAD_FACE,
+	HEAD_TEETH,
+	HEAD_EYELASH,
+	HEAD_EYES,
+	BODY_ARMS,
+	HAIR_MAIN,
+	HAIR_MAIN_CLOTH,
+	LOWER,
+	SHOES,
+	UPPER,
+	HAIR_SUB,
+	HAIR_SUB_CLOTH,
+	ROBE_SKIRT,
+	ROBE_FUR,
+	ROBE_CLOTH,
+	END
+};
+
+static const _char* PLAYER_JOINT_BONE_NAMES[12] = {
+			"RightUpLeg_Cloth"
+		,	"TailUp_Cloth"
+		,	"LeftUpLeg_Cloth"
+
+		,	"RightLeg_Cloth"
+		,	"Tail_Cloth"
+		,	"LeftLeg_Cloth"
+
+		,	"RightDownLeg_Cloth"
+		,	"RightDownRightLeg_Cloth"
+		,	"TailRightDown_Cloth"
+
+		,	"TailLeftDown_Cloth"
+		,	"LeftDownLeftLeg_Cloth"
+		,	"LeftDownLeg_Cloth"
+};
+
+enum class PLAYER_JOINT_BONE_ORDER {
+		RIGHTUP
+	,	TAILUP
+	,	LEFTUP
+
+	,	RIGHT
+	,	TAIL
+	,	LEFT
+
+	,	RIGHTDOWNRIGHT
+	,	RIGHTDOWN
+
+	,	TAILRIGHTDOWN
+	,	TAILLEFTDOWN
+
+	,	LEFTDOWN
+	,	LEFTDOWNLEFT
+	,	END
+};
+
+enum class PLAYER_JOINT_ORDER {
+	ORIGIN_TO_RUP_START
+	, ORIGIN_TO_RUP_END
+
+	, ORIGIN_TO_TUP_START
+	, ORIGIN_TO_TUP_END
+
+	, ORIGIN_TO_LUP_START
+	, ORIGIN_TO_LUP_END
+
+
+	, RUP_TO_RMIDDLE_START
+	, RUP_TO_RMIDDLE_END
+
+	, TUP_TO_TMIDDLE_START
+	, TUP_TO_TMIDDLE_END
+
+	, LUP_TO_LMIDDLE_START
+	, LUP_TO_LMIDDLE_END
+
+
+	, RMIDDLE_TO_RR_START
+	, RMIDDLE_TO_RR_END
+
+	, RMIDDLE_TO_R_START
+	, RMIDDLE_TO_R_END
+
+	, TMIDDLE_TO_TR_START
+	, TMIDDLE_TO_TR_END
+
+	, TMIDDLE_TO_TL_START
+	, TMIDDLE_TO_TL_END
+
+	, LMIDDLE_TO_L_START
+	, LMIDDLE_TO_L_END
+
+	, LMIDDLE_TO_LL_START
+	, LMIDDLE_TO_LL_END
+
+
+	, END
+};
+
+enum class PLAYER_JOINT_ROUTE_ORDER {
+	ORIGIN_TO_RUP
+	, ORIGIN_TO_TUP
+	, ORIGIN_TO_LUP
+
+	, RUP_TO_RMIDDLE
+	, TUP_TO_TMIDDLE
+	, LUP_TO_LMIDDLE
+
+	, RMIDDLE_TO_RR
+	, RMIDDLE_TO_R
+	, TMIDDLE_TO_TR
+	, TMIDDLE_TO_TL
+	, LMIDDLE_TO_L
+	, LMIDDLE_TO_LL
+	, END
+};
+
+
+NS_END
