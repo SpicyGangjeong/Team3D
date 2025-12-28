@@ -142,6 +142,14 @@ HRESULT CVolumetric::Dispatch()
 
 }
 
+void CVolumetric::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent)
+{
+	m_fDensity = fDensity;
+	m_fLightIntensity = fLightIntensity;
+	m_fAsymmetryParameter = fAsymmetryParameter;
+	m_fDepthPackExponent = fDepthPackExponent;
+}
+
 CVolumetric* CVolumetric::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CVolumetric* pInstance = new CVolumetric(pDevice, pContext);
