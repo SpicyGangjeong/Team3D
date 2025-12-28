@@ -20,9 +20,9 @@ public:
 		_float BlendRatio;
 
 		_int RootBoneIndex;
+		_int PlayHeadBone;
 		_int   HeadBoneIndex;
 		_float HeadAimWeight;
-		_float paddding1;
 
 		_float3 TargetDir_Local;
 		_float padding;
@@ -50,6 +50,7 @@ public:
 	void Set_Temp(_bool Temp) { m_bTemp = Temp; }
 	void Set_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
 	void Set_HeadPos(_vector vHeadPos) { m_vHeadPos = vHeadPos; }
+	void Play_HeadBone(_bool bPlay) { m_bHeadBone = bPlay; }
 #pragma endregion 
 #pragma region Animation
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
@@ -204,6 +205,7 @@ private:
 	_bool					m_bTemp = {false};
 	_vector					m_vTargetPos = XMVectorZero();
 	_vector					m_vHeadPos = XMVectorZero();
+	_bool					m_bHeadBone = { false };
 
 
 private:

@@ -42,9 +42,9 @@ cbuffer AnimCB : register(b0)
     float BlendRatio;
 
     int RootBoneIndex;
+    int PlayHeadBone;
     int HeadBoneIndex;
     float HeadAimWeight;
-    float paddding1;
 
     float3 TargetDir_Local;
     float padding;
@@ -332,8 +332,45 @@ row_major float4x4 SampleBlendedLocal(uint bone)
         T = 0;
         R = RootInitRot;
     }
+    
+    float4x4 M = MakeAffine(S, R, T);
+    
+    if (PlayHeadBone == 1)
+    {
+        if (bone == HeadBoneIndex && HeadAimWeight > 0.f)
+        {
+            float3 curFwd = normalize(float3(M._31, M._32, M._33));
+            float3 target = normalize(TargetDir_Local);
 
-    return MakeAffine(S, R, T);
+            float3 axis = cross(curFwd, target);
+            float axisLen = length(axis);
+
+            if (axisLen > EPS)
+            {
+                axis /= axisLen;
+
+                float angle = acos(saturate(dot(curFwd, target)));
+                angle *= HeadAimWeight;
+
+                float4 qAim = float4(axis * sin(angle * 0.5f), cos(angle * 0.5f));
+                qAim = QuatNormalize(qAim);
+
+                row_major float4x4 AimM =
+            MakeAffine(float3(1, 1, 1), qAim, float3(0, 0, 0));
+
+                M = mul(AimM, M);
+            }
+        }
+    }
+
+
+
+    return M;
+
+    
+    
+
+    //return MakeAffine(S, R, T);
 }
 
 [numthreads(256, 1, 1)]

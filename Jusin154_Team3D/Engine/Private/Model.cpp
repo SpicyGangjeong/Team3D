@@ -1708,9 +1708,9 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->PrevTime = m_Animations[m_iPreAnimIndex]->Get_CurrentTrackPosition();
 		pDesc->BlendRatio = m_fRatio;
 		pDesc->RootBoneIndex = m_iRootBoneIndex;
+		pDesc->PlayHeadBone = m_bHeadBone;
 		pDesc->HeadBoneIndex = m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)];
 		pDesc->HeadAimWeight = 1.f;
-		pDesc->paddding1 = 0.f;
 		if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] != -1)
 		{
 			_vector dirWS = XMVector3Normalize(m_vTargetPos - m_pTransform->Get_State(STATE::POSITION));
