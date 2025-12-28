@@ -33,6 +33,7 @@ HRESULT CFog::Bind_FogValue(CShader* pShader)
         pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_bool));
         pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
         pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
+        pShader->Bind_SRV("g_VolumeTexture", m_pGameInstance->Get_VolumeSRV());
     }
     else
     {

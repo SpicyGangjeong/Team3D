@@ -275,6 +275,7 @@ public:
 	HRESULT         Bind_CS_Output(_uint Index, _uint iBufferIndex);
 public:
 	void			Set_TimeMult(_float fTimeMult) { m_InstanceDesc.fTimeMult = fTimeMult; }
+	void            Set_Loop(_bool isLoop) { m_InstanceDesc.isLoop = isLoop; }
 private:
 		bool		LoadData(const _char* filename);
 

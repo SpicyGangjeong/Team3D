@@ -16,9 +16,10 @@ CNPCStat::CNPCStat(const CNPCStat& rhs)
 HRESULT CNPCStat::Initialize_Prototype(tinyxml2::XMLNode* pChild)
 {
 	auto pElement = pChild->ToElement();
+	pElement->QueryIntAttribute("ID", &m_NpcInfo.iID);
 	m_NpcInfo.pNpc_Name = CMyTools::ToWstring(pElement->Attribute("Name"));
-	pElement->QueryIntAttribute("OBJECTID", &m_NpcInfo.iNpcType);
-	pElement->QueryFloatAttribute("HP", &m_NpcInfo.fFontPos);
+	pElement->QueryIntAttribute("TAG", &m_NpcInfo.iNpcType);
+	pElement->QueryFloatAttribute("SizeX", &m_NpcInfo.fFontPos);
 	return S_OK;
 }
 
@@ -62,9 +63,9 @@ void CNPCStat::Free()
 void CNPCStat::Describe_Entity()
 {
 }
-
+#endif // _DEBUG
 CNPCStat::NPCINFO CNPCStat::Get_Stat()
 {
 	return m_NpcInfo;
 }
-#endif // _DEBUG
+

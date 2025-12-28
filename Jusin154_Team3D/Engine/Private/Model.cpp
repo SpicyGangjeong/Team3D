@@ -1710,7 +1710,7 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->RootBoneIndex = m_iRootBoneIndex;
 		pDesc->PlayHeadBone = m_bHeadBone;
 		pDesc->HeadBoneIndex = m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)];
-		pDesc->HeadAimWeight = 1.f;
+		pDesc->HeadAimWeight = m_fHeadAimWeight;
 		if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] != -1)
 		{
 			_vector dirWS = XMVector3Normalize(m_vTargetPos - m_pTransform->Get_State(STATE::POSITION));

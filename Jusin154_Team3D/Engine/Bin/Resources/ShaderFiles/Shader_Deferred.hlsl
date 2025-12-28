@@ -94,6 +94,9 @@ float g_fFogPow;
 float g_fFogHeightValue;
 bool  g_bFogVisible;
 vector g_vFogColor;
+float g_fDepthPackExponent;
+
+Texture3D g_VolumeTexture;
 
 float g_fWeights_32[32] =
 {
@@ -1142,6 +1145,8 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
     
+    float3 vVolumeUV = float3(In.vTexcoord.xy, pow(vDepthDesc.y, g_fDepthPackExponent));
+    
     if (0.f == g_fFogPow)
     {
         if (1 == vDepthDesc.y)
@@ -1151,9 +1156,10 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
         return Out;
     }
     
+    float4 vVolumeValue = g_VolumeTexture.Sample(DefaultSampler, vVolumeUV);
     float fViewZ = vDepthDesc.y * g_fFar;
     
-    float4 vPosition, vPreShadowPosition;
+    float4 vPosition;
     vPosition.x = In.vTexcoord.x * 2.f - 1.f;
     vPosition.y = In.vTexcoord.y * -2.f + 1.f;
     vPosition.z = vDepthDesc.x;
@@ -1174,14 +1180,19 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     
     fRatio = pow(1.f - saturate(exp(-1.f * vDepthDesc.y * g_fFogDensity)), g_fFogPow);
     
-    vFinalColor = lerp(vColor, g_vFogColor, fRatio);
-    vFinalColor.a = 1.f;
+    vVolumeValue.r = vVolumeValue.r < 1.413f ? pow(abs(vVolumeValue.r * 0.38317f), 1.f / 2.2f) : 1.f - exp(-vVolumeValue.r);
+    vVolumeValue.g = vVolumeValue.g < 1.413f ? pow(abs(vVolumeValue.g * 0.38317f), 1.f / 2.2f) : 1.f - exp(-vVolumeValue.g);
+    vVolumeValue.b = vVolumeValue.b < 1.413f ? pow(abs(vVolumeValue.b * 0.38317f), 1.f / 2.2f) : 1.f - exp(-vVolumeValue.b);
+    vVolumeValue.a = saturate(1.f - vVolumeValue.a);
+    vFinalColor = float4(lerp(vColor.rgb, vVolumeValue.rgb, vVolumeValue.a), 1.f);
     
     if (1.f == vDepthDesc.y)
     {
-        vFinalColor = float4(g_vFogColor);
+        vFinalColor = float4(vVolumeValue.rgb, 1.f);
     }
-    Out.vFirstTarget = vFinalColor;
+   
+    
+    Out.vFirstTarget = vVolumeValue;
  
     return Out;
 }
@@ -1302,7 +1313,7 @@ technique11 DefaultTechnique
     pass DebugPass // 0
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

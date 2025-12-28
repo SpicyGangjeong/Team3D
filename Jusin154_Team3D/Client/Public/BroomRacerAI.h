@@ -41,6 +41,7 @@ public:
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 	void Set_RaceRing(class CRaceRing* pRaceRing) {m_pRaceRing = pRaceRing;}
 	class CBroom* Get_Broom() { return m_pBroom; }
+	void Set_Move(_bool bMove) { m_bMove = bMove; }
 private:
 	CLight* m_pLightCom = { nullptr };
 	LIGHT_DESC LightDesc = {};
@@ -99,6 +100,11 @@ private:
 	_float			m_fScaleSmoothSpeed = 2.5f;
 	_float			m_fAnimTime = {};
 	_bool			m_bTurbo = {};
+	_bool			m_bMove = {};
+	_float			m_LaneOffsetX = 0.f; 
+	_float			m_LaneOffsetY = 0.f; 
+	_float			m_TurnGain = 1.f;
+	_float			m_HeightGain =1.f;
 
 	void	Behavior_Broom_Ride_MoveEnter();
 	HRESULT Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta);

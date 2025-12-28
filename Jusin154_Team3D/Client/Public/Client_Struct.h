@@ -37,6 +37,28 @@ namespace Client
 		_float			fVidio{};
 	}SPELL_INFO;
 
+	typedef struct DialogueChoice
+	{
+		_int		eType = {false};
+		_wstring	pText;
+		_int		NextTypeID{};
+	}DIALOGUECHOICEINFO;
+
+	typedef struct DialogueInfo
+	{
+		_int						iLineID{};
+		_bool						bType = {false};
+		_wstring					pText;
+		_int						NextTextID{};
+		vector<DIALOGUECHOICEINFO>	ChoiceInfo;
+	}CURRENTDIALOGUEINFO;
+
+	typedef struct NpcDialogue
+	{
+		_int						iNpcID{};
+		vector<CURRENTDIALOGUEINFO>	Info;
+	}NPCDIALOGUEINFO;
+
 	typedef struct tagLockOnInfo {
 		CUnit* pUnit = { nullptr };
 		class CMapElement_Interactable* pInteractive = { nullptr };
@@ -235,7 +257,7 @@ namespace Client
 
 		_bool       isBlurDissolve = {};
 		_bool       isNomalMap = {};
-		_bool       isPadding2 = {};
+		_bool       isNoDissolveSmoothStep = {};
 		_bool       isPadding3 = {};
 
 		_float4     vPadding5 = {};

@@ -82,11 +82,6 @@ void CNPCInteraction::NpcInfo(_wstring Name)
 	m_NpcName = Name;
 }
 
-void CNPCInteraction::Interaction(_bool bInteraction)
-{
-	m_bInteraction = bInteraction;
-}
-
 void CNPCInteraction::Priority_Update(_float fTimeDelta)
 {
 
@@ -169,15 +164,12 @@ HRESULT CNPCInteraction::Render()
 		m_NpcName.c_str(),
 		m_vFontPosition);
 
-	if (m_bInteraction == true)
-	{
-		m_pGameInstance->Perspective_Render_Text(
-			m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
-			m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
-			TEXT("Font_size15"),
-			TEXT("대화하기"),
-			m_vPosition);
-	}
+	m_pGameInstance->Perspective_Render_Text(
+		m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
+		m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
+		TEXT("Font_size15"),
+		TEXT("대화하기"),
+		m_vPosition);
 
 
 	return S_OK;
@@ -240,10 +232,6 @@ HRESULT CNPCInteraction::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fViewport", &m_fViewPort, sizeof(_float2))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iHover", &m_bInteraction, sizeof(_bool))))
 	{
 		return E_FAIL;
 	}
@@ -310,7 +298,10 @@ void CNPCInteraction::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
-
+#ifdef _DEBUG
 void CNPCInteraction::Describe_Entity()
 {
 }
+#endif // DEBUG
+
+

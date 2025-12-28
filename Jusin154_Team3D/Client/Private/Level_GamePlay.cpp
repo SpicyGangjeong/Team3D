@@ -604,7 +604,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
+	for (_uint i = 0; i < 10; ++i) {
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
 			return E_FAIL;
 		}
@@ -670,11 +670,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		return E_FAIL;
 	}
 
-#if 진우
-#else
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
+
+#if 진우
+#else
+
 #endif 
 	
 
