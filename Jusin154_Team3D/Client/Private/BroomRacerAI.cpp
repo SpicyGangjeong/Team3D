@@ -4,7 +4,7 @@
 #include "GameInstance.h"
 #include "Broom.h"
 #include "RaceRing.h"
-#include "CamPosition_Shoulder.h"
+#include "CamPosition_AI.h"
 #include "BroomRaceManager.h"
 
 #pragma region STATE
@@ -71,10 +71,11 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	}
 
 	_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Y = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Z = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
+	_float Y = m_pGameInstance->Real_Random_Float(-5.f, 5.f);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(X, Y, Z, 1.f));
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-200.f, Y, 0.f, 1.f));
+
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -85,19 +86,29 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 
-
-
 	m_pBroom->Set_Ride(true);
 
 	m_pBroomRaceManager = static_cast<CBroomRaceManager*>(pArg);
 
 	CBroomRaceManager::RacerInfo Info;
 
-	Info.pRacer = this;
+	Info.pAI = this;
 	Info.curRing = 0;
 	Info.prevPos = Get_WorldPostion();
 
 	m_pBroomRaceManager->Push_BroomRacer(Info);
+
+	m_LaneOffsetX = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
+	m_LaneOffsetY = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
+
+	m_TurnGain = m_pGameInstance->Real_Random_Float(0.85f, 1.15f);
+	m_HeightGain = m_pGameInstance->Real_Random_Float(0.85f, 1.15f);
+
+	m_pBroom->Set_AISpeed(
+		m_pGameInstance->Real_Random_Float(0.8f, 1.2f),
+		m_pGameInstance->Real_Random_Float(0.8f, 1.2f)
+	);
+
 
 	return S_OK;
 }
@@ -106,11 +117,13 @@ void CBroomRacerAI::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
-	m_pRaceRing = m_pBroomRaceManager->GetTargetRing(this);
+
 }
 
 void CBroomRacerAI::Update(_float fTimeDelta)
 {
+	Set_Input(fTimeDelta);
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -125,7 +138,6 @@ void CBroomRacerAI::Update(_float fTimeDelta)
 
 void CBroomRacerAI::Late_Update(_float fTimeDelta)
 {
-	Set_Input(fTimeDelta);
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
@@ -189,6 +201,7 @@ HRESULT CBroomRacerAI::Render()
 	}
 
 
+
 	return S_OK;
 }
 HRESULT CBroomRacerAI::Render_Shadow(SHADOW eType)
@@ -247,8 +260,22 @@ HRESULT CBroomRacerAI::Ready_Components()
 		return E_FAIL;
 	}
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
-	//m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+	_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+
+	switch (iRand)
+	{
+	case 0:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
+		break;
+	case 1:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+		break;
+	case 2:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Ghost_Peeves_Model");
+		break;
+	default:
+		break;
+	}
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
@@ -310,6 +337,10 @@ HRESULT CBroomRacerAI::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+	_float Intensity = 0.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -368,39 +399,57 @@ HRESULT CBroomRacerAI::Bind_ShaderParameters(_uint iMeshOrder)
 	return S_OK;
 }
 
+_vector CBroomRacerAI::Get_RingForwardTarget()
+{
+	_vector ringPos = m_pRaceRing->Get_WorldPostion();
+	_vector ringFwd = m_pRaceRing->Get_Component<CTransform>()->Get_State(STATE::RIGHT);
+	ringFwd = XMVector3Normalize(ringFwd);
+
+	_vector targetPos = ringPos + ringFwd;
+	targetPos = XMVectorSet(targetPos.m128_f32[0] + m_LaneOffsetX, targetPos.m128_f32[1] + m_LaneOffsetY, targetPos.m128_f32[2], 1.f);
+
+	return targetPos;
+}
 
 _float CBroomRacerAI::ComputeTurnToRing()
 {
-	_vector toRing = m_pRaceRing->Get_WorldPostion() - m_pBroom->Get_WorldPostion();
-	toRing = XMVector3Normalize(XMVectorSetY(toRing, 0.f));
+	_vector targetPos = Get_RingForwardTarget();
+
+	_vector toTarget = targetPos - m_pBroom->Get_WorldPostion();
+	toTarget = XMVector3Normalize(XMVectorSetY(toTarget, 0.f));
 
 	_vector myLook = m_pBroom->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 	myLook = XMVector3Normalize(XMVectorSetY(myLook, 0.f));
 
-	_vector cross = XMVector3Cross(myLook, toRing);
-	_float turn = XMVectorGetY(cross);
+	_float turn = XMVectorGetY(XMVector3Cross(myLook, toTarget));
 
-	_float DEAD = 0.05f;
-	if (fabsf(turn) < DEAD)
+	_float dist = XMVectorGetX(XMVector3Length(targetPos - m_pBroom->Get_WorldPostion()));
+
+	_float atten = clamp(dist / 40.f, 0.f, 1.f);
+
+	if (fabsf(turn) < 0.02f)
 		return 0.f;
 
-	return clamp(turn, -1.f, 1.f);
+	return clamp(turn * atten, -1.f, 1.f);
 }
+
 
 _float CBroomRacerAI::ComputeHeightAdjust()
 {
-	_float dy = (XMVectorGetY(m_pRaceRing->Get_WorldPostion()) + 15.f)
-		- XMVectorGetY(m_pBroom->Get_WorldPostion());
+	_vector targetPos = Get_RingForwardTarget();
+	_vector broomPos = m_pBroom->Get_WorldPostion();
 
-	_float DEAD = 5.f;
-	_float RANGE = 40.f;
+	_float dy = XMVectorGetY(targetPos) - XMVectorGetY(broomPos);
 
-	if (fabsf(dy) < DEAD)
+	_float dist = XMVectorGetX(XMVector3Length(targetPos - broomPos));
+
+	_float atten = clamp(dist / 40.f, 0.f, 1.f);
+
+	if (fabsf(dy) < 1.f)
 		return 0.f;
 
-	return clamp(dy / RANGE, -1.f, 1.f);
+	return clamp((dy / 20.f) * atten, -1.f, 1.f);
 }
-
 
 
 CBroomRacerAI* CBroomRacerAI::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -435,7 +484,7 @@ void CBroomRacerAI::Free()
 	SAFE_RELEASE(m_pBroomModel);
 	SAFE_RELEASE(m_pBroomTransform);
 	SAFE_RELEASE(m_pBroom);
-	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
+	SAFE_RELEASE(m_pCamPosition_AIPart);
 }
 #ifdef _DEBUG
 
@@ -493,9 +542,10 @@ HRESULT CBroomRacerAI::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 	if (!m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CBroomRacerAI::Behavior_Broom_HoverExit()
@@ -520,34 +570,19 @@ HRESULT CBroomRacerAI::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	if (!m_pBroom->Get_Hover())
 	{
 
-		if (Y > 0.f)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-		}
-		else if (Y < 0.f)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
-		}
-
 		_float ax = fabsf(X);
 		_float ay = fabsf(Y);
 		_float az = fabsf(Z);
 
 		if (ay > ax && ay > az)
 		{
-			if (Y > 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-			else
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 		}
 		else if (ax >= az)
 		{
 			if (ay >= ax)
 			{
-				if (Y > 0)
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-				else
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 			}
 			else {
 				if (X < 0)
@@ -561,13 +596,7 @@ HRESULT CBroomRacerAI::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 		}
 		else
 		{
-			if (Y > 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-			else if (Y< 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
-			}
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 		}
 		
 
@@ -577,9 +606,10 @@ HRESULT CBroomRacerAI::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	if (m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CBroomRacerAI::Behavior_Broom_FlyExit()
@@ -606,9 +636,10 @@ HRESULT CBroomRacerAI::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 	if (m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CBroomRacerAI::Behavior_Broom_TurboFlyExit()
@@ -741,18 +772,24 @@ void CBroomRacerAI::Set_Input(_float fTimeDelta)
 	_float targetX = ComputeTurnToRing();
 	_float targetY = ComputeHeightAdjust();
 
-	_float SMOOTH = 6.f;
+	CBroom::BroomInput InputDesc{};
 
-	m_fSmoothX += (targetX - m_fSmoothX) * SMOOTH * fTimeDelta;
-	m_fSmoothY += (targetY - m_fSmoothY) * SMOOTH * fTimeDelta;
+	InputDesc.X = 0.f;
+	InputDesc.Y = 0.f;
+	InputDesc.Z = 0.f;
 
-	CBroom::BroomInput InputDesc;
-	InputDesc.Z = 1.f;
-	InputDesc.X = m_fSmoothX;
-	InputDesc.Y = m_fSmoothY;
-	InputDesc.bHoverToggle = false;
+	/*if (m_bMove)
+	{*/
+		InputDesc.Z = 1.f;
+		InputDesc.X = targetX*m_TurnGain;
+		InputDesc.Y = targetY*m_HeightGain;
+	//}
+
+	InputDesc.bHoverToggle = (m_pBroomRaceManager->Get_RaceState() != ENUM_CLASS(CBroomRaceManager::RACE_STATE::RACING));
+
 	InputDesc.bTurbo = false;
 
 	m_pBroom->Set_Input(InputDesc);
 }
+
 

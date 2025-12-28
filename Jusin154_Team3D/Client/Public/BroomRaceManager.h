@@ -10,10 +10,22 @@ class CBroomRaceManager final : public CGameObject
 public:
 	struct RacerInfo
 	{
-		CGameObject* pRacer = nullptr;
+		class CPlayer* pRacer = nullptr;
+		class CBroomRacerAI* pAI = nullptr;
 		_uint       curRing = 0;
 		_vector      prevPos = XMVectorZero();
 	};
+
+	enum class RACE_STATE
+	{
+		READY,      
+		COUNTDOWN,  
+		START,      
+		RACING,
+		FINISH,
+		END
+	};
+
 
 private:
 	CBroomRaceManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -24,23 +36,25 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
-	class CRaceRing* GetTargetRing(CGameObject* pRacer);
+	virtual HRESULT Render() override;
+	void SetTargetRing(CGameObject* pRacer);
 	void Push_BroomRacer(RacerInfo Info);
-	void Push_RaceRing(CRaceRing* Ring);
+	void Push_RaceRing(class CRaceRing* Ring);
+	_int Get_RaceState() const { return m_eRaceState; }
 private:
 	vector<class CRaceRing*>			m_pRaceRings = {};
 	vector<RacerInfo>					m_Racers = {};
-
-
-#ifdef _DEBUG
-	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
-	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-#endif // _DEBUG
+	_float								m_fCountTimer = {};
+	_int								m_iCount = { 3 };
+	_int								m_eRaceState = { ENUM_CLASS(RACE_STATE::END) };
+	_wstring							ToolTip;
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT			Ready_Components();
 	HRESULT			Bind_ShaderResources() override;
+	void			Update_Countdown(_float fTimeDelta);
+	void			StartRaceMove();
 	void			Check_RingPassed();
 
 public:

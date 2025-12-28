@@ -22,6 +22,7 @@ vector g_vCamPosition;
 uint g_iIndexU;
 uint g_iIndexV;
 float2 g_vTime;
+float g_fMBIntensity = 1.f;
 
 float g_fDisolveRatio;
 float g_fUsingSurfaceParams;
@@ -442,7 +443,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }
@@ -478,7 +479,7 @@ PS_OUT PS_GLASS(PS_IN In)
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
     Out.vVelocityUV = float2(0.5f, 0.5f);
-    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }
@@ -507,7 +508,7 @@ PS_OUT PS_GLASS_CUBE(PS_IN In)
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
     Out.vVelocityUV = float2(0.5f, 0.5f);
-    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }
@@ -697,7 +698,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
     AI_TEXTURE_TYPE_METALNESS, // 서페이스 파라미터
     1.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }
@@ -762,7 +763,7 @@ PS_OUT PS_LAKE(PS_IN In)
     1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
 }
@@ -798,7 +799,7 @@ PS_OUT PS_LAND(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
 }
@@ -826,7 +827,7 @@ PS_OUT PS_NONMRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = g_vSurfaceColor;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
 }
@@ -868,7 +869,7 @@ PS_OUT PS_SPECTOR_WEAPON_MAIN(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
 }
@@ -920,7 +921,7 @@ PS_OUT PS_LEVIOSO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
 }
@@ -1036,7 +1037,6 @@ PS_OUT_DELCAL PS_MAIN_DECAL(PS_IN_DECAL In)
     
     return Out;
 }
-
 
 technique11 MeshTechnique11
 {

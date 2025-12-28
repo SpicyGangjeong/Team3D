@@ -138,9 +138,10 @@ public:
 		_bool       isBlurColor = {};
 
 		_bool       isBlurDissolve = {};
-		_bool       isPadding1 = {};
-		_bool       isPadding2 = {};
+		_bool       isNomalMap = {};
+		_bool       isNoDissolveSmoothStep = {};
 		_bool       isPadding3 = {};
+		
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};
@@ -272,7 +273,7 @@ public:
 #ifdef _DEBUG
 		HRESULT LoadPre(const _char* pFilePath, LEVEL eLevel);
 #endif // DEBUG
-
+	EFFECT_INFO* Get_Effect_Info() { return &m_EffectInfo; }
 
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -287,6 +288,9 @@ protected:
 	CTexture* m_pDissolve_TextureCom = { nullptr };
 	CTexture* m_pEmissive_TextureCom = { nullptr };
 	CTexture* m_pDistortion_TextureCom = { nullptr };
+	CTexture* m_pNormal_TextureCom = { nullptr };
+	CTexture* m_pSurface_TextureCom = { nullptr };
+
 
 	CShader* m_pShaderCom = { nullptr };
 	CLight*  m_pLightCom = { nullptr };
@@ -303,6 +307,7 @@ protected:
 	_string		m_strModelName = {};
 	_string     m_strEmissiveName = {};
 	_string     m_strDistortionName = {};
+	_string     m_strNomalMapName = {};
 
 	_string		m_strPath = {};
 	_string     m_strName = {};

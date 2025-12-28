@@ -69,10 +69,13 @@ Texture2D g_EmissiveTexture : register(t6);
 Texture2D g_DepthStencilTexture : register(t7);
 Texture2D g_DistortionTexture : register(t8);
 Texture2D g_DepthTexture : register(t9);
+Texture2D g_SurfaceParamsTexture : register(t10);
 
 
 float4 g_vCamPosition;
 float  g_fFar;
+float g_fUsingSurfaceParams;
+float g_fMBIntensity = 1.f;
 
 /* 디퓨즈 */
 vector g_vColor;
@@ -127,6 +130,8 @@ bool   g_isDissolve;
 bool   g_isDissolveMove;
 bool   g_isReverseDissolve;
 bool   g_isNomalDissolve;
+
+bool   g_isNoDissolveSmoothStep;
 
 bool   g_isDissolve_B;
 bool   g_isDissolve_G;
@@ -243,17 +248,40 @@ struct VS_BULR_MESH_OUT
     float4 vPrevProjPos : TEXCOORD5;
 };
 
-VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
+struct PS_BLUR_MESH_IN
 {
-    VS_OUT Out = (VS_OUT) 0;
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float2 vLifeTime : TEXCOORD1;
+    float4 vWorldPos : TEXCOORD2;
+    float4 vProjPos : TEXCOORD3;
+    uint iGPUIndex : TEXCOORD4;
+    float4 vPrevProjPos : TEXCOORD5;
+};
+
+VS_BULR_MESH_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_BULR_MESH_OUT Out = (VS_BULR_MESH_OUT) 0;
 
     matrix matW, matWV, matWVP;
     
     row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
+    row_major matrix PreTransformMatrix = g_ParticleValue[iGPUIndex].PreWorldMatrix;
+    
+    
     matW = mul(TransformMatrix, g_WorldMatrix);
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
+    
+    matrix matPrevW, matPrevWV, matPrevWVP;
+    
+    matPrevW = mul(PreTransformMatrix, g_PrevWorldMatrix);
+    matPrevWV = mul(matPrevW, g_PrevViewMatrix);
+    matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
     
 
  
@@ -269,13 +297,69 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos = vPosition;
-   
+    Out.vPrevProjPos = mul(vector(In.vPosition, 1.f), matPrevWVP);
+    
+    return Out;
+}
+
+VS_BULR_MESH_OUT VS_MAIN_NO_POS(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_BULR_MESH_OUT Out = (VS_BULR_MESH_OUT) 0;
+
+    matrix matW, matWV, matWVP;
+    
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    
+    row_major matrix Wolrd_NonPosMatrix = g_WorldMatrix;
+    
+    
+    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    
+    matW = mul(TransformMatrix, Wolrd_NonPosMatrix);
+    
+    matW[3] = In.vTranslation;
+    
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    /* PRE MAT */
+    
+    row_major matrix PreTransformMatrix = g_ParticleValue[iGPUIndex].PreWorldMatrix;
+    
+    row_major matrix PreWolrd_NonPosMatrix = g_PrevWorldMatrix;
+    
+    
+    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    
+    matrix matPrevW, matPrevWV, matPrevWVP;
+    
+    matPrevW = mul(PreTransformMatrix, PreWolrd_NonPosMatrix);
+    
+    matPrevW[3] = g_ParticleValue[iGPUIndex].PreWorldMatrix[3];
+    
+    matPrevWV = mul(matPrevW, g_PrevViewMatrix);
+    matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
+    
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    Out.vPosition = vPosition;
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vTexcoord = In.vTexcoord;
+    Out.vLifeTime = In.vLifeTime;
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
+    Out.vPrevProjPos = mul(vector(In.vPosition, 1.f), matPrevWVP);
     
     return Out;
 }
 
 VS_OUT VS_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
+    
     VS_OUT Out = (VS_OUT) 0;
 
     matrix matW, matWV, matWVP;
@@ -389,6 +473,17 @@ struct PS_OUT
     float4 vDiffuse : SV_TARGET0;
     float4 vRevealage : SV_TARGET1;
 };
+
+struct PS_NOMAL_OUT
+{
+    float4 vAlbedo : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
+    float4 vColor : SV_Target3;
+    float4 vSurface : SV_Target4;
+    float2 vVelocityUV : SV_TARGET5;
+};
+
 
 float4 DrawEffect(PS_IN In)
 {
@@ -659,13 +754,14 @@ float4 DrawEffect(PS_IN In)
 
             }
             
-            //if (vMtrlDissolve.r <= fTimeRatio + 0.1f)
-            //    discard;
-               
-          
-            //fTimeRatio = 1 - pow(1 - fTimeRatio, 3);
             
             float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
+            
+            if (g_isNoDissolveSmoothStep == true)
+            {
+                fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
+
+            }
             
             vMtrlDiffuse.a *= fFade;
 
@@ -807,21 +903,56 @@ float4 SoftEffect(PS_IN In, float4 vMtrlDiffuse)
     return vDiffuse;
     
 }
-PS_OUT PS_MAIN(PS_IN In)
+
+PS_NOMAL_OUT PS_MAIN(PS_BLUR_MESH_IN In)
 {
-   
-    PS_OUT Out;
+    PS_IN  PS_In;
+    PS_NOMAL_OUT Out;
+    
+    PS_In.vPosition = In.vPosition;
+    PS_In.vNormal = In.vNormal;
+    PS_In.vTangent = In.vTangent;
+    PS_In.vBinormal = In.vBinormal;
+    PS_In.vTexcoord = In.vTexcoord;
+    PS_In.vLifeTime = In.vLifeTime;
+    PS_In.vWorldPos = In.vWorldPos;
+    PS_In.vProjPos = In.vProjPos;
+    PS_In.iGPUIndex = In.iGPUIndex;
+
     vector vMtrlDiffuse;
-
-    vMtrlDiffuse = DrawEffect(In);
     
-    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     
-    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal.rgb);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
 
-    vMtrlDiffuse.rgb += RimLight(In).rgb;
-   
-    Out.vDiffuse = vMtrlDiffuse;
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
+    
+    vMtrlDiffuse = DrawEffect(PS_In);
+
+    vMtrlDiffuse.rgb += EmissiveDraw(PS_In, vMtrlDiffuse).rgb;
+    
+    vMtrlDiffuse += RimLight(PS_In);
+    
+    vSurface.b = 0.5f;
+    
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vAlbedo = vMtrlDiffuse;
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    
     return Out;
 }
 
@@ -1154,19 +1285,7 @@ PS_BLOOM_OUT PS_DISTORTION(PS_IN In)
 
 
 
-struct PS_BLUR_MESH_IN
-{
-    float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
-    float3 vTangent : TANGENT;
-    float3 vBinormal : BINORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float2 vLifeTime : TEXCOORD1;
-    float4 vWorldPos : TEXCOORD2;
-    float4 vProjPos : TEXCOORD3;
-    uint iGPUIndex : TEXCOORD4;
-    float4 vPrevProjPos : TEXCOORD5;
-};
+
 
 struct PS_BLUR_MESH_OUT
 {
@@ -1217,10 +1336,10 @@ technique11 DefaultTechnique
 //0
     pass Model
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_BLUR_MESH();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
@@ -1458,6 +1577,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
+    }
+//23
+    pass Default_NonPos
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_NO_POS();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 }
 

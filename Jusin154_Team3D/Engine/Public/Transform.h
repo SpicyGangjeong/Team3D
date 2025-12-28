@@ -21,6 +21,7 @@ private:
 public:
 	HRESULT		Bind_ShaderResource(class CShader* pShader, const _char* pConstantName) const;
 
+	void		Set_Radius(_float& fRadius) { m_fRadius = fRadius; }
 	void		Set_Scale(_float3& vScale);
 	void		Mult_Scale(_float3& vScale);
 	void		Set_State(STATE eState, _fvector vState) { XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]), vState); }
@@ -83,8 +84,11 @@ public:
 	void LookAt_Horizontal(_fvector vAt);
 	_float TargetDis(_fvector vTarget);
 
-
 	void Add_SpeedPerSec(_float fSpeedPerSec);
+
+#ifdef _DEBUG
+	_float3& Get_Rotation() { return m_vRotation; }
+#endif // _DEBUG
 
 private:
 	_float				m_fSpeedPerSec = {};
@@ -97,14 +101,13 @@ private:
 	_float3				m_vBackMomentum = {}; // 다음 프레임에 계산될 이동량
 
 #ifdef _DEBUG
-	_float3		m_vRotation = {};
+	_float3		m_vRotation = {0.f, 0.f, 0.f};
 #endif // _DEBUG
 
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

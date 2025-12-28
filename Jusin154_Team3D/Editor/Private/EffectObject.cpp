@@ -48,7 +48,7 @@ HRESULT CEffectObject::Render()
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
 
-		if (m_EffectInfo.eRenderOrder == RENDER::BULR_MESH)
+		if (m_EffectInfo.eRenderOrder == RENDER::BULR_MESH || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT)
 		{
 			if (FAILED(m_pInstance_ModelCom->Bind_OutPut_SRV_VS(5, 1)))
 				return E_FAIL;
@@ -100,7 +100,7 @@ HRESULT CEffectObject::Render_Blur()
 		}
 	}
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT_NONPOS)
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NONPOS_BLUR;
 
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
@@ -210,6 +210,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 	SAFE_RELEASE(m_pMasking_TextureCom);
 	SAFE_RELEASE(m_pDissolve_TextureCom);
 	SAFE_RELEASE(m_pEmissive_TextureCom);
+	SAFE_RELEASE(m_pNormal_TextureCom);
 
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
@@ -454,6 +455,31 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 
 	}
 
+	if (m_EffectInfo.isNomalMap)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+
+			m_strNomalMapName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNomalMapName),
+				reinterpret_cast<CComponent**>(&m_pNormal_TextureCom))))
+				return E_FAIL;
+		}
+	}
+
+
 	size_t iComponentLength = {};
 
 
@@ -480,6 +506,8 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			return E_FAIL;;
 		}
 	}
+
+
 
 
 
@@ -706,6 +734,33 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 
 	}
 
+
+	if (m_EffectInfo.isNomalMap)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+
+			m_strNomalMapName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNomalMapName),
+				reinterpret_cast<CComponent**>(&m_pNormal_TextureCom))))
+				return E_FAIL;
+		}
+
+
+	}
+
 	size_t iComponentLength = {};
 
 
@@ -801,7 +856,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
-	if (m_EffectInfo.isMotionBlur == true)
+	if (m_EffectInfo.isMotionBlur == true || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT)
 	{
 
 		if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
@@ -997,6 +1052,10 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoDissolveSmoothStep", &m_EffectInfo.isNoDissolveSmoothStep, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -1060,6 +1119,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fModelBlurIntensity", &m_EffectInfo.fModelBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
+
 
 	
 
@@ -1141,7 +1201,22 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
+	if (m_pNormal_TextureCom != nullptr)
+	{
+		if (FAILED(m_pShaderCom->Bind_SRV("g_NormalTexture", m_pNormal_TextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
 
+		_float fUsingSurfaceParams = MRO_PARAMETER;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_SRV("g_SurfaceParamsTexture", m_pSurface_TextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
+
+	}
 
 	return S_OK;
 }
@@ -1192,6 +1267,8 @@ void CEffectObject::Free()
 	SAFE_RELEASE(m_pDissolve_TextureCom);
 	SAFE_RELEASE(m_pEmissive_TextureCom);
 	SAFE_RELEASE(m_pDistortion_TextureCom);
+	SAFE_RELEASE(m_pNormal_TextureCom);
+	SAFE_RELEASE(m_pSurface_TextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pInstance_ModelCom);

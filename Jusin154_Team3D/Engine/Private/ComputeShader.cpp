@@ -173,8 +173,6 @@ ID3D11UnorderedAccessView* CComputeShader::GetOutputUAV(_uint iIndex) const
 	return m_pOutputUAV[iIndex];
 }
 
-
-
 void CComputeShader::Reset()
 {
 	//다음 랜더링 패스에 연관되지 않도록 초기화

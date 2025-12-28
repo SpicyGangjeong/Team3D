@@ -279,7 +279,10 @@ void CDialogue::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
-
+#ifdef _DEBUG
 void CDialogue::Describe_Entity()
 {
 }
+#endif // DEBUG
+
+

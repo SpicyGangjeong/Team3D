@@ -13,6 +13,7 @@
 #include "CamPosition_Shoulder.h"
 #include "CamPosition_Socket.h"
 #include "CamPosition_Target.h"
+#include "CamPosition_AI.h"
 #include "SkyBox.h"
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
@@ -180,6 +181,8 @@
 #include "Mage_Down_Attack.h"
 #include "Mage_Nomal_Attack.h"
 #include "MageSide.h"
+#include "Ranrok_FireBall.h"
+#include "Ranrok_Breath.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -212,6 +215,8 @@
 #include "MapElement_Chest.h"
 #include "MapElement_Chest_Lid.h"
 #include "MapElement_Static.h"
+#include "WorldDecal.h"
+#include "PointLight.h"
 
 #pragma endregion
 
@@ -1417,6 +1422,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+
 #pragma region EFFECT
 
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Trails", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
@@ -1520,7 +1530,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
+ 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"),
 			VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements)))) {
 		return E_FAIL;
@@ -1688,7 +1698,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
-
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
@@ -1756,11 +1765,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VictorRookWood_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-		return E_FAIL;
-	}
-
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/Goblin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
 		return E_FAIL;
@@ -1781,6 +1785,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Professor_EleazarFig_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VictorRookWood_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ghost_Peeves_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
 
@@ -1807,7 +1821,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_RaceRing_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/RaceRing/SM_BRR_RaceRing_01.bin", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/RaceRing/SM_BRR_RaceRing_01.bin", XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
@@ -1979,7 +1993,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_FireBall>(g_iStaticLevel, CRanrok_FireBall::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Breath>(g_iStaticLevel, CRanrok_Breath::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -2737,6 +2759,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Shoulder>(g_iStaticLevel, CCamPosition_Shoulder::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_CamPosition_AI */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_AI>(g_iStaticLevel, CCamPosition_AI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_CamPosition_Target */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Target>(g_iStaticLevel, CCamPosition_Target::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -2830,8 +2856,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 HRESULT CLoader::Loading_For_Field()
 {
-	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
-
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
 #pragma region DUNGEON
@@ -2922,7 +2946,6 @@ HRESULT CLoader::Loading_For_Field()
 
 #pragma endregion
 
-
 	{ // MapModels
 		_uint iIndex = 0;
 		for (auto& JobMapModels : jobMapModels)
@@ -2946,11 +2969,60 @@ HRESULT CLoader::Loading_For_Field()
 		}
 	}
 
+	/* For.Prototype_Component_DecalBox */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_DecalBox"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
+
+#pragma region MAP_TEXTURE
+	/* Base_MRO */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_MSK */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_MSK"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Rift_Material_MSK.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_Noraml */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_Noraml"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Rift_Veins_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_Fade */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_Fade"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_Noise08_D.png"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_MaskNoise */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_MaskNoise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_TankMoteNoiseVinceTest_D.png"), 0)))) {
+		return E_FAIL;
+	}
+	/* Decal_MaskNoise */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Decal_DiffuseMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/VFX/Textures/VFX_T_DementorTatter_D.dds"), 0)))) {
+		return E_FAIL;
+	}
+#pragma endregion
+
+
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	/* For.Prototype_GameObject_PointLight */
+	if (FAILED(m_pGameInstance->Add_Prototype<CPointLight>(ENUM_CLASS(LEVEL::FIELD), CPointLight::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_WorldDecal */
+	if (FAILED(m_pGameInstance->Add_Prototype<CWorldDecal>(ENUM_CLASS(LEVEL::FIELD), CWorldDecal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 

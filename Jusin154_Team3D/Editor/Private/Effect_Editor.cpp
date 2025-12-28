@@ -153,7 +153,7 @@ HRESULT CEffect_Editor::Packaging(const _char* pDirectoryPath)
 {
 	_uint iIndex = {};
 
-	_string strPerfectFilePath = "../Bin/Resources/Data/Effect/Package/";
+	_string strPerfectFilePath = "../Bin/Resources/Data/Effect/MonsterPackage/";
 	_string strDirectoryPath = pDirectoryPath;
 
 	size_t pos = strDirectoryPath.rfind('/');   // 뒤에서부터 '/' 검색

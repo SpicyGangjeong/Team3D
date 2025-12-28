@@ -112,6 +112,11 @@ HRESULT CTransform::Initialize(void* pArg)
 	m_fRotationPerSec = pDesc->fRotationPerSec;
 	m_fRadius = pDesc->fRadius;
 
+#ifdef _DEBUG
+	m_vRotation = _float3(0.f, 0.f, 0.f);
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
@@ -552,9 +557,6 @@ void CTransform::Describe_Entity()
 		GUI::InputFloat("Y##Position", &vPosition.y, 0.1f, 1.f);
 		GUI::InputFloat("Z##Position", &vPosition.z, 0.1f, 1.f);
 		Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
-
-
-		XMStoreFloat3(&m_vRotation, Get_RollPitchYawVector());
 
 
 		GUI::Text("----- Rotation ----");

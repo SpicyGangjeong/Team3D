@@ -35,8 +35,6 @@ HRESULT CBroom::Initialize(void* pArg)
 	}
 
 
-
-
 	Add_FSM();
 
 	Set_Anim();
@@ -50,7 +48,7 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f,-100.f, 0.f, 1.f));
 
 	m_pParentUnit = dynamic_cast<CUnit*>(m_pOwner);
 
@@ -62,8 +60,10 @@ HRESULT CBroom::Initialize(void* pArg)
 
 		m_pWindEffect->Get_Effect_Info()->isBillboard = false;
 	}
-
-
+	else {
+		m_fAISeed = m_pGameInstance->Real_Random_Float(0.f, XM_2PI);
+		m_fAICondition = 1.f;
+	}
 
 
 	return S_OK;
@@ -85,8 +85,15 @@ void CBroom::Update(_float fTimeDelta)
 	else {
 		m_bHoverToggle = m_Input.bHoverToggle;
 		m_bTurbo = m_Input.bTurbo;
-	}
 
+		m_fAITime += fTimeDelta;
+
+		_float target = 1.f + sinf(m_fAITime * 0.3f + m_fAISeed) * 0.15f;
+
+		m_fAICondition += (target - m_fAICondition) * fTimeDelta * 0.3f;
+
+		m_fAICondition = clamp(m_fAICondition, 0.85f, 1.15f);
+	}
 	if (!m_bRide)
 	{
 		m_bHoverToggle = true;
@@ -122,7 +129,7 @@ void CBroom::Update(_float fTimeDelta)
 			return;
 		}
 
-		m_pWindEffect->Set_Visible(true);
+		m_pWindEffect->Set_Visible(false);
 		m_pWindEffect->Get_Component<CInstance_Model>()->Set_TimeMult(0.5f + m_fSpeed / 20.f);
 		m_pWindEffect->Get_Effect_Info()->fBlurIntensity = m_fSpeed / 30.f;
 
@@ -287,13 +294,17 @@ void CBroom::PlayerInput()
 
 	if (m_pGameInstance->Key_Up(DIK_LSHIFT))
 	{
-		m_Input.bHoverToggle = !m_Input.bHoverToggle;
-		m_bHoverToggle = m_Input.bHoverToggle;
+		m_bHoverToggle = !m_bHoverToggle;
 	}
-
 
 	m_Input.bTurbo = m_pGameInstance->Mouse_Pressing(DIM_LBUTTON);
 	m_bTurbo = m_Input.bTurbo;
+}
+
+void CBroom::Set_AISpeed(_float speedMul, _float accelMul)
+{
+	m_fAISpeedMul = speedMul;
+	m_fAIAccelMul = accelMul;
 }
 
 

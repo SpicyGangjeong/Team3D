@@ -4,6 +4,9 @@
 #include "GameInstance.h"
 #include "RaceRing.h"
 #include "Layer.h"
+#include "BroomRacerAI.h"
+#include "Player.h"
+#include "Broom.h"
 
 CBroomRaceManager::CBroomRaceManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -30,10 +33,6 @@ HRESULT CBroomRaceManager::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-#ifdef _DEBUG
-	m_pGripShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 10, false, false));
-	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.2f, 10, false, false));
-#endif // _DEBUG
 
 	return S_OK;
 }
@@ -41,13 +40,25 @@ HRESULT CBroomRaceManager::Initialize(void* pArg)
 void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
+	switch (m_eRaceState)
+	{
+	case ENUM_CLASS(RACE_STATE::COUNTDOWN):
+		Update_Countdown(fTimeDelta);
+		break;
+	case ENUM_CLASS(RACE_STATE::RACING):
+		Check_RingPassed();
+		break;
+	}
 
-	Check_RingPassed();
 }
 
 void CBroomRaceManager::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
+
+
+
+
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -56,8 +67,15 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 void CBroomRaceManager::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
+	m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 }
 
+HRESULT CBroomRaceManager::Render()
+{
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), ToolTip.c_str(), _float2(g_iWinSizeX*0.5f, g_iWinSizeY*0.5f),XMVectorSet(1.f,1.f,1.f,1.f),5.f);
+
+	return S_OK;
+}
 
 HRESULT CBroomRaceManager::Ready_Components()
 {
@@ -123,63 +141,200 @@ void CBroomRaceManager::Free()
 
 void CBroomRaceManager::Describe_Entity()
 {
+	if (GUI::Button("Race Start"))
+	{
+		m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
+		const _float SPAWN_DISTANCE = 80.f;
 
+		for (auto& racer : m_Racers)
+		{
+			CTransform* pRingTransform =
+				m_pRaceRings[0]->Get_Component<CTransform>();
+
+			_vector ringPos = pRingTransform->Get_State(STATE::POSITION);
+			_vector ringLook = pRingTransform->Get_State(STATE::RIGHT);
+			ringLook = XMVector3Normalize(ringLook);
+
+			_vector spawnPos = ringPos - ringLook * SPAWN_DISTANCE;
+
+			if (racer.pAI)
+			{
+				CTransform* pBroomTransform =
+					racer.pAI->Get_Broom()->Get_Component<CTransform>();
+				_float fRand = m_pGameInstance->Real_Random_Float(-10.f, 10.f);
+				spawnPos.m128_f32[2] += fRand;
+
+				pBroomTransform->Set_State(STATE::POSITION, spawnPos);
+				pBroomTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
+				racer.pAI->Get_Broom()->Set_Move(false);
+			}
+			else if (racer.pRacer)
+			{
+				CTransform* pTransform =
+					racer.pRacer->Get_Component<CTransform>();
+				spawnPos.m128_f32[1] -= 2.f;
+				pTransform->Set_State(STATE::POSITION,spawnPos);
+				pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
+				racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::BROOM_RIDE);
+				racer.pRacer->Get_Broom()->Set_Move(false);
+			}
+		}
+	}
+	if (m_eRaceState == ENUM_CLASS(RACE_STATE::READY))
+	{
+		if (GUI::Button("Countdown"))
+		{
+			m_eRaceState = ENUM_CLASS(RACE_STATE::COUNTDOWN);
+		}
+	}
 }
 
+
 #endif // _DEBUG
+
+void CBroomRaceManager::Update_Countdown(_float fTimeDelta)
+{
+	m_fCountTimer += fTimeDelta;
+
+	if (m_fCountTimer >= 1.f)
+	{
+		m_fCountTimer = 0.f;
+		--m_iCount;
+
+		if (m_iCount > 0)
+		{
+			ToolTip = to_wstring(m_iCount);
+		}
+		else
+		{
+			ToolTip = to_wstring(0);
+			StartRaceMove();
+		}
+	}
+}
+
+void CBroomRaceManager::StartRaceMove()
+{
+	for (auto& racer : m_Racers)
+	{
+		if (racer.pAI)
+		{
+			racer.pAI->Get_Broom()->Set_Move(true);
+		}
+		else if (racer.pRacer)
+		{
+			racer.pRacer->Get_Broom()->Set_Move(true);
+		}
+	}
+
+	m_eRaceState = ENUM_CLASS(RACE_STATE::RACING);
+}
+
+
 
 void CBroomRaceManager::Check_RingPassed()
 {
+	const float PASS_RADIUS = 5.f;
+
 	for (auto& racer : m_Racers)
 	{
 		CRaceRing* pRing = m_pRaceRings[racer.curRing];
-		_vector ringPos = pRing->Get_WorldPostion();
-		_vector broomPos = racer.pRacer->Get_WorldPostion();
 
-		_vector ringFwd =pRing->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+		_vector ringPos = pRing->Get_WorldPostion();
+
+		_vector ringFwd =
+			pRing->Get_Component<CTransform>()->Get_State(STATE::RIGHT);
 		ringFwd = XMVector3Normalize(ringFwd);
 
-		_float prevSide = XMVectorGetX(XMVector3Dot(ringFwd, racer.prevPos - ringPos));
-		_float currSide = XMVectorGetX(XMVector3Dot(ringFwd, broomPos - ringPos));
 
-		_float dist = XMVectorGetX(XMVector3Length(broomPos - ringPos));
+		_vector currPos = racer.pAI ? racer.pAI->Get_WorldPostion() : racer.pRacer->Get_WorldPostion();
 
-		const _float PASS_RADIUS = 50.f;
+		_vector prevPos = racer.prevPos;
 
-		GUI::Text("CurRing %d", racer.curRing);
-
+		_float d0 = XMVectorGetX(
+			XMVector3Dot(prevPos - ringPos, ringFwd));
+		_float d1 = XMVectorGetX(
+			XMVector3Dot(currPos - ringPos, ringFwd));
 #ifdef _DEBUG
-		m_pGripShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Green, nullptr, true);
-		m_pSubShape->Draw(pRing->Get_Component<CTransform>()->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Purple, nullptr, true);
+		GUI::Text("%s", racer.pAI ? "AI" : "Player");
+		GUI::SameLine();
+		GUI::Text("CurRing %d", racer.curRing);
+		GUI::Text("PrevSide %.2f", d0);
+		GUI::Text("CurrSide %.2f", d1);
 #endif // _DEBUG
-
-		if (prevSide < 0.f && currSide >= 0.f && dist < PASS_RADIUS)
+		if (d0 * d1 <= 0.f && fabs(d0 - d1) > 1e-4f)
 		{
-			racer.curRing++;
-			if (racer.curRing >= m_pRaceRings.size())
-				racer.curRing = 0;
+			_float t = d0 / (d0 - d1);
+			t = std::clamp(t, 0.f, 1.f);
+
+			_vector hitPos =
+				prevPos + (currPos - prevPos) * t;
+
+			_vector v = hitPos - ringPos;
+			_float side = XMVectorGetX(XMVector3Dot(v, ringFwd));
+			_vector proj = hitPos - ringFwd * side;
+
+			_float dist =
+				XMVectorGetX(XMVector3Length(proj - ringPos));
+
+			if (dist <= PASS_RADIUS)
+			{
+				if(racer.pRacer){ 
+					pRing->Set_Target(false); 
+				}
+					
+
+				racer.curRing = (racer.curRing + 1) % m_pRaceRings.size();
+
+				if (racer.pRacer) {
+					m_pRaceRings[racer.curRing]->Set_Target(true);
+				}
+					
+				racer.pAI ? SetTargetRing(racer.pAI) : SetTargetRing(racer.pRacer);
+			}
 		}
 
-		racer.prevPos = broomPos;
+		racer.prevPos = currPos;
 	}
 }
 
-CRaceRing* CBroomRaceManager::GetTargetRing(CGameObject* pRacer)
-{
+
+void CBroomRaceManager::SetTargetRing(CGameObject*pRacer)
+{ 
 	for (auto& racer : m_Racers)
 	{
-		if (racer.pRacer == pRacer)
-			return m_pRaceRings[racer.curRing];
+		if (racer.pAI)
+		{
+			if (racer.pAI == pRacer)
+			{
+				if (racer.pAI)
+				{
+					racer.pAI->Set_RaceRing(m_pRaceRings[racer.curRing]);
+				}
+			}
+		}
+		else if (racer.pRacer)
+		{
+			if (racer.pRacer == pRacer)
+			{
+				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
+			}
+		}
 	}
-	return nullptr;
 }
 
 void CBroomRaceManager::Push_BroomRacer(RacerInfo Info)
 {
 	RacerInfo info;
 	info.pRacer = Info.pRacer;
+	info.pAI = Info.pAI;
 	info.curRing = Info.curRing;
 	info.prevPos = Info.prevPos;
+
+	if(Info.pAI)
+		info.pAI->Set_RaceRing(m_pRaceRings[info.curRing]);
+	else if(Info.pRacer)
+		info.pRacer->Set_RaceRing(m_pRaceRings[info.curRing]);
 
 	m_Racers.push_back(info);
 	SAFE_ADDREF(Info.pRacer);

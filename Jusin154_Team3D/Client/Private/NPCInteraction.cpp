@@ -298,7 +298,10 @@ void CNPCInteraction::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
-
+#ifdef _DEBUG
 void CNPCInteraction::Describe_Entity()
 {
 }
+#endif // DEBUG
+
+

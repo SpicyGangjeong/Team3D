@@ -61,11 +61,11 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody,&m_bCollisionPlayer);
 
-	//m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
-	//SAFE_ADDREF(m_pEffectPool);
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, -75.f, -15.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(3.f, -75.f, -15.f, 1.f));
 
 	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
 
@@ -636,7 +636,7 @@ void CRanrok::Free()
 
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
-	//SAFE_RELEASE(m_pEffectPool);
+	SAFE_RELEASE(m_pEffectPool);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }
@@ -644,81 +644,9 @@ void CRanrok::Free()
 
 void CRanrok::Describe_Entity()
 {
-	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	if (GUI::CollapsingHeader("Ranrak")) {
-		__super::Describe_Entity();
+	__super::Describe_Entity();
 
-		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
-		GUI::Text(AnimList.c_str());
-
-		GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
-		GUI::Text("AnimSpeed %.2f", m_pModelCom->Get_AnimSpeed());
-
-		GUI::Text("CurrFlow %d", m_iCurrentFlow);
-
-		_float3 Pos;
-		XMStoreFloat3(&Pos, Get_WorldPostion());
-
-		if (GUI::DragFloat3("Pos", (_float*)&Pos, 0.01f))
-		{
-			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&Pos), 1.f));
-		}
-
-		GUI::SameLine();
-
-		if (GUI::SmallButton("Copy"))
-		{	
-			char buf[128];
-			sprintf_s(buf, "<Pos x=\"%.3f\" y=\"%.3f\" z=\"%.3f\"/>", Pos.x, Pos.y, Pos.z);
-
-			GUI::SetClipboardText(buf);
-
-			m_Points[0].push_back(XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
-		}
-
-		GUI::SameLine();
-
-		if (GUI::SmallButton("Clear"))
-		{
-			m_Points[0].clear();
-		}
-
-		GUI::Separator();
-		GUI::Text("Points[0] Count : %d", (_int)m_Points[0].size());
-
-		for (_uint i = 0; i < m_Points[0].size();)
-		{
-			_vector v = m_Points[0][i];
-			XMFLOAT3 p;
-			XMStoreFloat3(&p, v);
-
-			GUI::PushID(i);
-
-			GUI::Text("[%d] (%.2f, %.2f, %.2f)", i, p.x, p.y, p.z);
-
-			GUI::SameLine();
-
-			if (GUI::SmallButton("X"))
-			{
-				m_Points[0].erase(m_Points[0].begin() + i);
-				GUI::PopID();
-				continue; 
-			}
-
-			GUI::PopID();
-			i++;
-		}
-
-
-		if (GUI::Button("MovePos"))
-		{
-			m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z,1.f));
-		}
-		
-		m_pTransformCom->Describe_Entity();
-	}
-	GUI::End();
+	m_pTransformCom->Describe_Entity();
 }
 
 #endif // _DEBUG

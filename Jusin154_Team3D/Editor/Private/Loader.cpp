@@ -193,6 +193,8 @@
 #include "Goblin_Spector.h"
 #include "StunEffect.h"
 #include "Blink.h"
+#include "Ranrok_FireBall.h"
+#include "Ranrok_Breath.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1259,6 +1261,17 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_MRO"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_MRO_%d.dds"), 4)))) {
 		return E_FAIL;
+	} 
+
+	/* Base_MRO */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_SRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/base_Black_SRO.dds"), 0)))) {
+		return E_FAIL;
 	}
 
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Noises", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
@@ -1329,6 +1342,21 @@ HRESULT CLoader::Loading_For_Effect()
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/Nomal", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0 , L"NOMAL")))) {
 			return E_FAIL;
 		}
 
@@ -1475,6 +1503,10 @@ HRESULT CLoader::Loading_For_Effect()
 		TEXT("Prototype_Component_Wand_Model")
 	));
 
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Playable_Model")
+	));
 
 	for (auto& job : futures) {
 
@@ -1763,6 +1795,13 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_FireBall>(NEXT_LEVEL, CRanrok_FireBall::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Breath>(NEXT_LEVEL, CRanrok_Breath::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_Wand */
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
@@ -2346,10 +2385,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SK_ConjuredDragon_Model"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Wands\\CharacterWands\\SK_Wands_Amit.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity())))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SK_ConjuredDragon_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\Environment\\BroomFlight\\Meshes\\SM_BRR_RaceRing_01.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
 
 #pragma region MONSTER
 
@@ -2392,17 +2431,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig_Anim.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Professor_EleazarFig_Model")
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Ghost_Peeves_Model")
 	));
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ConjuredDragon_Model"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f))* XMMatrixIdentity()))))
-	//	return E_FAIL;
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon_Anim.bin", XMMatrixIdentity(),
-		TEXT("Prototype_Component_ConjuredDragon_Anim_Model")
-	));
 
 #pragma endregion
 

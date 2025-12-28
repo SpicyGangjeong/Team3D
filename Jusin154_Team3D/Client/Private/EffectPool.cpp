@@ -42,6 +42,8 @@
 #include "Blink.h"
 #include "Transformation.h"
 #include "Avadakedavra.h"
+#include "Ranrok_FireBall.h"
+#include "Ranrok_Breath.h"
 
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -81,7 +83,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 #endif // 
 #ifdef 진우
 	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 기무리
 	m_isActiveEffectCreate = true;
@@ -560,6 +562,29 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_FIREBALL, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_FireBall* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_FireBall>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_BREATH, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Breath* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Breath>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+	
+
+	
 	return S_OK;
 }
 

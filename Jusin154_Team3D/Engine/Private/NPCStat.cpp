@@ -63,9 +63,9 @@ void CNPCStat::Free()
 void CNPCStat::Describe_Entity()
 {
 }
-
+#endif // _DEBUG
 CNPCStat::NPCINFO CNPCStat::Get_Stat()
 {
 	return m_NpcInfo;
 }
-#endif // _DEBUG
+

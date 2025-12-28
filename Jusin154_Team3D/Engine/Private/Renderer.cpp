@@ -563,14 +563,21 @@ void CRenderer::Render_Fog()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Fog");
 	EVENTSCOPE_("Render_Fog");
+
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_Texture"))) {
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG));
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
+	m_pShader->Bind_RawValue("g_fDepthPackExponent", m_pGameInstance->Get_DepthPackExponentPtr(), sizeof(_float));
 
 	if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
 		assert(false);
-	}
-
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_OriginalTexture"))) {
-		return;
 	}
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
@@ -657,6 +664,7 @@ void CRenderer::Render_Blur()
 	COMPUTE_TIMEDELTA("Timer_Render_Blur");
 	EVENTSCOPE_("Render_Blur");
 	m_eType = RENDER::BLUR;
+
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur")))) {
 		return;
 	}
@@ -700,6 +708,29 @@ void CRenderer::Render_Blur()
 		return;
 	}
 
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur_Y")))) {
+		return;
+	}
+
+	m_pBlurShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
+	m_pBlurShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
+	m_pBlurShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pBlurShader, "g_BlurXTexture"))) {
+		return;
+	}
+
+	m_pBlurShader->Begin(ENUM_CLASS(SHADER_PASS_BLUR::BLUR_Y));
+
+	m_pVIBuffer->Bind_Resources();
+
+	m_pVIBuffer->Render();
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+	{
+		return;
+	}
+
 	COMPUTE_TIMEDELTA("Timer_Render_Blur");
 }
 
@@ -708,7 +739,7 @@ void CRenderer::Combine_Blur()
 	COMPUTE_TIMEDELTA("Timer_Combine_Blur");
 	EVENTSCOPE_("Combine_Blur");
 
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pBlurShader, "g_BlurXTexture"))) {
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Y"), m_pBlurShader, "g_BlurYTexture"))) {
 		return;
 	}
 
@@ -726,7 +757,7 @@ void CRenderer::Combine_Blur()
 	m_pBlurShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
 
 
-	m_pBlurShader->Begin(ENUM_CLASS(SHADER_PASS_BLUR::BLUR_Y));
+	m_pBlurShader->Begin(ENUM_CLASS(SHADER_PASS_BLUR::COMBINED));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();

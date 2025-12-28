@@ -54,6 +54,8 @@ public:
 	HRESULT Load_WaterElemet(const _char* pFileName);
 	HRESULT Load_DoorElemet(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_PointLights(const _char* pFileName, const _wchar* pLayerTag);
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);

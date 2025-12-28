@@ -18,6 +18,7 @@ public:
 	HRESULT IsBinded_Camera(const _wstring& wstrCameraKey);
 	_vector Get_CameraLook();
 	_float	Get_CameraFov();
+	_float	Get_CameraNear() const { return m_fNear; }
 
 
 	void Force_CamPosition(_fvector vPos);
@@ -35,6 +36,7 @@ private:
 	_wstring									m_wstrCurrentCameraKey = {};
 
 	_float										m_fFar = 500.f;
+	_float										m_fNear = 0.1f;
 
 private:
 	HRESULT Initialize(_uint iLevelNumber);

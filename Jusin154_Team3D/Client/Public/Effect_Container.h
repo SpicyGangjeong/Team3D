@@ -25,6 +25,7 @@ public:
 		_wstring    wstrDissolveName = {};
 		_wstring    wstrEmissiveName = {};
 		_wstring    wstrDistortionName = {};
+		_wstring    wstrNomalName = {};
 		_wstring    wstrModelName = {};
 
 		_wstring    wstrEffectName = {};
@@ -77,6 +78,7 @@ protected:
 	_int				CollisionCheck();
 	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
 	ON_COLLISION_INFO	MonsterSweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	MonsterRayCast(_vector StartPos, _vector vDir, _float fLength, _uint iMaxHitCapacity);
 
 protected:
 	_float4							m_vStartPos = {};
@@ -93,6 +95,7 @@ protected:
 	_float							m_fDelay = {};
 	_bool							m_isDelayed = { false };
 	_bool							m_isCollisionEnter = { false };
+	_uint							m_iHitCount = {};
 
 	map<_float, function<void()>>	m_Events = {};
 	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);

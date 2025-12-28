@@ -51,7 +51,7 @@ enum class SHADER_PASS_DEFERRED { DEBUG, DIRECTIONAL, POINT, COMBINED, BLUR, SPO
 	POSTCOMBINED, FOG, TONE_MAPPING, SSAO_OCCLUSION, SSAO_BLUR, MOTIONBLUR, DOWNSAMPLE, MOTIONBLURTILE, MOTIONBLURTENT,
 	END };
 
-enum class SHADER_PASS_BLUR { BLUR_X , BLUR_Y , END};
+enum class SHADER_PASS_BLUR { BLUR_X , BLUR_Y , COMBINED,  END};
 
 enum class TEXTURE_MOUNT_SLOT0 { NOT_DEFINED, METALLIC, SPECULAR, HEIGHT,   END };
 enum class TEXTURE_MOUNT_SLOT1 { NOT_DEFINED, ROUGHNESS,                    END };
@@ -124,6 +124,7 @@ enum class PXOBJECT : _uint {
 #pragma endregion
 #pragma region PLAYER
 	PLAYER = 10,
+	AI,
 #pragma endregion
 #pragma region MONSTER
 	MONSTER = 30,
@@ -183,6 +184,7 @@ enum class PXOBJECT : _uint {
 	DOOR,
 	BUILDING,
 	BOX,
+	RACERING,
 #pragma endregion
 #pragma region NPC
 	NPC = 500,

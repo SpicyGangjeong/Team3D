@@ -84,11 +84,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+	//	return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+	//	return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 		return E_FAIL;
@@ -149,8 +149,17 @@ HRESULT CLevel_EffectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 HRESULT CLevel_EffectViewer::Ready_Layer_Light()
 {
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMainLight>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT)))
+	CMainLight* pLight = { nullptr };
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMainLight>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, nullptr, nullptr, &pLight))) {
 		return E_FAIL;
+	}
+
+	_float4 vDiffuse = _float4(0.745f, 0.797f, 0.8f, 0.f);
+	_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
+	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+
+	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
 	return S_OK;
 }
