@@ -9,6 +9,7 @@ float g_fUsingSurfaceParams;
 float g_fDiffuseMultiplier;
 float g_fSurfaceMultiplier;
 float g_fNormalMultiplier;
+float g_fMBIntensity = 1.f;
 
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
@@ -131,7 +132,7 @@ PS_OUT PS_MAIN(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }
@@ -190,7 +191,7 @@ PS_OUT PS_MAIN_TERRAIN_ANISO(PS_IN In)
         (1.f / 255.f)); // 지형은 1
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }

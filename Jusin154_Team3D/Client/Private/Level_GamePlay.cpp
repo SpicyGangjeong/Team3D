@@ -577,6 +577,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	CPlayer::PLAYERDESC playerDesc = {};
 	playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
 	playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	playerDesc.pBroomRaceManager = m_pBroomRaceManager;
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &playerDesc))) {
 		return E_FAIL;
 
@@ -603,7 +604,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
+	for (_uint i = 0; i < 10; ++i) {
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
 			return E_FAIL;
 		}
@@ -618,8 +619,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
+	for (_uint i = 0; i < 10; ++i) {
+
+		CRaceRing::RACERING_DESC RaceRingDesc {};
+		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
+		RaceRingDesc.iIndex = i;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
 			return E_FAIL;
 		}
 	}

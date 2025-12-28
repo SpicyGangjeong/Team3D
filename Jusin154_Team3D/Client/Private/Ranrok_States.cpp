@@ -440,8 +440,6 @@ void CRanrok::Behavior_FireBallEnter()
 			break;
 		}
 
-
-
 	}
 	else if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
 	{

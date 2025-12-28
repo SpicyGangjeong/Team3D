@@ -96,6 +96,9 @@
 
 #define CS_EFFECT					TEXT("CS_EFFECT")
 #define CS_INSTANCE_MODEL			TEXT("CS_INSTANCE_MODEL")
+#define CS_MODEL					TEXT("CS_MODEL")
+#define CS_LOCAL					TEXT("CS_LOCAL")
+
 
 #define			SAFE_ADDREF(pInstance)		Safe_AddRef(pInstance)
 #define			SAFE_RELEASE(pInstance)		Safe_Release(pInstance)

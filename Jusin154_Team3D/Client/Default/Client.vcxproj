@@ -168,6 +168,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
+    <ClInclude Include="..\Public\CamPosition_AI.h" />
     <ClInclude Include="..\public\Dialogue.h" />
     <ClInclude Include="..\public\Dialogue_Font.h" />
     <ClInclude Include="..\public\NPCInteraction.h" />
@@ -409,6 +410,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
+    <ClCompile Include="..\Private\CamPosition_AI.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\private\Dialogue_Font.cpp" />
     <ClCompile Include="..\private\NPCInteraction.cpp" />

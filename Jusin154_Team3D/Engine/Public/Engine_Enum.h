@@ -124,6 +124,7 @@ enum class PXOBJECT : _uint {
 #pragma endregion
 #pragma region PLAYER
 	PLAYER = 10,
+	AI,
 #pragma endregion
 #pragma region MONSTER
 	MONSTER = 30,
@@ -183,6 +184,7 @@ enum class PXOBJECT : _uint {
 	DOOR,
 	BUILDING,
 	BOX,
+	RACERING,
 #pragma endregion
 #pragma region NPC
 	NPC = 500,

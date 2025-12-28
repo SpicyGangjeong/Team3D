@@ -196,6 +196,7 @@ public:
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
 	_vector Get_CameraLook();
 	_float	Get_CameraFov();
+	_float	Get_CameraNear();
 	const _float* Get_CurrentCameraFar();
 	void Force_CamPosition(_fvector vPos);
 #pragma endregion
@@ -265,6 +266,11 @@ public:
 		_float FontSizeX(const _wstring& strFontTag, const _tchar* pText);
 #pragma endregion
 
+#pragma region VOLUMETRIC
+		ID3D11ShaderResourceView* Get_VolumeSRV();
+		_float* Get_DepthPackExponentPtr();
+#pragma endregion
+
 
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel);
@@ -304,6 +310,7 @@ private:
 	class CFog*						m_pFog = { nullptr };
 	class CResource_Manager*		m_pResource_Manager = { nullptr };
 	class CFont_Manager*			m_pFont_Manager = { nullptr };
+	class CVolumetric*				m_pVolumetric = { nullptr };
 
 	mt19937 m_Rng{ random_device{}() };
 	_float2							m_vViewPortSize = {};

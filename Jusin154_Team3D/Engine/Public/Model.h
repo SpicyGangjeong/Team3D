@@ -169,32 +169,32 @@ private:
 	vector<_bool>				m_CPUBoneMask;
 
 	// 바이너리
-	SaveModel* m_pSaveModel = { nullptr };
+	SaveModel*					m_pSaveModel = { nullptr };
 	//
 
 
-	vector<_float4x4> m_BoneMatrix;
+	vector<_float4x4>			m_BoneMatrix;
 
-	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
-	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
-	_matrix					m_BoneTransformationMatrix = {};
-	_float4					m_vInitialRootRot = {};
+	_float3						m_vPrevRootPos = { 0.f, 0.f, 0.f };
+	_float4						m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
+	_matrix						m_BoneTransformationMatrix = {};
+	_float4						m_vInitialRootRot = {};
 
-	_float					m_fRadius = { 0.f };			// 컬링용 Radius
-	_int					m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
-	_int					m_iIndexAnimPlayableMesh = { -1 };
-	_vector					m_vector[3];
+	_float						m_fRadius = { 0.f };			// 컬링용 Radius
+	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
+	_int						m_iIndexAnimPlayableMesh = { -1 };
+	_vector						m_vector[3];
 
-	vector<_uint>			m_iBoneMask;
-	_bool					m_bInitialRootPos = { false };
-	_bool					m_bInitialRootRotSaved = { false };
-	_bool					m_bLoopRestarted = false;
-	_bool					m_bIsSecondFinishedAnim = { false };
-	_bool					m_bIsSecondLoop = { false };
-	_bool					m_bRatio = { false };
-	_bool					m_bRootBone = {};
-	_float4x4				m_RootMatrix = {};
-	_bool					m_bTemp = {false};
+	vector<_uint>				m_iBoneMask;
+	_bool						m_bInitialRootPos = { false };
+	_bool						m_bInitialRootRotSaved = { false };
+	_bool						m_bLoopRestarted = false;
+	_bool						m_bIsSecondFinishedAnim = { false };
+	_bool						m_bIsSecondLoop = { false };
+	_bool						m_bRatio = { false };
+	_bool						m_bRootBone = {};
+	_float4x4					m_RootMatrix = {};
+	_bool						m_bTemp = {false};
 
 
 private:

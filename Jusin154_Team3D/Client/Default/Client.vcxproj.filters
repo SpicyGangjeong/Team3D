@@ -742,6 +742,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Breath.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\CamPosition_AI.h">
+	<Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1544,6 +1547,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath">
       <UniqueIdentifier>{a3b5e707-dbb3-47da-a77b-b0ca62b89e99}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\AI">
+      <UniqueIdentifier>{a24f4687-f540-44e5-ae47-fe176c4c9042}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2234,6 +2240,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Breath.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\CamPosition_AI.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -75,6 +75,7 @@ Texture2D g_SurfaceParamsTexture : register(t10);
 float4 g_vCamPosition;
 float  g_fFar;
 float g_fUsingSurfaceParams;
+float g_fMBIntensity = 1.f;
 
 /* 디퓨즈 */
 vector g_vColor;
@@ -942,7 +943,7 @@ PS_NOMAL_OUT PS_MAIN(PS_BLUR_MESH_IN In)
     
     vSurface.b = 0.5f;
     
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     Out.vAlbedo = vMtrlDiffuse;
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
