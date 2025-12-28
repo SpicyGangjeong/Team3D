@@ -134,7 +134,7 @@ HRESULT CRanrok_FireBall::Pre_Setting(CGameObject* pObject, void* pArg)
 	XMStoreFloat4(&m_vStartPos, vStartPos);
 
 	/* 플레이어 위치 받기 */
-	CUnit* pPlayer = m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first;
+	 CUnit* pPlayer = m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first;
 
 	if (pPlayer == nullptr)
 		return E_FAIL;
