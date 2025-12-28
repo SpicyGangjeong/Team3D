@@ -1,6 +1,11 @@
-﻿<Dialogue>
-	<Npc NpcName="Ollivander" NpcID="0" >
-		<Text ID="0" Size="0" NpcName="올리벤더:" Text="반갑네 친구 나는 올리벤더 라고 하네"></Text>
-		<Text ID="1" Size="0" NpcName="올리벤더:" Text="나는 여기서 지팡이를 팔고있어"></Text>
-	</Npc>
-</Dialogue>
+﻿<DialogueInfo>
+	<Dialogue NpcID="0">
+		<Line ID="0000" Type="0" Text="반갑네 친구 나는 올리벤더 라고 하네" NextText="0001"> </Line>
+		<Line ID="0001" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="0002"> </Line>
+		<Line ID="0002" Type="1" Text="뭐 필요한게 있나?" >
+			<Choice Type="1" Text="상점 이용하기" NextText="-1" />
+			<Choice Type="2" Text="퀘스트 확인하기" NextText="-1" />
+			<Choice Type="0" Text="다른일 하러가기" NextText="-1" />
+		</Line>
+	</Dialogue>
+</DialogueInfo>

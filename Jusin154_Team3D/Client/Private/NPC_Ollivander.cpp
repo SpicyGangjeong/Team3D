@@ -33,20 +33,6 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-	
-	if (false == m_bHasInteracted)
-	{
-		if (true == InteractWithPlayer()) {
-			m_vEnteringTimer.x += fTimeDelta;
-			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
-				m_vEnteringTimer.x -= m_vEnteringTimer.y;
-				m_bHasInteracted = true;
-				// Active();
-			}
-		}
-	}
-
-
 	if (false == m_bEntered) 
 	{
 		if (true == CastToPlayer()) {
@@ -54,7 +40,6 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
 				m_vEnteringTimer.x -= m_vEnteringTimer.y;
 				m_bEntered = true;
-				m_bHasInteracted = false;
 				// Active();
 			}
 #ifdef _DEBUG
@@ -73,7 +58,6 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
 				m_vEnteringTimer.x -= m_vEnteringTimer.y;
 				m_bEntered = false;
-				m_bHasInteracted = false;
 				// DeActive(), Ready To Enter;
 			}
 #ifdef _DEBUG
@@ -116,9 +100,8 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 	}
 
 	m_pNPCInteraction->Set_Visible(m_bEntered);
-	m_pNPCInteraction->Interaction(m_bHasInteracted);
 
-	if (m_bHasInteracted == true)
+	if (m_bEntered == true)
 	{
 		if (m_pGameInstance->Key_Down(DIK_F))
 		{
@@ -253,19 +236,6 @@ _bool CNPC_Ollivander::CastToPlayer()
 	return false;
 }
 
-_bool CNPC_Ollivander::InteractWithPlayer()
-{
-	_vector vCurrentPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_vector vTargetPos = {};
-	pair<CUnit*, CTransform*> pairAllyInfo = m_pInfoInstance->Get_NearestPlayerAlly(m_pTransformCom->Get_State(STATE::POSITION));
-	vTargetPos = pairAllyInfo.second->Get_State(STATE::POSITION);
-	_float fLength = XMVectorGetX(XMVector4Length(vTargetPos - vCurrentPos));
-	if (fLength < m_fInteractionDistance) {
-		return true;
-	}
-	return false;
-}
-
 HRESULT CNPC_Ollivander::Initialize_Prototype()
 {
 	return S_OK;
@@ -337,7 +307,7 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		m_pCharacter_Controller->SetGravity(true);
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("OLLIVENDER"), (CComponent**)&m_pStat))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("OLLIVENDER"), (CComponent**)&m_pNpcStat))) {
 		return E_FAIL;
 	}
 
@@ -345,7 +315,7 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
-	m_pNPCInteraction->NpcInfo(m_pStat->Get_Stat().pNpc_Name);
+	m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
 
 	return S_OK;
 }
@@ -379,7 +349,7 @@ void CNPC_Ollivander::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pCharacter_Controller);
-	SAFE_RELEASE(m_pStat);
+	SAFE_RELEASE(m_pNpcStat);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

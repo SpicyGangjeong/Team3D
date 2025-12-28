@@ -32,7 +32,6 @@ private:
 
 public:
 	void NpcInfo(_wstring Name);
-	void Interaction(_bool bInteraction);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -40,8 +39,6 @@ private:
 	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-
-	_bool	m_bInteraction = {false};
 
 	_vector m_vFontPosition{};
 	_vector m_vFontPosition1{};

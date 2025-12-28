@@ -368,7 +368,7 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 		if (FAILED(Stat_FileLoad("../Bin/Resources/Data/Stat/Stat.xml"))) {
 			return E_FAIL;
 		}
-		if (FAILED(Stat_FileLoad("../Bin/Resources/Data/Stat/NpcStat.xml"))) {
+		if (FAILED(NPC_FileLoad("../Bin/Resources/Data/Stat/NpcStat.xml"))) {
 			return E_FAIL;
 		}
 #pragma endregion

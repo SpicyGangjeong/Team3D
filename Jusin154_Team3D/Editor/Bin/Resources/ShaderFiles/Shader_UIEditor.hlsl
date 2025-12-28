@@ -1892,13 +1892,13 @@ PS_OUT PS_SpellLearnBooster(PS_IN In)
 
         float4 tex3 = g_Texture3.Sample(DefaultSampler, In.vTexcoord);
         Color = lerp(Color, tex3, tex3.a);
-    }    
+    }
     else if (g_iBoosterOn == 0 && g_iBoosterOff != 0)
     {
         float4 tex2 = g_Texture2.Sample(DefaultSampler, In.vTexcoord);
     
         tex2.rgb *= float3(1.f, 0.f, 0.f);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Color = tex;
+        Color = tex;
         
         Color = lerp(Color, tex2, tex2.a);
     }
@@ -2259,23 +2259,21 @@ PS_OUT PS_Interaction_Npc(PS_IN In)
     float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
 
     Color = tex1;
-    
-    if (g_iHover != 0)
-    {
-        float2 texpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
-        float2 texsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
-        float2 texlocal1 = (In.vTexcoord - texpos1) / texsize1;
-        bool inside1 = all(texlocal1 >= 0.0f && texlocal1 <= 1.0f);
-        if (inside1)
-        {
-            float2 startUV = g_fImageUV.xy;
-            float2 endUV = g_fImageUV.zw;
-            float2 atlasUV = atlasUV = startUV + texlocal1 * (endUV - startUV);
-            float4 tex2 = g_Texture1.Sample(DefaultSampler, atlasUV);
-            Color = lerp(Color, tex2, tex2.a);
 
-        }
+    float2 texpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+    float2 texsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+    float2 texlocal1 = (In.vTexcoord - texpos1) / texsize1;
+    bool inside1 = all(texlocal1 >= 0.0f && texlocal1 <= 1.0f);
+    if (inside1)
+    {
+        float2 startUV = g_fImageUV.xy;
+        float2 endUV = g_fImageUV.zw;
+        float2 atlasUV = atlasUV = startUV + texlocal1 * (endUV - startUV);
+        float4 tex2 = g_Texture1.Sample(DefaultSampler, atlasUV);
+        Color = lerp(Color, tex2, tex2.a);
+
     }
+    
 
     Color.a *= Alpha;
     

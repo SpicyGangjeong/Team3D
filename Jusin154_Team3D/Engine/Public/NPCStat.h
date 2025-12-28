@@ -8,6 +8,7 @@ class ENGINE_DLL CNPCStat final : public CComponent
 {
 	typedef struct tagNpcInfo
 	{
+		_int			iID{};
 		_wstring		pNpc_Name;
 		_int			iNpcType{};
 		_float			fFontPos{};

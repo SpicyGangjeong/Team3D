@@ -2706,7 +2706,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::TRANSFORMATION_SIDE, Get_PartObject<CWand>()); },
 			0.f);
-		Info.pText = TEXT("봄바르다");
+		Info.pText = TEXT("베라베르토!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
 

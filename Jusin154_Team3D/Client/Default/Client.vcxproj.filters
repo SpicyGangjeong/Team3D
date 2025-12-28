@@ -745,6 +745,9 @@
 	</ClInclude>
     <ClInclude Include="..\Public\CamPosition_AI.h">
 	<Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
+          </ClInclude>
+    <ClInclude Include="..\public\Dialogue_Data.h">
+      <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1550,6 +1553,9 @@
 	</Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition\AI">
       <UniqueIdentifier>{a24f4687-f540-44e5-ae47-fe176c4c9042}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
+      <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2243,6 +2249,9 @@
 	</ClCompile>
     <ClCompile Include="..\Private\CamPosition_AI.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
+        </ClCompile>
+    <ClCompile Include="..\private\Dialogue_Data.cpp">
+      <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
