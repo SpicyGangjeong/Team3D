@@ -177,6 +177,8 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 	ComputeAnimation(m_iCurrentAnimIndex, m_iIndexAnimPlayableMesh);
 
+	Apply_CPU_HeadAim();
+
 	if (m_bIsFinishedAnim)
 	{
 		if (m_bIsLoop)
@@ -517,6 +519,47 @@ vector<_float4x4> CModel::Get_OffsetMatrix(_int iIndex)
 	return m_Meshes[iIndex]->Get_OffsetMatrix();
 }
 
+void CModel::Apply_CPU_HeadAim()
+{
+	_int headIdx = m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)];
+	if (headIdx < 0)
+		return;
+
+	_float4x4 localF = m_Bones[headIdx]->Get_TransformationMatrix();
+	_matrix local = XMLoadFloat4x4(&localF);
+
+	_vector headFwd = XMVector3Normalize(local.r[2]);
+
+	_vector dirWS = XMVector3Normalize(m_vTargetPos - m_pTransform->Get_State(STATE::POSITION));
+
+	_matrix worldInv = m_pTransform->Get_WorldMatrixInv();
+
+	_vector dirLocal = XMVector3Normalize(XMVector3TransformNormal(dirWS, worldInv));
+
+	_float dot = XMVectorGetX(XMVector3Dot(headFwd, dirLocal));
+	dot = clamp(dot, -1.f, 1.f);
+
+	_float angle = acosf(dot) * m_fHeadAimWeight;
+
+	_vector axis = XMVector3Cross(headFwd, dirLocal);
+	if (XMVector3LengthSq(axis).m128_f32[0] < 1e-6f)
+		return;
+
+	axis = XMVector3Normalize(axis);
+
+	_vector qAim = XMQuaternionRotationAxis(axis, angle);
+
+	_matrix aimRot = XMMatrixRotationQuaternion(qAim);
+	_matrix newLocal = aimRot * local;
+
+	m_Bones[headIdx]->Set_TransformationMatrix(newLocal);
+
+	Mark_CPUChain(headIdx);
+	Apply_CPUMask_ToBones();
+}
+
+
+
 void CModel::Apply_CPUMask_ToBones()
 {
 	for (size_t i = 0; i < m_Bones.size(); ++i)
@@ -551,19 +594,18 @@ const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName)
 	return m_Bones[boneIdx]->Get_CombinedTransformationMatrixPtr();
 }
 
-const _float4x4* CModel::Get_BoneLocalMatrixPtr(const _char* pBoneName)
+_matrix CModel::Get_BoneMatrix(const _char* pBoneName)
 {
 	_int boneIdx = Get_BoneIndex(pBoneName);
 
-	if (boneIdx < 0) {
-		return nullptr;
-	}
+	if (boneIdx < 0)
+		return XMMatrixIdentity();
 
 	Mark_CPUChain(boneIdx);
 
 	Apply_CPUMask_ToBones();
 
-	return m_Bones[boneIdx]->Get_TransformationMatrixPtr();
+	return m_Bones[boneIdx]->Get_CombinedTransformationMatrix();
 }
 
 _matrix CModel::Get_BoneMatrix(const _char* pBoneName) const
@@ -577,6 +619,20 @@ _matrix CModel::Get_BoneMatrix(const _char* pBoneName) const
 		});
 
 	return 	(*iter)->Get_CombinedTransformationMatrix();
+}
+
+const _float4x4* CModel::Get_BoneLocalMatrixPtr(const _char* pBoneName)
+{
+	_int boneIdx = Get_BoneIndex(pBoneName);
+
+	if (boneIdx < 0)
+		return nullptr;
+
+	Mark_CPUChain(boneIdx);
+
+	Apply_CPUMask_ToBones();
+
+	return m_Bones[boneIdx]->Get_TransformationMatrixPtr();
 }
 
 _matrix CModel::Get_BoneLocalMatrix(const _char* pBoneName) const
@@ -2367,10 +2423,10 @@ HRESULT CModel::Initialize(void* pArg)
 				break;
 			}
 		}
-		if (-1 == m_iIndexAnimPlayableMesh) {
+	/*	if (-1 == m_iIndexAnimPlayableMesh) {
 
 			assert(false);
-		}
+		}*/
 	}
 
 

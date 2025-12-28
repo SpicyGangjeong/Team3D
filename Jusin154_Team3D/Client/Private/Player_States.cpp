@@ -1707,7 +1707,7 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 				if (Degree <= 60.f)
 				{
 					pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 					Add_Event(pairAnimInfo.first,
 						[this]() {m_bLookAt = true;
 						},
@@ -1718,16 +1718,16 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 					if (Cross < 0.f)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::PARRY2];
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true,1.f,false);
 					}
 					else {
 						pairAnimInfo = m_Animation[STATEANIM::PARRY3];
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 					}
 					Add_Event(pairAnimInfo.first,
 						[this]() {m_bLookAt = true;
 						},
-						0.8f);
+						0.11f);
 				}
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::PARRY_180];

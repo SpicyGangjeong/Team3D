@@ -4,6 +4,7 @@
 #include "Level_Loading.h"
 #include "Light_Main.h"
 #include "Camera_Debug.h"
+#include "Camera_Model.h"
 #include "InfoInstance.h"
 #include "UI_Manager.h"
 #include "Layer.h"
