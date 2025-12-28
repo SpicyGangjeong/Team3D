@@ -42,7 +42,28 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_GamePlay::Initialize(void* pArg)
 {
+	// 낮, 밤 설정
+#ifdef gimch
+	m_isDay = false;
+#endif // gimch
+#ifdef Bin
+	m_isDay = true;
+#endif // 
+#ifdef 진우
+	isDay = true;
+#endif // 
+#ifdef 기무리
+	isDay = true;
+#endif // 
+#ifdef 인혁
+	isDay = true;
+#endif // 
+
 	if (FAILED(Ready_Lights())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Volumetric())) {
 		return E_FAIL;
 	}
 
@@ -164,8 +185,49 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))) {
+
+	LIGHT_DESC Desc = {};
+	if (m_isDay)
+	{
+		Desc.vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
+		Desc.vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
+		Desc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
+	}
+	else
+	{
+		Desc.vDiffuse = _float4(0.0471f, 0.0745f, 0.1294f, 0.2549f);
+		Desc.vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
+		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc))) {
 		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Volumetric()
+{
+	// Volumetric 설정
+	if(m_isDay)
+	{
+		m_pGameInstance->Setting_Volumetirc(
+			1.251f,                         // 밀도
+			0.0253f,                          // 빛 강도
+			0.9f,                          // 산란 계수
+			1.78f                           // 깊이 분포 계수
+		);
+	}
+	else
+	{
+		m_pGameInstance->Setting_Volumetirc(
+			0.626f,                         // 밀도
+			0.01f,                          // 빛 강도
+			0.11f,                          // 산란 계수
+			1.0f                           // 깊이 분포 계수
+		);
 	}
 
 	return S_OK;
@@ -577,6 +639,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	CPlayer::PLAYERDESC playerDesc = {};
 	playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
 	playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	playerDesc.pBroomRaceManager = m_pBroomRaceManager;
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &playerDesc))) {
 		return E_FAIL;
 
@@ -602,11 +665,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
 {
-	//for (_uint i = 0; i < 1; ++i) {
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
-	//		return E_FAIL;
-	//	}
-	//}
+#ifdef Bin
+	for (_uint i = 0; i < 0; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
+			return E_FAIL;
+		}
+	}
+#endif // Bin
 	return S_OK;
 }
 
@@ -617,11 +682,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
+	for (_uint i = 0; i < 10; ++i) {
+
+		CRaceRing::RACERING_DESC RaceRingDesc{};
+		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
+		RaceRingDesc.iIndex = i;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
 			return E_FAIL;
 		}
 	}
+
 	return S_OK;
 }
 
@@ -645,7 +715,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-
 	for (_uint i = 0; i <1; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
@@ -664,11 +733,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
-#if 진우
-#else
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
+
+#if 진우
+#else
+
 #endif 
 
 	return S_OK;

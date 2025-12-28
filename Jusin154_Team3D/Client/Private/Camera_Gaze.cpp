@@ -109,6 +109,17 @@ void CCamera_Gaze::Toggle_Priority()
 	}
 }
 
+void CCamera_Gaze::Toggle_AIPriority()
+{
+	if (m_iPriority == 55) {
+		m_iPriority = 102;
+	}
+	else {
+		m_iPriority = 55;
+		m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, false);
+	}
+}
+
 void CCamera_Gaze::Late_Update(_float fTimeDelta)
 {
 	if (false == m_bActive) {

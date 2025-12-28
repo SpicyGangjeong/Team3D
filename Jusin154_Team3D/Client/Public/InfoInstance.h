@@ -9,6 +9,7 @@ class CTransform;
 class CUnit;
 class CState;
 class CStat;
+class CNPCStat;
 class CUIObject;
 NS_END
 
@@ -53,6 +54,8 @@ public:
 	HRESULT Load_WaterElemet(const _char* pFileName);
 	HRESULT Load_DoorElemet(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_PointLights(const _char* pFileName, const _wchar* pLayerTag);
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);
@@ -81,6 +84,9 @@ public:
 	const SPELLLEARNINFO& Get_SpellLearn(_int Index) const;
 	_int Get_SpellLearnIndex();
 #pragma endregion
+#pragma region Dialogue_Fint
+	void Set_Font(void* pArg);
+#pragma endregion
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 
@@ -99,6 +105,8 @@ private:
 	class CInteractiveInfo*		m_pInteractiveInfo =  { nullptr };
 	class CDamage_Font*			m_pDamage_Font =  { nullptr };
 	class CSpellLearn_Data*		m_pSpellLearn_Data =  { nullptr };
+	class CDialogue_Font*		m_pDialogue_Font = { nullptr };
+
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 
@@ -113,6 +121,7 @@ private:
 
 private:
 	HRESULT Stat_FileLoad(const _char* pDirectoryPath);
+	HRESULT NPC_FileLoad(const _char* pDirectoryPath);
 
 public:
 	virtual void Free() override;

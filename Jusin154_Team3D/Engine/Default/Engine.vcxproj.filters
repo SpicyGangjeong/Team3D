@@ -307,6 +307,12 @@
     <Filter Include="01.Utility\01.Renderer\RenderEventDebugger">
       <UniqueIdentifier>{fd18d84d-d656-4dbd-9859-436191a27b91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\13.NPCStat">
+      <UniqueIdentifier>{a564976c-cade-4f34-85c8-891b28d96b93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\08.Volumetric">
+      <UniqueIdentifier>{950977f0-f3c9-42f1-83f1-270b4bebf7ef}</UniqueIdentifier>
+    </Filter>
     <Filter Include="03.Management\04.Font_Manager">
       <UniqueIdentifier>{bba1e91b-87a8-4a7b-8e4e-b42d2041d8eb}</UniqueIdentifier>
     </Filter>
@@ -587,6 +593,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_QueryFilterCallback.cpp">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NPCStat.cpp">
+      <Filter>02.Element\02.Component\13.NPCStat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Volumetric.cpp">
+      <Filter>01.Utility\08.Volumetric</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Dynamic_D6Joint.cpp">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
@@ -1235,6 +1247,12 @@
     <ClInclude Include="..\Public\CallBack_QueryFilterCallback.h">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\NPCStat.h">
+      <Filter>02.Element\02.Component\13.NPCStat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Volumetric.h">
+      <Filter>01.Utility\08.Volumetric</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Dynamic_D6Joint.h">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClInclude>
@@ -1330,6 +1348,12 @@
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Local_Compute.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Volumetric_Compute.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Volumetric_Accumulate.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>

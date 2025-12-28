@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿#include "Light.h"
+#include "pch.h"
 #include "Light.h"
 #include "Shader.h"
 #include "VIBuffer.h"
@@ -202,8 +203,8 @@ void CLight::Describe_Entity()
 	 
 
 		GUI::ColorEdit4("Diffuse", (_float*)&m_LightDesc.vDiffuse);
-		GUI::DragFloat4("Ambient", reinterpret_cast<float*>(&m_LightDesc.vAmbient), 0.01f, 0.f, 1.f);
-		GUI::DragFloat4("Specular", reinterpret_cast<float*>(&m_LightDesc.vSpecular), 0.01f, 0.f, 1.f);
+		GUI::ColorEdit4("Ambient", (_float*)&m_LightDesc.vAmbient);
+		GUI::ColorEdit4("Specular", (_float*)&m_LightDesc.vSpecular);
 		GUI::DragFloat("Range", &m_LightDesc.fRange, 1.f, 0.f);
 		GUI::DragFloat2("SpotAngle", reinterpret_cast<float*>(&m_LightDesc.vSpotAngles));
 		GUI::Checkbox("UseLinearAtt", &m_bUsePowerAttenuation);
@@ -219,7 +220,14 @@ void CLight::Describe_Entity()
 
 		GUI::Spacing();
 
+		if (m_LightDesc.eType == LIGHT::DIRECTIONAL)
+		{
+			GUI::Text("Direction:");
+			GUI::InputFloat3("##Direction", (_float*)m_LightDesc.pDirection);
+		}
 		m_pOwner->Get_Component<CTransform>()->Describe_Entity();
+		
+		
 
 		GUI::TreePop();
 	}

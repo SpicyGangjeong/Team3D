@@ -24,6 +24,13 @@ cbuffer AnimCB : register(b0)
     float BlendRatio;
 
     int RootBoneIndex;
+    int PlayHeadBone;
+    int HeadBoneIndex;
+    float HeadAimWeight;
+  
+
+    float3 TargetDir_Local;
+    float padding;
     int SkipCount;
     int _pad0;
     int _pad1;

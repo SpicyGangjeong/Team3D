@@ -37,6 +37,28 @@ namespace Client
 		_float			fVidio{};
 	}SPELL_INFO;
 
+	typedef struct DialogueChoice
+	{
+		_int		eType = {false};
+		_wstring	pText;
+		_int		NextTypeID{};
+	}DIALOGUECHOICEINFO;
+
+	typedef struct DialogueInfo
+	{
+		_int						iLineID{};
+		_bool						bType = {false};
+		_wstring					pText;
+		_int						NextTextID{};
+		vector<DIALOGUECHOICEINFO>	ChoiceInfo;
+	}CURRENTDIALOGUEINFO;
+
+	typedef struct NpcDialogue
+	{
+		_int						iNpcID{};
+		vector<CURRENTDIALOGUEINFO>	Info;
+	}NPCDIALOGUEINFO;
+
 	typedef struct tagLockOnInfo {
 		CUnit* pUnit = { nullptr };
 		class CMapElement_Interactable* pInteractive = { nullptr };
@@ -104,6 +126,13 @@ namespace Client
 		vector<_vector> Booster;
 		vector<_vector> Lines;
 	}SPELLLEARNINFO;
+
+	typedef struct tagDialougeInfo
+	{
+		_wstring	pName;
+		_wstring	pText;
+		_float		fTime = 1.f;
+	}DIALOGUEINFO;
 
 	typedef struct tagEffectInfo
 	{
@@ -196,10 +225,10 @@ namespace Client
 		_float2		vDissolveUVGainAmount = {};
 		_bool		isDissolveMove = {};
 
-		_float3		vDissolveValue = {};
+		_float3		vDissolveValue = {}; /* Soft Mask , Cut Ratio*/
 
 		_float      fModelDistortIntensity = {};
-		_float		vPadding0 = {};
+		_float		fPadding0 = {};
 
 		_float      fLightDeley = {};
 		_float		fLightIntensity = {};
@@ -208,8 +237,8 @@ namespace Client
 
 		_bool		isDissolve_G = {};
 
-		_float4     vDissolveColor = {};
-		_float2     vDissolveColorCut = {};
+		_float4     vBlurColor = {};
+		_float2     vUVNoiseCutting = { 1.f ,1.f };
 
 		_float		fEmissiveColorCut = {};
 
@@ -220,7 +249,17 @@ namespace Client
 		_float4     vRimLightColor = {};
 
 		_float2     vMaskOffset = {};
-		_float2     vPadding4 = {};
+
+		_bool       isDiffuse_R = {};
+		_bool       isDiffuse_G = {};
+		_bool       isDiffuse_B = {};
+		_bool       isBlurColor = {};
+
+		_bool       isBlurDissolve = {};
+		_bool       isNomalMap = {};
+		_bool       isNoDissolveSmoothStep = {};
+		_bool       isPadding3 = {};
+
 		_float4     vPadding5 = {};
 
 		_bool		isRimLight = {};

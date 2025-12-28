@@ -19,6 +19,7 @@
 #include "Fog.h"
 #include "Resource_Manager.h"
 #include "Font_Manager.h"
+#include "Volumetric.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -105,13 +106,18 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000, EngineDesc.iNumLevels);
+	if (nullptr == m_pResource_Manager) {
+		return E_FAIL;
+	}
+
 	m_pFog = CFog::Create();
 	if (nullptr == m_pFog) {
 		return E_FAIL;
 	}
 
-	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000, EngineDesc.iNumLevels);
-	if (nullptr == m_pResource_Manager) {
+	m_pVolumetric = CVolumetric::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pVolumetric) {
 		return E_FAIL;
 	}
 
@@ -149,6 +155,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pPhysX_Manager->Update(fExcuteTimeDelta);
 
 	m_pObject_Manager->Late_Update(fExcuteTimeDelta);
+
+	m_pVolumetric->Dispatch();
 
 	m_pLevel_Manager->Update(fExcuteTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
@@ -895,6 +903,11 @@ HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTar
 	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
 }
 
+HRESULT CGameInstance::Clear_RenderTarget(const _wstring& strRenderTargetKey)
+{
+	return m_pRenderTarget_Manager->Clear_RenderTarget(strRenderTargetKey);
+}
+
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
@@ -933,6 +946,10 @@ _vector CGameInstance::Get_CameraLook()
 _float CGameInstance::Get_CameraFov()
 {
 	return m_pCamera_Manager->Get_CameraFov();
+}
+_float CGameInstance::Get_CameraNear()
+{
+	return m_pCamera_Manager->Get_CameraNear();
 }
 const _float* CGameInstance::Get_CurrentCameraFar()
 {
@@ -1287,8 +1304,27 @@ _float CGameInstance::FontSizeX(const _wstring& strFontTag, const _tchar* pText)
 	return m_pFont_Manager->FontSizeX(strFontTag, pText);
 }
 
+
+
 #pragma endregion
 
+#pragma region VOLUMETRIC
+ID3D11ShaderResourceView* CGameInstance::Get_VolumeSRV()
+{
+	return m_pVolumetric->Get_VolumeSRV();
+}
+
+_float* CGameInstance::Get_DepthPackExponentPtr()
+{
+	return m_pVolumetric->Get_DepthPackExponentPtr();
+}
+
+void CGameInstance::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent)
+{
+	m_pVolumetric->Setting_Volumetirc(fDensity , fLightIntensity , fAsymmetryParameter, fDepthPackExponent);
+}
+
+#pragma endregion
 void CGameInstance::Release_Engine()
 {
 	SAFE_RELEASE(m_pThreadHolder);
@@ -1305,6 +1341,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pKey_Manager);
 	SAFE_RELEASE(m_pMouse_Manager);
 	SAFE_RELEASE(m_pTimer_Manager);
+	SAFE_RELEASE(m_pVolumetric);
 	SAFE_RELEASE(m_pRenderer);
 	SAFE_RELEASE(m_pObject_Manager);
 	SAFE_RELEASE(m_pPhysX_Manager);

@@ -715,8 +715,9 @@ void CTroll::Behavior_DeadEnter()
 
 HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
 {
-	if (m_pModelCom->IsFinishedAnim()) {
-		m_bDead = true;
+	if (FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
+
+		return E_PENDING;
 	}
 	return S_OK;
 }

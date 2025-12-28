@@ -180,15 +180,18 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Boss_HpBer.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\public\DummyDecal.h" />
+    <ClInclude Include="..\public\Dialogue.h" />
     <ClInclude Include="..\public\Enemy_Detection.h" />
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
     <ClInclude Include="..\public\Interaction_Panel.h" />
+    <ClInclude Include="..\public\LightSpawner.h" />
     <ClInclude Include="..\public\MapElement_Chest.h" />
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
+    <ClInclude Include="..\public\NPCInteraction.h" />
     <ClInclude Include="..\public\QuestInstance.h" />
     <ClInclude Include="..\public\Quest_Canvas.h" />
     <ClInclude Include="..\public\Quest_Data.h" />
@@ -200,6 +203,8 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Quest_Slot.h" />
     <ClInclude Include="..\public\Quest_Status.h" />
     <ClInclude Include="..\Public\Ranrok.h" />
+    <ClInclude Include="..\Public\Ranrok_Breath.h" />
+    <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
     <ClInclude Include="..\public\SpellLearn_Booster.h" />
     <ClInclude Include="..\public\SpellLearn_ChaserPointer.h" />
@@ -422,6 +427,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Blink.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Boss_HpBer.cpp" />
+    <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\private\DummyDecal.cpp" />
     <ClCompile Include="..\Private\Enemy_Detection.cpp" />
@@ -430,9 +436,11 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\private\Interaction_Panel.cpp" />
+    <ClCompile Include="..\private\LightSpawner.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
+    <ClCompile Include="..\private\NPCInteraction.cpp" />
     <ClCompile Include="..\private\QuestInstance.cpp" />
     <ClCompile Include="..\private\Quest_Canvas.cpp" />
     <ClCompile Include="..\private\Quest_Data.cpp" />
@@ -444,6 +452,8 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Quest_Slot.cpp" />
     <ClCompile Include="..\private\Quest_Status.cpp" />
     <ClCompile Include="..\Private\Ranrok.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
+    <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\Ranrok_States.cpp" />
     <ClCompile Include="..\Private\Skill_Data.cpp" />
     <ClCompile Include="..\private\SpellLearn_Booster.cpp" />

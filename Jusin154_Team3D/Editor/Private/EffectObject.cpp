@@ -48,7 +48,7 @@ HRESULT CEffectObject::Render()
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
 
-		if (m_EffectInfo.eRenderOrder == RENDER::BULR_MESH)
+		if (m_EffectInfo.eRenderOrder == RENDER::BULR_MESH || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT)
 		{
 			if (FAILED(m_pInstance_ModelCom->Bind_OutPut_SRV_VS(5, 1)))
 				return E_FAIL;
@@ -72,10 +72,6 @@ HRESULT CEffectObject::Render_Blur()
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlurIntensity", &m_EffectInfo.fBlurIntensity, sizeof(_float)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBlurWeight", &m_EffectInfo.iBlurWeight, sizeof(_int)))) {
 		return E_FAIL;
 	}
 
@@ -104,7 +100,7 @@ HRESULT CEffectObject::Render_Blur()
 		}
 	}
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT_NONPOS)
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NONPOS_BLUR;
 
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
@@ -178,6 +174,11 @@ HRESULT CEffectObject::Render_Bloom()
 		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM;
 	}
 
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM_CULLING;
+	}
+
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
 
@@ -209,6 +210,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 	SAFE_RELEASE(m_pMasking_TextureCom);
 	SAFE_RELEASE(m_pDissolve_TextureCom);
 	SAFE_RELEASE(m_pEmissive_TextureCom);
+	SAFE_RELEASE(m_pNormal_TextureCom);
 
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
@@ -453,6 +455,31 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 
 	}
 
+	if (m_EffectInfo.isNomalMap)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+
+			m_strNomalMapName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNomalMapName),
+				reinterpret_cast<CComponent**>(&m_pNormal_TextureCom))))
+				return E_FAIL;
+		}
+	}
+
+
 	size_t iComponentLength = {};
 
 
@@ -479,6 +506,8 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			return E_FAIL;;
 		}
 	}
+
+
 
 
 
@@ -705,6 +734,33 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 
 	}
 
+
+	if (m_EffectInfo.isNomalMap)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+
+			m_strNomalMapName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNomalMapName),
+				reinterpret_cast<CComponent**>(&m_pNormal_TextureCom))))
+				return E_FAIL;
+		}
+
+
+	}
+
 	size_t iComponentLength = {};
 
 
@@ -800,7 +856,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
-	if (m_EffectInfo.isMotionBlur == true)
+	if (m_EffectInfo.isMotionBlur == true || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT)
 	{
 
 		if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
@@ -996,6 +1052,10 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoDissolveSmoothStep", &m_EffectInfo.isNoDissolveSmoothStep, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -1008,12 +1068,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColor", &m_EffectInfo.vDissolveColor, sizeof(_float4)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurColor", &m_EffectInfo.isBlurColor, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColorCut", &m_EffectInfo.vDissolveColorCut, sizeof(_float2)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vBlurColor", &m_EffectInfo.vBlurColor, sizeof(_float4)))) {
 		return E_FAIL;
 	}
 
@@ -1050,9 +1109,19 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVNoiseCutting", &m_EffectInfo.vUVNoiseCutting, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fModelBlurIntensity", &m_EffectInfo.fModelBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+
+	
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMask_G", &m_EffectInfo.isMask_G, sizeof(_bool)))) {
 		return E_FAIL;
@@ -1073,8 +1142,20 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve_B", &m_EffectInfo.isDissolve_B, sizeof(_bool)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_R", &m_EffectInfo.isDiffuse_R, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_G", &m_EffectInfo.isDiffuse_G, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_B", &m_EffectInfo.isDiffuse_B, sizeof(_bool)))) {
+		return E_FAIL;
+	}
 
-	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurDissolve", &m_EffectInfo.isBlurDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (m_pDiffuse_TextureCom != nullptr)
@@ -1120,7 +1201,22 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
+	if (m_pNormal_TextureCom != nullptr)
+	{
+		if (FAILED(m_pShaderCom->Bind_SRV("g_NormalTexture", m_pNormal_TextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
 
+		_float fUsingSurfaceParams = MRO_PARAMETER;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_SRV("g_SurfaceParamsTexture", m_pSurface_TextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
+
+	}
 
 	return S_OK;
 }
@@ -1171,6 +1267,8 @@ void CEffectObject::Free()
 	SAFE_RELEASE(m_pDissolve_TextureCom);
 	SAFE_RELEASE(m_pEmissive_TextureCom);
 	SAFE_RELEASE(m_pDistortion_TextureCom);
+	SAFE_RELEASE(m_pNormal_TextureCom);
+	SAFE_RELEASE(m_pSurface_TextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pInstance_ModelCom);

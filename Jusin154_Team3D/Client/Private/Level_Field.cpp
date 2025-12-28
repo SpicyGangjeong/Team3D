@@ -134,8 +134,8 @@ HRESULT CLevel_Field::Ready_Lights()
 		return E_FAIL;
 	}
 
-	_float4 vDiffuse = _float4(0.3f, 0.3f, 0.3f, 0.f);
-	_float4 vAmbient = _float4(0.12f, 0.12f, 0.12f, 0.f);
+	_float4 vDiffuse = _float4(0.745f, 0.797f, 0.8f, 0.f);
+	_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
 	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 	
 	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
@@ -187,11 +187,13 @@ HRESULT CLevel_Field::Ready_Layer_SkyBox()
 
 HRESULT CLevel_Field::Ready_Background()
 {
-	_float4 vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	_float4 vColor = _float4(0.2f, 0.246f, 0.253f, 1.f);
 	m_pGameInstance->Set_FogColor(vColor);
-	m_pGameInstance->Set_Fog(10.f, 5.f);
+	m_pGameInstance->Set_Fog(10.f, 8.f);
 
 	CInfoInstance::GetInstance()->Load_MapObjects("Dungeon_Map_Data", LAYER_BACKGROUND);
+	CInfoInstance::GetInstance()->Load_WorldDecal("Duengon_Decal_Data", LAYER_BACKGROUND);
+	CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data", LAYER_BACKGROUND);
 
 	return S_OK;
 }

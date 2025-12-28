@@ -75,12 +75,7 @@ HRESULT CEffectObject::Render_Blur()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBlurWeight", &m_EffectInfo.iBlurWeight, sizeof(_int)))) {
-		return E_FAIL;
-	}
-
 	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
-
 
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
 	{
@@ -103,11 +98,9 @@ HRESULT CEffectObject::Render_Blur()
 		{
 			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_NO_EMMISVE;
 		}
-
-
 	}
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT_NONPOS)
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NONPOS_BLUR;
 
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
@@ -118,10 +111,11 @@ HRESULT CEffectObject::Render_Blur()
 		}
 		else
 		{
-			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_CULLING;
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_CULLING_NO_EMISSIVE;
 		}
 
 	}
+
 
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
@@ -141,8 +135,6 @@ HRESULT CEffectObject::Render_Blur()
 		}
 
 	}
-
-
 
 
 	return S_OK;
@@ -222,6 +214,11 @@ HRESULT CEffectObject::Render_Bloom()
 	else
 	{
 		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM;
+	}
+
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM_CULLING;
 	}
 
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
@@ -361,6 +358,22 @@ HRESULT CEffectObject::Load(CEffect_Container::EFFECT_SAVE_INFO EffectSaveInfo, 
 		{
 			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strDistortionName,
 				reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
+			{
+
+				return E_FAIL;
+			}
+		}
+	}
+
+	if (m_EffectInfo.isNomalMap)
+	{
+
+		m_strNomalMapName = EffectSaveInfo.wstrNomalName;;
+
+		if (m_strDistortionName.length() > 0)
+		{
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strNomalMapName,
+				reinterpret_cast<CComponent**>(&m_pNormal_TextureCom))))
 			{
 
 				return E_FAIL;
@@ -632,6 +645,38 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 
 	}
 
+
+	if (m_EffectInfo.isNomalMap)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
+			m_strNomalMapName = CMyTools::ToWstring(szName);
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strNomalMapName,
+				reinterpret_cast<CComponent**>(&m_pNormal_TextureCom))))
+			{
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+		}
+
+
+	}
+
 	size_t iComponentLength = {};
 
 
@@ -686,6 +731,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
@@ -721,7 +767,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
-	if (m_EffectInfo.isMotionBlur == true)
+	if (m_EffectInfo.isMotionBlur == true || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT)
 	{
 
 		if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
@@ -929,12 +975,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColor", &m_EffectInfo.vDissolveColor, sizeof(_float4)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurColor", &m_EffectInfo.isBlurColor, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColorCut", &m_EffectInfo.vDissolveColorCut, sizeof(_float2)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vBlurColor", &m_EffectInfo.vBlurColor, sizeof(_float4)))) {
 		return E_FAIL;
 	}
 
@@ -971,6 +1016,13 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVNoiseCutting", &m_EffectInfo.vUVNoiseCutting, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fModelBlurIntensity", &m_EffectInfo.fModelBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -992,6 +1044,19 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve_B", &m_EffectInfo.isDissolve_B, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_R", &m_EffectInfo.isDiffuse_R, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_G", &m_EffectInfo.isDiffuse_G, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse_B", &m_EffectInfo.isDiffuse_B, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoDissolveSmoothStep", &m_EffectInfo.isNoDissolveSmoothStep, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
@@ -1038,7 +1103,22 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		}
 	}
 
+	if (m_pNormal_TextureCom != nullptr)
+	{
+		if (FAILED(m_pShaderCom->Bind_SRV("g_NormalTexture", m_pNormal_TextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
 
+		_float fUsingSurfaceParams = MRO_PARAMETER;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_SRV("g_SurfaceParamsTexture", m_pSurface_TextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
+
+	}
 
 
 	return S_OK;
@@ -1091,6 +1171,8 @@ void CEffectObject::Free()
 	SAFE_RELEASE(m_pDissolve_TextureCom);
 	SAFE_RELEASE(m_pEmissive_TextureCom);
 	SAFE_RELEASE(m_pDistortion_TextureCom);
+	SAFE_RELEASE(m_pNormal_TextureCom);
+	SAFE_RELEASE(m_pSurface_TextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pInstance_ModelCom);

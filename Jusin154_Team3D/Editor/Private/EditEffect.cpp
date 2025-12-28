@@ -326,6 +326,23 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 			}
 		}
 	}
+
+	if (m_EffectInfo.isNomalMap)
+	{
+		size_t iComponentLength = m_strNomalMapName.length();
+		const _char* pFileComponentPath = m_strNomalMapName.c_str();
+
+		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+		}
+	}
 	
 
 	size_t iComponentLength = m_strModelName.length();
@@ -390,6 +407,10 @@ HRESULT CEditEffect::Ready_Components(void* pArg)
 	}
 
 
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Base_MRO"),
+		reinterpret_cast<CComponent**>(&m_pSurface_TextureCom))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -435,7 +456,7 @@ void CEditEffect::Describe_Entity()
 
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", 
-		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" };
+		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" ,"BLUR_CULLING_NO_EMISSIVE" , "BLOOM_CULLING" , "DEFAULT_NONPOS"};
 
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -491,7 +512,7 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Bloom", &m_EffectInfo.isBloom);
 	GUI::Checkbox("Blur", &m_EffectInfo.isBlur);
 	GUI::Checkbox("RimLight", &m_EffectInfo.isRimLight);
-	
+	GUI::Checkbox("Nomal", &m_EffectInfo.isNomalMap);
 
 	if (GUI::Checkbox("Billboard", &m_EffectInfo.isBillboard))
 	{
@@ -515,13 +536,16 @@ void CEditEffect::Describe_Entity()
 
 			GUI::Checkbox("OnlyBlur", &m_EffectInfo.isOnlyBlur);
 			GUI::Checkbox("BlurNoEmissive", &m_EffectInfo.isBlurNoEmissive);
-
+			GUI::Checkbox("BlurDissolve", &m_EffectInfo.isBlurDissolve);
+			
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
 			GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 2.f, 0, 128);
 
 
+			GUI::Checkbox("BlurColor", &m_EffectInfo.isBlurColor);
 			ImGui::PopItemWidth();
+			GUI::ColorEdit4("BlurColor", (_float*)&m_EffectInfo.vBlurColor);
 
 			GUI::TreePop();
 		}
@@ -700,6 +724,10 @@ void CEditEffect::Describe_Entity()
 		if (GUI::TreeNode("DIFFUSE"))
 		{
 
+			GUI::Checkbox("Diffuse_R", &m_EffectInfo.isDiffuse_R);
+			GUI::Checkbox("Diffuse_G", &m_EffectInfo.isDiffuse_G);
+			GUI::Checkbox("Diffuse_B", &m_EffectInfo.isDiffuse_B);
+
 			GUI::DragFloat("Diffuse Alpha", &m_EffectInfo.fDiffuseAlpha , 0.01f, 0.f, 1.f);
 
 			ImGui::PushItemWidth(80);
@@ -725,6 +753,16 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::TreeNode("DIFFUSE_TEX"))
 			{
+				if (m_pDiffuse_TextureCom != nullptr)
+				{
+					if (GUI::ImageButton("Current Texture", m_pDiffuse_TextureCom->Get_SRV(0), ImVec2(48, 48)))
+					{
+					}
+
+					GUI::Spacing(); GUI::Spacing();
+				}
+
+
 				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
 				
 				if (strName != "") {
@@ -780,6 +818,15 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::TreeNode("MASKING_TEX"))
 			{
+				if (m_pMasking_TextureCom != nullptr)
+				{
+					if (GUI::ImageButton("Current Texture", m_pMasking_TextureCom->Get_SRV(0), ImVec2(48, 48)))
+					{
+					}
+
+					GUI::Spacing(); GUI::Spacing();
+				}
+
 				string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
 				
 				if (strName != "") {
@@ -799,38 +846,45 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("DISSOLVE"))
 		{
+			GUI::Checkbox("Dissolve G", &m_EffectInfo.isDissolve_G);
+			GUI::SameLine();
+			GUI::Checkbox("Dissolve B", &m_EffectInfo.isDissolve_B);
+
+			GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
+			GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
+			GUI::Checkbox("StopDissolveSmoothStep", &m_EffectInfo.isNoDissolveSmoothStep);
+			
+
+			ImGui::PushItemWidth(80);
+			GUI::Spacing();
+			GUI::Checkbox("DissolveMove", &m_EffectInfo.isDissolveMove);
+			GUI::DragFloat2("DissolveUVGainAmount", (_float*)&m_EffectInfo.vDissolveUVGainAmount, 0.01f);
+
+			GUI::Spacing();
+			GUI::DragFloat("DissolveDelay", &m_EffectInfo.fDissolveDelay, 0.005f);
+			GUI::DragFloat("ReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, 0.005f);
+
+			GUI::Spacing();
+
+			GUI::DragFloat("DissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, 0.005f);
+			GUI::DragFloat("DissolveSoftMask", &m_EffectInfo.vDissolveValue.y, 0.005f);
+			GUI::DragFloat("DissolveCutRatio", &m_EffectInfo.vDissolveValue.z, 0.005f);
+
+			GUI::Spacing();
+
+			ImGui::PopItemWidth();
+
 			if (GUI::TreeNode("DISSOLV_TEX"))
 			{
-				GUI::Checkbox("Dissolve G", &m_EffectInfo.isDissolve_G);
-				GUI::SameLine();
-				GUI::Checkbox("Dissolve B", &m_EffectInfo.isDissolve_B);
+				if (m_pDissolve_TextureCom != nullptr)
+				{
+					if (GUI::ImageButton("Current Texture", m_pDissolve_TextureCom->Get_SRV(0), ImVec2(48, 48)))
+					{
+					}
 
-				GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
-				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
+					GUI::Spacing(); GUI::Spacing();
+				}
 
-				ImGui::PushItemWidth(80);
-				GUI::Spacing();
-				GUI::Checkbox("DissolveMove", &m_EffectInfo.isDissolveMove);
-				GUI::DragFloat2("DissolveUVGainAmount", (_float*)&m_EffectInfo.vDissolveUVGainAmount, 0.01f);
-
-				GUI::Spacing();
-				GUI::DragFloat("DissolveDelay", &m_EffectInfo.fDissolveDelay, 0.005f);
-				GUI::DragFloat("ReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, 0.005f);
-
-				GUI::Spacing();
-
-				GUI::DragFloat("DissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, 0.005f);
-				GUI::DragFloat("DissolveSoftMask", &m_EffectInfo.vDissolveValue.y, 0.005f);
-				GUI::DragFloat("DissolveCutRatio", &m_EffectInfo.vDissolveValue.z, 0.005f);
-
-				GUI::Spacing();
-
-		
-				GUI::DragFloat2("DissolveColorCut", (_float*)& m_EffectInfo.vDissolveColorCut, 0.005f);
-				
-				ImGui::PopItemWidth();
-
-				GUI::ColorEdit4("DissolveColor", (_float*)&m_EffectInfo.vDissolveColor);
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {
@@ -881,6 +935,15 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::TreeNode("DISTORTION_TEX"))
 			{
+				if (m_pDistortion_TextureCom != nullptr)
+				{
+					if (GUI::ImageButton("Current Texture", m_pDistortion_TextureCom->Get_SRV(0), ImVec2(48, 48)))
+					{
+					}
+
+					GUI::Spacing(); GUI::Spacing();
+				}
+
 				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISTORTION_TEXTURE", (CComponent**)&m_pDistortion_TextureCom, nullptr, this);
 
 				if (strName != "") {
@@ -915,6 +978,8 @@ void CEditEffect::Describe_Entity()
 			GUI::ColorEdit4("NoiseColor", (_float*)&m_EffectInfo.vNoiseColor);
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("NoiseUVGainAmount", (_float*)&m_EffectInfo.vNoiseUVGainAmount, 0.01f);
+			GUI::DragFloat2("UVNoiseCutting", (_float*)&m_EffectInfo.vUVNoiseCutting, 0.01f);
+			
 			ImGui::PopItemWidth();
 
 
@@ -930,6 +995,15 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::TreeNode("NOISE_TEX"))
 			{
+				if (m_pNoise_TextureCom != nullptr)
+				{
+					if (GUI::ImageButton("Current Texture", m_pNoise_TextureCom->Get_SRV(0), ImVec2(48, 48)))
+					{
+					}
+
+					GUI::Spacing(); GUI::Spacing();
+				}
+
 				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
 
 				if (strName != "") {
@@ -937,6 +1011,29 @@ void CEditEffect::Describe_Entity()
 				}
 
 				GUI::TreePop();
+			}
+
+			GUI::TreePop();
+		}
+	}
+
+	if (m_EffectInfo.isNomalMap == true)
+	{
+		if (GUI::TreeNode("NOMAL_TEX"))
+		{
+			if (m_pNormal_TextureCom != nullptr)
+			{
+				if (GUI::ImageButton("Current Texture", m_pNormal_TextureCom->Get_SRV(0), ImVec2(48, 48)))
+				{
+				}
+
+				GUI::Spacing(); GUI::Spacing();
+			}
+
+			_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOMAL_TEXTURE", (CComponent**)&m_pNormal_TextureCom, nullptr, this , L"NOMAL");
+
+			if (strName != "") {
+				m_strNomalMapName = strName;
 			}
 
 			GUI::TreePop();

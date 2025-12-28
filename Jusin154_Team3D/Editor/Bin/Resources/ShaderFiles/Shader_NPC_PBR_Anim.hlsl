@@ -27,9 +27,11 @@ float g_fOutLinePower;
 float g_fUsingSurfaceParams;
 float g_fEtherealRatio;
 float g_fMixerFactor;
+float g_fMBIntensity = 1.f;
 float g_fDisolveEdgeWidth;
 float g_fDisolveAmount;
 float g_fDisolveRatio;
+
 
 
 Texture2D g_DiffuseTexture                   : register(t00);
@@ -331,7 +333,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_READ(PS_IN In)
         (In.vProjPos.w / g_fFar), // 酉??ㅽ럹?댁뒪 Z 
         (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // ?쒗럹?댁뒪 ?뚮씪誘명꽣
         1.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
 }
@@ -376,7 +378,7 @@ PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(lerp(0.7f, 0.3f, SpecMask), SpecMask * 0.5f, AoMask_Dao * AoMask_Thv, 0.f);
     // SRO
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 
@@ -408,7 +410,7 @@ PS_OUT PS_TEETH_SRXO_ToSRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vSRXO_MASK.r, vSRXO_MASK.g, vSRXO_MASK.a, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -439,7 +441,7 @@ PS_OUT PS_EYE_DN_SRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(0.5f, 0.5f, 1.f, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -493,7 +495,7 @@ PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(lerp(0.7f, 0.3f, SpecMask), SpecMask * 0.5f, AoMask_Dao * AoMask_Thv, 0.f);
     // SRO
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 
@@ -539,7 +541,7 @@ PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(lerp(0.7f, 0.3f, SpecMask), SpecMask * 0.5f, AoMask_Dao * AoMask_Thv, 0.f);
     // SRO
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 
@@ -570,7 +572,7 @@ PS_OUT PS_HEADwtHAND_DSRXON_ToSRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vSRXO_Mask.r, vSRXO_Mask.g, vSRXO_Mask.a, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -602,7 +604,7 @@ PS_OUT PS_LOWER_DSRON_ToSRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vSRO_Mask.r, vSRO_Mask.g, vSRO_Mask.b, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -634,7 +636,7 @@ PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMRO_Mask.r, vMRO_Mask.g, vMRO_Mask.b, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // MRO
     return Out;
 }
@@ -666,7 +668,7 @@ PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMRO_Mask.r, vMRO_Mask.g, vMRO_Mask.b, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -700,7 +702,7 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMRO_Mask.r, vMRO_Mask.g, vMRO_Mask.b, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -734,7 +736,7 @@ PS_OUT PS_DNMRO_ToMRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMRO_Mask.r, vMRO_Mask.g, vMRO_Mask.b, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -750,7 +752,7 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb * 3.f;
+    vDiffuse.rgb += vEmissive.rgb;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -768,7 +770,7 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vSpecular_Mask.r, 0.5f, 1.f, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -808,7 +810,7 @@ PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vSRO_Mask.r, Roughness, Occlusion, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -825,7 +827,7 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
     }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vAmbient = g_AmbientTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb * 3.f;
+    vDiffuse.rgb += vEmissive.rgb;
     vDiffuse.rgb += vAmbient.rgb;
     if (vDiffuse.a < 0.2f) {
         discard;
@@ -849,7 +851,7 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMRO_MASK.r, Roughness, Occlusion, vSRXO_Mask.b);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -897,7 +899,7 @@ PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(lerp(0.1f, 0.3f, SpecMask), SpecMask * 0.5f, AoMask_Dao * AoMask_Thv, 0.f);
     // SRO
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
@@ -927,7 +929,7 @@ PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMROColor.r, vMROColor.g, vMROColor.b, 0.f);
     // SRO
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
@@ -941,7 +943,7 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
         vDiffuseColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuseColor, In.vTexcoord);
     }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuseColor.rg += (vEmissive.rg) * 3.f;
+    vDiffuseColor.rgb += vEmissive.r * vEmissive.g;
     
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);
@@ -959,7 +961,7 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMROColor.r, vMROColor.g, vMROColor.b, 0.f);
     // SRO
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
@@ -989,7 +991,7 @@ PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vSROColor.r, vSROColor.g, vSROColor.b, 0.f);
     // SRO
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
@@ -1038,7 +1040,7 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(lerp(0.7f, 0.3f, SpecMask), SpecMask * 0.5f, AoMask_Dao * AoMask_Thv, 0.f);
     // SRO
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 
@@ -1074,7 +1076,7 @@ PS_OUT_BLEND PS_Dragon_EtherealWings(PS_IN In)
     float2 uvDiffuse = uv; uvDiffuse.y -= g_fEtherealRatio;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uvDiffuse);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuse += vEmissive * 3.f;
+    vDiffuse += vEmissive;
     float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uvDiffuse).a;
     vDiffuse.a =  (1- fOppacity);
     Out.vAlbedo = vDiffuse;
@@ -1113,7 +1115,7 @@ PS_OUT PS_Dragon_Body(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMRO, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }
@@ -1129,7 +1131,7 @@ PS_OUT PS_Dragon_Wings(PS_IN In)
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
-    vDiffuse += vEmissive * 3.f;
+    vDiffuse += vEmissive;
 
     if (vDiffuse.a < 0.2f)
     {
@@ -1151,7 +1153,7 @@ PS_OUT PS_Dragon_Wings(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = float4(vMRO, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
 }

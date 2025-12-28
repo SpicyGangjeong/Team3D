@@ -20,9 +20,15 @@ public:
 		_float BlendRatio;
 
 		_int RootBoneIndex;
+		_int PlayHeadBone;
+		_int   HeadBoneIndex;
+		_float HeadAimWeight;
 		_int SkipCount;
 		_int padding;
 		_int padding1;
+
+		_float3 TargetDir_Local;
+		_float padding;
 
 		_float4x4 PreTransformMatrix;
 		_float4 RootInitRot;
@@ -45,6 +51,11 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 	MODEL Get_Type() { return m_eType; }
 	void Set_Temp(_bool Temp) { m_bTemp = Temp; }
+	void Set_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
+	void Set_HeadPos(_vector vHeadPos) { m_vHeadPos = vHeadPos; }
+	void Play_HeadBone(_bool bPlay) { m_bHeadBone = bPlay; }
+	void Set_HeadAimWeight(_float fWeight) { m_fHeadAimWeight = fWeight; }
+	_bool Get_PlayHeadBone() const { return m_bHeadBone; }
 	_int Get_SkipBoneIndex(_int Index) { return m_SkipBoneindex[Index]; }
 #pragma endregion 
 #pragma region Animation
@@ -175,21 +186,21 @@ private:
 	vector<_bool>				m_CPUBoneMask;
 
 	// 바이너리
-	SaveModel* m_pSaveModel = { nullptr };
+	SaveModel*					m_pSaveModel = { nullptr };
 	//
 
 
-	vector<_float4x4> m_BoneMatrix;
+	vector<_float4x4>			m_BoneMatrix;
 
-	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
-	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
-	_matrix					m_BoneTransformationMatrix = {};
-	_float4					m_vInitialRootRot = {};
+	_float3						m_vPrevRootPos = { 0.f, 0.f, 0.f };
+	_float4						m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
+	_matrix						m_BoneTransformationMatrix = {};
+	_float4						m_vInitialRootRot = {};
 
-	_float					m_fRadius = { 0.f };			// 컬링용 Radius
-	_int					m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
-	_int					m_iIndexAnimPlayableMesh = { -1 };
-	_vector					m_vector[3];
+	_float						m_fRadius = { 0.f };			// 컬링용 Radius
+	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
+	_int						m_iIndexAnimPlayableMesh = { -1 };
+	_vector						m_vector[3];
 
 	vector<_uint>			m_iBoneMask;
 	_bool					m_bInitialRootPos = { false };
@@ -201,6 +212,10 @@ private:
 	_bool					m_bRootBone = {};
 	_float4x4				m_RootMatrix = {};
 	_bool					m_bTemp = {false};
+	_vector					m_vTargetPos = XMVectorZero();
+	_vector					m_vHeadPos = XMVectorZero();
+	_bool					m_bHeadBone = { false };
+	_float					m_fHeadAimWeight = { 0.f };
 	_int					m_iSkipBoneCount = {};
 	vector<_int>			m_SkipBoneindex = {};
 

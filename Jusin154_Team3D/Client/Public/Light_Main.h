@@ -20,13 +20,13 @@ public:
 	virtual HRESULT Capture_PreShadow();
 
 private:
-	CLight* m_pLightCom = { nullptr };
+	CLight*		m_pLightCom = { nullptr };
 
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources();
 	_matrix Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3>& WorldPositions);
 

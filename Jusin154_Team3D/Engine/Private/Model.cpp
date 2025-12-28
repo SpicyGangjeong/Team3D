@@ -1378,6 +1378,12 @@ void CModel::InItialize_BoneIndex()
 		{
 			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::NECK)] = i;
 		}
+		if (m_Bones[i]->Compare_Name("head"))
+		{
+			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] = i;
+		}
+	}
+}
 		if (m_Bones[i]->Compare_Name("Hips_Cloth"))
 		{
 			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)] = i;
@@ -1459,7 +1465,7 @@ HRESULT CModel::Create_ComputeShader()
 	CS_Desc.iInputStructStride = CS_InputStrides;
 	CS_Desc.iOutputStructStride = CS_OutputStrides;
 
-	m_pComputeShader = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("CS_Model"), &CS_Desc, nullptr);
+	m_pComputeShader = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, CS_MODEL, &CS_Desc, nullptr);
 
 	if (nullptr == m_pComputeShader) {
 		return E_FAIL;
@@ -1494,7 +1500,7 @@ HRESULT CModel::Create_ComputeShaderLocal()
 	CS_Desc.iInputStructStride = CS_InputStrides;
 	CS_Desc.iOutputStructStride = CS_OutputStrides;
 
-	m_pCS_AnimLocal = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("CS_Local"), &CS_Desc, nullptr);
+	m_pCS_AnimLocal = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, CS_LOCAL, &CS_Desc, nullptr);
 
 	if (nullptr == m_pCS_AnimLocal) {
 		return E_FAIL;
@@ -1767,6 +1773,8 @@ void CModel::ComputeAnimation(_uint AnimIndex,_uint MeshIndex)
 
 void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 {
+
+
 	D3D11_MAPPED_SUBRESOURCE ConstantSubResource = {};
 
 	auto* anim = m_Animations[AnimIndex];
@@ -1784,6 +1792,23 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->PrevTime = m_Animations[m_iPreAnimIndex]->Get_CurrentTrackPosition();
 		pDesc->BlendRatio = m_fRatio;
 		pDesc->RootBoneIndex = m_iRootBoneIndex;
+		pDesc->PlayHeadBone = m_bHeadBone;
+		pDesc->HeadBoneIndex = m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)];
+		pDesc->HeadAimWeight = m_fHeadAimWeight;
+		if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] != -1)
+		{
+			_vector dirWS = XMVector3Normalize(m_vTargetPos - m_pTransform->Get_State(STATE::POSITION));
+
+			_matrix worldInv = m_pTransform->Get_WorldMatrixInv();
+
+			_vector dirLocal =XMVector3Normalize(XMVector3TransformNormal(dirWS, worldInv));
+
+			XMStoreFloat3(&pDesc->TargetDir_Local, dirLocal);
+		}
+		else {
+			pDesc->TargetDir_Local = _float3(0.f, 0.f, 0.f);
+		}
+		pDesc->padding = 0.f;
 		pDesc->SkipCount = m_iSkipBoneCount;
 		pDesc->padding = 0;
 		pDesc->padding1 = 0;

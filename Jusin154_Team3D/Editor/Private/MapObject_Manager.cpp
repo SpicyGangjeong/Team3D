@@ -2,6 +2,7 @@
 #include "MapObject_Manager.h"
 
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "Camera_Debug.h"
 #include "Layer.h"
 #include "MapObject.h"
@@ -12,20 +13,25 @@
 #include "MapElement_Interactable.h"
 #include "MapElement_Light.h"
 #include "MapElement_Lake.h"
+#include "LightSpawner.h"
+#include "DummyDecal.h"
 
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CGameObject(pDevice, pContext), m_pInfoInstance{CInfoInstance::GetInstance()}
 {
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 CMapObject_Manager::CMapObject_Manager(const CMapObject_Manager& rhs)
 	: CGameObject(rhs)
+	, m_pInfoInstance{ rhs.m_pInfoInstance }
 	, m_ModelPrototypeTags{ rhs.m_ModelPrototypeTags }
 	, m_LODModelPrototypeTags{ rhs.m_LODModelPrototypeTags }
 	, m_ModelPrototypePaths{ rhs.m_ModelPrototypePaths }
 	, m_PartObjectKeyCount{ rhs.m_PartObjectKeyCount }
 {
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths)
@@ -81,6 +87,22 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//	return E_FAIL;
 	//if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
 	//	return E_FAIL;
+
+	m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+
+#pragma region Light
+	m_Light_Desc.eType = LIGHT::POINT;
+
+	m_Light_Desc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	m_Light_Desc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	m_Light_Desc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	m_Light_Desc.vPosOffset = _float4(1.f, 1.f, 1.f, 1.f);
+
+	m_Light_Desc.fRange = 5.f;
+	m_Light_Desc.iLevel = NEXT_LEVEL;
+	m_Light_Desc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+#pragma endregion
 
 
 	return S_OK;
@@ -179,6 +201,9 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	Update_ObjectList();
 
 	Update_Edit();
+
+	Update_LightSpawer();
+	//Update_Decal();
 
 	Update_Unified();
 
@@ -1825,6 +1850,97 @@ HRESULT CMapObject_Manager::Load_WaterObject(const _char* pFileName)
 
 	return S_OK;
 }
+
+HRESULT CMapObject_Manager::Save_PointLightObject(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_LightSpawer"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/Light/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("MapLightObjects");
+	doc.InsertEndChild(root);
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CLightSpawner* pLightSpawner = dynamic_cast<CLightSpawner*>(pGamObject);
+
+			if (nullptr == pLightSpawner)
+				return E_FAIL;
+
+			if (FAILED(pLightSpawner->Save_XML(doc, root)))
+				return E_FAIL;
+		}
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save PointLightObjects");
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapObject_Manager::Save_Decal(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Decal"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/Decal/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("Decal");
+	doc.InsertEndChild(root);
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CDummyDecal* pLightSpawner = dynamic_cast<CDummyDecal*>(pGamObject);
+
+			if (nullptr == pLightSpawner)
+				return E_FAIL;
+
+			if (FAILED(pLightSpawner->Save_XML(doc, root)))
+				return E_FAIL;
+		}
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save DummyDecals");
+	}
+
+	return S_OK;
+}
+
 void CMapObject_Manager::Update_PrototypeList()
 {
 	GUI::Begin("Model Prototype List");
@@ -2094,6 +2210,74 @@ void CMapObject_Manager::Update_Unified()
 	GUI::End();
 }
 
+void CMapObject_Manager::Update_LightSpawer()
+{
+	GUI::Begin("Light Spawer");
+	if (GUI::Button("Save Lights"))
+	{
+		Save_PointLightObject("Duengon_PointLight_Data");
+	}
+	if (GUI::Button("Load Lights"))
+	{
+		m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+	}
+	if(GUI::Button("Add Light Spawer"))
+	{
+		m_pGameInstance->Add_GameObject_ToLayer<CLightSpawner>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_LightSpawer"));
+	}
+	
+	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_LightSpawer"));
+
+	if(nullptr != pLayer)
+	{
+		_uint iIndex = {};
+		for (auto& pLightSpawner : *pLayer->Get_Objects())
+		{
+			if(m_iSelectedIndex == iIndex)
+				pLightSpawner->Describe_Entity();
+
+			++iIndex;
+		}
+	}
+
+	GUI::End();
+}
+
+void CMapObject_Manager::Update_Decal()
+{
+	GUI::Begin("Map Decal");
+	if (GUI::Button("Save Decals"))
+	{
+		Save_Decal("Duengon_Decal_Data");
+	}
+	if (GUI::Button("Load Decals"))
+	{
+		m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	}
+	if (GUI::Button("Add Decals"))
+	{
+		m_pGameInstance->Add_GameObject_ToLayer<CDummyDecal>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Decal"));
+	}
+
+	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Decal"));
+
+	if (nullptr != pLayer)
+	{
+		_uint iIndex = {};
+		for (auto& pLightSpawner : *pLayer->Get_Objects())
+		{
+			if (m_iSelectedIndex == iIndex)
+				pLightSpawner->Describe_Entity();
+
+			++iIndex;
+		}
+	}
+
+	GUI::End();
+}
+
 void CMapObject_Manager::Create_PartObject(_wstring& strPrototypeTag)
 {
 	vector<_uint> LodModelIndices;
@@ -2268,6 +2452,8 @@ void CMapObject_Manager::Free()
 	m_Collision.clear();
 
 	SAFE_RELEASE(m_pContainer);
+
+	SAFE_RELEASE(m_pInfoInstance);
 }
 
 void CMapObject_Manager::Describe_Entity()

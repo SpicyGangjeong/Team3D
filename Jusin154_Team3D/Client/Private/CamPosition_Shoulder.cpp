@@ -95,6 +95,10 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 
 		m_pBinded_Camera->Toggle_Priority();
 	}
+	if (m_pGameInstance->Key_Up(DIK_HOME)) {
+
+		m_pBinded_Camera->Toggle_AIPriority();
+	}
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}

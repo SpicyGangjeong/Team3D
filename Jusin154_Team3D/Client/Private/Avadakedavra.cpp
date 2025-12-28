@@ -241,10 +241,6 @@ void CAvadakedavra::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
-
-
-
-
 }
 
 void CAvadakedavra::Free()

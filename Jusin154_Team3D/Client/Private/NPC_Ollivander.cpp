@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "CallBack_NonPlayable_Behavior.h"
 #include "CallBack_NonPlayable_HitReport.h"
+#include "NPCInteraction.h"
 
 CNPC_Ollivander::CNPC_Ollivander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -32,8 +33,8 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
-	if (false == m_bEntered) {
+	if (false == m_bEntered) 
+	{
 		if (true == CastToPlayer()) {
 			m_vEnteringTimer.x += fTimeDelta;
 			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
@@ -97,6 +98,17 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
+
+	m_pNPCInteraction->Set_Visible(m_bEntered);
+
+	if (m_bEntered == true)
+	{
+		if (m_pGameInstance->Key_Down(DIK_F))
+		{
+
+		}
+	}
+
 }
 
 void CNPC_Ollivander::Late_Update(_float fTimeDelta)
@@ -295,6 +307,16 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		m_pCharacter_Controller->SetGravity(true);
 	}
 
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("OLLIVENDER"), (CComponent**)&m_pNpcStat))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
+		return E_FAIL;
+	}
+
+	m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
+
 	return S_OK;
 }
 
@@ -327,6 +349,7 @@ void CNPC_Ollivander::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pCharacter_Controller);
+	SAFE_RELEASE(m_pNpcStat);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

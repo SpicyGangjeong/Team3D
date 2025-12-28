@@ -32,17 +32,40 @@ HRESULT CDummyDecal::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_vMaskRed = _float4(1.f, 0.f, 0.f, 1.f);
-	m_vMaskGreen = _float4(0.f, 0.f, 0.f, 0.f);
-	m_vMaskBlue = _float4(1.f, 0.f, 0.f, 1.f);
+	_float fMaxScale = 1.f;
 
-	m_vUVSpeed = _float2(0.1f, 0.1f);
+	if (nullptr != pArg)
+	{
+		DUMMY_DECAL_DESC* pDesc = static_cast<DUMMY_DECAL_DESC*>(pArg);
+		m_pTransformCom->Set_Scale(pDesc->vScale);
+		m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
+
+		m_fUVTiling = pDesc->fUVTiling;
+		m_vUVSpeed = pDesc->vUVSpeed;
+		m_vMaskRed = pDesc->vMaskRed;
+		m_vMaskGreen = pDesc->vMaskGreen;
+		m_vMaskBlue = pDesc->vMaskBlue;
+
+		_float fBoxRadius = 0.86f; // 1,1,1 기준
+		fMaxScale = max(pDesc->vScale.x, max(pDesc->vScale.y, pDesc->vScale.z));
+	}
+	else
+	{
+		m_vMaskRed = _float4(1.f, 0.f, 0.f, 1.f);
+		m_vMaskGreen = _float4(0.f, 0.f, 0.f, 0.f);
+		m_vMaskBlue = _float4(1.f, 0.f, 0.f, 1.f);
+		m_vUVSpeed = _float2(0.05f, 0.05f);
+	}
+	
+	m_pTransformCom->Set_Radius(fMaxScale);
 
 	return S_OK;
 }
 
 void CDummyDecal::Priority_Update(_float fTimeDelta)
 {
+	
 }
 
 void CDummyDecal::Update(_float fTimeDelta)
@@ -50,14 +73,14 @@ void CDummyDecal::Update(_float fTimeDelta)
 	m_fTimeAcc.x += fTimeDelta * m_vUVSpeed.x;
 	m_fTimeAcc.y += fTimeDelta * m_vUVSpeed.y;
 
-	Describe_Entity();
+	//Describe_Entity();
 }
 
 void CDummyDecal::Late_Update(_float fTimeDelta)
 {
-	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::DECAL, this);
-	//}
+	}
 }
 
 HRESULT CDummyDecal::Render()
@@ -80,6 +103,9 @@ HRESULT CDummyDecal::Render()
 			return E_FAIL;
 		}
 		if (FAILED(m_pShaderCom->Bind_SRV("g_NoiseTexture", m_pFadeTextureCom->Get_SRV(0)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_SRV("g_DiffsueMaskTexture", m_pDiffuseMaskTextureCom->Get_SRV(0)))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pShaderCom->Begin(22))) {
@@ -114,6 +140,10 @@ HRESULT CDummyDecal::Ready_Components(void* pArg)
 	/* Com_Texture */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Decal_Fade"),
 		reinterpret_cast<CComponent**>(&m_pFadeTextureCom))))
+		return E_FAIL;
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Decal_DiffuseMask"),
+		reinterpret_cast<CComponent**>(&m_pDiffuseMaskTextureCom))))
 		return E_FAIL;
 
 
@@ -163,7 +193,7 @@ HRESULT CDummyDecal::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNormalThreshold", &m_fNormalThreshold, sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeX", &m_fWinSizeX, sizeof(_float)))) {
@@ -174,6 +204,9 @@ HRESULT CDummyDecal::Bind_ShaderResources()
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vTime", &m_fTimeAcc, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVTiling", &m_fUVTiling, sizeof(_float)))) {
 		return E_FAIL;
 	}
 
@@ -188,6 +221,9 @@ HRESULT CDummyDecal::Bind_ShaderResources()
 	}
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_NormalCopy"), m_pShaderCom, "g_NormalMapTexture"))) {
 		return E_FAIL;
 	}
 
@@ -224,6 +260,7 @@ void CDummyDecal::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pDiffuseMaskTextureCom);
 	SAFE_RELEASE(m_pFadeTextureCom);
 	SAFE_RELEASE(m_pMaskTextureCom);
 	SAFE_RELEASE(m_pNormalTextureCom);
@@ -236,16 +273,12 @@ void CDummyDecal::Describe_Entity()
 {
 	GUI::Begin("TEST DECAL");
 
-	_float fAgle = XMConvertToDegrees(m_fNormalThreshold);
-
-	GUI::InputFloat("m_fNormalThreshold", &fAgle);
+	GUI::InputFloat("m_fUVTiling", (_float*)(&m_fUVTiling));
 	GUI::InputFloat2("m_fSpeed", (_float*)(&m_vUVSpeed));
 
 	GUI::ColorEdit4("Mask Red", (_float*)&m_vMaskRed);
 	GUI::ColorEdit4("Mask Green", (_float*)&m_vMaskGreen);
 	GUI::ColorEdit4("Mask Blue", (_float*)&m_vMaskBlue);
-
-	m_fNormalThreshold = XMConvertToRadians(fAgle);
 
 	m_pTransformCom->Describe_Entity();
 
@@ -258,6 +291,80 @@ void CDummyDecal::Describe_Entity()
 		}
 	}
 
+	
 
 	GUI::End();
+}
+
+HRESULT CDummyDecal::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
+{
+	tinyxml2::XMLElement* object = doc.NewElement("Object");
+	object->SetAttribute("Type", 0);
+	root->InsertEndChild(object);
+
+
+#pragma region TRANSFORM
+	_float3 vPosition = {};
+	XMStoreFloat3(&vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+
+	_float3 vScale = m_pTransformCom->Get_Scale();
+
+	_float3 vRotation = m_pTransformCom->Get_Rotation();
+
+
+	tinyxml2::XMLElement* Position = doc.NewElement("Position");
+	Position->SetAttribute("x", vPosition.x);
+	Position->SetAttribute("y", vPosition.y);
+	Position->SetAttribute("z", vPosition.z);
+	object->InsertEndChild(Position);
+
+	tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
+	Scale->SetAttribute("x", vScale.x);
+	Scale->SetAttribute("y", vScale.y);
+	Scale->SetAttribute("z", vScale.z);
+	object->InsertEndChild(Scale);
+
+	tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
+	Rotation->SetAttribute("x", vRotation.x);
+	Rotation->SetAttribute("y", vRotation.y);
+	Rotation->SetAttribute("z", vRotation.z);
+	object->InsertEndChild(Rotation);
+#pragma endregion
+
+#pragma region DECAL
+
+	/* Diffuse */
+	tinyxml2::XMLElement* Shader_Value = doc.NewElement("Shader_Value");
+	Shader_Value->SetAttribute("UVTiling", m_fUVTiling);
+	Shader_Value->SetAttribute("UVSpeedX", m_vUVSpeed.x);
+	Shader_Value->SetAttribute("UVSpeedY", m_vUVSpeed.y);
+	object->InsertEndChild(Shader_Value);
+
+	/* MaskRed */
+	tinyxml2::XMLElement* MaskRed = doc.NewElement("MaskRed");
+	MaskRed->SetAttribute("r", m_vMaskRed.x);
+	MaskRed->SetAttribute("g", m_vMaskRed.y);
+	MaskRed->SetAttribute("b", m_vMaskRed.z);
+	MaskRed->SetAttribute("a", m_vMaskRed.w);
+	object->InsertEndChild(MaskRed);
+
+	/* MaskGreen */
+	tinyxml2::XMLElement* MaskGreen = doc.NewElement("MaskGreen");
+	MaskGreen->SetAttribute("r", m_vMaskGreen.x);
+	MaskGreen->SetAttribute("g", m_vMaskGreen.y);
+	MaskGreen->SetAttribute("b", m_vMaskGreen.z);
+	MaskGreen->SetAttribute("a", m_vMaskGreen.w);
+	object->InsertEndChild(MaskGreen);
+
+	/* MaskBlue */
+	tinyxml2::XMLElement* MaskBlue = doc.NewElement("MaskBlue");
+	MaskBlue->SetAttribute("r", m_vMaskBlue.x);
+	MaskBlue->SetAttribute("g", m_vMaskBlue.y);
+	MaskBlue->SetAttribute("b", m_vMaskBlue.z);
+	MaskBlue->SetAttribute("a", m_vMaskBlue.w);
+	object->InsertEndChild(MaskBlue);
+
+#pragma endregion
+
+	return S_OK;
 }

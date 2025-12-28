@@ -44,12 +44,20 @@ private:
 	vector<_wstring>					m_LODModelPrototypeTags;
 	vector<filesystem::path>			m_ModelPrototypePaths;
 
+	_uint								m_iSelectedIndex = {};
 	_uint								m_iContainerObjectIndex = {};
 	_int								m_iGlassIndex = { 1 };
 
 	class CBuildingContainer*			m_pContainer = { nullptr };
 	_char								m_szSaveFileName[MAX_PATH] = {};
 	_char								m_szSaveContainerName[MAX_PATH] = {};
+
+#pragma region LIGHT
+	LIGHT_DESC							m_Light_Desc = {};
+#pragma endregion
+
+	class CInfoInstance*					m_pInfoInstance = { nullptr };
+
 private:
 	HRESULT		Ready_Components();
 	HRESULT		Bind_ShaderResources();
@@ -73,6 +81,9 @@ private:
 	HRESULT     Load_InteractObject(const _char* pFileName);
 
 	HRESULT		Load_WaterObject(const _char* pFileName);
+
+	HRESULT		Save_PointLightObject(const _char* pFileName);
+	HRESULT		Save_Decal(const _char* pFileName);
 #pragma endregion
 
 	void		Update_PrototypeList();
@@ -80,6 +91,8 @@ private:
 	void		Update_Edit();
 	void		Update_ContainerObject();
 	void		Update_Unified();
+	void 		Update_LightSpawer();
+	void 		Update_Decal();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
 	void		Create_Elemnt(_wstring& strPrototypeTag);

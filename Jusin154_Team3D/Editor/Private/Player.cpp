@@ -84,6 +84,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
+#if 진우 
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, -80.f, -11.4f, 1.f));
+#endif
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -95,7 +98,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 #endif // _DEBUG
 
 	// UI 연동 추가
-
+	m_pModelCom->Set_Temp(true);
 
 	return S_OK;
 }
@@ -184,7 +187,7 @@ HRESULT CPlayer::Render()
 	}
 
 #ifdef _DEBUG
-	m_pCharacter_Controller->Render();
+	//m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
 	Render_CameraCoordinateSystem();
 #endif
@@ -252,7 +255,7 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 	}
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+	m_strModelPrototypeTag = TEXT("Prototype_Component_Playable_Model");
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
@@ -308,6 +311,33 @@ HRESULT CPlayer::Ready_Components()
 	}
 
 	return S_OK;
+}
+void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
+{
+	m_vCameraShakeTimer.x = 0.f;
+	m_vCameraShakeTimer.y = fTime;
+	m_fCameraShakeIntense = fIntense;
+	m_bCameraShake = true;
+}
+
+void CPlayer::Update_CameraShake(_float fTimeDelta)
+{
+	if (true == m_bCameraShake) {
+		m_vCameraShakeTimer.x += fTimeDelta;
+		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) {
+			m_vCameraShakeTimer.x = 0.f;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(0.f, 0.f);
+			m_bCameraShake = false;
+		}
+		else {
+			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
+			fIntense *= fIntense;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense)
+			);
+		}
+	}
 }
 
 HRESULT CPlayer::Ready_Parts()

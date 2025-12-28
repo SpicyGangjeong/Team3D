@@ -745,7 +745,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].vDiffuseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDiffuseUVMoveTime.x, m_InstanceDesc.vDiffuseUVMoveTime.y));
 				pParticleValues[i].vDistortionUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDistortionUVMoveTime.x, m_InstanceDesc.vDistortionUVMoveTime.y));
 				pParticleValues[i].vNoiseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
-				pParticleValues[i].vDissolveUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
+				pParticleValues[i].vDissolveUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDissolveUVMoveTime.x, m_InstanceDesc.vDissolveUVMoveTime.y));
 				pParticleValues[i].fSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vSpeed.x, m_InstanceDesc.vSpeed.y);
 				pParticleValues[i].fRotaionSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vRotationSpeed.x, m_InstanceDesc.vRotationSpeed.y);
 				pParticleValues[i].vAniIndex = _float2(0.f, m_InstanceDesc.vAniIndex.y);
@@ -988,6 +988,11 @@ void CInstance_Model::Describe_Entity()
 			if (GUI::TreeNode("Pivot Move"))
 			{
 
+				if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
 				if (GUI::Checkbox("PivotMove", &m_InstanceDesc.isPivotMove))
 				{
 					Instane_Buffer_ReStruct();
@@ -1075,12 +1080,6 @@ void CInstance_Model::Describe_Entity()
 			{
 
 				if (GUI::Checkbox("AxisTurn", &m_InstanceDesc.isAxisTurn))
-				{
-					Instane_Buffer_ReStruct();
-				}
-
-
-				if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1201,6 +1200,11 @@ void CInstance_Model::Describe_Entity()
 			}
 
 			if (ImGui::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("DissolveUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDissolveUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
