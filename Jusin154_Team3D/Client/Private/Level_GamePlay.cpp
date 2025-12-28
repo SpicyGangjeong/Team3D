@@ -42,7 +42,28 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_GamePlay::Initialize(void* pArg)
 {
+	// 낮, 밤 설정
+#ifdef gimch
+	m_isDay = false;
+#endif // gimch
+#ifdef Bin
+	m_isDay = true;
+#endif // 
+#ifdef 진우
+	isDay = true;
+#endif // 
+#ifdef 기무리
+	isDay = true;
+#endif // 
+#ifdef 인혁
+	isDay = true;
+#endif // 
+
 	if (FAILED(Ready_Lights())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Volumetric())) {
 		return E_FAIL;
 	}
 
@@ -164,8 +185,49 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))) {
+
+	LIGHT_DESC Desc = {};
+	if (m_isDay)
+	{
+		Desc.vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
+		Desc.vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
+		Desc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
+	}
+	else
+	{
+		Desc.vDiffuse = _float4(0.0471f, 0.0745f, 0.1294f, 0.2549f);
+		Desc.vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
+		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc))) {
 		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Volumetric()
+{
+	// Volumetric 설정
+	if(m_isDay)
+	{
+		m_pGameInstance->Setting_Volumetirc(
+			1.251f,                         // 밀도
+			0.0253f,                          // 빛 강도
+			0.9f,                          // 산란 계수
+			1.78f                           // 깊이 분포 계수
+		);
+	}
+	else
+	{
+		m_pGameInstance->Setting_Volumetirc(
+			0.626f,                         // 밀도
+			0.01f,                          // 빛 강도
+			0.11f,                          // 산란 계수
+			1.0f                           // 깊이 분포 계수
+		);
 	}
 
 	return S_OK;

@@ -29,7 +29,7 @@ HRESULT CMainLight::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(1.f, -1.f, 1.f, 0.f));
+	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(-1.716f, 0.121f, 0.211f, 0.f));
 
 	m_pGameTime = CGameTime::Create();
 
@@ -134,17 +134,14 @@ HRESULT CMainLight::Ready_Components()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
-	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
+	LightDesc.vDiffuse = _float4(0.3294f, 0.4824f, 0.4824f, 0.0314f);
+	LightDesc.vAmbient = _float4(0.1608f, 0.1608f, 0.1608f, 0.0f);
 	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+	m_pTransformCom->Rotation(XMConvertToRadians(-4.f), XMConvertToRadians(271.f), 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
 
-#ifdef gimch
-	LightDesc.vDiffuse = _float4(0.745f, 0.797f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.417f, 0.533f, 0.544f, 0.f);
-#endif // gimch
-
+	
 
 	/* Com_Light*/
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
