@@ -40,13 +40,25 @@ HRESULT CBroomRaceManager::Initialize(void* pArg)
 void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
+	switch (m_eRaceState)
+	{
+	case ENUM_CLASS(RACE_STATE::COUNTDOWN):
+		Update_Countdown(fTimeDelta);
+		break;
+	case ENUM_CLASS(RACE_STATE::RACING):
+		Check_RingPassed();
+		break;
+	}
 
-	Check_RingPassed();
 }
 
 void CBroomRaceManager::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
+
+
+
+
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -55,6 +67,14 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 void CBroomRaceManager::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
+	m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+}
+
+HRESULT CBroomRaceManager::Render()
+{
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), ToolTip.c_str(), _float2(g_iWinSizeX*0.5f, g_iWinSizeY*0.5f),XMVectorSet(1.f,1.f,1.f,1.f),5.f);
+
+	return S_OK;
 }
 
 HRESULT CBroomRaceManager::Ready_Components()
@@ -123,6 +143,7 @@ void CBroomRaceManager::Describe_Entity()
 {
 	if (GUI::Button("Race Start"))
 	{
+		m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
 		const _float SPAWN_DISTANCE = 80.f;
 
 		for (auto& racer : m_Racers)
@@ -140,24 +161,76 @@ void CBroomRaceManager::Describe_Entity()
 			{
 				CTransform* pBroomTransform =
 					racer.pAI->Get_Broom()->Get_Component<CTransform>();
+				_float fRand = m_pGameInstance->Real_Random_Float(-10.f, 10.f);
+				spawnPos.m128_f32[2] += fRand;
 
 				pBroomTransform->Set_State(STATE::POSITION, spawnPos);
-				pBroomTransform->Set_State(STATE::LOOK, ringLook);
+				pBroomTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
+				racer.pAI->Get_Broom()->Set_Move(false);
 			}
 			else if (racer.pRacer)
 			{
-				CTransform* pBroomTransform =
-					racer.pRacer->Get_Broom()->Get_Component<CTransform>();
-
-				pBroomTransform->Set_State(STATE::POSITION, spawnPos);
-				pBroomTransform->Set_State(STATE::LOOK, ringLook);
+				CTransform* pTransform =
+					racer.pRacer->Get_Component<CTransform>();
+				spawnPos.m128_f32[1] -= 2.f;
+				pTransform->Set_State(STATE::POSITION,spawnPos);
+				pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
+				racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::BROOM_RIDE);
+				racer.pRacer->Get_Broom()->Set_Move(false);
 			}
+		}
+	}
+	if (m_eRaceState == ENUM_CLASS(RACE_STATE::READY))
+	{
+		if (GUI::Button("Countdown"))
+		{
+			m_eRaceState = ENUM_CLASS(RACE_STATE::COUNTDOWN);
 		}
 	}
 }
 
 
 #endif // _DEBUG
+
+void CBroomRaceManager::Update_Countdown(_float fTimeDelta)
+{
+	m_fCountTimer += fTimeDelta;
+
+	if (m_fCountTimer >= 1.f)
+	{
+		m_fCountTimer = 0.f;
+		--m_iCount;
+
+		if (m_iCount > 0)
+		{
+			ToolTip = to_wstring(m_iCount);
+		}
+		else
+		{
+			ToolTip = to_wstring(0);
+			StartRaceMove();
+		}
+	}
+}
+
+void CBroomRaceManager::StartRaceMove()
+{
+	for (auto& racer : m_Racers)
+	{
+		if (racer.pAI)
+		{
+			racer.pAI->Get_Broom()->Set_Move(true);
+		}
+		else if (racer.pRacer)
+		{
+			racer.pRacer->Get_Broom()->Set_Move(true);
+		}
+	}
+
+	m_eRaceState = ENUM_CLASS(RACE_STATE::RACING);
+}
+
+
 
 void CBroomRaceManager::Check_RingPassed()
 {

@@ -1296,6 +1296,11 @@ _float CGameInstance::FontSizeX(const _wstring& strFontTag, const _tchar* pText)
 	return m_pFont_Manager->FontSizeX(strFontTag, pText);
 }
 
+
+
+#pragma endregion
+
+#pragma region VOLUMETRIC
 ID3D11ShaderResourceView* CGameInstance::Get_VolumeSRV()
 {
 	return m_pVolumetric->Get_VolumeSRV();
@@ -1306,8 +1311,12 @@ _float* CGameInstance::Get_DepthPackExponentPtr()
 	return m_pVolumetric->Get_DepthPackExponentPtr();
 }
 
-#pragma endregion
+void CGameInstance::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent)
+{
+	m_pVolumetric->Setting_Volumetirc(fDensity , fLightIntensity , fAsymmetryParameter, fDepthPackExponent);
+}
 
+#pragma endregion
 void CGameInstance::Release_Engine()
 {
 	SAFE_RELEASE(m_pThreadHolder);

@@ -604,11 +604,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
+#ifdef Bin
+	for (_uint i = 0; i < 0; ++i) {
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
 			return E_FAIL;
 		}
 	}
+#endif // Bin
 	return S_OK;
 }
 
@@ -621,13 +623,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
 	for (_uint i = 0; i < 10; ++i) {
 
-		CRaceRing::RACERING_DESC RaceRingDesc {};
+		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
 		RaceRingDesc.iIndex = i;
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
 			return E_FAIL;
 		}
 	}
+
 	return S_OK;
 }
 
@@ -670,11 +673,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		return E_FAIL;
 	}
 
-#if 진우
-#else
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
+
+#if 진우
+#else
+
 #endif 
 	
 

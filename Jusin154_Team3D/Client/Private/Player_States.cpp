@@ -2706,7 +2706,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::TRANSFORMATION_SIDE, Get_PartObject<CWand>()); },
 			0.f);
-		Info.pText = TEXT("봄바르다");
+		Info.pText = TEXT("베라베르토!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
 
@@ -3124,7 +3124,7 @@ void CPlayer::Add_FSM()
 			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 			if (!m_bOnce) {
 				m_pBroomTransform->Set_WorldMatrix(m_pTransformCom->Get_XMWorldMatrix());
-				m_pBroomTransform->Set_State(STATE::POSITION, m_pBroomTransform->Get_State(STATE::POSITION) + XMVectorSet(0.f,2.f,0.f,0.f));
+				m_pBroomTransform->Set_State(STATE::POSITION, m_pTransformCom->Get_State(STATE::POSITION) + XMVectorSet(0.f,2.f,0.f,0.f));
 				_float3 vScale = { 0.3f,0.3f,0.3f };
 				m_pBroomTransform->Set_Scale(vScale);
 				m_bOnce = true;

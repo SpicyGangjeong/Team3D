@@ -35,6 +35,8 @@ public:
 	_bool Get_Turbo() { return m_bTurbo; }
 
 	void Set_Input(BroomInput broomInput) { m_Input = broomInput; }
+	void Set_AISpeed(_float speedMul, _float accelMul);
+	void Set_Move(_bool bMove) { m_bMove = bMove; }	
 	HRESULT         Ready_Child();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
@@ -60,13 +62,23 @@ private:
 	_float m_fTurnDecel = 0.3f;
 	_float m_fVerticalSpeed = 0.f;
 
-
 	_float m_fFlyAccel = 1.f;
 	_float m_fFlyDecel = 1.f;
 
 	_float m_fTurboAccel = 1.3f;
 	_float m_fTurboDecel = 0.6f;
 
+	_bool m_bMove = { true };
+	
+#pragma region AI
+	_float m_fAISpeedMul = 1.f;
+	_float m_fAIAccelMul = 1.f;
+
+	_float m_fAICondition = 1.f;   
+	_float m_fAISeed = 0.f;      
+	_float m_fAITime = 0.f;
+
+#pragma endregion
 
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
@@ -76,7 +88,6 @@ private:
 	class CEffectParts* m_pWindEffect = { nullptr };
 	_float m_fCameraOffset = { 10.f };
 
-	_bool	  m_bHit = { false };
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

@@ -194,6 +194,7 @@
 #include "StunEffect.h"
 #include "Blink.h"
 #include "Ranrok_FireBall.h"
+#include "Ranrok_Breath.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1268,6 +1269,11 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_SRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/base_Black_SRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Noises", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		_string strFilePath = pFilePath;
@@ -1793,6 +1799,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Breath>(NEXT_LEVEL, CRanrok_Breath::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_Wand */
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
@@ -2422,17 +2431,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig_Anim.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Professor_EleazarFig_Model")
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Ghost_Peeves_Model")
 	));
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ConjuredDragon_Model"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f))* XMMatrixIdentity()))))
-	//	return E_FAIL;
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon_Anim.bin", XMMatrixIdentity(),
-		TEXT("Prototype_Component_ConjuredDragon_Anim_Model")
-	));
 
 #pragma endregion
 

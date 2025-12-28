@@ -47,6 +47,8 @@ public:
 
 	ID3D11ShaderResourceView* Get_VolumeSRV() { return m_pAccVolumeSRV; }
 	_float* Get_DepthPackExponentPtr() { return &m_fDepthPackExponent; }
+
+	void		Setting_Volumetirc(_float fDensity , _float fLightIntensity, _float fAsymmetryParameter , _float fDepthPackExponent);
 private:
 	class CGameInstance*		m_pGameInstance = { nullptr };
 	ID3D11Device*				m_pDevice = { nullptr };

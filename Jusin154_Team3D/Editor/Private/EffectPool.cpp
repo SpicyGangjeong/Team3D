@@ -22,6 +22,7 @@
 #include "StunEffect.h"
 #include "Blink.h"
 #include "Ranrok_FireBall.h"
+#include "Ranrok_Breath.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -323,10 +324,17 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 	))) return E_FAIL;
 
 
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_BREATH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Breath* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Breath>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 	
+
 	return S_OK;
-
-
 }
 
 HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg)

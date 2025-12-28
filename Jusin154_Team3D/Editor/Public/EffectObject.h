@@ -139,7 +139,7 @@ public:
 
 		_bool       isBlurDissolve = {};
 		_bool       isNomalMap = {};
-		_bool       isPadding2 = {};
+		_bool       isNoDissolveSmoothStep = {};
 		_bool       isPadding3 = {};
 		
 		_float4     vPadding5 = {};
@@ -273,7 +273,7 @@ public:
 #ifdef _DEBUG
 		HRESULT LoadPre(const _char* pFilePath, LEVEL eLevel);
 #endif // DEBUG
-
+	EFFECT_INFO* Get_Effect_Info() { return &m_EffectInfo; }
 
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -290,6 +290,7 @@ protected:
 	CTexture* m_pDistortion_TextureCom = { nullptr };
 	CTexture* m_pNormal_TextureCom = { nullptr };
 	CTexture* m_pSurface_TextureCom = { nullptr };
+
 
 	CShader* m_pShaderCom = { nullptr };
 	CLight*  m_pLightCom = { nullptr };
