@@ -42,7 +42,12 @@ cbuffer AnimCB : register(b0)
     float BlendRatio;
 
     int RootBoneIndex;
-    float3 _pad0;
+    int HeadBoneIndex;
+    float HeadAimWeight;
+    float paddding1;
+
+    float3 TargetDir_Local;
+    float padding;
 
     row_major float4x4 PreTransformMatrix;
     float4 RootInitRot;
@@ -315,8 +320,6 @@ row_major float4x4 SampleBlendedLocal(uint bone)
         prevT = CurrentTime;
     }
 
-
-
     SampleLocalTRS_Prev(bone, prevT, sA, rA, tA);
     SampleLocalTRS_Cur(bone, CurrentTime, sB, rB, tB);
 
@@ -329,6 +332,8 @@ row_major float4x4 SampleBlendedLocal(uint bone)
         T = 0;
         R = RootInitRot;
     }
+    
+    
 
     return MakeAffine(S, R, T);
 }

@@ -1341,6 +1341,10 @@ void CModel::InItialize_BoneIndex()
 		{
 			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::NECK)] = i;
 		}
+		if (m_Bones[i]->Compare_Name("head"))
+		{
+			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] = i;
+		}
 	}
 }
 
@@ -1685,6 +1689,8 @@ void CModel::ComputeAnimation(_uint AnimIndex,_uint MeshIndex)
 
 void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 {
+
+
 	D3D11_MAPPED_SUBRESOURCE ConstantSubResource = {};
 
 	auto* anim = m_Animations[AnimIndex];
@@ -1702,6 +1708,23 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->PrevTime = m_Animations[m_iPreAnimIndex]->Get_CurrentTrackPosition();
 		pDesc->BlendRatio = m_fRatio;
 		pDesc->RootBoneIndex = m_iRootBoneIndex;
+		pDesc->HeadBoneIndex = m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)];
+		pDesc->HeadAimWeight = 1.f;
+		pDesc->paddding1 = 0.f;
+		if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] != -1)
+		{
+			_vector dirWS = XMVector3Normalize(m_vTargetPos - m_pTransform->Get_State(STATE::POSITION));
+
+			_matrix worldInv = m_pTransform->Get_WorldMatrixInv();
+
+			_vector dirLocal =XMVector3Normalize(XMVector3TransformNormal(dirWS, worldInv));
+
+			XMStoreFloat3(&pDesc->TargetDir_Local, dirLocal);
+		}
+		else {
+			pDesc->TargetDir_Local = _float3(0.f, 0.f, 0.f);
+		}
+		pDesc->padding = 0.f;
 		pDesc->PreTransformMatrix = m_PreTransformMatrix;
 		pDesc->RootInitRot = m_vInitialRootRot;
 		m_pContext->Unmap(m_pConstantBuffer, 0);

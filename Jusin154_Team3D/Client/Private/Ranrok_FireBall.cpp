@@ -111,7 +111,6 @@ HRESULT CRanrok_FireBall::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pFireBall->Set_Visible(true);
 	m_pFireBall_PT->Set_Visible(true);
 	m_pFireBall_Surface->Set_Visible(true);
-	m_pFireBall_Tail->Set_Visible(true);
 
 	/* 초기 객체 위치 초기화*/
 
@@ -132,7 +131,6 @@ HRESULT CRanrok_FireBall::Pre_Setting(CGameObject* pObject, void* pArg)
 	 m_pFireBall->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 	 m_pFireBall_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 	 m_pFireBall_Surface->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
-	 m_pFireBall_Tail->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 
 
 	 /* 플레이어 위치 받기 */
