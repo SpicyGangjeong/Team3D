@@ -289,25 +289,20 @@ void CRanrok::Behavior_FireBreathEnter()
 		pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_WINDUP_A];
 
 		Add_Event(pairAnimInfo.first,
-			[&]() {
-				pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_A];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-				m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBREATH)];
-				m_bLookAt = false;
-			}, 0.95f);
+			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_A];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBREATH)];
+		m_pModelCom->Play_HeadBone(true); },
+			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::FIREBREATH_A].first,
-			[&]() {
-				pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_COOLDOWN_A];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-				m_bLookAt = true;
-			}, 0.95f);
-
+			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_COOLDOWN_A];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
+			0.95f);
 		Add_Event(m_Animation[STATEANIM::FIREBREATH_A].first,
 			[this]() {
 				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this);
 			}, 0.1f);
-
 	}
 	else if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
 	{
@@ -321,9 +316,25 @@ HRESULT CRanrok::Behavior_FireBreathExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	if (m_pModelCom->Get_PlayHeadBone())
+	{
+		m_fHeadAimWeight += fTimeDelta;
+		if (m_fHeadAimWeight >= 1.f)
+		{
+			m_fHeadAimWeight = 1.f;
+		}
+		m_pModelCom->Set_HeadAimWeight(m_fHeadAimWeight);
+	}
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::FIREBREATH_COOLDOWN_A].first)
+	{
+		m_fHeadAimWeight -= fTimeDelta*2.f;
+		m_pModelCom->Set_HeadAimWeight(m_fHeadAimWeight);
+	}
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
+		m_pModelCom->Play_HeadBone(false);
 		if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
 		{
 			m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
@@ -341,6 +352,7 @@ HRESULT CRanrok::Behavior_FireBreathExitCheck(_float fTimeDelta)
 void CRanrok::Behavior_FireBreathExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FIREBREATH);
+	m_fHeadAimWeight = 0.f;
 }
 
 void CRanrok::Behavior_FireSweepEnter()
@@ -355,8 +367,8 @@ void CRanrok::Behavior_FireSweepEnter()
 			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_A];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIRESWEEP)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIRESWEEP)];
-		m_bLookAt = false;
-			}, 0.95f);
+		m_pModelCom->Play_HeadBone(true); },
+			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::FIRESWEEP_A].first,
 			[&]() { pairAnimInfo = m_Animation[STATEANIM::FIRESWEEP_COOLDOWN_A];
@@ -389,8 +401,25 @@ HRESULT CRanrok::Behavior_FireSweepExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
+	if (m_pModelCom->Get_PlayHeadBone())
+	{
+		m_fHeadAimWeight += fTimeDelta;
+		if (m_fHeadAimWeight >= 1.f)
+		{
+			m_fHeadAimWeight = 1.f;
+		}
+		m_pModelCom->Set_HeadAimWeight(m_fHeadAimWeight);
+	}
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::FIRESWEEP_COOLDOWN_A].first)
+	{
+		m_fHeadAimWeight -= fTimeDelta * 2.f;
+		m_pModelCom->Set_HeadAimWeight(m_fHeadAimWeight);
+	}
+
 	if (m_pModelCom->IsFinishedAnim())
 	{
+		m_pModelCom->Play_HeadBone(false);
 		if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
 		{
 			m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
@@ -408,6 +437,7 @@ HRESULT CRanrok::Behavior_FireSweepExitCheck(_float fTimeDelta)
 void CRanrok::Behavior_FireSweepExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FIRESWEEP);
+	m_fHeadAimWeight = 0.f;
 }
 
 void CRanrok::Behavior_FireBallEnter()

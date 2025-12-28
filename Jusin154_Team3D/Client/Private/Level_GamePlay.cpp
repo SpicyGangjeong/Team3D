@@ -619,15 +619,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
+#ifdef Bin
 	for (_uint i = 0; i < 10; ++i) {
 
-		CRaceRing::RACERING_DESC RaceRingDesc {};
+		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
 		RaceRingDesc.iIndex = i;
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
 			return E_FAIL;
 		}
 	}
+#endif // Bin
+
+
 	return S_OK;
 }
 

@@ -112,6 +112,7 @@ private:
 	_float m_fAroundRadius = 40.f;
 	_float m_fAroundTime = {};
 	_float m_fRushTime = {};
+	_float m_fHeadAimWeight = {};
 
 
 	void	Behavior_IdleEnter();

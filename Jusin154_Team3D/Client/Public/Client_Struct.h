@@ -37,6 +37,28 @@ namespace Client
 		_float			fVidio{};
 	}SPELL_INFO;
 
+	typedef struct DialogueChoice
+	{
+		_int		eType = {false};
+		_wstring	pText;
+		_int		NextTypeID{};
+	}DIALOGUECHOICEINFO;
+
+	typedef struct DialogueInfo
+	{
+		_int						iLineID{};
+		_bool						bType = {false};
+		_wstring					pText;
+		_int						NextTextID{};
+		vector<DIALOGUECHOICEINFO>	ChoiceInfo;
+	}CURRENTDIALOGUEINFO;
+
+	typedef struct NpcDialogue
+	{
+		_int						iNpcID{};
+		vector<CURRENTDIALOGUEINFO>	Info;
+	}NPCDIALOGUEINFO;
+
 	typedef struct tagLockOnInfo {
 		CUnit* pUnit = { nullptr };
 		class CMapElement_Interactable* pInteractive = { nullptr };
