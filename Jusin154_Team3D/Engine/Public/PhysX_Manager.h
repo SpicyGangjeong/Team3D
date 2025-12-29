@@ -83,9 +83,8 @@ private:
 
 	PSX::PxScene*						m_pScene = { nullptr };							// 피직스 시뮬레이션의 공간
 	PSX::PxControllerManager*			m_pCCTManager = { nullptr };					// 피직스 캐릭터 컨트롤러를 전부 추적하고 매니징함
-#ifdef _DEBUG
-	PSX::PxPvd* m_pPvd = { nullptr };							// 피직스 시뮬레이션 디버깅을 위한 도구
-#endif // _DEBUG
+
+	PSX::PxPvd* m_pPvd = { nullptr };													// 피직스 시뮬레이션 디버깅을 위한 도구
 	PSX::PxCookingParams*				m_pCookingParam = { nullptr };
 	PSX::PxPvdTransport*				m_pTransport = { nullptr };
 

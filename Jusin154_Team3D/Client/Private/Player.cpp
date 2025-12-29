@@ -296,15 +296,18 @@ HRESULT CPlayer::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Render(i))) {
-			return E_FAIL;
+			if (FAILED(m_pModelCom->Render(i))) {
+				return E_FAIL;
+			}
 		}
+#ifdef _DEBUG
+		Render_CameraCoordinateSystem();
+		//m_pCharacter_Controller->Render();
+#endif // _DEBUG
 	}
 
 #ifdef _DEBUG
-	m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
-	Render_CameraCoordinateSystem();
 #endif
 
 	return S_OK;
@@ -748,6 +751,56 @@ void CPlayer::Free()
 }
 #ifdef _DEBUG
 
+void CPlayer::Render_CameraCoordinateSystem()
+{
+	m_Batch->Begin();
+
+	const _float fArrowLength = 2.0f;
+	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
+
+
+	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
+
+		GUI::Text("%d", m_LockOnInfo.pUnit);
+
+		GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
+		GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
+		GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
+		GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
+
+		_float  fButtonSize = 45.f;
+		GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##2", { fButtonSize, fButtonSize });
+		GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
+		GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##8", { fButtonSize, fButtonSize });
+		//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
+		//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
+		//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
+		//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
+	}
+	GUI::End();
+	m_Batch->DrawLine( // W
+		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
+	);
+	m_Batch->DrawLine( // D
+		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
+	);
+	m_Batch->DrawLine( // PlayerLook
+		VertexPositionColor(XMVectorZero(), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * xmvLook, DirectX::Colors::HotPink)
+	);
+	m_Batch->End();
+}
 void CPlayer::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
