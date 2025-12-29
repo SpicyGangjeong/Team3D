@@ -53,7 +53,7 @@ private:
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };
 	class CEffectParts* m_pGoblin_Particle2 = { nullptr };
-	class CGoblin_Spector* m_pGoblinSpector = { nullptr };
+	class CGoblin_Assassin_Spector* m_pGoblinSpector = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

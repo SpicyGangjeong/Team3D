@@ -36,6 +36,12 @@ public:
 		_float4 RootInitRot;
 	}ANIMSTATE_DESC;
 
+	typedef struct tagBoneInsertionDesc {
+		_uint iStartOffset;
+		_uint iMatrixCount;
+		_uint iPad0;
+		_uint iPad1;
+	}BONEINSERTION_DESC;
 
 
 private:
@@ -115,17 +121,18 @@ public:
 #pragma endregion
 #pragma region Material
 	HRESULT					Bind_Material(_uint iMeshIndex, class CShader* pShader);
-	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader, _bool OutLine = false);
+	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader);
 #pragma endregion
 
-	void			ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
-	void			ComputeLocal(_uint AnimIndex, _uint MeshIndex);
-	void			Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
-	void			Bind_OutPut_SRV_VS_Prev(_uint iIndex, _uint iBufferIndex);
-	void			ComputeAnimation_Second(_uint AnimIndex);
-	void			InItialize_BoneIndex();
+	void					ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
+	void					ComputeLocal(_uint AnimIndex, _uint MeshIndex);
+	void					ComputeInsertionBoneBuffer(BONEINSERTION_DESC& CBDesc, ID3D11ShaderResourceView* pSRV);
+	void					Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
+	void					Bind_OutPut_SRV_VS_Prev(_uint iIndex, _uint iBufferIndex);
+	void					ComputeAnimation_Second(_uint AnimIndex);
+	void					InItialize_BoneIndex();
 
-	void			Initialize_BoneMasks();
+	void					Initialize_BoneMasks();
 
 public:
 	HRESULT Ready_PhysXMeshes(_fmatrix& PreTransformMatrix, _uint iLevel);
@@ -236,6 +243,7 @@ private:
 private:
 	HRESULT			Create_ComputeShader();
 	HRESULT			Create_ComputeShaderLocal();
+	HRESULT			Create_ComputeShaderBoneInsertion();
 	HRESULT			Create_ParentVB();
 	HRESULT			Create_BoneLocalVB();
 	HRESULT			Create_SkipBoneVB();
@@ -247,7 +255,7 @@ private:
 
 	HRESULT			Create_Local();
 
-	_uint				m_iNumBuffer = {};
+	_uint			m_iNumBuffer = {};
 
 	vector<_int>	m_Parent = {};
 	vector<_float4x4>	m_BoneLocal = {};
@@ -257,6 +265,7 @@ private:
 
 	class CComputeShader* m_pComputeShader = nullptr;
 	class CComputeShader* m_pCS_AnimLocal = nullptr;
+	class CComputeShader* m_pCS_BoneInsertion = nullptr;
 
 	ID3D11Buffer* m_pConstantBuffer = { nullptr };
 	ID3D11Buffer* m_pParentBuffer = { nullptr };
@@ -265,7 +274,7 @@ private:
 	ID3D11Buffer* m_pBoneLocalBuffer = { nullptr };
 	ID3D11Buffer* m_pSkipBoneBuffer = { nullptr };
 	ID3D11Buffer* m_pLocalMatrixBuffer = { nullptr };
-
+	ID3D11Buffer* m_pInsertionCB = { nullptr };
 
 	ID3D11ShaderResourceView* m_pParentSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pBoneLocalSRV = { nullptr };

@@ -95,7 +95,7 @@ HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 	return m_Materials[iMaterialIndex]->Bind_SRV(pShader, m_eType);
 }
 
-HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader, _bool OutLine)
+HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader)
 {
 	if (iMeshIndex >= m_iNumMeshes) {
 		return E_FAIL;
@@ -107,12 +107,7 @@ HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader, _bool OutLine)
 		return E_FAIL;
 	}
 	HRESULT hr = { E_FAIL };
-	if (false == OutLine) {
-		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_UsingPass());
-	}
-	else {
-		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_OutLinePass());
-	}
+	hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_UsingPass());
 	return hr;
 }
 
@@ -1563,6 +1558,34 @@ HRESULT CModel::Create_ComputeShaderLocal()
 	return S_OK;
 }
 
+HRESULT CModel::Create_ComputeShaderBoneInsertion()
+{
+	_uint		CS_InputStrides[] = {
+		sizeof(_float4x4)
+	};
+
+	_uint		CS_OutputStrides[] = {
+		sizeof(BONE_DESC),
+	};
+
+	CComputeShader::CS_INFO CS_Desc = {};
+
+	CS_Desc.iNumElement = (_uint)m_Bones.size();
+	CS_Desc.iNumInputBuffer = 1;
+	CS_Desc.iNumOutputBuffer = 1;
+
+	CS_Desc.iInputStructStride = CS_InputStrides;
+	CS_Desc.iOutputStructStride = CS_OutputStrides;
+
+	m_pCS_BoneInsertion = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, CS_BONEINSERT, &CS_Desc, nullptr);
+
+	if (nullptr == m_pCS_BoneInsertion) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CModel::Create_Temp()
 {
 	for (auto& anim : m_Animations)
@@ -1688,18 +1711,28 @@ HRESULT CModel::Create_BoneMatrixVB()
 
 HRESULT CModel::Create_Const()
 {
+	{
+		D3D11_BUFFER_DESC cbDesc = {};
+		cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+		cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cbDesc.ByteWidth = sizeof(ANIMSTATE_DESC);
 
-	D3D11_BUFFER_DESC cbDesc = {};
-	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cbDesc.ByteWidth = sizeof(ANIMSTATE_DESC);
+		if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pConstantBuffer))){
+			return E_FAIL;
+		}
+	}
+	{
+		D3D11_BUFFER_DESC cbDesc = {};
+		cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+		cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cbDesc.ByteWidth = sizeof(BONEINSERTION_DESC);
 
-	D3D11_SUBRESOURCE_DATA	CBInitialDesc = {};
-
-	if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pConstantBuffer)))
-		return E_FAIL;
-
+		if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pInsertionCB))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -1933,6 +1966,55 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 	m_pContext->CSSetShaderResources(0, 8, nullSRV);
 
 
+}
+
+void CModel::ComputeInsertionBoneBuffer(BONEINSERTION_DESC& CBDesc, ID3D11ShaderResourceView* pSRV)
+{
+	if (m_pComputeShader == nullptr){
+		return;
+	}
+
+	D3D11_MAPPED_SUBRESOURCE ConstantSubResource = {};
+
+	if (SUCCEEDED(m_pContext->Map(m_pInsertionCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantSubResource)))
+	{
+		BONEINSERTION_DESC* pDesc = static_cast<BONEINSERTION_DESC*>(ConstantSubResource.pData);
+		memcpy_s(pDesc, sizeof(BONEINSERTION_DESC), &CBDesc, sizeof(BONEINSERTION_DESC));
+		m_pContext->Unmap(m_pInsertionCB, 0);
+	}
+
+	ID3D11ShaderResourceView* srvs[] =
+	{
+		pSRV,
+	};
+
+	ID3D11UnorderedAccessView* uavs[] =
+	{
+		m_pBoneMatrixUAV
+	};
+	_uint iThreadPerX = 256;
+	_uint iGroupCountX = (CBDesc.iMatrixCount + iThreadPerX - 1) / iThreadPerX;
+	if (iGroupCountX == 0) {
+		iGroupCountX = 1;
+	}
+
+	m_pCS_BoneInsertion->Dispatch_ExternalSRV_UAV(
+		0,
+		0,
+		_float3((_float)iGroupCountX, 1.f, 1.f),
+		srvs,
+		1,
+		uavs,
+		1,
+		m_pInsertionCB
+	);
+
+	ID3D11UnorderedAccessView* nullUAV[1] = { nullptr };
+	UINT counts[1] = { 0 };
+	m_pContext->CSSetUnorderedAccessViews(0, 1, nullUAV, counts);
+
+	ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
+	m_pContext->CSSetShaderResources(0, 1, nullSRV);
 }
 
 
@@ -2416,6 +2498,10 @@ HRESULT CModel::Initialize(void* pArg)
 			return E_FAIL;
 		}
 
+		if (FAILED(Create_ComputeShaderBoneInsertion())){
+			return E_FAIL;
+		}
+
 		for (int i = 0; i < m_Meshes.size(); i++)
 		{
 			if (1 < m_Meshes[i]->Get_NumBone()) {
@@ -2536,6 +2622,7 @@ void CModel::Free()
 
 	SAFE_RELEASE(m_pComputeShader);
 	SAFE_RELEASE(m_pCS_AnimLocal);
+	SAFE_RELEASE(m_pCS_BoneInsertion);
 	SAFE_RELEASE(m_pConstantBuffer);
 	SAFE_RELEASE(m_pParentBuffer);
 	SAFE_RELEASE(m_pBoneLocalBuffer);
@@ -2543,6 +2630,7 @@ void CModel::Free()
 	SAFE_RELEASE(m_pPrevBoneMatrixBuffer);
 	SAFE_RELEASE(m_pSkipBoneBuffer);
 	SAFE_RELEASE(m_pLocalMatrixBuffer);
+	SAFE_RELEASE(m_pInsertionCB);
 	SAFE_RELEASE(m_pParentSRV); 
 	SAFE_RELEASE(m_pBoneLocalSRV);
 	SAFE_RELEASE(m_pBoneMatrixSRV);

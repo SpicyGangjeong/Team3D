@@ -168,6 +168,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\Public\Camera_Model.h" />
     <ClInclude Include="..\Public\Goblin_Assassin.h" />
+    <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
     <ClInclude Include="..\Public\Goblin_Sword.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
@@ -332,8 +333,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\NoMountIcon.h" />
     <ClInclude Include="..\Public\PhysXEffectHitBox.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\EffectParts.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
@@ -418,6 +417,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\Private\Camera_Model.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin.cpp" />
+    <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />
     <ClCompile Include="..\Private\Goblin_Sword.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
@@ -583,8 +583,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
     <ClCompile Include="..\Private\CamPosition_Target.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\EffectParts.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />

@@ -189,37 +189,6 @@ __super::Update(fTimeDelta);
 	}
 }
 
-void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
-{
-	if (nullptr != m_pGrapInteractive) {
-		m_vGrapInteratableLerp.x += fTimeDelta;
-		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderGlobalPos(), m_vGrapInteratableLerp.x);
-		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y) {
-			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
-		}
-	}
-}
-
-void CPlayer::Update_CameraShake(_float fTimeDelta)
-{
-	if (true == m_bCameraShake) {
-		m_vCameraShakeTimer.x += fTimeDelta;
-		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) {
-			m_vCameraShakeTimer.x = 0.f;
-			m_pCamPosition_ShoulderPart->Set_CameraShake(0.f, 0.f);
-			m_bCameraShake = false;
-		}
-		else {
-			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
-			fIntense *= fIntense;
-			m_pCamPosition_ShoulderPart->Set_CameraShake(
-				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
-				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense)
-			);
-		}
-	}
-}
-
 void CPlayer::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
@@ -262,20 +231,21 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::LOOK, look);
 	////////////////////////////////////////////////////////////////////////////
 	
-#ifdef 기무리
-	if (nullptr == m_pRobePart) {
-		{
-			CPlayerRobe::PlayerRobe_DESC Desc{};
-			Desc.pModel = m_pModelCom;
-			Desc.pParentTransform = m_pTransformCom;
-			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
-			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
-				assert(false);
-			}
-		}
-	}
-#endif // 기무리
+//#ifdef 기무리
+//	if (nullptr == m_pRobePart) {
+//		{
+//			CPlayerRobe::PlayerRobe_DESC Desc{};
+//			Desc.pModel = m_pModelCom;
+//			Desc.pParentTransform = m_pTransformCom;
+//			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
+//			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
+//				assert(false);
+//			}
+//		}
+//	}
+//#endif // 기무리
 }
+
 
 HRESULT CPlayer::Render()
 {
@@ -303,7 +273,7 @@ HRESULT CPlayer::Render()
 			{
 				return E_FAIL;
 			}
-			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
+			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 				return E_FAIL;
 			}
 
@@ -318,16 +288,46 @@ HRESULT CPlayer::Render()
 				return E_FAIL;
 			}
 		}
+		Render_CameraCoordinateSystem();
+		//m_pCharacter_Controller->Render();
 	}
 #ifdef _DEBUG
 	if (RENDER::NONLIGHT == eType) {
-		//m_pCharacter_Controller->Render();
 		//m_pRigidBody->Render();
-		Render_CameraCoordinateSystem();
 	}
 #endif
 
 	return S_OK;
+}
+void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
+{
+	if (nullptr != m_pGrapInteractive) {
+		m_vGrapInteratableLerp.x += fTimeDelta;
+		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderGlobalPos(), m_vGrapInteratableLerp.x);
+		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y) {
+			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
+		}
+	}
+}
+
+void CPlayer::Update_CameraShake(_float fTimeDelta)
+{
+	if (true == m_bCameraShake) {
+		m_vCameraShakeTimer.x += fTimeDelta;
+		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) {
+			m_vCameraShakeTimer.x = 0.f;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(0.f, 0.f);
+			m_bCameraShake = false;
+		}
+		else {
+			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
+			fIntense *= fIntense;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense)
+			);
+		}
+	}
 }
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {

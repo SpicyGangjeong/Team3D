@@ -28,7 +28,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	}
 
 	m_pInfoInstance->Regist_ActiveMonster(this);
-
+	
 	return S_OK;
 }
 
@@ -115,14 +115,8 @@ HRESULT CMonster::Render_OutLine()
 		return E_FAIL;
 	}
 	Compute_Depth();
-	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar()));
 	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
-	if (m_fOutLineThickness > 6.f) {
-		m_fOutLineThickness = 6.f;
-	}
-	else if (m_fOutLineThickness < 2.f) {
-		m_fOutLineThickness = 2.f;
-	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
 	}
