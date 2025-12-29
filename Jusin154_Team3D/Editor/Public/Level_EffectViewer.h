@@ -25,7 +25,7 @@ private:
 	HRESULT Ready_Layer_PhysX(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);
 
-	PhsXUserData		 m_PlaneData = {};
+	PHYSX_USERDATA		 m_PlaneData = {};
 	class CInfoInstance* m_pInfoInstance = { nullptr };
 public:
 	static CLevel_EffectViewer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID);

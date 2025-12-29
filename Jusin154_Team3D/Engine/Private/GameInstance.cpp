@@ -82,7 +82,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pKey_Manager) {
 		return E_FAIL;
 	}
-	m_pPipeLine = CPipeLine::Create();
+	m_pPipeLine = CPipeLine::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pPipeLine) {
 		return E_FAIL;
 	}
@@ -724,6 +724,11 @@ _matrix CGameInstance::Get_Transform_Matrix(D3DTS eState)
 	return m_pPipeLine->Get_Transform_Matrix(eState);
 }
 
+_matrix CGameInstance::Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType)
+{
+	return m_pPipeLine->Get_ShadowTransform_Matrix(eState, eShadowType);
+}
+
 const _float4* CGameInstance::Get_CamPosition()
 {
 	return m_pPipeLine->Get_CamPosition();
@@ -794,6 +799,16 @@ _float  CGameInstance::Get_ShadowBoxFar(_uint iShadowBoxIndex)
 	return m_pPipeLine->Get_ShadowBoxFar(iShadowBoxIndex);
 }
 
+HRESULT CGameInstance::Begin_OutLine_Write(_uint iDSSRef)
+{
+	return m_pPipeLine->Begin_OutLine_Write(iDSSRef);
+}
+
+HRESULT CGameInstance::End_OutLine_Write()
+{
+	return m_pPipeLine->End_OutLine_Write();
+}
+
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
 	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
@@ -819,6 +834,15 @@ HRESULT CGameInstance::Render_Lights(_uint _iCurrentLevel, CShader* pShader, CVI
 	return m_pLight_Manager->Render_Lights(_iCurrentLevel, pShader, pVIBuffer);
 }
 
+list<class CLight*>* CGameInstance::Get_LightList(_uint _iCurrentLevel)
+{
+	return m_pLight_Manager->Get_LightList(_iCurrentLevel);
+}
+
+_uint CGameInstance::Get_NumLight(_uint _iCurrentLevel)
+{
+	return m_pLight_Manager->Get_NumLight(_iCurrentLevel);
+}
 
 HRESULT CGameInstance::Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding)
 {
@@ -906,6 +930,11 @@ HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTar
 HRESULT CGameInstance::Clear_RenderTarget(const _wstring& strRenderTargetKey)
 {
 	return m_pRenderTarget_Manager->Clear_RenderTarget(strRenderTargetKey);
+}
+
+ID3D11ShaderResourceView* CGameInstance::Get_RenderTarget_SRV(const _wstring& strRenderTargetKey)
+{
+	return m_pRenderTarget_Manager->Get_RenderTarget_SRV(strRenderTargetKey);
 }
 
 #ifdef _DEBUG
@@ -1017,9 +1046,13 @@ PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody,
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel);
 }
-PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel)
+PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1)
 {
-	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame, iLevel);
+	return m_pPhysX_Manager->Create_PxJoint(eType, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
+}
+PSX::PxD6Joint* CGameInstance::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	return m_pPhysX_Manager->Create_PxD6Joint(pActor0, pActor1, pxJointWorldPos);
 }
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
@@ -1065,6 +1098,10 @@ void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
 	m_pPhysX_Manager->Release_Actor(Actor);
 }
+void CGameInstance::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
+{
+	m_pPhysX_Manager->ApplyFilterData(pRigidActor);
+}
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
@@ -1074,7 +1111,7 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
 }
-void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
+void CGameInstance::Add_Editor_Plane(PHYSX_USERDATA& PlaneData)
 {
 	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
 }
@@ -1296,6 +1333,11 @@ _float CGameInstance::FontSizeX(const _wstring& strFontTag, const _tchar* pText)
 	return m_pFont_Manager->FontSizeX(strFontTag, pText);
 }
 
+
+
+#pragma endregion
+
+#pragma region VOLUMETRIC
 ID3D11ShaderResourceView* CGameInstance::Get_VolumeSRV()
 {
 	return m_pVolumetric->Get_VolumeSRV();
@@ -1306,8 +1348,17 @@ _float* CGameInstance::Get_DepthPackExponentPtr()
 	return m_pVolumetric->Get_DepthPackExponentPtr();
 }
 
-#pragma endregion
+void CGameInstance::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent)
+{
+	m_pVolumetric->Setting_Volumetirc(fDensity , fLightIntensity , fAsymmetryParameter, fDepthPackExponent);
+}
 
+void CGameInstance::Update_Volumetric()
+{
+	m_pVolumetric->Update();
+}
+
+#pragma endregion
 void CGameInstance::Release_Engine()
 {
 	SAFE_RELEASE(m_pThreadHolder);

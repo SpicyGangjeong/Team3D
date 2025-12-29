@@ -82,9 +82,6 @@ void CGoblin_Mage::Priority_Update(_float fTimeDelta)
 
 void CGoblin_Mage::Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
-		return;
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -285,7 +282,6 @@ _vector CGoblin_Mage::Get_LockOnPos()
 
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
-
 	if (true == m_bDead) {
 		return;
 	}
@@ -331,6 +327,12 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
 			break;
 		}
 	}

@@ -102,6 +102,7 @@ HRESULT CLevel_EffectViewer::Initialize()
 	//m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
+	m_pGameInstance->Setting_Volumetirc(0.5f, 0.064f, 0.902f, 2.0f);
 	return S_OK;
 }
 
@@ -155,7 +156,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_Light()
 		return E_FAIL;
 	}
 
-	_float4 vDiffuse = _float4(0.745f, 0.797f, 0.8f, 0.f);
+	_float4 vDiffuse = _float4(0.607f, 0.658f, 0.698f, 0.f);
 	_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
 	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 

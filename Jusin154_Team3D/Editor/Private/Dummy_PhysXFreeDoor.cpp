@@ -140,7 +140,7 @@ HRESULT CDummy_PhysXFreeDoor::Render()
 				* (ScaleMatrix * RotationMatrix * TranslationWorld); // 그 후 SRT 적용
 
 			m_pTransformCom->Set_WorldMatrix(world);
-			m_pActor->setGlobalPose(XMWorldToPx_NoScale(world));
+			m_pActor->setGlobalPose(XMWorldToPx_NoScaleNoFlip(world));
 
 			m_pActor->setAngularVelocity(PSX::PxVec3(0));
 			m_pActor->setLinearVelocity(PSX::PxVec3(0));

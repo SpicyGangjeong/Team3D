@@ -25,6 +25,7 @@ StructuredBuffer<Channel> g_PrevChannelBuffer : register(t3);
 StructuredBuffer<int> g_ParentBuffer : register(t4);
 StructuredBuffer<BoneLocal> g_BoneLocalBuffer : register(t5);
 StructuredBuffer<uint> g_BoneRemap : register(t6); 
+StructuredBuffer<int> g_SkipBone : register(t7);
 
 
 RWStructuredBuffer<float4x4> g_LocalMatrixOut : register(u0);
@@ -42,7 +43,17 @@ cbuffer AnimCB : register(b0)
     float BlendRatio;
 
     int RootBoneIndex;
-    float3 _pad0;
+    int PlayHeadBone;
+    int HeadBoneIndex;
+    float HeadAimWeight;
+
+    int SkipCount;
+    int _pad0;
+    int _pad1;
+    int _pad2;
+
+    float3 TargetDir_Local;
+    float padding3;
 
     row_major float4x4 PreTransformMatrix;
     float4 RootInitRot;
@@ -163,6 +174,37 @@ void DecomposeAffine_RowMajor(row_major float4x4 M, out float3 S, out float4 R, 
 
     R = QuatNormalize(q);
 }
+row_major float4x4 ApplyHeadAim(uint bone, row_major float4x4 M)
+{
+    if (PlayHeadBone != 1)
+        return M;
+    if (bone != HeadBoneIndex)
+        return M;
+    if (HeadAimWeight <= 0.f)
+        return M;
+
+    float3 curFwd = normalize(float3(M._31, M._32, M._33));
+    float3 target = normalize(TargetDir_Local);
+
+    float d = dot(curFwd, target);
+
+    float3 axis = cross(curFwd, target);
+    float axisLen = length(axis);
+    if (axisLen <= EPS)
+        return M;
+
+    axis /= axisLen;
+
+    float angle = acos(saturate(d));
+    angle *= saturate(HeadAimWeight);
+
+    float4 qAim = float4(axis * sin(angle * 0.5f), cos(angle * 0.5f));
+    qAim = QuatNormalize(qAim);
+
+    row_major float4x4 AimM = MakeAffine(float3(1, 1, 1), qAim, float3(0, 0, 0));
+    return mul(AimM, M);
+}
+
 
 uint FindKeyIndexCur(uint start, uint count, float t)
 {
@@ -274,55 +316,36 @@ void SampleLocalTRS_Prev(uint bone, float t, out float3 S, out float4 R, out flo
 
 row_major float4x4 SampleBlendedLocal(uint bone)
 {
-    if (PrevAnimIndex == -1)
+    float3 S;
+    float4 R;
+    float3 T;
+
+    if (PrevAnimIndex == -1 || CurrentAnimIndex == PrevAnimIndex)
     {
-        float3 S;
-        float4 R;
-        float3 T;
         SampleLocalTRS_Cur(bone, CurrentTime, S, R, T);
         if (bone == RootBoneIndex)
         {
             T = 0;
             R = RootInitRot;
         }
-        return MakeAffine(S, R, T);
-    }
 
-    if (CurrentAnimIndex == PrevAnimIndex)
-    {
-        float3 S;
-        float4 R;
-        float3 T;
-        SampleLocalTRS_Cur(bone, CurrentTime, S, R, T);
-
-        if (bone == RootBoneIndex)
-        {
-            T = 0;
-            R = RootInitRot;
-        }
-        return MakeAffine(S, R, T);
+        row_major float4x4 M = MakeAffine(S, R, T);
+        return ApplyHeadAim(bone, M);
     }
 
     float br = saturate(BlendRatio);
 
     float3 sA, sB, tA, tB;
     float4 rA, rB;
-    
-    float prevT = PrevTime;
 
-    if (BlendRatio < 1e-4f)
-    {
-        prevT = CurrentTime;
-    }
-
-
+    float prevT = (BlendRatio < 1e-4f) ? CurrentTime : PrevTime;
 
     SampleLocalTRS_Prev(bone, prevT, sA, rA, tA);
     SampleLocalTRS_Cur(bone, CurrentTime, sB, rB, tB);
 
-    float3 S = lerp(sA, sB, br);
-    float3 T = lerp(tA, tB, br);
-    float4 R = QuatSlerp(rA, rB, br);
+    S = lerp(sA, sB, br);
+    T = lerp(tA, tB, br);
+    R = QuatSlerp(rA, rB, br);
 
     if (bone == RootBoneIndex)
     {
@@ -330,15 +353,31 @@ row_major float4x4 SampleBlendedLocal(uint bone)
         R = RootInitRot;
     }
 
-    return MakeAffine(S, R, T);
+    row_major float4x4 M = MakeAffine(S, R, T);
+    return ApplyHeadAim(bone, M);
 }
+
 
 [numthreads(256, 1, 1)]
 void CS_LOCAL(uint3 DTid : SV_DispatchThreadID)
 {
     uint bone = DTid.x;
+    
     if (bone >= BoneCount)
         return;
+    
+    if (SkipCount != 0)
+    {
+        for (int i = 0; i < SkipCount; i++)
+        {
+            if (bone == g_SkipBone[i])
+            {
+                g_LocalMatrixOut[bone] = g_BoneLocalBuffer[bone].BoneLocal;
+                return;
+            }
+        }
+    }
 
+    
     g_LocalMatrixOut[bone] = SampleBlendedLocal(bone);
 }

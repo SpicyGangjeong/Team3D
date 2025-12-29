@@ -200,6 +200,7 @@
 #include "Blink.h"
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
+#include "Ranrok_Point.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -213,8 +214,8 @@
 #include "Dummy_PhysXWall.h"
 #include "Dummy_PhysXEffectHitBox.h"
 //#include "Dummy_PhysXDoorFrame.h"
-//#include "Dummy_PhysXFixedDoor.h"
-//#include "Dummy_PhysXDoorSet.h"
+#include "Dummy_PhysXFixedDoor.h"
+#include "Dummy_PhysXDoorSet.h"
 
 #pragma endregion 
 
@@ -1841,6 +1842,10 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Point>(NEXT_LEVEL, CRanrok_Point::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	/* For.Prototype_GameObject_Wand */
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -1994,19 +1999,19 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
 			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
-			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.1f };
 			Desc.fContactOffset = { 0.05f };
 			Desc.vhalfGeometryInfo = { 1.5f, 1.5f, 0.25f };
 			Desc.fDensity = 10.f;
-			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(1.5f, 1.5f, 0.f));
+			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(1.5f, 0.75f, 0.125f));
 
 			Desc.pxMassCenter = pxPivotTransform;
 			Desc.eLockFlag = { };
-			Desc.vAutoDamping = { 10.f, 10.f };
+			Desc.vAutoDamping = { 0.f, 0.2f };
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_FIXED_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
 	}
@@ -2103,15 +2108,15 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXFreeDoor>(g_iStaticLevel, CDummy_PhysXFreeDoor::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-	//if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXDoorSet>(g_iStaticLevel, CDummy_PhysXDoorSet::Create(m_pDevice, m_pContext)))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXDoorSet>(g_iStaticLevel, CDummy_PhysXDoorSet::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	//if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXDoorFrame>(g_iStaticLevel, CDummy_PhysXDoorFrame::Create(m_pDevice, m_pContext)))) {
 	//	return E_FAIL;
 	//}
-	//if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXFixedDoor>(g_iStaticLevel, CDummy_PhysXFixedDoor::Create(m_pDevice, m_pContext)))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXFixedDoor>(g_iStaticLevel, CDummy_PhysXFixedDoor::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2422,11 +2427,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SK_ConjuredDragon_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\Environment\\BroomFlight\\Meshes\\SM_BRR_RaceRing_01.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity())))) {
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Anim_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Goblins\\SK_WPN_GOB_SmallSword.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
-	}
+
 
 #pragma region MONSTER
 
@@ -2440,9 +2444,18 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_GoblinMage_Model")
 	));
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Anim_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector_Anim.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_SK_GOB_M_Assassin_Master_Model")
+	));
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector.bin",  XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+	//	return E_FAIL;
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/TombProtector/TombProtector.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
@@ -2532,6 +2545,15 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Playable_Model")
 	));
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_CCL_CameraRig.001_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/CCL_CameraRig.001.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
+
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Rct.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Cmbt_Model")
+	//));
+
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Rct.fbx", XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_Student_Cmbt_Model")
@@ -2573,7 +2595,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//));
 
 	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_AvadaKedavran.fbx", XMMatrixIdentity(),
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_AvadaKedavra.fbx", XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_Student_Cmbt_Model")
 	//));
 
@@ -2689,6 +2711,31 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 HRESULT CLoader::Loading_For_MapViewer()
 {
+#pragma region PLAYER_AND_RANROK
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok>(g_iStaticLevel, CRanrok::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CFSM>(g_iStaticLevel, CFSM::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype<CPlayer>(g_iStaticLevel, CPlayer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
+
+
+
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 #pragma region TEXTURES
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
@@ -2879,6 +2926,8 @@ HRESULT CLoader::Loading_For_MapViewer()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Shallow.bin", XMMatrixIdentity()))))
 		return E_FAIL;
+
+
 #pragma endregion
 	
 	vector<_wstring> ModelPrototypeTags = {};

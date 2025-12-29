@@ -12,6 +12,7 @@
 #include "Land.h"
 #include "InstancedProp.h"
 #include "Player.h"
+#include "Ranrok.h"
 #include "Unified.h"
 #include "MapElement_Lake.h"
 #include "MapElement_Door.h"
@@ -47,6 +48,12 @@ HRESULT CLevel_MapViewer::Initialize()
 	if (FAILED(Ready_Layer_Background(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(Ready_Layer_Player_And_Ranrok())) {
+		return E_FAIL;
+	}
+
+
 
 	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
 	//	return E_FAIL;
@@ -519,6 +526,19 @@ HRESULT CLevel_MapViewer::Ready_Layer_Chest(const _wstring& strLayerTag)
 HRESULT CLevel_MapViewer::Ready_Layer_MapObjectManager(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapObject_Manager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_MapViewer::Ready_Layer_Player_And_Ranrok()
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 		return E_FAIL;
 
 	return S_OK;

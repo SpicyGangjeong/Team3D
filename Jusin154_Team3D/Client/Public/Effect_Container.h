@@ -59,6 +59,7 @@ public:
 public:
 	HRESULT			Load_Directory(const _char* pPath);
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
+	void			Setting_Pos(_fvector vPos);
 	HRESULT         Load_Package(const _char* pPath);
 	HRESULT         Load_Data(const _char* pPath);
 	HRESULT         Create_Effect();
@@ -88,6 +89,7 @@ protected:
 	_wstring						m_wstrEffectName = {};
 	_bool							m_bHit = { false };
 	_bool							m_isLoop = {};
+	_bool							m_isStop = {};
 
 	_float							m_fAccTime = {};
 	_float							m_fPreAccTime = {};

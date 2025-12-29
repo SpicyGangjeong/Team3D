@@ -23,9 +23,11 @@ HRESULT CLight_Main::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Components())){
+	if (FAILED(Ready_Components(pArg))){
 		return E_FAIL;
 	}
+
+	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(-1.716f, 0.121f, 0.211f, 0.f));
 
 	return S_OK;
 }
@@ -88,23 +90,23 @@ HRESULT CLight_Main::Capture_PreShadow()
 	_float4x4 ProjMatrix = {}; XMStoreFloat4x4(&ProjMatrix, Get_OffCenterProjMatrix(xmViewMatrix, vNeededPos));
 
 	m_pGameInstance->Render_PreShadow(ViewMatrix, ProjMatrix);
+
+	m_pGameInstance->Update_Volumetric();
 	return S_OK;
 }
 
-HRESULT CLight_Main::Ready_Components()
+HRESULT CLight_Main::Ready_Components(void* pArg)
 {
 	__super::Ready_Components(nullptr);
 
-	m_pTransformCom->LookAt(XMVectorSet(1.f, -4.f, 1.f, 1.f));
+	LIGHT_DESC* pLightDescArg = static_cast<LIGHT_DESC*>(pArg);
+
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	//LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	//LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
-	//LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
-	LightDesc.vAmbient = _float4(0.12f, 0.12f, 0.24f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
+	LightDesc.vDiffuse = pLightDescArg->vDiffuse;
+	LightDesc.vAmbient = pLightDescArg->vAmbient;
+	LightDesc.vSpecular = pLightDescArg->vSpecular;
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
 

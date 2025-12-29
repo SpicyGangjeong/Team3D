@@ -72,8 +72,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 	}
 	else {
 
-		m_pCharacter_Controller->Set_Position(XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
+		m_pCharacter_Controller->Set_Position(XMVectorSet(-44.704f, 6.860f, 16.071f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, 6.860f, 16.071f, 1.f));
 	}
 
 	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
@@ -162,7 +162,9 @@ void CRanrok::Late_Update(_float fTimeDelta)
 	{
 		if (true == m_bLookAt) {
 			m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
+
 		}
+		m_pModelCom->Set_TargetPos((XMLoadFloat4(&m_vTargetPos)));
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
@@ -278,6 +280,12 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
 			break;
 		}
 	}
@@ -428,15 +436,22 @@ HRESULT CRanrok::Render_Nonblend()
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->Begin_OutLine_Write(2);
+		}
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
+		}
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->End_OutLine_Write();
 		}
 	}
 
@@ -490,7 +505,82 @@ HRESULT CRanrok::Render_Blend()
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->Begin_OutLine_Write(2);
+		}
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->End_OutLine_Write();
+		}
+	}
+
+	if (true == m_bDrawOutLine) {
+		Render_OutLine();
+	}
+	return S_OK;
+}
+HRESULT CRanrok::Render_OutLine()
+{
+	m_bDrawOutLine = false;
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+
+	Compute_Depth();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar()));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &m_fOutLineThickness, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineScale", &m_fOutLineScale, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLinePower", &m_fOutLinePower, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+		return E_FAIL;
+	}
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::OUTLINE_READ)))) {
 			return E_FAIL;
 		}
 
@@ -501,7 +591,6 @@ HRESULT CRanrok::Render_Blend()
 			return E_FAIL;
 		}
 	}
-
 	return S_OK;
 }
 
@@ -522,7 +611,6 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
 
-	_float Speed = 40.f;
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
@@ -565,7 +653,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.5f);
 
-	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
+	m_pCharacter_Controller->Set_Position(CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
 }
 
 HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
@@ -647,6 +735,7 @@ void CRanrok::Free()
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pEffectPool);
+	SAFE_RELEASE(m_pRanrok_Point);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }

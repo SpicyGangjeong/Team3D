@@ -2,30 +2,12 @@
 
 #include "Client_Define.h"
 #include "Unit.h"
+#include "Player_ENUM.h"
 
 NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
-	enum class PLAYER_MESH_ORDER {
-		HEAD_EYE_OCC,
-		HEAD_FACE,
-		HEAD_TEETH,
-		HEAD_EYELASH,
-		HEAD_EYES,
-		BODY_ARMS,
-		HAIR_MAIN,
-		HAIR_MAIN_CLOTH,
-		LOWER,
-		SHOES,
-		UPPER,
-		HAIR_SUB,
-		HAIR_SUB_CLOTH,
-		ROBE_SKIRT,
-		ROBE_FUR,
-		ROBE_CLOTH,
-		END
-	};
 public:
 	typedef struct tagPlayerInitDesc {
 		_float4 vPos;
@@ -92,6 +74,8 @@ private:
 	class CTransform* m_pBroomTransform = { nullptr };
 	class CBroom* m_pBroom = { nullptr };
 	CStat* m_pStat = { nullptr };
+	class CPlayerRobe* m_pRobePart = { nullptr };
+
 
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };

@@ -39,7 +39,7 @@ private:
 	class CEffectParts*				  m_pFireBall_Tail = { nullptr };
 
 	_float3							  m_vLook = {};
-	_float							  m_fLinearSpeed = 0.3f;
+	_float							  m_fLinearSpeed = 0.8f;
 
 	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; 
 	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f };

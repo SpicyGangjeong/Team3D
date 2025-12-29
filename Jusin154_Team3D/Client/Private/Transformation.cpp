@@ -216,7 +216,7 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 
 	//m_pCharacter_Controller->Move(fTimeDelta);
 
-	PhsXUserData* pUserData = static_cast<PhsXUserData*>(pCCT->Get_Actor()->userData);
+	PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pCCT->Get_Actor()->userData);
 	switch (pUserData->eKind)
 	{
 	case PHYSX_KIND::CCTActor:

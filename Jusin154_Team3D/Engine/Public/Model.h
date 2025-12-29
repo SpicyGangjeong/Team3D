@@ -20,12 +20,28 @@ public:
 		_float BlendRatio;
 
 		_int RootBoneIndex;
-		_float3 padding;
+		_int PlayHeadBone;
+		_int   HeadBoneIndex;
+		_float HeadAimWeight;
+
+		_int SkipCount;
+		_int padding0;
+		_int padding1;
+		_int padding2;
+
+		_float3 TargetDir_Local;
+		_float padding3;
 
 		_float4x4 PreTransformMatrix;
 		_float4 RootInitRot;
 	}ANIMSTATE_DESC;
 
+	typedef struct tagBoneInsertionDesc {
+		_uint iStartOffset;
+		_uint iMatrixCount;
+		_uint iPad0;
+		_uint iPad1;
+	}BONEINSERTION_DESC;
 
 
 private:
@@ -43,6 +59,12 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 	MODEL Get_Type() { return m_eType; }
 	void Set_Temp(_bool Temp) { m_bTemp = Temp; }
+	void Set_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
+	void Set_HeadPos(_vector vHeadPos) { m_vHeadPos = vHeadPos; }
+	void Play_HeadBone(_bool bPlay) { m_bHeadBone = bPlay; }
+	void Set_HeadAimWeight(_float fWeight) { m_fHeadAimWeight = fWeight; }
+	_bool Get_PlayHeadBone() const { return m_bHeadBone; }
+	_int Get_SkipBoneIndex(_int Index) { return m_SkipBoneindex[Index]; }
 #pragma endregion 
 #pragma region Animation
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
@@ -77,34 +99,40 @@ public:
 	void				Update_RootBone(_float Amount = 1.f);
 	void				Initialize_RootBone();
 	vector<_float4x4>	Get_OffsetMatrix(_int iIndex);
+	void				Apply_CPU_HeadAim();
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
 #pragma endregion
 #pragma region Bone
 	HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
 	const _float4x4*		Get_BoneMatrixPtr(const _char* pBoneName);
+	_matrix					Get_BoneMatrix(const _char* pBoneName);
 	_matrix					Get_BoneMatrix(const _char* pBoneName) const;
+	const _float4x4*		Get_BoneLocalMatrixPtr(const _char* pBoneName);
 	_matrix					Get_BoneLocalMatrix(const _char* pBoneName) const;
 	static _int				Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
 	_int					Get_BoneIndex(const _char* pBoneName) const;
 	_matrix					Get_BoneMatrix(_uint iBoneIndex);
 	void					Combined_BoneMatrix();
+	void					Combined_BoneMatrix(_int iStartBoneIndex, _uint iBoneCount);
 	_int					Find_BoneIndex(const _char* pBoneName);
+	HRESULT					Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix newTransformation);
 
 #pragma endregion
 #pragma region Material
 	HRESULT					Bind_Material(_uint iMeshIndex, class CShader* pShader);
-	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader, _bool OutLine = false);
+	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader);
 #pragma endregion
 
-	void			ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
-	void			ComputeLocal(_uint AnimIndex, _uint MeshIndex);
-	void			Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
-	void			Bind_OutPut_SRV_VS_Prev(_uint iIndex, _uint iBufferIndex);
-	void			ComputeAnimation_Second(_uint AnimIndex);
-	void			InItialize_BoneIndex();
+	void					ComputeAnimation(_uint AnimIndex, _uint MeshIndex);
+	void					ComputeLocal(_uint AnimIndex, _uint MeshIndex);
+	void					ComputeInsertionBoneBuffer(BONEINSERTION_DESC& CBDesc, ID3D11ShaderResourceView* pSRV);
+	void					Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
+	void					Bind_OutPut_SRV_VS_Prev(_uint iIndex, _uint iBufferIndex);
+	void					ComputeAnimation_Second(_uint AnimIndex);
+	void					InItialize_BoneIndex();
 
-	void			Initialize_BoneMasks();
+	void					Initialize_BoneMasks();
 
 public:
 	HRESULT Ready_PhysXMeshes(_fmatrix& PreTransformMatrix, _uint iLevel);
@@ -164,7 +192,7 @@ private:
 
 	_float						m_fRatio = {};
 	_int						m_iCurrSecondAnimIndex = { -1 };
-	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1 };
+	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1,-1,-1 };
 	vector<vector<_uint>>		m_BoneMask;
 	vector<_bool>				m_CPUBoneMask;
 
@@ -185,16 +213,22 @@ private:
 	_int						m_iIndexAnimPlayableMesh = { -1 };
 	_vector						m_vector[3];
 
-	vector<_uint>				m_iBoneMask;
-	_bool						m_bInitialRootPos = { false };
-	_bool						m_bInitialRootRotSaved = { false };
-	_bool						m_bLoopRestarted = false;
-	_bool						m_bIsSecondFinishedAnim = { false };
-	_bool						m_bIsSecondLoop = { false };
-	_bool						m_bRatio = { false };
-	_bool						m_bRootBone = {};
-	_float4x4					m_RootMatrix = {};
-	_bool						m_bTemp = {false};
+	vector<_uint>			m_iBoneMask;
+	_bool					m_bInitialRootPos = { false };
+	_bool					m_bInitialRootRotSaved = { false };
+	_bool					m_bLoopRestarted = false;
+	_bool					m_bIsSecondFinishedAnim = { false };
+	_bool					m_bIsSecondLoop = { false };
+	_bool					m_bRatio = { false };
+	_bool					m_bRootBone = {};
+	_float4x4				m_RootMatrix = {};
+	_bool					m_bTemp = {false};
+	_vector					m_vTargetPos = XMVectorZero();
+	_vector					m_vHeadPos = XMVectorZero();
+	_bool					m_bHeadBone = { false };
+	_float					m_fHeadAimWeight = { 0.f };
+	_int					m_iSkipBoneCount = {};
+	vector<_int>			m_SkipBoneindex = {};
 
 
 private:
@@ -209,8 +243,10 @@ private:
 private:
 	HRESULT			Create_ComputeShader();
 	HRESULT			Create_ComputeShaderLocal();
+	HRESULT			Create_ComputeShaderBoneInsertion();
 	HRESULT			Create_ParentVB();
 	HRESULT			Create_BoneLocalVB();
+	HRESULT			Create_SkipBoneVB();
 	HRESULT			Create_Temp();
 	HRESULT			Create_BoneMatrixVB();
 	HRESULT			Create_Const();
@@ -219,31 +255,33 @@ private:
 
 	HRESULT			Create_Local();
 
-	_uint				m_iNumBuffer = {};
+	_uint			m_iNumBuffer = {};
 
-	vector<_int>		m_Parent = {};
+	vector<_int>	m_Parent = {};
 	vector<_float4x4>	m_BoneLocal = {};
 
 	vector<ANIMSTATE_DESC> m_AnimRanges;
-
 	vector<_float4x4> m_BoneMatrixCPU;
 
 	class CComputeShader* m_pComputeShader = nullptr;
 	class CComputeShader* m_pCS_AnimLocal = nullptr;
+	class CComputeShader* m_pCS_BoneInsertion = nullptr;
 
 	ID3D11Buffer* m_pConstantBuffer = { nullptr };
 	ID3D11Buffer* m_pParentBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pPrevBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneLocalBuffer = { nullptr };
+	ID3D11Buffer* m_pSkipBoneBuffer = { nullptr };
 	ID3D11Buffer* m_pLocalMatrixBuffer = { nullptr };
-
+	ID3D11Buffer* m_pInsertionCB = { nullptr };
 
 	ID3D11ShaderResourceView* m_pParentSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pBoneLocalSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pBoneMatrixSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pPrevBoneMatrixSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pLocalMatrixSRV = { nullptr };
+	ID3D11ShaderResourceView* m_pSkipBoneSRV = { nullptr };
 
 	ID3D11UnorderedAccessView* m_pBoneMatrixUAV = { nullptr };
 	ID3D11UnorderedAccessView* m_pLocalMatrixUAV = { nullptr };

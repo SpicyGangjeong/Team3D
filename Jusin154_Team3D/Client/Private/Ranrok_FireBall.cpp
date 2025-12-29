@@ -85,7 +85,6 @@ void CRanrok_FireBall::Update(_float fTimeDelta)
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = m_pFireBall->Get_WorldPostion();
 		ON_COLLISION_INFO CollisionInfo = MonsterSweepTarget(vStartPos, vEndPos, 0.2f, true);
-
 		OnCollision(this, &CollisionInfo);
 	}
 
@@ -134,7 +133,7 @@ HRESULT CRanrok_FireBall::Pre_Setting(CGameObject* pObject, void* pArg)
 	XMStoreFloat4(&m_vStartPos, vStartPos);
 
 	/* 플레이어 위치 받기 */
-	CUnit* pPlayer = m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first;
+	 CUnit* pPlayer = m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first;
 
 	if (pPlayer == nullptr)
 		return E_FAIL;

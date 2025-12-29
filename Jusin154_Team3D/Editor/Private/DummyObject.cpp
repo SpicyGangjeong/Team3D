@@ -84,7 +84,7 @@ HRESULT CDummyObject::Render()
 
 if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
 {
-	if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
+	if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 		return E_FAIL;
 	}
 

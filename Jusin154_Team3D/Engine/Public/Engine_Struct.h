@@ -373,9 +373,10 @@ typedef struct tagVertexInstance_UIDesc
 
 }VTX_POSTEX_INSTANCE_UI;
 
-typedef struct tagPhsXUserData {
+typedef struct tagPHYSX_USERDATA {
 
 	PHYSX_KIND			eKind = PHYSX_KIND::NOT_DEFINED;
+	_bool				bAutoOwnerTranslation = true;
 
 	class CGameObject* pOwner = { nullptr };
 	_float4x4			BeforeMatrix = { };
@@ -387,7 +388,11 @@ typedef struct tagPhsXUserData {
 		class CObstacle_Controller* pObstacle = { nullptr };
 	};
 
-}PhsXUserData;
+}PHYSX_USERDATA;
+
+typedef struct tagD6JointDesc {
+
+}PHYSX_JOINT_D6Desc;
 
 typedef struct tagOnCollsionInfo
 {

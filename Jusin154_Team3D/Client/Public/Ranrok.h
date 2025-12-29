@@ -48,6 +48,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_OutLine() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
@@ -93,7 +94,7 @@ private:
 	_int m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_AIR);
 
 	_float m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,15.f,40.f,40.f,40.f};
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,8.f,40.f,40.f,40.f};
 
 	_float m_fTuckedTime = {};
 	_bool m_bFireBurst = { false };
@@ -112,7 +113,10 @@ private:
 	_float m_fAroundRadius = 40.f;
 	_float m_fAroundTime = {};
 	_float m_fRushTime = {};
+	_float m_fHeadAimWeight = {};
 
+	class CEffect_Container* m_pRanrok_Point = { nullptr };
+	_float					 m_fTuckedSpeed = { 75.f };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

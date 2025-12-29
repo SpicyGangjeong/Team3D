@@ -130,7 +130,22 @@ HRESULT CLevel_Field::Ready_Lights()
 {
 	CLight_Main* pLight = { nullptr };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT,nullptr, nullptr, &pLight))) {
+	LIGHT_DESC Desc = {};
+	if (m_isDay)
+	{
+		Desc.vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
+		Desc.vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
+		Desc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
+	}
+	else
+	{
+		Desc.vDiffuse = _float4(0.0471f, 0.0745f, 0.1294f, 0.2549f);
+		Desc.vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
+		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc, nullptr, &pLight))) {
 		return E_FAIL;
 	}
 

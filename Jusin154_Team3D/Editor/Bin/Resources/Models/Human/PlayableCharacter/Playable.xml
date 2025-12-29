@@ -86,7 +86,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="T_HUM_Head_Teeth_SRXO" Extension=".dds"/>
 	</MI_HUM_N_Heads_Teeth>
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "36" OutLineWrite="36">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "25" OutLineWrite="36">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_STUHair18_PrincessLong_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -115,7 +115,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HUM_N_Heads_Eyelash>
-	<MI_HUM_N_Heads_Eye	ShaderIndex = "37" OutLineWrite="37">
+	<MI_HUM_N_Heads_Eye	ShaderIndex = "26" OutLineWrite="37">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Poltergeist_Eye_D" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -173,7 +173,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="T_Adult_F_Arms_Ivory_SRXO" Extension=".dds"/>
 	</MI_HUM_F_Body_Arms01>
-	<MI_HUM_F_Hair_Kit	ShaderIndex = "34" OutLineWrite="34">
+	<MI_HUM_F_Hair_Kit	ShaderIndex = "23" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_STUHair18_PrincessLong_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -231,7 +231,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_ClothSim>
-	<M_HUM_F_Lower_ArcanePants01_Long_RonanAvatar	ShaderIndex = "35" OutLineWrite="35">
+	<M_HUM_F_Lower_ArcanePants01_Long_RonanAvatar	ShaderIndex = "24" OutLineWrite="35">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Low_ArcanePants01_Long_RonanAvatar2_D" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="T_HUM_F_Low_ArcanePants01_Long_RonanAvatar2_SRO" Extension=".dds"/>
@@ -260,7 +260,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</M_HUM_F_Lower_ArcanePants01_Long_RonanAvatar>
-	<MI_HUM_F_Shoes_DarkArts01_Short_RonanAvatar	ShaderIndex = "35" OutLineWrite="35">
+	<MI_HUM_F_Shoes_DarkArts01_Short_RonanAvatar	ShaderIndex = "24" OutLineWrite="35">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Shoes_DarkArts01_Short_RonanAvatar_D" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="T_HUM_F_Shoes_DarkArts01_Short_RonanAvatar_SRO" Extension=".dds"/>
@@ -289,7 +289,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HUM_F_Shoes_DarkArts01_Short_RonanAvatar>
-	<MI_HUM_F_Upp_StuUni01	ShaderIndex = "35" OutLineWrite="35">
+	<MI_HUM_F_Upp_StuUni01	ShaderIndex = "24" OutLineWrite="35">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Upp_StuUni01_D" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="T_HUM_F_Upp_StuUni01_SRO" Extension=".dds"/>
@@ -318,7 +318,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HUM_F_Upp_StuUni01>
-	<MI_HUM_M_Robe_RelicRobeGry	ShaderIndex = "38" OutLineWrite="38">
+	<MI_HUM_M_Robe_RelicRobeGry	ShaderIndex = "27" OutLineWrite="38">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_M_Robe_RelicRobeGry_D" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
