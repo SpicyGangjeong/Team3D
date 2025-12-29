@@ -30,9 +30,7 @@
 void CGoblin::Behavior_IdleEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
-	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CGoblin::Behavior_IdleExitCheck()
@@ -41,6 +39,10 @@ HRESULT CGoblin::Behavior_IdleExitCheck()
 	{
 		m_bLookAt = false;
 		m_bDetection = true;
+
+		pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
 	if ((m_fTargetDistance <= 10.f && m_fTargetDistance != 0.f) /*|| m_pDetection->Get_Step() == true*/)
 	{
@@ -131,8 +133,6 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
-
-
 	if (m_fTargetDistance >= 6.f)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
@@ -207,8 +207,6 @@ void CGoblin::Behavior_CombatEnter()
 
 HRESULT CGoblin::Behavior_CombatExitCheck(_float fTimeDelta)
 {
-	m_bLookAt = true;
-
 	if (m_fTargetDistance > 25.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::IDLE);
@@ -286,7 +284,7 @@ void CGoblin::Behavior_SwingEnter()
 
 	Set_Easing(pairAnimInfo.first, 0.01f, 0.15f, 0.8f);
 
-	Set_Easing(pairAnimInfo.first, 0.2f, 0.4f, 1.4f);
+	Set_Easing(pairAnimInfo.first, 0.15f, 0.4f, 1.4f);
 }
 
 HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
@@ -549,7 +547,11 @@ void CGoblin::Behavior_HitEnter()
 		pairAnimInfo = m_Animation[STATEANIM::INCARCEROUS];
 		break;
 	default:
-		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_R];
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+		if (iRand == 0)
+			pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_L];
+		else
+			pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_R];
 		break;
 	}
 
@@ -798,7 +800,7 @@ void CGoblin::HitState_Behavior(_float fTimeDelta)
 			m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
 			_vector vCameraLook = m_pGameInstance->Get_CameraLook();
 			vCameraLook = XMVector3Normalize(vCameraLook);
-			m_pRigidBody->Add_Force(vCameraLook * 30.f, PSX::PxForceMode::eIMPULSE);
+			m_pRigidBody->Add_Force(vCameraLook * 60.f, PSX::PxForceMode::eIMPULSE);
 			m_fAirTime = 0.f;
 		}
 		break;

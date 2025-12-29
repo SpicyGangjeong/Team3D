@@ -691,6 +691,8 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 				return S_OK;
 		else if (!strcmp(FileType.c_str(), "Ground MRO/SRO")) 
 				return S_OK;
+		else if (!strcmp(FileType.c_str(), "Corruption Mask"))
+			return S_OK;
 		else if (!strcmp(FileType.c_str(), "Rock_Texture")) {
 			eTexture = aiTextureType::aiTextureType_DIFFUSE;
 		}

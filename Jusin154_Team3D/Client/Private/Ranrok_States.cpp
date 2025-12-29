@@ -32,7 +32,7 @@ void CRanrok::Behavior_IdleEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::HOVER_LOOP];
-
+	m_bLookAt = true;
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
@@ -49,12 +49,14 @@ HRESULT CRanrok::Behavior_IdleExitCheck()
 void CRanrok::Behavior_IdleExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLE);
+	m_bLookAt = false;
 }
 
 void CRanrok::Behavior_IdleBreakEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
+	m_bLookAt = true;
 	pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -71,6 +73,7 @@ HRESULT CRanrok::Behavior_IdleBreakExitCheck()
 void CRanrok::Behavior_IdleBreakExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
+	m_bLookAt = false;
 }
 
 void CRanrok::Behavior_MoveEnter()
@@ -331,7 +334,7 @@ HRESULT CRanrok::Behavior_FireBreathExitCheck(_float fTimeDelta)
 
 	if (iCurrAnimIndex == m_Animation[STATEANIM::FIREBREATH_COOLDOWN_A].first)
 	{
-		m_fHeadAimWeight -= fTimeDelta*2.f;
+		m_fHeadAimWeight -= fTimeDelta * 2.f;
 		m_pModelCom->Set_HeadAimWeight(m_fHeadAimWeight);
 	}
 
@@ -499,9 +502,6 @@ void CRanrok::Behavior_FireBallEnter()
 				}, 0.45f);
 			break;
 		}
-
-
-
 	}
 
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBALL)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBALL)];

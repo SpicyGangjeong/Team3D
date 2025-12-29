@@ -57,7 +57,7 @@ void CSkill_Data::Update_Damage(_float Damage)
 {
 	for (_int i = 0; i < m_iSpell_Count; ++i)
 	{
-		m_fSpell_Damage[i] = SpellInfo->fSpell_Damage + Damage;
+		m_fSpell_Damage[i] = SpellInfo[i].fSpell_Damage + Damage;
 	}
 }
 

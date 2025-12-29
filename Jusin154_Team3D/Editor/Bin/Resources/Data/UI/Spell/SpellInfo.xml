@@ -109,7 +109,7 @@
 반환됩니다." Spell_Lock="0"
 		Equip_Spell="0" Use_Skill="1" Preview="0" Vidio="0" />
 	<Spell Spell_ID="20" Spell_Name="아바다 케다브라" Image_Name="Avada_Kedavra" Spell_Type="5" Type_Name="저주" Skill_Type="20"
-		Spell_Damage="10" Spell_Cooltime="90" Duration="0" AnimNum="208" SpellInfo="적을 즉시 처치합니다." Spell_Lock="0" Equip_Spell="0"
+		Spell_Damage="100" Spell_Cooltime="90" Duration="0" AnimNum="208" SpellInfo="적을 즉시 처치합니다." Spell_Lock="0" Equip_Spell="0"
 		Use_Skill="1" Preview="0" Vidio="0" />
 	<Spell Spell_ID="21" Spell_Name="크루시오" Image_Name="Crucio" Spell_Type="5" Type_Name="저주" Skill_Type="21"
 		Spell_Damage="10" Spell_Cooltime="20" Duration="20" AnimNum="216"

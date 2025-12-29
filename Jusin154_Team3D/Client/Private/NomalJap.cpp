@@ -6,6 +6,7 @@
 #include "GameInstance.h"
 #include "EffectParts.h"
 #include "TrailObject.h"
+#include "Player.h"
 
 
 CNomalJap::CNomalJap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -112,7 +113,7 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
 
-	if (true == m_pGameInstance->SphereCast(0.25, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
+	if (true == m_pGameInstance->SphereCast(0.25f, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
 		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
 	{
 		OnCollision(this);
@@ -302,7 +303,7 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-
+	dynamic_cast<CPlayer*>(m_pOwner->Get_Owner())->Start_CameraShake(0.2f, 1.f);
 }
 
 void CNomalJap::Free()

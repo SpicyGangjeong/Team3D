@@ -22,6 +22,7 @@
 #include "Wand.h"
 #include "Item_Potion.h"
 #include "RaceRing.h"
+#include "Goblin_Sword.h"
 #include "Goblin_BattleAxe.h"
 #include "BroomRaceManager.h"
 
@@ -31,6 +32,7 @@
 #include "PlayerRobe.h"
 #include "Goblin.h"
 #include "Goblin_Mage.h"
+#include "Goblin_Assassin.h"
 #include "Goblin_Spector.h"
 #include "Troll.h"
 #include "NPC_Ollivander.h"
@@ -1752,7 +1754,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
+			Desc1.vhalfGeometryInfo = { 2.f, 2.f, 2.f };
 			Desc1.fDensity = 1.f;
 			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc1.eLockFlag = {};
@@ -1836,6 +1838,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin_Mage/GoblinMage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Spector_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
@@ -1902,8 +1908,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Sword_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity()))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_BattleAxe_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin",  XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 #pragma endregion
@@ -2785,6 +2795,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Mage>(g_iStaticLevel, CGoblin_Mage::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Goblin_Assassin */
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Assassin>(g_iStaticLevel, CGoblin_Assassin::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Goblin_Spector */
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Spector>(g_iStaticLevel, CGoblin_Spector::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -2865,6 +2879,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Goblin_Dagger */
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Dagger>(g_iStaticLevel, CGoblin_Dagger::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Goblin_Sword */
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Sword>(g_iStaticLevel, CGoblin_Sword::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Goblin_BattleAxe */

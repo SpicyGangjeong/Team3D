@@ -76,7 +76,9 @@ void CAvadakedavra::Late_Update(_float fTimeDelta)
 
 	__super::Late_Update(fTimeDelta);
 
-	//XMStoreFloat4(&m_vEndPos, m_pStupefy_PJ_PT->Get_WorldPostion());
+	if (m_Info.pUnit) {
+		XMStoreFloat4(&m_vEndPos, m_Info.pUnit->Get_LockOnPos());
+	}
 
 	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
 
@@ -84,7 +86,7 @@ void CAvadakedavra::Late_Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
+		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.2f);
 
 		OnCollision(this, &CollisionInfo);
 	}
