@@ -18,6 +18,7 @@ float g_fPI;
 float g_fFar;
 float g_fBlinkTime;
 float g_fTime;
+float g_fColorTime;
 float g_fFrame;
 float g_fDeltaU;
 float g_fDeltaV;
@@ -1771,6 +1772,7 @@ PS_OUT PS_Broomstick(PS_IN In)
     return Out;
 }
 
+
 PS_OUT PS_SpellLearn(PS_IN In)
 {
     PS_OUT Out;
@@ -1994,6 +1996,72 @@ PS_OUT PS_CanvasFade(PS_IN In)
     Color.a = Alpha;
     
     Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_FlagWave(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha;
+    float4 Color = float4(0.f, 0.f, 0.f, 1.f);
+    
+    float2 uv = In.vTexcoord;
+
+    float phase = uv.y * 1.5f;
+
+    float waveX =
+    sin(uv.y * 20.f + g_fTime * 1.0f + phase) * 0.007f;
+
+    float waveY =
+    sin(uv.x * 12.f + g_fTime * 0.8f) * 0.002f;
+
+    uv.x += waveX;
+    uv.y += waveY;
+    
+    float4 tex = g_Texture.Sample(ClampSampler, uv);
+
+    Color = tex;
+    
+    if (Color.r <= 0.f)
+        discard;
+    
+    Color.a = Alpha;
+    
+    Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_BroomCircle(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 color = float4(0.f, 0.f, 0.f, 0.f);
+    
+    float2 center = float2(0.5f, 0.5f);
+    float2 uv = In.vTexcoord - center;
+    float2 Rotation;
+    Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
+    Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    Rotation += center;
+            
+    float4 tex = g_Texture.Sample(BorderZeroLinearSampler, Rotation);
+    color = tex;
+    
+    float Diffuse = g_Texture1.Sample(DefaultSampler, In.vTexcoord).r;
+    
+    
+    if (g_iHover != 0)
+    {
+        if (g_fTime >= Diffuse)
+        {
+            discard;
+        }
+    }
+    
+    color.a *= Alpha;
+    
+    Out.vColor = color;
     return Out;
 }
 
@@ -2278,6 +2346,22 @@ PS_OUT PS_Interaction_Npc(PS_IN In)
     Color.a *= Alpha;
     
     Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_BroomGateTarget(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 Color = float4(1.f, 1.f, 1.f, 0.f * g_fAlpha);
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Color = tex1;
+
+    Color.a *= g_fAlpha;
+    Out.vColor = Color;
+    
     return Out;
 }
 
@@ -2691,6 +2775,26 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_CanvasFade();
     }
 
+    pass FlagWave
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_FlagWave();
+    }
+
+    pass BroomCircle
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BroomCircle();
+    }
+
     pass Enemy_Detection
     {
         SetRasterizerState(RS_Nocull);
@@ -2719,5 +2823,15 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_NONESIZE3D();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Interaction_Npc();
+    }
+
+    pass BroomGateTarget
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_NONESIZE3D();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BroomGateTarget();
     }
 }

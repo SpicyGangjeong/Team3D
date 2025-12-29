@@ -8,6 +8,7 @@
 #include "Action_Panel.h"
 #include "Mouse_Cursor.h"
 #include "Enemy_Panel.h"
+#include "Broom_Panel.h"
 
 CGamePlay_Canvas::CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CCanvasObject(pDevice, pContext)
@@ -122,6 +123,12 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Enemy_Panel"), m_pEnemy_Panel);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CBroom_Panel**>(&m_pBroom_Panel))))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("Broom_Panel"), m_pBroom_Panel);
 
 	return S_OK;
 }

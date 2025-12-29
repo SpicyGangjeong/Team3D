@@ -159,7 +159,7 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
-	
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();
@@ -167,8 +167,8 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
-	
-__super::Update(fTimeDelta);
+
+	__super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -185,8 +185,47 @@ __super::Update(fTimeDelta);
 	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
 	{
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
-		m_bAim = false; 
+		m_bAim = false;
 	}
+
+	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+
+}
+
+void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
+{
+	if (nullptr != m_pGrapInteractive)
+  {
+		m_vGrapInteratableLerp.x += fTimeDelta;
+		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderGlobalPos(), m_vGrapInteratableLerp.x);
+		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y)
+    {
+			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
+		}
+	}
+}
+
+void CPlayer::Update_CameraShake(_float fTimeDelta)
+{
+	if (true == m_bCameraShake) 
+  {
+		m_vCameraShakeTimer.x += fTimeDelta;
+		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) 
+    {
+			m_vCameraShakeTimer.x = 0.f;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(0.f, 0.f);
+			m_bCameraShake = false;
+	  }
+		else
+    {
+			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
+			fIntense *= fIntense;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense));
+		}
+	}
+
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -244,12 +283,14 @@ void CPlayer::Late_Update(_float fTimeDelta)
 //		}
 //	}
 //#endif // 기무리
+
+
 }
 
 
 HRESULT CPlayer::Render()
 {
-	if (!m_bVisible){
+	if (!m_bVisible) {
 		return S_OK;
 	}
 	if (FAILED(Bind_ShaderResources())) {
@@ -405,6 +446,16 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_fCameraShakeIntense = fIntense;
 	m_bCameraShake = true;
 }
+void CPlayer::Set_RaceRing(CRaceRing* pRaceRing)
+{
+	if (m_pRaceRing != pRaceRing)
+	{
+		_vector TargetPos = pRaceRing->Get_WorldPostion();
+		m_pInfoInstance->Event_CallBack(TEXT("BroomTargetGate"), &TargetPos);
+	}
+	m_pRaceRing = pRaceRing;
+}
+#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
@@ -444,15 +495,15 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::End();
 	m_Batch->DrawLine( // W
 		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength* XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
+		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
 	);
 	m_Batch->DrawLine( // D
 		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength* XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
+		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
 	);
 	m_Batch->DrawLine( // PlayerLook
 		VertexPositionColor(XMVectorZero(), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength* xmvLook, DirectX::Colors::HotPink)
+		VertexPositionColor(fArrowLength * xmvLook, DirectX::Colors::HotPink)
 	);
 	m_Batch->End();
 }
@@ -563,7 +614,7 @@ HRESULT CPlayer::Ready_Parts()
 		}
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this,&m_pBroom))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this, &m_pBroom))) {
 		return E_FAIL;
 	}
 
@@ -672,8 +723,8 @@ void CPlayer::SetGravity()
 {
 	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
 	eCollisionFlags;
-	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
-		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
+	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
+		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
 		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
@@ -697,7 +748,7 @@ void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 }
 
 _matrix CPlayer::Get_WandPos()
- {
+{
 	CWand* pWand = Get_PartObject<CWand>();
 
 	if (pWand == nullptr)

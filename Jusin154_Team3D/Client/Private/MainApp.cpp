@@ -122,11 +122,27 @@ HRESULT CMainApp::Ready_Default_Setting()
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size23"), TEXT("../Bin/Resources/Fonts/Font_size23.spritefont"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size25"), TEXT("../Bin/Resources/Fonts/Font_size25.spritefont"))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size30"), TEXT("../Bin/Resources/Fonts/Font_size30.spritefont"))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size15"), TEXT("../Bin/Resources/Fonts/UI_size15.spritefont"))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size20"), TEXT("../Bin/Resources/Fonts/UI_size20.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size25"), TEXT("../Bin/Resources/Fonts/UI_size25.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size50"), TEXT("../Bin/Resources/Fonts/UI_size50.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size70"), TEXT("../Bin/Resources/Fonts/UI_size70.spritefont"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

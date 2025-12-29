@@ -7,6 +7,7 @@
 #include "BroomRacerAI.h"
 #include "Player.h"
 #include "Broom.h"
+#include "InfoInstance.h"
 
 CBroomRaceManager::CBroomRaceManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -14,7 +15,8 @@ CBroomRaceManager::CBroomRaceManager(ID3D11Device* pDevice, ID3D11DeviceContext*
 }
 
 CBroomRaceManager::CBroomRaceManager(const CBroomRaceManager& Prototype)
-	: CGameObject(Prototype)
+	: CGameObject(Prototype),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -32,7 +34,6 @@ HRESULT CBroomRaceManager::Initialize(void* pArg)
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
-
 
 	return S_OK;
 }
@@ -56,7 +57,14 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
 
-
+	if (m_eRaceState == ENUM_CLASS(RACE_STATE::RACING))
+	{
+		m_fRacingTimer += fTimeDelta;
+	}
+	else
+	{
+		m_fRacingTimer = 0.f;
+	}
 
 
 #ifdef _DEBUG
@@ -72,8 +80,6 @@ void CBroomRaceManager::Late_Update(_float fTimeDelta)
 
 HRESULT CBroomRaceManager::Render()
 {
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), ToolTip.c_str(), _float2(g_iWinSizeX*0.5f, g_iWinSizeY*0.5f),XMVectorSet(1.f,1.f,1.f,1.f),5.f);
-
 	return S_OK;
 }
 
@@ -184,6 +190,7 @@ void CBroomRaceManager::Describe_Entity()
 	{
 		if (GUI::Button("Countdown"))
 		{
+			m_pInfoInstance->Event_CallBack(TEXT("Ready_Race"));
 			m_eRaceState = ENUM_CLASS(RACE_STATE::COUNTDOWN);
 		}
 	}
@@ -201,13 +208,15 @@ void CBroomRaceManager::Update_Countdown(_float fTimeDelta)
 		m_fCountTimer = 0.f;
 		--m_iCount;
 
-		if (m_iCount > 0)
+		if (m_iPerCount != m_iCount)
 		{
-			ToolTip = to_wstring(m_iCount);
+			m_iPerCount = m_iCount;
+			m_pInfoInstance->Event_CallBack(TEXT("Race_Count"), &m_iCount);
 		}
-		else
+		if (m_iCount <= 0)
 		{
-			ToolTip = to_wstring(0);
+			size_t MaxRing = m_pRaceRings.size();
+			m_pInfoInstance->Event_CallBack(TEXT("Race_Start"), &MaxRing);
 			StartRaceMove();
 		}
 	}
@@ -313,6 +322,7 @@ void CBroomRaceManager::SetTargetRing(CGameObject*pRacer)
 			if (racer.pRacer == pRacer)
 			{
 				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
+				m_pInfoInstance->Event_CallBack(TEXT("CurrentRing"));
 			}
 		}
 	}
