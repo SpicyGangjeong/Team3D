@@ -8,7 +8,7 @@ enum class COLLIDER { AABB, OBB, SPHERE, END };
 enum class RENDER {PRIORITY, SHADOW_NEAR, NONBLEND, DECAL, BLUR, NONLIGHT, EFFECT ,BLEND, BLOOM, DISTORTION, BULR_MESH ,UI, OCCLUSION, SHADOW_MIDDLE, PRESHADOW, UI_OVERLAY ,END };
 enum class RAY { LOCAL, WORLD, END };
 enum class ACTOR { BOX, CAPSULE, SPHERE, PLANE, TRIANGLEMESH, HEIGHTFIELD, END };
-enum class BLEND_BONE{SPINE,SHOULDER_L,SHOULDER_R,NECK,SHOULDER_NECK_L, SHOULDER_NECK_R,HEAD,END};
+enum class BLEND_BONE{SPINE,SHOULDER_L,SHOULDER_R,NECK,SHOULDER_NECK_L, SHOULDER_NECK_R,HEAD, HIPS_CLOTH, END};
 enum class STAT { NAME, CURRENTHP, MAXHP, TARGETHP, MELEE, MAGIC, DEFENSE, SPEED, AGILITY, LEVEL, EXPERIENCE, MAX_EXPERIENCE, GOLD, END };
 //enum class CONDITION { POISON, HPREGENERATION, PANIC, GRAP, END };
 enum class SHADOW : _ubyte { 
@@ -118,9 +118,17 @@ enum class PHYSX_KIND {
     OBSTACLEActor,
 };
 
+enum class PHYSX_JOINT {
+	D6,
+	DISTANCE,
+	REVOLUTE,
+	END
+};
+
 enum class PXOBJECT : _uint {
 #pragma region NOT_DEFINE
-	NOT_DEFINE = 000,
+	NOT_DEFINE = 0,
+	LEG,
 #pragma endregion
 #pragma region PLAYER
 	PLAYER = 10,
@@ -144,13 +152,7 @@ enum class PXOBJECT : _uint {
 	GOBLIN_SHIELD_BREAK_MAGIC,
 	GOBLIN_NORMAL_MAGIC,
 	TROLL_GROUND_STRIKE,
-
-	/*
-	* _int iKind;
-	*  if (iKind > 100 && iKind < 200){
-	*  dammage
-	*/
-
+	GOBLIN_PROTEGO,
 #pragma endregion
 #pragma region ALLY_HITBOX
 	ALLY_HITBOX = 200,
@@ -216,6 +218,8 @@ enum class PXOBJECT : _uint {
 #pragma region NOCOLLIDE
 	NOCOLLIDE = 900,
 	GAIL,
+	JOINT_ROUTE,
+	JOINT_ANCHOR,
 
 #pragma endregion
 	END = 999
@@ -223,7 +227,7 @@ enum class PXOBJECT : _uint {
 
 enum class HIT_TYPE : _ubyte
 {
-	HIT_NONE = 0,
+	HIT_NONE = 0,				// 히트모션 없음
 	HIT_PROJECTILE = 1 << 0,   // 발사체
 	HIT_MEDIUM = 1 << 1,   // 적당한 공격
 	HIT_HEAVY = 1 << 2,   // 강공격

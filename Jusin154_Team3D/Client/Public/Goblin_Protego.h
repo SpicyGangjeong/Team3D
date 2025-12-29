@@ -32,7 +32,7 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring	 m_wstrEffectName = {};
-
+	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	class CEffectParts* m_pSphere = { nullptr };
 	class CEffectParts* m_pBottom = { nullptr };
 	class CEffectParts* m_pCircle = { nullptr };

@@ -472,7 +472,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
@@ -516,7 +516,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 
 			bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
 
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
@@ -570,7 +570,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
@@ -624,7 +624,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 
 			if (nullptr != pActor && nullptr != pActor->userData)
 			{
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 
 				switch (PXOBJECT(pUserData->iSubKind))
@@ -678,7 +678,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterRayCast(_vector StartPos, _vector _v
 
 			if (nullptr != pActor && nullptr != pActor->userData)
 			{
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 
 				switch (pUserData->eKind)
@@ -738,7 +738,7 @@ _int CEffect_Container::CollisionCheck()
 
 		if (nullptr != pActor && nullptr != pActor->userData) {
 
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 
 			if (pUserData->iSubKind >= UINT_MAX - 1) {
 				continue;

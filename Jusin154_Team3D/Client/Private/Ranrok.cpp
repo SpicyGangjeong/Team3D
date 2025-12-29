@@ -72,8 +72,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 	}
 	else {
 
-		m_pCharacter_Controller->Set_Position(XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, -2.860f, 16.071f, 1.f));
+		m_pCharacter_Controller->Set_Position(XMVectorSet(-44.704f, 6.860f, 16.071f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, 6.860f, 16.071f, 1.f));
 	}
 
 	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
@@ -160,10 +160,10 @@ void CRanrok::Late_Update(_float fTimeDelta)
 
 	if (!m_pFSM->IsEnable(FSMSTATE::TUCKED))
 	{
-	/*	if (true == m_bLookAt) {
+		if (true == m_bLookAt) {
 			m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 
-		}*/
+		}
 		m_pModelCom->Set_TargetPos((XMLoadFloat4(&m_vTargetPos)));
 	}
 
@@ -280,6 +280,12 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
 			break;
 		}
 	}
@@ -524,7 +530,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
 
-	_float Speed = 40.f;
+	_float Speed = 75.f;
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));

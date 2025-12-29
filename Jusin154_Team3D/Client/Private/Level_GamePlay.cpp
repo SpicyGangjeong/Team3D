@@ -4,6 +4,7 @@
 #include "Level_Loading.h"
 #include "Light_Main.h"
 #include "Camera_Debug.h"
+#include "Camera_Model.h"
 #include "InfoInstance.h"
 #include "UI_Manager.h"
 #include "Layer.h"
@@ -25,6 +26,7 @@
 #include "Troll.h"
 #include "Goblin.h"
 #include "Goblin_Mage.h"
+#include "Goblin_Assassin.h"
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
 #include "NPC_EleazarFig.h"
@@ -50,13 +52,13 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_isDay = true;
 #endif // 
 #ifdef 진우
-	isDay = true;
+	m_isDay = true;
 #endif // 
 #ifdef 기무리
-	isDay = true;
+	m_isDay = true;
 #endif // 
 #ifdef 인혁
-	isDay = true;
+	m_isDay = true;
 #endif // 
 
 	if (FAILED(Ready_Lights())) {
@@ -660,7 +662,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			return E_FAIL;
 		}
 	}
-
 	return S_OK;
 }
 
@@ -683,7 +684,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 10; ++i) {
+	for (_uint i = 0; i < 1; ++i) {
 
 		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
@@ -716,7 +717,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	for (_uint i = 0; i <1; ++i)
+	/*for (_uint i = 0; i <1; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
@@ -728,23 +729,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
-	}
+	}*/
 
+	 for (_uint i = 0; i < 1; ++i)
+	 {
+		 if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Assassin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+			 return E_FAIL;
+		 }
+	 }
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
-	}
+	}*/
 
 #if 진우
 #else
 
 #endif 
-	
-
 
 	return S_OK;
 }

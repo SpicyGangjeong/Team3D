@@ -34,6 +34,7 @@ namespace Client {
 #define CAMERA_DEBUG			TEXT("CAMERA_DEBUG")
 #define CAMERA_SHOULDER			TEXT("CAMERA_SHOULDER")
 #define CAMERA_AI				TEXT("CAMERA_AI")
+#define CAMERA_MODEL			TEXT("CAMERA_MODEL")
 #pragma endregion
 #pragma region COMPONENT
 

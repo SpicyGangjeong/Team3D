@@ -634,7 +634,7 @@ _int CEffect_Container::CollisionCheck()
 
 		if (nullptr != pActor && nullptr != pActor->userData) {
 
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 
 			if (pUserData->iSubKind >= UINT_MAX - 1) {
 				continue;
@@ -648,6 +648,7 @@ _int CEffect_Container::CollisionCheck()
 			case PXOBJECT::GOBLIN_WARRIOR:
 			case PXOBJECT::GOBLIN_MAGICIAN:
 			case PXOBJECT::TROLL:
+			case PXOBJECT::RANROK:
 			case PXOBJECT::WALL:
 			{
 				return i;
@@ -707,11 +708,22 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
 			{
+			case PHYSX_KIND::BODY_DYNAMIC:
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::GOBLIN_PROTEGO:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				}
+				break;
 			case PHYSX_KIND::CCTActor:
 			{
 				switch (PXOBJECT(pUserData->iSubKind))
@@ -774,7 +786,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 
 			if (nullptr != pActor && nullptr != pActor->userData)
 			{
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 
 				switch (PXOBJECT(pUserData->iSubKind))
@@ -826,11 +838,22 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
 			{
+			case PHYSX_KIND::BODY_DYNAMIC:
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::SKILL_PROTEGO:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				}
+				break;
 			case PHYSX_KIND::CCTActor:
 			{
 				switch (PXOBJECT(pUserData->iSubKind))
@@ -842,11 +865,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 					m_bHit = true;
 				}
 				break;
-				case PXOBJECT::SKILL_PROTEGO:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
+
 				}
 			}
 			}
@@ -880,7 +899,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 
 			if (nullptr != pActor && nullptr != pActor->userData)
 			{
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 
 				switch (PXOBJECT(pUserData->iSubKind))
@@ -934,7 +953,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterRayCast(_vector StartPos, _vector _v
 
 			if (nullptr != pActor && nullptr != pActor->userData)
 			{
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 
 				switch (pUserData->eKind)

@@ -227,10 +227,10 @@ HRESULT CMonster::Render_Disolve()
 	if (FLT_EPSILON3 * 10 < m_fDisolveTime)
 	{
 		m_bDrawOutLine = false;
-		_bool bDisolve = true;
+		_int bDisolve = 1;
 		_float fDisolveAmount = 0.1f;
 		_float fDisolveEdgeWidth = 0.1f;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_int)))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &m_fDisolveTime, sizeof(_float)))) {

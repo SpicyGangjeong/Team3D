@@ -25,6 +25,7 @@ StructuredBuffer<Channel> g_PrevChannelBuffer : register(t3);
 StructuredBuffer<int> g_ParentBuffer : register(t4);
 StructuredBuffer<BoneLocal> g_BoneLocalBuffer : register(t5);
 StructuredBuffer<uint> g_BoneRemap : register(t6); 
+StructuredBuffer<int> g_SkipBone : register(t7);
 
 
 RWStructuredBuffer<float4x4> g_LocalMatrixOut : register(u0);
@@ -46,8 +47,13 @@ cbuffer AnimCB : register(b0)
     int HeadBoneIndex;
     float HeadAimWeight;
 
+    int SkipCount;
+    int _pad0;
+    int _pad1;
+    int _pad2;
+
     float3 TargetDir_Local;
-    float padding;
+    float padding3;
 
     row_major float4x4 PreTransformMatrix;
     float4 RootInitRot;
@@ -356,8 +362,22 @@ row_major float4x4 SampleBlendedLocal(uint bone)
 void CS_LOCAL(uint3 DTid : SV_DispatchThreadID)
 {
     uint bone = DTid.x;
+    
     if (bone >= BoneCount)
         return;
+    
+    if (SkipCount != 0)
+    {
+        for (int i = 0; i < SkipCount; i++)
+        {
+            if (bone == g_SkipBone[i])
+            {
+                g_LocalMatrixOut[bone] = g_BoneLocalBuffer[bone].BoneLocal;
+                return;
+            }
+        }
+    }
 
+    
     g_LocalMatrixOut[bone] = SampleBlendedLocal(bone);
 }
