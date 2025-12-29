@@ -48,7 +48,7 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
     
@@ -57,7 +57,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 PS_OUT PS_DECAL(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float2 vDepthUV;
     vDepthUV.x = In.vPosition.x / 1920.f;
@@ -99,7 +99,7 @@ PS_OUT PS_DECAL(PS_IN In)
 
 PS_OUT PS_DEBUG(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     Out.vColor = float4(1.f, 0.5f, 0.5f, 1.f);
     

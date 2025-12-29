@@ -119,7 +119,7 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -130,7 +130,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 PS_OUT PS_Texture_Color(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     float4 Color = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
@@ -144,7 +144,7 @@ PS_OUT PS_Texture_Color(PS_IN In)
 
 PS_OUT PS_Logo(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha;
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -165,7 +165,7 @@ PS_OUT PS_Logo(PS_IN In)
 
 PS_OUT PS_Logo_Text(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha;
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -191,7 +191,7 @@ PS_OUT PS_Logo_Text(PS_IN In)
 
 PS_OUT PS_Logo_Glow(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
@@ -212,7 +212,7 @@ PS_OUT PS_Logo_Glow(PS_IN In)
 
 PS_OUT PS_AlphaBlend(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
@@ -227,7 +227,7 @@ PS_OUT PS_AlphaBlend(PS_IN In)
 
 PS_OUT PS_Clamp(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
@@ -242,7 +242,7 @@ PS_OUT PS_Clamp(PS_IN In)
 
 PS_OUT PS_Cursor(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = float4(0.f, 0.f, 0.f, 0.f);
@@ -292,7 +292,7 @@ PS_OUT PS_Cursor(PS_IN In)
 
 PS_OUT PS_Key_Hold_Rotation(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
 
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -365,7 +365,7 @@ PS_OUT PS_Key_Hold_Rotation(PS_IN In)
 
 PS_OUT PS_Mission(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = float4(0.f, 0.f, 0.f, 0.f);
@@ -387,7 +387,7 @@ PS_OUT PS_Mission(PS_IN In)
 
 PS_OUT PS_Sptire_Sheet(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(0.f, 0.f, 0.f, 0.f);
     float2 UV = In.vTexcoord;
@@ -422,7 +422,7 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
 
 PS_OUT PS_QuestType(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float3 Color = float3(253.f, 207.f, 11.f) / 255.f;
     float4 Texture1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
@@ -443,7 +443,7 @@ PS_OUT PS_QuestType(PS_IN In)
 
 PS_OUT PS_Spell_Anim(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
@@ -468,7 +468,7 @@ PS_OUT PS_Spell_Anim(PS_IN In)
 
 PS_OUT PS_NineSlice(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float2 uv = In.vTexcoord;
@@ -532,7 +532,7 @@ PS_OUT PS_NineSlice(PS_IN In)
 
 PS_OUT PS_Rotation(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 color = float4(0.f, 0.f, 0.f, 0.f);
@@ -560,7 +560,7 @@ PS_OUT PS_Rotation(PS_IN In)
 
 PS_OUT PS_Slot(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float2 center = float2(0.5f, 0.5f);
@@ -582,7 +582,7 @@ PS_OUT PS_Slot(PS_IN In)
 
 PS_OUT PS_SpellAnim(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
@@ -684,7 +684,7 @@ PS_OUT PS_SpellAnim(PS_IN In)
 
 PS_OUT PS_HpBar(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float4 Color1 = float4(1.f, 1.f, 1.f, 1.f);
@@ -781,7 +781,7 @@ PS_OUT PS_HpBar(PS_IN In)
 
 PS_OUT PS_Magic_Meter(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float3 Blue = float3(41.f, 165.f, 255.f) / 255.f;
     
@@ -812,7 +812,7 @@ PS_OUT PS_Magic_Meter(PS_IN In)
 
 PS_OUT PS_Magic_Icon(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -848,7 +848,7 @@ PS_OUT PS_Magic_Icon(PS_IN In)
 
 PS_OUT PS_RemapUV(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -871,7 +871,7 @@ PS_OUT PS_RemapUV(PS_IN In)
 
 PS_OUT PS_Revelio(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -910,7 +910,7 @@ PS_OUT PS_Revelio(PS_IN In)
 
 PS_OUT PS_Potion(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(214.f / 255.f, 225 / 255.f, 36 / 255.f, 1.f);
     
@@ -953,7 +953,7 @@ PS_OUT PS_Potion(PS_IN In)
 
 PS_OUT PS_Magic_Item(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1077,7 +1077,7 @@ PS_OUT PS_Magic_Item(PS_IN In)
 
 PS_OUT PS_Spell_Preview(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float2 uv = In.vTexcoord;
@@ -1152,7 +1152,7 @@ PS_OUT PS_Spell_Preview(PS_IN In)
 
 PS_OUT PS_Spell_Header(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
@@ -1198,7 +1198,7 @@ PS_OUT PS_Spell_Header(PS_IN In)
 
 PS_OUT PS_Spell_Header_Line(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float2 uv = In.vTexcoord;
@@ -1260,7 +1260,7 @@ PS_OUT PS_Spell_Header_Line(PS_IN In)
 
 PS_OUT PS_Spell_Drag(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
 
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1289,7 +1289,7 @@ PS_OUT PS_Spell_Drag(PS_IN In)
 
 PS_OUT PS_Camera_LockOn(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
 
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1331,7 +1331,7 @@ PS_OUT PS_Camera_LockOn(PS_IN In)
 
 PS_OUT PS_Loding_Screen(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
 
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1362,7 +1362,7 @@ PS_OUT PS_Loding_Screen(PS_IN In)
 
 PS_OUT PS_Enemy_HpBer(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1448,7 +1448,7 @@ PS_OUT PS_Enemy_HpBer(PS_IN In)
 
 PS_OUT PS_Boss_HpBer(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1520,7 +1520,7 @@ PS_OUT PS_Boss_HpBer(PS_IN In)
 
 PS_OUT PS_Quest_Border(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1587,7 +1587,7 @@ PS_OUT PS_Quest_Border(PS_IN In)
 
 PS_OUT PS_Quest_Info(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1650,7 +1650,7 @@ PS_OUT PS_Quest_Info(PS_IN In)
 
 PS_OUT PS_Quest_Status(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1721,7 +1721,7 @@ PS_OUT PS_Quest_Status(PS_IN In)
 
 PS_OUT PS_Broomstick(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1773,7 +1773,7 @@ PS_OUT PS_Broomstick(PS_IN In)
 
 PS_OUT PS_SpellLearn(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1794,7 +1794,7 @@ PS_OUT PS_SpellLearn(PS_IN In)
 
 PS_OUT PS_SpellLearnColor(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1866,7 +1866,7 @@ PS_OUT PS_SpellLearnColor(PS_IN In)
 
 PS_OUT PS_SpellLearnBooster(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
@@ -1910,7 +1910,7 @@ PS_OUT PS_SpellLearnBooster(PS_IN In)
 
 PS_OUT PS_NPCInteraction(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float2 uv = In.vTexcoord;
@@ -1983,7 +1983,7 @@ PS_OUT PS_NPCInteraction(PS_IN In)
 
 PS_OUT PS_CanvasFade(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha;
     float4 Color = float4(0.f, 0.f, 0.f, 1.f);
   
@@ -2043,7 +2043,7 @@ VS_OUT3D VS_MAIN3D(VS_IN3D In)
 
 PS_OUT PS_Enemy_Detection(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float4 Color = float4(1.f, 1.f, 1.f, 0.f * g_fAlpha);
     
@@ -2191,7 +2191,7 @@ VS_OUT3D VS_NONESIZE3D(VS_IN3D In)
 
 PS_OUT PS_Interaction_Object(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float4 Color = float4(1.f, 1.f, 1.f, 0.f * g_fAlpha);
     
@@ -2209,7 +2209,7 @@ PS_OUT PS_Interaction_Object(PS_IN In)
 
 PS_OUT PS_Interaction_Npc(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float2 uv = In.vTexcoord;

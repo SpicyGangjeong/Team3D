@@ -344,7 +344,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_READ(PS_IN In)
 
 PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -388,7 +388,7 @@ PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
 
 PS_OUT PS_TEETH_SRXO_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -421,7 +421,7 @@ PS_OUT PS_TEETH_SRXO_ToSRO(PS_IN In)
 
 PS_OUT PS_EYE_DN_SRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -452,7 +452,7 @@ PS_OUT PS_EYE_DN_SRO(PS_IN In)
 
 PS_OUT PS_EYE_OCC(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     discard;
     return Out;
 }
@@ -460,7 +460,7 @@ PS_OUT PS_EYE_OCC(PS_IN In)
 PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
 {
 
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -506,7 +506,7 @@ PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
 PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
 {
 
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -551,7 +551,7 @@ PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
 
 PS_OUT PS_HEADwtHAND_DSRXON_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -583,7 +583,7 @@ PS_OUT PS_HEADwtHAND_DSRXON_ToSRO(PS_IN In)
 
 PS_OUT PS_LOWER_DSRON_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -615,7 +615,7 @@ PS_OUT PS_LOWER_DSRON_ToSRO(PS_IN In)
 
 PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -647,7 +647,7 @@ PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
 
 PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -679,7 +679,7 @@ PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
 
 PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -713,7 +713,7 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
 
 PS_OUT PS_DNMRO_ToMRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -747,7 +747,7 @@ PS_OUT PS_DNMRO_ToMRO(PS_IN In)
 
 PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -781,7 +781,7 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
 
 PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -821,7 +821,7 @@ PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
 
 PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -861,7 +861,7 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
 }
 PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float2 uv = In.vTexcoord;
     float2 center = float2(0.5f, 0.5f);
     float2 p = uv - center;
@@ -908,7 +908,7 @@ PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
 }
 PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -938,7 +938,7 @@ PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
 }
 PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -970,7 +970,7 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
 }
 PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -1000,7 +1000,7 @@ PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
 }
 PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float2 uv = In.vTexcoord;
     float4 vDAOColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -1089,7 +1089,7 @@ PS_OUT_BLEND PS_Dragon_EtherealWings(PS_IN In)
 
 PS_OUT PS_Dragon_Body(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -1126,7 +1126,7 @@ PS_OUT PS_Dragon_Body(PS_IN In)
 
 PS_OUT PS_Dragon_Wings(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)

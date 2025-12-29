@@ -137,7 +137,7 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -145,7 +145,7 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 PS_OUT PS_UVMove(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float2 vMovedUV = Get_MovedUV(In.vTexcoord, g_fDeltaU, g_fDeltaV, g_iIndexU, g_iIndexV);
     

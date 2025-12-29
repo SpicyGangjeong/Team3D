@@ -363,7 +363,7 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
@@ -528,7 +528,7 @@ PS_OUT_BLUR PS_MAIN_BLUR(PS_IN_BLUR In)
 
 PS_OUT PS_HAIR(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float4 DAO = g_DAOTexture.Sample(DefaultSampler, In.vTexcoord);
     float alpha = DAO.a;
@@ -565,7 +565,7 @@ PS_OUT PS_HAIR(PS_IN In)
 
 PS_OUT PS_EYELASH(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (vMtrlDiffuse.a < 0.4f)
@@ -595,7 +595,7 @@ PS_OUT PS_EYELASH(PS_IN In)
 
 PS_OUT PS_SPECTOR_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float4 vMtrlDiffuse = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);

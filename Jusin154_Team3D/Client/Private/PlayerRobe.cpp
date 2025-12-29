@@ -41,7 +41,9 @@ void CPlayerRobe::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayerRobe::Render()
 {
+#ifdef _DEBUG
 	Render_BonePhysX();
+#endif // _DEBUG
 	return S_OK;
 }
 
@@ -210,7 +212,6 @@ HRESULT CPlayerRobe::Render_Legs()
 
 	return S_OK;
 }
-
 HRESULT CPlayerRobe::Render_BonePhysX()
 {
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f);

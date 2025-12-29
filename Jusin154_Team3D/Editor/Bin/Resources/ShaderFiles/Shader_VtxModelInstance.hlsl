@@ -832,7 +832,7 @@ float4 EmissiveDraw(PS_IN In, float4 Diffuse)
 
 PS_OUT BlendedWeight(vector fDiffuse, float fLinearZ)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float3 vColor = fDiffuse.rgb;
     float fAlpha = fDiffuse.a;
@@ -958,7 +958,7 @@ PS_NOMAL_OUT PS_MAIN(PS_BLUR_MESH_IN In)
 
 PS_OUT PS_NON_NORMALMAP(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     vector vMtrlDiffuse;
     
@@ -1237,7 +1237,7 @@ PS_BLNED_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
 
 PS_OUT PS_NO_DEPTH_COMPARE(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     vector vMtrlDiffuse;
     
