@@ -66,12 +66,8 @@ void CGoblin_Attack::Update(_float fTimeDelta)
 	Update_Event(fTimeDelta);
 
 
-	CGoblin_BattleAxe* pAxe = static_cast<CGoblin_BattleAxe*>(m_pOwner);
-
-	_float4x4 AxeMat = pAxe->Get_AxeMatrix();
-
-	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
-	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&m_vMat));
+	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&m_vMat));
 
 
 }
@@ -90,13 +86,18 @@ HRESULT CGoblin_Attack::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
-	
-	CGoblin_BattleAxe* pAxe = static_cast<CGoblin_BattleAxe*>(m_pOwner);
-	
-	_float4x4 AxeMat = pAxe->Get_AxeMatrix();
+	//
+	//CGoblin_BattleAxe* pAxe = static_cast<CGoblin_BattleAxe*>(m_pOwner);
+	//
+	//_float4x4 AxeMat = pAxe->Get_AxeMatrix();
 
-	 m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
-	 m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+	m_vMat = *static_cast<_float4x4*>(pArg);
+
+	 //m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+	 //m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+
+	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&m_vMat));
+	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&m_vMat));
 
 	m_pPT1->Set_Visible(true);
 	m_pPT2->Set_Visible(true);

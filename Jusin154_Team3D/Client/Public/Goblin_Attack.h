@@ -34,6 +34,7 @@ private:
 	_wstring						  m_wstrEffectName = {};
 	class CEffectParts*					  m_pPT1 = { nullptr };
 	class CEffectParts*					  m_pPT2 = { nullptr };
+	_float4x4							  m_vMat = {};
 public:
 	static CGoblin_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
