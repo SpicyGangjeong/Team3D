@@ -742,10 +742,10 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Breath.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\CamPosition_AI.h">
-	<Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
-          </ClInclude>
+      <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Dialogue_Data.h">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClInclude>
@@ -754,6 +754,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\PlayerRobe.h">
       <Filter>02.GameObjects\Player\Robe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Model.h">
+      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1556,15 +1559,18 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath">
       <UniqueIdentifier>{a3b5e707-dbb3-47da-a77b-b0ca62b89e99}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition\AI">
       <UniqueIdentifier>{a24f4687-f540-44e5-ae47-fe176c4c9042}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
       <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Player\Robe">
       <UniqueIdentifier>{f3c7cf8d-2b83-49d3-85da-fe135e376a11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\Camera_Model">
+      <UniqueIdentifier>{f8d55057-c0f8-4cac-8a6c-6f11345a83bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2255,15 +2261,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Breath.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\CamPosition_AI.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
-        </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Dialogue_Data.cpp">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerRobe.cpp">
-      <Filter>02.GameObjects\Player\Robe</Filter>
+    <ClCompile Include="..\Private\Camera_Model.cpp">
+      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

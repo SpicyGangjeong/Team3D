@@ -99,14 +99,16 @@ public:
 	void				Update_RootBone(_float Amount = 1.f);
 	void				Initialize_RootBone();
 	vector<_float4x4>	Get_OffsetMatrix(_int iIndex);
+	void				Apply_CPU_HeadAim();
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
 #pragma endregion
 #pragma region Bone
 	HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
 	const _float4x4*		Get_BoneMatrixPtr(const _char* pBoneName);
-	const _float4x4*		Get_BoneLocalMatrixPtr(const _char* pBoneName);
+	_matrix					Get_BoneMatrix(const _char* pBoneName);
 	_matrix					Get_BoneMatrix(const _char* pBoneName) const;
+	const _float4x4*		Get_BoneLocalMatrixPtr(const _char* pBoneName);
 	_matrix					Get_BoneLocalMatrix(const _char* pBoneName) const;
 	static _int				Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
 	_int					Get_BoneIndex(const _char* pBoneName) const;

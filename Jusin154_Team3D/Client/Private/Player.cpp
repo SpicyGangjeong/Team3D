@@ -216,7 +216,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	if (m_bLookAt && m_LockOnInfo.pUnit)
 	{
-		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 10.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
 	}
 	////////////////////////////////////////////////////////////////////////////
 	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
@@ -374,7 +374,7 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		m_bShield = true;
 	}
-	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) && m_bShield)
+	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) || m_bShield)
 		return;
 
 #ifdef _DEBUG
@@ -392,7 +392,8 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 		m_fHitDegree = -1.f;
 	}
 	
-	m_pFSM->Change_State(FSMSTATE::HIT);
+	if(m_eHitType !=ENUM_CLASS(HIT_TYPE::HIT_NONE))
+		m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {

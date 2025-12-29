@@ -160,10 +160,10 @@ void CRanrok::Late_Update(_float fTimeDelta)
 
 	if (!m_pFSM->IsEnable(FSMSTATE::TUCKED))
 	{
-	/*	if (true == m_bLookAt) {
+		if (true == m_bLookAt) {
 			m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 
-		}*/
+		}
 		m_pModelCom->Set_TargetPos((XMLoadFloat4(&m_vTargetPos)));
 	}
 
