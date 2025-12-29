@@ -231,7 +231,7 @@ HRESULT CGoblin_Assassin::Render_OutLine()
 	Compute_Depth();
 	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
 	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
-	m_fOutLineThickness = CMyTools::Lerp_f1D(0.14f, 0.5f, fRatio);
+	m_fOutLineThickness = CMyTools::Lerp_f1D(0.024f, 0.5f, fRatio);
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
 		return E_FAIL;
 	}
