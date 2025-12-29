@@ -682,6 +682,18 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath">
       <UniqueIdentifier>{fbf574e7-159e-43c3-914d-6a200383a45c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel">
+      <UniqueIdentifier>{dd61e764-b7d3-444e-b366-8d5ae8178eea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Flag">
+      <UniqueIdentifier>{3c9de404-4242-49b1-9ffb-8cae91794f27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Circle">
+      <UniqueIdentifier>{d1ddcfea-f78c-400c-962f-2998b698f41a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard">
+      <UniqueIdentifier>{7ed6c441-cc93-42ff-ba9d-1428bbc279cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1382,6 +1394,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Breath.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Flag.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Circle.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Scoreboard.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2088,6 +2112,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Breath.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Flag.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Circle.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Scoreboard.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

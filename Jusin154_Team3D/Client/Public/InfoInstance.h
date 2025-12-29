@@ -36,6 +36,8 @@ public:
 	pair<_float3, _float3> Get_CameraCoordinateSystem();
 	_float Player_Damage();
 	void Set_Damage(_float fDamage);
+	void Set_PlayerPos(_vector Position);
+	_vector Get_PalyerPos();
 #pragma endregion
 #pragma region MONSTER_INFO
 	HRESULT Regist_PlayerAlly(CUnit* pUnit);
@@ -79,12 +81,11 @@ public:
 	const vector<QUESTINFO>& Get_AcceptQuest() const;
 	HRESULT Set_AcceptQuest(_int Index);
 #pragma endregion
-#pragma region Interactive_INFO
 #pragma region SpellLearn_Data
 	const SPELLLEARNINFO& Get_SpellLearn(_int Index) const;
 	_int Get_SpellLearnIndex();
 #pragma endregion
-#pragma region Dialogue_Fint
+#pragma region Dialogue_Font
 	void Set_Font(void* pArg);
 #pragma endregion
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
@@ -106,6 +107,8 @@ private:
 	class CDamage_Font*			m_pDamage_Font =  { nullptr };
 	class CSpellLearn_Data*		m_pSpellLearn_Data =  { nullptr };
 	class CDialogue_Font*		m_pDialogue_Font = { nullptr };
+
+	_vector						m_pPlayerPos{};
 
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);

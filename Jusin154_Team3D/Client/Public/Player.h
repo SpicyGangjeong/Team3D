@@ -50,7 +50,7 @@ public:
 	void Set_Shield(_bool bShield) { m_bShield = bShield; }
 	void Start_CameraShake(_float fTime, _float fIntense);
 	_int Get_UIState() { return m_eUIState; }
-	void	Set_RaceRing(class CRaceRing* pRaceRing) { m_pRaceRing = pRaceRing; }
+	void	Set_RaceRing(class CRaceRing* pRaceRing);
 	class CBroom* Get_Broom() { return m_pBroom; }
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();

@@ -42,10 +42,14 @@ public:
 	void Push_RaceRing(class CRaceRing* Ring);
 	_int Get_RaceState() const { return m_eRaceState; }
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	vector<class CRaceRing*>			m_pRaceRings = {};
 	vector<RacerInfo>					m_Racers = {};
 	_float								m_fCountTimer = {};
+	_float								m_fRacingTimer = {};
 	_int								m_iCount = { 3 };
+	_int								m_iPerCount = {};
 	_int								m_eRaceState = { ENUM_CLASS(RACE_STATE::END) };
 	_wstring							ToolTip;
 private:

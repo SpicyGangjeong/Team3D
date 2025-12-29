@@ -742,12 +742,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Breath.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\CamPosition_AI.h">
-	<Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
-          </ClInclude>
+      <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Dialogue_Data.h">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Circle.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Flag.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Scoreboard.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_TargetGate.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1550,12 +1565,27 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath">
       <UniqueIdentifier>{a3b5e707-dbb3-47da-a77b-b0ca62b89e99}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition\AI">
       <UniqueIdentifier>{a24f4687-f540-44e5-ae47-fe176c4c9042}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
       <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel">
+      <UniqueIdentifier>{e5da4124-9936-46e7-981b-9d8ccc9590d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle">
+      <UniqueIdentifier>{b5b99876-ca87-4276-9276-5961625e06c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag">
+      <UniqueIdentifier>{8a87e6cb-ba54-45ee-866b-9098085f973b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard">
+      <UniqueIdentifier>{09fac7f5-d246-4860-a151-04c92c0677f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate">
+      <UniqueIdentifier>{c61b7c21-0ea8-42c4-a535-8624ce17fc8c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2246,12 +2276,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Breath.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\CamPosition_AI.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
-        </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Dialogue_Data.cpp">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Circle.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Flag.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Scoreboard.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_TargetGate.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@
 #include "Dialogue_Font.h"
 #include "SpellLearn_Canvas.h"
 #include "Interaction_Key.h"
+#include "Broom_TargetGate.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -349,6 +350,12 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("SpellLearn_Canvas"), m_pSpellLearn_Canvas);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_TargetGate>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_TargetGate**>(&m_pBroom_TargetGate))))
+	{
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Broom_TargetGate"), m_pBroom_TargetGate);
 
 	return S_OK;
 }
