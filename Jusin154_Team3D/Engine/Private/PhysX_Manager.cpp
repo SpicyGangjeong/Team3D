@@ -763,7 +763,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 
 		sceneDesc.gravity = PSX::PxVec3(0.f, -GRAVITY, 0.f);
 
-		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(2/*cpu 코어 갯수*/);
+		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(4 /*cpu 코어 스레드 갯수에 따라 유동적으로 선택*/);
 		if (nullptr == m_pDispatcher) {
 			assert(false);
 			return E_FAIL;

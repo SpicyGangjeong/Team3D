@@ -356,9 +356,8 @@ PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
     
-    if (AlphaMask < 0.2f) {
-        discard;
-    }
+    clip(AlphaMask - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -368,8 +367,8 @@ PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
     float SpecMask = vTHV_Mask.g;
     float AoMask_Thv = vTHV_Mask.b;
     
-    float3 vColorRoot = vDAO_Mask * 0.6f;
-    float3 vColorTip = vDAO_Mask;
+    float3 vColorRoot = vDAO_Mask.rgb * 0.6f;
+    float3 vColorTip = vDAO_Mask.rgb;
     float3 vBaseColor = lerp(vColorRoot, vColorTip, RootTip);
     
     
@@ -396,9 +395,9 @@ PS_OUT PS_TEETH_SRXO_ToSRO(PS_IN In)
         float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
@@ -429,9 +428,8 @@ PS_OUT PS_EYE_DN_SRO(PS_IN In)
         float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
@@ -471,11 +469,9 @@ PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
     float fDiffuseMask = vDAO_Mask.r;
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
+
+    clip(AlphaMask - 0.2f);
     
-    if (AlphaMask < 0.2f)
-    {
-        discard;
-    }
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -517,11 +513,9 @@ PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
     float fDiffuseMask = vDAO_Mask.r;
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
+
+    clip(AlphaMask - 0.2f);
     
-    if (AlphaMask < 0.2f)
-    {
-        discard;
-    }
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -559,9 +553,9 @@ PS_OUT PS_HEADwtHAND_DSRXON_ToSRO(PS_IN In)
         float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -591,9 +585,9 @@ PS_OUT PS_LOWER_DSRON_ToSRO(PS_IN In)
         float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -623,9 +617,9 @@ PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
         float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -655,9 +649,9 @@ PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
         float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -689,9 +683,9 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
     vDiffuse.rgb += vEmissive.rgb * 3.f;
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -723,9 +717,9 @@ PS_OUT PS_DNMRO_ToMRO(PS_IN In)
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
     vDiffuse.rgb += vEmissive.rgb * 3.f;
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -757,9 +751,9 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
     }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     vDiffuse.rgb += vEmissive.rgb;
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -790,10 +784,9 @@ PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
     float4 vAlpha = g_TransmissionTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (vAlpha.r < 0.2f)
-    {
-        discard;
-    }
+
+    clip(vAlpha.r - 0.2f);
+    
     vDiffuse.a = vAlpha.r;
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
@@ -833,9 +826,9 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
     float4 vAmbient = g_AmbientTexture.Sample(DefaultSampler, In.vTexcoord);
     vDiffuse.rgb += vEmissive.rgb;
     vDiffuse.rgb += vAmbient.rgb;
-    if (vDiffuse.a < 0.2f) {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -890,10 +883,8 @@ PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
     float3 vColorTip = vColorHair;
     float3 vBaseColor = lerp(vColorRoot, vColorTip, RootTip);
     
-    if (fAlpha < 0.3f)
-    {
-        discard;
-    }
+    clip(fAlpha - 0.2f);
+    
     Out.vAlbedo = float4(vBaseColor, fAlpha);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w),
@@ -1031,10 +1022,9 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
     float fAlphaRoot = AlphaMask;
     float fBaseAlpha = lerp(fAlphaRoot, fAlphaTip, (1.f - RootTip));
     float fAlpha = (fBaseAlpha);
-    if (fAlpha < 0.2f)
-    {
-        discard;
-    }
+
+    clip(fAlpha - 0.2f);
+    
     Out.vAlbedo = float4(vBaseColor, fAlpha);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w),
@@ -1099,10 +1089,9 @@ PS_OUT PS_Dragon_Body(PS_IN In)
     }
     float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).r;
     vDiffuse.a = fOppacity;
-    if (vDiffuse.a < 0.2f)
-    {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -1137,10 +1126,9 @@ PS_OUT PS_Dragon_Wings(PS_IN In)
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
     vDiffuse += vEmissive;
 
-    if (vDiffuse.a < 0.2f)
-    {
-        discard;
-    }
+
+    clip(vDiffuse.a - 0.2f);
+    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));

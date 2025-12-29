@@ -408,6 +408,13 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_bCameraShake = true;
 }
 
+void CPlayer::Set_RaceRing(CRaceRing* pRaceRing)
+{
+	SAFE_RELEASE(m_pRaceRing);
+	m_pRaceRing = pRaceRing;
+	SAFE_ADDREF(m_pRaceRing);
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};

@@ -4,7 +4,6 @@
 #include "Level_Loading.h"
 #include "Light_Main.h"
 #include "Camera_Debug.h"
-#include "Camera_Model.h"
 #include "InfoInstance.h"
 #include "UI_Manager.h"
 #include "Layer.h"
@@ -42,6 +41,7 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_GamePlay::Initialize(void* pArg)
 {
+#ifdef _DEBUG
 	// 낮, 밤 설정
 #ifdef gimch
 	m_isDay = false;
@@ -58,6 +58,8 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef 인혁
 	m_isDay = true;
 #endif // 
+#endif // _DEBUG
+
 
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
@@ -311,6 +313,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	_bool isReady_Background = { true };
 	_bool isReady_Hogsmeade = { true };
 	_bool isReady_Hogwart = { true };
+#ifdef _DEBUG
 
 #ifdef gimch
 	isReady_Background = true;
@@ -337,6 +340,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // 
+#endif // _DEBUG
+
 
 	
 	/* Map Containters */

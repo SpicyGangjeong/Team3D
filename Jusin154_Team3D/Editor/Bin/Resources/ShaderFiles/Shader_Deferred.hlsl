@@ -686,6 +686,15 @@ PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
     return Out;
 
 };
+PS_OUT_BACKBUFFER PS_MAIN_PRINT(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    
+    Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
+    return Out;
+
+};
 
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
@@ -1521,5 +1530,14 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MOTIONBLUR_TENTSAMPLE();
+    }
+    pass PrintToBackBufferPass // 22
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PRINT();
     }
 }

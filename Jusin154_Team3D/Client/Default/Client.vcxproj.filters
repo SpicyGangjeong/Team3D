@@ -746,9 +746,6 @@
     <ClInclude Include="..\Public\PlayerRobe.h">
       <Filter>02.GameObjects\Player\Robe</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Camera_Model.h">
-      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Goblin_Assassin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
     </ClInclude>
@@ -1575,9 +1572,6 @@
     <Filter Include="02.GameObjects\Player\Robe">
       <UniqueIdentifier>{f3c7cf8d-2b83-49d3-85da-fe135e376a11}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Cameras\Camera_Model">
-      <UniqueIdentifier>{f8d55057-c0f8-4cac-8a6c-6f11345a83bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin">
       <UniqueIdentifier>{af9f5cf6-151a-49bc-9af4-28ba0bde1d37}</UniqueIdentifier>
     </Filter>
@@ -2285,9 +2279,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Dialogue_Data.cpp">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Camera_Model.cpp">
-      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Assassin.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
