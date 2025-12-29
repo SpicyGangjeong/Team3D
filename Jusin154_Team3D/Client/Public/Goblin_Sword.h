@@ -11,6 +11,7 @@ public:
 	typedef struct tagSword : public CPartObject::PARTOBJECT_DESC
 	{
 		const _float4x4* pSocketMatrices = {  };
+		_int iIndex = {};
 	}GOBLIN_SWORD_DESC;
 private:
 	CGoblin_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -24,14 +25,25 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	HRESULT Render_Disolve();
+	void Set_Disolve(_bool bDisolve) { m_bDisolve = bDisolve; }
+	void Set_CanTakeDamage(_bool bCanTake) { m_bCanTakeDamage = bCanTake; }
+	const _float4x4& Get_SwordMatrix() { return m_vSwordMat; };
 public:
 
 private:
-	const _float4x4* m_pSocketMatrices = {  };
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
+	const _float4x4*	m_pSocketMatrices = {  };
+	CShader*			m_pShaderCom = { nullptr };
+	CModel*				m_pModelCom = { nullptr };
+	_int				m_iIndex = {};
+	_wstring			m_strModelPrototypeTag;
+	_bool				m_bCanTakeDamage = { false };
+	_bool				m_bHit = { false };
+	_bool				m_bDisolve = { false };
+	_float				m_fDisolveTime = { 0.f };
+	_float4x4			m_vSwordMat = {};
 
-	_float4 m_vStartPos = {};
+	_float4				m_vStartPos = {};
 	PSX::PxSweepBufferN<12> m_SweepBuffer = {};
 
 private:

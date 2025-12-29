@@ -6,7 +6,7 @@
 #include "Layer.h"
 #include "Player.h"
 #include "Goblin_Sword.h"
-#include "Goblin_Spector.h"
+#include "Goblin_Assassin_Spector.h"
 #include "Effect_Container.h"
 #include "EffectPool.h"
 #include "MapElement_Interactable.h"
@@ -498,6 +498,7 @@ HRESULT CGoblin_Assassin::Ready_Parts()
 
 		Goblin_SwordDesc.pParentTransform = m_pTransformCom;
 		Goblin_SwordDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+		Goblin_SwordDesc.iIndex = 0;
 
 		if (FAILED(Add_PartObject<CGoblin_Sword>("Goblin_Sword_L", g_iStaticLevel, nullptr, &Goblin_SwordDesc)))
 		{
@@ -510,6 +511,7 @@ HRESULT CGoblin_Assassin::Ready_Parts()
 
 		Goblin_SwordDesc.pParentTransform = m_pTransformCom;
 		Goblin_SwordDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
+		Goblin_SwordDesc.iIndex = 1;
 
 		if (FAILED(Add_PartObject<CGoblin_Sword>("Goblin_Sword_R", g_iStaticLevel, nullptr, &Goblin_SwordDesc)))
 		{
@@ -518,13 +520,13 @@ HRESULT CGoblin_Assassin::Ready_Parts()
 	}
 
 
-	//CGoblin_Spector::GOBLIN_SPECTOR_DESC Goblin_SpectorDesc{};
+	CGoblin_Assassin_Spector::GOBLIN_SPECTOR_DESC Goblin_SpectorDesc{};
 
-	//Goblin_SpectorDesc.pParentTransform = m_pTransformCom;
+	Goblin_SpectorDesc.pParentTransform = m_pTransformCom;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &Goblin_SpectorDesc, this, &m_pGoblinSpector))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Assassin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &Goblin_SpectorDesc, this, &m_pGoblinSpector))) {
+		return E_FAIL;
+	}
 
 #pragma region EFFECT
 	/* EFFECT */

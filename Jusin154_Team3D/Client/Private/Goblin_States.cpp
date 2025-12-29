@@ -265,7 +265,7 @@ void CGoblin::Behavior_SwingEnter()
 			m_pGoblinSpector->Set_Visible(true);
 			m_pGoblinSpector->Spector_Trail_Visible(true);
 
-			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_ATTACK, m_pGoblinSpector->Get_PartObject<CGoblin_BattleAxe>());
+			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_ATTACK, m_pGoblinSpector->Get_PartObject<CGoblin_BattleAxe>(), (void*)&m_pGoblinSpector->Get_PartObject<CGoblin_BattleAxe>()->Get_AxeMatrix());
 		},
 		0.05f);
 

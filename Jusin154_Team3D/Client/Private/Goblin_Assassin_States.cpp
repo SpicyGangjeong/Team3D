@@ -3,12 +3,11 @@
 #include "InfoInstance.h"
 #include "GameInstance.h"
 #include "Player.h"
-#include "Goblin_Dagger.h"
-#include "Goblin_Spector.h"
+#include "Goblin_Assassin_Spector.h"
 #include "EffectParts.h"
 
 #include "EffectPool.h"
-#include "Goblin_BattleAxe.h"
+#include "Goblin_Sword.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -252,8 +251,31 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 	m_pFSM->Enable_State(FSMSTATE::SLASH);
 
 	pairAnimInfo = m_Animation[STATEANIM::SLASH];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.5f);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::SLASH)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::SLASH)];
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGoblinSpector->Set_Visible(true);
+			m_pGoblinSpector->Spector_Trail_Visible(true);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_ATTACK, m_pGoblinSpector->Get_PartObject<CGoblin_Sword>(), (void*)&m_pGoblinSpector->Get_PartObject<CGoblin_Sword>()->Get_SwordMatrix());
+		},
+		0.05f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGoblinSpector->Set_Disolve(true); },
+			0.28f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_bLookAt = false; },
+			0.3f);
+
+	Set_Easing(pairAnimInfo.first, 0.01f, 0.15f, 0.8f);
+
+	Set_Easing(pairAnimInfo.first, 0.15f, 0.4f, 1.4f);
 }
 
 HRESULT CGoblin_Assassin::Behavior_SlashExitCheck(_float fTimeDelta)
@@ -270,6 +292,7 @@ HRESULT CGoblin_Assassin::Behavior_SlashExitCheck(_float fTimeDelta)
 void CGoblin_Assassin::Behavior_SlashExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SLASH);
+	m_bLookAt = true;
 }
 
 void CGoblin_Assassin::Behavior_DashEnter()
