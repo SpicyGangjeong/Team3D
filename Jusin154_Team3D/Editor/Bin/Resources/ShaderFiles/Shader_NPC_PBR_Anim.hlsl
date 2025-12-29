@@ -1334,62 +1334,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_READ();
     }
-    pass TEETH_SRXO_ToSRO__OUTLINE_WRITE // 14
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_TEETH_SRXO_ToSRO();
-    }
-    pass EYE_DN_ToSRO__OUTLINE_WRITE // 15
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_EYE_DN_SRO();
-    }
-    pass HEADwtHAND_DSRXON_ToSRO__OUTLINE_WRITE // 16
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_HEADwtHAND_DSRXON_ToSRO();
-    }
-    pass UPPER_DMRON_ToMRO__OUTLINE_WRITE // 17
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_UPPER_DMRON_ToMRO();
-    }
-    pass EmissiveMetalness_DENMRO_ToMRO__OUTLINE_WRITE // 18
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_EmissiveMetalness_DENMRO_ToMRO();
-    }
-    pass MI_ClothSim_DSEN_ToSRO__OUTLINE_WRITE // 19
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MI_ClothSim_DSEN_ToSRO();
-    }
-///////
-    pass MI_DANSROMRO_ToSRO // 20
+    pass MI_DANSROMRO_ToSRO // 14
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1398,26 +1343,8 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MI_DANSROMRO_ToSRO();
     }
-    pass MI_DANSROMRO_ToSRO_OUTLINE_WRITE // 21
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MI_DANSROMRO_ToSRO();
-    }
-    pass DNMRO_ToMRO__OUTLINE_WRITE // 22
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_DNMRO_ToMRO();
-    }
 //// DRAGON
-    pass DragonAuraPass // 23
+    pass DragonAuraPass // 15
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1426,7 +1353,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_Aura();
     }
-    pass DragonEtherealEyesPass // 24
+    pass DragonEtherealEyesPass // 16
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1435,16 +1362,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_EtherealEyes();
     }
-    pass DragonEtherealEyes_OUTLINE_WRITEPass // 25
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_Dragon_EtherealEyes();
-    }
-    pass DragonEtherealWingsPass // 26
+    pass DragonEtherealWingsPass // 17
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1453,7 +1371,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_EtherealWings();
     }
-    pass DragonWingsPass // 27
+    pass DragonWingsPass // 18
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1462,16 +1380,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_Wings();
     }
-    pass DragonWings_OUTLINE_WRITEPass // 28
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_Dragon_Wings();
-    }
-    pass DragonBodyPass // 29
+    pass DragonBodyPass // 19
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1480,16 +1389,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_Body();
     }
-    pass DragonBody_OUTLINE_WRITEPass // 30
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_Dragon_Body();
-    }
-    pass DragonRedHotPass // 31
+    pass DragonRedHotPass // 20
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1498,7 +1398,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_RedHot();
     }
-    pass DragonPinkHotPass // 32
+    pass DragonPinkHotPass // 21
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1507,7 +1407,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_PinkHot();
     }
-    pass DragonYellowHotPass // 33
+    pass DragonYellowHotPass // 22
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1517,7 +1417,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_Dragon_YellowHot();
     }
 //// PLAYER_
-    pass PLAYER_HAIR_DAOTHV_ToSRO // 34
+    pass PLAYER_HAIR_DAOTHV_ToSRO // 23
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1526,7 +1426,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_HairDAOTHV_ToSRO();
     }
-    pass PLAYER_Suit_DSRON_ToSRO // 35
+    pass PLAYER_Suit_DSRON_ToSRO // 24
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1535,7 +1435,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_Suit_DSRON_ToSRO();
     }
-    pass PLAYER_EyeLash_DAOTHV_ToSRO // 36
+    pass PLAYER_EyeLash_DAOTHV_ToSRO // 25
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1544,7 +1444,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_EyeLash_DAOTHV_ToSRO();
     }
-    pass PLAYER_Eye_ToSRO // 37
+    pass PLAYER_Eye_ToSRO // 26
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1553,7 +1453,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_Eye_ToMRO();
     }
-    pass PLAYER_Robe_ToMRO // 38
+    pass PLAYER_Robe_ToMRO // 27
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);

@@ -82,7 +82,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pKey_Manager) {
 		return E_FAIL;
 	}
-	m_pPipeLine = CPipeLine::Create();
+	m_pPipeLine = CPipeLine::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pPipeLine) {
 		return E_FAIL;
 	}
@@ -724,6 +724,11 @@ _matrix CGameInstance::Get_Transform_Matrix(D3DTS eState)
 	return m_pPipeLine->Get_Transform_Matrix(eState);
 }
 
+_matrix CGameInstance::Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType)
+{
+	return m_pPipeLine->Get_ShadowTransform_Matrix(eState, eShadowType);
+}
+
 const _float4* CGameInstance::Get_CamPosition()
 {
 	return m_pPipeLine->Get_CamPosition();
@@ -794,6 +799,16 @@ _float  CGameInstance::Get_ShadowBoxFar(_uint iShadowBoxIndex)
 	return m_pPipeLine->Get_ShadowBoxFar(iShadowBoxIndex);
 }
 
+HRESULT CGameInstance::Begin_OutLine_Write(_uint iDSSRef)
+{
+	return m_pPipeLine->Begin_OutLine_Write(iDSSRef);
+}
+
+HRESULT CGameInstance::End_OutLine_Write()
+{
+	return m_pPipeLine->End_OutLine_Write();
+}
+
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
 	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
@@ -819,6 +834,15 @@ HRESULT CGameInstance::Render_Lights(_uint _iCurrentLevel, CShader* pShader, CVI
 	return m_pLight_Manager->Render_Lights(_iCurrentLevel, pShader, pVIBuffer);
 }
 
+list<class CLight*>* CGameInstance::Get_LightList(_uint _iCurrentLevel)
+{
+	return m_pLight_Manager->Get_LightList(_iCurrentLevel);
+}
+
+_uint CGameInstance::Get_NumLight(_uint _iCurrentLevel)
+{
+	return m_pLight_Manager->Get_NumLight(_iCurrentLevel);
+}
 
 HRESULT CGameInstance::Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding)
 {
@@ -906,6 +930,11 @@ HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTar
 HRESULT CGameInstance::Clear_RenderTarget(const _wstring& strRenderTargetKey)
 {
 	return m_pRenderTarget_Manager->Clear_RenderTarget(strRenderTargetKey);
+}
+
+ID3D11ShaderResourceView* CGameInstance::Get_RenderTarget_SRV(const _wstring& strRenderTargetKey)
+{
+	return m_pRenderTarget_Manager->Get_RenderTarget_SRV(strRenderTargetKey);
 }
 
 #ifdef _DEBUG
@@ -1322,6 +1351,11 @@ _float* CGameInstance::Get_DepthPackExponentPtr()
 void CGameInstance::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent)
 {
 	m_pVolumetric->Setting_Volumetirc(fDensity , fLightIntensity , fAsymmetryParameter, fDepthPackExponent);
+}
+
+void CGameInstance::Update_Volumetric()
+{
+	m_pVolumetric->Update();
 }
 
 #pragma endregion
