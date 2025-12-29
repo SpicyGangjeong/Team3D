@@ -269,7 +269,7 @@ void CGoblin_BattleAxe::SwingHit(_bool& bPlayerHit)
 		for (_uint i = 0; i < pxHits.size(); ++i) {
 			PSX::PxActor* pxHitActor = pxHits[i].actor;
 			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
-				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+				PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)pxHitActor->userData;
 
 				ON_COLLISION_INFO tagCollInfo = {};
 

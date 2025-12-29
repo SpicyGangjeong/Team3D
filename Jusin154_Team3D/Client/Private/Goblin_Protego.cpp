@@ -73,6 +73,9 @@ void CGoblin_Protego::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
+	if (m_bVisible == false) {
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	}
 
 
 	/* 시작 사이즈 러프 */
@@ -92,10 +95,8 @@ void CGoblin_Protego::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
 		return;
-
+	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
 	__super::Late_Update(fTimeDelta);
-
-
 }
 
 HRESULT CGoblin_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
@@ -125,6 +126,15 @@ HRESULT CGoblin_Protego::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
+	}
+
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_PROTEGO);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
@@ -164,6 +174,8 @@ CGameObject* CGoblin_Protego::Clone(void* pArg, CGameObject* pOwner)
 
 void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (!m_bVisible)
+		return;
 	//CTransform* pOtherTransform = p
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
@@ -180,6 +192,7 @@ void CGoblin_Protego::Free()
 	SAFE_RELEASE(m_pSphere);
 	SAFE_RELEASE(m_pBottom);
 	SAFE_RELEASE(m_pCircle);
+	SAFE_RELEASE(m_pRigidBody);
 
 }
 #ifdef _DEBUG

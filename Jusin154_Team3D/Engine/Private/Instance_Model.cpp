@@ -579,8 +579,10 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isStop_Move_For_Depth_Compare = m_InstanceDesc.isStop_Move_For_Depth_Compare;
 		pDesc->isNoPos = m_InstanceDesc.isNoPos;
 		pDesc->isNoResetTime = m_InstanceDesc.isNoResetTime;
+		pDesc->isLocal_Located_Not_TakeDelay = m_InstanceDesc.isLocal_Located_Not_TakeDelay;
+		pDesc->isCompute_LocalInverse = m_InstanceDesc.isCompute_LocalInverse;
 		
-
+		
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
 		pDesc->fMoveLerpOption = m_InstanceDesc.fMoveLerpOption;
@@ -681,12 +683,20 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				memcpy(&pVertices[i].vUp, SRMatrix.m[1], sizeof(_float4));
 				memcpy(&pVertices[i].vLook, SRMatrix.m[2], sizeof(_float4));
 
+				/* 구위의 한점으로 위치를 정하기 위한 반지름 */
+				_float fRoundRange = m_pGameInstance->Random_Float(m_InstanceDesc.vRoundRangeLength.x, m_InstanceDesc.vRoundRangeLength.y);
+				_float fAzimuthAngle = m_pGameInstance->Random_Float(m_InstanceDesc.vAzimuthAngle.x, m_InstanceDesc.vAzimuthAngle.y);
+				_float fPolarAngle = m_pGameInstance->Random_Float(m_InstanceDesc.vPolarAngle.x, m_InstanceDesc.vPolarAngle.y);
 
 				pVertices[i].vTranslation = _float4(
-					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.x - m_InstanceDesc.vRange.x * 0.5f, m_InstanceDesc.vCenter.x + m_InstanceDesc.vRange.x * 0.5f),
-					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.y - m_InstanceDesc.vRange.y * 0.5f, m_InstanceDesc.vCenter.y + m_InstanceDesc.vRange.y * 0.5f),
-					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.z - m_InstanceDesc.vRange.z * 0.5f, m_InstanceDesc.vCenter.z + m_InstanceDesc.vRange.z * 0.5f),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.x - m_InstanceDesc.vRange.x * 0.5f, m_InstanceDesc.vCenter.x + m_InstanceDesc.vRange.x * 0.5f)
+					 + fRoundRange * cosf(XMConvertToRadians(fAzimuthAngle)) * sinf(XMConvertToRadians(fPolarAngle)) ,
+					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.y - m_InstanceDesc.vRange.y * 0.5f, m_InstanceDesc.vCenter.y + m_InstanceDesc.vRange.y * 0.5f)
+					+ fRoundRange * sinf(XMConvertToRadians(fAzimuthAngle)) * sinf(XMConvertToRadians(fPolarAngle)),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.z - m_InstanceDesc.vRange.z * 0.5f, m_InstanceDesc.vCenter.z + m_InstanceDesc.vRange.z * 0.5f)
+					+ fRoundRange * cosf(XMConvertToRadians(fPolarAngle)),
 					1.f);
+
 
 				_float3			vSinAmount = _float3(
 					m_pGameInstance->Random_Float(m_InstanceDesc.vSinMinAmount.x, m_InstanceDesc.vSinMaxAmount.x),
@@ -737,6 +747,15 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].vDeltaSize = vSizeLerp;
 
 
+				_float3			vWolrdOffset = _float3(
+					m_pGameInstance->Random_Float(m_InstanceDesc.vWolrdOffsetMin.x, m_InstanceDesc.vWolrdOffsetMax.x),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vWolrdOffsetMin.y, m_InstanceDesc.vWolrdOffsetMax.y),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vWolrdOffsetMin.z, m_InstanceDesc.vWolrdOffsetMax.z)
+				);
+
+
+				pParticleValues[i].vWolrdOffset = vWolrdOffset;
+
 				//라이프 타임 설정
 				pVertices[i].vLifeTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vLifeTime.x, m_InstanceDesc.vLifeTime.y));
 
@@ -761,6 +780,8 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].fCollisionTime = 0.f;
 				pParticleValues[i].isCompareStop = false;
 				pParticleValues[i].isStop = false;
+				pParticleValues[i].fLoopCount = 0.f;
+				
 
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
@@ -768,6 +789,8 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				memcpy(&pParticleValues[i].vOriginTranslation, &pVertices[i].vTranslation, sizeof(_float4));
 
 				memcpy(&pParticleValues[i].PreWorldMatrix, &IdentityMat, sizeof(_float4x4));
+	/*			memcpy(&pParticleValues[i].LocalMatrixInv, &IdentityMat, sizeof(_float4x4));*/
+				
 
 				if (m_InstanceDesc.isRandomAniIndex == true)
 				{
@@ -879,7 +902,18 @@ void CInstance_Model::Describe_Entity()
 		{
 			Instane_Buffer_ReStruct();
 		}
+		
+		if (GUI::Checkbox("Local_Located_Not_TakeDelay", &m_InstanceDesc.isLocal_Located_Not_TakeDelay))
+		{
+			Instane_Buffer_ReStruct();
 
+		}
+
+		if (GUI::Checkbox("Compute_LocalInverse", &m_InstanceDesc.isCompute_LocalInverse))
+		{
+			Instane_Buffer_ReStruct();
+
+		}
 		
 
 		if (GUI::Checkbox("RandomIndex", &m_InstanceDesc.isRandomAniIndex))
@@ -918,6 +952,31 @@ void CInstance_Model::Describe_Entity()
 			}
 
 			if (ImGui::DragFloat3("RotationMax", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMax)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("RoundRangeLength", reinterpret_cast<_float*>(&m_InstanceDesc.vRoundRangeLength)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("AzimuthAngle", reinterpret_cast<_float*>(& m_InstanceDesc.vAzimuthAngle)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("PolarAngle", reinterpret_cast<_float*>(&m_InstanceDesc.vPolarAngle)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat3("WolrdOffsetMin", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMin)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat3("WolrdOffsetMax", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMax)))
 			{
 				Instane_Buffer_ReStruct();
 			}

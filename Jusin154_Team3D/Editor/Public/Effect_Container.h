@@ -26,6 +26,7 @@ public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
 	void			Reset_Light();
 	_uint			Get_SkillType() const { return m_iSkillType; }
+	void			Setting_Pos(_fvector vPos);
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -52,6 +53,7 @@ protected:
 	_wstring						m_wstrEffectName = {};
 
 	_bool							m_isLoop = {};
+	_bool							m_isStop = {};
 
 	_float							m_fAccTime = {};
 	_float							m_fPreAccTime = {};

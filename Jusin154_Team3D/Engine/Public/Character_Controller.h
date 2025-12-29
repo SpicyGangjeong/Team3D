@@ -14,7 +14,7 @@ class ENGINE_DLL CCharacter_Controller final :
 	/* dev-treadmill.tistory.com/159 */
 	// 기본적으로 아무 힘도 받지 않는, 주지 않는 놈임
 	// kinematic 기반임
-	static CPhysX_CctQueryFilterCallback s_QueryFilterCallback_IGNORE_Shield;
+	static CPhysX_CctQueryFilterCallback s_QueryFilterCallback_IGNORE_GLOBAL;
 public:
 #pragma region STRUCT
 	typedef struct tagCharacter_ControllerDesc
@@ -93,7 +93,7 @@ private:
 	_float					m_fCurrentSlopeDegree = { 0.f };
 	_int					m_iIsOnGround = { 0 };
 	_float4					m_vAccHeight = { 0.f, 0.16f, 0.f, 0.01f };
-	PhsXUserData			m_tagData = {};
+	PHYSX_USERDATA			m_tagData = {};
 
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
 	_bool					m_bActive = { true };

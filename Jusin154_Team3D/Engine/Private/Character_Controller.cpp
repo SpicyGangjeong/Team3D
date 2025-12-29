@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 
-CPhysX_CctQueryFilterCallback CCharacter_Controller::s_QueryFilterCallback_IGNORE_Shield = {};
+CPhysX_CctQueryFilterCallback CCharacter_Controller::s_QueryFilterCallback_IGNORE_GLOBAL = {};
 
 CCharacter_Controller::CCharacter_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -214,7 +214,7 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 
 	PSX::PxRigidActor* hitActor = sweepHit.actor;
 
-	PhsXUserData* hitUserData = static_cast<PhsXUserData*>(hitActor->userData);
+	PHYSX_USERDATA* hitUserData = static_cast<PHYSX_USERDATA*>(hitActor->userData);
 
 	switch (PXOBJECT(hitUserData->iSubKind))
 	{
@@ -262,7 +262,7 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 	PSX::PxVec3						pxVecMomentum = {};					// 순간 이동량
 	_float							fMinimumDistant = FLT_EPSILON3;		// 이동량 오차 허용치, ( 크면 클수록 이동이 더 일찍 끝난다, 순간 이동량보다 같거나 더 크면 안움직일듯? )
 	PSX::PxControllerFilters		pxFilter = {};						// 충돌 대상 필터
-	pxFilter.mFilterCallback = &s_QueryFilterCallback_IGNORE_Shield;	// 쉴드 무시
+	pxFilter.mFilterCallback = &s_QueryFilterCallback_IGNORE_GLOBAL;	// 쉴드 무시
 	const PSX::PxObstacleContext*	pPxObstacles = { nullptr };			// 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
 	if (true == m_bGravity) {
 		if (0 >= m_iIsOnGround) {      // 공중: 무조건 중력
@@ -323,7 +323,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		m_pTransform = pDesc->pTransform;
 		m_fWalkableSlopeDegree = pDesc->fWalkableSlope;
 	}
-	{ // PhsXUserData
+	{ // PHYSX_USERDATA
 		m_tagData.eKind = PHYSX_KIND::CCTActor;
 		m_tagData.pOwner = m_pOwner;
 		XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
@@ -347,7 +347,6 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_BoxController(Desc);
 		m_pController->setUserData(&m_tagData);
-		m_pController->getActor()->userData = &m_tagData;
 	} break;
 	case ACTOR::CAPSULE:
 	{
@@ -363,14 +362,16 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_CapsuleController(Desc);
 		m_pController->setUserData(&m_tagData);
-		m_pController->getActor()->userData = &m_tagData;
 	} break;
 	default:
 		assert(false); // PhysX에서 불가능
 		return E_FAIL;
 		break;
 	}
-	
+
+	PSX::PxRigidDynamic* pActor = m_pController->getActor();
+	pActor->userData = &m_tagData;
+	m_pGameInstance->ApplyFilterData(pActor);
 	m_pController->setStepOffset(pDesc->fStepOffset);
 
 	if (nullptr == m_pController) {

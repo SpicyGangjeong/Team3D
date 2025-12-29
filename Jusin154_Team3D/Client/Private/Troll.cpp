@@ -197,15 +197,23 @@ HRESULT CTroll::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->Begin_OutLine_Write(2);
+		}
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
+		}
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->End_OutLine_Write();
 		}
 	}
 
@@ -251,6 +259,15 @@ HRESULT CTroll::Render_OutLine()
 	}
 	else if (m_fOutLineThickness < 2.f) {
 		m_fOutLineThickness = 2.f;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
@@ -387,6 +404,12 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
 			break;
 		}
 	}

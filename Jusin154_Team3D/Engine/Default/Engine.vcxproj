@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;EDITOR_PROJECT;$(USERNAME);_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../Public/PhysX/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -151,7 +151,7 @@ call Update_Lib.bat
       <PreprocessorDefinitions>ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;$(USERNAME);NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../Public/PhysX/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -208,6 +208,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\ComputeShader.cpp" />
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\Private\Dynamic_D6Joint.cpp" />
     <ClCompile Include="..\private\Fog.cpp" />
     <ClCompile Include="..\private\Font.cpp" />
     <ClCompile Include="..\private\Font_Manager.cpp" />
@@ -218,10 +219,6 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\Renderer_Declare.cpp" />
     <ClCompile Include="..\Private\RenderEventDebugger.cpp" />
     <ClCompile Include="..\private\Resource_Manager.cpp" />
-    <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\private\ElementObject.cpp" />
     <ClCompile Include="..\Private\FSM.cpp" />
     <ClCompile Include="..\Private\GameInstance.cpp">
@@ -426,6 +423,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
     <ClInclude Include="..\Public\CallBack_QueryFilterCallback.h" />
+    <ClInclude Include="..\Public\Dynamic_D6Joint.h" />
     <ClInclude Include="..\public\Fog.h" />
     <ClInclude Include="..\public\Font.h" />
     <ClInclude Include="..\public\Font_Manager.h" />
@@ -436,10 +434,6 @@ call Update_Lib.bat
     <ClInclude Include="..\public\Quest.h" />
     <ClInclude Include="..\Public\RenderEventDebugger.h" />
     <ClInclude Include="..\public\Resource_Manager.h" />
-    <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="..\Public\Camera.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </ExcludedFromBuild>
@@ -633,6 +627,10 @@ call Update_Lib.bat
     <None Include="..\Public\fMod\fmod_errors.cs" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_BoneCombinedInsertion_Compute.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Distortion.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>

@@ -36,8 +36,12 @@ xcopy			/y		.\Engine\Bin\Assimp\assimp-vc145-mt.dll		.\Editor\Bin\Release\
 :: fMod는 아쉽게도 pdb가 없기 때문에 안옮김
 xcopy			/y	.\Engine\ThirdPartyLib\Assimp\assimp-vc145-mtd.pdb		.\Client\Bin\Debug\
 xcopy			/y	.\Engine\ThirdPartyLib\Assimp\assimp-vc145-mt.pdb		.\Client\Bin\Release\
+xcopy			/y	.\Engine\ThirdPartyLib\PhysX_debug\*.pdb				.\Client\Bin\Debug\
+xcopy			/y	.\Engine\ThirdPartyLib\PhysX_release\*.pdb				.\Client\Bin\Release\
 xcopy			/y	.\Engine\ThirdPartyLib\Assimp\assimp-vc145-mtd.pdb		.\Editor\Bin\Debug\
 xcopy			/y	.\Engine\ThirdPartyLib\Assimp\assimp-vc145-mt.pdb		.\Editor\Bin\Release\
+xcopy			/y	.\Engine\ThirdPartyLib\PhysX_debug\*.pdb				.\Editor\Bin\Debug\
+xcopy			/y	.\Engine\ThirdPartyLib\PhysX_release\*.pdb				.\Editor\Bin\Release\
 xcopy			/y	.\Editor\ThirdPartyLib\ZLib\Debug\zlibd.pdb				.\Editor\Bin\Debug\
 xcopy			/y	.\Editor\ThirdPartyLib\ZLib\Release\zlib.pdb			.\Editor\Bin\Release\
 
@@ -55,3 +59,5 @@ xcopy			/y		.\Engine\ThirdPartyLib\fMod\fmod_vc.lib				.\EngineSDK\Lib\Debug\
 xcopy			/y		.\Engine\ThirdPartyLib\fMod\fmod_vc.lib				.\EngineSDK\Lib\Release\
 
 xcopy			/y		.\Engine\ThirdPartyLib\DirectXTK\DirectXTKd.lib				.\EngineSDK\Lib\Debug\
+xcopy			/y		.\Engine\ThirdPartyLib\PhysX\PhysX_debug\*.lib				.\EngineSDK\Lib\Debug\
+xcopy			/y		.\Engine\ThirdPartyLib\PhysX\PhysX_release\*.lib			.\EngineSDK\Lib\Release\

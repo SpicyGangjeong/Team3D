@@ -4,13 +4,12 @@
 #include "Level_Loading.h"
 #include "Light_Main.h"
 #include "Camera_Debug.h"
+#include "Camera_Model.h"
 #include "InfoInstance.h"
 #include "UI_Manager.h"
 #include "Layer.h"
 #include "SkyBox.h"
 #include "Broom.h"
-#include "Dummy_PhysXWall.h"
-#include "Dummy_PhysXPlayable.h"
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
@@ -25,6 +24,7 @@
 #include "Troll.h"
 #include "Goblin.h"
 #include "Goblin_Mage.h"
+#include "Goblin_Assassin.h"
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
 #include "NPC_EleazarFig.h"
@@ -42,7 +42,28 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_GamePlay::Initialize(void* pArg)
 {
+	// 낮, 밤 설정
+#ifdef gimch
+	m_isDay = false;
+#endif // gimch
+#ifdef Bin
+	m_isDay = true;
+#endif // 
+#ifdef 진우
+	m_isDay = true;
+#endif // 
+#ifdef 기무리
+	m_isDay = true;
+#endif // 
+#ifdef 인혁
+	m_isDay = true;
+#endif // 
+
 	if (FAILED(Ready_Lights())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Volumetric())) {
 		return E_FAIL;
 	}
 
@@ -164,8 +185,49 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))) {
+
+	LIGHT_DESC Desc = {};
+	if (m_isDay)
+	{
+		Desc.vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
+		Desc.vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
+		Desc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
+	}
+	else
+	{
+		Desc.vDiffuse = _float4(0.0471f, 0.0745f, 0.1294f, 0.2549f);
+		Desc.vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
+		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc))) {
 		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Volumetric()
+{
+	// Volumetric 설정
+	if(m_isDay)
+	{
+		m_pGameInstance->Setting_Volumetirc(
+			1.251f,                         // 밀도
+			0.0253f,                          // 빛 강도
+			0.9f,                          // 산란 계수
+			1.78f                           // 깊이 분포 계수
+		);
+	}
+	else
+	{
+		m_pGameInstance->Setting_Volumetirc(
+			0.626f,                         // 밀도
+			0.01f,                          // 빛 강도
+			0.11f,                          // 산란 계수
+			1.0f                           // 깊이 분포 계수
+		);
 	}
 
 	return S_OK;
@@ -267,8 +329,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 인혁
 	isReady_Background = false;
@@ -582,33 +644,57 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	}
-	{
-		CNPC_Ollivander::NPCDESC NPCDesc{};
-		NPCDesc.vPos = _float4(40.f, 4.f, 68.9f, 1.f);
-		NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
-			return E_FAIL;
-		}
-	}
-	{
-		CNPC_EleazarFig::NPCDESC NPCDesc{};
-		NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
-		NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
-			return E_FAIL;
-		}
-	}
 
+	_bool isLoad_NPC = { true };
+#ifdef _DEBUG
+#ifdef gimch
+
+#endif // gimch
+#ifdef 진우
+
+#endif // 
+#ifdef 기무리
+	isLoad_NPC = true;
+#endif // 
+#ifdef 인혁
+
+#endif // 
+#ifdef Bin
+
+#endif // Bin
+#endif // _DEBUG
+
+	if(true == isLoad_NPC)
+	{
+		{
+			CNPC_Ollivander::NPCDESC NPCDesc{};
+			NPCDesc.vPos = _float4(40.f, 4.f, 68.9f, 1.f);
+			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
+				return E_FAIL;
+			}
+		}
+		{
+			CNPC_EleazarFig::NPCDESC NPCDesc{};
+			NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
+			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
+				return E_FAIL;
+			}
+		}
+	}
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 10; ++i) {
+#ifdef Bin
+	for (_uint i = 0; i < 0; ++i) {
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
 			return E_FAIL;
 		}
 	}
+#endif // Bin
 	return S_OK;
 }
 
@@ -619,15 +705,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 10; ++i) {
+	for (_uint i = 0; i < 1; ++i) {
 
-		CRaceRing::RACERING_DESC RaceRingDesc {};
+		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
 		RaceRingDesc.iIndex = i;
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
 			return E_FAIL;
 		}
 	}
+
 	return S_OK;
 }
 
@@ -637,49 +724,65 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 		return E_FAIL;
 	}
 
-	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
-	Desc.vPos = { 0.f, 0.f, 0.f };
-	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::WALL);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	for (_uint i = 0; i <1; ++i)
-	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+	_bool isLoad_Monster = { true };
+#ifdef _DEBUG
+#ifdef gimch
+
+#endif // gimch
+#ifdef 진우
+
+#endif // 
+#ifdef 기무리
+	isLoad_Monster = true;
+#endif // 
+#ifdef 인혁
+
+#endif // 
+#ifdef Bin
+
+#endif // Bin
+#endif // _DEBUG
+	if (true == isLoad_Monster) {
+		for (_uint i = 0; i < 1; ++i)
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+				return E_FAIL;
+			}
+		}
+
+		for (_uint i = 0; i < 1; ++i)
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+				return E_FAIL;
+			}
+		}
+
+		for (_uint i = 0; i < 1; ++i)
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Assassin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+				return E_FAIL;
+			}
+		}
+
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
-	}
 
-	 for (_uint i = 0; i <1; ++i)
-	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
+
 	}
-
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-		return E_FAIL;
-	}
-
 #if 진우
 #else
 
 #endif 
-	
-
 
 	return S_OK;
 }

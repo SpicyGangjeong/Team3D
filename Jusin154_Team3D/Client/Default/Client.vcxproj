@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>$(USERNAME);_DEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Inc/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Inc/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;../../EngineSDK/Inc/PhysX/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -123,7 +123,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;fmod_vc.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;fmod_vc.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;DirectXTKd.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>cd /d "$(SolutionDir)"
@@ -140,7 +140,7 @@ call Update_Resources.bat
       <PreprocessorDefinitions>$(USERNAME);NDEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Inc/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Inc/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;../../EngineSDK/Inc/PhysX/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -150,7 +150,7 @@ call Update_Resources.bat
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;fmod_vc.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>cd /d "$(SolutionDir)"
@@ -166,6 +166,10 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
+    <ClInclude Include="..\Public\Camera_Model.h" />
+    <ClInclude Include="..\Public\Goblin_Assassin.h" />
+    <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
+    <ClInclude Include="..\Public\Goblin_Sword.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\CamPosition_AI.h" />
@@ -174,8 +178,13 @@ call Update_Resources.bat
     <ClInclude Include="..\public\Dialogue_Font.h" />
     <ClInclude Include="..\public\NPCInteraction.h" />
     <ClInclude Include="..\public\PointLight.h" />
+    <ClInclude Include="..\Public\Ranrok_Point.h" />
+    <ClInclude Include="..\Public\PlayerRobe.h" />
+    <ClInclude Include="..\Public\Player_ENUM.h" />
+    <ClInclude Include="..\Public\State_Dash.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
+    <ClInclude Include="..\Public\State_Slash.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
     <ClInclude Include="..\Public\Transformation.h" />
     <ClInclude Include="..\Public\LightningSide.h" />
@@ -325,8 +334,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\NoMountIcon.h" />
     <ClInclude Include="..\Public\PhysXEffectHitBox.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\EffectParts.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
@@ -409,6 +416,11 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
+    <ClCompile Include="..\Private\Camera_Model.cpp" />
+    <ClCompile Include="..\Private\Goblin_Assassin.cpp" />
+    <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
+    <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />
+    <ClCompile Include="..\Private\Goblin_Sword.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\CamPosition_AI.cpp" />
@@ -417,7 +429,11 @@ call Update_Resources.bat
     <ClCompile Include="..\private\Dialogue_Font.cpp" />
     <ClCompile Include="..\private\NPCInteraction.cpp" />
     <ClCompile Include="..\private\PointLight.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Point.cpp" />
+    <ClCompile Include="..\Private\PlayerRobe.cpp" />
+    <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
+    <ClCompile Include="..\Private\State_Slash.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
     <ClCompile Include="..\Private\LightningSide.cpp" />
@@ -569,8 +585,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
     <ClCompile Include="..\Private\CamPosition_Target.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\EffectParts.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />

@@ -311,7 +311,7 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, nullptr, this, &m_pNPCInteraction))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
 		return E_FAIL;
 	}
 

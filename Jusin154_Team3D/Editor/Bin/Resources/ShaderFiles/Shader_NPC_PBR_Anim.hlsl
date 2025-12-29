@@ -28,6 +28,9 @@ float g_fUsingSurfaceParams;
 float g_fEtherealRatio;
 float g_fMixerFactor;
 float g_fMBIntensity = 1.f;
+float g_fDisolveEdgeWidth;
+float g_fDisolveAmount;
+float g_fDisolveRatio;
 
 
 
@@ -65,6 +68,8 @@ StructuredBuffer<BoneOut> g_PrevBoneBuffer   : register(t27);
 
 
 Texture2D g_SurfaceParamsTexture;
+Texture2D g_DeadDisolveTexture;
+Texture2D g_DeadDisolveBurnTexture;
 
 int g_iBinded_Texture[27];
 matrix g_BoneMatrices[512];
@@ -301,10 +306,12 @@ struct PS_OUT_BLEND
 };
 struct PS_OUT_OUTLINE
 {
-    float4 vOutLine : SV_TARGET0;
+    float4 vAlbedo : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
-    float2 vVelocityUV : SV_TARGET3;
+    float4 vColor : SV_Target3;
+    float4 vSurface : SV_Target4;
+    float2 vVelocityUV : SV_TARGET5;
 };
 
 PS_OUT_OUTLINE PS_MAIN_OUTLINE_READ(PS_IN In)
@@ -322,12 +329,14 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_READ(PS_IN In)
     float fRim = saturate((1.0f - fNdotV) * g_fOutLineScale);
     fRim = pow(fRim, g_fOutLinePower);
 
-    Out.vOutLine = float4(g_vOutLineColor.rgb, fRim);
+    Out.vAlbedo = float4(g_vOutLineColor.rgb, fRim);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 源딆씠 ( 0~ 1)
         (In.vProjPos.w / g_fFar), // 酉??ㅽ럹?댁뒪 Z 
         (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // ?쒗럹?댁뒪 ?뚮씪誘명꽣
         1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vSurface = float4(0.5f, 1.f, 1.f, 0.f);
     Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
@@ -338,7 +347,11 @@ PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAO_Mask = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAO_Mask, In.vTexcoord);
+    }
     float fDiffuseMask = vDAO_Mask.r;
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
@@ -378,7 +391,11 @@ PS_OUT PS_TEETH_SRXO_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -407,7 +424,11 @@ PS_OUT PS_EYE_DN_SRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -442,7 +463,11 @@ PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAO_Mask = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAO_Mask, In.vTexcoord);
+    }
     float fDiffuseMask = vDAO_Mask.r;
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
@@ -484,7 +509,11 @@ PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAO_Mask = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAO_Mask, In.vTexcoord);
+    }
     float fDiffuseMask = vDAO_Mask.r;
     float AlphaMask = vDAO_Mask.g;
     float AoMask_Dao = vDAO_Mask.b;
@@ -525,7 +554,11 @@ PS_OUT PS_HEADwtHAND_DSRXON_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -553,7 +586,11 @@ PS_OUT PS_LOWER_DSRON_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -581,7 +618,11 @@ PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -609,7 +650,11 @@ PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -638,7 +683,12 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb;
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
+    vDiffuse.rgb += vEmissive.rgb * 3.f;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -667,7 +717,12 @@ PS_OUT PS_DNMRO_ToMRO(PS_IN In)
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    vDiffuse.rgb += vEmissive.rgb;
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
+    vDiffuse.rgb += vEmissive.rgb * 3.f;
     if (vDiffuse.a < 0.2f) {
         discard;
     }
@@ -695,6 +750,11 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     vDiffuse.rgb += vEmissive.rgb;
     if (vDiffuse.a < 0.2f) {
@@ -724,6 +784,11 @@ PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float4 vAlpha = g_TransmissionTexture.Sample(DefaultSampler, In.vTexcoord);
     if (vAlpha.r < 0.2f)
     {
@@ -759,6 +824,11 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
     PS_OUT Out;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vAmbient = g_AmbientTexture.Sample(DefaultSampler, In.vTexcoord);
     vDiffuse.rgb += vEmissive.rgb;
@@ -797,6 +867,11 @@ PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
     float2 p = uv - center;
     float2 uvRot90 = frac(float2(p.x, p.y) + center);
     float4 vDAOColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAOColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAOColor, In.vTexcoord);
+    }
     float4 vTHVColor = g_DiffuseBlend.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float fAlpha = g_NormalBlendTexture.Sample(DefaultSampler, uvRot90).r;
@@ -836,6 +911,11 @@ PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuseColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuseColor, In.vTexcoord);
+    }
     float4 vSubSurfaceColor = g_ReflectionTexture.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vMROColor = g_MetalnessTexture.Sample(DefaultSampler, uv);
@@ -861,6 +941,11 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuseColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuseColor, In.vTexcoord);
+    }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
     vDiffuseColor.rgb += vEmissive.r * vEmissive.g;
     
@@ -888,6 +973,11 @@ PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuseColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuseColor, In.vTexcoord);
+    }
     float4 vSROColor = g_SpecularTexture.Sample(DefaultSampler, uv);
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     
@@ -912,7 +1002,12 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
 {
     PS_OUT Out;
     float2 uv = In.vTexcoord;
-    float4 vDAOColor    = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    float4 vDAOColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDAOColor = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDAOColor, In.vTexcoord);
+    }
     float3 vHairBaseColor = g_NormalBlendTexture.Sample(DefaultSampler, uv).rrr;
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
     float4 vTHVColor    = g_DiffuseBlend.Sample(DefaultSampler, uv);
@@ -997,6 +1092,11 @@ PS_OUT PS_Dragon_Body(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uv).r;
     vDiffuse.a = fOppacity;
     if (vDiffuse.a < 0.2f)
@@ -1029,6 +1129,11 @@ PS_OUT PS_Dragon_Wings(PS_IN In)
     PS_OUT Out;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
+    }
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
     vDiffuse += vEmissive;
 
@@ -1233,62 +1338,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_READ();
     }
-    pass TEETH_SRXO_ToSRO__OUTLINE_WRITE // 14
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_TEETH_SRXO_ToSRO();
-    }
-    pass EYE_DN_ToSRO__OUTLINE_WRITE // 15
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_EYE_DN_SRO();
-    }
-    pass HEADwtHAND_DSRXON_ToSRO__OUTLINE_WRITE // 16
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_HEADwtHAND_DSRXON_ToSRO();
-    }
-    pass UPPER_DMRON_ToMRO__OUTLINE_WRITE // 17
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_UPPER_DMRON_ToMRO();
-    }
-    pass EmissiveMetalness_DENMRO_ToMRO__OUTLINE_WRITE // 18
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_EmissiveMetalness_DENMRO_ToMRO();
-    }
-    pass MI_ClothSim_DSEN_ToSRO__OUTLINE_WRITE // 19
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MI_ClothSim_DSEN_ToSRO();
-    }
-///////
-    pass MI_DANSROMRO_ToSRO // 20
+    pass MI_DANSROMRO_ToSRO // 14
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1297,26 +1347,8 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MI_DANSROMRO_ToSRO();
     }
-    pass MI_DANSROMRO_ToSRO_OUTLINE_WRITE // 21
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MI_DANSROMRO_ToSRO();
-    }
-    pass DNMRO_ToMRO__OUTLINE_WRITE // 22
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_DNMRO_ToMRO();
-    }
 //// DRAGON
-    pass DragonAuraPass // 23
+    pass DragonAuraPass // 15
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1325,7 +1357,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_Aura();
     }
-    pass DragonEtherealEyesPass // 24
+    pass DragonEtherealEyesPass // 16
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1334,16 +1366,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_EtherealEyes();
     }
-    pass DragonEtherealEyes_OUTLINE_WRITEPass // 25
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_Dragon_EtherealEyes();
-    }
-    pass DragonEtherealWingsPass // 26
+    pass DragonEtherealWingsPass // 17
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1352,7 +1375,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_EtherealWings();
     }
-    pass DragonWingsPass // 27
+    pass DragonWingsPass // 18
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1361,16 +1384,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_Wings();
     }
-    pass DragonWings_OUTLINE_WRITEPass // 28
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_Dragon_Wings();
-    }
-    pass DragonBodyPass // 29
+    pass DragonBodyPass // 19
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1379,16 +1393,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_Body();
     }
-    pass DragonBody_OUTLINE_WRITEPass // 30
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_Dragon_Body();
-    }
-    pass DragonRedHotPass // 31
+    pass DragonRedHotPass // 20
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1397,7 +1402,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_RedHot();
     }
-    pass DragonPinkHotPass // 32
+    pass DragonPinkHotPass // 21
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1406,7 +1411,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Dragon_PinkHot();
     }
-    pass DragonYellowHotPass // 33
+    pass DragonYellowHotPass // 22
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1416,7 +1421,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_Dragon_YellowHot();
     }
 //// PLAYER_
-    pass PLAYER_HAIR_DAOTHV_ToSRO // 34
+    pass PLAYER_HAIR_DAOTHV_ToSRO // 23
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1425,7 +1430,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_HairDAOTHV_ToSRO();
     }
-    pass PLAYER_Suit_DSRON_ToSRO // 35
+    pass PLAYER_Suit_DSRON_ToSRO // 24
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1434,7 +1439,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_Suit_DSRON_ToSRO();
     }
-    pass PLAYER_EyeLash_DAOTHV_ToSRO // 36
+    pass PLAYER_EyeLash_DAOTHV_ToSRO // 25
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1443,7 +1448,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_EyeLash_DAOTHV_ToSRO();
     }
-    pass PLAYER_Eye_ToSRO // 37
+    pass PLAYER_Eye_ToSRO // 26
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -1452,7 +1457,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_Eye_ToMRO();
     }
-    pass PLAYER_Robe_ToMRO // 38
+    pass PLAYER_Robe_ToMRO // 27
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);

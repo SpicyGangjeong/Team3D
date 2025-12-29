@@ -45,21 +45,12 @@ void CDummy_PhysXFixedDoor::Update(_float fTimeDelta)
 
 void CDummy_PhysXFixedDoor::Late_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
-	}
+	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 }
 
 HRESULT CDummy_PhysXFixedDoor::Render()
 {
 	_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
-
-	//GUI::Begin("FixedDoor");
-	//m_pTransformCom->Describe_Entity();
-	//GUI::Text("Current Roll : %f", XMConvertToDegrees(XMVectorGetX(vRPY)));
-	//GUI::Text("Current Pitch : %f", XMConvertToDegrees(XMVectorGetY(vRPY)));
-	//GUI::Text("Current Yaw : %f", XMConvertToDegrees(XMVectorGetZ(vRPY)));
-	//GUI::End();
 #ifdef _DEBUG
 	if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
@@ -89,7 +80,7 @@ HRESULT CDummy_PhysXFixedDoor::Ready_Components(void* pArg)
 	{ // RIGID_BODY
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = pPhysXDummyDesc->iSubKind;
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), (CComponent**)&m_pRigidBody, &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_FIXED_DOOR"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 	}

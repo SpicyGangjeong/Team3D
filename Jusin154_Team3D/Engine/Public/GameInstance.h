@@ -94,7 +94,7 @@ public:
 		}
 		return hr;
 	}
-	void		Set_LayerEnabled(_bool isEnable);
+
 	class CLayer* Get_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag);
 	void Clear_Objects_With_Layers(_uint iLevelIndex);
 
@@ -136,6 +136,7 @@ public:
 	void Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix);
 	const _float4x4* Get_Transform_Float4x4(D3DTS eState);
 	_matrix Get_Transform_Matrix(D3DTS eState);
+	_matrix Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType);
 	const _float4* Get_CamPosition();
 	const _vector Get_CamXMPosition();
 	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
@@ -151,6 +152,8 @@ public:
 	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
 	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
 	_float  Get_ShadowBoxFar(_uint iShadowBoxIndex);
+	HRESULT Begin_OutLine_Write(_uint iDSSMask);
+	HRESULT End_OutLine_Write();
 #pragma endregion
 #pragma region LIGHT_MANAGER
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
@@ -158,6 +161,8 @@ public:
 	void			  Delete_Light(_uint _iCurrentLevel, class CLight* _pLight);
 	const LIGHT_DESC* Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex);
 	HRESULT			  Render_Lights(_uint _iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);
+	list<class CLight*>* Get_LightList(_uint _iCurrentLevel);
+	_uint				Get_NumLight(_uint _iCurrentLevel);
 #pragma endregion
 #pragma region COLLIDER_MANAGER
 	HRESULT Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding);
@@ -183,6 +188,7 @@ public:
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
 	HRESULT Clear_RenderTarget(const _wstring& strRenderTargetKey);
+	ID3D11ShaderResourceView* Get_RenderTarget_SRV(const _wstring& strRenderTargetKey);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -212,7 +218,8 @@ public:
 	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel);
 	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel);
 	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel);
-	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame, _uint iLevel);
+	PSX::PxJoint* Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1);
+	PSX::PxD6Joint* Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 	_bool SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
@@ -226,12 +233,13 @@ public:
 	void				Attach_Actor(PSX::PxActor& Actor, _uint iLevel);
 	void				Detach_Actor(PSX::PxActor& pActor, _uint iLevel);
 	void				Release_Actor(PSX::PxActor& Actor);
+	void				ApplyFilterData(PSX::PxRigidActor* pRigidActor);
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 #ifdef EDITOR_PROJECT
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
-	void Add_Editor_Plane(PhsXUserData& PlaneData);
+	void Add_Editor_Plane(PHYSX_USERDATA& PlaneData);
 #pragma endregion
 #pragma region THREADHOLDER
 	template<class Function, class... Args>
@@ -270,6 +278,7 @@ public:
 		ID3D11ShaderResourceView*	Get_VolumeSRV();
 		_float*						Get_DepthPackExponentPtr();
 		void						Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent);
+		void						Update_Volumetric();
 #pragma endregion
 
 
