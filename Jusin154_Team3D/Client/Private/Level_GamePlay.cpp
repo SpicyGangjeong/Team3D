@@ -10,8 +10,6 @@
 #include "Layer.h"
 #include "SkyBox.h"
 #include "Broom.h"
-#include "Dummy_PhysXWall.h"
-#include "Dummy_PhysXPlayable.h"
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
@@ -656,7 +654,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 #endif // 
 #ifdef 인혁
 
@@ -726,15 +724,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 		return E_FAIL;
 	}
 
-	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
-	Desc.vPos = { 0.f, 0.f, 0.f };
-	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::WALL);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -749,7 +738,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = false;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 인혁
 

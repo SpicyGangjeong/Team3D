@@ -306,10 +306,12 @@ struct PS_OUT_BLEND
 };
 struct PS_OUT_OUTLINE
 {
-    float4 vOutLine : SV_TARGET0;
+    float4 vAlbedo : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
-    float2 vVelocityUV : SV_TARGET3;
+    float4 vColor : SV_Target3;
+    float4 vSurface : SV_Target4;
+    float2 vVelocityUV : SV_TARGET5;
 };
 
 PS_OUT_OUTLINE PS_MAIN_OUTLINE_READ(PS_IN In)
@@ -327,12 +329,14 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_READ(PS_IN In)
     float fRim = saturate((1.0f - fNdotV) * g_fOutLineScale);
     fRim = pow(fRim, g_fOutLinePower);
 
-    Out.vOutLine = float4(g_vOutLineColor.rgb, fRim);
+    Out.vAlbedo = float4(g_vOutLineColor.rgb, fRim);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 源딆씠 ( 0~ 1)
         (In.vProjPos.w / g_fFar), // 酉??ㅽ럹?댁뒪 Z 
         (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // ?쒗럹?댁뒪 ?뚮씪誘명꽣
         1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vSurface = float4(0.5f, 1.f, 1.f, 0.f);
     Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
     return Out;
