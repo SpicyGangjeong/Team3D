@@ -740,6 +740,9 @@
     <ClInclude Include="..\public\Dialogue_Data.h">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Point.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\Player_ENUM.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -1572,6 +1575,9 @@
     <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
       <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point">
+      <UniqueIdentifier>{a94e24d2-0f61-4263-b834-bfdf9f6c06ae}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\Player\Robe">
       <UniqueIdentifier>{f3c7cf8d-2b83-49d3-85da-fe135e376a11}</UniqueIdentifier>
     </Filter>
@@ -2286,7 +2292,10 @@
     <ClCompile Include="..\private\Dialogue_Data.cpp">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Camera_Model.cpp">
+    <ClCompile Include="..\Private\Ranrok_Point.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
+	</ClCompile>
+	<ClCompile Include="..\Private\Camera_Model.cpp">
       <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Assassin.cpp">

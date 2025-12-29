@@ -115,6 +115,8 @@ private:
 	_float m_fRushTime = {};
 	_float m_fHeadAimWeight = {};
 
+	class CEffect_Container* m_pRanrok_Point = { nullptr };
+	_float					 m_fTuckedSpeed = { 75.f };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

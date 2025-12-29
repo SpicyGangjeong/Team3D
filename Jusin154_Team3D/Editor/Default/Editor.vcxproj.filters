@@ -682,6 +682,9 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath">
       <UniqueIdentifier>{fbf574e7-159e-43c3-914d-6a200383a45c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point">
+      <UniqueIdentifier>{837e0b65-8ea3-41c5-8176-defa6e0cf3a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1382,6 +1385,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Breath.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Point.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2088,6 +2094,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Breath.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Point.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -207,7 +207,8 @@ HRESULT CEffectObject::Render_Bloom()
 
 	SHADER_PASS_INSTANCE_MODEL BloomPass = {};
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD
+		|| m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONWB_NONPOS)
 	{
 		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM_NOWORLD;
 	}

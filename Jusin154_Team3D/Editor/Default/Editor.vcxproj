@@ -204,6 +204,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Quest_Status.h" />
     <ClInclude Include="..\Public\Ranrok.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
+    <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
     <ClInclude Include="..\public\SpellLearn_Booster.h" />
@@ -453,6 +454,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Quest_Status.cpp" />
     <ClCompile Include="..\Private\Ranrok.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\Ranrok_States.cpp" />
     <ClCompile Include="..\Private\Skill_Data.cpp" />
