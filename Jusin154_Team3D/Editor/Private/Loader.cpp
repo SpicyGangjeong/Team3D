@@ -195,6 +195,7 @@
 #include "Blink.h"
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
+#include "Ranrok_Point.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1800,6 +1801,10 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Breath>(NEXT_LEVEL, CRanrok_Breath::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Point>(NEXT_LEVEL, CRanrok_Point::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

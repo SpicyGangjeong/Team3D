@@ -100,7 +100,7 @@ private:
 	_bool m_bHoverDash = { false };
 	_vector m_vMoveDir = XMVectorZero();
 
-
+	class CEffect_Container* m_pRanrok_Point = { nullptr };
 
 	vector<vector<_vector>> m_Points;
 	_int m_iCurrentPoint = 0;
@@ -111,6 +111,7 @@ private:
 	_float m_fAroundRadius = 40.f;
 	_float m_fAroundTime = {};
 	_float m_fRushTime = {};
+	_float m_fTuckedSpeed = { 75.f};
 
 
 	void	Behavior_IdleEnter();

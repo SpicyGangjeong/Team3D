@@ -26,7 +26,7 @@ public:
 	virtual HRESULT Render() override;
 public:
 	HRESULT Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPrototypeLevel, _uint iCloneLevel , function<class CEffect_Container*(_uint , _uint)> AddPrototypeEvent);
-	HRESULT Use_Skill(SKILL_TYPE eType , CGameObject* pOwner, void* pArg = nullptr);
+	HRESULT Use_Skill(SKILL_TYPE eType , CGameObject* pOwner, void* pArg = nullptr, CEffect_Container** ppOut = nullptr);
 public:
 #ifdef _DEBUG
 	HRESULT Reset_Pool();

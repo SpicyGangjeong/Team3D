@@ -522,7 +522,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
 
-	_float Speed = 40.f;
+
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
@@ -565,7 +565,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.5f);
 
-	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
+	m_pCharacter_Controller->Set_Position(CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
 }
 
 HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)

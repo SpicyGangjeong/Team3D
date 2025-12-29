@@ -10,6 +10,8 @@
 #include "TrailObject.h"
 #include "MapElement_Interactable.h"
 
+#include "Ranrok_Point.h"
+
 #pragma region STATE
 #include "State_Idle.h"
 #include "State_Move.h"
@@ -155,6 +157,9 @@ void CRanrok::Late_Update(_float fTimeDelta)
 			m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 		}
 	}
+
+	if (m_bVisible == false)
+		return;
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
@@ -367,6 +372,7 @@ HRESULT CRanrok::Ready_Components()
 
 HRESULT CRanrok::Ready_Parts()
 {
+
 	return S_OK;
 }
 
@@ -512,8 +518,6 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
 
-	_float Speed = 50.f;
-
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
 
@@ -553,9 +557,9 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector LerpTarget = XMVectorLerp(Target, NextTarget, 0.5f);
 
-	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.f);
+	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta, 2.5f);
 
-	m_pCharacter_Controller->Set_Position(CurPos + vLook * Speed * fTimeDelta);
+	m_pCharacter_Controller->Set_Position(CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
 }
 
 HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
@@ -637,6 +641,8 @@ void CRanrok::Free()
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pEffectPool);
+	SAFE_RELEASE(m_pRanrok_Point);
+
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }
@@ -647,6 +653,8 @@ void CRanrok::Describe_Entity()
 	__super::Describe_Entity();
 
 	m_pTransformCom->Describe_Entity();
+
+	GUI::DragFloat("Tucked Speed", &m_fTuckedSpeed);
 }
 
 #endif // _DEBUG

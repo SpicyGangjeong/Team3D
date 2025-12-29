@@ -659,6 +659,12 @@ void CRanrok::Behavior_TuckedEnter()
 	//}
 	pairAnimInfo = m_Animation[STATEANIM::FLY];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_bVisible = false;
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_POINT, this, nullptr, &m_pRanrok_Point);
+		}, 0.1f);
 }
 
 HRESULT CRanrok::Behavior_TuckedExitCheck(_float fTimeDelta)
@@ -685,9 +691,13 @@ HRESULT CRanrok::Behavior_TuckedExitCheck(_float fTimeDelta)
 
 void CRanrok::Behavior_TuckedExit()
 {
+	/* 이펙트를 서서히 사라지게 하기위해 도착 이후에 나오는 이펙트를 아래로 떨굼 */
+	m_pRanrok_Point->Setting_Pos(XMVectorSet(0.f, -500.f, 0.f, 1.f));
+	SAFE_RELEASE(m_pRanrok_Point);
+
+
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;
-	m_bVisible = true;
 }
 
 void CRanrok::Behavior_LandEnter()

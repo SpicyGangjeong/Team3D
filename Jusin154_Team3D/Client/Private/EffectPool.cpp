@@ -44,6 +44,7 @@
 #include "Avadakedavra.h"
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
+#include "Ranrok_Point.h"
 
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -582,8 +583,17 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
-	
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_POINT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
+		CRanrok_Point* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Point>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+	
+	
 	
 	return S_OK;
 }
@@ -605,7 +615,7 @@ HRESULT CEffectPool::Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPr
 	return S_OK;
 }
 
-HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg)
+HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg, CEffect_Container** ppOut)
 {
 	if (pOwner == nullptr)
 		return S_OK;
@@ -619,6 +629,11 @@ HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg
 
 		m_ActiveEffectList.push_back(pSkill);
 		Safe_AddRef(pSkill);
+
+		if (nullptr != ppOut) {
+			*ppOut = pSkill;
+			SAFE_ADDREF(pSkill);
+		}
 
 		break;
 	}

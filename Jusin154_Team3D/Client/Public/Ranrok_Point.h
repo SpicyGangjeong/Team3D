@@ -8,12 +8,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CRanrok_FireBall final : public CEffect_Container
+class CRanrok_Point final : public CEffect_Container
 {
 private:
-	CRanrok_FireBall(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CRanrok_FireBall(const CRanrok_FireBall& rhs);
-	virtual ~CRanrok_FireBall() = default;
+	CRanrok_Point(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRanrok_Point(const CRanrok_Point& rhs);
+	virtual ~CRanrok_Point() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -33,10 +33,9 @@ private:
 private:
 	_wstring						  m_wstrEffectName = {};
 
-	class CEffectParts*				  m_pFireBall = { nullptr };
-	class CEffectParts*				  m_pFireBall_PT = { nullptr };
-	class CEffectParts*				  m_pFireBall_Surface = { nullptr };
-	class CEffectParts*				  m_pFireBall_Tail = { nullptr };
+	class CEffectParts*				  m_pGooRod_0 = { nullptr };
+	class CEffectParts*				  m_pSmoke = { nullptr };
+	class CEffectParts*				  m_pSpread_PT = { nullptr };
 
 	_float3							  m_vLook = {};
 	_float							  m_fLinearSpeed = 0.8f;
@@ -46,7 +45,7 @@ private:
 private:
 	class  CInfoInstance*			  m_pInfoInstance = { nullptr };
 public:
-	static CRanrok_FireBall* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRanrok_Point* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 #ifdef _DEBUG
