@@ -21,6 +21,9 @@ public:
                 case PXOBJECT::SKILL_PROTEGO:
                     return PSX::PxQueryHitType::eNONE;
                     break;
+                case PXOBJECT::GOBLIN_PROTEGO:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
                 case PXOBJECT::JOINT_ROUTE:
                     return PSX::PxQueryHitType::eNONE;
                     break;

@@ -152,13 +152,7 @@ enum class PXOBJECT : _uint {
 	GOBLIN_SHIELD_BREAK_MAGIC,
 	GOBLIN_NORMAL_MAGIC,
 	TROLL_GROUND_STRIKE,
-
-	/*
-	* _int iKind;
-	*  if (iKind > 100 && iKind < 200){
-	*  dammage
-	*/
-
+	GOBLIN_PROTEGO,
 #pragma endregion
 #pragma region ALLY_HITBOX
 	ALLY_HITBOX = 200,

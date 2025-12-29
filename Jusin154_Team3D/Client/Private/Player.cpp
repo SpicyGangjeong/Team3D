@@ -369,12 +369,11 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
-
-	if (m_pFSM->IsEnable(FSMSTATE::SHIELD))
-	{
-		m_bShield = true;
-	}
-	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) || m_bShield)
+	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
+	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) || 
+		m_bShield ||
+		iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first||
+		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first)
 		return;
 
 #ifdef _DEBUG

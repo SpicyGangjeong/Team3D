@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 
-CPhysX_CctQueryFilterCallback CCharacter_Controller::s_QueryFilterCallback_IGNORE_Shield = {};
+CPhysX_CctQueryFilterCallback CCharacter_Controller::s_QueryFilterCallback_IGNORE_GLOBAL = {};
 
 CCharacter_Controller::CCharacter_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -262,7 +262,7 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 	PSX::PxVec3						pxVecMomentum = {};					// 순간 이동량
 	_float							fMinimumDistant = FLT_EPSILON3;		// 이동량 오차 허용치, ( 크면 클수록 이동이 더 일찍 끝난다, 순간 이동량보다 같거나 더 크면 안움직일듯? )
 	PSX::PxControllerFilters		pxFilter = {};						// 충돌 대상 필터
-	pxFilter.mFilterCallback = &s_QueryFilterCallback_IGNORE_Shield;	// 쉴드 무시
+	pxFilter.mFilterCallback = &s_QueryFilterCallback_IGNORE_GLOBAL;	// 쉴드 무시
 	const PSX::PxObstacleContext*	pPxObstacles = { nullptr };			// 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
 	if (true == m_bGravity) {
 		if (0 >= m_iIsOnGround) {      // 공중: 무조건 중력
