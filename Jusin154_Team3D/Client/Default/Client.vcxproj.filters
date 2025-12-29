@@ -404,9 +404,6 @@
     <ClInclude Include="..\Public\Goblin_Spector.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Goblin_Spector.h">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Goblin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
@@ -763,6 +760,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Dash.h">
       <Filter>04.Mechanic\State\Movement\Dash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Spector.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Assassin_Spector.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1590,6 +1593,12 @@
     <Filter Include="04.Mechanic\State\Movement\Dash">
       <UniqueIdentifier>{6d1f0862-40a4-4c0b-9921-87fe6af2008b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector">
+      <UniqueIdentifier>{0c62f4f7-a0e6-4ff2-a4dd-25e3dd79709e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector">
+      <UniqueIdentifier>{bf7cf91b-742f-4913-8af2-39ed94d19e23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1988,9 +1997,6 @@
     <ClCompile Include="..\Private\Enemy_Panel.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Goblin_Spector.cpp">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Goblin.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClCompile>
@@ -2300,6 +2306,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerRobe.cpp">
       <Filter>02.GameObjects\Player\Robe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Spector.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

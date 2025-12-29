@@ -24,7 +24,7 @@ public:
 	virtual HRESULT Render() override;
 	HRESULT Render_Disolve();
 	void Set_Disolve(_bool bDisolve) { m_bDisolve = bDisolve; }
-	const _float4x4 Get_AxeMatrix() { return m_vAxeMat; };
+	const _float4x4& Get_AxeMatrix() { return m_vAxeMat; };
 
 private:
 	const _float4x4* m_pSocketMatrices = {  };

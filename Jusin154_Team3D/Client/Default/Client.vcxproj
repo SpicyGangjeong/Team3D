@@ -168,6 +168,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\Public\Camera_Model.h" />
     <ClInclude Include="..\Public\Goblin_Assassin.h" />
+    <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
     <ClInclude Include="..\Public\Goblin_Sword.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
@@ -416,6 +417,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\Private\Camera_Model.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin.cpp" />
+    <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />
     <ClCompile Include="..\Private\Goblin_Sword.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
