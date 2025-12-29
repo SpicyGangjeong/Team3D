@@ -192,42 +192,6 @@ void CPlayer::Update(_float fTimeDelta)
 
 }
 
-void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
-{
-	if (nullptr != m_pGrapInteractive)
-  {
-		m_vGrapInteratableLerp.x += fTimeDelta;
-		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderGlobalPos(), m_vGrapInteratableLerp.x);
-		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y)
-    {
-			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
-		}
-	}
-}
-
-void CPlayer::Update_CameraShake(_float fTimeDelta)
-{
-	if (true == m_bCameraShake) 
-  {
-		m_vCameraShakeTimer.x += fTimeDelta;
-		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) 
-    {
-			m_vCameraShakeTimer.x = 0.f;
-			m_pCamPosition_ShoulderPart->Set_CameraShake(0.f, 0.f);
-			m_bCameraShake = false;
-	  }
-		else
-    {
-			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
-			fIntense *= fIntense;
-			m_pCamPosition_ShoulderPart->Set_CameraShake(
-				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
-				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense));
-		}
-	}
-
-}
-
 void CPlayer::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
@@ -446,6 +410,7 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_fCameraShakeIntense = fIntense;
 	m_bCameraShake = true;
 }
+
 void CPlayer::Set_RaceRing(CRaceRing* pRaceRing)
 {
 	if (m_pRaceRing != pRaceRing)
@@ -455,7 +420,6 @@ void CPlayer::Set_RaceRing(CRaceRing* pRaceRing)
 	}
 	m_pRaceRing = pRaceRing;
 }
-#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
