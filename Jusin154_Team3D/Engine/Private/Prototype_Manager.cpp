@@ -147,7 +147,6 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 		CComputeShader::Create(m_pDevice, m_pContext,
 			L"../Bin/Resources/ShaderFiles/Shader_Instance_Compute.hlsl", "CS_MAIN")))) {
 		return E_FAIL;
-
 	}
 
 	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_MODEL,
@@ -161,7 +160,12 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 		CComputeShader::Create(m_pDevice, m_pContext,
 			L"../Bin/Resources/ShaderFiles/Shader_Local_Compute.hlsl", "CS_LOCAL")))) {
 		return E_FAIL;
+	}
 
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_BONEINSERT,
+		CComputeShader::Create(m_pDevice, m_pContext,
+			L"../Bin/Resources/ShaderFiles/Shader_BoneCombinedInsertion_Compute.hlsl", "CS_MAIN")))) {
+		return E_FAIL;
 	}
 
 #pragma endregion

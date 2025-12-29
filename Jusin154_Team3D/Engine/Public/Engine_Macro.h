@@ -98,6 +98,7 @@
 #define CS_INSTANCE_MODEL			TEXT("CS_INSTANCE_MODEL")
 #define CS_MODEL					TEXT("CS_MODEL")
 #define CS_LOCAL					TEXT("CS_LOCAL")
+#define CS_BONEINSERT				TEXT("CS_BONEINSERT")
 
 
 #define			SAFE_ADDREF(pInstance)		Safe_AddRef(pInstance)
