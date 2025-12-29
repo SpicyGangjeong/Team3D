@@ -93,7 +93,7 @@ private:
 	_int m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_AIR);
 
 	_float m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,10.f,40.f,40.f,40.f};
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,8.f,40.f,40.f,40.f};
 
 	_float m_fTuckedTime = {};
 	_bool m_bFireBurst = { false };

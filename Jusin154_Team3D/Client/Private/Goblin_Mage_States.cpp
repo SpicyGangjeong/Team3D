@@ -466,7 +466,11 @@ void CGoblin_Mage::Behavior_HitEnter()
 		pairAnimInfo = m_Animation[STATEANIM::INCARCEROUS];
 		break;
 	default:
-		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_R];
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+		if(iRand == 0)
+			pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_L];
+		else
+			pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_R];
 		break;
 	}
 

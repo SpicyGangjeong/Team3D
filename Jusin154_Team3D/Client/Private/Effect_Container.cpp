@@ -648,6 +648,7 @@ _int CEffect_Container::CollisionCheck()
 			case PXOBJECT::GOBLIN_WARRIOR:
 			case PXOBJECT::GOBLIN_MAGICIAN:
 			case PXOBJECT::TROLL:
+			case PXOBJECT::RANROK:
 			case PXOBJECT::WALL:
 			{
 				return i;
@@ -712,6 +713,17 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 
 			switch (pUserData->eKind)
 			{
+			case PHYSX_KIND::BODY_DYNAMIC:
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::GOBLIN_PROTEGO:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				}
+				break;
 			case PHYSX_KIND::CCTActor:
 			{
 				switch (PXOBJECT(pUserData->iSubKind))
@@ -831,6 +843,17 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 
 			switch (pUserData->eKind)
 			{
+			case PHYSX_KIND::BODY_DYNAMIC:
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::SKILL_PROTEGO:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				}
+				break;
 			case PHYSX_KIND::CCTActor:
 			{
 				switch (PXOBJECT(pUserData->iSubKind))
@@ -842,11 +865,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 					m_bHit = true;
 				}
 				break;
-				case PXOBJECT::SKILL_PROTEGO:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
+
 				}
 			}
 			}

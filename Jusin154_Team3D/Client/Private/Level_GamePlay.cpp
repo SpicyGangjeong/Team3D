@@ -26,6 +26,7 @@
 #include "Troll.h"
 #include "Goblin.h"
 #include "Goblin_Mage.h"
+#include "Goblin_Assassin.h"
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
 #include "NPC_EleazarFig.h"
@@ -706,7 +707,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 10; ++i) {
+	for (_uint i = 0; i < 1; ++i) {
 
 		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;

@@ -338,7 +338,7 @@
       <Filter>04.Mechanic\State\State_Combat\State_Swing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Blink.h">
-      <Filter>04.Mechanic\State\State_Combat\State_Blink</Filter>
+      <Filter>04.Mechanic\State\Movement\State_Blink</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Dagger.h">
       <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
@@ -758,6 +758,18 @@
     <ClInclude Include="..\Public\Camera_Model.h">
       <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Assassin.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Sword.h">
+      <Filter>02.GameObjects\Item\Goblin_Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Slash.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Slash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dash.h">
+      <Filter>04.Mechanic\State\Movement\Dash</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1145,9 +1157,6 @@
     </Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_Swing">
       <UniqueIdentifier>{f109c973-c532-4549-9680-d0d6495b0fa8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Blink">
-      <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Mouse_Cursor">
       <UniqueIdentifier>{b8c7e12b-da04-4d49-bc61-104649975d0b}</UniqueIdentifier>
@@ -1572,6 +1581,21 @@
     <Filter Include="02.GameObjects\Cameras\Camera_Model">
       <UniqueIdentifier>{f8d55057-c0f8-4cac-8a6c-6f11345a83bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin">
+      <UniqueIdentifier>{af9f5cf6-151a-49bc-9af4-28ba0bde1d37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Goblin_Sword">
+      <UniqueIdentifier>{db12252c-8c0d-40bc-9466-e76ec60e2509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Slash">
+      <UniqueIdentifier>{0736f27e-2722-483b-88b6-30471ad70835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\State_Blink">
+      <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Dash">
+      <UniqueIdentifier>{6d1f0862-40a4-4c0b-9921-87fe6af2008b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1893,7 +1917,7 @@
       <Filter>04.Mechanic\State\State_Combat\State_Swing</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Blink.cpp">
-      <Filter>04.Mechanic\State\State_Combat\State_Blink</Filter>
+      <Filter>04.Mechanic\State\Movement\State_Blink</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Dagger.cpp">
       <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
@@ -2270,6 +2294,22 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Model.cpp">
       <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerRobe.cpp" />
+    <ClCompile Include="..\Private\Goblin_Assassin.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Assassin_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Sword.cpp">
+      <Filter>02.GameObjects\Item\Goblin_Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slash.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Slash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dash.cpp">
+      <Filter>04.Mechanic\State\Movement\Dash</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
