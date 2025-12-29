@@ -79,12 +79,6 @@
     <ClInclude Include="..\Public\Broom.h">
       <Filter>02.GameObjects\Item\Broom</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Dummy_PhysXWall.h">
-      <Filter>02.GameObjects\PhysX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h">
-      <Filter>02.GameObjects\PhysX</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>04.Mechanic\State</Filter>
     </ClInclude>
@@ -1661,12 +1655,6 @@
     <ClCompile Include="..\Private\Broom.cpp">
       <Filter>02.GameObjects\Item\Broom</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp">
-      <Filter>02.GameObjects\PhysX</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp">
-      <Filter>02.GameObjects\PhysX</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\State_Root.cpp">
       <Filter>04.Mechanic\State</Filter>
     </ClCompile>
@@ -2295,7 +2283,6 @@
     <ClCompile Include="..\Private\Camera_Model.cpp">
       <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerRobe.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
     </ClCompile>
@@ -2310,6 +2297,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Dash.cpp">
       <Filter>04.Mechanic\State\Movement\Dash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerRobe.cpp">
+      <Filter>02.GameObjects\Player\Robe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

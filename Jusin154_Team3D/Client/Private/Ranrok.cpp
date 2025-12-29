@@ -524,6 +524,9 @@ HRESULT CRanrok::Render_Blend()
 		}
 	}
 
+	if (true == m_bDrawOutLine) {
+		Render_OutLine();
+	}
 	return S_OK;
 }
 HRESULT CRanrok::Render_OutLine()

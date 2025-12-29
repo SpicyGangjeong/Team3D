@@ -15,6 +15,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	_bool m_isDay = { true };
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
 

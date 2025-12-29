@@ -139,9 +139,6 @@
 #pragma endregion
 
 #pragma region PHYSX
-
-#include "Dummy_PhysXWall.h"
-#include "Dummy_PhysXPlayable.h"
 #include "PhysXEffectHitBox.h"
 
 #pragma endregion
@@ -377,8 +374,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
-	isLoad_Monster = false;
+	isLoad_NPC = true;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -2914,15 +2911,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_BroomRaceManager */
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroomRaceManager>(g_iStaticLevel, CBroomRaceManager::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXWall>(g_iStaticLevel, CDummy_PhysXWall::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CPhysXEffectHitBox>(g_iStaticLevel, CPhysXEffectHitBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;

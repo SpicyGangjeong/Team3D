@@ -332,8 +332,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\NoMountIcon.h" />
     <ClInclude Include="..\Public\PhysXEffectHitBox.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\EffectParts.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
@@ -583,8 +581,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
     <ClCompile Include="..\Private\CamPosition_Target.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\EffectParts.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
