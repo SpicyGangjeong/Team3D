@@ -672,10 +672,12 @@ struct PS_IN_OUTLINE
 };
 struct PS_OUT_OUTLINE
 {
-    float4 vOutLine : SV_TARGET0;
+    float4 vAlbedo : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
-    float2 vVelocityUV : SV_TARGET3;
+    float4 vColor : SV_Target3;
+    float4 vSurface : SV_Target4;
+    float2 vVelocityUV : SV_TARGET5;
 };
 
 PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
@@ -684,6 +686,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
     float3 vToView = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz);
@@ -691,15 +694,17 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     float fNdotV = saturate(dot(vNormal, vToView));
     float fRim = saturate((1.0f - fNdotV) * g_fOutLineScale);
     fRim = pow(fRim, g_fOutLinePower);
-    
-    Out.vOutLine = float4(g_vOutLineColor.rgb, fRim);
+
+    Out.vAlbedo = float4(g_vOutLineColor.rgb, fRim);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
-    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    AI_TEXTURE_TYPE_METALNESS, // 서페이스 파라미터
-    1.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 源딆씠 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 酉??ㅽ럹?댁뒪 Z 
+        (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // ?쒗럹?댁뒪 ?뚮씪誘명꽣
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vSurface = float4(0.5f, 1.f, 1.f, 0.f);
     Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
-    
+
     return Out;
 }
 

@@ -53,6 +53,8 @@ enum ESTATE : _u64Flag
     SWIPE                       = 1ULL << 46,
     SLIDE                       = 1ULL << 47,
     FALL                        = 1ULL << 48,
+	SLASH                       = 1ULL << 49,
+	DASH                        = 1ULL << 50,
     END
 };
 NS_END

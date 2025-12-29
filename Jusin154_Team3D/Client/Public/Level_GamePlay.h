@@ -19,10 +19,13 @@ public:
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
+
+	_bool m_isDay = { true };
 private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);
 	HRESULT Ready_Lights();
+	HRESULT Ready_Volumetric();
 	HRESULT Ready_Background();
 	HRESULT Ready_Layer_Hogsmeade();
 	HRESULT Ready_Layer_Hogwart();

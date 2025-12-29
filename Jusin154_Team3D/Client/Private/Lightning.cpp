@@ -39,7 +39,7 @@ HRESULT CLightning::Initialize(void* pArg)
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
-	m_iSkillType = ENUM_CLASS(SKILL_TYPE::LIGHTNING);
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
 
 	m_wstrEffectName = L"Lightning";
 
@@ -82,14 +82,15 @@ void CLightning::Late_Update(_float fTimeDelta)
 
 	__super::Late_Update(fTimeDelta);
 
-	//if (false == m_bHit) {
-	//	_vector vStartPos = XMLoadFloat4(&m_vStartPos);
-	//	_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-	//	ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f , true);
+	if (false == m_bHit) {
+		_vector vTop = XMLoadFloat4(&m_vTargetPos) + XMVectorSet(0.f, 5.f, 0.f, 0.f);
 
-	//	OnCollision(this, &CollisionInfo);
-	//}
+		_vector vBottom = XMLoadFloat4(&m_vTargetPos) - XMVectorSet(0.f, 5.f, 0.f, 0.f);
 
+		ON_COLLISION_INFO CollisionInfo = SweepTarget(vTop, vBottom, 0.02f, true);
+
+		OnCollision(this, &CollisionInfo);
+	}
 }
 
 HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
@@ -215,7 +216,7 @@ void CLightning::OnCollision(CGameObject* pOther, void* pDesc)
 		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	}
 
-	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
+	CWand* pWand = static_cast<CWand*>(m_pOwner);
 
 	if (pWand == nullptr)
 		return;

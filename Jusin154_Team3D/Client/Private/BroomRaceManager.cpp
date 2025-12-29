@@ -251,38 +251,33 @@ void CBroomRaceManager::Check_RingPassed()
 
 		_vector prevPos = racer.prevPos;
 
-		_float d0 = XMVectorGetX(
-			XMVector3Dot(prevPos - ringPos, ringFwd));
-		_float d1 = XMVectorGetX(
-			XMVector3Dot(currPos - ringPos, ringFwd));
+		_float Prev = XMVectorGetX(XMVector3Dot(prevPos - ringPos, ringFwd));
+		_float Curr = XMVectorGetX(XMVector3Dot(currPos - ringPos, ringFwd));
 #ifdef _DEBUG
 		GUI::Text("%s", racer.pAI ? "AI" : "Player");
 		GUI::SameLine();
 		GUI::Text("CurRing %d", racer.curRing);
-		GUI::Text("PrevSide %.2f", d0);
-		GUI::Text("CurrSide %.2f", d1);
+		GUI::Text("PrevSide %.2f", Prev);
+		GUI::Text("CurrSide %.2f", Curr);
 #endif // _DEBUG
-		if (d0 * d1 <= 0.f && fabs(d0 - d1) > 1e-4f)
+		if (Prev * Curr <= 0.f && fabs(Prev - Curr) > 1e-4f)
 		{
-			_float t = d0 / (d0 - d1);
-			t = std::clamp(t, 0.f, 1.f);
+			_float t = Prev / (Prev - Curr);
+			t = clamp(t, 0.f, 1.f);
 
-			_vector hitPos =
-				prevPos + (currPos - prevPos) * t;
+			_vector hitPos = prevPos + (currPos - prevPos) * t;
 
 			_vector v = hitPos - ringPos;
 			_float side = XMVectorGetX(XMVector3Dot(v, ringFwd));
 			_vector proj = hitPos - ringFwd * side;
 
-			_float dist =
-				XMVectorGetX(XMVector3Length(proj - ringPos));
+			_float dist = XMVectorGetX(XMVector3Length(proj - ringPos));
 
 			if (dist <= PASS_RADIUS)
 			{
 				if(racer.pRacer){ 
 					pRing->Set_Target(false); 
 				}
-					
 
 				racer.curRing = (racer.curRing + 1) % m_pRaceRings.size();
 

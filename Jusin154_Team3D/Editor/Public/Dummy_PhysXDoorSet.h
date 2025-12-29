@@ -33,7 +33,6 @@ public:
 
 private:
 	class CDummy_PhysXFixedDoor* m_pDoorPart = { nullptr };
-	class CDummy_PhysXDoorFrame* m_pFramePart = { nullptr };
 	PSX::PxRevoluteJoint* m_pPSXJoint = { nullptr };
 	_float3		m_vRadianYAngle = {};
 

@@ -28,11 +28,14 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     row_major matrix InvProjMatrix;
     row_major matrix InvViewMatrix;
     
+    row_major matrix ShadowViewMatrix;
+    row_major matrix ShadowViewProjMatrix;
+    
     float fAsymmetryParameter;
-    float padding0;
-    float padding1;
-    float padding2;
-}
+    uint iNumLight;
+    float fHeightOffset;
+    float fBaseHeight;
+};
 
 float ConvertNdcZToDepth(float ndcZ);
 float SliceTickness(float ndcZ, uint dimZ);

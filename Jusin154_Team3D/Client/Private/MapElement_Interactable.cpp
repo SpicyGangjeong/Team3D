@@ -58,7 +58,7 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 	m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
 
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
-	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
+	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat3(&pDesc->vBoxLocalPosition));
 	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(false);
 
 	if (false == m_isPooled)
@@ -338,7 +338,7 @@ void CMapElement_Interactable::ActivateAt(_fvector vPos)
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pInfoInstance->Regist_ActiveInteractive(this);
 	m_pRigidBody->Set_Kinematic(false);
-	m_pRigidBody->Set_Position(vPos);
+	m_pRigidBody->Set_Position(vPos, true);
 }
 
 ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _fvector EndPos, _float fRadius)
@@ -372,7 +372,7 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
@@ -432,7 +432,7 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 
 			if (nullptr != pActor && nullptr != pActor->userData)
 			{
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
 
 				switch (PXOBJECT(pUserData->iSubKind))

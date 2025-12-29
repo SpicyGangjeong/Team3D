@@ -17,6 +17,7 @@
 #include "MapElement_Interactable.h"
 #include "BroomRaceManager.h"
 #include "RaceRing.h"
+#include "PlayerRobe.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -177,6 +178,7 @@ __super::Update(fTimeDelta);
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
+
 	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)){
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
 	}
@@ -187,6 +189,116 @@ __super::Update(fTimeDelta);
 	}
 }
 
+void CPlayer::Late_Update(_float fTimeDelta)
+{
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#ifdef _DEBUG
+	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+#endif // _DEBUG
+
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
+
+	__super::Late_Update(fTimeDelta);
+
+	if (nullptr != m_LockOnInfo.pUnit) {
+		if (false == m_LockOnInfo.pUnit->isDead()) {
+			static_cast<CMonster*>(m_LockOnInfo.pUnit)->Set_DrawOutLine();
+		}
+		else {
+			m_LockOnInfo.pUnit = nullptr;
+		}
+	}
+	if (nullptr != m_LockOnInfo.pInteractive) {
+		static_cast<CMapElement_Interactable*>(m_LockOnInfo.pInteractive)->Set_DrawOutLine();
+	}
+
+	if (m_bLookAt && m_LockOnInfo.pUnit)
+	{
+		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
+	}
+	////////////////////////////////////////////////////////////////////////////
+	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
+	_vector up = XMVector3Normalize(XMVector3Cross(look, right));
+
+	m_pTransformCom->Set_State(STATE::RIGHT, right);
+	m_pTransformCom->Set_State(STATE::UP, up);
+	m_pTransformCom->Set_State(STATE::LOOK, look);
+	////////////////////////////////////////////////////////////////////////////
+	
+//#ifdef 기무리
+//	if (nullptr == m_pRobePart) {
+//		{
+//			CPlayerRobe::PlayerRobe_DESC Desc{};
+//			Desc.pModel = m_pModelCom;
+//			Desc.pParentTransform = m_pTransformCom;
+//			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
+//			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
+//				assert(false);
+//			}
+//		}
+//	}
+//#endif // 기무리
+}
+
+
+HRESULT CPlayer::Render()
+{
+	if (!m_bVisible){
+		return S_OK;
+	}
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
+	if (RENDER::NONBLEND == eType) {
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+		for (_uint i = 0; i < iNumMeshes; i++)
+		{
+			if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pShaderCom->Bind_Matrices(
+				"g_OffsetMatrix",
+				m_pModelCom->Get_OffsetMatrix(i).data(),
+				(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+			)))
+			{
+				return E_FAIL;
+			}
+			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+				return E_FAIL;
+			}
+
+
+			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+			if (FAILED(Bind_ShaderParameters(i))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pModelCom->Render(i))) {
+				return E_FAIL;
+			}
+		}
+		Render_CameraCoordinateSystem();
+		//m_pCharacter_Controller->Render();
+	}
+#ifdef _DEBUG
+	if (RENDER::NONLIGHT == eType) {
+		//m_pRigidBody->Render();
+	}
+#endif
+
+	return S_OK;
+}
 void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
 {
 	if (nullptr != m_pGrapInteractive) {
@@ -216,98 +328,6 @@ void CPlayer::Update_CameraShake(_float fTimeDelta)
 			);
 		}
 	}
-}
-
-void CPlayer::Late_Update(_float fTimeDelta)
-{
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
-
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-
-	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
-
-	__super::Late_Update(fTimeDelta);
-
-	if (nullptr != m_LockOnInfo.pUnit) {
-		if (false == m_LockOnInfo.pUnit->isDead()) {
-			static_cast<CMonster*>(m_LockOnInfo.pUnit)->Set_DrawOutLine();
-		}
-		else {
-			m_LockOnInfo.pUnit = nullptr;
-		}
-	}
-	if (nullptr != m_LockOnInfo.pInteractive) {
-		static_cast<CMapElement_Interactable*>(m_LockOnInfo.pInteractive)->Set_DrawOutLine();
-	}
-
-	if (m_bLookAt && m_LockOnInfo.pUnit)
-	{
-		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 10.f);
-	}
-	////////////////////////////////////////////////////////////////////////////
-	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
-
-	_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-	_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
-	_vector up = XMVector3Normalize(XMVector3Cross(look, right));
-
-	m_pTransformCom->Set_State(STATE::RIGHT, right);
-	m_pTransformCom->Set_State(STATE::UP, up);
-	m_pTransformCom->Set_State(STATE::LOOK, look);
-	////////////////////////////////////////////////////////////////////////////
-	
-
-}
-
-HRESULT CPlayer::Render()
-{
-	if (!m_bVisible){
-		return S_OK;
-	}
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; i++)
-	{
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_OffsetMatrix",
-			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
-		)))
-		{
-			return E_FAIL;
-		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
-			return E_FAIL;
-		}
-
-
-		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
-		if (FAILED(Bind_ShaderParameters(i))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Render(i))) {
-			return E_FAIL;
-		}
-	}
-
-#ifdef _DEBUG
-	m_pCharacter_Controller->Render();
-	//m_pRigidBody->Render();
-	Render_CameraCoordinateSystem();
-#endif
-
-	return S_OK;
 }
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
@@ -349,12 +369,11 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
-
-	if (m_pFSM->IsEnable(FSMSTATE::SHIELD))
-	{
-		m_bShield = true;
-	}
-	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) && m_bShield)
+	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
+	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) || 
+		m_bShield ||
+		iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first||
+		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first)
 		return;
 
 #ifdef _DEBUG
@@ -372,7 +391,8 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 		m_fHitDegree = -1.f;
 	}
 	
-	m_pFSM->Change_State(FSMSTATE::HIT);
+	if(m_eHitType !=ENUM_CLASS(HIT_TYPE::HIT_NONE))
+		m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
@@ -385,7 +405,6 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_fCameraShakeIntense = fIntense;
 	m_bCameraShake = true;
 }
-#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
@@ -437,8 +456,6 @@ void CPlayer::Render_CameraCoordinateSystem()
 	);
 	m_Batch->End();
 }
-#endif // _DEBUG
-
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -549,8 +566,6 @@ HRESULT CPlayer::Ready_Parts()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this,&m_pBroom))) {
 		return E_FAIL;
 	}
-
-
 
 	return S_OK;
 }
@@ -719,7 +734,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-
+	SAFE_RELEASE(m_pRobePart);
 	SAFE_RELEASE(m_pGrapInteractive);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;

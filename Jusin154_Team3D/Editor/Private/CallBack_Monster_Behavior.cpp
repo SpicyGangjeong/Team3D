@@ -17,7 +17,7 @@ PSX::PxControllerBehaviorFlags CCallBack_Monster_Behavior::getBehaviorFlags(cons
 		return PSX::PxControllerBehaviorFlags(0);
 	}
 	PSX::PxControllerBehaviorFlags eResults = PSX::PxControllerBehaviorFlags(0);
-	PhsXUserData* pActorData = static_cast<PhsXUserData*>(actor.userData);
+	PHYSX_USERDATA* pActorData = static_cast<PHYSX_USERDATA*>(actor.userData);
 	switch (pActorData->eKind)
 	{
 	case PHYSX_KIND::BODY_STATIC:
