@@ -118,6 +118,7 @@ void CMainLight::Update(_float fTimeDelta)
 
 void CMainLight::Late_Update(_float fTimeDelta)
 {
+
 }
 
 HRESULT CMainLight::Render()

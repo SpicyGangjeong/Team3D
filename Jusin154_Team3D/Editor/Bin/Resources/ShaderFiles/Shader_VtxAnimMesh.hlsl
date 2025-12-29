@@ -88,10 +88,6 @@ float g_fUsingSurfaceParams;
 
 matrix g_BoneMatrices[512];
 
-
-
-
-
 struct VS_IN
 {
     float3 vPosition : POSITION;

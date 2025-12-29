@@ -724,6 +724,11 @@ _matrix CGameInstance::Get_Transform_Matrix(D3DTS eState)
 	return m_pPipeLine->Get_Transform_Matrix(eState);
 }
 
+_matrix CGameInstance::Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType)
+{
+	return m_pPipeLine->Get_ShadowTransform_Matrix(eState, eShadowType);
+}
+
 const _float4* CGameInstance::Get_CamPosition()
 {
 	return m_pPipeLine->Get_CamPosition();
@@ -819,6 +824,15 @@ HRESULT CGameInstance::Render_Lights(_uint _iCurrentLevel, CShader* pShader, CVI
 	return m_pLight_Manager->Render_Lights(_iCurrentLevel, pShader, pVIBuffer);
 }
 
+list<class CLight*>* CGameInstance::Get_LightList(_uint _iCurrentLevel)
+{
+	return m_pLight_Manager->Get_LightList(_iCurrentLevel);
+}
+
+_uint CGameInstance::Get_NumLight(_uint _iCurrentLevel)
+{
+	return m_pLight_Manager->Get_NumLight(_iCurrentLevel);
+}
 
 HRESULT CGameInstance::Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding)
 {
@@ -906,6 +920,11 @@ HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTar
 HRESULT CGameInstance::Clear_RenderTarget(const _wstring& strRenderTargetKey)
 {
 	return m_pRenderTarget_Manager->Clear_RenderTarget(strRenderTargetKey);
+}
+
+ID3D11ShaderResourceView* CGameInstance::Get_RenderTarget_SRV(const _wstring& strRenderTargetKey)
+{
+	return m_pRenderTarget_Manager->Get_RenderTarget_SRV(strRenderTargetKey);
 }
 
 #ifdef _DEBUG
@@ -1322,6 +1341,11 @@ _float* CGameInstance::Get_DepthPackExponentPtr()
 void CGameInstance::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent)
 {
 	m_pVolumetric->Setting_Volumetirc(fDensity , fLightIntensity , fAsymmetryParameter, fDepthPackExponent);
+}
+
+void CGameInstance::Update_Volumetric()
+{
+	m_pVolumetric->Update();
 }
 
 #pragma endregion
