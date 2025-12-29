@@ -436,15 +436,22 @@ HRESULT CRanrok::Render_Nonblend()
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->Begin_OutLine_Write(2);
+		}
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
+		}
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->End_OutLine_Write();
 		}
 	}
 
@@ -498,7 +505,79 @@ HRESULT CRanrok::Render_Blend()
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->Begin_OutLine_Write(2);
+		}
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->End_OutLine_Write();
+		}
+	}
+
+	return S_OK;
+}
+HRESULT CRanrok::Render_OutLine()
+{
+	m_bDrawOutLine = false;
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+
+	Compute_Depth();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar()));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &m_fOutLineThickness, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineScale", &m_fOutLineScale, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLinePower", &m_fOutLinePower, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+		return E_FAIL;
+	}
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::OUTLINE_READ)))) {
 			return E_FAIL;
 		}
 
@@ -509,7 +588,6 @@ HRESULT CRanrok::Render_Blend()
 			return E_FAIL;
 		}
 	}
-
 	return S_OK;
 }
 

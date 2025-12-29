@@ -173,7 +173,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="T_HUM_M_Body_ArmsOld0_Fig_SRXO" Extension=".dds"/>
 	</MI_HUM_M_Arms_ArmsOld_Fig>
-	<MI_Professor_EleazarFig_02	ShaderIndex = "20" OutLineWrite="21">
+	<MI_Professor_EleazarFig_02	ShaderIndex = "14" OutLineWrite="14">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Professor_EleazarFig_D" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="T_Professor_EleazaFig_SRO" Extension=".dds"/>

@@ -95,7 +95,7 @@ HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 	return m_Materials[iMaterialIndex]->Bind_SRV(pShader, m_eType);
 }
 
-HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader, _bool OutLine)
+HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader)
 {
 	if (iMeshIndex >= m_iNumMeshes) {
 		return E_FAIL;
@@ -107,12 +107,7 @@ HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader, _bool OutLine)
 		return E_FAIL;
 	}
 	HRESULT hr = { E_FAIL };
-	if (false == OutLine) {
-		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_UsingPass());
-	}
-	else {
-		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_OutLinePass());
-	}
+	hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_UsingPass());
 	return hr;
 }
 

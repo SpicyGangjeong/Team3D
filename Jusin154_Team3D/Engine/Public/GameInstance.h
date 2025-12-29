@@ -151,6 +151,8 @@ public:
 	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
 	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
 	_float  Get_ShadowBoxFar(_uint iShadowBoxIndex);
+	HRESULT Begin_OutLine_Write(_uint iDSSMask);
+	HRESULT End_OutLine_Write();
 #pragma endregion
 #pragma region LIGHT_MANAGER
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);

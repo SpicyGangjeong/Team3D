@@ -3,9 +3,13 @@
 #include "Shader.h"
 #include "GameInstance.h"
 
-CPipeLine::CPipeLine()
-	:m_pGameInstance(CGameInstance::GetInstance())
+CPipeLine::CPipeLine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: m_pDevice{ pDevice }
+	, m_pContext{ pContext }
+	, m_pGameInstance{ CGameInstance::GetInstance() }
 {
+	SAFE_ADDREF(m_pDevice);
+	SAFE_ADDREF(m_pContext);
 	SAFE_ADDREF(m_pGameInstance);
 }
 
@@ -150,6 +154,20 @@ HRESULT CPipeLine::Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::pat
 	return S_OK;
 }
 
+HRESULT CPipeLine::Begin_OutLine_Write(_uint iDSSRef)
+{
+	m_pContext->OMGetDepthStencilState(&m_pPrevDSS, &m_iPrevDSSRef);
+	m_pContext->OMSetDepthStencilState(m_pDSS_OutLineWrite, iDSSRef);
+	return S_OK;
+}
+
+HRESULT CPipeLine::End_OutLine_Write()
+{
+	m_pContext->OMSetDepthStencilState(m_pPrevDSS, m_iPrevDSSRef);
+	SAFE_RELEASE(m_pPrevDSS);
+	return S_OK;
+}
+
 HRESULT CPipeLine::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
 {
 	_vector vShadowQuat = XMQuaternionNormalize(XMLoadFloat4(&vShadowDirRPYQuat));
@@ -254,6 +272,30 @@ HRESULT CPipeLine::Initialize()
 	
 	for (_uint i = ENUM_CLASS(D3DTS::VIEW); i < ENUM_CLASS(D3DTS::END); ++i) {
 		XMStoreFloat4x4(&m_TransformStateMatrices[i], XMMatrixIdentity());
+	}
+
+	if (nullptr == m_pDSS_OutLineWrite) {
+		D3D11_DEPTH_STENCIL_DESC depthStencilDescription{};
+		depthStencilDescription.DepthEnable = TRUE;
+		depthStencilDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;     // true에 해당
+		depthStencilDescription.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;         // less_equal
+
+		depthStencilDescription.StencilEnable = TRUE;
+		depthStencilDescription.StencilReadMask = 0xFF;
+		depthStencilDescription.StencilWriteMask = 0xFF;
+
+		// FrontFace
+		depthStencilDescription.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDescription.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDescription.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;   // Replace
+		depthStencilDescription.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;      // Always
+
+		// BackFace
+		depthStencilDescription.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDescription.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDescription.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+		depthStencilDescription.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		m_pDevice->CreateDepthStencilState(&depthStencilDescription, &m_pDSS_OutLineWrite);
 	}
 
 	return S_OK;
@@ -440,9 +482,9 @@ ID3D11ShaderResourceView* CPipeLine::Find_GlobalShaderResourceView(const _tchar*
 	return (*iter).second;
 }
 
-CPipeLine* CPipeLine::Create()
+CPipeLine* CPipeLine::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPipeLine* pInstance = new CPipeLine();
+	CPipeLine* pInstance = new CPipeLine(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{
@@ -455,6 +497,10 @@ CPipeLine* CPipeLine::Create()
 void CPipeLine::Free()
 {
 	__super::Free();
+	SAFE_RELEASE(m_pDevice);
+	SAFE_RELEASE(m_pContext);
+	SAFE_RELEASE(m_pDSS_OutLineWrite);
+	SAFE_RELEASE(m_pGameInstance);
 	for (auto& pairSRV : m_mapGlobalSRV) {
 		SAFE_RELEASE(pairSRV.second);
 	}

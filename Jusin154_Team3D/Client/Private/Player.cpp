@@ -273,7 +273,7 @@ HRESULT CPlayer::Render()
 			{
 				return E_FAIL;
 			}
-			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, false))) {
+			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 				return E_FAIL;
 			}
 

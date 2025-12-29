@@ -21,7 +21,7 @@ cascade
 class CPipeLine final : public CBase
 {
 private:
-	CPipeLine();
+	CPipeLine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPipeLine() = default;
 public:
 	void Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix);
@@ -43,6 +43,9 @@ public:
 	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
 	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
+	HRESULT Begin_OutLine_Write(_uint iDSSRef);
+	HRESULT End_OutLine_Write();
+
 	HRESULT Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
 	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
 	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
@@ -51,6 +54,8 @@ public:
 	void Update(); // Objects의 Priority, Update사이에서 불려야만 함
 
 private:
+	ID3D11Device* m_pDevice = { nullptr };
+	ID3D11DeviceContext* m_pContext = { nullptr };
 	class CGameInstance* m_pGameInstance = { nullptr };
 	_float4x4	m_TransformStateMatrices[ENUM_CLASS(D3DTS::END)] = {};
 	_float4x4	m_ShadowTransformStateMatrices[3][ENUM_CLASS(D3DTS::END)] = {};
@@ -83,6 +88,10 @@ private:
 	_float4 m_vShadowInvDirectionalRPYQuat = { 0.f, 0.f, 0.f, 1.f };
 
 	unordered_map<_wstring, ID3D11ShaderResourceView*> m_mapGlobalSRV = {};
+	ID3D11DepthStencilState*	m_pDSS_OutLineWrite = { nullptr };
+	ID3D11DepthStencilState*	m_pPrevDSS = { nullptr };
+	_uint						m_iPrevDSSRef = { };
+
 private:
 	HRESULT Initialize();
 	void Make_Planes(const _float4* pPoints, _float4* pPlanes);
@@ -93,7 +102,7 @@ private:
 	ID3D11ShaderResourceView* Find_GlobalShaderResourceView(const _tchar* wszKeyGlobalSRV);
 
 public:
-	static CPipeLine* Create();
+	static CPipeLine* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 #ifdef _DEBUG
 	virtual void Describe_Entity();

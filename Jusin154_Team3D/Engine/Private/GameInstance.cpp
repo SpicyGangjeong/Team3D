@@ -82,7 +82,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pKey_Manager) {
 		return E_FAIL;
 	}
-	m_pPipeLine = CPipeLine::Create();
+	m_pPipeLine = CPipeLine::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pPipeLine) {
 		return E_FAIL;
 	}
@@ -792,6 +792,16 @@ const _float4x4* CGameInstance::Get_ShadowMatricesPtr(_uint iShadowBoxIndex)
 _float  CGameInstance::Get_ShadowBoxFar(_uint iShadowBoxIndex)
 {
 	return m_pPipeLine->Get_ShadowBoxFar(iShadowBoxIndex);
+}
+
+HRESULT CGameInstance::Begin_OutLine_Write(_uint iDSSRef)
+{
+	return m_pPipeLine->Begin_OutLine_Write(iDSSRef);
+}
+
+HRESULT CGameInstance::End_OutLine_Write()
+{
+	return m_pPipeLine->End_OutLine_Write();
 }
 
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
