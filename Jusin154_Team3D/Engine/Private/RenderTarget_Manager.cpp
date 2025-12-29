@@ -252,6 +252,16 @@ HRESULT CRenderTarget_Manager::Clear_RenderTarget(const _wstring& strRenderTarge
 	return S_OK;
 }
 
+ID3D11ShaderResourceView* CRenderTarget_Manager::Get_RenderTarget_SRV(const _wstring& strRenderTargetKey)
+{
+    CRenderTarget* pRenderTarget = Find_RenderTarget(strRenderTargetKey);
+
+    if(nullptr == pRenderTarget)
+        return nullptr;
+  
+    return pRenderTarget->Get_SRV();
+}
+
 
 HRESULT CRenderTarget_Manager::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, 
     const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, 

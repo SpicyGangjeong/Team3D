@@ -94,7 +94,7 @@ public:
 		}
 		return hr;
 	}
-	void		Set_LayerEnabled(_bool isEnable);
+
 	class CLayer* Get_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag);
 	void Clear_Objects_With_Layers(_uint iLevelIndex);
 
@@ -136,6 +136,7 @@ public:
 	void Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix);
 	const _float4x4* Get_Transform_Float4x4(D3DTS eState);
 	_matrix Get_Transform_Matrix(D3DTS eState);
+	_matrix Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType);
 	const _float4* Get_CamPosition();
 	const _vector Get_CamXMPosition();
 	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
@@ -158,6 +159,8 @@ public:
 	void			  Delete_Light(_uint _iCurrentLevel, class CLight* _pLight);
 	const LIGHT_DESC* Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex);
 	HRESULT			  Render_Lights(_uint _iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);
+	list<class CLight*>* Get_LightList(_uint _iCurrentLevel);
+	_uint				Get_NumLight(_uint _iCurrentLevel);
 #pragma endregion
 #pragma region COLLIDER_MANAGER
 	HRESULT Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding);
@@ -183,6 +186,7 @@ public:
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
 	HRESULT Clear_RenderTarget(const _wstring& strRenderTargetKey);
+	ID3D11ShaderResourceView* Get_RenderTarget_SRV(const _wstring& strRenderTargetKey);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -272,6 +276,7 @@ public:
 		ID3D11ShaderResourceView*	Get_VolumeSRV();
 		_float*						Get_DepthPackExponentPtr();
 		void						Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent);
+		void						Update_Volumetric();
 #pragma endregion
 
 

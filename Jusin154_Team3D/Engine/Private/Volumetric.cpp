@@ -27,18 +27,71 @@ HRESULT CVolumetric::Initialize()
 	if(FAILED(CreateResourceViews()))
 		return E_FAIL;
 
+	if(FAILED(Create_SamplerState()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CVolumetric::Update()
 {
-
+	
 }
 
 void CVolumetric::Cumpute_Volume()
 {
 	EVENTSCOPE_("Render_Cumpute_Volume");
 
+	XMStoreFloat4x4(&m_ShadowViewMatrix,
+		m_pGameInstance->Get_ShadowTransform_Matrix(D3DTS::VIEW, SHADOW::SHADOW_MIDDLE));
+	XMStoreFloat4x4(&m_ShadowViewProjMatrix,
+		m_pGameInstance->Get_ShadowTransform_Matrix(D3DTS::VIEW, SHADOW::SHADOW_MIDDLE) *
+		m_pGameInstance->Get_ShadowTransform_Matrix(D3DTS::PROJ, SHADOW::SHADOW_MIDDLE)
+	);
+
+	/* Light Buffer Update */
+	D3D11_MAPPED_SUBRESOURCE LightSubResource = {};
+	if (FAILED(m_pContext->Map(m_pLightInfoBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &LightSubResource)))
+	{
+		MSG_BOX("Failed to Map : CVolumetric");
+	}
+	else
+	{
+		_uint iCurentLevel = m_pGameInstance->Get_CurrentLevelID();
+
+		m_iNumLights = min(m_iMaxNumLights, m_pGameInstance->Get_NumLight(iCurentLevel));
+
+		if (0 != m_iNumLights)
+		{
+			
+			CS_LIGHT_DESC* pDesc = static_cast<CS_LIGHT_DESC*>(LightSubResource.pData);
+			list<class CLight*>* Lights = m_pGameInstance->Get_LightList(iCurentLevel);
+
+			_uint iIndex = 0;
+			for (auto& Light : *Lights)
+			{
+				const LIGHT_DESC* pLihgtDesc = Light->Get_LightDesc();
+				memcpy(&pDesc[iIndex].vDiffuse, &pLihgtDesc->vDiffuse, sizeof(_float4));
+				if(LIGHT::DIRECTIONAL !=  pLihgtDesc->eType)
+				{
+					memcpy(&pDesc[iIndex].vPosition, pLihgtDesc->pPosition, sizeof(_float3));
+					ZeroMemory(&pDesc[iIndex].vDirection, sizeof(_float3));
+				}
+				else
+					memcpy(&pDesc[iIndex].vDirection , pLihgtDesc->pDirection, sizeof(_float4));
+
+				pDesc[iIndex].fRange = pLihgtDesc->fRange;
+				++iIndex;
+				if (m_iMaxNumLights <= iIndex)
+					break;
+			}
+		}
+
+		m_pContext->Unmap(m_pLightInfoBuffer, 0);
+	}
+
+
+	/* Constannt Buffer Update */
 	D3D11_MAPPED_SUBRESOURCE ConstantSubResource = {};
 
 	if (FAILED(m_pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantSubResource)))
@@ -74,10 +127,13 @@ void CVolumetric::Cumpute_Volume()
 		XMStoreFloat4x4(&pDesc->InvProjMatrix, m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ_INV));
 		XMStoreFloat4x4(&pDesc->InvViewMatrix, m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW_INV));
 
+		XMStoreFloat4x4(&pDesc->ShadowViewMatrix, XMLoadFloat4x4(&m_ShadowViewMatrix));
+		XMStoreFloat4x4(&pDesc->ShadowViewProjMatrix, XMLoadFloat4x4(&m_ShadowViewProjMatrix));
+
 		pDesc->fAsymmetryParameter = m_fAsymmetryParameter;
-		pDesc->padding0 = 0.f;
-		pDesc->padding1 = 0.f;
-		pDesc->padding2 = 0.f;
+		pDesc->iNumLight = m_iNumLights;
+		pDesc->fHeightOffset = m_fHieghtOffset;
+		pDesc->fBaseHeight = m_fBaseHeight;
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -88,6 +144,15 @@ void CVolumetric::Cumpute_Volume()
 
 	//SRV, UAV 바인딩
 	m_pContext->CSSetUnorderedAccessViews(0, 1, &m_pVolumeUAV, nullptr);
+	m_pContext->CSSetShaderResources(0, 1, &m_pLightInfoSRV);
+
+	// Sampler 바인딩
+	m_pContext->CSSetSamplers(0, 1, &m_pSamplerState);
+
+	// 쉐도우 맵 바인딩
+	ID3D11ShaderResourceView* ShadowSRV[1] = { m_pGameInstance->Get_RenderTarget_SRV(TEXT("Target_Shadow_Middle")) };
+	m_pContext->CSSetShaderResources(1, 1, ShadowSRV);
+	m_pContext->CSSetShaderResources(2, 1, &m_pNoiseTexture);
 
 	//컴퓨트 쉐이더 실행
 	XMUINT3 vGroupCount = { (160 + 7) / 8, (90 + 7) / 8, (128 + 3) / 4 };
@@ -169,6 +234,9 @@ void CVolumetric::Free()
 	
 	SAFE_RELEASE(m_pConstantBuffer);
 	SAFE_RELEASE(m_pLightInfoBuffer);
+	SAFE_RELEASE(m_pLightInfoSRV);
+	SAFE_RELEASE(m_pSamplerState);
+	SAFE_RELEASE(m_pNoiseTexture);
 
 	SAFE_RELEASE(m_pAccVolumeUAV);
 	SAFE_RELEASE(m_pAccVolumeSRV);
@@ -197,6 +265,8 @@ void CVolumetric::Describe_Entity()
 		GUI::SliderFloat("LightIntensity", &m_fLightIntensity, 0.01f, 0.5f, "%.4f");
 		GUI::SliderFloat("AsymmetryParameter", &m_fAsymmetryParameter, -0.9f, 0.9f, "%.4f");
 		GUI::SliderFloat("DepthPackExponent", &m_fDepthPackExponent, 0.01f, 5.f);
+		GUI::SliderFloat("HieghtOffset", &m_fHieghtOffset, 0.f, 1.f, "%.5f");
+		GUI::InputFloat("BaseHeight", &m_fBaseHeight, 0.1f, 1.f);
 	}
 	GUI::End();
 
@@ -268,8 +338,6 @@ HRESULT CVolumetric::CreateBuffers()
 	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	cbDesc.ByteWidth = sizeof(CS_VOLUME_CONSTANT_DESC);
 
-	D3D11_SUBRESOURCE_DATA	CBInitialDesc = {};
-
 	if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pConstantBuffer)))
 		return E_FAIL;
 
@@ -304,12 +372,25 @@ HRESULT CVolumetric::CreateBuffers()
 		XMStoreFloat4x4(&pDesc->InvViewMatrix, m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW_INV));
 
 		pDesc->fAsymmetryParameter = 0.0f;
-		pDesc->padding0 = 0.f;
-		pDesc->padding1 = 0.f;
-		pDesc->padding2 = 0.f;
+		pDesc->iNumLight = 0;
+		pDesc->fHeightOffset = 0.f;
+		pDesc->fBaseHeight = 0.f;
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
+
+
+	// 라이트 정보 버퍼 생성
+	D3D11_BUFFER_DESC cbLIghtDesc = {};
+	cbLIghtDesc.Usage = D3D11_USAGE_DYNAMIC;
+	cbLIghtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	cbLIghtDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbLIghtDesc.ByteWidth = sizeof(CS_LIGHT_DESC) * m_iMaxNumLights;
+	cbLIghtDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	cbLIghtDesc.StructureByteStride = sizeof(CS_LIGHT_DESC);
+
+	if (FAILED(m_pDevice->CreateBuffer(&cbLIghtDesc, nullptr, &m_pLightInfoBuffer)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -357,6 +438,48 @@ HRESULT CVolumetric::CreateResourceViews()
 
 	if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pAccumulateTexture3D, &UAV_Decs, &m_pAccVolumeUAV)))
 		return E_FAIL;
+
+	// Light Info SRV
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN; 
+	srvDesc.ViewDimension = D3D_SRV_DIMENSION_BUFFER;
+	srvDesc.Buffer.FirstElement = 0;
+	srvDesc.Buffer.NumElements = m_iMaxNumLights;
+
+	if (FAILED(m_pDevice->CreateShaderResourceView(m_pLightInfoBuffer, &srvDesc, &m_pLightInfoSRV)))
+		return E_FAIL;
+
+
+	// Noise Texture SRV
+
+	if(FAILED(CreateDDSTextureFromFile(m_pDevice,
+		TEXT("C:/MeshTable/Game/Environment/MasterMaterials/BaseTextures/Noise/T_PerlinNoise.dds"),
+		nullptr,
+		&m_pNoiseTexture
+	)))
+	{
+		assert(false);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CVolumetric::Create_SamplerState()
+{
+	D3D11_SAMPLER_DESC desc = {};
+	desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	
+	desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	desc.MinLOD = 0.0f;
+	desc.MaxLOD = D3D11_FLOAT32_MAX;
+	if (FAILED(m_pDevice->CreateSamplerState(&desc, &m_pSamplerState)))
+	{
+		assert(false);
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

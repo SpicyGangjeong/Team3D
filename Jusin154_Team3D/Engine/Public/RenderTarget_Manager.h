@@ -23,7 +23,7 @@ public:
 	HRESULT Copy_RenderTargetAToB(const _wstring& strATag, const _wstring& strBTag);
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
 	HRESULT Clear_RenderTarget(const _wstring& strRenderTargetKey);
-
+	ID3D11ShaderResourceView* Get_RenderTarget_SRV(const _wstring& strRenderTargetKey);
 	// 두 랜더타겟을 하나로 모음
 	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
 	// 랜더 타겟의 크기를 dest로 다시 맞춤
