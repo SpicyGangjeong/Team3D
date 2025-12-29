@@ -90,6 +90,8 @@ HRESULT CLight_Main::Capture_PreShadow()
 	_float4x4 ProjMatrix = {}; XMStoreFloat4x4(&ProjMatrix, Get_OffCenterProjMatrix(xmViewMatrix, vNeededPos));
 
 	m_pGameInstance->Render_PreShadow(ViewMatrix, ProjMatrix);
+
+	m_pGameInstance->Update_Volumetric();
 	return S_OK;
 }
 

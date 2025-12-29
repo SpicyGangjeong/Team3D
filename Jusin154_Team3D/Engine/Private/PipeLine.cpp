@@ -28,6 +28,23 @@ _matrix CPipeLine::Get_Transform_Matrix(D3DTS eState)
 	return XMLoadFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(eState)]);
 }
 
+_matrix CPipeLine::Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType)
+{
+	_uint iPass = UINT_MAX;
+	if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_NEAR)) {
+		iPass = 0;
+	}
+	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_MIDDLE)) {
+		iPass = 1;
+	}
+	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_FAR)) {
+		iPass = 2;
+	}
+	assert(iPass != UINT_MAX);
+
+	return XMLoadFloat4x4(&m_ShadowTransformStateMatrices[iPass][ENUM_CLASS(eState)]);
+}
+
 const _float4* CPipeLine::Get_CamPosition()
 {
 	return &m_vCamPosition;

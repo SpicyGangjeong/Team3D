@@ -84,6 +84,14 @@ const LIGHT_DESC* CLight_Manager::Get_Light_Info(_uint _iCurrentLevel, _uint _iL
     return (*iter)->Get_LightDesc();
 }
 
+_uint CLight_Manager::Get_NumLight(_uint _iCurrentLevel)
+{
+    if(true == m_Lights[_iCurrentLevel].empty())
+		return 0;
+
+    return static_cast<_uint>(m_Lights[_iCurrentLevel].size());
+}
+
 
 HRESULT CLight_Manager::Render_Lights(_uint iCurrentLevel, CShader* pShader, CVIBuffer* pVIBuffer)
 {
