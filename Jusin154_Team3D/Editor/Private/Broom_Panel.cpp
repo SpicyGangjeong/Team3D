@@ -4,6 +4,10 @@
 #include "Broom_Flag.h"
 #include "Broom_Circle.h"
 #include "Broom_Scoreboard.h"
+#include "Broom_Fiish.h"
+#include "Broom_Record.h"
+#include "Broom_Exit.h"
+
 
 CBroom_Panel::CBroom_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -126,6 +130,24 @@ HRESULT CBroom_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Broom_Scoreboard"), m_pBroom_Scoreboard);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Finish>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Finish**>(&m_pBroom_Fiish))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_Fiish"), m_pBroom_Fiish);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Record>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Record**>(&m_pBroom_Record))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_Record"), m_pBroom_Record);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Exit>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Exit**>(&m_pBroom_Exit))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_Exit"), m_pBroom_Exit);
+		
 	return S_OK;
 }
 

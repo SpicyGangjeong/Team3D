@@ -37,6 +37,7 @@ private:
 public:
 	void Set_MaxRing(_int iMaxRing);
 	void Set_CurrentRing();
+	void Set_Timer(_float fTimer);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };

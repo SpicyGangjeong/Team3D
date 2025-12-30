@@ -456,10 +456,11 @@ PS_OUT PS_Spell_Anim(PS_IN In)
     float2 texsize = g_fImageSipos1.zw / g_fCurrent_Size;
     float2 texlocal = (In.vTexcoord - texpos) / texsize;
     bool inside = all(texlocal >= 0.0f && texlocal <= 1.0f);
-    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
-
     if (inside)
+    {
+        float4 tex2 = g_Texture1.Sample(DefaultSampler, texlocal);
         Color = lerp(Color, tex2, tex2.a);
+    }
     
     Color.a *= Alpha;
     Out.vColor = Color;

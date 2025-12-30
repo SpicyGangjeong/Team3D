@@ -4,6 +4,9 @@
 #include "Broom_Flag.h"
 #include "Broom_Circle.h"
 #include "Broom_Scoreboard.h"
+#include "Broom_Finish.h"
+#include "Broom_Record.h"
+#include "Broom_Exit.h"
 #include "InfoInstance.h"
 
 CBroom_Panel::CBroom_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -50,10 +53,11 @@ HRESULT CBroom_Panel::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("Ready_Race"), [this](void* p) {this->Ready_Race(); });
 	m_pInfoInstance->Add_Event(TEXT("Race_Count"), [this](void* p) {this->Race_Count(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Race_Start"), [this](void* p) {this->Race_Start(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("RaceEnd"), [this](void* p) {this->Race_End(); });
 
 	Visible(false);
 	ElementAllVisible(false);
-	return S_OK;	
+	return S_OK;
 }
 
 void CBroom_Panel::Priority_Update(_float fTimeDelta)
@@ -70,6 +74,28 @@ void CBroom_Panel::Update(_float fTimeDelta)
 	if (!__super::Chack_Visible())
 	{
 		return;
+	}
+	Set_BroomTimer();
+
+	if (m_bDinish == true)
+		m_fTime += fTimeDelta;
+
+	if (m_fTime >= 1.f && m_bResults == false)
+	{
+		m_fTime = 0.f;
+		m_bDinish = false;
+		Race_Results();
+	}
+
+	if (m_bResults == true)
+	{
+		if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+		{
+			m_fTime = 0.f;
+			m_bDinish = false;
+			m_bResults = false;
+			ElementAllVisible(false);
+		}
 	}
 
 	__super::Update(fTimeDelta);
@@ -133,6 +159,24 @@ HRESULT CBroom_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Broom_Scoreboard"), m_pBroom_Scoreboard);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Finish>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Finish**>(&m_pBroom_Fiish))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_Fiish"), m_pBroom_Fiish);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Record>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Record**>(&m_pBroom_Record))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_Record"), m_pBroom_Record);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Exit>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Exit**>(&m_pBroom_Exit))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_Exit"), m_pBroom_Exit);
+
 	return S_OK;
 }
 
@@ -159,6 +203,30 @@ void CBroom_Panel::Race_Start(_int iRing)
 void CBroom_Panel::Current_Ring()
 {
 	static_cast<CBroom_Scoreboard*>(m_pBroom_Scoreboard)->Set_CurrentRing();
+}
+
+void CBroom_Panel::Race_End()
+{
+	static_cast<CBroom_Scoreboard*>(m_pBroom_Scoreboard)->Visible(false);
+	static_cast<CBroom_Finish*>(m_pBroom_Fiish)->Visible(true);
+	static_cast<CBroom_Finish*>(m_pBroom_Fiish)->Finish(m_fRaceTime);
+	static_cast<CBroom_Record*>(m_pBroom_Record)->Finish(m_fRaceTime);
+	m_bDinish = true;
+}
+
+void CBroom_Panel::Race_Results()
+{
+	m_bResults = true;
+	static_cast<CBroom_Circle*>(m_pBroom_Circle)->Rece_Results();
+	static_cast<CBroom_Flag*>(m_pBroom_Flag)->Rece_Results();
+	static_cast<CBroom_Record*>(m_pBroom_Record)->Rece_Results();
+	static_cast<CBroom_Exit*>(m_pBroom_Exit)->Rece_Results();
+}
+
+void CBroom_Panel::Set_BroomTimer()
+{
+	m_fRaceTime = m_pInfoInstance->Get_Broom_Timer();
+	static_cast<CBroom_Scoreboard*>(m_pBroom_Scoreboard)->Set_Timer(m_fRaceTime);
 }
 
 CBroom_Panel* CBroom_Panel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -130,6 +130,9 @@
 #include "Broom_Flag.h"
 #include "Broom_Circle.h"
 #include "Broom_Scoreboard.h"
+#include "Broom_Fiish.h"
+#include "Broom_Record.h"
+#include "Broom_Exit.h"
 
 #include "NPCInteraction.h"
 
@@ -1191,7 +1194,19 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-	
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Finish>(g_iStaticLevel, CBroom_Finish::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Record>(g_iStaticLevel, CBroom_Record::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Exit>(g_iStaticLevel, CBroom_Exit::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+		
 	if (FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;

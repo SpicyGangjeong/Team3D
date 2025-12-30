@@ -138,6 +138,9 @@
 #include "Broom_Circle.h"
 #include "Broom_Scoreboard.h"
 #include "Broom_TargetGate.h"
+#include "Broom_Finish.h"
+#include "Broom_Record.h"
+#include "Broom_Exit.h"
 
 #include "Interaction_Key.h"
 
@@ -2543,6 +2546,21 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_SpellLearn_Broom_TargetGate*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_TargetGate>(g_iStaticLevel, CBroom_TargetGate::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Fiish*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Finish>(g_iStaticLevel, CBroom_Finish::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Record*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Record>(g_iStaticLevel, CBroom_Record::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Exit*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Exit>(g_iStaticLevel, CBroom_Exit::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

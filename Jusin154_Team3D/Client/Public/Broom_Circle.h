@@ -36,6 +36,8 @@ public:
 	void Race_Start(_int iCount);
 	void Set_Count(_int Count);
 
+	void Rece_Results();
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };

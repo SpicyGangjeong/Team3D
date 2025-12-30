@@ -93,6 +93,10 @@ public:
 
 	HRESULT ActiveAt_Interactive(_fvector vPosition);
 #pragma endregion
+#pragma region BroomManager
+	void   Set_Broom_Timer(_float fTimer);
+	_float Get_Broom_Timer();
+#pragma endregion
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -112,6 +116,8 @@ private:
 
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+
+	_float						m_fBroom_Timer{};
 
 	_float						m_fDamage{};
 	UI_STATE					m_eUI_State = { UI_STATE::END };

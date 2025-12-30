@@ -353,6 +353,16 @@ HRESULT CInfoInstance::ActiveAt_Interactive(_fvector vPosition)
 	return m_pInteractiveInfo->ActiveAt_Interactive(vPosition);
 }
 
+void CInfoInstance::Set_Broom_Timer(_float fTimer)
+{
+	m_fBroom_Timer = fTimer;
+}
+
+_float CInfoInstance::Get_Broom_Timer()
+{
+	return m_fBroom_Timer;
+}
+
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {

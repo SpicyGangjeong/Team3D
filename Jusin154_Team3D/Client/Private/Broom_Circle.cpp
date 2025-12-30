@@ -324,6 +324,11 @@ void CBroom_Circle::Set_Count(_int Count)
 	m_iCount = Count;
 }
 
+void CBroom_Circle::Rece_Results()
+{
+	Visible(true);
+}
+
 CBroom_Circle* CBroom_Circle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBroom_Circle* pInstance = new CBroom_Circle(pDevice, pContext);
