@@ -1,9 +1,8 @@
 ﻿#include "pch.h"
+#include "Bone.h"
 #include "Mesh.h"
 #include "Model.h"
-#include "Bone.h"
 #include "Shader.h"
-#include "ComputeShader.h"
 CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer{ pDevice, pContext }
 {
@@ -55,6 +54,16 @@ HRESULT CMesh::Render_Indexed(_uint IndexCount, _uint StartIndexLocation, _uint 
 	m_pContext->DrawIndexed(IndexCount, StartIndexLocation, BaseVertexLocation);
 	return S_OK;
 }
+
+HRESULT CMesh::Copy_BoneMatrices(vector<_float4x4>& pDestination)
+{
+	if (pDestination.size() != m_iNumBones) {
+		return E_FAIL;
+	}
+	memcpy_s(pDestination.data(), sizeof(_float4x4) * m_iNumBones, m_pBoneMatrices, sizeof(_float4x4) * m_iNumBones);
+	return S_OK;
+}
+
 #ifdef EDITOR_PROJECT
 HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix)
 {
@@ -591,6 +600,11 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const ai
 	m_pBoneMatrices = new _float4x4[0 == m_iNumBones ? 1 : m_iNumBones];
 	ZeroMemory(m_pBoneMatrices, sizeof(_float4x4) * m_iNumBones);
 
+	_float fMinimumEffectiveWeight = 0.0001f;
+
+	vector<vector<SaveBoneWeight>> influencesPerVertex;
+	influencesPerVertex.resize(m_iNumVertices);
+
 	_float4x4 OffSetMatrix;
 	XMStoreFloat4x4(&OffSetMatrix, XMMatrixIdentity());
 
@@ -612,22 +626,59 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const ai
 
 		for (_uint j = 0; j < iNumWeight; ++j) {
 			aiVertexWeight AIWeight = pAIBone->mWeights[j];
-			if (0.f == pVertices[AIWeight.mVertexId].vBlendWeight.x) {
-				pVertices[AIWeight.mVertexId].vBlendIndex.x = i;
-				pVertices[AIWeight.mVertexId].vBlendWeight.x = AIWeight.mWeight;
+			const aiVertexWeight& aiWeight = pAIBone->mWeights[j];
+
+			if (aiWeight.mVertexId >= m_iNumVertices) {
+				continue;
 			}
-			else if (0.f == pVertices[AIWeight.mVertexId].vBlendWeight.y) {
-				pVertices[AIWeight.mVertexId].vBlendIndex.y = i;
-				pVertices[AIWeight.mVertexId].vBlendWeight.y = AIWeight.mWeight;
+
+			if (aiWeight.mWeight < fMinimumEffectiveWeight) {
+				continue;
 			}
-			else if (0.f == pVertices[AIWeight.mVertexId].vBlendWeight.z) {
-				pVertices[AIWeight.mVertexId].vBlendIndex.z = i;
-				pVertices[AIWeight.mVertexId].vBlendWeight.z = AIWeight.mWeight;
-			}
-			else {
-				pVertices[AIWeight.mVertexId].vBlendIndex.w = i;
-				pVertices[AIWeight.mVertexId].vBlendWeight.w = AIWeight.mWeight;
-			}
+
+			influencesPerVertex[aiWeight.mVertexId].push_back(
+				SaveBoneWeight{ i, aiWeight.mWeight }
+			);
+		}
+	}
+	for (_uint iVertexIndex = 0; iVertexIndex < m_iNumVertices; ++iVertexIndex)
+	{
+		vector<SaveBoneWeight>& influences = influencesPerVertex[iVertexIndex];
+
+		if (influences.empty()) {
+			continue;
+		}
+
+		sort( influences.begin(), influences.end(), []
+		(const SaveBoneWeight& left, const SaveBoneWeight& right) {
+				return left.Weight > right.Weight;
+		});
+
+		// 상위 4개만 선택
+		_uint selectedCount = min<_uint>(4, static_cast<_uint>(influences.size()));
+
+		pVertices[iVertexIndex].vBlendIndex = XMUINT4(0, 0, 0, 0);
+		pVertices[iVertexIndex].vBlendWeight = _float4(0.f, 0.f, 0.f, 0.f);
+
+		float totalWeight = 0.f;
+		for (_uint iSelectedIndex = 0; iSelectedIndex < selectedCount; ++iSelectedIndex)
+		{
+			SaveBoneWeight& influence = influences[iSelectedIndex];
+
+			if (iSelectedIndex == 0) { pVertices[iVertexIndex].vBlendIndex.x = influence.VertexId; pVertices[iVertexIndex].vBlendWeight.x = influence.Weight; }
+			if (iSelectedIndex == 1) { pVertices[iVertexIndex].vBlendIndex.y = influence.VertexId; pVertices[iVertexIndex].vBlendWeight.y = influence.Weight; }
+			if (iSelectedIndex == 2) { pVertices[iVertexIndex].vBlendIndex.z = influence.VertexId; pVertices[iVertexIndex].vBlendWeight.z = influence.Weight; }
+			if (iSelectedIndex == 3) { pVertices[iVertexIndex].vBlendIndex.w = influence.VertexId; pVertices[iVertexIndex].vBlendWeight.w = influence.Weight; }
+
+			totalWeight += influence.Weight;
+		}
+
+		if (totalWeight > 0.f)
+		{
+			pVertices[iVertexIndex].vBlendWeight.x /= totalWeight;
+			pVertices[iVertexIndex].vBlendWeight.y /= totalWeight;
+			pVertices[iVertexIndex].vBlendWeight.z /= totalWeight;
+			pVertices[iVertexIndex].vBlendWeight.w /= totalWeight;
 		}
 	}
 	if (0 == m_iNumBones) {

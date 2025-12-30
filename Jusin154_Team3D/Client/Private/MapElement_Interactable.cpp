@@ -285,8 +285,9 @@ HRESULT CMapElement_Interactable::Render_OutLine()
 #endif // _DEBUG
 
 	Compute_Depth();
-	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
-	m_fOutLineThickness = CMyTools::Lerp_f1D(0.07f, 0.15f, fRatio);
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(1.5f, 2.f, fRatio);
 	if (m_fOutLineThickness > 0.15f) {
 		m_fOutLineThickness = 0.15f;
 	}

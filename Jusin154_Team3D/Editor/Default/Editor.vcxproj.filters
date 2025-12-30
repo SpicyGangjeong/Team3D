@@ -2137,6 +2137,9 @@
     <ClCompile Include="..\Private\Ranrok_Breath.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Loader_ObjectViewer.cpp">
+      <Filter>01.Level\00.Loading\Loader</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Point.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point</Filter>
     </ClCompile>

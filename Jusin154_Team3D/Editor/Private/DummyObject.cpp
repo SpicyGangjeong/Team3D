@@ -87,12 +87,12 @@ if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
 	if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 		return E_FAIL;
 	}
-
-	m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
-	m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 	if (FAILED(Bind_ShaderParameters(i))) {
 		return E_FAIL;
 	}
+
+	m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+	m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
 }
 else {

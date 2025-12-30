@@ -46,7 +46,7 @@ struct VS_OUT
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
 
     matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
     float3 vLocalPos = In.vPosition;
@@ -87,7 +87,7 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float2 center = float2(0.5f, 0.5f);
@@ -109,7 +109,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 PS_OUT PS_Alpha_Blend(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 color = g_Texture.Sample(ClampSampler, In.vTexcoord);
@@ -126,7 +126,7 @@ PS_OUT PS_Alpha_Blend(PS_IN In)
 
 PS_OUT PS_UVAlpha_Blend(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 color = g_Texture.Sample(ClampSampler, In.vUV);
@@ -143,7 +143,7 @@ PS_OUT PS_UVAlpha_Blend(PS_IN In)
 
 PS_OUT PS_Megic_Meter(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float3 Blue = float3(41.f, 165.f, 255.f) / 255.f;
     
@@ -169,7 +169,7 @@ PS_OUT PS_Megic_Meter(PS_IN In)
 
 PS_OUT PS_Spell_List(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float3 Blue = float3(41.f, 165.f, 255.f) / 255.f;
     
@@ -195,7 +195,7 @@ PS_OUT PS_Spell_List(PS_IN In)
 
 PS_OUT PS_Eessential_Spell_Slot(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
@@ -215,7 +215,7 @@ PS_OUT PS_Eessential_Spell_Slot(PS_IN In)
 
 PS_OUT PS_Eessential_Spell(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
@@ -232,7 +232,7 @@ PS_OUT PS_Eessential_Spell(PS_IN In)
 
 PS_OUT PS_Color_Image(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
@@ -275,7 +275,7 @@ PS_OUT PS_Color_Image(PS_IN In)
 
 PS_OUT PS_Spell_Hover(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float3 HoverOff = g_Texture2.Sample(DefaultSampler, In.vTexcoord).rgb;
@@ -310,7 +310,7 @@ PS_OUT PS_Spell_Hover(PS_IN In)
 
 PS_OUT PS_Spell_Effect(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     if (In.bHover == 0)
         discard;
@@ -355,7 +355,7 @@ PS_OUT PS_Spell_Effect(PS_IN In)
 
 PS_OUT PS_Spell_Slot(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float2 center = float2(0.5f, 0.5f);
     float2 uv = In.vTexcoord - center;
@@ -415,7 +415,7 @@ PS_OUT PS_Spell_Slot(PS_IN In)
 
 PS_OUT PS_Spell_Lock(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
@@ -439,7 +439,7 @@ PS_OUT PS_Spell_Lock(PS_IN In)
 
 PS_OUT PS_Quest_Slot(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 color = float4(1.f, 1.f, 1.f, 1.f);

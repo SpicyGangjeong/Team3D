@@ -585,7 +585,7 @@ void CRenderer::Render_Fog()
 		return;
 	}
 
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::FOG));
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::PRINT_BACKBUFFER));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();

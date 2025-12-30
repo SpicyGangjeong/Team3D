@@ -14,7 +14,6 @@
 #include "CamPosition_Socket.h"
 #include "CamPosition_Target.h"
 #include "CamPosition_AI.h"
-#include "Camera_Model.h"
 #include "SkyBox.h"
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
@@ -365,7 +364,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
 	_bool isLoad_Background = { true };
-	_bool isLoad_Hogwart = { false };
+	_bool isLoad_Hogwart = { true };
 	_bool isLoad_UI_SEQUANTIAL = { true };
 	_bool isLoad_NPC = { true };
 	_bool isLoad_Monster = { true };
@@ -385,8 +384,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
-	isLoad_Monster = true;
+	isLoad_NPC = false;
+	isLoad_Monster = false;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -1266,6 +1265,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma region UI_ANI
 	if (true == isLoad_UI_SEQUANTIAL) {
+
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Ancient_Magic"),
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic\\Ancient_Magic%d.png"), 152))))
@@ -2947,10 +2947,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_CamPosition_Arm */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Arm>(g_iStaticLevel, CCamPosition_Arm::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* For.Prototype_GameObject_Camera_Model */
-	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Model>(g_iStaticLevel, CCamera_Model::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Wand */

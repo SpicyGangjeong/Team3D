@@ -14,8 +14,7 @@ ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath,
 	}
 	filesystem::path pathFile = pFilePath;
 	const _wstring wstrKeyOriginal = pathFile.filename().wstring();
-	
-	{ // 브레이스 해제 금지
+	{ // 브레이스 해제 금지0
 		shared_lock<shared_mutex> sharedLock(m_smtxTexture);
 
 		auto iter = m_Resources[iLevel].find(wstrKeyOriginal);
@@ -28,22 +27,24 @@ ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath,
 			SAFE_ADDREF(iter->second);
 			return iter->second;
 		}
-		else {
 #ifdef _DEBUG
+		else {
 			lock_guard<mutex> statisticsLock(m_mtxStatistics);
 			m_mapCacheMiss[wstrKeyOriginal]++;
-#endif // _DEBUG
 		}
+#endif // _DEBUG
 		// sharedLock 소멸
-	} // 브레이스 해제 금지
-
+	} // 브레이스 해제 금지0
+#ifdef USE_LOWTEXTURE
+	Replacer_SrcFilePath(pathFile);
+#endif // USE_LOWTEXTURE
 	ID3D11ShaderResourceView* pSRV = Load_SRV(pathFile);
 
 	if (pSRV == nullptr){
 		return nullptr;
 	}
 
-	{ // 브레이스 해제 금지
+	{ // 브레이스 해제 금지1
 		unique_lock<shared_mutex> uniqueLock(m_smtxTexture);
 
 		auto iter = m_Resources[iLevel].find(wstrKeyOriginal);
@@ -57,7 +58,7 @@ ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath,
 
 		m_Resources[iLevel].emplace(wstrKeyOriginal, pSRV);
 		// sharedLock 소멸
-	} // 브레이스 해제 금지
+	} // 브레이스 해제 금지1
 
 #ifdef _DEBUG
 	++m_iCount;
@@ -120,6 +121,35 @@ ID3D11ShaderResourceView* CResource_Manager::Load_SRV(const filesystem::path& pa
 		}
 	}
 	return pSRV;
+}
+
+HRESULT CResource_Manager::Replacer_SrcFilePath(filesystem::path& pathFile)
+{
+	if (true == pathFile.is_absolute()) {
+
+		const std::filesystem::path inputRootPath = pathFile.root_path();
+		const std::filesystem::path inputRelativePath = pathFile.relative_path();
+		auto relativePathIterator = inputRelativePath.begin();
+		if (relativePathIterator == inputRelativePath.end()){
+			return E_FAIL;
+		}
+		else if ("MeshTable" != (*relativePathIterator).string()) {
+			return E_FAIL;
+		}
+
+		++relativePathIterator;
+
+		std::filesystem::path outputPath = inputRootPath / "MeshTableTexture";
+		for (; relativePathIterator != inputRelativePath.end(); ++relativePathIterator)
+		{
+			outputPath /= *relativePathIterator;
+		}
+		pathFile = outputPath;
+	}
+	else {
+		return E_FAIL;
+	}
+	return S_OK;
 }
 
 CResource_Manager* CResource_Manager::Create(ID3D11Device* pDevice, _uint iResourceCount, _uint iNumLevel)

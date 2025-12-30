@@ -452,6 +452,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\private\Interaction_Panel.cpp" />
     <ClCompile Include="..\private\LightSpawner.cpp" />
+    <ClCompile Include="..\Private\Loader_ObjectViewer.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
@@ -727,6 +728,10 @@ call Update_Shaders.bat
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </TreatWarningAsError>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPos.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>

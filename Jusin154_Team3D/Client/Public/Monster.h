@@ -34,6 +34,7 @@ public:
 	virtual CStat* Get_Stat();
 	const _float4x4*  Get_HeadMatrix();
 	void CameraShake(_float ClampValue, _float Min, _float Max, _float Time);
+
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };
@@ -46,8 +47,8 @@ protected:
 	_bool			m_bLookAt = { true };
 	_float4			m_vOutLineColor = CMyTools::ColorRGBA_HEXtoFLOAT4(0xfefefe00);
 	_float			m_fOutLineThickness = { 5.f };
-	_float			m_fOutLineScale = { 1.f };
-	_float			m_fOutLinePower = { 1.f };
+	_float			m_fOutLineScale = { 2.f };
+	_float			m_fOutLinePower = { 2.f };
 	_float			m_fDisolveTime = { 0.f };
 	_bool			m_bDisolve = { false };
 	_float			m_fDegree = {};

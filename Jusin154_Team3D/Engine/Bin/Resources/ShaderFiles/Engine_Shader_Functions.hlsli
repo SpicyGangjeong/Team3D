@@ -44,6 +44,7 @@ float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vSha
 float GetRimLight(float3 vCamPosition, float3 vPosition, float3 vNormal, float fRimPower, float fRimStrength)
 {
     float fRimLight = (1 - dot(normalize(vCamPosition - vPosition), vNormal));
+    fRimLight = max(fRimLight, 1e-6f);
     fRimLight = pow(fRimLight, fRimPower);
     fRimLight = fRimLight * fRimStrength;
     return fRimLight;
@@ -70,23 +71,54 @@ float2 Get_MovedUV(float2 vOriginalUV, float fDeltaU, float fDeltaV, uint iIndex
     return vOriginalUV * vDelta + vOffset;
 }
 
-float2 UV_Cutting(float2 vUV, float2 vUVCutting, int iCurrentFrame)
+float2 UV_Cutting(float2 originalUV, float2 uvCuttingCountFloat, int currentFrameIndex)
 {
-    float2 UV = vUV; // 이미지의 UV값
-    
-    int iTotalFrame = vUVCutting.x * vUVCutting.y; // 이미지의 최대 프레임 (몇 곱하기 몇인지)
-    
-    int iFrameX = iCurrentFrame % (int) vUVCutting.x; // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
-    int iFrameY = iCurrentFrame / (int) vUVCutting.x; // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
-    
-    float fFreamWidth = 1.0 / vUVCutting.x; // 1.0 나누기 이미지 갯수를 해서 한칸에 얼마나 갈지 정해준다.
-    float fFreamHeight = 1.0 / vUVCutting.y; // 1.0 나누기 이미지 갯수를 해서 한줄에 얼마나 갈지 정해준다.
-    
-    UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth; // 먼저 uv를 0~1이 아닌 0~fFrameWidth로 만든 다음에 한칸씩 옆으로 밀어준다.
-    UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight; // 먼저 uv를 0~1이 아닌 0~fFrameHeight로 만든 다음에 한줄씩 밑으로 내려준다.
-    
-    return UV;
+    // (1) 칸 개수는 정수로 취급 (0 방지)
+    int uvCuttingCountX = max((int) uvCuttingCountFloat.x, 1);
+    int uvCuttingCountY = max((int) uvCuttingCountFloat.y, 1);
+
+    int totalFrameCount = uvCuttingCountX * uvCuttingCountY;
+
+    // (2) currentFrameIndex를 [0, totalFrameCount)로 래핑 (정수 % 제거)
+    int wrappedFrameIndex = currentFrameIndex;
+    if (totalFrameCount > 0)
+    {
+        float inverseTotalFrameCount = 1.0f / (float) totalFrameCount;
+
+        // loopCount = floor(currentFrameIndex / totalFrameCount)
+        int loopCount = (int) floor((float) currentFrameIndex * inverseTotalFrameCount);
+
+        wrappedFrameIndex = currentFrameIndex - loopCount * totalFrameCount;
+
+        // 음수 프레임까지 방어(선택)
+        if (wrappedFrameIndex < 0)
+        {
+            wrappedFrameIndex += totalFrameCount;
+        }
+    }
+    else
+    {
+        wrappedFrameIndex = 0;
+    }
+
+    // (3) 가로 기준으로 행/열 구하기 (정수 /, % 제거)
+    float inverseCuttingCountX = 1.0f / (float) uvCuttingCountX;
+    float inverseCuttingCountY = 1.0f / (float) uvCuttingCountY;
+
+    // frameIndexY = floor(wrappedFrameIndex / uvCuttingCountX)
+    int frameIndexY = (int) floor((float) wrappedFrameIndex * inverseCuttingCountX);
+
+    // frameIndexX = wrappedFrameIndex - frameIndexY * uvCuttingCountX   (% 대체)
+    int frameIndexX = wrappedFrameIndex - frameIndexY * uvCuttingCountX;
+
+    // (4) UV 변환
+    float2 resultUV = originalUV;
+    resultUV.x = resultUV.x * inverseCuttingCountX + (float) frameIndexX * inverseCuttingCountX;
+    resultUV.y = resultUV.y * inverseCuttingCountY + (float) frameIndexY * inverseCuttingCountY;
+
+    return resultUV;
 }
+
 
 // (Kd F(Lambert)) + (Ks F(cook-torrance))
 
@@ -153,7 +185,7 @@ PBR_LIGHT_OUT PBR_Lighting(
     float3 vAlbedo, float fMetallic, float fRoughness,
     float3 vLightColor, float fLightIntensity, float fAttenuation, float3 vFO
 ) {
-    PBR_LIGHT_OUT Out;
+    PBR_LIGHT_OUT Out = (PBR_LIGHT_OUT)0;
     Out.vShade = 0;
     Out.vSpecular = 0;
     float3 vLighting = vLightColor * fLightIntensity;
@@ -163,8 +195,8 @@ PBR_LIGHT_OUT PBR_Lighting(
     float NdotV = saturate(dot(vNormal, vToView));
     if (NdotL <= 0 || NdotV <= 0)
     {
-        Out.vShade = 0;
-        Out.vSpecular = 0;
+        Out.vShade = float3(0.f, 0.f, 0.f);
+        Out.vSpecular = float3(0.f, 0.f, 0.f);
         return Out;
     }
     
@@ -475,12 +507,12 @@ float4 ApplyDissolve(Texture2D DisolveTexture, float fDisolveRatio, float fDisol
 
 bool IsValidUV(float2 uv)
 {
-    if (uv.x < 0 || uv.x >= 1
-    || uv.y < 0 || uv.y >= 1)
+    bool bReturn = true;
+    if (uv.x < 0 || uv.x >= 1 || uv.y < 0 || uv.y >= 1)
     {
-        return false;
+        bReturn = false;
     }
-    return true;
+    return bReturn;
 }
 
 float4 BilinearFetches(float2 vGlobalTexelSize, Texture2D SrcTexture2D, float2 vCenterTexCoord, sampler samplerLinear)
@@ -535,9 +567,10 @@ float4 BlendDiffuse(float4 vDiffuseA, Texture2D DiffuseBlendTexture, float2 vTex
 }
 float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIntensity = 1.f)
 {
+    float2 vReturnVelocity = float2(0.5f, 0.5f);
     if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5)
     {
-        return float2(0.5f, 0.5f);
+        return vReturnVelocity;
     }
 
     float2 currentNDC = vCurrentProjPos.xy / vCurrentProjPos.w;
@@ -552,6 +585,10 @@ float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIn
     velocityUV = clamp(velocityUV, -1.0f, 1.0f);
 
     return velocityUV * 0.5f + 0.5f; // 0 속도 -> 0.5
+}
+float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos)
+{
+    return CalcVelocityUV(vCurrentProjPos, vPreviousProjPos, 1.0f);
 }
 
 float3 DownSampleFast(Texture2D SrcTexture2D, float2 vCenterTexcoord, float2 vSrcTexelSize, float2 vResolution)

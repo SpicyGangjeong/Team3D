@@ -19,14 +19,16 @@ void CPlayerRobe::Update(_float fTimeDelta)
 {
 	_matrix SocketMatrixFixed = (XMMatrixRotationZ(XM_PI) * XMLoadFloat4x4(m_pSocketMatrix)) *
 		XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr());
+
 	m_pRobeMainAnchor->Move_Kinematic(SocketMatrixFixed, false);
 	m_pRobeMainAnchor->Get_Actor()->wakeUp();
+
 	Update_LegsPosition();
+	Update_RobeSocketPosition();
 }
 
 void CPlayerRobe::Late_Update(_float fTimeDelta)
 {
-	Update_RobeSocketPosition();
 #ifdef _DEBUG
 	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
 		PSX::PxConstraintFlags pxConstraintFlags = m_pDynamicJoints[i]->getConstraintFlags();
@@ -41,7 +43,9 @@ void CPlayerRobe::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayerRobe::Render()
 {
+#ifdef _DEBUG
 	Render_BonePhysX();
+#endif // _DEBUG
 	return S_OK;
 }
 
@@ -54,19 +58,29 @@ HRESULT CPlayerRobe::Update_RobeSocketPosition()
 		for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
 			pxTransform = m_pRobeJointAnchor[i]->Get_GlobalPosition();
 			WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTransform.p), 1.f));
-			XMStoreFloat4x4(&m_ReconstructedJointAnchorMatirces[i], WorldMatrix * OwnerInvWorldMatrix);
+			_fmatrix LocalMatrix = WorldMatrix* OwnerInvWorldMatrix;
+			XMStoreFloat4x4(&m_ReconstructedJointAnchorMatirces[i], LocalMatrix);
+			m_pModelCom->Set_BoneCombinedTransformation(PLAYER_JOINT_BONE_NAMES[i], LocalMatrix);
 		}
 	}
-	{
-		D3D11_MAPPED_SUBRESOURCE		SubResource{};
-		if (FAILED(m_pContext->Map(m_pBoneCombinedMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource))) {
-			return E_FAIL;
-		}
-		memcpy_s(SubResource.pData, sizeof(_float4x4) * ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END), m_ReconstructedJointAnchorMatirces, sizeof(_float4x4) * ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END));
-		m_pContext->Unmap(m_pBoneCombinedMatrixBuffer, 0);
-	}
-	m_pModelCom->ComputeInsertionBoneBuffer(m_BoneInsertionDesc, m_pBoneCombinedMatrixSRV);
+	//{
+	//	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+	//	if (FAILED(m_pContext->Map(m_pBoneCombinedMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource))) {
+	//		return E_FAIL;
+	//	}
+	//	memcpy_s(SubResource.pData, sizeof(_float4x4) * ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END), m_ReconstructedJointAnchorMatirces, sizeof(_float4x4) * ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END));
+	//	m_pContext->Unmap(m_pBoneCombinedMatrixBuffer, 0);
+	//}
+	//m_pModelCom->ComputeInsertionBoneBuffer(m_BoneInsertionDesc, m_pBoneCombinedMatrixSRV);
 	return S_OK;
+}
+
+HRESULT CPlayerRobe::Bind_PrevBoneMatrices(CShader* pShader, const _char* pConstant)
+{
+	HRESULT hr = E_FAIL;
+	hr = pShader->Bind_Matrices(pConstant, m_PrevRobeBoneMatrices.data(), m_iBoneNum);
+	m_pModelCom->Capture_BoneMatrices(ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END), m_PrevRobeBoneMatrices);
+	return hr;
 }
 
 HRESULT CPlayerRobe::Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld)
@@ -210,7 +224,6 @@ HRESULT CPlayerRobe::Render_Legs()
 
 	return S_OK;
 }
-
 HRESULT CPlayerRobe::Render_BonePhysX()
 {
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f);
@@ -490,6 +503,12 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 	PlayerRobe_DESC* pDesc = static_cast<PlayerRobe_DESC*> (pArg);
 	m_pSocketMatrix = pDesc->pSocketMatrix;
 	m_pModelCom = pDesc->pModel;
+
+	m_iBoneNum = m_pModelCom->Get_MeshInfluencedBoneNum(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
+	m_PrevRobeBoneMatrices.resize(m_iBoneNum);
+	if (FAILED(m_pModelCom->Capture_BoneMatrices(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH), m_PrevRobeBoneMatrices))) {
+		return E_FAIL;
+	}
 
 	m_pLeftFootLocalMatrix	= m_pModelCom->Get_BoneMatrixPtr("LeftFoot");
 	m_pLeftLegLocalMatrix	= m_pModelCom->Get_BoneMatrixPtr("LeftLeg");

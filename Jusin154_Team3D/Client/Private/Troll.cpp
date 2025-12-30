@@ -252,14 +252,9 @@ HRESULT CTroll::Render_OutLine()
 	}
 
 	Compute_Depth();
-	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
-	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
-	if (m_fOutLineThickness > 6.f) {
-		m_fOutLineThickness = 6.f;
-	}
-	else if (m_fOutLineThickness < 2.f) {
-		m_fOutLineThickness = 2.f;
-	}
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(2.5f, 3.f, fRatio);
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
 		return E_FAIL;
 	}

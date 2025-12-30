@@ -138,7 +138,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 		size_t iPos = strEffectPath.rfind('.');   // 뒤에서부터 '/' 검색
 
-		if (iPos != std::string::npos)
+		if (iPos != string::npos)
 		{
 			strExt += strEffectPath.substr(iPos + 1);
 			strEffectName = strEffectPath.substr(0, iPos);
@@ -146,7 +146,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 		size_t pos = strEffectName.rfind('\\');   // 뒤에서부터 '/' 검색
 
-		if (pos != std::string::npos)
+		if (pos != string::npos)
 			strEffectName = strEffectName.substr(pos + 1);
 
 		if (!strcmp(strExt.c_str(), "trail"))
