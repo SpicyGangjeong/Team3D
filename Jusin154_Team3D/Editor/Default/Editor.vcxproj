@@ -178,6 +178,10 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Blink.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Boss_HpBer.h" />
+    <ClInclude Include="..\public\Broom_Circle.h" />
+    <ClInclude Include="..\public\Broom_Panel.h" />
+    <ClInclude Include="..\public\Broom_Flag.h" />
+    <ClInclude Include="..\public\Broom_Scoreboard.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\public\DummyDecal.h" />
     <ClInclude Include="..\public\Dialogue.h" />
@@ -204,6 +208,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Quest_Status.h" />
     <ClInclude Include="..\Public\Ranrok.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
+    <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
     <ClInclude Include="..\public\SpellLearn_Booster.h" />
@@ -427,6 +432,10 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Blink.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Boss_HpBer.cpp" />
+    <ClCompile Include="..\private\Broom_Circle.cpp" />
+    <ClCompile Include="..\private\Broom_Panel.cpp" />
+    <ClCompile Include="..\private\Broom_Flag.cpp" />
+    <ClCompile Include="..\private\Broom_Scoreboard.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\private\DummyDecal.cpp" />
@@ -454,6 +463,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Quest_Status.cpp" />
     <ClCompile Include="..\Private\Ranrok.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\Ranrok_States.cpp" />
     <ClCompile Include="..\Private\Skill_Data.cpp" />

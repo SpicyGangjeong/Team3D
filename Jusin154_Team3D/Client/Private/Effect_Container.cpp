@@ -569,9 +569,27 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_isCollisionEnter = false;
 
 	m_bHit = false;
+	m_isStop = false;
 
 	return S_OK;
 }
+
+
+void CEffect_Container::Setting_Pos(_fvector vPos)
+{
+	for (auto& iter : m_PartObjects)
+	{
+		CTransform* pTransform = iter.second->Get_Component<CTransform>();
+
+		if (pTransform == nullptr)
+			continue;
+
+		pTransform->Set_State(STATE::POSITION, vPos);
+	}
+
+	m_isStop = true;
+}
+
 
 HRESULT CEffect_Container::Ready_Components(void* pArg)
 {

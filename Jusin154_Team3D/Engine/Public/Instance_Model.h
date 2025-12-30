@@ -76,13 +76,16 @@ public:
 		_float2      vAcceleration = {};
 
 		_bool       isNoResetTime = {};
-		_bool       isPadding1 = {};
-		_bool       isPadding2 = {};
+		_bool       isLocal_Located_Not_TakeDelay = {}; 
+		_bool       isCompute_LocalInverse = {};
 		_bool       isPadding3 = {};
 
 		_float		fTimeMult = { 1.f };
-		_float2     fPadding4 = {};
-		_float4     vPadding5 = {};
+		_float2     vRoundRangeLength = {};
+		_float2     vAzimuthAngle = {};
+		_float2     vPolarAngle = {};
+
+
 		_float4     vPadding6 = {};
 
 		_bool		isRandomAniIndex = {};
@@ -90,6 +93,9 @@ public:
 		_bool		isMoveRight = {};
 		_bool		isExcludePos = {};
 		_bool		isStop_Move_For_Depth_Compare = {};
+
+		_float3     vWolrdOffsetMax = {};
+		_float3     vWolrdOffsetMin = {};
 
 	}INSTANCE_DESC;
 
@@ -185,8 +191,8 @@ public:
 		_int     isNoPos = {};
 
 		_int	 isNoResetTime = {};
-		_int	 isPadding0 = {};
-		_int	 isPadding1 = {};
+		_int	 isLocal_Located_Not_TakeDelay = {};
+		_int	 isCompute_LocalInverse = {};
 		_int	 isPadding2 = {};
 
 		_float   fTimeDelta = {};
@@ -245,7 +251,11 @@ public:
 		_float    fRotateAttenuation = {};
 		_float    fRotateAttDelay = {};
 
+		_float3   vWolrdOffset = {};
+		_float	  fLoopCount = {};
+
 		_float4x4  PreWorldMatrix = {};
+		//_float4x4  LocalMatrixInv = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 

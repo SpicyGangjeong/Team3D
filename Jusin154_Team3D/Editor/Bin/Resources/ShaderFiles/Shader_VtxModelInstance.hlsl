@@ -20,38 +20,42 @@ struct ParticleValue
 
     
     float2 vAniIndex;
-    float fGravity;
+    float  fGravity;
     
-    float3 vSinAmount;
+    float3 vSinAmount;   
     float3 vDeltaAngle;
     float3 vDeltaAxisAngle;
     
-    float fDrag;
+    float  fDrag;
     float3 vPivot;
     
-    float fSizeDrag;
+    float  fSizeDrag;
     float3 vDeltaSize;
     float2 vDelay;
     
         
-    bool isCompareStop;
+    bool  isCompareStop;
     float fCollisionTime;
-    float fDropAttenuation;
+    float fDropAttenuation; 
     
     float3 vVelocity;
-    float fAcceleration;
+    float  fAcceleration;
     
-    bool isStop;
+    bool   isStop;
     
-    float fRotateAttenuation;
-    float fRotateAttDelay;
+    float  fRotateAttenuation;
+    float  fRotateAttDelay;
+    
+    float3 vWolrdOffset;
+    float  fLoopCount;  /* 현재 몇번째 루프중인지 */
     
     row_major matrix PreWorldMatrix;
+    //row_major matrix LocalMatrixInv;
 };
 
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix g_ProjMatrixInv, g_ViewMatrixInv;
+matrix g_WorldMatrixInv, g_ProjMatrixInv, g_ViewMatrixInv;
 
 matrix g_PrevWorldMatrix, g_PrevViewMatrix, g_PrevProjMatrix;
 
@@ -70,12 +74,16 @@ Texture2D g_DepthStencilTexture : register(t7);
 Texture2D g_DistortionTexture : register(t8);
 Texture2D g_DepthTexture : register(t9);
 Texture2D g_SurfaceParamsTexture : register(t10);
+//Texture2D g_NormalMapTexture : register(t11);
 
 
 float4 g_vCamPosition;
 float  g_fFar;
-float g_fUsingSurfaceParams;
-float g_fMBIntensity = 1.f;
+float  g_fUsingSurfaceParams;
+float  g_fMBIntensity = 1.f;
+
+float g_fWinSizeX;
+float g_fWinSizeY;
 
 /* 디퓨즈 */
 float4 g_vColor;
@@ -261,6 +269,14 @@ struct PS_BLUR_MESH_IN
     uint iGPUIndex : TEXCOORD4;
     float4 vPrevProjPos : TEXCOORD5;
 };
+
+struct PS_OUT_DELCAL
+{
+    float4 vAlbedo : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vSurface : SV_Target2;
+};
+
 
 VS_BULR_MESH_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
@@ -901,6 +917,57 @@ float4 SoftEffect(PS_IN In, float4 vMtrlDiffuse)
     
 }
 
+float2 ComputeDecal(float4 vPosition , float4x4 LocalMatrixInv)
+{
+    float2 vDecalUV;
+    float2 vDepthUV;
+    
+    //vDepthUV.x = vPosition.x / g_fWinSizeX;
+    //vDepthUV.y = vPosition.y / g_fWinSizeY;
+    
+    //float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vDepthUV);
+    //float3 vNormalDesc = g_NormalMapTexture.Sample(DefaultSampler, vDepthUV).xyz;
+    //vNormalDesc = normalize(vNormalDesc * 2.f - 1.f);
+    
+    //float fViewZ = vDepthDesc.y * g_fFar;
+    
+    //float4 vPos;
+    
+    //vPos.x = vDepthUV.x * 2.f - 1.f;
+    //vPos.y = vDepthUV.y * -2.f + 1.f;
+    //vPos.z = vDepthDesc.x;
+    //vPos.w = 1.f;
+    
+    //float4 vViewPos = mul(vPos, g_ProjMatrixInv);
+    //vViewPos /= vViewPos.w;
+    
+    //float4 vWorldPos = mul(vViewPos, g_ViewMatrixInv);
+
+    //vector vLocalPos = mul(vWorldPos, LocalMatrixInv);
+
+    //float3 ObjectAbsPos = abs(vLocalPos.xyz);
+    
+    //clip(0.5f - ObjectAbsPos);
+    
+    //float3 vAbsNormal = abs(vNormalDesc);
+    
+    //int iAxisIndex = 0;
+    
+    //if (vAbsNormal.y > vAbsNormal.x && vAbsNormal.y > vAbsNormal.z)
+    //    iAxisIndex = 1;
+    //else if (vAbsNormal.z > vAbsNormal.x && vAbsNormal.z > vAbsNormal.y)
+    //    iAxisIndex = 2;
+    
+    //if (0 == iAxisIndex)
+    //    vDecalUV = vLocalPos.zy + 0.5f * 2.f;
+    //else if (1 == iAxisIndex)
+    //    vDecalUV = vLocalPos.xz + 0.5f * 2.f;
+    //else
+    //    vDecalUV = vLocalPos.xy + 0.5f * 2.f;
+    
+    return vDecalUV;
+}
+
 PS_NOMAL_OUT PS_MAIN(PS_BLUR_MESH_IN In)
 {
     PS_IN  PS_In;
@@ -1319,6 +1386,97 @@ PS_BLUR_MESH_OUT PS_BLUR_MESH(PS_BLUR_MESH_IN In)
     return Out;
 }
 
+
+PS_OUT_DELCAL PS_DECAL(PS_BLUR_MESH_IN In)
+{
+    PS_IN PS_In;
+    PS_OUT_DELCAL Out;
+    
+    PS_In.vPosition = In.vPosition;
+    PS_In.vNormal = In.vNormal;
+    PS_In.vTangent = In.vTangent;
+    PS_In.vBinormal = In.vBinormal;
+    PS_In.vTexcoord = In.vTexcoord;
+    PS_In.vLifeTime = In.vLifeTime;
+    PS_In.vWorldPos = In.vWorldPos;
+    PS_In.vProjPos = In.vProjPos;
+    PS_In.iGPUIndex = In.iGPUIndex;
+
+    vector vMtrlDiffuse;
+    
+    //PS_In.vTexcoord = ComputeDecal(In.vPosition, g_ParticleValue[In.iGPUIndex].LocalMatrixInv);
+    
+    float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, PS_In.vTexcoord);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, PS_In.vTexcoord);
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal.rgb);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
+    
+    vMtrlDiffuse = DrawEffect(PS_In);
+
+    vMtrlDiffuse.rgb += EmissiveDraw(PS_In, vMtrlDiffuse).rgb;
+    
+    vMtrlDiffuse += RimLight(PS_In);
+    
+    vSurface.b = 0.5f;
+    
+    
+    Out.vAlbedo = vMtrlDiffuse;
+    Out.vSurface = vSurface;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    
+    return Out;
+}
+
+PS_OUT PS_DECAL_WB(PS_BLUR_MESH_IN In)
+{
+    PS_IN PS_In;
+    PS_OUT Out;
+    
+    PS_In.vPosition = In.vPosition;
+    PS_In.vNormal = In.vNormal;
+    PS_In.vTangent = In.vTangent;
+    PS_In.vBinormal = In.vBinormal;
+    PS_In.vTexcoord = In.vTexcoord;
+    PS_In.vLifeTime = In.vLifeTime;
+    PS_In.vWorldPos = In.vWorldPos;
+    PS_In.vProjPos = In.vProjPos;
+    PS_In.iGPUIndex = In.iGPUIndex;
+
+    vector vMtrlDiffuse;
+    
+    //PS_In.vTexcoord = ComputeDecal(In.vPosition, g_ParticleValue[In.iGPUIndex].LocalMatrixInv);
+    vMtrlDiffuse = DrawEffect(PS_In);
+    
+    vMtrlDiffuse = SoftEffect(PS_In, vMtrlDiffuse);
+    
+    //int2 iTexel = int2(In.vPosition.xy);
+    
+    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    
+    //float fbias = 0.000005f;
+    
+    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+    //    discard;
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(PS_In, vMtrlDiffuse).rgb;
+    
+    vMtrlDiffuse += RimLight(PS_In);
+
+
+    Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 //0
@@ -1570,11 +1728,43 @@ technique11 DefaultTechnique
     pass Default_NonPos
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_NO_POS();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+//24
+    pass NonWB_NonPos
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_NO_POS();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
+    }
+
+//25
+    pass Decal
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_DECAL();
+    }
+
+//26
+    pass Decal_WB
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_DECAL_WB();
     }
 }
 
