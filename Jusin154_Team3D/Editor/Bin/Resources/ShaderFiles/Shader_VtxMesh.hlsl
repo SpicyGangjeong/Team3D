@@ -198,7 +198,7 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
 }
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
     
     matrix matWV, matWVP;
     matWV = mul(g_WorldMatrix, g_ViewMatrix);

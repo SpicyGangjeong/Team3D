@@ -84,7 +84,7 @@ struct VS_OUT
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
     
 
 
@@ -104,7 +104,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 VS_OUT VS_TRAIL(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
     
     
     matrix matWVP;
@@ -297,7 +297,7 @@ float4 EmissiveDraw(PS_IN In)
 
 PS_TRAILOUT PS_Trail(PS_IN In)
 {
-    PS_TRAILOUT Out;
+    PS_TRAILOUT Out = (PS_TRAILOUT)0;
     
     int2 iTexel = int2(In.vPosition.xy);
     
@@ -367,7 +367,7 @@ struct PS_BLOOM_OUT
 
 PS_BLUR_OUT PS_TRAIL_BLOOM(PS_IN In)
 {
-    PS_BLUR_OUT Out;
+    PS_BLUR_OUT Out = (PS_BLUR_OUT)0;
     
     vector vMtrlDiffuse;
  

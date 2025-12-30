@@ -185,7 +185,7 @@ PBR_LIGHT_OUT PBR_Lighting(
     float3 vAlbedo, float fMetallic, float fRoughness,
     float3 vLightColor, float fLightIntensity, float fAttenuation, float3 vFO
 ) {
-    PBR_LIGHT_OUT Out;
+    PBR_LIGHT_OUT Out = (PBR_LIGHT_OUT)0;
     Out.vShade = 0;
     Out.vSpecular = 0;
     float3 vLighting = vLightColor * fLightIntensity;
@@ -195,8 +195,8 @@ PBR_LIGHT_OUT PBR_Lighting(
     float NdotV = saturate(dot(vNormal, vToView));
     if (NdotL <= 0 || NdotV <= 0)
     {
-        Out.vShade = 0;
-        Out.vSpecular = 0;
+        Out.vShade = float3(0.f, 0.f, 0.f);
+        Out.vSpecular = float3(0.f, 0.f, 0.f);
         return Out;
     }
     
@@ -507,12 +507,12 @@ float4 ApplyDissolve(Texture2D DisolveTexture, float fDisolveRatio, float fDisol
 
 bool IsValidUV(float2 uv)
 {
-    if (uv.x < 0 || uv.x >= 1
-    || uv.y < 0 || uv.y >= 1)
+    bool bReturn = true;
+    if (uv.x < 0 || uv.x >= 1 || uv.y < 0 || uv.y >= 1)
     {
-        return false;
+        bReturn = false;
     }
-    return true;
+    return bReturn;
 }
 
 float4 BilinearFetches(float2 vGlobalTexelSize, Texture2D SrcTexture2D, float2 vCenterTexCoord, sampler samplerLinear)
@@ -567,9 +567,10 @@ float4 BlendDiffuse(float4 vDiffuseA, Texture2D DiffuseBlendTexture, float2 vTex
 }
 float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIntensity = 1.f)
 {
+    float2 vReturnVelocity = float2(0.5f, 0.5f);
     if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5)
     {
-        return float2(0.5f, 0.5f);
+        return vReturnVelocity;
     }
 
     float2 currentNDC = vCurrentProjPos.xy / vCurrentProjPos.w;
@@ -584,6 +585,10 @@ float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIn
     velocityUV = clamp(velocityUV, -1.0f, 1.0f);
 
     return velocityUV * 0.5f + 0.5f; // 0 속도 -> 0.5
+}
+float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos)
+{
+    return CalcVelocityUV(vCurrentProjPos, vPreviousProjPos, 1.0f);
 }
 
 float3 DownSampleFast(Texture2D SrcTexture2D, float2 vCenterTexcoord, float2 vSrcTexelSize, float2 vResolution)

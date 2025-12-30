@@ -46,7 +46,7 @@ struct VS_OUT
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
 
     matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
     float3 vLocalPos = In.vPosition;

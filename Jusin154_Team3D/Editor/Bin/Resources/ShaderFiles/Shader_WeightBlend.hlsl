@@ -20,7 +20,7 @@ struct VS_OUT
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
   
     matrix matWV, matWVP;
     
@@ -51,7 +51,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     
     vector vMixedDiffuse = g_MixedDiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    float fRevealage = g_RevealageTexture.Sample(PointSampler, In.vTexcoord);
+    float fRevealage = g_RevealageTexture.Sample(PointSampler, In.vTexcoord).r;
 
     
     Out.vBackBuffer = vector(vMixedDiffuse.rgb / fRevealage , fRevealage);

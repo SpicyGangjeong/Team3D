@@ -114,7 +114,7 @@ struct VS_OUT
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
 
     float4 w = In.vBlendWeight;
     float sumW = max(dot(w, 1.0f), 1e-6f);

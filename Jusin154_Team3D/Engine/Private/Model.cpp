@@ -1,12 +1,12 @@
 ﻿#include "pch.h"
-#include "Model.h"
-#include "Bone.h"
-#include "Mesh.h"
-#include "Material.h"
 #include "Animation.h"
-#include "GameObject.h"
-#include "Transform.h"
+#include "Bone.h"
 #include "ComputeShader.h"
+#include "GameObject.h"
+#include "Material.h"
+#include "Mesh.h"
+#include "Model.h"
+#include "Transform.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -117,6 +117,22 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 		return E_FAIL;
 	}
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(m_Bones, pShader, pConstantName);
+}
+
+HRESULT CModel::Capture_BoneMatrices(_uint iMeshIndex, vector<_float4x4>& pDestination)
+{
+	if (iMeshIndex >= m_iNumMeshes) {
+		return E_FAIL;
+	}
+	return m_Meshes[iMeshIndex]->Copy_BoneMatrices(pDestination);
+}
+
+_int CModel::Get_MeshInfluencedBoneNum(_uint iMeshIndex)
+{
+	if (iMeshIndex >= m_iNumMeshes) {
+		return E_FAIL;
+	}
+	return m_Meshes[iMeshIndex]->Get_NumBone();
 }
 
 _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
@@ -698,6 +714,16 @@ HRESULT CModel::Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix 
 	m_Bones[iBoneIndex]->Set_CombinedTransformationMatrix(newTransformation);
 	return S_OK;
 }
+
+//HRESULT CModel::Set_BoneLocalTransformationMatrix(const _char* pBoneName, _fmatrix newTransformation)
+//{
+//	_int iBoneIndex = Find_BoneIndex(pBoneName);
+//	if (iBoneIndex < 0) {
+//		return E_FAIL;
+//	}
+//	m_Bones[iBoneIndex]->Set_TransformationMatrix(newTransformation);
+//	return S_OK;
+//}
 
 
 void CModel::Set_CurrentTrackPosition(_float TrackPosition)

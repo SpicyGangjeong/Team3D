@@ -32,7 +32,7 @@ struct VS_OUT
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
    
     vector vPosition = mul(vector(In.vPosition, 1.f), In.TransformMatrix);
     

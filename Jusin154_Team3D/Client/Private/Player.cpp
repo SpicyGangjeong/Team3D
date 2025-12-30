@@ -1,37 +1,22 @@
 ﻿#include "pch.h"
 #include "Player.h"
 
-#include "GameInstance.h"
-#include "InfoInstance.h"
-#include "CamPosition_Socket.h"
-#include "Camera_Gaze.h"
-#include "CamPosition_Arm.h"
-#include "Wand.h"
-#include "Item_Potion.h"
-#include "Character_Controller.h"
-#include "CamPosition_Shoulder.h"
+#include "Broom.h"
+#include "BroomRaceManager.h"
 #include "CallBack_Playable_Behavior.h"
 #include "CallBack_Playable_HitReport.h"
-#include "Monster.h"
-#include "Broom.h"
-#include "MapElement_Interactable.h"
-#include "BroomRaceManager.h"
-#include "RaceRing.h"
-#include "PlayerRobe.h"
-
-#pragma region STATE
-#include "State_Idle.h"
-#include "State_Dodge.h"
-#include "State_Jump.h"
-#include "State_Land.h"
-#include "State_Move.h"
-#include "State_Combat.h"
-#include "State_Hit.h"
-#include "State_Broom_Ride.h"
-#pragma endregion
-
-#include "Layer.h"
+#include "CamPosition_Shoulder.h"
+#include "Character_Controller.h"
 #include "EffectPool.h"
+#include "GameInstance.h"
+#include "InfoInstance.h"
+#include "Item_Potion.h"
+#include "Layer.h"
+#include "MapElement_Interactable.h"
+#include "Monster.h"
+#include "PlayerRobe.h"
+#include "RaceRing.h"
+#include "Wand.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -231,19 +216,19 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::LOOK, look);
 	////////////////////////////////////////////////////////////////////////////
 	
-//#ifdef 기무리
-//	if (nullptr == m_pRobePart) {
-//		{
-//			CPlayerRobe::PlayerRobe_DESC Desc{};
-//			Desc.pModel = m_pModelCom;
-//			Desc.pParentTransform = m_pTransformCom;
-//			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
-//			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
-//				assert(false);
-//			}
-//		}
-//	}
-//#endif // 기무리
+#ifdef 기무리
+	if (nullptr == m_pRobePart) {
+		{
+			CPlayerRobe::PlayerRobe_DESC Desc{};
+			Desc.pModel = m_pModelCom;
+			Desc.pParentTransform = m_pTransformCom;
+			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
+			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
+				assert(false);
+			}
+		}
+	}
+#endif // 기무리
 }
 
 
@@ -255,6 +240,8 @@ HRESULT CPlayer::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
+	_float fIntensity = 0.f;
+	m_pShaderCom->Bind_RawValue("g_fMBIntensity", &fIntensity, sizeof(_float));
 	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
 	if (RENDER::NONBLEND == eType) {
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -264,13 +251,23 @@ HRESULT CPlayer::Render()
 			if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 				return E_FAIL;
 			}
-
+#ifdef _DEBUG
+#ifdef 기무리
+			if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+				return E_FAIL;
+			}
+#endif // 기무리
+#endif // _DEBUG
+			
 			if (FAILED(m_pShaderCom->Bind_Matrices(
 				"g_OffsetMatrix",
 				m_pModelCom->Get_OffsetMatrix(i).data(),
 				(_int)m_pModelCom->Get_OffsetMatrix(i).size()
 			)))
 			{
+				return E_FAIL;
+			}
+			if (FAILED(Bind_ShaderParameters(i))) {
 				return E_FAIL;
 			}
 			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
@@ -280,9 +277,6 @@ HRESULT CPlayer::Render()
 
 			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 			m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
-			if (FAILED(Bind_ShaderParameters(i))) {
-				return E_FAIL;
-			}
 
 			if (FAILED(m_pModelCom->Render(i))) {
 				return E_FAIL;
@@ -591,6 +585,21 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		fMixerFactor = 0.658333f;
 		iColorMixerMethod = 1;
 		break;
+#ifdef _DEBUG
+#ifdef 기무리
+	case PLAYER_MESH_ORDER::ROBE_CLOTH:
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH), m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+		if (nullptr != m_pRobePart) {
+			if (FAILED(m_pRobePart->Bind_PrevBoneMatrices(m_pShaderCom, "g_PrevBoneMatrices"))) {
+				return E_FAIL;
+			}
+		}
+		break;
+#endif
+#endif // _DEBUG
+
 	default:
 		break;
 	}
@@ -777,6 +786,9 @@ void CPlayer::Describe_Entity()
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("PLAYER_DESC")) {
+		if (true == GUI::Button("ShaderRefresh")) {
+			m_pShaderCom->Shader_Refresh();
+		}
 		m_pCharacter_Controller->Describe_Entity();
 		_float4 vMomentum = {};
 		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());

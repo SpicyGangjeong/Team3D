@@ -437,6 +437,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\private\Interaction_Panel.cpp" />
     <ClCompile Include="..\private\LightSpawner.cpp" />
+    <ClCompile Include="..\Private\Loader_ObjectViewer.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
