@@ -148,7 +148,7 @@ public:
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentIndex);
 	// 바이너리
 	_bool SaveAssimpModel(const _char* filename);
-	_int SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& outNodes, _int parentIndex);
+	_int SaveNodeRecursive(const aiNode* pAINode, vector<SaveNode>& outNodes, _int parentIndex);
 	//
 #endif // EDITOR_PROJECT
 
@@ -304,7 +304,7 @@ private:
 	// 바이너리
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials(const _char* pModelFilePath, _uint iLevel);
-	HRESULT Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex);
+	HRESULT Ready_Bones(const vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex);
 	HRESULT Ready_Animations(const vector<CBone*>& Bones);
 	//
 

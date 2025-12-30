@@ -372,8 +372,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
-	isLoad_UI_SEQUANTIAL = false;
+	isLoad_Hogwart = true;
+	isLoad_UI_SEQUANTIAL = true;
 	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
@@ -1237,6 +1237,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma region UI_ANI
 	if (true == isLoad_UI_SEQUANTIAL) {
+
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Ancient_Magic"),
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic\\Ancient_Magic%d.png"), 152))))

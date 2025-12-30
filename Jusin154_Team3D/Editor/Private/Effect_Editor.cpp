@@ -158,7 +158,7 @@ HRESULT CEffect_Editor::Packaging(const _char* pDirectoryPath)
 
 	size_t pos = strDirectoryPath.rfind('/');   // 뒤에서부터 '/' 검색
 
-	if (pos != std::string::npos)
+	if (pos != string::npos)
 		strPerfectFilePath += strDirectoryPath.substr(pos + 1);
 
 	strPerfectFilePath += ".bin";
@@ -281,7 +281,7 @@ HRESULT CEffect_Editor::ReSaveFile(const _char* pDirectoryPath)
 
 		size_t iPos;
 
-		while ((iPos = strPath.find(ext)) != std::string::npos) {
+		while ((iPos = strPath.find(ext)) != string::npos) {
 			strPath.erase(iPos, ext.length());
 		};
 
