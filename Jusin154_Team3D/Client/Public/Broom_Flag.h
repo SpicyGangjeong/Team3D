@@ -33,6 +33,11 @@ private:
 	
 public:
 	void Set_Start();
+	void Set_Finish();
+	void Rece_Results();
+
+private:
+	void Finish_SizeUp(_float fTime);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -40,6 +45,8 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_float	m_fStart = { false };
+
+	_bool	m_fFinish = { false };
 
 public:
 	static CBroom_Flag* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

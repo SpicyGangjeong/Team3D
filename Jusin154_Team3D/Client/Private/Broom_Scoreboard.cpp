@@ -152,7 +152,7 @@ void CBroom_Scoreboard::Set_Setting()
 	m_fFontPosition[3] = _float2(m_fX + 947.5f, m_fY - 225.f);
 	m_fFontPosition[4] = _float2(m_fX + 920, m_fY - 230.f);
 	m_fFontPosition[5] = _float2(m_fX + 965, m_fY - 230.f);
-	m_fFontPosition[6] = _float2(m_fX + 755, m_fY - 215.f);
+	m_fFontPosition[6] = _float2(m_fX + 740, m_fY - 215.f);
 	m_fFontPosition[7] = _float2(m_fX + 1045, m_fY - 215.f);
 }
 
@@ -167,6 +167,18 @@ void CBroom_Scoreboard::Set_CurrentRing()
 	Score[4] = to_wstring(m_iCurrentRing);
 	m_fCurreentRingFontSize = (m_pGameInstance->FontSizeX(TEXT("UI_size25"), Score[4].c_str()) - 22.f) * 0.5f;
 	m_fFontPosition[4] = _float2(m_fX + 920 - m_fCurreentRingFontSize, m_fY - 230.f);
+}
+
+void CBroom_Scoreboard::Set_Timer(_float fTimer)
+{
+	wchar_t szBuf[32] = {};
+
+	_int min = static_cast<_int>(fTimer) / 60;
+	_int sec = static_cast<_int>(fTimer) % 60;
+	_int ms = static_cast<_int>((fTimer - static_cast<_int>(fTimer)) * 100);
+
+	swprintf_s(szBuf, L"%02d:%02d:%02d", min, sec, ms);
+	Score[6] = szBuf;
 }
 
 _vector CBroom_Scoreboard::Get_WorldPostion()

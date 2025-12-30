@@ -18,9 +18,9 @@ public:
 
 	enum class RACE_STATE
 	{
-		READY,      
-		COUNTDOWN,  
-		START,      
+		READY,
+		COUNTDOWN,
+		START,
 		RACING,
 		FINISH,
 		END
@@ -52,11 +52,16 @@ private:
 	_int								m_iPerCount = {};
 	_int								m_eRaceState = { ENUM_CLASS(RACE_STATE::END) };
 	_wstring							ToolTip;
+
+	_int								m_iLastRing{};
+
+	_bool								m_bRaceStart = { false };
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT			Ready_Components();
-	HRESULT			Bind_ShaderResources() override;
+	HRESULT			Bind_ShaderResources() override;	
 	void			Update_Countdown(_float fTimeDelta);
 	void			StartRaceMove();
 	void			Check_RingPassed();

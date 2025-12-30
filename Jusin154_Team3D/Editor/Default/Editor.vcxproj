@@ -179,8 +179,11 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Boss_HpBer.h" />
     <ClInclude Include="..\public\Broom_Circle.h" />
+    <ClInclude Include="..\public\Broom_Exit.h" />
+    <ClInclude Include="..\public\Broom_Fiish.h" />
     <ClInclude Include="..\public\Broom_Panel.h" />
     <ClInclude Include="..\public\Broom_Flag.h" />
+    <ClInclude Include="..\public\Broom_Record.h" />
     <ClInclude Include="..\public\Broom_Scoreboard.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\public\DummyDecal.h" />
@@ -433,8 +436,11 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Boss_HpBer.cpp" />
     <ClCompile Include="..\private\Broom_Circle.cpp" />
+    <ClCompile Include="..\private\Broom_Exit.cpp" />
+    <ClCompile Include="..\private\Broom_Fiish.cpp" />
     <ClCompile Include="..\private\Broom_Panel.cpp" />
     <ClCompile Include="..\private\Broom_Flag.cpp" />
+    <ClCompile Include="..\private\Broom_Record.cpp" />
     <ClCompile Include="..\private\Broom_Scoreboard.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />

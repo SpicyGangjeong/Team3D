@@ -59,12 +59,22 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 
 	if (m_eRaceState == ENUM_CLASS(RACE_STATE::RACING))
 	{
-		m_fRacingTimer += fTimeDelta;
+		if (m_iLastRing < m_pRaceRings.size())
+		{
+			m_fRacingTimer += fTimeDelta;
+			m_pInfoInstance->Set_Broom_Timer(m_fRacingTimer);
+		}
+		else
+		{
+			m_fRacingTimer = 0.f;
+			if (m_bRaceStart == true)
+			{
+				m_pInfoInstance->Event_CallBack(TEXT("RaceEnd"));
+				m_bRaceStart = false;
+			}
+		}
 	}
-	else
-	{
-		m_fRacingTimer = 0.f;
-	}
+
 
 
 #ifdef _DEBUG
@@ -179,7 +189,7 @@ void CBroomRaceManager::Describe_Entity()
 				CTransform* pTransform =
 					racer.pRacer->Get_Component<CTransform>();
 				spawnPos.m128_f32[1] -= 2.f;
-				pTransform->Set_State(STATE::POSITION,spawnPos);
+				pTransform->Set_State(STATE::POSITION, spawnPos);
 				pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
 				racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::BROOM_RIDE);
 				racer.pRacer->Get_Broom()->Set_Move(false);
@@ -237,6 +247,7 @@ void CBroomRaceManager::StartRaceMove()
 	}
 
 	m_eRaceState = ENUM_CLASS(RACE_STATE::RACING);
+	m_bRaceStart = true;
 }
 
 
@@ -284,8 +295,8 @@ void CBroomRaceManager::Check_RingPassed()
 
 			if (dist <= PASS_RADIUS)
 			{
-				if(racer.pRacer){ 
-					pRing->Set_Target(false); 
+				if (racer.pRacer) {
+					pRing->Set_Target(false);
 				}
 
 				racer.curRing = (racer.curRing + 1) % m_pRaceRings.size();
@@ -293,7 +304,7 @@ void CBroomRaceManager::Check_RingPassed()
 				if (racer.pRacer) {
 					m_pRaceRings[racer.curRing]->Set_Target(true);
 				}
-					
+
 				racer.pAI ? SetTargetRing(racer.pAI) : SetTargetRing(racer.pRacer);
 			}
 		}
@@ -303,8 +314,8 @@ void CBroomRaceManager::Check_RingPassed()
 }
 
 
-void CBroomRaceManager::SetTargetRing(CGameObject*pRacer)
-{ 
+void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
+{
 	for (auto& racer : m_Racers)
 	{
 		if (racer.pAI)
@@ -325,6 +336,7 @@ void CBroomRaceManager::SetTargetRing(CGameObject*pRacer)
 				m_pInfoInstance->Event_CallBack(TEXT("CurrentRing"));
 			}
 		}
+		m_iLastRing++;
 	}
 }
 
@@ -336,9 +348,9 @@ void CBroomRaceManager::Push_BroomRacer(RacerInfo Info)
 	info.curRing = Info.curRing;
 	info.prevPos = Info.prevPos;
 
-	if(Info.pAI)
+	if (Info.pAI)
 		info.pAI->Set_RaceRing(m_pRaceRings[info.curRing]);
-	else if(Info.pRacer)
+	else if (Info.pRacer)
 		info.pRacer->Set_RaceRing(m_pRaceRings[info.curRing]);
 
 	m_Racers.push_back(info);
