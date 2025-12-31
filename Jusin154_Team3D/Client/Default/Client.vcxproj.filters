@@ -2,25 +2,25 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="Client.h">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Define.h">
-      <Filter>99.Define</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Enum.h">
-      <Filter>99.Define</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Macro.h">
-      <Filter>99.Define</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MainApp.h">
       <Filter>00.MainApp</Filter>
@@ -146,7 +146,7 @@
       <Filter>02.GameObjects\Environment\01.MapPartObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Struct.h">
-      <Filter>99.Define</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject_Collision.h">
       <Filter>02.GameObjects\Environment\01.MapPartObject\Collision</Filter>
@@ -791,24 +791,21 @@
     <ClInclude Include="..\Public\Broom_Record.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ReparoObject.h">
+      <Filter>02.GameObjects\ReparoObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </Image>
     <Image Include="small.ico">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="99.Define">
-      <UniqueIdentifier>{2899f7fc-0ed2-41c0-8e24-0d89f08ffc39}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.MainApp">
       <UniqueIdentifier>{2902e559-abdf-4dd7-ac4c-cc6e2b81ad0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\00.DEFAULT">
-      <UniqueIdentifier>{05a0db73-4fbf-456c-9137-bb605c632d68}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels">
       <UniqueIdentifier>{aa499dd2-f7cb-4abd-9b3c-19f6e8427d7e}</UniqueIdentifier>
@@ -1647,13 +1644,22 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Finish">
       <UniqueIdentifier>{2246ff16-d62c-4e16-a948-16e7968e0933}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\ReparoObject">
+      <UniqueIdentifier>{4fbbe0ec-6b65-49f1-a72d-fe73ddbf2b4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ReparoObject\99.Define">
+      <UniqueIdentifier>{2899f7fc-0ed2-41c0-8e24-0d89f08ffc39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ReparoObject\99.Define\00.DEFAULT">
+      <UniqueIdentifier>{05a0db73-4fbf-456c-9137-bb605c632d68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\pch.cpp">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MainApp.cpp">
       <Filter>00.MainApp</Filter>
@@ -2337,9 +2343,6 @@
     <ClCompile Include="..\Private\Ranrok_Point.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Camera_Model.cpp">
-      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Goblin_Assassin.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
     </ClCompile>
@@ -2388,6 +2391,9 @@
     <ClCompile Include="..\Private\Broom_Record.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\ReparoObject.cpp">
+      <Filter>02.GameObjects\ReparoObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Goblin_States.cpp">
@@ -2435,7 +2441,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
-      <Filter>99.Define\00.DEFAULT</Filter>
+      <Filter>02.GameObjects\ReparoObject\99.Define\00.DEFAULT</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

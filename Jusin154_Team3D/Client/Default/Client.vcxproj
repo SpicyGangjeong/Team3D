@@ -188,6 +188,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
+    <ClInclude Include="..\Public\ReparoObject.h" />
     <ClInclude Include="..\Public\State_Dash.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
@@ -445,6 +446,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\PointLight.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
+    <ClCompile Include="..\Private\ReparoObject.cpp" />
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\State_Slash.cpp" />

@@ -74,11 +74,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Anim_Model"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Goblins\\SK_WPN_GOB_SmallSword.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-	//	return E_FAIL;
-
-
 #pragma region MONSTER
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -129,7 +124,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin",XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Ghost_Peeves_Model")
 	));
 
@@ -166,9 +161,22 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Wand_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin",XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Broom_Model")
 	));
+
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerA.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerB.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+		TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model")
+	));
+
+
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_SkyboxModel")

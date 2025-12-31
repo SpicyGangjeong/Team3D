@@ -744,9 +744,9 @@ void CRanrok::Behavior_LandEnter()
 	pairAnimInfo = m_Animation[STATEANIM::LAND];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-	/*Add_Event(pairAnimInfo.first,
+	Add_Event(pairAnimInfo.first,
 		[this]() {	CameraShake(30.f, 5.f, 10.f, 1.2f); },
-		0.53f);*/
+		0.53f);
 }
 
 HRESULT CRanrok::Behavior_LandExitCheck(_float fTimeDelta)
