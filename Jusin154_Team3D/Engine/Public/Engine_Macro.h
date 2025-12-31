@@ -23,8 +23,9 @@
 #define ASSERT_INHYUK(expression)
 
 #define OPTIONAL_TRUE_KEYINPUTGUICHECK
+
 #define USE_LOWTEXTURE
-#ifndef _DEBUG
+#ifndef _DEBUG // 릴리즈 모드일 때는 고해상도 유지
 #undef USE_LOWTEXTURE
 #endif // !_DEBUG
 
@@ -33,31 +34,31 @@
 #undef ASSERT_NURI
 #define ASSERT_NURI(expression) assert(expression)
 #define MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK); assert(false); 
-//#undef USE_LOWTEXTURE
+//#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
 //#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 //#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif 진우
 #undef ASSERT_JINWOO
 #define ASSERT_JINWOO(expression) assert(expression)
-#undef USE_LOWTEXTURE
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
 //#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 //#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif gimch
 #undef ASSERT_JINHO
 #define ASSERT_JINHO(expression) assert(expression)
-#undef USE_LOWTEXTURE
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
 #undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 #define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif Bin
 #undef ASSERT_HYUNBIN
 #define ASSERT_HYUNBIN(expression) assert(expression)
-#undef USE_LOWTEXTURE
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
 //#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 //#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif 인혁
 #undef ASSERT_INHYUK
 #define ASSERT_INHYUK(expression) assert(expression)
-#undef USE_LOWTEXTURE
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
 //#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 //#define OPTIONAL_TRUE_KEYINPUTGUICHECK || true
 #endif

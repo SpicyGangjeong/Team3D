@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿#pragma region HEADER
+#include "pch.h"
 #include "Camera_Debug.h"
 #include "Client_Struct.h"
 #include "GameInstance.h"
@@ -231,6 +232,7 @@
 
 #pragma endregion
 
+#pragma endregion
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }

@@ -116,8 +116,6 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 void CBroomRacerAI::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
-
-
 }
 
 void CBroomRacerAI::Update(_float fTimeDelta)
