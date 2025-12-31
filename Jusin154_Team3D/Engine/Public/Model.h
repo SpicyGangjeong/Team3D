@@ -213,7 +213,7 @@ private:
 
 	_float						m_fRadius = { 0.f };			// 컬링용 Radius
 	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
-	_int						m_iIndexAnimPlayableMesh = { -1 };
+	_uint						m_iIndexAnimPlayableMesh = { 0 };
 	_vector						m_vector[3];
 
 	vector<_uint>			m_iBoneMask;
