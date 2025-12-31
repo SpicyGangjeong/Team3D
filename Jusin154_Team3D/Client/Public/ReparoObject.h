@@ -1,0 +1,40 @@
+﻿#pragma once
+
+#include "Client_Define.h"
+#include "Unit.h"
+
+NS_BEGIN(Client)
+
+class CReparoObject final : public CUnit
+{
+private:
+	CReparoObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CReparoObject(const CReparoObject& Prototype);
+	virtual ~CReparoObject() = default;
+
+public:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Priority_Update(_float fTimeDelta) override;
+	virtual void Update(_float fTimeDelta) override;
+	virtual void Late_Update(_float fTimeDelta) override;
+	virtual HRESULT Render() override;
+
+private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
+private:
+	HRESULT Ready_Components();
+	HRESULT Bind_ShaderResources();
+
+public:
+	static CReparoObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
+	virtual void Free() override;
+#ifdef _DEBUG
+	virtual void Describe_Entity() override;
+#endif // _DEBUG
+
+};
+
+NS_END

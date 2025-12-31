@@ -419,7 +419,6 @@ void CPlayer::Set_RaceRing(CRaceRing* pRaceRing)
 	SAFE_ADDREF(m_pRaceRing);
 }
 
-
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};

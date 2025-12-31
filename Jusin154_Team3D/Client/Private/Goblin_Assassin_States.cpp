@@ -132,7 +132,7 @@ HRESULT CGoblin_Assassin::Behavior_MoveExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
-	if (m_fTargetDistance >= 6.f)
+	if (m_fTargetDistance >= 7.f)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -141,7 +141,6 @@ HRESULT CGoblin_Assassin::Behavior_MoveExitCheck(_float fTimeDelta)
 		if (!m_bFirstMove)
 		{
 			_uint Rand = m_pGameInstance->Real_Random_Int(0, 3);
-
 			switch (Rand)
 			{
 			case  0:
@@ -168,7 +167,6 @@ HRESULT CGoblin_Assassin::Behavior_MoveExitCheck(_float fTimeDelta)
 				break;
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
-
 			m_bFirstMove = true;
 			m_fMoveTime = 0.f;
 			return S_OK;
@@ -183,7 +181,7 @@ HRESULT CGoblin_Assassin::Behavior_MoveExitCheck(_float fTimeDelta)
 	}
 
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 4.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 5.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
@@ -217,12 +215,7 @@ HRESULT CGoblin_Assassin::Behavior_CombatExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (m_fTargetDistance <= 6.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::SLASH)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::SLASH);
-		return E_FAIL;
-	}
-	else if (m_fTargetDistance <= 10.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::DASH)] <= 0.f)
+	if (m_fTargetDistance <= 7.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::DASH)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::DASH);
 		return E_FAIL;
@@ -251,8 +244,7 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 	m_pFSM->Enable_State(FSMSTATE::SLASH);
 
 	pairAnimInfo = m_Animation[STATEANIM::SLASH];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.5f);
-	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::SLASH)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::SLASH)];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.3f,false,1.3f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -262,6 +254,12 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_ATTACK, m_pGoblinSpector->Get_PartObject<CGoblin_Sword>(), (void*)&m_pGoblinSpector->Get_PartObject<CGoblin_Sword>()->Get_SwordMatrix());
 		},
 		0.05f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_CanTakeDamage(true);
+			Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_CanTakeDamage(true); },
+		0.15f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -280,8 +278,11 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 
 HRESULT CGoblin_Assassin::Behavior_SlashExitCheck(_float fTimeDelta)
 {
-	if (m_pModelCom->IsFinishedAnim())
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (fRatio >= 0.9f)
 	{
+		Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_CanTakeDamage(false);
+		Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_CanTakeDamage(false);
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
@@ -307,7 +308,8 @@ void CGoblin_Assassin::Behavior_DashEnter()
 
 HRESULT CGoblin_Assassin::Behavior_DashExitCheck(_float fTimeDelta)
 {
-	if (m_pModelCom->IsFinishedAnim())
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (fRatio >= 0.7f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SLASH);
 		return E_FAIL;
@@ -340,7 +342,8 @@ HRESULT CGoblin_Assassin::Behavior_BlinkExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-	if (!m_bDisolve && iCurrAnimIndex != m_Animation[STATEANIM::BLINK].first)
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (m_fDisolveTime >= 0.8f && iCurrAnimIndex != m_Animation[STATEANIM::BLINK].first)
 	{
 		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::TP)];
 		_vector vPlayerPos = XMLoadFloat4(&m_vTargetPos);
@@ -365,7 +368,7 @@ HRESULT CGoblin_Assassin::Behavior_BlinkExitCheck(_float fTimeDelta)
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}
 
-	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::BLINK].first)
+	if (fRatio >= 0.8f && iCurrAnimIndex == m_Animation[STATEANIM::BLINK].first)
 	{
 		m_bLookAt = true;
 		m_fTpTime = 0.f;

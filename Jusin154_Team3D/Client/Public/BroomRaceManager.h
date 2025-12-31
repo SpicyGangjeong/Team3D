@@ -65,6 +65,7 @@ private:
 	void			Update_Countdown(_float fTimeDelta);
 	void			StartRaceMove();
 	void			Check_RingPassed();
+	void			Finish();
 
 public:
 	static CBroomRaceManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

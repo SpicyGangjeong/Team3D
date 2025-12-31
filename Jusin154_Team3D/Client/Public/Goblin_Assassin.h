@@ -10,9 +10,15 @@ NS_BEGIN(Client)
 
 class CGoblin_Assassin final : public CMonster
 {
+	enum class STRAFE_DIR
+	{
+		LEFT,
+		RIGHT,
+		NONE
+	};
+
 	enum class GOBLIN_ASSASSIN_SKILL
 	{
-		SLASH,
 		DASH,
 		TP,
 		END
@@ -76,7 +82,7 @@ private:
 	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::END)] = { 5.f,2.f,15.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::END)] = { 8.f,15.f };
 
 	_bool	m_bStep = { true };
 	_float	m_fTpTime = {};
@@ -93,6 +99,14 @@ private:
 	_float	m_fGravityAmount = {};
 	_float	m_fHitTimer = {};
 	_float	m_fTumbleTimer = {};
+
+
+	STRAFE_DIR m_eStrafeDir = STRAFE_DIR::NONE;
+	STRAFE_DIR m_ePrevStrafeDir = STRAFE_DIR::NONE;
+
+	_float m_fDecisionTimer = 0.f;
+	_float m_fDecisionInterval = 2.f; 
+
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
