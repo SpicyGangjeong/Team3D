@@ -7,6 +7,7 @@
 #include "Broom_Finish.h"
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
+#include "Broom_Trophy.h"
 #include "InfoInstance.h"
 
 CBroom_Panel::CBroom_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -159,11 +160,11 @@ HRESULT CBroom_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Broom_Scoreboard"), m_pBroom_Scoreboard);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Finish>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Finish**>(&m_pBroom_Fiish))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Finish>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Finish**>(&m_pBroom_Finish))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Broom_Fiish"), m_pBroom_Fiish);
+	Add_Element(TEXT("Broom_Fiish"), m_pBroom_Finish);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Record>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Record**>(&m_pBroom_Record))))
 	{
@@ -177,14 +178,27 @@ HRESULT CBroom_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Broom_Exit"), m_pBroom_Exit);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Trophy>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Trophy**>(&m_pBroom_Trophy))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_Trophy"), m_pBroom_Trophy);
+
 	return S_OK;
 }
 
 void CBroom_Panel::Ready_Race()
 {
 	Visible(true);
+	static_cast<CBroom_Circle*>(m_pBroom_Circle)->Race_Setting();
+	static_cast<CBroom_Flag*>(m_pBroom_Flag)->Race_Setting();
 	static_cast<CBroom_Circle*>(m_pBroom_Circle)->Visible(true);
 	static_cast<CBroom_Flag*>(m_pBroom_Flag)->Visible(true);
+	static_cast<CBroom_Scoreboard*>(m_pBroom_Scoreboard)->Visible(false);
+	static_cast<CBroom_Finish*>(m_pBroom_Finish)->Visible(false);
+	static_cast<CBroom_Record*>(m_pBroom_Record)->Visible(false);
+	static_cast<CBroom_Exit*>(m_pBroom_Exit)->Visible(false);
+	static_cast<CBroom_Trophy*>(m_pBroom_Trophy)->Score(false);
 }
 
 void CBroom_Panel::Race_Count(_int Count)
@@ -208,8 +222,8 @@ void CBroom_Panel::Current_Ring()
 void CBroom_Panel::Race_End()
 {
 	static_cast<CBroom_Scoreboard*>(m_pBroom_Scoreboard)->Visible(false);
-	static_cast<CBroom_Finish*>(m_pBroom_Fiish)->Visible(true);
-	static_cast<CBroom_Finish*>(m_pBroom_Fiish)->Finish(m_fRaceTime);
+	static_cast<CBroom_Finish*>(m_pBroom_Finish)->Visible(true);
+	static_cast<CBroom_Finish*>(m_pBroom_Finish)->Finish(m_fRaceTime);
 	static_cast<CBroom_Record*>(m_pBroom_Record)->Finish(m_fRaceTime);
 	m_bDinish = true;
 }
@@ -221,6 +235,7 @@ void CBroom_Panel::Race_Results()
 	static_cast<CBroom_Flag*>(m_pBroom_Flag)->Rece_Results();
 	static_cast<CBroom_Record*>(m_pBroom_Record)->Rece_Results();
 	static_cast<CBroom_Exit*>(m_pBroom_Exit)->Rece_Results();
+	static_cast<CBroom_Trophy*>(m_pBroom_Trophy)->Score(static_cast<CBroom_Record*>(m_pBroom_Record)->NewScore());
 }
 
 void CBroom_Panel::Set_BroomTimer()

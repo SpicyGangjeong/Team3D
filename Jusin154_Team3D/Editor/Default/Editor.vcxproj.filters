@@ -706,6 +706,9 @@
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record">
       <UniqueIdentifier>{cfd0b003-cc18-48cf-a881-94e137b5dadc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy">
+      <UniqueIdentifier>{cbb99946-a4d6-4ad8-842c-e67ca5de3f3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1430,6 +1433,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Broom_Record.h">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Trophy.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2163,6 +2169,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Broom_Record.cpp">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Trophy.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

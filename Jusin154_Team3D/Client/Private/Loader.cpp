@@ -141,6 +141,7 @@
 #include "Broom_Finish.h"
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
+#include "Broom_Trophy.h"
 
 #include "Interaction_Key.h"
 
@@ -389,8 +390,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Monster = false;
 #endif // 
 #ifdef 나
-	isLoad_Background = false;
-	isLoad_Hogwart = false;
+	isLoad_Background = true;
+	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef Bin
@@ -2571,6 +2572,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_SpellLearn_Broom_Exit*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Exit>(g_iStaticLevel, CBroom_Exit::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Trophy*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Trophy>(g_iStaticLevel, CBroom_Trophy::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

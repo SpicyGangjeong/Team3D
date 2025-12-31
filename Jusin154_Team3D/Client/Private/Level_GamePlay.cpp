@@ -343,8 +343,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
 #endif // 
 #endif // _DEBUG

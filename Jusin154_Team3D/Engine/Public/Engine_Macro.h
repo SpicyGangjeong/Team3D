@@ -24,6 +24,7 @@
 
 #define OPTIONAL_TRUE_KEYINPUTGUICHECK
 #define USE_LOWTEXTURE
+
 #ifndef _DEBUG
 #undef USE_LOWTEXTURE
 #endif // !_DEBUG

@@ -70,7 +70,7 @@ void CFog::Update_Fog()
 
 HRESULT CFog::Initialize()
 {
-    m_pNoiseTextureSRV = m_pGameInstance->Add_Resource("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_Noise01_D.png");
+   m_pNoiseTextureSRV = m_pGameInstance->Add_Resource("C:/MeshTable/Game/VFX/Textures/Noises/VFX_T_Noise01_D.png");
 
     if (nullptr == m_pNoiseTextureSRV)
         return E_FAIL;
