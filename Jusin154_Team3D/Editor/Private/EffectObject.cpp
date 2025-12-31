@@ -117,6 +117,11 @@ HRESULT CEffectObject::Render_Blur()
 
 	}
 
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DECAL || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DECAL_WB)
+	{
+		BlurPass = SHADER_PASS_INSTANCE_MODEL::DECAL_BLUR;
+	}
+
 	
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
@@ -832,20 +837,20 @@ HRESULT CEffectObject::Bind_ShaderResources()
 			return E_FAIL;
 		}
 
-		//if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_NormalCopy"), m_pShaderCom, "g_NormalMapTexture"))) {
-		//	return E_FAIL;
-		//}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_NormalCopy"), m_pShaderCom, "g_NormalMapTexture"))) {
+			return E_FAIL;
+		}
 	}
 
-	//_float2 vViewPortSize = m_pGameInstance->Get_ViewPortSize();
+	_float2 vViewPortSize = m_pGameInstance->Get_ViewPortSize();
 
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeX", &vViewPortSize.x, sizeof(_float)))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeX", &vViewPortSize.x, sizeof(_float)))) {
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeY", &vViewPortSize.y, sizeof(_float)))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeY", &vViewPortSize.y, sizeof(_float)))) {
+		return E_FAIL;
+	}
 
 
 
@@ -872,6 +877,14 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	_float4x4 WorldInv = {};
+
+	XMStoreFloat4x4(&WorldInv, m_pTransformCom->Get_WorldMatrixInv());
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrixInv", &WorldInv))) {
+		return E_FAIL;
+	}
+
 
 	if (m_EffectInfo.isMotionBlur == true || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT)
 	{
@@ -888,6 +901,14 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
 			return E_FAIL;
 		}
+	}
+	
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DECAL_WB || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DECAL_BLUR)
+	{
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Normal"), m_pShaderCom, "g_NormalMapTexture"))) {
+			return E_FAIL;
+		}
+
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse", &m_EffectInfo.isDiffuse, sizeof(_bool)))) {
