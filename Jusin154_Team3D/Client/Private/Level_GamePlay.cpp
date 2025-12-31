@@ -45,7 +45,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef _DEBUG
 	// 낮, 밤 설정
 #ifdef gimch
-	m_isDay = false;
+	m_isDay = true;
 #endif // gimch
 #ifdef Bin
 	m_isDay = true;
@@ -224,7 +224,8 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			1.251f,                         // 밀도
 			0.0253f,                          // 빛 강도
 			0.9f,                          // 산란 계수
-			1.78f                           // 깊이 분포 계수
+			1.78f,                           // 깊이 분포 계수
+			0.f
 		);
 	}
 	else
@@ -233,7 +234,8 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			0.626f,                         // 밀도
 			0.01f,                          // 빛 강도
 			0.11f,                          // 산란 계수
-			1.0f                           // 깊이 분포 계수
+			1.0f,                           // 깊이 분포 계수
+			0.f
 		);
 	}
 
