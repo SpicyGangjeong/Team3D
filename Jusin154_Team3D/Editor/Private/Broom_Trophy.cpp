@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Broom_Flag.h"
+#include "Broom_Trophy.h"
 #include "GameInstance.h"
 
-CBroom_Flag::CBroom_Flag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CElementObject(pDevice, pContext)
+CBroom_Trophy::CBroom_Trophy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+    :CElementObject(pDevice, pContext)
 {
 }
 
-CBroom_Flag::CBroom_Flag(const CBroom_Flag& rhs)
-	:CElementObject(rhs)
+CBroom_Trophy::CBroom_Trophy(const CBroom_Trophy& rhs)
+    :CElementObject(rhs)
 {
 }
 
-HRESULT CBroom_Flag::Initialize_Prototype()
+HRESULT CBroom_Trophy::Initialize_Prototype()
 {
-	return S_OK;
+    return S_OK;
 }
 
-HRESULT CBroom_Flag::Initialize(void* pArg)
+HRESULT CBroom_Trophy::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
-	Desc.fY = 100.f;
-	Desc.fSizeX = 437.5f;
-	Desc.fSizeY = 160.f;
+	Desc.fY = 250.f;
+	Desc.fSizeX = 250.f;
+	Desc.fSizeY = 250.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,46 +37,18 @@ HRESULT CBroom_Flag::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
+	m_fTimeMult = 150.f;
 	m_fAlpha = 1.f;
-	m_fAlphaTime = 10.f;
-	m_fStart = 500.f;
-	m_fSortZ = 0.03f;
+	m_fAlphaTime = 1.f;
+	m_fSortZ = 0.01f;
 	return S_OK;
 }
 
-void CBroom_Flag::Set_Start()
+void CBroom_Trophy::Set_Start()
 {
-	m_fSizeX = m_fOrigin_Size.x;
-	m_fAlpha = 1.f;
 }
 
-void CBroom_Flag::Rece_Results()
-{
-	Visible(true);
-	m_fFinish = true;
-	m_bHover = false;
-	m_fAlpha = 1.f;
-	MoveY(100.f);
-	SizeUpdate(m_fOrigin_Size.x, m_fOrigin_Size.y);
-}
-
-void CBroom_Flag::Race_Setting()
-{
-	Visible(false);
-	m_fFinish = false;
-	m_bHover = false;
-	m_fAlpha = 1.f;
-	MoveY(100.f);
-	SizeUpdate(m_fOrigin_Size.x, m_fOrigin_Size.y);
-}
-
-void CBroom_Flag::Finish_SizeUp(_float fTime)
-{
-
-}
-
-void CBroom_Flag::Priority_Update(_float fTimeDelta)
+void CBroom_Trophy::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -85,7 +57,7 @@ void CBroom_Flag::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CBroom_Flag::Update(_float fTimeDelta)
+void CBroom_Trophy::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -116,31 +88,9 @@ void CBroom_Flag::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_bHover == true)
-	{
-		m_fSizeX -= fTimeDelta * m_fStart;
-		m_fAlpha -= fTimeDelta * m_fAlphaTime;
-	}
-
-	if (m_fAlpha <= 0.f && m_fFinish == false)
-	{
-		m_bHover = false;
-		m_fAlpha = 0.f;
-		Visible(false);
-	}
-
-	m_fTime += fTimeDelta * m_fTimeMult;
-
-	if (m_fFinish == true)
-	{
-		MoveY(200.f);
-		SizeUpdate(600.f, 300.f);
-	}
-
 	__super::Update(fTimeDelta);
 }
-
-void CBroom_Flag::Late_Update(_float fTimeDelta)
+void CBroom_Trophy::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -152,12 +102,12 @@ void CBroom_Flag::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CBroom_Flag::Render()
+HRESULT CBroom_Trophy::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::FLAGWAVE)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -170,12 +120,12 @@ HRESULT CBroom_Flag::Render()
 	return S_OK;
 }
 
-_vector CBroom_Flag::Get_WorldPostion()
+_vector CBroom_Trophy::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CBroom_Flag::Bind_ShaderResources()
+HRESULT CBroom_Trophy::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -197,10 +147,6 @@ HRESULT CBroom_Flag::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 	{
 		return E_FAIL;
@@ -216,17 +162,16 @@ HRESULT CBroom_Flag::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CBroom_Flag::Ready_Components(void* pArg)
+HRESULT CBroom_Trophy::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_BRFlag"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_BR_BestTime_Trophy"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
@@ -234,33 +179,33 @@ HRESULT CBroom_Flag::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CBroom_Flag* CBroom_Flag::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBroom_Trophy* CBroom_Trophy::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CBroom_Flag* pInstance = new CBroom_Flag(pDevice, pContext);
+	CBroom_Trophy* pInstance = new CBroom_Trophy(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CBroom_Flag");
+		MSG_BOX("Failed to Created : CBroom_Trophy");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CBroom_Flag::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CBroom_Trophy::Clone(void* pArg, CGameObject* pOwner)
 {
-	CBroom_Flag* pInstance = new CBroom_Flag(*this);
+	CBroom_Trophy* pInstance = new CBroom_Trophy(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CBroom_Flag");
+		MSG_BOX("Failed to Cloned : CBroom_Trophy");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBroom_Flag::Free()
+void CBroom_Trophy::Free()
 {
 	__super::Free();
 
@@ -269,8 +214,7 @@ void CBroom_Flag::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-#ifdef _DEBUG
-void CBroom_Flag::Describe_Entity()
+
+void CBroom_Trophy::Describe_Entity()
 {
 }
-#endif // _DEBUG

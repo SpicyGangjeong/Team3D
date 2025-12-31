@@ -44,8 +44,13 @@ HRESULT CBroom_Circle::Initialize(void* pArg)
 	m_fFontX = 918.f;
 	m_fFontY = 345.f;
 	m_fFontAlpha = 1.f;
+	m_fSortZ = 0.02f;
 	m_fAngle = XMConvertToRadians(90.f);
 	m_bTimer = false;
+	m_bFinish = false;
+	m_bNewScore = true;
+	m_vImagePosi = _float4(50.f, 50.f, 150.f, 150.f);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Score"), [this](void* p) {this->Score(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -89,17 +94,11 @@ void CBroom_Circle::Update(_float fTimeDelta)
 		}
 	}
 
-	//if (m_pGameInstance->Key_Down(DIK_K))
-	//{
-	//	Race_Start();
-	//}
-
 	if (m_iPerCount != m_iCount)
 	{
 		m_iPerCount = m_iCount;
 		Start_Size_Lerp(fTimeDelta * m_fTimeMult);
 	}
-
 
 	if (m_fFontAlpha >= 0.f)
 	{
@@ -117,8 +116,21 @@ void CBroom_Circle::Update(_float fTimeDelta)
 		else if (m_fDissolve >= 1.f)
 		{
 			m_bHover = false;
+			m_fAlpha = 1.f;
+			m_fDissolve = 1.f;
 			Visible(false);
 		}
+	}
+
+	if (m_bFinish == true && m_bNewScore == false)
+	{
+		MoveY(220.f);
+		SizeUpdate(250.f, 250.f);
+	}
+	else if (m_bFinish == true && m_bNewScore == true)
+	{
+		MoveY(220.f);
+		SizeUpdate(220.f, 220.f);
 	}
 
 	__super::Update(fTimeDelta);
@@ -151,22 +163,25 @@ HRESULT CBroom_Circle::Render()
 		return E_FAIL;
 	}
 
-	_wstring Count;
-	_vector Color{};
-	if (m_iCount > 0.f)
+	if (m_bFinish == false)
 	{
-		Count = to_wstring(m_iCount);
-		Color = XMVectorSet(1.f * m_fFontAlpha, 1.f * m_fFontAlpha, 1.f * m_fFontAlpha, m_fFontAlpha);
-	}
+		_wstring Count;
+		_vector Color{};
+		if (m_iCount > 0.f)
+		{
+			Count = to_wstring(m_iCount);
+			Color = XMVectorSet(1.f * m_fFontAlpha, 1.f * m_fFontAlpha, 1.f * m_fFontAlpha, m_fFontAlpha);
+		}
 
-	else if (m_iCount == 0)
-	{
-		Count = TEXT("GO");
-		Color = XMVectorSet(0.f, 1.f * m_fFontAlpha, 0.f, m_fFontAlpha);
-	}
+		else if (m_iCount == 0)
+		{
+			Count = TEXT("GO");
+			Color = XMVectorSet(0.f, 1.f * m_fFontAlpha, 0.f, m_fFontAlpha);
+		}
 
-	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size70"), Count.c_str()) - 61.f) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("UI_size70"), Count.c_str(), _float2(m_fFontX + m_fX - OffSet, m_fFontY - m_fY), Color);
+		_float OffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size70"), Count.c_str()) - 61.f) * 0.5f;
+		m_pGameInstance->Render_Text(TEXT("UI_size70"), Count.c_str(), _float2(m_fFontX + m_fX - OffSet, m_fFontY - m_fY), Color);
+	}
 
 	return S_OK;
 }
@@ -198,6 +213,10 @@ HRESULT CBroom_Circle::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
@@ -226,6 +245,18 @@ HRESULT CBroom_Circle::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos1", &m_vImagePosi, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iFinish", &m_bNewScore, sizeof(_bool))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -240,6 +271,10 @@ HRESULT CBroom_Circle::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_VFX_T_Repairo_Wisp_04_D"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_Collections_Brooms"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -288,22 +323,17 @@ void CBroom_Circle::Start_Size_Lerp(_float fTimeDelta)
 			m_fSizeX -= fTimeDelta;
 			m_fSizeY -= fTimeDelta;
 		}
-		else if (m_fSizeX <= 160.f/* && m_bCountDown == false*/)
+		else if (m_fSizeX <= 160.f)
 		{
 			m_fSizeX = 160.f;
 			m_fSizeY = 160.f;
 			m_bSizeUp = false;
-			/*m_fTime = 0.f;*/
-			//m_bCountDown = true;
 		}
 	}
 
 	if (m_iCount <= 0)
 	{
-		//m_bTimer = false;
 		m_bHover = true;
-		//static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("BroomEnd"), &m_bHover);
-		//Visible(false);
 	}
 
 }
@@ -311,12 +341,14 @@ void CBroom_Circle::Start_Size_Lerp(_float fTimeDelta)
 void CBroom_Circle::Race_Start(_int iCount)
 {
 	m_iCount = iCount;
-	//m_bTimer = true;
 	m_bCountDown = true;
 	m_bHover = false;
+	m_bSizeUp = false;
 	m_fTime = 0.f;
 	m_fDissolve = 0.f;
 	m_fFontAlpha = 1.f;
+	MoveY(120.f);
+	SizeUpdate(m_fOrigin_Size.x, m_fOrigin_Size.y);
 }
 
 void CBroom_Circle::Set_Count(_int Count)
@@ -327,6 +359,35 @@ void CBroom_Circle::Set_Count(_int Count)
 void CBroom_Circle::Rece_Results()
 {
 	Visible(true);
+}
+
+void CBroom_Circle::Race_Setting()
+{
+	Visible(false);
+	m_iCount = 3;
+	MoveY(120.f);
+	SizeUpdate(m_fOrigin_Size.x, m_fOrigin_Size.y);
+	m_fTime = 0.f;
+	m_fDissolve = 0.f;
+	m_fFontAlpha = 1.f;
+	m_bCountDown = true;
+	m_bHover = false;
+	m_bSizeUp = false;
+	m_bSizeDown = false;
+	m_bTimer = false;
+	m_bFinish = false;
+	m_bNewScore = true;
+}
+
+void CBroom_Circle::Score(_bool Score)
+{
+	m_bFinish = true;
+	m_bHover = false;
+	m_bNewScore = Score;
+	m_fTime = 0.f;
+	m_fDissolve = 1.f;
+	m_fFontAlpha = 1.f;
+	m_fAlpha = 1.f;
 }
 
 CBroom_Circle* CBroom_Circle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -361,6 +422,7 @@ void CBroom_Circle::Free()
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

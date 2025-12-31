@@ -40,7 +40,7 @@ HRESULT CBroom_Record::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 10.f;
-	m_fBaseTime = 15.f;
+	m_fBaseTime = 5.f;
 	Set_Font();
 	Set_Best_Record(m_fBaseTime);
 	return S_OK;
@@ -244,6 +244,8 @@ void CBroom_Record::Finish(_float fTime)
 	else
 		m_bNewScore = false;
 
+	static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Score"), &m_bNewScore);
+
 	wchar_t szBuf[32] = {};
 
 	_int min = static_cast<_int>(fTime) / 60;
@@ -252,6 +254,11 @@ void CBroom_Record::Finish(_float fTime)
 
 	swprintf_s(szBuf, L"%02d:%02d:%02d", min, sec, ms);
 	m_fFont[1] = szBuf;
+}
+
+_bool CBroom_Record::NewScore()
+{
+	return m_bNewScore;
 }
 
 CBroom_Record* CBroom_Record::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

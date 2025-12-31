@@ -43,6 +43,7 @@ HRESULT CBroom_Scoreboard::Initialize(void* pArg)
 	m_fFontX = 900.f;
 	m_fFontY = 900.f;
 	m_iCurrentRing = 0;
+	m_fSortZ = 0.04f;
 	Set_Setting();
 	return S_OK;
 }
