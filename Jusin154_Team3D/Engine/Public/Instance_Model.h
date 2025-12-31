@@ -78,15 +78,15 @@ public:
 		_bool       isNoResetTime = {};
 		_bool       isLocal_Located_Not_TakeDelay = {}; 
 		_bool       isCompute_LocalInverse = {};
-		_bool       isPadding3 = {};
+		_bool       isRoundLengthLerp = {};
 
 		_float		fTimeMult = { 1.f };
 		_float2     vRoundRangeLength = {};
 		_float2     vAzimuthAngle = {};
 		_float2     vPolarAngle = {};
+		_float		fRoundLengthLerpSpeed = {};
 
-
-		_float4     vPadding6 = {};
+		_float3     vPadding6 = {};
 
 		_bool		isRandomAniIndex = {};
 		_bool		isMoveUp = {};
@@ -193,7 +193,7 @@ public:
 		_int	 isNoResetTime = {};
 		_int	 isLocal_Located_Not_TakeDelay = {};
 		_int	 isCompute_LocalInverse = {};
-		_int	 isPadding2 = {};
+		_int	 isRoundLengthLerp = {};
 
 		_float   fTimeDelta = {};
 		_float	 fSizeLerpOption = {};
@@ -253,6 +253,11 @@ public:
 
 		_float3   vWolrdOffset = {};
 		_float	  fLoopCount = {};
+
+		_float      fRoundRangeLength = {};
+		_float      fAzimuthAngle = {};
+		_float      fPolarAngle = {};
+		_float		fRoundLengthLerpSpeed = {};
 
 		_float4x4  PreWorldMatrix = {};
 		_float4x4  LocalMatrixInv = {};

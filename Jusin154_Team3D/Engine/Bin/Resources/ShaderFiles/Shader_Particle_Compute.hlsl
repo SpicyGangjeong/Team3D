@@ -59,6 +59,11 @@ struct ParticleValue
     float3 vWolrdOffset;
     float  fLoopCount;  /* 현재 몇번째 루프중인지 */
     
+    float fRoundRangeLength;
+    float fAzimuthAngle;
+    float fPolarAngle;
+    float fRoundLengthLerpSpeed;
+    
     row_major matrix PreWorldMatrix;
     row_major matrix LocalMatrixInv;
 };
@@ -99,7 +104,7 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isNoResetTime;
     bool isLocal_Located_Not_TakeDelay;
     bool isCompute_LocalInverse;
-    bool isPadding2;
+    bool isRoundLengthLerp;
 
     float fTimeDelta;
     float fSizeLerpOption; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
@@ -160,6 +165,7 @@ void CS_MAIN(
         
         if (isNoPos)
         {
+            
             particle.vTranslation.xyz += WorldMatrix[3].xyz;
             
             /* 월드 오프셋 */
@@ -167,6 +173,22 @@ void CS_MAIN(
             particle.vTranslation += WorldMatrix[0] * particleValue.vWolrdOffset.x;
             particle.vTranslation += WorldMatrix[1] * particleValue.vWolrdOffset.y;
             particle.vTranslation += WorldMatrix[2] * particleValue.vWolrdOffset.z;
+        }
+    }
+    
+    if (isRoundLengthLerp == true)
+    {
+        if(particle.vLifeTime.x < particle.vLifeTime.y)
+        {
+            float3 vRoundRange = float3(
+					 particleValue.fRoundRangeLength * cos(particleValue.fAzimuthAngle) * sin(particleValue.fPolarAngle),
+					 particleValue.fRoundRangeLength * sin(particleValue.fAzimuthAngle) * sin(particleValue.fPolarAngle),
+					 particleValue.fRoundRangeLength * cos(particleValue.fPolarAngle)
+        );
+        
+        
+            particleValue.vOriginTranslation.xyz += particleValue.fRoundLengthLerpSpeed * vRoundRange * fTimeDelta;
+            particle.vTranslation.xyz += particleValue.fRoundLengthLerpSpeed * vRoundRange * fTimeDelta;
         }
     }
     
@@ -271,6 +293,7 @@ void CS_MAIN(
         return ;
     }
     
+
       
     if (isDrop == true)
     {        

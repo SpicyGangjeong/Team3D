@@ -581,6 +581,8 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isNoResetTime = m_InstanceDesc.isNoResetTime;
 		pDesc->isLocal_Located_Not_TakeDelay = m_InstanceDesc.isLocal_Located_Not_TakeDelay;
 		pDesc->isCompute_LocalInverse = m_InstanceDesc.isCompute_LocalInverse;
+		pDesc->isRoundLengthLerp = m_InstanceDesc.isRoundLengthLerp;
+		
 		
 		
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
@@ -696,6 +698,12 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.z - m_InstanceDesc.vRange.z * 0.5f, m_InstanceDesc.vCenter.z + m_InstanceDesc.vRange.z * 0.5f)
 					+ fRoundRange * cosf(XMConvertToRadians(fPolarAngle)),
 					1.f);
+
+				
+				pParticleValues[i].fRoundRangeLength = fRoundRange;
+				pParticleValues[i].fAzimuthAngle = XMConvertToRadians(fAzimuthAngle);
+				pParticleValues[i].fPolarAngle = XMConvertToRadians(fPolarAngle);
+				pParticleValues[i].fRoundLengthLerpSpeed = m_InstanceDesc.fRoundLengthLerpSpeed;
 
 
 				_float3			vSinAmount = _float3(
@@ -922,7 +930,6 @@ void CInstance_Model::Describe_Entity()
 		}
 
 
-
 		if (GUI::TreeNode("Transform"))
 		{
 
@@ -956,20 +963,6 @@ void CInstance_Model::Describe_Entity()
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("RoundRangeLength", reinterpret_cast<_float*>(&m_InstanceDesc.vRoundRangeLength)))
-			{
-				Instane_Buffer_ReStruct();
-			}
-
-			if (ImGui::DragFloat2("AzimuthAngle", reinterpret_cast<_float*>(& m_InstanceDesc.vAzimuthAngle)))
-			{
-				Instane_Buffer_ReStruct();
-			}
-
-			if (ImGui::DragFloat2("PolarAngle", reinterpret_cast<_float*>(&m_InstanceDesc.vPolarAngle)))
-			{
-				Instane_Buffer_ReStruct();
-			}
 
 			if (ImGui::DragFloat3("WolrdOffsetMin", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMin)))
 			{
@@ -979,6 +972,39 @@ void CInstance_Model::Describe_Entity()
 			if (ImGui::DragFloat3("WolrdOffsetMax", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMax)))
 			{
 				Instane_Buffer_ReStruct();
+			}
+
+
+			if (GUI::TreeNode("Round Range"))
+			{
+	
+
+				if (ImGui::DragFloat2("RoundRangeLength", reinterpret_cast<_float*>(&m_InstanceDesc.vRoundRangeLength)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat2("AzimuthAngle", reinterpret_cast<_float*>(&m_InstanceDesc.vAzimuthAngle)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat2("PolarAngle", reinterpret_cast<_float*>(&m_InstanceDesc.vPolarAngle)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (GUI::Checkbox("RoundLengthLerp", &m_InstanceDesc.isRoundLengthLerp))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat("fRoundLengthLerpSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.fRoundLengthLerpSpeed)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				GUI::TreePop();
 			}
 
 			GUI::TreePop();
