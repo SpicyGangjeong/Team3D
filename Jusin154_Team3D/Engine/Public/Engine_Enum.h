@@ -191,6 +191,7 @@ enum class PXOBJECT : _uint {
 #pragma region NPC
 	NPC = 500,
 	OLLIVANDER,
+	ELEAZARFIG,
 
 #pragma endregion
 #pragma region ITEM

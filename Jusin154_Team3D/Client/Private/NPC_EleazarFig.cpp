@@ -21,6 +21,10 @@ CNPC_EleazarFig::CNPC_EleazarFig(const CNPC_EleazarFig& Prototype)
 void CNPC_EleazarFig::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->RewindMomentum();
+	m_iEntered -= 1;
+	if (m_iEntered < 0) {
+		m_iEntered = 0;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
@@ -38,6 +42,8 @@ void CNPC_EleazarFig::Update(_float fTimeDelta)
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
+
+	//m_pNPCInteraction->Set_Visible(0 < m_iEntered);
 }
 
 void CNPC_EleazarFig::Late_Update(_float fTimeDelta)
@@ -165,6 +171,16 @@ _bool CNPC_EleazarFig::CastToPlayer()
 	return false;
 }
 
+void CNPC_EleazarFig::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
+{
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
+	if (nullptr == pPlayer) {
+		return;
+	}
+	if (fDistance < m_fEncounterDistance) {
+		m_iEntered = 4;
+	}
+}
 HRESULT CNPC_EleazarFig::Initialize_Prototype()
 {
 	return S_OK;
@@ -216,7 +232,7 @@ HRESULT CNPC_EleazarFig::Ready_Components(void* pArg)
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::ELEAZARFIG);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.0001f;
@@ -233,6 +249,15 @@ HRESULT CNPC_EleazarFig::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 		m_pCharacter_Controller->SetGravity(true);
+	}
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::ELEAZARFIG);
+		Desc.bAutoOwnerTranslation = false;
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_NPC_HITBOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
@@ -266,6 +291,7 @@ void CNPC_EleazarFig::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pCharacter_Controller);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;

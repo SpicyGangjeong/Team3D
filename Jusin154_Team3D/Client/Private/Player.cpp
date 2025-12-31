@@ -121,7 +121,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_bAI = false;
 
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
-
+	m_fRayDistance = 10.f;
 	m_pModelCom->Set_Temp(true);
 
 
@@ -144,6 +144,7 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
+	Update_RaycastElements();
 
 	m_pFSM->Update_State(fTimeDelta);
 
@@ -328,6 +329,37 @@ void CPlayer::Update_CameraShake(_float fTimeDelta)
 			);
 		}
 	}
+}
+HRESULT CPlayer::Update_RaycastElements()
+{
+	if (false == m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER)) {
+		m_iRayHitCount = 0;
+	}
+	_vector vCameraPos = m_pGameInstance->Get_CamXMPosition();
+	_vector vCameraDir = m_pGameInstance->Get_CameraLook();
+	vector<PSX::PxRaycastHit> m_vRayHits = {};
+	_bool bHit = m_pGameInstance->RayCast(vCameraDir, vCameraDir, m_fRayDistance, m_vRayHits.data(), (_uint)m_vRayHits.size(), m_iRayHitCount);
+	if (true == bHit) {
+		CMyTools::SortHitsByDistance(m_vRayHits);
+		for (_uint i = 0; i < m_iRayHitCount; ++i) {
+			if (nullptr != m_vRayHits[i].actor->userData) {
+				PHYSX_USERDATA* pData = (PHYSX_USERDATA*)m_vRayHits[i].actor->userData;
+				switch (pData->eKind)
+				{
+				case PHYSX_KIND::BODY_STATIC:
+					break;
+				case PHYSX_KIND::BODY_DYNAMIC:
+					pData->pBody->OnRayCollision(this, i, m_vRayHits[i].distance, _float3(m_vRayHits[i].position.x, m_vRayHits[i].position.y, m_vRayHits[i].position.z));
+					break;
+				case PHYSX_KIND::CCTActor:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+	return S_OK;
 }
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
@@ -715,6 +747,7 @@ void CPlayer::Free()
 
 	SAFE_RELEASE(m_pRobePart);
 	SAFE_RELEASE(m_pGrapInteractive);
+
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

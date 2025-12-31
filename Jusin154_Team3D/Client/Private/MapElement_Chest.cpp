@@ -63,6 +63,10 @@ HRESULT CMapElement_Chest::Initialize(void* pArg)
 
 void CMapElement_Chest::Priority_Update(_float fTimeDelta)
 {
+	m_iEntered -= 1;
+	if (m_iEntered < 0) {
+		m_iEntered = 0;
+	}
 	m_pLid->Priority_Update(fTimeDelta);
 }
 
@@ -166,6 +170,17 @@ HRESULT CMapElement_Chest::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CMapElement_Chest::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
+{
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
+	if (nullptr == pPlayer) {
+		return;
+	}
+	if (fDistance < m_fEncounterDistance) {
+		m_iEntered = 4;
+	}
 }
 
 HRESULT CMapElement_Chest::Ready_Components(void* pArg)

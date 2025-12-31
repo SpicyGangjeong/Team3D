@@ -39,7 +39,8 @@ public:
 	PSX::PxShapeFlags		Get_ShapeFlags()		const { return m_ePxShapeFlags; }
 	PSX::PxRigidBodyFlags	Get_RigidBodyFlags()	const { return m_ePxRigidBodyFlags; }
 
-	PHYSX_USERDATA*		Get_UserDataPtr() { return &m_tagData; };
+	PHYSX_USERDATA*			Get_UserDataPtr() { return &m_tagData; };
+	void					OnRayCollision(class CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos);
 
 protected:
 	ACTOR					m_eActorType = ACTOR::END;
@@ -52,6 +53,7 @@ protected:
 
 	CTransform*				m_pTransform = { nullptr };
 	PHYSX_USERDATA			m_tagData = {};
+
 
 protected:
 	virtual HRESULT Initialize(void* pArg);

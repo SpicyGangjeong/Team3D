@@ -24,9 +24,11 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
 protected:
 	CInfoInstance*							m_pInfoInstance = { nullptr };
 	CCharacter_Controller*					m_pCharacter_Controller = { nullptr };
+	CRigidBody_Dynamic*						m_pRigidBody = { nullptr };
 	class CCallBack_NonPlayable_Behavior*	m_pCallBack_Behavior = { nullptr };
 	class CCallBack_NonPlayable_HitReport*	m_pCallBack_HitReport = { nullptr };
 	CUnit*									m_pPlayerAllyUnit = { nullptr };
@@ -35,7 +37,7 @@ protected:
 	class CNPCInteraction*					m_pNPCInteraction = { nullptr };
 
 	CNPCStat*								m_pNpcStat = { nullptr };
-	_bool									m_bEntered = { false };
+	_int									m_iEntered = { 0 };
 	_float2									m_vEnteringTimer = { 0.f, 1.f };
 	_float									m_fEncounterDistance = { 3.f };
 protected:

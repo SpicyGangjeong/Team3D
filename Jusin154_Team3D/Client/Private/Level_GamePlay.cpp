@@ -332,8 +332,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 인혁
 	isReady_Background = false;
@@ -659,7 +659,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 #endif // 
 #ifdef 인혁
 
@@ -743,7 +743,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = false;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 인혁
 
