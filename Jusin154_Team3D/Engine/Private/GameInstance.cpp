@@ -54,11 +54,13 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 #ifdef _DEBUG
 #ifdef 기무리
 	m_pThreadHolder = CThreadHolder::Create(12);
-#endif // 기무리
-#ifndef 기무리
+#elif Bin
+	m_pThreadHolder = CThreadHolder::Create(12);
+#else
 	m_pThreadHolder = CThreadHolder::Create(6);
-#endif // !기무리
+#endif // 
 #endif // _DEBUG
+
 #ifndef _DEBUG
 	m_pThreadHolder = CThreadHolder::Create(12);
 #endif // !_DEBUG

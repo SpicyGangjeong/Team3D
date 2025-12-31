@@ -20,7 +20,7 @@ void CPlayerRobe::Update(_float fTimeDelta)
 	_matrix SocketMatrixFixed = (XMMatrixRotationZ(XM_PI) * XMLoadFloat4x4(m_pSocketMatrix)) *
 		XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr());
 
-	m_pRobeMainAnchor->Move_Kinematic(SocketMatrixFixed, false);
+	m_pRobeMainAnchor->Move_Kinematic(SocketMatrixFixed, true);
 	m_pRobeMainAnchor->Get_Actor()->wakeUp();
 
 	Update_LegsPosition();
@@ -30,13 +30,13 @@ void CPlayerRobe::Update(_float fTimeDelta)
 void CPlayerRobe::Late_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
-		PSX::PxConstraintFlags pxConstraintFlags = m_pDynamicJoints[i]->getConstraintFlags();
-		const bool bBroken = (pxConstraintFlags.isSet(PSX::PxConstraintFlag::eBROKEN));
-		if (true == bBroken) {
-			assert(false);
-		}
-	}
+	//for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
+	//	PSX::PxConstraintFlags pxConstraintFlags = m_pDynamicJoints[i]->getConstraintFlags();
+	//	const bool bBroken = (pxConstraintFlags.isSet(PSX::PxConstraintFlag::eBROKEN));
+	//	if (true == bBroken) {
+	//		assert(false);
+	//	}
+	//}
 	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
 #endif // _DEBUG
 }
@@ -52,13 +52,14 @@ HRESULT CPlayerRobe::Render()
 HRESULT CPlayerRobe::Update_RobeSocketPosition()
 {
 	{
-		PSX::PxTransform pxTransform = {};
-		_matrix WorldMatrix = {};
+		PSX::PxTransform pxTransform = m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::HIPS_CLOTH)]->Get_GlobalPosition();
+		_matrix WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTransform.p), 1.f));
 		_matrix OwnerInvWorldMatrix = m_pParentTransformCom->Get_WorldMatrixInv();
-		for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
+		m_pModelCom->Set_BoneCombinedTransformation(PLAYER_JOINT_BONE_NAMES[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::HIPS_CLOTH)], WorldMatrix * OwnerInvWorldMatrix);
+		for (_uint i = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::RIGHTUP); i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
 			pxTransform = m_pRobeJointAnchor[i]->Get_GlobalPosition();
 			WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTransform.p), 1.f));
-			_fmatrix LocalMatrix = WorldMatrix* OwnerInvWorldMatrix;
+			_fmatrix LocalMatrix = WorldMatrix * OwnerInvWorldMatrix;
 			XMStoreFloat4x4(&m_ReconstructedJointAnchorMatirces[i], LocalMatrix);
 			m_pModelCom->Set_BoneCombinedTransformation(PLAYER_JOINT_BONE_NAMES[i], LocalMatrix);
 		}
@@ -504,6 +505,8 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 	m_pSocketMatrix = pDesc->pSocketMatrix;
 	m_pModelCom = pDesc->pModel;
 
+	m_ReconstructedJointAnchorMatirces.resize(ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END));
+
 	m_iBoneNum = m_pModelCom->Get_MeshInfluencedBoneNum(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
 	m_PrevRobeBoneMatrices.resize(m_iBoneNum);
 	if (FAILED(m_pModelCom->Capture_BoneMatrices(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH), m_PrevRobeBoneMatrices))) {
@@ -534,6 +537,9 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 
 		switch ((PLAYER_JOINT_BONE_ORDER)i)
 		{
+		case PLAYER_JOINT_BONE_ORDER::HIPS_CLOTH:
+			iParentIndex = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::HIPS_CLOTH);
+			break;
 		case PLAYER_JOINT_BONE_ORDER::RIGHTUP:
 		case PLAYER_JOINT_BONE_ORDER::TAILUP:
 		case PLAYER_JOINT_BONE_ORDER::LEFTUP:
