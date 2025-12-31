@@ -789,7 +789,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				memcpy(&pParticleValues[i].vOriginTranslation, &pVertices[i].vTranslation, sizeof(_float4));
 
 				memcpy(&pParticleValues[i].PreWorldMatrix, &IdentityMat, sizeof(_float4x4));
-	/*			memcpy(&pParticleValues[i].LocalMatrixInv, &IdentityMat, sizeof(_float4x4));*/
+				memcpy(&pParticleValues[i].LocalMatrixInv, &IdentityMat, sizeof(_float4x4));
 				
 
 				if (m_InstanceDesc.isRandomAniIndex == true)

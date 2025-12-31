@@ -50,7 +50,7 @@ struct ParticleValue
     float  fLoopCount;  /* 현재 몇번째 루프중인지 */
     
     row_major matrix PreWorldMatrix;
-    //row_major matrix LocalMatrixInv;
+    row_major matrix LocalMatrixInv;
 };
 
 
@@ -74,7 +74,7 @@ Texture2D g_DepthStencilTexture : register(t7);
 Texture2D g_DistortionTexture : register(t8);
 Texture2D g_DepthTexture : register(t9);
 Texture2D g_SurfaceParamsTexture : register(t10);
-//Texture2D g_NormalMapTexture : register(t11);
+Texture2D g_NormalMapTexture : register(t11);
 
 
 float4 g_vCamPosition;
@@ -252,9 +252,10 @@ struct VS_BULR_MESH_OUT
     float2 vLifeTime : TEXCOORD1;
     float4 vWorldPos : TEXCOORD2;
     float4 vProjPos : TEXCOORD3;
-    uint iGPUIndex : TEXCOORD4;
+    uint   iGPUIndex : TEXCOORD4;
     float4 vPrevProjPos : TEXCOORD5;
 };
+
 
 struct PS_BLUR_MESH_IN
 {
@@ -266,8 +267,9 @@ struct PS_BLUR_MESH_IN
     float2 vLifeTime : TEXCOORD1;
     float4 vWorldPos : TEXCOORD2;
     float4 vProjPos : TEXCOORD3;
-    uint iGPUIndex : TEXCOORD4;
+    uint   iGPUIndex : TEXCOORD4;
     float4 vPrevProjPos : TEXCOORD5;
+
 };
 
 struct PS_OUT_DELCAL
@@ -315,6 +317,7 @@ VS_BULR_MESH_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
     Out.vProjPos = vPosition;
     Out.vPrevProjPos = mul(float4(In.vPosition, 1.f), matPrevWVP);
     
+
     return Out;
 }
 
@@ -467,7 +470,6 @@ VS_BULR_MESH_OUT VS_BLUR_MESH(VS_IN In, uint iGPUIndex : SV_InstanceID)
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos = vPosition;
     Out.vPrevProjPos = mul(float4(In.vPosition, 1.f), matPrevWVP);
-    
     return Out;
 }
 
@@ -870,7 +872,7 @@ PS_OUT BlendedWeight(float4 fDiffuse, float fLinearZ)
     
     
     float linearZPositive = max(fLinearZ, 1e-6f);
-    float fWeight = clamp(pow(linearZPositive, -2.5f), 1.0f, 1000.0f);
+    float fWeight = clamp(pow(linearZPositive, -2.5f), 1.0f, 10.0f);
 
     
     Out.vDiffuse = float4(vColor.rgb * fAlpha, fAlpha) * fWeight;
@@ -927,48 +929,54 @@ float2 ComputeDecal(float4 vPosition , float4x4 LocalMatrixInv)
     float2 vDecalUV;
     float2 vDepthUV;
     
-    //vDepthUV.x = vPosition.x / g_fWinSizeX;
-    //vDepthUV.y = vPosition.y / g_fWinSizeY;
+    vDepthUV.x = vPosition.x / g_fWinSizeX;
+    vDepthUV.y = vPosition.y / g_fWinSizeY;
     
-    //float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vDepthUV);
-    //float3 vNormalDesc = g_NormalMapTexture.Sample(DefaultSampler, vDepthUV).xyz;
-    //vNormalDesc = normalize(vNormalDesc * 2.f - 1.f);
+    float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthUV);
+    float3 vNormalDesc = g_NormalMapTexture.Sample(PointSampler, vDepthUV).xyz;
+    vNormalDesc = normalize(vNormalDesc * 2.f - 1.f);
     
-    //float fViewZ = vDepthDesc.y * g_fFar;
+    float4 vPos;
     
-    //float4 vPos;
+    vPos.x = vDepthUV.x * 2.f - 1.f;
+    vPos.y = vDepthUV.y * -2.f + 1.f;
+    vPos.z = vDepthDesc.x;
+    vPos.w = 1.f;
     
-    //vPos.x = vDepthUV.x * 2.f - 1.f;
-    //vPos.y = vDepthUV.y * -2.f + 1.f;
-    //vPos.z = vDepthDesc.x;
-    //vPos.w = 1.f;
+    float4 vViewPos = mul(vPos, g_ProjMatrixInv);
+    vViewPos /= vViewPos.w;
     
-    //float4 vViewPos = mul(vPos, g_ProjMatrixInv);
-    //vViewPos /= vViewPos.w;
-    
-    //float4 vWorldPos = mul(vViewPos, g_ViewMatrixInv);
+    float4 vWorldPos = mul(vViewPos, g_ViewMatrixInv);
 
-    //vector vLocalPos = mul(vWorldPos, LocalMatrixInv);
+    vector vLocalPos = mul(vWorldPos, LocalMatrixInv);
 
-    //float3 ObjectAbsPos = abs(vLocalPos.xyz);
+    float3 ObjectAbsPos = abs(vLocalPos.xyz); /* 로컬 000 중심으로부터의 xyz 거리*/
     
-    //clip(0.5f - ObjectAbsPos);
+    /* 데칼의 월드 사이즈를 키우지 말것 */
     
-    //float3 vAbsNormal = abs(vNormalDesc);
+    clip(0.05f - ObjectAbsPos);
+
     
-    //int iAxisIndex = 0;
+    float3 vAbsNormal = abs(vNormalDesc);
     
-    //if (vAbsNormal.y > vAbsNormal.x && vAbsNormal.y > vAbsNormal.z)
-    //    iAxisIndex = 1;
-    //else if (vAbsNormal.z > vAbsNormal.x && vAbsNormal.z > vAbsNormal.y)
-    //    iAxisIndex = 2;
+    int iAxisIndex = 0; /* 노말의 양수 음수 방향은 중요하지 않고 크기가 중요함*/
     
-    //if (0 == iAxisIndex)
-    //    vDecalUV = vLocalPos.zy + 0.5f * 2.f;
-    //else if (1 == iAxisIndex)
-    //    vDecalUV = vLocalPos.xz + 0.5f * 2.f;
-    //else
-    //    vDecalUV = vLocalPos.xy + 0.5f * 2.f;
+    /* 픽셀의 노말에서 가장 큰 값을 가진 곳이 내가 평행하게바라보고 있는 축 이라는 뜻이다 */
+    
+    /* 즉, 내가 바라보고있는 방향을 기준으로 2d로 그려지기 때문에 
+        x가 가장크면 zy , y가 가장크면 xz , z가 가장크면 xy의 값을 uv로 판단함 */ 
+    
+    if (vAbsNormal.y > vAbsNormal.x && vAbsNormal.y > vAbsNormal.z) 
+        iAxisIndex = 1;
+    else if (vAbsNormal.z > vAbsNormal.x && vAbsNormal.z > vAbsNormal.y)
+        iAxisIndex = 2;
+    
+    if (0 == iAxisIndex)
+        vDecalUV = (vLocalPos.zy + 0.05f) / 0.1f;
+    else if (1 == iAxisIndex)
+        vDecalUV = (vLocalPos.xz + 0.05f) / 0.1f;
+    else
+        vDecalUV = (vLocalPos.xy + 0.05f) / 0.1f;
     
     return vDecalUV;
 }
@@ -1053,8 +1061,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
 
     return Out;
 }
-   
-
+  
 VS_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_OUT Out = (VS_OUT) 0;
@@ -1409,7 +1416,7 @@ PS_OUT_DELCAL PS_DECAL(PS_BLUR_MESH_IN In)
 
     vector vMtrlDiffuse;
     
-    //PS_In.vTexcoord = ComputeDecal(In.vPosition, g_ParticleValue[In.iGPUIndex].LocalMatrixInv);
+    PS_In.vTexcoord = ComputeDecal(In.vPosition , g_ParticleValue[In.iGPUIndex].LocalMatrixInv);
     
     float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, PS_In.vTexcoord);
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, PS_In.vTexcoord);
@@ -1458,26 +1465,56 @@ PS_OUT PS_DECAL_WB(PS_BLUR_MESH_IN In)
 
     vector vMtrlDiffuse;
     
-    //PS_In.vTexcoord = ComputeDecal(In.vPosition, g_ParticleValue[In.iGPUIndex].LocalMatrixInv);
+    PS_In.vTexcoord = ComputeDecal(In.vPosition ,g_ParticleValue[In.iGPUIndex].LocalMatrixInv);
+    
     vMtrlDiffuse = DrawEffect(PS_In);
-    
-    vMtrlDiffuse = SoftEffect(PS_In, vMtrlDiffuse);
-    
-    //int2 iTexel = int2(In.vPosition.xy);
-    
-    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
-    
-    //float fbias = 0.000005f;
-    
-    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
-    //    discard;
-    
+
     vMtrlDiffuse.rgb += EmissiveDraw(PS_In, vMtrlDiffuse).rgb;
     
     vMtrlDiffuse += RimLight(PS_In);
 
 
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
+    
+    return Out;
+}
+
+PS_BLUR_OUT PS_DECAL_BLUR(PS_IN In)
+{
+    PS_BLUR_OUT Out;
+    
+    float4 vMtrlDiffuse;
+    
+    In.vTexcoord = ComputeDecal(In.vPosition, g_ParticleValue[In.iGPUIndex].LocalMatrixInv);
+    
+    vMtrlDiffuse = DrawEffect(In);
+    
+    if (g_isBlurColor == true)
+    {
+        clip(length(vMtrlDiffuse.rgb) - FLT_EPSILON5);
+        
+        vMtrlDiffuse = float4(g_vBlurColor.rgb, vMtrlDiffuse.a);
+    }
+
+    
+    vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
+    
+    vMtrlDiffuse.a *= 5.f;
+    
+    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a);
+    
+    float fBulrIntensity = g_fBlurIntensity;
+    
+    if (g_isBlurDissolve == true)
+    {
+        fBulrIntensity *= 1.f - (In.vLifeTime.x / In.vLifeTime.y);
+       
+        fBulrIntensity = saturate(fBulrIntensity);
+    }
+   
+    Out.vDiffuse = float4(vMtrlDiffuse.rgb * fBulrIntensity, vMtrlDiffuse.a);
     
     return Out;
 }
@@ -1753,9 +1790,9 @@ technique11 DefaultTechnique
 //25
     pass Decal
     {
-        SetRasterizerState(RS_Nocull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_DECAL();
@@ -1764,12 +1801,23 @@ technique11 DefaultTechnique
 //26
     pass Decal_WB
     {
-        SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Effect, 0);
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_DECAL_WB();
+    }
+
+//27
+    pass Decal_Blur
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_DECAL_BLUR();
     }
 }
 
