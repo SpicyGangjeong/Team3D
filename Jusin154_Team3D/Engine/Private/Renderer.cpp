@@ -248,11 +248,11 @@ void CRenderer::Render_Shadow()
 		m_pContext->RSSetViewports(1, &ViewPortDesc);
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_NEAR)]) {
-			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR))) {
-					assert(false);
-				}
-			}
+			//if (nullptr != pRenderObject) {
+			//	if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR))) {
+			//		assert(false);
+			//	}
+			//}
 
 			SAFE_RELEASE(pRenderObject);
 		}
@@ -282,11 +282,11 @@ void CRenderer::Render_Shadow()
 		m_pContext->RSSetViewports(1, &ViewPortDesc);
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_MIDDLE)]) {
-			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE))) {
-					assert(false);
-				}
-			}
+			//if (nullptr != pRenderObject) {
+			//	if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE))) {
+			//		assert(false);
+			//	}
+			//}
 
 			SAFE_RELEASE(pRenderObject);
 		}

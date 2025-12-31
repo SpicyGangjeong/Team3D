@@ -20,7 +20,7 @@ HRESULT CDynamic_D6Joint::Initialize_Prototype()
 HRESULT CDynamic_D6Joint::Initialize(void* pArg)
 {
 	DYNAMICJOINT_DESC* pDesc = static_cast<DYNAMICJOINT_DESC*>(pArg);
-	m_pJoint = m_pGameInstance->Create_PxD6Joint(pDesc->pActor0, pDesc->pActor1, *pDesc->pxJointWorldPos);
+	m_pJoint = m_pGameInstance->Create_BasicPxD6Joint(pDesc->pActor0, pDesc->pActor1, *pDesc->pxJointWorldPos);
 	return S_OK;
 }
 #ifdef _DEBUG

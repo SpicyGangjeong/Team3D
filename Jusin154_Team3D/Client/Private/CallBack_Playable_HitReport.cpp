@@ -75,13 +75,10 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 			case PXOBJECT::DOOR:
 			{
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-				_float fDot = vDir.dot(PSX::PxVec3(0.f, 1.f, 0.f));
-				if (fDot > 0) {
-					pDynamic->addTorque(PSX::PxVec3(0.f, 1.f, 0.f) * fLength * 100.f, PSX::PxForceMode::eFORCE);
-				}
-				else {
-					pDynamic->addTorque(PSX::PxVec3(0.f, -1.f, 0.f) * fLength * 100.f, PSX::PxForceMode::eFORCE);
-				}
+				PSX::PxVec3 vCompressedDir = -vWorldNormal;
+				vCompressedDir.normalize();
+				pDynamic->addTorque(vCompressedDir * 100.f, PSX::PxForceMode::eFORCE);
+
 			} break;
 			default:
 			{
