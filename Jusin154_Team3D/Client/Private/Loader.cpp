@@ -388,7 +388,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_NPC = false;
 	isLoad_Monster = false;
 #endif // 
-#ifdef 인혁
+#ifdef 나
 	isLoad_Background = false;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;

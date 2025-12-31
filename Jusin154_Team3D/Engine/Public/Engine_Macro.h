@@ -54,7 +54,7 @@
 #undef USE_LOWTEXTURE
 //#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 //#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
-#elif 인혁
+#elif 나
 #undef ASSERT_INHYUK
 #define ASSERT_INHYUK(expression) assert(expression)
 #undef USE_LOWTEXTURE
