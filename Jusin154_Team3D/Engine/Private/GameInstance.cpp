@@ -1355,9 +1355,9 @@ _float* CGameInstance::Get_DepthPackExponentPtr()
 	return m_pVolumetric->Get_DepthPackExponentPtr();
 }
 
-void CGameInstance::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent)
+void CGameInstance::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent, _float fHeightOffset)
 {
-	m_pVolumetric->Setting_Volumetirc(fDensity , fLightIntensity , fAsymmetryParameter, fDepthPackExponent);
+	m_pVolumetric->Setting_Volumetirc(fDensity , fLightIntensity , fAsymmetryParameter, fDepthPackExponent, fHeightOffset);
 }
 
 void CGameInstance::Update_Volumetric()

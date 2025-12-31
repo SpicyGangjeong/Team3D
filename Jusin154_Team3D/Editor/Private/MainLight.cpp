@@ -135,8 +135,8 @@ HRESULT CMainLight::Ready_Components()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.3294f, 0.4824f, 0.4824f, 0.0314f);
-	LightDesc.vAmbient = _float4(0.1608f, 0.1608f, 0.1608f, 0.0f);
+	LightDesc.vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
+	LightDesc.vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
 	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 	m_pTransformCom->Rotation(XMConvertToRadians(-4.f), XMConvertToRadians(271.f), 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
@@ -161,6 +161,8 @@ HRESULT CMainLight::Ready_Components()
 	m_pGameInstance->Set_FogColor(vColor);
 	m_pGameInstance->Set_Fog(10.f, 10.f);
 #endif // gimch
+
+	
 
 	return S_OK;
 }

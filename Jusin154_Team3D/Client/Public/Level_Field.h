@@ -23,6 +23,7 @@ private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);
 	HRESULT Ready_Lights();
+	HRESULT Ready_Volumetric();
 	HRESULT Ready_Camera();
 	HRESULT Ready_Layer_SkyBox();
 	HRESULT Ready_Background();

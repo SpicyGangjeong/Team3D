@@ -3,7 +3,7 @@
     <Container Name="SD_Center_Structure_Core">
         <Position x="90.616638" y="61.029755" z="181.1416"/>
         <Scale x="0.99999976" y="1" z="0.99999976"/>
-        <Rotation x="-0" y="-89.999954" z="-0"/>
+        <Rotation x="-0" y="-89.999962" z="-0"/>
         <MapContainerType type="0"/>
         <BoundingBox_Min x="-35.21841" y="-35.6856" z="-31.945499"/>
         <BoundingBox_Max x="29.51535" y="56.519848" z="31.1311"/>
@@ -17,19 +17,19 @@
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
         <PartObject Lod_Level="3" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod2</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod3</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod3</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
         <PartObject Lod_Level="3" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod2</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod3</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod3</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -54,12 +54,12 @@
         </PartObject>
     </Container>
     <Container Name="MainFloor">
-        <Position x="-0.54542542" y="-16.1605" z="196.76065"/>
+        <Position x="15.454575" y="-62.060455" z="221.76065"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
         <MapContainerType type="0"/>
         <BoundingBox_Min x="-28.81465" y="-8.9726992" z="-26.676258"/>
-        <BoundingBox_Max x="28.814625" y="13.2588" z="26.67626"/>
+        <BoundingBox_Max x="28.814629" y="13.2588" z="26.67626"/>
         <PartObject Lod_Level="3" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod1</PrototypeTag>
@@ -93,7 +93,7 @@
             <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
             <Position x="0" y="0" z="0"/>
-            <Scale x="0.99999857" y="1" z="0.99999857"/>
+            <Scale x="0.99999881" y="1" z="0.99999881"/>
             <Rotation x="-0" y="-179.99995" z="-0"/>
         </PartObject>
         <PartObject Lod_Level="3" Key_Index="4">
@@ -120,12 +120,12 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_DrillWall_Wall_tunnel_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_DrillWall_Wall_tunnel_Lod2</PrototypeTag>
         <Position x="-6.2576318" y="13.000011" z="16.460384"/>
-        <Scale x="0.99999696" y="1" z="0.99999696"/>
+        <Scale x="0.99999702" y="1" z="0.99999702"/>
         <Rotation x="0" y="149.99982" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="0">
         <PrototypeTag>Prototype_GameObject_SM_ConjuredDragonZoneG3_SM_ConjuredDragonZoneG3</PrototypeTag>
-        <Position x="-1.2299185" y="-13.802015" z="197.21222"/>
+        <Position x="15.840987" y="-59.449043" z="222.07832"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
     </Object>
@@ -168,7 +168,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_01_barrier_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_01_barrier_Lod3</PrototypeTag>
         <Position x="8.9415083" y="7.31499" z="15.686381"/>
-        <Scale x="0.99999923" y="1" z="0.99999923"/>
+        <Scale x="0.99999911" y="1" z="0.99999911"/>
         <Rotation x="0" y="132.00003" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="3">
@@ -211,7 +211,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
         <Position x="12.565532" y="4.9186649" z="45.371735"/>
-        <Scale x="0.99971271" y="0.9996962" z="0.99976748"/>
+        <Scale x="0.99971259" y="0.99969614" z="0.99976742"/>
         <Rotation x="-72.000023" y="57.000023" z="103.41815"/>
     </Object>
     <Object Type="1" Lod_Level="3">
@@ -228,7 +228,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
         <Position x="-9.9581451" y="-6.1321979" z="78.127563"/>
-        <Scale x="0.99987215" y="0.99993086" z="0.99993896"/>
+        <Scale x="0.99987221" y="0.99993086" z="0.99993891"/>
         <Rotation x="279" y="-4" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -245,7 +245,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
         <Position x="-21.113478" y="-4.4468188" z="78.920029"/>
-        <Scale x="0.99990451" y="1" z="0.99990451"/>
+        <Scale x="0.99990487" y="1" z="0.99990487"/>
         <Rotation x="0" y="170.99998" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -270,7 +270,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
         <Position x="-0.59898424" y="-1.831475" z="51.009457"/>
-        <Scale x="1.0999988" y="1.0999992" z="1.0999995"/>
+        <Scale x="1.0999992" y="1.0999994" z="1.0999997"/>
         <Rotation x="281" y="-12" z="195"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -278,7 +278,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
         <Position x="-8.8064957" y="-2.5607352" z="54.605598"/>
-        <Scale x="0.99996692" y="0.99981207" z="0.99982613"/>
+        <Scale x="0.99996692" y="0.99981207" z="0.99982619"/>
         <Rotation x="-79" y="-21" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -286,7 +286,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
         <Position x="0.38874197" y="-1.7316872" z="54.66328"/>
-        <Scale x="0.9998371" y="0.99975336" z="0.99990553"/>
+        <Scale x="0.9998374" y="0.99975348" z="0.99990565"/>
         <Rotation x="83" y="173" z="12"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -354,7 +354,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Top_rock_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Top_rock_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Top_rock_Lod3</PrototypeTag>
-        <Position x="24.031487" y="-273.49725" z="147.93475"/>
+        <Position x="-4.1685157" y="-218.09718" z="95.934761"/>
         <Scale x="10" y="10" z="10"/>
         <Rotation x="0" y="0" z="0"/>
     </Object>
@@ -379,7 +379,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Sanctum_CaveShell_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Sanctum_CaveShell_A_A_Lod2</PrototypeTag>
         <Position x="-23.526148" y="12.500113" z="22.037344"/>
-        <Scale x="0.99999946" y="0.99999964" z="0.99999964"/>
+        <Scale x="0.99999964" y="0.99999976" z="0.99999976"/>
         <Rotation x="90" y="0" z="-146"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -411,7 +411,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_C_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_C_Lod2</PrototypeTag>
         <Position x="-0.69039518" y="-0.7595998" z="104.48612"/>
-        <Scale x="0.99999994" y="0.99999994" z="1"/>
+        <Scale x="1" y="1" z="1"/>
         <Rotation x="15" y="90" z="47"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -477,7 +477,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
         <Position x="0.84340656" y="7.9303908" z="31.134466"/>
-        <Scale x="0.99999976" y="0.9999997" z="0.99999976"/>
+        <Scale x="0.99999976" y="0.99999976" z="0.9999997"/>
         <Rotation x="11" y="66" z="95"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -502,7 +502,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_02_barrier_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_02_barrier_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_02_barrier_Lod3</PrototypeTag>
-        <Position x="-36.42326" y="-2.709861" z="143.91249"/>
+        <Position x="-63.20319" y="2.8758738" z="142.6291"/>
         <Scale x="0.9999997" y="1" z="0.9999997"/>
         <Rotation x="0" y="-120" z="0"/>
     </Object>
@@ -565,6 +565,15 @@
         <Position x="-27.277679" y="-5.8310142" z="155.97043"/>
         <Scale x="1" y="0.99999982" z="1"/>
         <Rotation x="2" y="-58" z="-2"/>
+    </Object>
+    <Object Type="1" Lod_Level="3">
+        <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
+        <Position x="-26.105206" y="-5.8742881" z="156.2901"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="1" y="11" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Rock_N110</PrototypeTag>
@@ -667,41 +676,41 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
-        <Position x="-59.658913" y="1.2851217" z="120.69578"/>
+        <Position x="-62.246441" y="-2.3902447" z="123.28508"/>
         <Scale x="1" y="0.99999976" z="0.99999976"/>
-        <Rotation x="91" y="30" z="0"/>
+        <Rotation x="90" y="0" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="3">
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_01_barrier</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_01_barrier_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_01_barrier_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_01_barrier_Lod3</PrototypeTag>
-        <Position x="-39.067284" y="-3.3409057" z="146.35178"/>
+        <Position x="-53.072697" y="-3.1165009" z="152.66946"/>
         <Scale x="0.99999976" y="1" z="0.99999976"/>
-        <Rotation x="0" y="-61" z="0"/>
+        <Rotation x="0" y="-75" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="3">
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_02_barrier</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_02_barrier_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_02_barrier_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Gauntlet_02_barrier_Lod3</PrototypeTag>
-        <Position x="-36.1437" y="-1.8005683" z="115.12833"/>
+        <Position x="-34.315231" y="-2.0528224" z="109.37218"/>
         <Scale x="1.5" y="1.5" z="1.5"/>
-        <Rotation x="43" y="0" z="0"/>
+        <Rotation x="0" y="285" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
-        <Position x="-61.701439" y="-0.61707294" z="130.33885"/>
+        <Position x="-60.442032" y="-3.1543531" z="157.9068"/>
         <Scale x="1" y="0.99999982" z="1"/>
-        <Rotation x="93" y="28" z="0"/>
+        <Rotation x="60" y="0" z="-30"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_B</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_B_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_B_Lod2</PrototypeTag>
-        <Position x="-33.237759" y="-2.62553" z="150.66624"/>
+        <Position x="-46.777443" y="-1.3062706" z="163.18243"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
     </Object>
@@ -709,7 +718,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_B</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_B_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_B_Lod2</PrototypeTag>
-        <Position x="-52.814796" y="-2.5514283" z="96.003014"/>
+        <Position x="-66.351379" y="4.8245163" z="140.02983"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="120" z="0"/>
     </Object>
@@ -717,25 +726,25 @@
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_RockGround_A</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_RockGround_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_RockGround_A_Lod2</PrototypeTag>
-        <Position x="-21.332092" y="-9.638586" z="162.2536"/>
-        <Scale x="1.1999999" y="2" z="2"/>
-        <Rotation x="0" y="-73" z="-31"/>
+        <Position x="-22.807938" y="-11.853147" z="162.12589"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="-60" z="-20"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C_Lod2</PrototypeTag>
-        <Position x="-33.210457" y="-3.3332615" z="250.71452"/>
-        <Scale x="10" y="10" z="10"/>
-        <Rotation x="-2" y="60" z="8"/>
+        <Position x="-118.17125" y="-59.162086" z="284.09644"/>
+        <Scale x="20" y="20" z="20"/>
+        <Rotation x="0" y="0" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_MD_A</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_MD_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_MD_A_Lod2</PrototypeTag>
-        <Position x="59.142254" y="2.6246691" z="226.76474"/>
-        <Scale x="20" y="20" z="20"/>
-        <Rotation x="60" y="195" z="0"/>
+        <Position x="110.87371" y="-60.16074" z="136.97139"/>
+        <Scale x="30" y="32" z="30"/>
+        <Rotation x="90" y="195" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_MD_B</PrototypeTag>
@@ -749,16 +758,16 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_Broken_Stalagmite_A_A_Lod2</PrototypeTag>
-        <Position x="-34.545471" y="-7.3144598" z="147.19632"/>
-        <Scale x="2" y="2" z="2"/>
-        <Rotation x="90" y="-13" z="0"/>
+        <Position x="37.649933" y="-56.293678" z="189.54504"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="60" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="3">
         <PrototypeTag>Prototype_GameObject_SM_AgedTombProtector_Grunt_A_A</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_AgedTombProtector_Grunt_A_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_AgedTombProtector_Grunt_A_A_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_AgedTombProtector_Grunt_A_A_Lod3</PrototypeTag>
-        <Position x="-0.39500338" y="-14.256949" z="196.38307"/>
+        <Position x="14.213883" y="-60.124386" z="223.37006"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
     </Object>
@@ -767,9 +776,9 @@
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_A_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_A_Lod3</PrototypeTag>
-        <Position x="-40.495888" y="4.8741293" z="218.10585"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="2" y="17" z="-17"/>
+        <Position x="48.371517" y="-44.666214" z="256.67169"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="450" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="3">
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_B</PrototypeTag>
@@ -784,50 +793,67 @@
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_C</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_C_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_C_Lod2</PrototypeTag>
-        <Position x="-43.326477" y="6.4479647" z="219.36571"/>
+        <Position x="43.09586" y="-48.873901" z="256.54434"/>
         <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="135" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_D</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_D_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_D_Lod2</PrototypeTag>
-        <Position x="-45.665279" y="2.4449012" z="219.43742"/>
+        <Position x="48.439754" y="-47.256763" z="257.98126"/>
         <Scale x="1" y="1" z="1"/>
-        <Rotation x="-29" y="0" z="0"/>
+        <Rotation x="1" y="0" z="0"/>
+    </Object>
+    <Object Type="1" Lod_Level="3">
+        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_F</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_F_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_F_Lod2</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_F_Lod3</PrototypeTag>
+        <Position x="47.738712" y="-59.25156" z="224.37935"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="45" y="36" z="0"/>
+    </Object>
+    <Object Type="1" Lod_Level="2">
+        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_M</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_M_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_M_Lod2</PrototypeTag>
+        <Position x="-10.77942" y="-59.410133" z="242.21277"/>
+        <Scale x="5" y="5" z="5"/>
+        <Rotation x="-30" y="0" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_Pensieve_Akio_Rock_A</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_Pensieve_Akio_Rock_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_SanctumDun_Pensieve_Akio_Rock_A_Lod2</PrototypeTag>
-        <Position x="53.162827" y="-6.6190376" z="202.28929"/>
+        <Position x="4.0287285" y="-28.955685" z="277.99692"/>
         <Scale x="1" y="1" z="1"/>
-        <Rotation x="2" y="30" z="-45"/>
+        <Rotation x="0" y="0" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_Repository_EdgeRock_Base</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_EdgeRock_Base_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_EdgeRock_Base_Lod2</PrototypeTag>
-        <Position x="3.33846" y="-14.036123" z="251.83813"/>
-        <Scale x="5" y="5" z="5.0000005"/>
+        <Position x="3.33846" y="-57.136124" z="289.83813"/>
+        <Scale x="10" y="10" z="10"/>
         <Rotation x="0" y="115" z="90"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C_Lod2</PrototypeTag>
-        <Position x="26.085785" y="-14.550651" z="140.74722"/>
-        <Scale x="10" y="10" z="10"/>
-        <Rotation x="0" y="75" z="0"/>
+        <Position x="166.55321" y="-110.51585" z="269.20355"/>
+        <Scale x="20" y="19.999998" z="19.999998"/>
+        <Rotation x="105" y="0" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="3">
         <PrototypeTag>Prototype_GameObject_SM_Repository_FracturedCliff_01</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_FracturedCliff_01_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_FracturedCliff_01_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_FracturedCliff_01_Lod3</PrototypeTag>
-        <Position x="-24.230169" y="-7.3430138" z="150.42848"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="51" z="6"/>
+        <Position x="-28.803976" y="-7.29072" z="154.71165"/>
+        <Scale x="2.1000001" y="1" z="1"/>
+        <Rotation x="13" y="39" z="0"/>
     </Object>
     <Object Type="1" Lod_Level="2">
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Rock_Y2</PrototypeTag>
@@ -850,7 +876,7 @@
         <PrototypeTag>Prototype_GameObject_SM_Repository_DestructibleCover_A_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_DestructibleCover_A_Lod2</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_Repository_DestructibleCover_A_Lod3</PrototypeTag>
-        <Position x="-28.418056" y="-3.8354592" z="154.20857"/>
+        <Position x="-43.926014" y="-3.6771858" z="159.54404"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
     </Object>
@@ -934,7 +960,7 @@
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_MD_A3_Lod1</PrototypeTag>
         <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_MD_A3_Lod2</PrototypeTag>
         <Position x="9.9750528" y="-1.3253504" z="94.724838"/>
-        <Scale x="0.99999994" y="0.99999994" z="1"/>
+        <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="-20"/>
     </Object>
     <Object Type="1" Lod_Level="2">
@@ -944,46 +970,5 @@
         <Position x="8.8833523" y="-1.4699308" z="97.490433"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="105" z="0"/>
-    </Object>
-    <Object Type="1" Lod_Level="3">
-        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_A</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_A_Lod1</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_A_Lod2</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_A_Lod3</PrototypeTag>
-        <Position x="42.514252" y="0.3793726" z="156.28098"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Object>
-    <Object Type="1" Lod_Level="2">
-        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_D</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_D_Lod1</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_SanctumDun_MagicRockTendril_D_Lod2</PrototypeTag>
-        <Position x="41.1147" y="-1.0827398" z="161.14326"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="-30" y="225" z="0"/>
-    </Object>
-    <Object Type="1" Lod_Level="2">
-        <PrototypeTag>Prototype_GameObject_SM_BoH_BreakingBridge_Area07_Base</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_BoH_BreakingBridge_Area07_Base_Lod1</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_BoH_BreakingBridge_Area07_Base_Lod2</PrototypeTag>
-        <Position x="32.063461" y="6.3117862" z="249.41806"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Object>
-    <Object Type="1" Lod_Level="2">
-        <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C_Lod1</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_CavernDun_Sanctum_Rock_LG_C_Lod2</PrototypeTag>
-        <Position x="21.034981" y="-13.552054" z="239.63063"/>
-        <Scale x="2" y="2" z="2"/>
-        <Rotation x="0" y="105" z="0"/>
-    </Object>
-    <Object Type="1" Lod_Level="2">
-        <PrototypeTag>Prototype_GameObject_SM_Repository_EdgeRock_Base</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_Repository_EdgeRock_Base_Lod1</PrototypeTag>
-        <PrototypeTag>Prototype_GameObject_SM_Repository_EdgeRock_Base_Lod2</PrototypeTag>
-        <Position x="44.267986" y="-14.369235" z="182.47475"/>
-        <Scale x="2" y="2" z="2"/>
-        <Rotation x="-45" y="90" z="45"/>
     </Object>
 </Land>
