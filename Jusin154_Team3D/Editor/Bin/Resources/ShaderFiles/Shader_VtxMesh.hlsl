@@ -198,7 +198,7 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
 }
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
     
     matrix matWV, matWVP;
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
@@ -349,7 +349,7 @@ struct PS_OUT
 };
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -450,7 +450,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 PS_OUT PS_MAIN_SELECT(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -467,7 +467,7 @@ PS_OUT PS_MAIN_SELECT(PS_IN In)
 
 PS_OUT PS_GLASS(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     vector vGlassDiffuse = g_GlassTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
@@ -486,7 +486,7 @@ PS_OUT PS_GLASS(PS_IN In)
 
 PS_OUT PS_GLASS_CUBE(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
@@ -729,7 +729,7 @@ PS_OUT_CAPTUREDMODEL PS_CAPTUREDMODEL(PS_IN_CAPTUREDMODEL In)
 
 PS_OUT PS_LAKE(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float2 vUV = float2(In.vTexcoord.x + cos(g_fTime * g_vUVSpeed1.x), In.vTexcoord.y + cos(g_fTime * g_vUVSpeed1.y)) * g_fNormalValue1;
     float2 vUVLarge = float2(In.vTexcoord.x + cos(g_fTime * g_vUVSpeed2.x), In.vTexcoord.y + cos(g_fTime * g_vUVSpeed2.y)) * g_fNormalValue2;
@@ -775,7 +775,7 @@ PS_OUT PS_LAKE(PS_IN In)
 
 PS_OUT PS_LAND(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 10.f);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 10.f);
@@ -811,7 +811,7 @@ PS_OUT PS_LAND(PS_IN In)
 
 PS_OUT PS_NONMRO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
   
@@ -839,7 +839,7 @@ PS_OUT PS_NONMRO(PS_IN In)
 
 PS_OUT PS_SPECTOR_WEAPON_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float4 vMtrlDiffuse = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
@@ -880,7 +880,7 @@ PS_OUT PS_SPECTOR_WEAPON_MAIN(PS_IN In)
 }
 PS_OUT PS_LEVIOSO(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);

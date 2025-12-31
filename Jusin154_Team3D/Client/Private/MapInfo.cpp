@@ -395,10 +395,6 @@ HRESULT CMapInfo::Load_LightElements(const _char* pFileName, const _wchar* pLaye
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc)))
 			return E_FAIL;
 	}
-#ifndef 기무리
-	//MSG_BOX("Successed to Load File");
-#endif
-
 	return S_OK;
 }
 

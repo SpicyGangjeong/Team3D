@@ -21,6 +21,7 @@ public:
 private:
 	HRESULT Initialize(_uint iResourceCount, _uint iNumLevel);
 	ID3D11ShaderResourceView* Load_SRV(const filesystem::path& pathFile);
+	HRESULT Replacer_SrcFilePath(filesystem::path& pathFile);
 
 private:
 #ifdef _DEBUG

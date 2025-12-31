@@ -86,7 +86,7 @@ float g_fWinSizeX;
 float g_fWinSizeY;
 
 /* 디퓨즈 */
-vector g_vColor;
+float4 g_vColor;
 float  g_fDiffuseAlpha;
 
 float2 g_vDiffuseUVGainAmount;
@@ -302,18 +302,18 @@ VS_BULR_MESH_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 
  
 
-    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    float4 vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
-    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
-    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
-    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(float4(In.vBinormal, 0.f), matW)).xyz;
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
-    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos = vPosition;
-    Out.vPrevProjPos = mul(vector(In.vPosition, 1.f), matPrevWVP);
+    Out.vPrevProjPos = mul(float4(In.vPosition, 1.f), matPrevWVP);
     
     return Out;
 }
@@ -329,7 +329,7 @@ VS_BULR_MESH_OUT VS_MAIN_NO_POS(VS_IN In, uint iGPUIndex : SV_InstanceID)
     row_major matrix Wolrd_NonPosMatrix = g_WorldMatrix;
     
     
-    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    Wolrd_NonPosMatrix[3] = float4(0.f, 0.f, 0.f, 1.f);
     
     matW = mul(TransformMatrix, Wolrd_NonPosMatrix);
     
@@ -345,7 +345,7 @@ VS_BULR_MESH_OUT VS_MAIN_NO_POS(VS_IN In, uint iGPUIndex : SV_InstanceID)
     row_major matrix PreWolrd_NonPosMatrix = g_PrevWorldMatrix;
     
     
-    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    Wolrd_NonPosMatrix[3] = float4(0.f, 0.f, 0.f, 1.f);
     
     matrix matPrevW, matPrevWV, matPrevWVP;
     
@@ -357,18 +357,18 @@ VS_BULR_MESH_OUT VS_MAIN_NO_POS(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
     
     
-    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    float4 vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
-    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
-    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
-    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(float4(In.vBinormal, 0.f), matW)).xyz;
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
-    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos = vPosition;
-    Out.vPrevProjPos = mul(vector(In.vPosition, 1.f), matPrevWVP);
+    Out.vPrevProjPos = mul(float4(In.vPosition, 1.f), matPrevWVP);
     
     return Out;
 }
@@ -386,15 +386,15 @@ VS_OUT VS_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    float4 vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
-    Out.vNormal   = normalize(mul(vector(In.vNormal, 0.f), matW));
-    Out.vTangent  = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
-    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vNormal   = normalize(mul(float4(In.vNormal, 0.f), matW));
+    Out.vTangent  = normalize(mul(float4(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(float4(In.vBinormal, 0.f), matW)).xyz;
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
-    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos  = vPosition;
     
@@ -411,7 +411,7 @@ VS_OUT VS_NONPOS(VS_IN In, uint iGPUIndex : SV_InstanceID)
     
     row_major matrix Wolrd_NonPosMatrix = g_WorldMatrix;
     
-    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    Wolrd_NonPosMatrix[3] = float4(0.f, 0.f, 0.f, 1.f);
     
     matW = mul(TransformMatrix, Wolrd_NonPosMatrix);
     
@@ -420,15 +420,15 @@ VS_OUT VS_NONPOS(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    float4 vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
-    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
-    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
-    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(float4(In.vBinormal, 0.f), matW)).xyz;
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
-    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos = vPosition;
     return Out;
@@ -455,18 +455,18 @@ VS_BULR_MESH_OUT VS_BLUR_MESH(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matPrevWVP = mul(matPrevWV, g_PrevProjMatrix);
     
 
-    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    float4 vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
-    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
-    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
-    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(float4(In.vBinormal, 0.f), matW)).xyz;
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
-    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
     Out.vProjPos = vPosition;
-    Out.vPrevProjPos = mul(vector(In.vPosition, 1.f), matPrevWVP);
+    Out.vPrevProjPos = mul(float4(In.vPosition, 1.f), matPrevWVP);
     
     return Out;
 }
@@ -503,11 +503,11 @@ struct PS_NOMAL_OUT
 
 float4 DrawEffect(PS_IN In)
 {
-    vector vMtrlDiffuse = vector(0.f ,0.f ,0.f ,0.f);
-    vector vMtrlMask;
-    vector vMtrlNoise;
-    vector vMtrlDissolve;
-    vector vMtrlDistortion;
+    float4 vMtrlDiffuse = float4(0.f ,0.f ,0.f ,0.f);
+    float4 vMtrlMask;
+    float4 vMtrlNoise;
+    float4 vMtrlDissolve;
+    float4 vMtrlDistortion;
     
     float fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
     float2 vDiffuseTime = g_ParticleValue[In.iGPUIndex].vDiffuseUVMoveTime;
@@ -555,7 +555,7 @@ float4 DrawEffect(PS_IN In)
             
         }
         
-        vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
+        float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
         
         if (g_isDiffuse_R)
             vMtrlDiffuse.r = vDiffuse.r;
@@ -611,7 +611,7 @@ float4 DrawEffect(PS_IN In)
         
         if (g_isNoiseColor)
         {
-            float fNoiseValue = vMtrlNoise.rgb;
+            float fNoiseValue = vMtrlNoise.r;
         
             if (g_isNoise_G == true)
                 fNoiseValue = vMtrlNoise.g;
@@ -623,7 +623,7 @@ float4 DrawEffect(PS_IN In)
         }
         
         if (length(g_vNoiseColor) > FLT_EPSILON5)
-            vMtrlDiffuse.rgb *= g_vNoiseColor;
+            vMtrlDiffuse.rgb *= g_vNoiseColor.rgb;
 
 
     }
@@ -696,10 +696,7 @@ float4 DrawEffect(PS_IN In)
     
     vMtrlDiffuse.a *= g_fDiffuseAlpha;
       
-    if (vMtrlDiffuse.a <= FLT_EPSILON5)
-        discard;
-    
-    
+    clip(vMtrlDiffuse.a - FLT_EPSILON5);
     
     if (g_isDissolve == true)
     {
@@ -775,16 +772,14 @@ float4 DrawEffect(PS_IN In)
             
             if (g_isNoDissolveSmoothStep == true)
             {
-                fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
-
+                fFade = fTimeRatio;
             }
             
             vMtrlDiffuse.a *= fFade;
 
         }
        
-        if (vMtrlDiffuse.a <= FLT_EPSILON5)
-            discard;
+        clip(vMtrlDiffuse.a - FLT_EPSILON5);
     }
     
 
@@ -793,7 +788,7 @@ float4 DrawEffect(PS_IN In)
 
 float4 EmissiveDraw(PS_IN In, float4 Diffuse)
 {
-    float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
+    float4 vEmissiveMtrl = float4(0.f, 0.f, 0.f, 0.f);
     float2 CenteredUV = In.vTexcoord - 0.5f;
     float fEmissive = 0.f;
     float fEmissiveStrength = g_fEmissiveStrength;
@@ -846,9 +841,9 @@ float4 EmissiveDraw(PS_IN In, float4 Diffuse)
     
 }
 
-PS_OUT BlendedWeight(vector fDiffuse, float fLinearZ)
+PS_OUT BlendedWeight(float4 fDiffuse, float fLinearZ)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float3 vColor = fDiffuse.rgb;
     float fAlpha = fDiffuse.a;
@@ -869,9 +864,11 @@ PS_OUT BlendedWeight(vector fDiffuse, float fLinearZ)
     
     //float fWeight = pow(fLinearZ, -2.5);
     
-    float fWeight = clamp(pow(fLinearZ, -2.5f), 1.0f, 1000.0f);
+    float linearZPositive = max(fLinearZ, 1e-6f);
+    float fWeight = clamp(pow(linearZPositive, -2.5f), 1.0f, 1000.0f);
+
     
-    Out.vDiffuse = vector(vColor.rgb * fAlpha, fAlpha) * fWeight;
+    Out.vDiffuse = float4(vColor.rgb * fAlpha, fAlpha) * fWeight;
    
     Out.vRevealage.r = fAlpha;
 
@@ -986,7 +983,7 @@ PS_NOMAL_OUT PS_MAIN(PS_BLUR_MESH_IN In)
     PS_In.vProjPos = In.vProjPos;
     PS_In.iGPUIndex = In.iGPUIndex;
 
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
     float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
@@ -1025,9 +1022,9 @@ PS_NOMAL_OUT PS_MAIN(PS_BLUR_MESH_IN In)
 
 PS_OUT PS_NON_NORMALMAP(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
     
@@ -1065,7 +1062,7 @@ VS_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    float4 vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
     Out.vTexcoord = In.vTexcoord;
@@ -1088,7 +1085,7 @@ VS_OUT VS_BLUR_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    float4 vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
     Out.vTexcoord = In.vTexcoord;
@@ -1109,7 +1106,7 @@ VS_OUT VS_BLUR_NOPOS(VS_IN In, uint iGPUIndex : SV_InstanceID)
     
     row_major matrix Wolrd_NonPosMatrix = g_WorldMatrix;
     
-    Wolrd_NonPosMatrix[3] = vector(0.f, 0.f, 0.f, 1.f);
+    Wolrd_NonPosMatrix[3] = float4(0.f, 0.f, 0.f, 1.f);
     
     matW = mul(TransformMatrix, Wolrd_NonPosMatrix);
     
@@ -1118,7 +1115,7 @@ VS_OUT VS_BLUR_NOPOS(VS_IN In, uint iGPUIndex : SV_InstanceID)
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    float4 vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     
     Out.vPosition = vPosition;
     Out.vTexcoord = In.vTexcoord;
@@ -1148,19 +1145,15 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
 {
     PS_BLUR_OUT Out;
     
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
     
     if (g_isBlurColor == true)
     {
-        if (length(vMtrlDiffuse.rgb) < FLT_EPSILON5)
-        {
-            discard;
-        }
+        clip(length(vMtrlDiffuse.rgb) - FLT_EPSILON5);
         
-        vMtrlDiffuse = vector(g_vBlurColor.rgb, vMtrlDiffuse.a);
-
+        vMtrlDiffuse = float4(g_vBlurColor.rgb, vMtrlDiffuse.a);
     }
     
     vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
@@ -1178,7 +1171,7 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
         fBulrIntensity = saturate(fBulrIntensity);
     }
    
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBulrIntensity, vMtrlDiffuse.a);
+    Out.vDiffuse = float4(vMtrlDiffuse.rgb * fBulrIntensity, vMtrlDiffuse.a);
     
     return Out;
 }
@@ -1187,19 +1180,15 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
 {
     PS_BLUR_OUT Out;
     
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
     
     if(g_isBlurColor == true)
     {
-        if (length(vMtrlDiffuse.rgb) < FLT_EPSILON5)
-        {
-            discard;
-        }
+        clip(length(vMtrlDiffuse.rgb) - FLT_EPSILON5);
         
-        vMtrlDiffuse = vector(g_vBlurColor.rgb, vMtrlDiffuse.a);
-
+        vMtrlDiffuse = float4(g_vBlurColor.rgb, vMtrlDiffuse.a);
     }
 
     
@@ -1220,7 +1209,7 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
         fBulrIntensity = saturate(fBulrIntensity);
     }
    
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBulrIntensity, vMtrlDiffuse.a);
+    Out.vDiffuse = float4(vMtrlDiffuse.rgb * fBulrIntensity, vMtrlDiffuse.a);
     
     return Out;
 }
@@ -1233,7 +1222,7 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     if (FLT_EPSILON5 >= (In.vLifeTime.x / In.vLifeTime.y))
         discard;
     
-    vector vMtrlDiffuse = vector(0.f, 0.f, 0.f, 0.f);
+    float4 vMtrlDiffuse = float4(0.f, 0.f, 0.f, 0.f);
     
     vMtrlDiffuse = DrawEffect(In);
     
@@ -1269,7 +1258,7 @@ PS_BLNED_OUT PS_BLEND(PS_IN In)
 {
     PS_BLNED_OUT Out;
     
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
     
@@ -1287,7 +1276,7 @@ PS_BLNED_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
 {
     PS_BLNED_OUT Out;
     
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
     
@@ -1304,9 +1293,9 @@ PS_BLNED_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
 
 PS_OUT PS_NO_DEPTH_COMPARE(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
     
@@ -1323,7 +1312,7 @@ PS_BLOOM_OUT PS_DISTORTION(PS_IN In)
 {
     PS_BLOOM_OUT Out;
     
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
 
     vMtrlDiffuse = DrawEffect(In);
@@ -1365,7 +1354,6 @@ PS_BLUR_MESH_OUT PS_BLUR_MESH(PS_BLUR_MESH_IN In)
 {
     PS_BLUR_MESH_OUT Out;
     
-    PS_OUT PS_Out;
     PS_IN PS_In;
     
     PS_In.vPosition = In.vPosition;
@@ -1378,7 +1366,7 @@ PS_BLUR_MESH_OUT PS_BLUR_MESH(PS_BLUR_MESH_IN In)
     PS_In.vProjPos = In.vProjPos;
     PS_In.iGPUIndex = In.iGPUIndex;
     
-    vector vMtrlDiffuse;
+    float4 vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(PS_In);
 
@@ -1393,7 +1381,7 @@ PS_BLUR_MESH_OUT PS_BLUR_MESH(PS_BLUR_MESH_IN In)
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
         (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
         0.f, // 서페이스 파라미터
-        1.f);
+        1.f).rg;
     
     return Out;
 }

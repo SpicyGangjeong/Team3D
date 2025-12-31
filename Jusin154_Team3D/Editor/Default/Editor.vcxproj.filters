@@ -685,6 +685,27 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point">
       <UniqueIdentifier>{837e0b65-8ea3-41c5-8176-defa6e0cf3a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel">
+      <UniqueIdentifier>{dd61e764-b7d3-444e-b366-8d5ae8178eea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Flag">
+      <UniqueIdentifier>{3c9de404-4242-49b1-9ffb-8cae91794f27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Circle">
+      <UniqueIdentifier>{d1ddcfea-f78c-400c-962f-2998b698f41a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard">
+      <UniqueIdentifier>{7ed6c441-cc93-42ff-ba9d-1428bbc279cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Fiish">
+      <UniqueIdentifier>{0b19a4f7-c004-4e10-8ceb-7b9b63d78e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Exit">
+      <UniqueIdentifier>{39648080-72dd-484f-b490-b79d550b971d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record">
+      <UniqueIdentifier>{cfd0b003-cc18-48cf-a881-94e137b5dadc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1388,6 +1409,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Point.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Flag.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Circle.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Scoreboard.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Fiish.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Fiish</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Exit.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Exit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_Record.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2095,8 +2137,32 @@
     <ClCompile Include="..\Private\Ranrok_Breath.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Loader_ObjectViewer.cpp">
+      <Filter>01.Level\00.Loading\Loader</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Point.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Flag.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Circle.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Scoreboard.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Fiish.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Fiish</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Exit.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Exit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_Record.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

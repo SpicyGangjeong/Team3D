@@ -345,6 +345,10 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMapFinal"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
+			return E_FAIL;
+		}
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityTile"), (_uint)(Viewport.Width / (_float)m_iMBTileSize), (_uint)(Viewport.Height / (_float)m_iMBTileSize),
 			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
 			return E_FAIL;
@@ -507,6 +511,9 @@ HRESULT CRenderer::Initialize()
 
 		/* MRT_MotionBlur */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur"), TEXT("Target_MotionBlur")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur"), TEXT("Target_VelocityMapFinal")))) {
 			return E_FAIL;
 		}
 

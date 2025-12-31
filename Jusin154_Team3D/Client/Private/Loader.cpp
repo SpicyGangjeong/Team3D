@@ -14,7 +14,6 @@
 #include "CamPosition_Socket.h"
 #include "CamPosition_Target.h"
 #include "CamPosition_AI.h"
-#include "Camera_Model.h"
 #include "SkyBox.h"
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
@@ -132,6 +131,15 @@
 #include "SpellLearn_Booster.h"
 #include "SpellLearn_Slot.h"
 #include "SpellLearn_Overlay.h"
+
+#include "Broom_Panel.h"
+#include "Broom_Flag.h"
+#include "Broom_Circle.h"
+#include "Broom_Scoreboard.h"
+#include "Broom_TargetGate.h"
+#include "Broom_Finish.h"
+#include "Broom_Record.h"
+#include "Broom_Exit.h"
 
 #include "Interaction_Key.h"
 
@@ -356,7 +364,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
 	_bool isLoad_Background = { true };
-	_bool isLoad_Hogwart = { false };
+	_bool isLoad_Hogwart = { true };
 	_bool isLoad_UI_SEQUANTIAL = { true };
 	_bool isLoad_NPC = { true };
 	_bool isLoad_Monster = { true };
@@ -376,8 +384,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
-	isLoad_Monster = true;
+	isLoad_NPC = false;
+	isLoad_Monster = false;
 #endif // 
 #ifdef 인혁
 	isLoad_Background = false;
@@ -1227,6 +1235,24 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+
+	Asset_FileLoad("../Bin/Resources/Textures/BroomFlight", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
 		return E_FAIL;
@@ -1239,6 +1265,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma region UI_ANI
 	if (true == isLoad_UI_SEQUANTIAL) {
+
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Ancient_Magic"),
 			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic\\Ancient_Magic%d.png"), 152))))
@@ -2497,6 +2524,47 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_GameObject_SpellLearn_Broom_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Panel>(g_iStaticLevel, CBroom_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Flag*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Flag>(g_iStaticLevel, CBroom_Flag::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Circle*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Circle>(g_iStaticLevel, CBroom_Circle::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Scoreboard*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Scoreboard>(g_iStaticLevel, CBroom_Scoreboard::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_TargetGate*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_TargetGate>(g_iStaticLevel, CBroom_TargetGate::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Fiish*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Finish>(g_iStaticLevel, CBroom_Finish::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Record*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Record>(g_iStaticLevel, CBroom_Record::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Exit*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Exit>(g_iStaticLevel, CBroom_Exit::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
 	/* For.Prototype_GameObject_Interaction_Key*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CInteraction_Key>(g_iStaticLevel, CInteraction_Key::Create(m_pDevice, m_pContext))))
 	{
@@ -2879,10 +2947,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_CamPosition_Arm */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Arm>(g_iStaticLevel, CCamPosition_Arm::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* For.Prototype_GameObject_Camera_Model */
-	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Model>(g_iStaticLevel, CCamera_Model::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Wand */

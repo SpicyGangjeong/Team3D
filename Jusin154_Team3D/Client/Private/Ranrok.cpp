@@ -443,13 +443,36 @@ HRESULT CRanrok::Render_Nonblend()
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
 		if (true == m_bDrawOutLine) {
 			m_pGameInstance->Begin_OutLine_Write(2);
 		}
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
-
 		if (true == m_bDrawOutLine) {
 			m_pGameInstance->End_OutLine_Write();
 		}
@@ -512,20 +535,9 @@ HRESULT CRanrok::Render_Blend()
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
-		if (true == m_bDrawOutLine) {
-			m_pGameInstance->Begin_OutLine_Write(2);
-		}
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
-
-		if (true == m_bDrawOutLine) {
-			m_pGameInstance->End_OutLine_Write();
-		}
-	}
-
-	if (true == m_bDrawOutLine) {
-		Render_OutLine();
 	}
 	return S_OK;
 }
@@ -537,8 +549,9 @@ HRESULT CRanrok::Render_OutLine()
 	}
 
 	Compute_Depth();
-	_float fRatio = CMyTools::Saturate((m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar()));
-	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(0.14f, 0.5f, fRatio);
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
 		return E_FAIL;
 	}
@@ -565,7 +578,7 @@ HRESULT CRanrok::Render_OutLine()
 	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	for (_uint i = 0; i < iNumMeshes; i++)
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
 	{
 		if (FAILED(m_pShaderCom->Bind_Matrices(
 			"g_OffsetMatrix",
