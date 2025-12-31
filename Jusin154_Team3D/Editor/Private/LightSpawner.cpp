@@ -207,6 +207,7 @@ HRESULT CLightSpawner::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement
 	Diffuse->SetAttribute("x", pLight->vDiffuse.x);
 	Diffuse->SetAttribute("y", pLight->vDiffuse.y);
 	Diffuse->SetAttribute("z", pLight->vDiffuse.z);
+	Diffuse->SetAttribute("w", pLight->vDiffuse.w);
 	object->InsertEndChild(Diffuse);
 
 	/* Ambient */

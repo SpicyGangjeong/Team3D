@@ -17,6 +17,7 @@
 #include "MapElement_Lake.h"
 #include "RaceRing.h"
 #include "BroomRaceManager.h"
+#include "ReparoObject.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -44,7 +45,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef _DEBUG
 	// 낮, 밤 설정
 #ifdef gimch
-	m_isDay = false;
+	m_isDay = true;
 #endif // gimch
 #ifdef Bin
 	m_isDay = true;
@@ -93,6 +94,10 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	}
 
 	if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 		return E_FAIL;
 	}
 
@@ -219,7 +224,8 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			1.251f,                         // 밀도
 			0.0253f,                          // 빛 강도
 			0.9f,                          // 산란 계수
-			1.78f                           // 깊이 분포 계수
+			1.78f,                           // 깊이 분포 계수
+			0.f
 		);
 	}
 	else
@@ -228,7 +234,8 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			0.626f,                         // 밀도
 			0.01f,                          // 빛 강도
 			0.11f,                          // 산란 계수
-			1.0f                           // 깊이 분포 계수
+			1.0f,                           // 깊이 분포 계수
+			0.f
 		);
 	}
 
@@ -723,6 +730,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
+{
+	for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))) {
@@ -753,14 +771,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {
-		for (_uint i = 0; i < 1; ++i)
+		for (_uint i = 0; i < 0; ++i)
 		{
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 				return E_FAIL;
 			}
 		}
 
-		for (_uint i = 0; i < 1; ++i)
+		for (_uint i = 0; i < 0; ++i)
 		{
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 				return E_FAIL;
@@ -779,9 +797,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
-		}
+		}*/
 
 	}
 #if 진우

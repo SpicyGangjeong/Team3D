@@ -58,7 +58,7 @@ public:
 	ID3D11ShaderResourceView* Get_VolumeSRV() { return m_pAccVolumeSRV; }
 	_float*		Get_DepthPackExponentPtr() { return &m_fDepthPackExponent; }
 
-	void		Setting_Volumetirc(_float fDensity , _float fLightIntensity, _float fAsymmetryParameter , _float fDepthPackExponent);
+	void		Setting_Volumetirc(_float fDensity , _float fLightIntensity, _float fAsymmetryParameter , _float fDepthPackExponent, _float fHeightOffset);
 private:
 	class CGameInstance*		m_pGameInstance = { nullptr };
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -90,7 +90,7 @@ private:
 	_float						m_fLightIntensity = { 0.01f };			// 광원 강도
 	_float						m_fAsymmetryParameter = { 0.5344f };	//  이방성 계수 값이 클 수록 들어오는 방향으로 나가는 빛의 양이 많아짐
 	_float						m_fDepthPackExponent = { 1.f };			// 깊이 비선형 분포 지수
-	_float						m_fHieghtOffset = { 0.f };
+	_float						m_fHeightOffset = { 0.f };
 	_float						m_fBaseHeight = { 0.f };
 	_uint						m_iNumLights = { 1 };
 	_uint						m_iMaxNumLights = { 20 };

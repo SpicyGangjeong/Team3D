@@ -51,7 +51,9 @@ PS_OUT PS_MAIN(PS_IN In)
 
     
     vector vMixedDiffuse = g_MixedDiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    float fRevealage = g_RevealageTexture.Sample(PointSampler, In.vTexcoord).r;
+    float fRevealage = clamp(g_RevealageTexture.Sample(PointSampler, In.vTexcoord).r, 0.f ,1.f);
+    
+    
 
     
     Out.vBackBuffer = vector(vMixedDiffuse.rgb / fRevealage , fRevealage);

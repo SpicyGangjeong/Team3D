@@ -2271,7 +2271,7 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 			{
 				m_fNeutralTime += fTimeDelta;
 
-				if (m_fNeutralTime > 0.2f)
+				if (m_fNeutralTime > 0.25f)
 				{
 					if (iCurrAnimIndex != pairAnimInfo.first)
 					{
@@ -2281,9 +2281,11 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 			}
 		}
 		else {
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_IDLE);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_fNoInputTime += fTimeDelta;
 
-			if (m_fNoInputTime > 0.2f)
+			if (m_fNoInputTime > 0.25f)
 			{
 				pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_IDLE);
 
@@ -2443,7 +2445,7 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 			{
 				m_fNeutralTime += fTimeDelta;
 
-				if (m_fNeutralTime > 0.2f)
+				if (m_fNeutralTime > 0.25f)
 					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 			}
 		}
@@ -2451,7 +2453,7 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 
 			m_fNoInputTime += fTimeDelta;
 
-			if (m_fNoInputTime > 0.2f)
+			if (m_fNoInputTime > 0.25f)
 			{
 				pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_TURBO_FWD);
 
@@ -2747,6 +2749,22 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 			0.f);
 		Info.pText = TEXT("아바다 케다브라!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::REPARO):
+	{
+		pairAnimInfo = m_Animation[STATEANIM::REPARO_START];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() {		pairAnimInfo = m_Animation[STATEANIM::REPARO_LOOP];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
+			0.95f);
+
+		Add_Event(m_Animation[STATEANIM::REPARO_LOOP].first,
+			[&]() {		pairAnimInfo = m_Animation[STATEANIM::REPARO_END];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
+			0.95f);
+	}
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LUMOS):
 		if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
@@ -3300,6 +3318,10 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 587,false };
 	m_Animation[STATEANIM::ANCIENT_THROW] = { 920,false };
 	m_Animation[STATEANIM::AVADA_KEDAVRA] = { 0,false };
+
+	m_Animation[STATEANIM::REPARO_START] = { 759,false };
+	m_Animation[STATEANIM::REPARO_LOOP] = { 758,true };
+	m_Animation[STATEANIM::REPARO_END] = { 757,false };
 
 	m_Animation[STATEANIM::ANCIENT_LIGHTNING] = { 1002,false };
 

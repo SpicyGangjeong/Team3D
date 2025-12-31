@@ -186,8 +186,6 @@ void CBroom::Behavior_Broom_HoverEnter()
 
 HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 {
-	if (false == m_bMove)
-		return S_OK;
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 	_bool bFwd = m_Input.Z > 0.f;
@@ -197,6 +195,21 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 	_bool bDown = m_Input.Y < 0.f;
 	_bool bShift = m_Input.bHoverToggle;
 	_bool bTurbo = m_Input.bTurbo;
+
+	if (false == m_bMove)
+	{
+		m_fTargetSpeed = 0.f;
+
+		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fDecel;
+
+
+		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
+		pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
+		return S_OK;
+	}
+
+
+
 
 	if (m_bHoverToggle)
 	{
