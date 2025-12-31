@@ -102,7 +102,7 @@ HRESULT CLevel_EffectViewer::Initialize()
 	//m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
-	m_pGameInstance->Setting_Volumetirc(0.5f, 0.064f, 0.902f, 2.0f);
+	m_pGameInstance->Setting_Volumetirc(0.15f, 0.025f, 0.902f, 2.0f);
 	return S_OK;
 }
 

@@ -60,7 +60,7 @@ struct ParticleValue
     float  fLoopCount;  /* 현재 몇번째 루프중인지 */
     
     row_major matrix PreWorldMatrix;
-    //row_major matrix LocalMatrixInv;
+    row_major matrix LocalMatrixInv;
 };
 
 
@@ -637,20 +637,14 @@ void CS_MAIN(
         particleValue.vDissolveUVMoveTime.x = 0.f;
     }
         
-    //if (isCompute_LocalInverse == true)
-    //{
-    //    row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+    if (isCompute_LocalInverse == true)
+    {
+        row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
         
-       
-    //    CurMat = mul(CurMat, WorldMatrix);
+        CurMat = mul(CurMat, WorldMatrix);
         
-    //    particle.vRight = CurMat[0].xyzw;
-    //    particle.vUp = CurMat[1].xyzw;
-    //    particle.vLook = CurMat[2].xyzw;
-    //    particle.vTranslation = CurMat[3].xyzw;
-        
-    //    particleValue.LocalMatrixInv = Inverse4x4(CurMat); /* 데칼 메쉬만 인스턴스당 1번 수행할거임 */
-    //}
+        particleValue.LocalMatrixInv = Inverse4x4(CurMat); /* 데칼 메쉬만 인스턴스당 1번 수행할거임 */
+    }
    
     //아웃풋 대입
     
