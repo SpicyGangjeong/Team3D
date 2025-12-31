@@ -114,9 +114,11 @@ HRESULT CMonster::Render_OutLine()
 	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
 		return E_FAIL;
 	}
+
 	Compute_Depth();
-	_float fRatio = CMyTools::Saturate((m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar()));
-	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(2.5f, 3.f, fRatio);
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
 	}
@@ -136,9 +138,15 @@ HRESULT CMonster::Render_OutLine()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
+
 
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
@@ -147,6 +155,9 @@ HRESULT CMonster::Render_OutLine()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_READ)))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

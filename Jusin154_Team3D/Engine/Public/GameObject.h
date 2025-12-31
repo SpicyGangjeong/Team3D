@@ -92,7 +92,7 @@ protected:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 
-	void Compute_Depth();
+	virtual void Compute_Depth();
 
 protected:
 	class CGameInstance*	m_pGameInstance = { nullptr };

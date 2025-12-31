@@ -56,7 +56,11 @@ struct ParticleValue
     float  fRotateAttenuation;
     float  fRotateAttDelay;
     
+    float3 vWolrdOffset;
+    float  fLoopCount;  /* 현재 몇번째 루프중인지 */
+    
     row_major matrix PreWorldMatrix;
+    //row_major matrix LocalMatrixInv;
 };
 
 
@@ -93,8 +97,8 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isNoPos;
     
     bool isNoResetTime;
-    bool isPadding0;
-    bool isPadding1;
+    bool isLocal_Located_Not_TakeDelay;
+    bool isCompute_LocalInverse;
     bool isPadding2;
 
     float fTimeDelta;
@@ -108,8 +112,6 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     float2 vScreenSize;
     float fPadding0;
     float fPadding1;
-
-    
 }
 
 //내가 몇개의 스레드를 사용할 것인지 지정하는데
@@ -126,6 +128,47 @@ void CS_MAIN(
     float fGravity = particleValue.fGravity;
     float fOnlyDropY = 0.f;
     float fRatio = particle.vLifeTime.x / particle.vLifeTime.y;
+    bool  _isLocal_Located_Not_TakeDelay = isLocal_Located_Not_TakeDelay;
+    
+    if (particleValue.fLoopCount == 0.f) /* 첫 루프에는 딜레이에 따른 위치를 설정받지 않도록함 */
+    {
+        _isLocal_Located_Not_TakeDelay = false;
+    }
+    
+    if (_isLocal_Located_Not_TakeDelay == true && particleValue.vDelay.x <= FLT_EPSILON5)
+    {
+     
+        if (isNoWorld)
+        {
+            row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+        
+       
+            CurMat = mul(CurMat, WorldMatrix);
+        
+            particle.vRight = CurMat[0].xyzw;
+            particle.vUp = CurMat[1].xyzw;
+            particle.vLook = CurMat[2].xyzw;
+            particle.vTranslation = CurMat[3].xyzw;
+            
+            /* 월드 오프셋 */
+            
+            particle.vTranslation += CurMat[0] * particleValue.vWolrdOffset.x;
+            particle.vTranslation += CurMat[1] * particleValue.vWolrdOffset.y;
+            particle.vTranslation += CurMat[2] * particleValue.vWolrdOffset.z;
+
+        }
+        
+        if (isNoPos)
+        {
+            particle.vTranslation.xyz += WorldMatrix[3].xyz;
+            
+            /* 월드 오프셋 */
+            
+            particle.vTranslation += WorldMatrix[0] * particleValue.vWolrdOffset.x;
+            particle.vTranslation += WorldMatrix[1] * particleValue.vWolrdOffset.y;
+            particle.vTranslation += WorldMatrix[2] * particleValue.vWolrdOffset.z;
+        }
+    }
     
     particleValue.vDelay.x += fTimeDelta;
     
@@ -138,7 +181,7 @@ void CS_MAIN(
         return;
     }
     
-    if (particle.vLifeTime.x <= FLT_EPSILON5)
+    if (particle.vLifeTime.x <= FLT_EPSILON5 && _isLocal_Located_Not_TakeDelay == false)
     {
         if (isNoWorld)
         {
@@ -150,12 +193,25 @@ void CS_MAIN(
             particle.vRight = CurMat[0].xyzw;
             particle.vUp = CurMat[1].xyzw;
             particle.vLook = CurMat[2].xyzw;
-            particle.vTranslation = CurMat[3].xyzw;
+            particle.vTranslation = CurMat[3].xyzw ;
+            
+            /* 월드 오프셋 */
+            
+            particle.vTranslation += CurMat[0] * particleValue.vWolrdOffset.x;
+            particle.vTranslation += CurMat[1] * particleValue.vWolrdOffset.y;
+            particle.vTranslation += CurMat[2] * particleValue.vWolrdOffset.z;
+
         }
         
         if (isNoPos)
         {       
             particle.vTranslation.xyz += WorldMatrix[3].xyz;
+            
+            /* 월드 오프셋 */
+            
+            particle.vTranslation += WorldMatrix[0] * particleValue.vWolrdOffset.x;
+            particle.vTranslation += WorldMatrix[1] * particleValue.vWolrdOffset.y;
+            particle.vTranslation += WorldMatrix[2] * particleValue.vWolrdOffset.z;
         }
         
     }
@@ -185,6 +241,7 @@ void CS_MAIN(
         }
         
        //초기화
+        particleValue.fLoopCount += 1.f;
         particle.vRight = particleValue.vOriginRight;
         particle.vUp = particleValue.vOriginUp;
         particle.vLook = particleValue.vOriginLook;
@@ -580,6 +637,21 @@ void CS_MAIN(
         particleValue.vDissolveUVMoveTime.x = 0.f;
     }
         
+    //if (isCompute_LocalInverse == true)
+    //{
+    //    row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+        
+       
+    //    CurMat = mul(CurMat, WorldMatrix);
+        
+    //    particle.vRight = CurMat[0].xyzw;
+    //    particle.vUp = CurMat[1].xyzw;
+    //    particle.vLook = CurMat[2].xyzw;
+    //    particle.vTranslation = CurMat[3].xyzw;
+        
+    //    particleValue.LocalMatrixInv = Inverse4x4(CurMat); /* 데칼 메쉬만 인스턴스당 1번 수행할거임 */
+    //}
+   
     //아웃풋 대입
     
     g_VBInstanceOutput[iIndex] = particle;

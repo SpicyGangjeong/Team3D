@@ -100,7 +100,8 @@ HRESULT CEffectObject::Render_Blur()
 		}
 	}
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT_NONPOS)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONPOS || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::DEFAULT_NONPOS 
+		|| m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONWB_NONPOS)
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NONPOS_BLUR;
 
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
@@ -830,7 +831,23 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
 			return E_FAIL;
 		}
+
+		//if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_NormalCopy"), m_pShaderCom, "g_NormalMapTexture"))) {
+		//	return E_FAIL;
+		//}
 	}
+
+	//_float2 vViewPortSize = m_pGameInstance->Get_ViewPortSize();
+
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeX", &vViewPortSize.x, sizeof(_float)))) {
+	//	return E_FAIL;
+	//}
+
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fWinSizeY", &vViewPortSize.y, sizeof(_float)))) {
+	//	return E_FAIL;
+	//}
+
+
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;

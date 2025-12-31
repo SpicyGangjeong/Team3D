@@ -107,7 +107,7 @@ HRESULT CEffect_Container::Load_Directory(const _char* pPath)
 			size_t iPos = {};
 			_string strFilePath = szFilePath;
 
-			while ((iPos = strFilePath.find(".trail")) != std::string::npos) {
+			while ((iPos = strFilePath.find(".trail")) != string::npos) {
 				strFilePath.erase(iPos, 6);
 			};
 
@@ -149,7 +149,7 @@ HRESULT CEffect_Container::Load_Directory(const _char* pPath)
 		size_t iPos = {};
 		_string strFilePath = szFilePath;
 
-		while ((iPos = strFilePath.find(".bin")) != std::string::npos) {
+		while ((iPos = strFilePath.find(".bin")) != string::npos) {
 			strFilePath.erase(iPos, 4);
 		};
 
@@ -227,7 +227,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 		size_t iPos = strEffectPath.rfind('.');   // 뒤에서부터 '/' 검색
 
-		if (iPos != std::string::npos)
+		if (iPos != string::npos)
 		{
 			strExt += strEffectPath.substr(iPos + 1);
 			strEffectName = strEffectPath.substr(0, iPos);
@@ -235,7 +235,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 		size_t pos = strEffectName.rfind('\\');   // 뒤에서부터 '/' 검색
 
-		if (pos != std::string::npos)
+		if (pos != string::npos)
 			strEffectName = strEffectName.substr(pos + 1);
 
 		if (!strcmp(strExt.c_str(), "trail"))
@@ -255,7 +255,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 			/*이펙트 로드 로드*/
 			size_t iPos = {};
 
-			while ((iPos = strEffectPath.find(".trail")) != std::string::npos) {
+			while ((iPos = strEffectPath.find(".trail")) != string::npos) {
 				strEffectPath.erase(iPos, 6);
 			};
 
@@ -291,7 +291,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 		size_t iPosition = {};
 		_string strFilePath = strEffectPath;
 
-		while ((iPosition = strFilePath.find(".bin")) != std::string::npos) {
+		while ((iPosition = strFilePath.find(".bin")) != string::npos) {
 			strFilePath.erase(iPosition, 4);
 		};
 
@@ -328,6 +328,7 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_bVisible = true;
 	m_isCollisionEnter = false;
 	m_bHit = false;
+	m_isStop = false;
 
 	return S_OK;
 }
@@ -344,6 +345,21 @@ void CEffect_Container::Reset_Light()
 		pLight->Reset_IntensityRatio();
 	}
 
+}
+
+void CEffect_Container::Setting_Pos(_fvector vPos)
+{
+	for (auto& iter : m_PartObjects)
+	{
+		CTransform* pTransform = iter.second->Get_Component<CTransform>();
+
+		if (pTransform == nullptr)
+			continue;
+
+		pTransform->Set_State(STATE::POSITION, vPos);
+	}
+
+	m_isStop = true;
 }
 
 

@@ -22,6 +22,7 @@ public:
 	HRESULT Bind_BoneMatrices(const vector<class CBone*>& Bones, class CShader* pShader, const _char* pConstantName);
 	HRESULT Bind_BoneMatrices(_float4x4* pCombinedMatrices, class CShader* pShader, const _char* pConstantName);
 	HRESULT Render_Indexed(_uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
+	HRESULT Copy_BoneMatrices(vector<_float4x4>& pDestination);
 #ifdef EDITOR_PROJECT
 private:
 	virtual HRESULT Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);

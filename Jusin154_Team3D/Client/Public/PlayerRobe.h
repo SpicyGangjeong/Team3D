@@ -32,6 +32,8 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	HRESULT Update_RobeSocketPosition();
+	HRESULT Bind_PrevBoneMatrices(CShader* pShader, const _char* pConstant);
 private:
 	_float4x4  m_PreTransformMatrix = { };
 	const _float4x4* m_pSocketMatrix			= { nullptr };
@@ -42,7 +44,8 @@ private:
 	const _float4x4* m_RobeJointAnchorMatrices[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
 	_float4x4 m_ReconstructedJointAnchorMatirces[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { };
 
-	CModel* m_pModelCom = { nullptr };
+	CModel*				m_pModelCom = { nullptr };
+	_int				m_iBoneNum = -1;
 	CRigidBody_Dynamic* m_pRightLeg = { nullptr };
 	CRigidBody_Dynamic* m_pLeftLeg = { nullptr };
 	CRigidBody_Dynamic* m_pRobeMainAnchor = { nullptr };
@@ -54,6 +57,7 @@ private:
 	ID3D11ShaderResourceView*	m_pBoneCombinedMatrixSRV = { nullptr };
 
 	CModel::BONEINSERTION_DESC m_BoneInsertionDesc = {};
+	vector<_float4x4>	m_PrevRobeBoneMatrices = { };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
@@ -68,7 +72,6 @@ private:
 	HRESULT Bind_ShaderResources() { return S_OK; }
 
 	HRESULT Update_LegsPosition();
-	HRESULT Update_RobeSocketPosition();
 	HRESULT Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld);
 	HRESULT Create_BoneCombinedMatrixSRV();
 #ifdef _DEBUG

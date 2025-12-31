@@ -1,37 +1,22 @@
 ﻿#include "pch.h"
 #include "Player.h"
 
-#include "GameInstance.h"
-#include "InfoInstance.h"
-#include "CamPosition_Socket.h"
-#include "Camera_Gaze.h"
-#include "CamPosition_Arm.h"
-#include "Wand.h"
-#include "Item_Potion.h"
-#include "Character_Controller.h"
-#include "CamPosition_Shoulder.h"
+#include "Broom.h"
+#include "BroomRaceManager.h"
 #include "CallBack_Playable_Behavior.h"
 #include "CallBack_Playable_HitReport.h"
-#include "Monster.h"
-#include "Broom.h"
-#include "MapElement_Interactable.h"
-#include "BroomRaceManager.h"
-#include "RaceRing.h"
-#include "PlayerRobe.h"
-
-#pragma region STATE
-#include "State_Idle.h"
-#include "State_Dodge.h"
-#include "State_Jump.h"
-#include "State_Land.h"
-#include "State_Move.h"
-#include "State_Combat.h"
-#include "State_Hit.h"
-#include "State_Broom_Ride.h"
-#pragma endregion
-
-#include "Layer.h"
+#include "CamPosition_Shoulder.h"
+#include "Character_Controller.h"
 #include "EffectPool.h"
+#include "GameInstance.h"
+#include "InfoInstance.h"
+#include "Item_Potion.h"
+#include "Layer.h"
+#include "MapElement_Interactable.h"
+#include "Monster.h"
+#include "PlayerRobe.h"
+#include "RaceRing.h"
+#include "Wand.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -159,7 +144,7 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
-	
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();
@@ -167,8 +152,8 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
-	
-__super::Update(fTimeDelta);
+
+	__super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -185,8 +170,11 @@ __super::Update(fTimeDelta);
 	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
 	{
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
-		m_bAim = false; 
+		m_bAim = false;
 	}
+
+	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -231,30 +219,32 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::LOOK, look);
 	////////////////////////////////////////////////////////////////////////////
 	
-//#ifdef 기무리
-//	if (nullptr == m_pRobePart) {
-//		{
-//			CPlayerRobe::PlayerRobe_DESC Desc{};
-//			Desc.pModel = m_pModelCom;
-//			Desc.pParentTransform = m_pTransformCom;
-//			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
-//			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
-//				assert(false);
-//			}
-//		}
-//	}
-//#endif // 기무리
+#ifdef 기무리
+	if (nullptr == m_pRobePart) {
+		{
+			CPlayerRobe::PlayerRobe_DESC Desc{};
+			Desc.pModel = m_pModelCom;
+			Desc.pParentTransform = m_pTransformCom;
+			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
+			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
+				assert(false);
+			}
+		}
+	}
+#endif // 기무리
 }
 
 
 HRESULT CPlayer::Render()
 {
-	if (!m_bVisible){
+	if (!m_bVisible) {
 		return S_OK;
 	}
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
+	_float fIntensity = 0.f;
+	m_pShaderCom->Bind_RawValue("g_fMBIntensity", &fIntensity, sizeof(_float));
 	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
 	if (RENDER::NONBLEND == eType) {
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -264,13 +254,23 @@ HRESULT CPlayer::Render()
 			if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 				return E_FAIL;
 			}
-
+//#ifdef _DEBUG
+//#ifdef 기무리
+//			if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+//				return E_FAIL;
+//			}
+//#endif // 기무리
+//#endif // _DEBUG
+			
 			if (FAILED(m_pShaderCom->Bind_Matrices(
 				"g_OffsetMatrix",
 				m_pModelCom->Get_OffsetMatrix(i).data(),
 				(_int)m_pModelCom->Get_OffsetMatrix(i).size()
 			)))
 			{
+				return E_FAIL;
+			}
+			if (FAILED(Bind_ShaderParameters(i))) {
 				return E_FAIL;
 			}
 			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
@@ -280,16 +280,16 @@ HRESULT CPlayer::Render()
 
 			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 			m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
-			if (FAILED(Bind_ShaderParameters(i))) {
-				return E_FAIL;
-			}
 
 			if (FAILED(m_pModelCom->Render(i))) {
 				return E_FAIL;
 			}
 		}
+#ifdef _DEBUG
 		Render_CameraCoordinateSystem();
 		//m_pCharacter_Controller->Render();
+#endif // _DEBUG
+
 	}
 #ifdef _DEBUG
 	if (RENDER::NONLIGHT == eType) {
@@ -406,56 +406,20 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_bCameraShake = true;
 }
 
-void CPlayer::Render_CameraCoordinateSystem()
+
+void CPlayer::Set_RaceRing(CRaceRing* pRaceRing)
 {
-	m_Batch->Begin();
-
-	const _float fArrowLength = 2.0f;
-	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
-	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
-
-
-	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
-	if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
-
-		GUI::Text("%d", m_LockOnInfo.pUnit);
-
-		GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
-		GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
-		GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
-		GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
-
-		_float  fButtonSize = 45.f;
-		GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button("##2", { fButtonSize, fButtonSize });
-		GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
-		GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button("##8", { fButtonSize, fButtonSize });
-		//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
-		//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
-		//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
-		//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
+	if (m_pRaceRing != pRaceRing)
+	{
+		_vector TargetPos = pRaceRing->Get_WorldPostion();
+		m_pInfoInstance->Event_CallBack(TEXT("BroomTargetGate"), &TargetPos);
 	}
-	GUI::End();
-	m_Batch->DrawLine( // W
-		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength* XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
-	);
-	m_Batch->DrawLine( // D
-		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength* XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
-	);
-	m_Batch->DrawLine( // PlayerLook
-		VertexPositionColor(XMVectorZero(), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength* xmvLook, DirectX::Colors::HotPink)
-	);
-	m_Batch->End();
+	SAFE_RELEASE(m_pRaceRing);
+	m_pRaceRing = pRaceRing;
+	SAFE_ADDREF(m_pRaceRing);
 }
+
+
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -563,7 +527,7 @@ HRESULT CPlayer::Ready_Parts()
 		}
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this,&m_pBroom))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this, &m_pBroom))) {
 		return E_FAIL;
 	}
 
@@ -632,6 +596,21 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		fMixerFactor = 0.658333f;
 		iColorMixerMethod = 1;
 		break;
+#ifdef _DEBUG
+#ifdef 기무리
+	case PLAYER_MESH_ORDER::ROBE_CLOTH:
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH), m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+		if (nullptr != m_pRobePart) {
+			if (FAILED(m_pRobePart->Bind_PrevBoneMatrices(m_pShaderCom, "g_PrevBoneMatrices"))) {
+				return E_FAIL;
+			}
+		}
+		break;
+#endif
+#endif // _DEBUG
+
 	default:
 		break;
 	}
@@ -672,8 +651,8 @@ void CPlayer::SetGravity()
 {
 	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
 	eCollisionFlags;
-	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
-		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
+	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
+		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
 		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
@@ -697,7 +676,7 @@ void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 }
 
 _matrix CPlayer::Get_WandPos()
- {
+{
 	CWand* pWand = Get_PartObject<CWand>();
 
 	if (pWand == nullptr)
@@ -763,11 +742,64 @@ void CPlayer::Free()
 }
 #ifdef _DEBUG
 
+void CPlayer::Render_CameraCoordinateSystem()
+{
+	m_Batch->Begin();
+
+	const _float fArrowLength = 2.0f;
+	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
+
+
+	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
+
+		GUI::Text("%d", m_LockOnInfo.pUnit);
+
+		GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
+		GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
+		GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
+		GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
+
+		_float  fButtonSize = 45.f;
+		GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##2", { fButtonSize, fButtonSize });
+		GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
+		GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##8", { fButtonSize, fButtonSize });
+		//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
+		//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
+		//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
+		//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
+	}
+	GUI::End();
+	m_Batch->DrawLine( // W
+		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
+	);
+	m_Batch->DrawLine( // D
+		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
+	);
+	m_Batch->DrawLine( // PlayerLook
+		VertexPositionColor(XMVectorZero(), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * xmvLook, DirectX::Colors::HotPink)
+	);
+	m_Batch->End();
+}
 void CPlayer::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("PLAYER_DESC")) {
+		if (true == GUI::Button("ShaderRefresh")) {
+			m_pShaderCom->Shader_Refresh();
+		}
 		m_pCharacter_Controller->Describe_Entity();
 		_float4 vMomentum = {};
 		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());

@@ -68,10 +68,11 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -4.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -4.f, 1.f));
 
+#ifdef _DEBUG
 #if 진우
 	m_isDebugMode = true;
 #endif 
-
+#endif 
 	return S_OK;
 }
 
@@ -162,7 +163,6 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 
 HRESULT CGoblin_Mage::Render()
 {
-
 	if (!m_bVisible)
 		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {

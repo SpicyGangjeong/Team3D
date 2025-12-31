@@ -166,7 +166,7 @@ struct PS_OUT_VELOCITYTILE
 };
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
   
     matrix matWV, matWVP;
     
@@ -180,7 +180,7 @@ VS_OUT VS_MAIN(VS_IN In)
 }
 VS_OUT VS_CAPTURE(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
 
     float2 vClipPos = In.vPosition.xy * 2.0f; // → -1.0 ~ +1.0
 
@@ -191,7 +191,7 @@ VS_OUT VS_CAPTURE(VS_IN In)
 }
 VS_OUT VS_TONE_MAPPING(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
   
     matrix matWV, matWVP;
     
@@ -295,7 +295,7 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
         vReferenceVelocityPixel = vBlurVeloPixel;
     }
     float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, g_fMBBlurRadius);
-
+    
     [loop]
     for (int iInterval = -iMaxRadius; iInterval <= iMaxRadius; ++iInterval) {
         float fOffset = (float) abs(iInterval);
@@ -412,7 +412,7 @@ PS_OUT_VELOCITYTILE PS_MOTIONBLUR_TENTSAMPLE(PS_IN In)
         {
             vSampleUV.x = uv.x + vSrcTexelSize.x * i;
             vSampleUV.y = uv.y + vSrcTexelSize.y * j;
-            vSampleVel = g_VelocityTexture.Sample(ClampSampler, vSampleUV);
+            vSampleVel = g_VelocityTexture.Sample(ClampSampler, vSampleUV).xy;
             vSampleDiff = vSampleVel *2.f - 1.f;
             fSampleSpeed = length(vSampleDiff * g_vResolution * g_iMBTileSize);
             if (fSampleSpeed > vMaxSpeed) {
@@ -686,6 +686,15 @@ PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
     return Out;
 
 };
+PS_OUT_BACKBUFFER PS_MAIN_PRINT(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    
+    Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
+    return Out;
+
+};
 
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
@@ -795,7 +804,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_UPSAMPLE(PS_IN In)
         for (int iCol = -1; iCol < 2; ++iCol) {
             uv = In.vTexcoord + vTexcelSize * float2(iRow, iCol);
             if (true == IsValidUV(uv)) {
-                vColor  += g_fWeight_3x3_UPSAMPLE[1 + iRow][1 + iCol] * g_DiffuseTexture.SampleLevel(BorderZeroLinearSampler, uv, 0);
+                vColor += g_fWeight_3x3_UPSAMPLE[1 + iRow][1 + iCol] * g_DiffuseTexture.SampleLevel(BorderZeroLinearSampler, uv, 0).xyz;
                 fWeight += g_fWeight_3x3_UPSAMPLE[1 + iRow][1 + iCol];
             }
         }
@@ -811,6 +820,8 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_BLUR_X(PS_IN In)
     float4 vSample = float4(0.f, 0.f, 0.f, 1.f);
     float fWeight = 0.f;
     float2 uv = float2(0.f, 0.f);
+    
+    [loop]
     for (int i = -15; i < 16; ++i)
     {
         uv.x = In.vTexcoord.x + ((float) i / g_vResolution.x);
@@ -838,6 +849,8 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_BLUR_COMBINE(PS_IN In)
     float4 vSample = float4(0.f, 0.f, 0.f, 1.f);
     float fWeight = 0.f;
     float2 uv = float2(0.f, 0.f);
+    
+    [loop]
     for (int i = -15; i < 16; ++i)
     {
         uv.x = In.vTexcoord.x;
@@ -867,7 +880,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     float2 uv = In.vTexcoord;
     float fSrcAlpha = g_DiffuseTexture.Sample(PointSampler, uv).a;
     float2 vSrcTexelSize = float2(1.f / g_vSrcResolution.x, 1.f / g_vSrcResolution.y);
-    float3 vColor = (0.f, 0.f, 0.f);
+    float3 vColor = float3(0.f, 0.f, 0.f);
     
     vColor = DownSampleFast(g_DiffuseTexture, In.vTexcoord, vSrcTexelSize, g_vSrcResolution);
     
@@ -888,7 +901,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_DOWNSAMPLE(PS_IN In)
     float2 uv = In.vTexcoord;
     float fSrcAlpha = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0).a;
     float2 vSrcTexelSize = float2(1.f / g_vSrcResolution.x, 1.f / g_vSrcResolution.y);
-    float3 vColor = (0.f, 0.f, 0.f);
+    float3 vColor = float3(0.f, 0.f, 0.f);
     
     vColor = DownSampleFast(g_DiffuseTexture, In.vTexcoord, vSrcTexelSize, g_vSrcResolution);
     
@@ -978,6 +991,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     }
     
     float fAcc = 0.f;
+    [loop]
     for (int i = -16; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x + ((float) i / g_vResolution.x) * fBlurAmount * g_fDOFBlurMultiplier;
@@ -1069,6 +1083,7 @@ PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
     }
     
     float fAcc = 0.f;
+    [loop]
     for (int i = -16; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
@@ -1256,6 +1271,7 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
     float3x3 toViewTBNMatrix = float3x3(vTangent, vBiNormal, vCenterViewNormal);
     
     float fOcclusion = 0.f;
+    [loop]
     for (uint i = 0; i < g_iKernelSize; ++i)
     {
         float3 vViewSamplePosVec = mul(g_SamplePos[i].xyz, toViewTBNMatrix); // TANSPACE -> VIEW
@@ -1521,5 +1537,14 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MOTIONBLUR_TENTSAMPLE();
+    }
+    pass PrintToBackBufferPass // 22
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PRINT();
     }
 }

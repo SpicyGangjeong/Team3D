@@ -47,14 +47,14 @@ void CIMGUIUI::CanvaswstringTostring(vector<wstring>& panelNames)
 			wname.c_str(), (int)wname.size(),
 			nullptr, 0, nullptr, nullptr);
 
-		std::string result(size, 0);
+		string result(size, 0);
 
 		WideCharToMultiByte(CP_UTF8, 0,
 			wname.c_str(), (int)wname.size(),
 			&result[0], size, nullptr, nullptr);
 
 		// 변환된 string 저장
-		m_iCanvasNamestring.push_back(std::move(result));
+		m_iCanvasNamestring.push_back(move(result));
 	}
 
 	// vector<const char*> 업데이트
@@ -64,7 +64,7 @@ void CIMGUIUI::CanvaswstringTostring(vector<wstring>& panelNames)
 	m_iCanvasCount = 999;
 }
 
-void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
+void CIMGUIUI::PanelwstringTostring(vector<wstring>& panelNames)
 {
 	m_iPanelNamestring.clear();
 	m_iPanelName.clear();
@@ -79,14 +79,14 @@ void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
 			wname.c_str(), (int)wname.size(),
 			nullptr, 0, nullptr, nullptr);
 
-		std::string result(size, 0);
+		string result(size, 0);
 
 		WideCharToMultiByte(CP_UTF8, 0,
 			wname.c_str(), (int)wname.size(),
 			&result[0], size, nullptr, nullptr);
 
 		// 변환된 string 저장
-		m_iPanelNamestring.push_back(std::move(result));
+		m_iPanelNamestring.push_back(move(result));
 	}
 
 	// vector<const char*> 업데이트
@@ -111,14 +111,14 @@ void CIMGUIUI::ElementwstringTostring(vector<wstring>& panelNames)
 			wname.c_str(), (int)wname.size(),
 			nullptr, 0, nullptr, nullptr);
 
-		std::string result(size, 0);
+		string result(size, 0);
 
 		WideCharToMultiByte(CP_UTF8, 0,
 			wname.c_str(), (int)wname.size(),
 			&result[0], size, nullptr, nullptr);
 
 		// 변환된 string 저장
-		m_pElementNamestring.push_back(std::move(result));
+		m_pElementNamestring.push_back(move(result));
 	}
 
 	// vector<const char*> 업데이트

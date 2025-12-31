@@ -332,6 +332,7 @@ void CRenderer::Render_NonBlend()
 void CRenderer::Render_Decal()
 {
 	m_pGameInstance->Copy_RenderTargetAToB(TEXT("Target_Normal"), TEXT("Target_NormalCopy"));
+
 	EVENTSCOPE_("Render_Decal");
 	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_Decal")))) {
 		return;
@@ -568,7 +569,7 @@ void CRenderer::Render_Fog()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_Texture"))) {
 		return;
 	}
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG));
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::PRINT_BACKBUFFER));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
