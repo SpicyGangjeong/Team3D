@@ -288,8 +288,10 @@ HRESULT CPlayer::Render()
 				return E_FAIL;
 			}
 		}
+#ifdef _DEBUG
 		Render_CameraCoordinateSystem();
 		//m_pCharacter_Controller->Render();
+#endif
 	}
 #ifdef _DEBUG
 	if (RENDER::NONLIGHT == eType) {
@@ -406,6 +408,7 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_bCameraShake = true;
 }
 
+#ifdef _DEBUG
 void CPlayer::Render_CameraCoordinateSystem()
 {
 	m_Batch->Begin();
@@ -456,6 +459,8 @@ void CPlayer::Render_CameraCoordinateSystem()
 	);
 	m_Batch->End();
 }
+#endif
+
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
