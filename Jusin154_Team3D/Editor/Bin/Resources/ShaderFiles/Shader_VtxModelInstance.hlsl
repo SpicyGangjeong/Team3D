@@ -761,6 +761,8 @@ float4 DrawEffect(PS_IN In)
         }
         else
         {
+            
+                        
             if (g_fDissolveCutRatio <= fTimeRatio) // 일정 수준 이상 넘어가지 못하도록 막기
             {
                 fTimeRatio = g_fDissolveCutRatio;
@@ -772,7 +774,7 @@ float4 DrawEffect(PS_IN In)
             
             if (g_isNoDissolveSmoothStep == true)
             {
-                fFade = fTimeRatio;
+                fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
             }
             
             vMtrlDiffuse.a *= fFade;
@@ -863,6 +865,9 @@ PS_OUT BlendedWeight(float4 fDiffuse, float fLinearZ)
     //이게 오리지널 웨이트 함수
     
     //float fWeight = pow(fLinearZ, -2.5);
+    
+    // float fWeight = clamp(pow(fLinearZ, -2.5f), 1.0f, 1000.0f);
+    
     
     float linearZPositive = max(fLinearZ, 1e-6f);
     float fWeight = clamp(pow(linearZPositive, -2.5f), 1.0f, 1000.0f);
