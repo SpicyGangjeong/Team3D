@@ -22,6 +22,12 @@ HRESULT CElementObject::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
+		m_fX + m_pOwner->Get_WorldPostion().m128_f32[0],
+		m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
+		m_fSortZ, 1.f));
+
 	return S_OK;
 }
 

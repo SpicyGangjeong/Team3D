@@ -84,7 +84,6 @@ void CNPCInteraction::NpcInfo(_wstring Name)
 
 void CNPCInteraction::Priority_Update(_float fTimeDelta)
 {
-
 	_vector MonsterPos = static_cast<CUnit*>(m_pOwner)->Get_WorldPostion();
 
 	_float fOffsetX = 0.5f; // 적절한 X 오프셋 값 (몬스터 머리 옆으로 올리기 위함)
@@ -126,7 +125,6 @@ void CNPCInteraction::Update(_float fTimeDelta)
 {
 	if (m_bVisible != true)
 		return;
-	Set_ImageSizePosition();
 }
 
 void CNPCInteraction::Late_Update(_float fTimeDelta)

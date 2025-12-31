@@ -163,6 +163,14 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Barral_Splesh.h" />
     <ClInclude Include="..\Public\Avadakedavra.h" />
     <ClInclude Include="..\Public\AvadakedavraSide.h" />
+    <ClInclude Include="..\Public\Broom_Circle.h" />
+    <ClInclude Include="..\Public\Broom_Exit.h" />
+    <ClInclude Include="..\Public\Broom_Finish.h" />
+    <ClInclude Include="..\Public\Broom_Flag.h" />
+    <ClInclude Include="..\Public\Broom_Panel.h" />
+    <ClInclude Include="..\Public\Broom_Record.h" />
+    <ClInclude Include="..\Public\Broom_Scoreboard.h" />
+    <ClInclude Include="..\public\Broom_TargetGate.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
@@ -177,6 +185,7 @@ call Update_Resources.bat
     <ClInclude Include="..\public\Dialogue_Font.h" />
     <ClInclude Include="..\public\NPCInteraction.h" />
     <ClInclude Include="..\public\PointLight.h" />
+    <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
     <ClInclude Include="..\Public\State_Dash.h" />
@@ -411,6 +420,14 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Avadakedavra.cpp" />
     <ClCompile Include="..\Private\AvadakedavraSide.cpp" />
+    <ClCompile Include="..\Private\Broom_Circle.cpp" />
+    <ClCompile Include="..\Private\Broom_Exit.cpp" />
+    <ClCompile Include="..\Private\Broom_Finish.cpp" />
+    <ClCompile Include="..\Private\Broom_Flag.cpp" />
+    <ClCompile Include="..\Private\Broom_Panel.cpp" />
+    <ClCompile Include="..\Private\Broom_Record.cpp" />
+    <ClCompile Include="..\Private\Broom_Scoreboard.cpp" />
+    <ClCompile Include="..\private\Broom_TargetGate.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
@@ -426,6 +443,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\Dialogue_Font.cpp" />
     <ClCompile Include="..\private\NPCInteraction.cpp" />
     <ClCompile Include="..\private\PointLight.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />

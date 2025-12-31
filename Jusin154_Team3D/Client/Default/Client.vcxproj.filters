@@ -740,6 +740,9 @@
     <ClInclude Include="..\public\Dialogue_Data.h">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Point.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Player_ENUM.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
@@ -763,6 +766,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Assassin_Spector.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Circle.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Flag.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Scoreboard.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_TargetGate.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Finish.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Finish</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Exit.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Exit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Record.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1569,6 +1596,9 @@
     <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
       <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point">
+      <UniqueIdentifier>{a94e24d2-0f61-4263-b834-bfdf9f6c06ae}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Player\Robe">
       <UniqueIdentifier>{f3c7cf8d-2b83-49d3-85da-fe135e376a11}</UniqueIdentifier>
     </Filter>
@@ -1592,6 +1622,30 @@
     </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector">
       <UniqueIdentifier>{bf7cf91b-742f-4913-8af2-39ed94d19e23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel">
+      <UniqueIdentifier>{e5da4124-9936-46e7-981b-9d8ccc9590d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle">
+      <UniqueIdentifier>{b5b99876-ca87-4276-9276-5961625e06c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag">
+      <UniqueIdentifier>{8a87e6cb-ba54-45ee-866b-9098085f973b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard">
+      <UniqueIdentifier>{09fac7f5-d246-4860-a151-04c92c0677f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate">
+      <UniqueIdentifier>{c61b7c21-0ea8-42c4-a535-8624ce17fc8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Exit">
+      <UniqueIdentifier>{b585e3f0-93f7-4825-b049-5616a680d102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Record">
+      <UniqueIdentifier>{40d9d62b-f8cf-4a09-89cc-2f336f8052a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Finish">
+      <UniqueIdentifier>{2246ff16-d62c-4e16-a948-16e7968e0933}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2280,6 +2334,12 @@
     <ClCompile Include="..\private\Dialogue_Data.cpp">
       <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Point.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Model.cpp">
+      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Goblin_Assassin.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
     </ClCompile>
@@ -2303,6 +2363,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Circle.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Flag.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Scoreboard.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_TargetGate.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Finish.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Finish</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Exit.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Exit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Record.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

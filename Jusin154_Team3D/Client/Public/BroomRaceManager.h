@@ -18,9 +18,9 @@ public:
 
 	enum class RACE_STATE
 	{
-		READY,      
-		COUNTDOWN,  
-		START,      
+		READY,
+		COUNTDOWN,
+		START,
 		RACING,
 		FINISH,
 		END
@@ -42,17 +42,26 @@ public:
 	void Push_RaceRing(class CRaceRing* Ring);
 	_int Get_RaceState() const { return m_eRaceState; }
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	vector<class CRaceRing*>			m_pRaceRings = {};
 	vector<RacerInfo>					m_Racers = {};
 	_float								m_fCountTimer = {};
+	_float								m_fRacingTimer = {};
 	_int								m_iCount = { 3 };
+	_int								m_iPerCount = {};
 	_int								m_eRaceState = { ENUM_CLASS(RACE_STATE::END) };
 	_wstring							ToolTip;
+
+	_int								m_iLastRing{};
+
+	_bool								m_bRaceStart = { false };
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT			Ready_Components();
-	HRESULT			Bind_ShaderResources() override;
+	HRESULT			Bind_ShaderResources() override;	
 	void			Update_Countdown(_float fTimeDelta);
 	void			StartRaceMove();
 	void			Check_RingPassed();

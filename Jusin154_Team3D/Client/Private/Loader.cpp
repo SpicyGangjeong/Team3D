@@ -132,6 +132,15 @@
 #include "SpellLearn_Slot.h"
 #include "SpellLearn_Overlay.h"
 
+#include "Broom_Panel.h"
+#include "Broom_Flag.h"
+#include "Broom_Circle.h"
+#include "Broom_Scoreboard.h"
+#include "Broom_TargetGate.h"
+#include "Broom_Finish.h"
+#include "Broom_Record.h"
+#include "Broom_Exit.h"
+
 #include "Interaction_Key.h"
 
 #include "NPCInteraction.h"
@@ -184,6 +193,7 @@
 #include "MageSide.h"
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
+#include "Ranrok_Point.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -1225,6 +1235,24 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+
+	Asset_FileLoad("../Bin/Resources/Textures/BroomFlight", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
 		return E_FAIL;
@@ -2099,7 +2127,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Point>(g_iStaticLevel, CRanrok_Point::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -2489,6 +2520,47 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_SpellLearn_SpellLearn_Overlay*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpellLearn_Overlay>(g_iStaticLevel, CSpellLearn_Overlay::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_SpellLearn_Broom_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Panel>(g_iStaticLevel, CBroom_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Flag*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Flag>(g_iStaticLevel, CBroom_Flag::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Circle*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Circle>(g_iStaticLevel, CBroom_Circle::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Scoreboard*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Scoreboard>(g_iStaticLevel, CBroom_Scoreboard::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_TargetGate*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_TargetGate>(g_iStaticLevel, CBroom_TargetGate::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Fiish*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Finish>(g_iStaticLevel, CBroom_Finish::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Record*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Record>(g_iStaticLevel, CBroom_Record::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Exit*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Exit>(g_iStaticLevel, CBroom_Exit::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

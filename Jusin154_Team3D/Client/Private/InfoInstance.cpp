@@ -64,6 +64,16 @@ void CInfoInstance::Set_Damage(_float fDamage)
 		m_pSkillInfo->Update_Damage(fDamage);
 }
 
+_vector CInfoInstance::Get_PalyerPos()
+{
+	return m_pPlayerPos;
+}
+
+void CInfoInstance::Set_PlayerPos(_vector Position)
+{
+	m_pPlayerPos = Position;
+}
+
 #pragma region MONSTER_INFO
 HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
 {
@@ -341,6 +351,16 @@ HRESULT CInfoInstance::Deregist_ActiveInteractive(CMapElement_Interactable* pInt
 HRESULT CInfoInstance::ActiveAt_Interactive(_fvector vPosition)
 {
 	return m_pInteractiveInfo->ActiveAt_Interactive(vPosition);
+}
+
+void CInfoInstance::Set_Broom_Timer(_float fTimer)
+{
+	m_fBroom_Timer = fTimer;
+}
+
+_float CInfoInstance::Get_Broom_Timer()
+{
+	return m_fBroom_Timer;
 }
 
 #pragma endregion

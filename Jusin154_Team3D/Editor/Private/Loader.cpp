@@ -126,6 +126,14 @@
 #include "SpellLearn_Slot.h"
 #include "SpellLearn_Overlay.h"
 
+#include "Broom_Panel.h"
+#include "Broom_Flag.h"
+#include "Broom_Circle.h"
+#include "Broom_Scoreboard.h"
+#include "Broom_Fiish.h"
+#include "Broom_Record.h"
+#include "Broom_Exit.h"
+
 #include "NPCInteraction.h"
 
 #include "Dialogue.h"
@@ -195,6 +203,7 @@
 #include "Blink.h"
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
+#include "Ranrok_Point.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -646,6 +655,22 @@ HRESULT CLoader::Loading_For_UI()
 		});
 
 	Asset_FileLoad("../Bin/Resources/Textures/Quest", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/BroomFlight", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
 			_string strFilePath = pFilePath;
@@ -1152,7 +1177,36 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-	
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Panel>(g_iStaticLevel, CBroom_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Flag>(g_iStaticLevel, CBroom_Flag::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Circle>(g_iStaticLevel, CBroom_Circle::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Scoreboard>(g_iStaticLevel, CBroom_Scoreboard::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Finish>(g_iStaticLevel, CBroom_Finish::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Record>(g_iStaticLevel, CBroom_Record::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Exit>(g_iStaticLevel, CBroom_Exit::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+		
 	if (FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -1800,6 +1854,10 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Breath>(NEXT_LEVEL, CRanrok_Breath::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Point>(NEXT_LEVEL, CRanrok_Point::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

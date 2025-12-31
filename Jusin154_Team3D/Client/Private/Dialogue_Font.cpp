@@ -84,7 +84,7 @@ HRESULT CDialogue_Font::Render()
 
 _vector CDialogue_Font::Get_WorldPostion()
 {
-    return m_pTransformCom->Get_State(STATE::POSITION);
+    return _vector();
 }
 
 HRESULT CDialogue_Font::Bind_ShaderResources()
