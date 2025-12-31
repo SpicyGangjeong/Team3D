@@ -99,9 +99,9 @@ HRESULT CPlayerRobe::Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DY
 	PSX::PxTransform startJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), false); // start y--
 	PSX::PxTransform endJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), true); // end y++
 
-	m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_BasicPxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
+	m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
 
-	m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_BasicPxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
+	m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
 
 	return S_OK;
 }
@@ -356,8 +356,8 @@ HRESULT CPlayerRobe::Ready_Components()
 					PSX::PxTransform startJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), false); // start y--
 					PSX::PxTransform endJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), true); // end y++
 
-					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_BasicPxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
-					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_BasicPxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
 				}
 			}
 			{
@@ -381,8 +381,8 @@ HRESULT CPlayerRobe::Ready_Components()
 					PSX::PxTransform startJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), false); // start y--
 					PSX::PxTransform endJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), true); // end y++
 
-					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_BasicPxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
-					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_BasicPxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
 				}
 			}
 			{
@@ -406,8 +406,8 @@ HRESULT CPlayerRobe::Ready_Components()
 					PSX::PxTransform startJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), false); // start y--
 					PSX::PxTransform endJointWorldPose = CMyTools::MakeJointWorldPoseFromRouteEnd(routeRigidActor, m_pRobeJointRoute[Desc_Route.iTargetRouteIndex]->Get_HalfGeometryInfo(), true); // end y++
 
-					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_BasicPxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
-					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_BasicPxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iStartJointIndex] = m_pGameInstance->Create_PxD6Joint(startAnchorRigidActor, routeRigidActor, startJointWorldPose);
+					m_pDynamicJoints[Desc_Route.iEndJointIndex] = m_pGameInstance->Create_PxD6Joint(routeRigidActor, endAnchorRigidActor, endJointWorldPose);
 				}
 			}
 		}
