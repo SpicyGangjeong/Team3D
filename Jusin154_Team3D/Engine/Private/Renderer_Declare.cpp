@@ -632,7 +632,6 @@ void CRenderer::Free()
 void CRenderer::Describe_Entitiy()
 {
 	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::SetColumnWidth(180.f);
 	if (GUI::CollapsingHeader("RENDERER")) {
 		if (GUI::CollapsingHeader("PostProcessing_Bloom"))
 		{
