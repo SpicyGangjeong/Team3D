@@ -289,6 +289,7 @@ HRESULT CMapInfo::Load_PointLights(const _char* pFilePath)
 		Diffuse->QueryFloatAttribute("x", &Desc.vDiffuse.x);
 		Diffuse->QueryFloatAttribute("y", &Desc.vDiffuse.y);
 		Diffuse->QueryFloatAttribute("z", &Desc.vDiffuse.z);
+		Diffuse->QueryFloatAttribute("w", &Desc.vDiffuse.w);
 
 		auto* Ambient = Object->FirstChildElement("Ambient");
 		Ambient->QueryFloatAttribute("x", &Desc.vAmbient.x);

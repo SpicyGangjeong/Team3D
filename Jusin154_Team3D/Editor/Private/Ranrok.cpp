@@ -666,6 +666,24 @@ void CRanrok::Describe_Entity()
 {
 	__super::Describe_Entity();
 
+	if (GUI::Button("MovePos"))
+	{
+		m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
+	}
+
+#ifdef gimch
+
+	if (m_pGameInstance->Key_Down(DIK_L))
+	{
+		_float3 vPos;
+		if (m_pGameInstance->isPicking(&vPos))
+		{
+			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&vPos), 1.f));
+		}
+	}
+
+#endif // 
+
 	m_pTransformCom->Describe_Entity();
 
 	GUI::DragFloat("Tucked Speed", &m_fTuckedSpeed);
