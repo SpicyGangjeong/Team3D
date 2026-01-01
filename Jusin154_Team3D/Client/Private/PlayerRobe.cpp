@@ -72,15 +72,6 @@ HRESULT CPlayerRobe::Update_RobeSocketPosition()
 			m_pModelCom->Set_BoneCombinedTransformation(PLAYER_JOINT_BONE_NAMES[i], LocalMatrix);
 		}
 	}
-	//{
-	//	D3D11_MAPPED_SUBRESOURCE		SubResource{};
-	//	if (FAILED(m_pContext->Map(m_pBoneCombinedMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource))) {
-	//		return E_FAIL;
-	//	}
-	//	memcpy_s(SubResource.pData, sizeof(_float4x4) * ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END), m_ReconstructedJointAnchorMatirces, sizeof(_float4x4) * ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END));
-	//	m_pContext->Unmap(m_pBoneCombinedMatrixBuffer, 0);
-	//}
-	//m_pModelCom->ComputeInsertionBoneBuffer(m_BoneInsertionDesc, m_pBoneCombinedMatrixSRV);
 	return S_OK;
 }
 
@@ -114,35 +105,6 @@ HRESULT CPlayerRobe::Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DY
 
 	return S_OK;
 }
-
-HRESULT CPlayerRobe::Create_BoneCombinedMatrixSRV()
-{
-	D3D11_BUFFER_DESC desc{};
-	desc.Usage = D3D11_USAGE_DYNAMIC;
-	desc.ByteWidth = sizeof(_float4x4) * ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END);
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	desc.StructureByteStride = sizeof(_float4x4);
-	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-
-	if (FAILED(m_pDevice->CreateBuffer(&desc, nullptr, &m_pBoneCombinedMatrixBuffer))) {
-		return E_FAIL;
-	}
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
-	srvDesc.Buffer.FirstElement = 0;
-	srvDesc.Buffer.NumElements = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END);
-	
-
-	if (FAILED(m_pDevice->CreateShaderResourceView(m_pBoneCombinedMatrixBuffer, &srvDesc, &m_pBoneCombinedMatrixSRV))){
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
 
 HRESULT CPlayerRobe::Update_LegsPosition()
 {
@@ -526,13 +488,6 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 	m_pRightFootLocalMatrix	= m_pModelCom->Get_BoneMatrixPtr("RightFoot");
 	m_pRightLegLocalMatrix	= m_pModelCom->Get_BoneMatrixPtr("RightLeg");
 	
-	{
-		ZeroMemory(&m_BoneInsertionDesc, sizeof(m_BoneInsertionDesc));
-		m_BoneInsertionDesc.iMatrixCount = ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END);
-		m_BoneInsertionDesc.iStartOffset = m_pModelCom->Get_BoneIndex(PLAYER_JOINT_BONE_NAMES[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::RIGHTUP)]);
-	}
-	Create_BoneCombinedMatrixSRV();
-
 	XMStoreFloat4x4(&m_PreTransformMatrix, XMLoadFloat4x4(m_pModelCom->Get_PreTransformMatrixPtr()));
 
 	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
@@ -647,8 +602,6 @@ void CPlayerRobe::Free()
 #ifdef _DEBUG
 	SAFE_RELEASE(m_pDepthStencilStateNone);
 #endif // _DEBUG
-	SAFE_RELEASE(m_pBoneCombinedMatrixSRV);
-	SAFE_RELEASE(m_pBoneCombinedMatrixBuffer);
 	SAFE_RELEASE(m_pRightLeg);
 	SAFE_RELEASE(m_pLeftLeg);
 	SAFE_RELEASE(m_pRobeMainAnchor);
@@ -666,12 +619,13 @@ void CPlayerRobe::Describe_Entity()
 	GUI::Begin("PhysX");
 	if (GUI::CollapsingHeader("Robe")) {
 		for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
-			if (GUI::BeginChild("##i")) {
+			if (GUI::BeginChild(("Child ID: " + to_string((size_t)(this))).c_str())) {
 
-				GUI::EndChild();
 			}
+			GUI::EndChild();
 		}
 	}
+	GUI::End();
 }
 
 #endif // _DEBUG

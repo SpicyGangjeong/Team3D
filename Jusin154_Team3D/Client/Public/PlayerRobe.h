@@ -56,10 +56,6 @@ private:
 	CRigidBody_Dynamic* m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
 	PSX::PxD6Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
 	
-	ID3D11Buffer*				m_pBoneCombinedMatrixBuffer = { nullptr };
-	ID3D11ShaderResourceView*	m_pBoneCombinedMatrixSRV = { nullptr };
-
-	CModel::BONEINSERTION_DESC m_BoneInsertionDesc = {};
 	vector<_float4x4>	m_PrevRobeBoneMatrices = { };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
@@ -76,7 +72,6 @@ private:
 
 	HRESULT Update_LegsPosition();
 	HRESULT Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld);
-	HRESULT Create_BoneCombinedMatrixSRV();
 #ifdef _DEBUG
 	HRESULT Render_BonePhysX();
 	HRESULT Render_Legs();
