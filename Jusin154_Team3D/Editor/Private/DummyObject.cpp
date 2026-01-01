@@ -50,11 +50,9 @@ void CDummyObject::Update(_float fTimeDelta)
 
 void CDummyObject::Late_Update(_float fTimeDelta)
 {
-#ifdef 기무리
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-#else
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
-#endif // 기무리
+
 
 }
 
