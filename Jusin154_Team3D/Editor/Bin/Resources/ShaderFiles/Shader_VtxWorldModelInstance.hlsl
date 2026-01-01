@@ -4,13 +4,17 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_PrevWorldMatrix, g_PrevViewMatrix, g_PrevProjMatrix;
 
 Texture2D g_DiffuseTexture;
+Texture2D g_GlassTexture;
 Texture2D g_NormalTexture;
 Texture2D g_SurfaceParamsTexture;
+Texture2D g_EmissiveTexture;
 
 float4 g_vCamPosition;
 float g_fFar;
 float g_fUsingSurfaceParams;
 float g_fMBIntensity = 1.f;
+float g_fGlassRatio = 1.f;
+float g_fBloomStrength = 1.f;
 
 
 struct VS_IN
@@ -92,6 +96,11 @@ struct PS_OUT
     float2 vVelocityUV : SV_Target5;
 };
 
+struct PS_OUT_BLOOM
+{
+    float4 vColor : SV_TARGET0;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT)0;
@@ -118,6 +127,35 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_LIGHT(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vGlassDiffuse = g_GlassTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    
+    Out.vAlbedo = lerp(vGlassDiffuse, vMtrlDiffuse, g_fGlassRatio);
+    Out.vNormal = float4(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = float4(g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord));
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+
+    return Out;
+}
+
+PS_OUT_BLOOM PS_BLOOM(PS_IN In)
+{
+    PS_OUT_BLOOM Out;
+    
+    vector vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vColor = float4((vEmissive * g_fBloomStrength).xyz, 2.f / 255.f);
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass Model
@@ -128,6 +166,26 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass Light
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_LIGHT();
+    }
+
+    pass Bloom
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLOOM();
     }
 }
 

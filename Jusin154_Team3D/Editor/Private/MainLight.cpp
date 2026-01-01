@@ -142,8 +142,10 @@ HRESULT CMainLight::Ready_Components()
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
 
-	
-
+#ifdef gimch
+	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.204f);
+	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.0f);
+#endif // gimch
 	/* Com_Light*/
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
 	{
@@ -160,6 +162,7 @@ HRESULT CMainLight::Ready_Components()
 	vColor = _float4(0.2f, 0.246f, 0.256f, 1.f);
 	m_pGameInstance->Set_FogColor(vColor);
 	m_pGameInstance->Set_Fog(10.f, 10.f);
+
 #endif // gimch
 
 	

@@ -66,8 +66,7 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 
 	//if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
 	//	return E_FAIL;
-	if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
-		return E_FAIL;
+	
 
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
 	
@@ -88,8 +87,13 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
 	//	return E_FAIL;
 
-	m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
-	m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+#pragma region DUNGEON
+	//if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
+	//	return E_FAIL;
+	//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	//m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+#pragma endregion
+
 
 #pragma region Light
 	m_Light_Desc.eType = LIGHT::POINT;

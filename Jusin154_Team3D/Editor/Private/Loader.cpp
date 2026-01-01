@@ -161,6 +161,7 @@
 #include "VIBuffer_Model_Instance.h"
 #include "Instance_Model.h"
 #include "InstancedProp.h"
+#include "InstancedProp_Light.h"
 #include "Unified.h"
 #include "MapElement_Lake.h"
 #include "MapElement_Chest.h"
@@ -2912,6 +2913,38 @@ if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactabl
 	return E_FAIL;
 #pragma endregion
 
+#pragma region HOGSMEADE_LOD
+/* SUB_HogsHead */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_HogsHead\\SUB_HogsHead_EXTLOD\\ProxyAssets",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+/* SUB_PippensPotions */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_PippensPotions\\SUB_Pippens_EXTLOD\\ProxyAssets",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+/* GEN_E_LOD */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_E\\SUB_GEN_E_EXTLOD\\ProxyAssets",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+/* GEN_F_LOD */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_F\\SUB_GEN_F_EXTLOD\\ProxyAssets",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+/* GEN_G_LOD */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_G\\SUB_GEN_G_EXTLOD\\ProxyAssets",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+/* GEN_H_LOD */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_H\\SUB_GEN_H_EXTLOD\\ProxyAssets",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+/* GEN_J_LOD */
+if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_J\\SUB_GEN_J_EXTLOD\\ProxyAssets",
+	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+#pragma endregion
+
+
 
 #pragma region HOGWART
 _bool bHogwartLoad = { false };
@@ -3134,6 +3167,11 @@ if(bHogwartLoad)
 
 
 #pragma region DUNGEON
+
+_bool bDungeonLoad = { false };
+
+if (bDungeonLoad)
+{
 /* Cave Wall */
 if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Wall",
 		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
@@ -3197,6 +3235,7 @@ if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Mes
 if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Meshes\\Repository",
 	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
 	return E_FAIL;
+}
 
 #pragma endregion
 
@@ -3208,7 +3247,7 @@ vector<future<void>> jobFutures;
 _uint iLoadCount = 46;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { false };
+_bool isLoad_Map = { true };
 if(isLoad_Map)
 {
 	{ /* Terrain */
@@ -3714,6 +3753,19 @@ if(isLoad_Map)
 		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Models/InstanceProp/SM_ScotsPine_LargeA_Master.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightPost */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightPost"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_LightPost.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Light_Post_Floating.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
 #pragma endregion // INSTANCE_MODEL
 
 	/* For.Prototype_Component_VIBuffer_Box */
@@ -3778,6 +3830,10 @@ if(isLoad_Map)
 
 	/* For.Prototype_GameObject_InstancedProp */
 	if (FAILED(m_pGameInstance->Add_Prototype<CInstancedProp>(g_iStaticLevel, CInstancedProp::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_InstancedProp */
+	if (FAILED(m_pGameInstance->Add_Prototype<CInstancedProp_Light>(g_iStaticLevel, CInstancedProp_Light::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Unified */

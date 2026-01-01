@@ -66,6 +66,11 @@ HRESULT CBounding_AABB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fve
 	return	S_OK;
 }
 
+void CBounding_AABB::Set_Desc(void* pDesc)
+{
+	return;
+}
+
 #endif
 
 CBounding_AABB* CBounding_AABB::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const void* pArg)
