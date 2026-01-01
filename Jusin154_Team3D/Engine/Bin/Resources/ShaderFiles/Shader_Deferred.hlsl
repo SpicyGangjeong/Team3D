@@ -88,6 +88,7 @@ float g_fMBSampleBias;
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
+float g_fLightSpecularMaximum;
 
 float g_fFogDensity;
 float g_fFogPow;
@@ -483,7 +484,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
-    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+    float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
     
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 0.f);
@@ -569,7 +570,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 
     float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
-    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+    float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
 
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 0.f);
@@ -670,7 +671,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
-    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+    float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
     
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 0.f);

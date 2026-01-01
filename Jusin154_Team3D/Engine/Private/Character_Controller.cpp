@@ -451,7 +451,7 @@ void CCharacter_Controller::Free()
 #ifdef _DEBUG
 void CCharacter_Controller::Describe_Entity()
 {
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("Character_Controller") ){
 		GUI::Text("Gravity : %d ", m_bGravity);
 		m_pTransform->Describe_Entity();

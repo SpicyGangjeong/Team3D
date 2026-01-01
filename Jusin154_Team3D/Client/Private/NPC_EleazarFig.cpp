@@ -158,19 +158,6 @@ HRESULT CNPC_EleazarFig::Bind_ShaderResources()
 	return S_OK;
 }
 
-_bool CNPC_EleazarFig::CastToPlayer()
-{
-	_vector vCurrentPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_vector vTargetPos = {};
-	pair<CUnit*, CTransform*> pairAllyInfo = m_pInfoInstance->Get_NearestPlayerAlly(m_pTransformCom->Get_State(STATE::POSITION));
-	vTargetPos = pairAllyInfo.second->Get_State(STATE::POSITION);
-	_float fLength = XMVectorGetX(XMVector4Length(vTargetPos - vCurrentPos));
-	if (fLength < m_fEncounterDistance) {
-		return true;
-	}
-	return false;
-}
-
 void CNPC_EleazarFig::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
@@ -257,7 +244,6 @@ HRESULT CNPC_EleazarFig::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_NPC_HITBOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;

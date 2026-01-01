@@ -235,7 +235,6 @@
 #pragma endregion
 
 #pragma endregion
-
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
 	, m_pContext{ pContext }
@@ -386,7 +385,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = true;
+	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = true;
 	isLoad_NPC = true;
 	isLoad_Monster = true;
@@ -1716,7 +1715,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.fDensity = 0.01f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
-		Desc.vAutoDamping = { 12.f, 12.f };
+		Desc.vAutoDamping = { 12.f, 120.f };
 		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_JOINT_ANCHOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
@@ -1731,13 +1730,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.001f };
 		Desc.fContactOffset = { 0.005f };
-		Desc.vhalfGeometryInfo = { 0.25f, 0.25f, 0.25f };
+		Desc.vhalfGeometryInfo = { 0.75f, 0.25f, 0.25f };
 		Desc.fDensity = 0.01f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
 		Desc.vAutoDamping = { 1200.f, 1200.f };
 		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
-		Desc.vLocalTranslation = { 0.f, 1.9f, 0.f };
+		Desc.vLocalTranslation = { 0.f, 1.0f, 0.f };
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_NPC_HITBOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
@@ -1754,7 +1753,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.fDensity = 0.01f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
-		Desc.vAutoDamping = { 12.f, 12.f };
+		Desc.vAutoDamping = { 12.f, 120.f };
 		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_JOINT_ROUTE"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
@@ -1769,7 +1768,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.01f };
 		Desc.fContactOffset = { 0.01f };
-		Desc.vhalfGeometryInfo = { 0.12f, 0.25f, 0.f };
+		Desc.vhalfGeometryInfo = { 0.06f, 0.25f, 0.f };
 		Desc.fDensity = 122.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
@@ -1842,25 +1841,25 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
 			Desc.eType = ACTOR::BOX;
-			Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
 			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
-			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.1f };
 			Desc.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 0.35f, 0.65f, 0.15f };
+			Desc.vhalfGeometryInfo = { 0.5f, 1.f, 0.125f };
 			Desc.fDensity = 1.f;
 			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 1.f, 0.f));
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
-			Desc.vLocalTranslation = { 0.5f, 0.f, 0.f };
+			Desc.vLocalTranslation = { 0.5f, 1.375f, 0.f };
 
 			Desc.pxMassCenter = pxPivotTransform;
 			Desc.eLockFlag = {
-				PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X |
+				//PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X |
 				//PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y |
-				PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z |
-				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y |
-				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_X |
-				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z
+				//PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z |
+				//PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y |
+				//PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_X |
+				//PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z
 			};
 			Desc.vAutoDamping = { 10.f, 10.f };
 		}

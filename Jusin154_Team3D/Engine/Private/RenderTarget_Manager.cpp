@@ -584,7 +584,7 @@ void CRenderTarget_Manager::RenderTarget_Debuger()
 
     GUI::Spacing();
 
-    GUI::PushItemWidth(80);
+    GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
     if (GUI::Button("ToggleAll")) {
         Toggle_RT_Debugger();
     }

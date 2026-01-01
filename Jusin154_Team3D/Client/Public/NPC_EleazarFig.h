@@ -41,7 +41,6 @@ protected:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources() override;
-	_bool CastToPlayer();
 
 public:
 	static CNPC_EleazarFig* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

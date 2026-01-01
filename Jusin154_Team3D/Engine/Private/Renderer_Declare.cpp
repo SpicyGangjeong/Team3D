@@ -633,6 +633,9 @@ void CRenderer::Describe_Entitiy()
 {
 	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("RENDERER")) {
+		if (GUI::CollapsingHeader("Variable")) {
+			GUI::DragFloat("SpecularMaximum", &m_fLightSpecularMaximum, 0.01f, 0.0f, 2.f, "%.3f");
+		}
 		if (GUI::CollapsingHeader("PostProcessing_Bloom"))
 		{
 			GUI::BeginChild("PostProcessing_Bloom");

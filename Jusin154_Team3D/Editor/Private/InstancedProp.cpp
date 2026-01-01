@@ -333,10 +333,10 @@ void CInstancedProp::Describe_Entity()
 #endif // _DEBUG
 	_float3 vMove = {};
 
-	ImGui::Text("----- Transfrom ----");
-	ImGui::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
-	ImGui::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
-	ImGui::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+	GUI::Text("----- Transfrom ----");
+	GUI::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
+	GUI::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
+	GUI::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
 
 	m_pTransformCom->Move_Right(vMove.x);
 	m_pTransformCom->Move_Up(vMove.y);

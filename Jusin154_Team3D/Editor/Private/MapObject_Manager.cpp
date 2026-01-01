@@ -1954,7 +1954,7 @@ void CMapObject_Manager::Update_PrototypeList()
 			continue;
 		}
 
-		if (ImGui::Button(CMyTools::ToString(Tag).c_str()))
+		if (GUI::Button(CMyTools::ToString(Tag).c_str()))
 		{
 			if (ADD_TYPE::CONTAINER == m_eType)
 				Create_PartObject(Tag);
@@ -1974,7 +1974,7 @@ void CMapObject_Manager::Update_PrototypeList()
 			auto& Tag = m_ModelPrototypeTags[i];
 
 			if (_wstring::npos != Tag.find(L"COL") && _wstring::npos == Tag.find(L"Lod")) {
-				if (ImGui::Button(CMyTools::ToString(Tag).c_str()))
+				if (GUI::Button(CMyTools::ToString(Tag).c_str()))
 				{
 					vector<_uint> LodModelIndices;
 
@@ -2029,7 +2029,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 	if (ADD_TYPE::CONTAINER == m_eType)
 	{
-		if (ImGui::CollapsingHeader("Map Objects", ImGuiTreeNodeFlags_DefaultOpen))
+		if (GUI::CollapsingHeader("Map Objects", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			if (false == m_MapObjects.empty())
 			{
@@ -2044,7 +2044,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 					strSrc = CMyTools::ToString(strPrototypeTag) + to_string(iObjectIndex) + "##" + to_string(iObjectIndex++);
 
-					if (ImGui::Button(strSrc.c_str()))
+					if (GUI::Button(strSrc.c_str()))
 					{
 						m_pSelectObject = pCurrentMapObject;
 					}
@@ -2052,7 +2052,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 			}
 		}
-		if (ImGui::CollapsingHeader("COL", ImGuiTreeNodeFlags_DefaultOpen))
+		if (GUI::CollapsingHeader("COL", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			for (auto pMapObject : m_Collision)
 			{
@@ -2065,7 +2065,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 				strSrc = CMyTools::ToString(strPrototypeTag) + to_string(iObjectIndex) + "##" + to_string(iObjectIndex++);
 
-				if (ImGui::Button(strSrc.c_str()))
+				if (GUI::Button(strSrc.c_str()))
 				{
 					m_pSelectObject = pCurrentMapObject;
 				}
@@ -2100,7 +2100,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 			strSrc = CMyTools::ToString(strPrototypeTag) + to_string(iObjectIndex) + "##" + to_string(iObjectIndex++);
 
-			if (ImGui::Button(strSrc.c_str()))
+			if (GUI::Button(strSrc.c_str()))
 			{
 				m_pSelectElemnt = pCurrentMapObject;
 			}

@@ -33,7 +33,6 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	HRESULT Update_RobeSocketPosition();
-	HRESULT Bind_PrevBoneMatrices(CShader* pShader, const _char* pConstant);
 	vector<_float4x4> Get_RobeJointAnchorMatrix() const { return m_ReconstructedJointAnchorMatirces; }
 	_float4x4 Get_RobeJointAnchorMatrix(_uint iIndex) const { return m_ReconstructedJointAnchorMatirces[iIndex]; }
 private:

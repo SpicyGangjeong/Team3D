@@ -21,6 +21,7 @@
 #define ASSERT_JINHO(expression)
 #define ASSERT_HYUNBIN(expression)
 #define ASSERT_INHYUK(expression)
+#define IMGUI_GLOBAL_ITEM_WIDTH 160
 
 #define OPTIONAL_TRUE_KEYINPUTGUICHECK
 
