@@ -687,6 +687,9 @@ void CRenderer::Describe_Entitiy()
 		}
 		if (GUI::CollapsingHeader("End_Padding")) {
 		}
+		if (GUI::Button("Refresh_Shader")) {
+			m_pShader->Shader_Refresh();
+		}
 	}
 	GUI::End();
 }

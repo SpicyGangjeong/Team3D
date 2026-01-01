@@ -41,15 +41,13 @@ public:
 
 private:
 	CLight*			m_pLightCom = { nullptr };
-	CTexture*		m_pEmissiveTextureCom = { nullptr };
-	CTexture*		m_pMaskTextureCom = { nullptr };
-	CTexture*		m_pGlassTextureCom = { nullptr };
 
 	_bool			m_isLightOn = { true };
 	_bool			m_isLightAdded = { false };
 	_uint			m_iGlassMeshIndex = {};
 	_float			m_fBloomStrength = {1.f};
 	_float			m_fGlassRatio = { 0.5f };
+	
 
 	_float			m_LightAdded_Distance = { 5000.f };
 
