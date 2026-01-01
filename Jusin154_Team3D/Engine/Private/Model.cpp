@@ -1506,6 +1506,8 @@ void CModel::Initialize_BoneMasks()
 		{
 			if (m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)][i] == 1)
 			{
+				if (i == 38)
+					continue;
 				m_iSkipBoneCount++;
 				m_SkipBoneindex.push_back(i);
 			}

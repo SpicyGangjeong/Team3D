@@ -33,6 +33,9 @@ float g_fDisolveAmount;
 float g_fDisolveRatio;
 
 
+float g_TempWeight;
+
+
 
 Texture2D g_DiffuseTexture                   : register(t00);
 Texture2D g_SpecularTexture                  : register(t01);
@@ -274,7 +277,7 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
         + g_RobeBoneMask[idx.z] * w.z
         + g_RobeBoneMask[idx.w] * w.w;
 
-    bool isRobe = robeWeight > 0.6f;
+    bool isRobe = robeWeight > g_TempWeight;
 
     matrix BoneMatrix = (matrix) 0;
 

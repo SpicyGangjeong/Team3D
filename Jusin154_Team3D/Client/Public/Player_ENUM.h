@@ -23,10 +23,8 @@ enum class PLAYER_MESH_ORDER {
 	END
 };
 
-static const _char* PLAYER_JOINT_BONE_NAMES[13] = {
-			"Hips_Cloth"
-
-		,	"RightUpLeg_Cloth"
+static const _char* PLAYER_JOINT_BONE_NAMES[12] = {
+			"RightUpLeg_Cloth"
 		,	"RightLeg_Cloth"
 		,	"RightDownLeg_Cloth"
 		,	"RightDownRightLeg_Cloth"
@@ -44,9 +42,7 @@ static const _char* PLAYER_JOINT_BONE_NAMES[13] = {
 };
 
 enum class PLAYER_JOINT_BONE_ORDER {
-		HIPS_CLOTH
-
-	,	RIGHTUP
+		RIGHTUP
 	,	RIGHT
 	,	RIGHTDOWN
 	,	RIGHTDOWNRIGHT
