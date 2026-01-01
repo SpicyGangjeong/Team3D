@@ -79,6 +79,14 @@ private:
 
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };
+
+
+
+
+
+
+
+	_float m_fTempWeight = {};
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -119,7 +127,6 @@ private:
 	void Get_UIState(_int UIState);
 
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 
 	void	Reset_LightCombo() { m_iLightCombo = 0; }
 	_uint	Next_LightCombo() { return ++m_iLightCombo; }
@@ -155,7 +162,7 @@ private:
 	_float			m_fabsDir = 0.f;
 	_float			m_fNoInputTime = 0.f;
 	_float			m_fNeutralTime = 0.f; 
-
+	array<_float4x4, 256> SkinMatrices;
 
 	/* 무적 불 변수*/
 #ifdef _DEBUG

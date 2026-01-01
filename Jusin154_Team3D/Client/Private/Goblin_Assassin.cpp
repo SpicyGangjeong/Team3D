@@ -42,7 +42,7 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Goblin_Assassin.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};

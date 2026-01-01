@@ -878,23 +878,4 @@ void CBroom::Add_FSM()
 
 
 
-void CBroom::Set_Anim()
-{
-	m_Animation[STATEANIM::BROOM_MOUNT_B] = { 29,false };
-	m_Animation[STATEANIM::BROOM_HOVER_IDLE_B] = { 24,true };
-	m_Animation[STATEANIM::BROOM_HOVER_STOP_B] = { 6,false };
-
-	m_Animation[STATEANIM::BROOM_HOVER_DOWN_B] = { 25,true };
-	m_Animation[STATEANIM::BROOM_HOVER_LEFT_B] = { 26,true };
-	m_Animation[STATEANIM::BROOM_HOVER_RIGHT_B] = { 27,true };
-	m_Animation[STATEANIM::BROOM_HOVER_UP_B] = { 28,true };
-
-	m_Animation[STATEANIM::BROOM_FLY_B] = { 12,true };
-	m_Animation[STATEANIM::BROOM_FLY_DOWN_B] = { 13,true };
-	m_Animation[STATEANIM::BROOM_FLY_LEFT_B] = { 15,true };
-	m_Animation[STATEANIM::BROOM_FLY_RIGHT_B] = { 16,true };
-	m_Animation[STATEANIM::BROOM_FLY_UP_B] = { 17,true }; 
-}
-#pragma endregion State
-
 

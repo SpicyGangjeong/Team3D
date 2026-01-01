@@ -33,6 +33,9 @@ float g_fDisolveAmount;
 float g_fDisolveRatio;
 
 
+float g_TempWeight;
+
+
 
 Texture2D g_DiffuseTexture                   : register(t00);
 Texture2D g_SpecularTexture                  : register(t01);
@@ -74,6 +77,7 @@ Texture2D g_DeadDisolveBurnTexture;
 int g_iBinded_Texture[27];
 matrix g_BoneMatrices[256];
 matrix g_PrevBoneMatrices[256];
+int g_RobeBoneMask[256];
 
 struct VS_IN_MESH
 {
@@ -185,21 +189,94 @@ VS_OUT VS_MAIN(VS_IN In)
 
 VS_OUT VS_MAIN_LEGACY(VS_IN In)
 {
-    VS_OUT Out = (VS_OUT)0;
-    
+    VS_OUT Out = (VS_OUT) 0;
+
     float4 w = In.vBlendWeight;
     float sumW = max(dot(w, 1.0f), 1e-6f);
     w /= sumW;
 
-    matrix BoneMatrix =
-        mul(g_OffsetMatrix[In.vBlendIndex.x],
-            mul(g_BoneMatrices[In.vBlendIndex.x], w.x))
-      + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            mul(g_BoneMatrices[In.vBlendIndex.y], w.y))
-      + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            mul(g_BoneMatrices[In.vBlendIndex.z], w.z))
-      + mul(g_OffsetMatrix[In.vBlendIndex.w],
+    uint4 idx = In.vBlendIndex;
+    
+    matrix BoneMatrix = (matrix) 0;
+    matrix TempBoneMatrix = (matrix) 0;
+    
+    int MinIdx = 30;
+    int MaxIdx = 41;
+    
+    if (idx.x >= MinIdx && idx.x <= MaxIdx)
+        //g_RobeBoneMask[idx.x] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.x],
+            mul(g_BoneMatrices[In.vBlendIndex.x], w.x));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.x],
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x));
+    }
+    if (idx.y >= MinIdx && idx.y <= MaxIdx)
+    //if (g_RobeBoneMask[idx.y]  == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.y],
+            mul(g_BoneMatrices[In.vBlendIndex.y], w.y));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.y],
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y));
+    }
+    if (idx.z >= MinIdx && idx.z <= MaxIdx)
+    //if (g_RobeBoneMask[idx.z] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.z],
+            mul(g_BoneMatrices[In.vBlendIndex.z], w.z));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.z],
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z));
+    }
+    if (idx.w >= MinIdx && idx.w <= MaxIdx)
+    //if (g_RobeBoneMask[idx.w] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.w],
             mul(g_BoneMatrices[In.vBlendIndex.w], w.w));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.w],
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
+    }
+    
+    BoneMatrix = TempBoneMatrix;
+    
+    
+
+    //float robeWeight =
+    //      g_RobeBoneMask[idx.x] * w.x
+    //    + g_RobeBoneMask[idx.y] * w.y
+    //    + g_RobeBoneMask[idx.z] * w.z
+    //    + g_RobeBoneMask[idx.w] * w.w;
+
+    //bool isRobe = robeWeight > g_TempWeight;
+
+    //matrix BoneMatrix = (matrix) 0;
+
+    //if (isRobe)
+    //{
+    //    BoneMatrix += w.x * mul(g_OffsetMatrix[idx.x], g_BoneMatrices[idx.x]);
+    //    BoneMatrix += w.y * mul(g_OffsetMatrix[idx.y], g_BoneMatrices[idx.y]);
+    //    BoneMatrix += w.z * mul(g_OffsetMatrix[idx.z], g_BoneMatrices[idx.z]);
+    //    BoneMatrix += w.w * mul(g_OffsetMatrix[idx.w], g_BoneMatrices[idx.w]);
+    //}
+    //else
+    //{
+    //    BoneMatrix += w.x * mul(g_OffsetMatrix[idx.x], g_BoneBuffer[idx.x].LocalCombined);
+    //    BoneMatrix += w.y * mul(g_OffsetMatrix[idx.y], g_BoneBuffer[idx.y].LocalCombined);
+    //    BoneMatrix += w.z * mul(g_OffsetMatrix[idx.z], g_BoneBuffer[idx.z].LocalCombined);
+    //    BoneMatrix += w.w * mul(g_OffsetMatrix[idx.w], g_BoneBuffer[idx.w].LocalCombined);
+    //}
+
 
     matrix PrevBoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],

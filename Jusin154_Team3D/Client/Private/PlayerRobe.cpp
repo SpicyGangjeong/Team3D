@@ -13,6 +13,9 @@ CPlayerRobe::CPlayerRobe(const CPlayerRobe& Prototype)
 }
 void CPlayerRobe::Priority_Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
 }
 
 void CPlayerRobe::Update(_float fTimeDelta)
@@ -55,10 +58,16 @@ HRESULT CPlayerRobe::Update_RobeSocketPosition()
 		PSX::PxTransform pxTransform = {};
 		_matrix WorldMatrix = {};
 		_matrix OwnerInvWorldMatrix = m_pParentTransformCom->Get_WorldMatrixInv();
+		{
+			pxTransform = m_pRobeMainAnchor->Get_GlobalPosition();
+			WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTransform.p), 1.f));
+			_fmatrix LocalMatrix = WorldMatrix * OwnerInvWorldMatrix;
+			m_pModelCom->Set_BoneCombinedTransformation("Hips_Cloth", LocalMatrix);
+		}
 		for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
 			pxTransform = m_pRobeJointAnchor[i]->Get_GlobalPosition();
 			WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTransform.p), 1.f));
-			_fmatrix LocalMatrix = WorldMatrix* OwnerInvWorldMatrix;
+			_fmatrix LocalMatrix = WorldMatrix * OwnerInvWorldMatrix;
 			XMStoreFloat4x4(&m_ReconstructedJointAnchorMatirces[i], LocalMatrix);
 			m_pModelCom->Set_BoneCombinedTransformation(PLAYER_JOINT_BONE_NAMES[i], LocalMatrix);
 		}
@@ -504,6 +513,8 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 	m_pSocketMatrix = pDesc->pSocketMatrix;
 	m_pModelCom = pDesc->pModel;
 
+	m_ReconstructedJointAnchorMatirces.resize(ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END));
+
 	m_iBoneNum = m_pModelCom->Get_MeshInfluencedBoneNum(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
 	m_PrevRobeBoneMatrices.resize(m_iBoneNum);
 	if (FAILED(m_pModelCom->Capture_BoneMatrices(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH), m_PrevRobeBoneMatrices))) {
@@ -652,6 +663,15 @@ void CPlayerRobe::Free()
 
 void CPlayerRobe::Describe_Entity()
 {
+	GUI::Begin("PhysX");
+	if (GUI::CollapsingHeader("Robe")) {
+		for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
+			if (GUI::BeginChild("##i")) {
+
+				GUI::EndChild();
+			}
+		}
+	}
 }
 
 #endif // _DEBUG

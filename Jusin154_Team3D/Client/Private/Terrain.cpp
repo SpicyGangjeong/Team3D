@@ -56,6 +56,9 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
 
 }
 
@@ -68,6 +71,8 @@ void CTerrain::Late_Update(_float fTimeDelta)
 
 HRESULT CTerrain::Render()
 {
+	if (false == m_bVisible)
+		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -95,6 +100,8 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::Render_Shadow(SHADOW eType)
 {
+	if (false == m_bVisible)
+		return S_OK;
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
@@ -246,7 +253,11 @@ void CTerrain::Describe_Entity()
 {
 	GUI::Begin("Renderer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
-	if (GUI::CollapsingHeader("Terr"))
+	size_t iIndex = (size_t)this;
+
+	
+	_string strTag = "Terrain_" + to_string((size_t)iIndex);
+	if (GUI::CollapsingHeader(strTag.c_str()))
 	{
 		static _int iTuningValue = 16;
 		GUI::DragInt("DSN1", (_int*)&iTuningValue, 1, 1024);
@@ -256,6 +267,7 @@ void CTerrain::Describe_Entity()
 		m_vDRN.y = 1.f / (_float)iTuningValue;
 		m_vDRN.z = 1.f / (_float)iTuningValue;
 		GUI::PopItemWidth();
+		GUI::Checkbox("Visible", &m_bVisible);
 	}
 	GUI::End();
 }
