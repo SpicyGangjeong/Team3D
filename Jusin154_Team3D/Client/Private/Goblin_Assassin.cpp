@@ -42,7 +42,7 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Goblin_Assassin.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -159,6 +159,11 @@ HRESULT CGoblin_Assassin::Render()
 	if (FAILED(Render_DeadDisolve())) {
 		return E_FAIL;
 	}
+
+	if (FAILED(Render_Disolve())) {
+		return E_FAIL;
+	}
+
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
@@ -216,6 +221,13 @@ HRESULT CGoblin_Assassin::Render()
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
 			return E_FAIL;
 		}
+	}
+
+	{
+		_bool bDisolve = false;
+		_float zero = 0.f;
+		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 
 	return S_OK;
@@ -345,7 +357,7 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
 
-//	m_pGoblinSpector->Set_Visible(false);
+	m_pGoblinSpector->Set_Visible(false);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
@@ -359,7 +371,7 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (pEffect_Container != nullptr)
 	{
 		_uint iSkillType = pEffect_Container->Get_SkillType();
-		//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
 
 		switch (iSkillType)
 		{
@@ -403,14 +415,14 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 
-	//m_DamageInfo.fDamage = damagePair.first;
-	//m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
-	//if (0 == damagePair.second) {
-	//	m_pFSM->Change_State(FSMSTATE::DEAD);
-	//	_int ID = m_pStat->Get_Stat().iObjectID;
-	//	m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
-	//	return;
-	//}
+	m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	if (0 == damagePair.second) {
+		m_pFSM->Change_State(FSMSTATE::DEAD);
+		_int ID = m_pStat->Get_Stat().iObjectID;
+		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
+		return;
+	}
 
 
 	m_pFSM->Change_State(FSMSTATE::HIT);
@@ -485,7 +497,7 @@ HRESULT CGoblin_Assassin::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN_ASSASSIN"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
 	return S_OK;

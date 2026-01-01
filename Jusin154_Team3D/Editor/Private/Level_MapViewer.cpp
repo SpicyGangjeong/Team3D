@@ -18,6 +18,7 @@
 #include "MapElement_Door.h"
 #include "MapElement_Chest.h"
 #include "DummyDecal.h"
+#include "EffectPool.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -46,6 +47,11 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Background(TEXT("Layer_SkyBox")))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+	{
 		return E_FAIL;
 	}
 
@@ -86,6 +92,8 @@ HRESULT CLevel_MapViewer::Initialize()
 	if (FAILED(Ready_Layer_MapObjectManager(LAYER_MAPOBJECTMANAGER))) {
 		return E_FAIL;
 	}
+
+	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
 
 	return S_OK;
 }

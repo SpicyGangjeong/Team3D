@@ -59,7 +59,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+	Load_AnimXML("../Bin/Resources/Data/AnimList/RacerAI.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -735,35 +735,7 @@ void CBroomRacerAI::Add_FSM()
 
 }
 
-void CBroomRacerAI::Set_Anim()
-{
-	m_Animation[STATEANIM::BROOM_IDLE] = { 35,  true };
-	m_Animation[STATEANIM::BROOM_FWD] = { 36,  true };
-	m_Animation[STATEANIM::BROOM_LEFT] = { 38,  true };
-	m_Animation[STATEANIM::BROOM_RIGHT] = { 39,  true };
-	m_Animation[STATEANIM::BROOM_DOWN] = { 37,  true };
-	m_Animation[STATEANIM::BROOM_UP] = { 40,  true };
-	m_Animation[STATEANIM::BROOM_REVELIO] = { 3,   false };
 
-	m_Animation[STATEANIM::BROOM_MOUNT] = { 59,  false };
-	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 62,  false };
-	m_Animation[STATEANIM::BROOM_HOVER_START] = { 24,  false };
-	m_Animation[STATEANIM::BROOM_DISMOUNT] = { 63,  false };
-
-	m_Animation[STATEANIM::BROOM_HOVER_IDLE] = { 28,  true };
-	m_Animation[STATEANIM::BROOM_HOVER_FWD] = { 25,  true };
-	m_Animation[STATEANIM::BROOM_HOVER_LEFT] = { 26,  true };
-	m_Animation[STATEANIM::BROOM_HOVER_RIGHT] = { 27,  true };
-	m_Animation[STATEANIM::BROOM_HOVER_REVELIO] = { 46,  false };
-
-	m_Animation[STATEANIM::BROOM_TURBO_DOWN] = { 41,  true };
-	m_Animation[STATEANIM::BROOM_TURBO_FWD] = { 42,  true };
-	m_Animation[STATEANIM::BROOM_TURBO_LEFT] = { 43,  true };
-	m_Animation[STATEANIM::BROOM_TURBO_RIGHT] = { 44,  true };
-	m_Animation[STATEANIM::BROOM_TURBO_UP] = { 45,  true };
-
-
-}
 
 void CBroomRacerAI::Set_Input(_float fTimeDelta)
 {

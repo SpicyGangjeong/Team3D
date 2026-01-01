@@ -35,12 +35,17 @@ public:
 	virtual void Start_Size_Lerp(_float fTimeDelta) override;
 	void Race_Start(_int iCount);
 	void Set_Count(_int Count);
-
 	void Rece_Results();
+	void Race_Setting();
+
+private:
+	void Score(_bool Score);
+
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
@@ -54,6 +59,10 @@ private:
 	_bool	m_bTimer = { false };
 	_bool	m_bSizeDown = { false };
 	_bool	m_bSizeUp = { false };
+	_bool	m_bFinish = { false };
+	_bool	m_bNewScore = { false };
+
+	_float4	m_vImagePosi{};
 
 public:
 	static CBroom_Circle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

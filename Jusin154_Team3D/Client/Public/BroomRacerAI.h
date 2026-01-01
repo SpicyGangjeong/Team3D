@@ -83,7 +83,6 @@ public:
 
 private:
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 	void Set_Input(_float fTimeDelta);
 
 	function<void()> m_InputAction = nullptr;

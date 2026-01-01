@@ -33,7 +33,9 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float	m_fStart = { false };
+	_float	m_fStart{};
+
+	_bool	m_fFinish = { false };
 
 public:
 	static CBroom_Flag* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

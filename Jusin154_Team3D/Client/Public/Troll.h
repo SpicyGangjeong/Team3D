@@ -88,7 +88,6 @@ public:
 private:
 	virtual void Add_FSM();
 	void SlamHit(Engine::_bool& bHit, Engine::_float4* m_pStartPos, bool& retFlag);
-	virtual void Set_Anim();
 	void CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits);
 
 	_float m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = {};

@@ -87,7 +87,6 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Draw();
 	GUI::Render();
-	//m_pGameInstance->Render_Font(TEXT("HYHL"), TEXT("피곤해 못 써"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 	ImGui_ImplDX11_RenderDrawData(GUI::GetDrawData());
 	m_pGameInstance->Render_End();
 

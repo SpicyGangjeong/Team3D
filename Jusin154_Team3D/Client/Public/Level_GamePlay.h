@@ -38,6 +38,7 @@ private:
 	HRESULT Ready_Layer_BroomRacerAI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Item(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_RaceRing(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_ReparoObject(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_SkyBox(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster();
 	HRESULT Ready_Layer_Manager(const _wstring& strLayerTag);

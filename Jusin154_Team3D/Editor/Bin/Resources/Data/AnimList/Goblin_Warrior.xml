@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animations owner="Goblin_Warrior">
+
+	<!-- IDLE -->
+	<Anim state="IDLE" index="22" loop="true"/>
+	<Anim state="IDLE_TURN_BWD" index="24" loop="false"/>
+	<Anim state="IDLE_TURN_L" index="26" loop="false"/>
+	<Anim state="IDLE_TURN_R" index="30" loop="false"/>
+
+	<Anim state="IDLE_BREAK1" index="137" loop="false"/>
+	<Anim state="IDLE_BREAK2" index="138" loop="false"/>
+	<Anim state="IDLE_BREAK3" index="139" loop="false"/>
+	<Anim state="IDLE_BREAK4" index="37" loop="false"/>
+	<Anim state="IDLE_BREAK5" index="38" loop="false"/>
+	<Anim state="IDLE_BREAK6" index="39" loop="false"/>
+	<Anim state="IDLE_BREAK7" index="41" loop="false"/>
+
+	<!-- WALK -->
+	<Anim state="WALK_FWD" index="45" loop="true"/>
+	<Anim state="WALK_START" index="57" loop="false"/>
+	<Anim state="WALK_STOP" index="58" loop="false"/>
+	<Anim state="WALK_BWD" index="252" loop="true"/>
+
+	<!-- JOG -->
+	<Anim state="JOG_FWD" index="147" loop="true"/>
+	<Anim state="JOG_START" index="157" loop="false"/>
+	<Anim state="JOG_BWD" index="146" loop="false"/>
+	<Anim state="JOG_112_L" index="148" loop="true"/>
+	<Anim state="JOG_112_R" index="152" loop="true"/>
+	<Anim state="JOG_90_L" index="151" loop="true"/>
+	<Anim state="JOG_90_R" index="155" loop="true"/>
+
+	<!-- SHUFFLE -->
+	<Anim state="SHUFFLE1" index="203" loop="false"/>
+	<Anim state="SHUFFLE2" index="204" loop="false"/>
+	<Anim state="SHUFFLE3" index="205" loop="false"/>
+	<Anim state="SHUFFLE4" index="206" loop="false"/>
+
+	<!-- MOVE / ACTION -->
+	<Anim state="DODGE_LEFT" index="125" loop="false"/>
+	<Anim state="DODGE_RIGHT" index="126" loop="false"/>
+	<Anim state="SPRINT" index="90" loop="true"/>
+
+	<Anim state="SKILL" index="85" loop="false"/>
+	<!-- 나이프 던지기 -->
+
+	<Anim state="BLINK_START" index="428" loop="false"/>
+	<Anim state="BLINK" index="426" loop="false"/>
+
+	<Anim state="SWING_FWD" index="100" loop="false"/>
+	<Anim state="ATTACK_END" index="76" loop="false"/>
+
+	<!-- HIT -->
+	<Anim state="HIT_FWD" index="353" loop="false"/>
+	<Anim state="HIT_BWD" index="352" loop="false"/>
+	<Anim state="HIT_BWD2" index="349" loop="false"/>
+	<Anim state="HIT_BWD3" index="350" loop="false"/>
+	<Anim state="HIT_BWD4" index="351" loop="false"/>
+	<Anim state="HIT_L" index="354" loop="false"/>
+	<Anim state="HIT_R" index="355" loop="false"/>
+
+	<!-- KNOCKDOWN -->
+	<Anim state="KNOCKDOWN_BWD" index="374" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD_SPLT" index="375" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD_SPLT_HOLD" index="370" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD" index="371" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD_SPLT" index="372" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD_SPLT_HOLD" index="373" loop="false"/>
+
+	<!-- GETUP -->
+	<Anim state="GETUP_BWD" index="330" loop="false"/>
+	<Anim state="GETUP_FWD" index="332" loop="false"/>
+	<Anim state="GETUP_L" index="334" loop="false"/>
+	<Anim state="GETUP_L_FD" index="336" loop="false"/>
+	<Anim state="GETUP_L_FU" index="338" loop="false"/>
+	<Anim state="GETUP_R" index="340" loop="false"/>
+	<Anim state="GETUP_R_FD" index="342" loop="false"/>
+	<Anim state="GETUP_R_FU" index="344" loop="false"/>
+	<Anim state="GETUP_SLOUCH" index="346" loop="false"/>
+
+	<!-- ETC -->
+	<Anim state="KNOCKBACK" index="377" loop="true"/>
+	<Anim state="KNOCKBACK2" index="378" loop="true"/>
+	<Anim state="TUMBLE" index="379" loop="true"/>
+	<Anim state="TUMBLE2" index="380" loop="true"/>
+	<Anim state="TUMBLE_FWD" index="429" loop="true"/>
+
+	<Anim state="PETRIFICUSED_START" index="383" loop="false"/>
+	<Anim state="LAND" index="376" loop="false"/>
+	<Anim state="HIT_LEVIOSO" index="381" loop="false"/>
+	<Anim state="INCARCEROUS" index="382" loop="false"/>
+
+	<!-- STUMBLE -->
+	<Anim state="STUMBLE_BWD_L" index="394" loop="false"/>
+	<Anim state="STUMBLE_BWD_R" index="395" loop="false"/>
+	<Anim state="STUMBLE_FWD" index="396" loop="false"/>
+
+	<!-- DEAD -->
+	<Anim state="DEAD_BWD" index="317" loop="false"/>
+	<Anim state="DEAD_BWD2" index="318" loop="false"/>
+	<Anim state="DEAD_FWD" index="319" loop="false"/>
+	<Anim state="DEAD_FWD2" index="320" loop="false"/>
+	<Anim state="DEAD_L" index="321" loop="false"/>
+	<Anim state="DEAD_L2" index="322" loop="false"/>
+	<Anim state="DEAD_R" index="323" loop="false"/>
+	<Anim state="DEAD_R2" index="324" loop="false"/>
+
+</Animations>

@@ -17,6 +17,7 @@
 #include "PlayerRobe.h"
 #include "RaceRing.h"
 #include "Wand.h"
+#include "Mesh.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -64,7 +65,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Player.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -220,7 +221,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::LOOK, look);
 	////////////////////////////////////////////////////////////////////////////
 	
-#ifdef 기무리
+
 	if (nullptr == m_pRobePart) {
 		{
 			CPlayerRobe::PlayerRobe_DESC Desc{};
@@ -232,7 +233,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 			}
 		}
 	}
-#endif // 기무리
+
 }
 
 
@@ -262,7 +263,6 @@ HRESULT CPlayer::Render()
 //			}
 //#endif // 기무리
 //#endif // _DEBUG
-			
 			if (FAILED(m_pShaderCom->Bind_Matrices(
 				"g_OffsetMatrix",
 				m_pModelCom->Get_OffsetMatrix(i).data(),
@@ -451,7 +451,6 @@ void CPlayer::Set_RaceRing(CRaceRing* pRaceRing)
 	SAFE_ADDREF(m_pRaceRing);
 }
 
-
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -629,18 +628,68 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		iColorMixerMethod = 1;
 		break;
 #ifdef _DEBUG
-#ifdef 기무리
 	case PLAYER_MESH_ORDER::ROBE_CLOTH:
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH), m_pShaderCom, "g_BoneMatrices"))) {
+	{
+		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
+		_uint MeshBoneCount = pMesh->Get_NumBone();
+
+		for (_uint i = 0; i < MeshBoneCount; ++i)
+		{
+			XMStoreFloat4x4(&SkinMatrices[i] ,XMMatrixIdentity());
+		}
+
+		_uint temp = 0;
+		vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
+		vector<_int> boneIndices = pMesh->Get_BoneIndices(); 
+
+		for (_uint i = 0; i < MeshBoneCount; ++i)
+		{
+			_uint global = boneIndices[i];
+			if (global == 38)
+				continue;
+			if (globalMask[global] == 1)
+			{
+				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
+			}
+		}
+
+		//array<_int, 256> paletteMask{};
+		//paletteMask.fill(0);
+
+		//for (_uint i = 0; i < paletteCount; ++i)
+		//{
+		//	if (i == 29)
+		//		continue;
+		//	_uint global = boneIndices[i];
+		//	paletteMask[i] = globalMask[global];
+		//}
+
+		//m_pShaderCom->Bind_IntArray("g_RobeBoneMask", paletteMask.data(), 256);
+
+		GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
 			return E_FAIL;
 		}
+
+
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_BoneMatrices",
+			SkinMatrices.data(),
+			(_int)SkinMatrices.size()
+		)))
+		{
+			return E_FAIL;
+		}
+
+
 		if (nullptr != m_pRobePart) {
 			if (FAILED(m_pRobePart->Bind_PrevBoneMatrices(m_pShaderCom, "g_PrevBoneMatrices"))) {
 				return E_FAIL;
 			}
 		}
+	}
 		break;
-#endif
 #endif // _DEBUG
 
 	default:

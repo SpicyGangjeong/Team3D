@@ -41,6 +41,7 @@ HRESULT CBroom_Flag::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 10.f;
 	m_fStart = 500.f;
+	m_fSortZ = 0.03f;
 	return S_OK;
 }
 
@@ -50,20 +51,29 @@ void CBroom_Flag::Set_Start()
 	m_fAlpha = 1.f;
 }
 
-void CBroom_Flag::Set_Finish()
-{
-	Visible(true);
-	m_fFinish = true;
-}
-
 void CBroom_Flag::Rece_Results()
 {
 	Visible(true);
+	m_fFinish = true;
+	m_bHover = false;
+	m_fAlpha = 1.f;
+	MoveY(100.f);
+	SizeUpdate(m_fOrigin_Size.x, m_fOrigin_Size.y);
+}
+
+void CBroom_Flag::Race_Setting()
+{
+	Visible(false);
+	m_fFinish = false;
+	m_bHover = false;
+	m_fAlpha = 1.f;
+	MoveY(100.f);
+	SizeUpdate(m_fOrigin_Size.x, m_fOrigin_Size.y);
 }
 
 void CBroom_Flag::Finish_SizeUp(_float fTime)
 {
-	
+
 }
 
 void CBroom_Flag::Priority_Update(_float fTimeDelta)
@@ -112,19 +122,20 @@ void CBroom_Flag::Update(_float fTimeDelta)
 		m_fAlpha -= fTimeDelta * m_fAlphaTime;
 	}
 
-	if (m_fAlpha <= 0.f)
+	if (m_fAlpha <= 0.f && m_fFinish == false)
 	{
 		m_bHover = false;
 		m_fAlpha = 0.f;
 		Visible(false);
 	}
 
+	m_fTime += fTimeDelta * m_fTimeMult;
+
 	if (m_fFinish == true)
 	{
-
+		MoveY(200.f);
+		SizeUpdate(600.f, 300.f);
 	}
-
-	m_fTime += fTimeDelta * m_fTimeMult;
 
 	__super::Update(fTimeDelta);
 }

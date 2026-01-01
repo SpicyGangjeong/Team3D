@@ -49,6 +49,8 @@ void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 	case ENUM_CLASS(RACE_STATE::RACING):
 		Check_RingPassed();
 		break;
+	case ENUM_CLASS(RACE_STATE::FINISH):
+		break;
 	}
 
 }
@@ -70,6 +72,7 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 			if (m_bRaceStart == true)
 			{
 				m_pInfoInstance->Event_CallBack(TEXT("RaceEnd"));
+				m_iCount = 3;
 				m_bRaceStart = false;
 			}
 		}
@@ -212,7 +215,6 @@ void CBroomRaceManager::Describe_Entity()
 void CBroomRaceManager::Update_Countdown(_float fTimeDelta)
 {
 	m_fCountTimer += fTimeDelta;
-
 	if (m_fCountTimer >= 1.f)
 	{
 		m_fCountTimer = 0.f;
@@ -313,6 +315,10 @@ void CBroomRaceManager::Check_RingPassed()
 	}
 }
 
+void CBroomRaceManager::Finish()
+{
+}
+
 
 void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 {
@@ -324,6 +330,11 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 			{
 				if (racer.pAI)
 				{
+					if (racer.curRing == m_pRaceRings.size() - 1)
+					{
+						racer.pAI->Get_Broom()->Set_Hover(true);
+						racer.pAI->Get_Broom()->Set_Move(false);
+					}
 					racer.pAI->Set_RaceRing(m_pRaceRings[racer.curRing]);
 				}
 			}
@@ -332,6 +343,11 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 		{
 			if (racer.pRacer == pRacer)
 			{
+				if (racer.curRing == m_pRaceRings.size() - 1)
+				{
+					racer.pRacer->Get_Broom()->Set_Hover(true);
+					racer.pRacer->Get_Broom()->Set_Move(false);
+				}
 				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
 				m_pInfoInstance->Event_CallBack(TEXT("CurrentRing"));
 			}

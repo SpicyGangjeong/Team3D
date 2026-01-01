@@ -187,8 +187,16 @@ PSX::PxD6Joint* CPhysX_Manager::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, P
 
 	PSX::PxD6Joint* pJoint = PSX::PxD6JointCreate(*m_pPhysics, pActor0, pxLocalParentPOs, pActor1, pxLocalChildPos);
 
+#ifdef 기무리
 	pActor0->setSolverIterationCounts(8, 2);
 	pActor1->setSolverIterationCounts(8, 2);
+#elif Bin
+	pActor0->setSolverIterationCounts(8, 2);
+	pActor1->setSolverIterationCounts(8, 2);
+#else
+	pActor0->setSolverIterationCounts(4, 1);
+	pActor1->setSolverIterationCounts(4, 1);
+#endif // 기무리
 
 	pJoint->setMotion(PSX::PxD6Axis::eX, PSX::PxD6Motion::eLOCKED);
 	pJoint->setMotion(PSX::PxD6Axis::eY, PSX::PxD6Motion::eLOCKED);
@@ -755,6 +763,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 #ifndef _DEBUG
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
 #endif // _DEBUG
+
 		PxInitExtensions(*m_pPhysics, m_pPvd);
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());

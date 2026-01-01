@@ -1,6 +1,7 @@
 #ifndef ENGINE_SHADER_DEFINES_HLSLI
 #define ENGINE_SHADER_DEFINES_HLSLI
 
+#pragma pack_matrix(row_major)
 #include "Engine_Shader_Constants.hlsli"
 #include "Engine_Shader_Structures.hlsli"
 #include "Engine_Shader_Samplers.hlsli"

@@ -67,6 +67,7 @@ Texture2D g_MaskingTexture;
 int g_iHover;
 int g_iBoosterOn;
 int g_iBoosterOff;
+int g_iFinish;
 int g_iClick;
 int g_iColor;
 int g_Count;
@@ -2051,12 +2052,24 @@ PS_OUT PS_BroomCircle(PS_IN In)
     
     float Diffuse = g_Texture1.Sample(DefaultSampler, In.vTexcoord).r;
     
-    
     if (g_iHover != 0)
     {
         if (g_fTime >= Diffuse)
         {
             discard;
+        }
+    }
+    
+    if(g_iFinish == 0)
+    {
+        float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+        float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+        float2 Imagelocal1 = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+        bool inside1 = all(Imagelocal1 >= 0.0f && Imagelocal1 <= 1.0f);
+        if (inside1)
+        {
+            float4 tex1 = g_Texture2.Sample(DefaultSampler, Imagelocal1);
+            color = lerp(color, tex1, tex1.a);
         }
     }
     
