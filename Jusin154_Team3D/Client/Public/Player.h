@@ -127,7 +127,6 @@ private:
 	void Get_UIState(_int UIState);
 
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 
 	void	Reset_LightCombo() { m_iLightCombo = 0; }
 	_uint	Next_LightCombo() { return ++m_iLightCombo; }

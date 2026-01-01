@@ -55,7 +55,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 #ifdef 기무리
 	m_pThreadHolder = CThreadHolder::Create(12);
 #elif Bin
-	m_pThreadHolder = CThreadHolder::Create(12);
+	m_pThreadHolder = CThreadHolder::Create(8);
 #else
 	m_pThreadHolder = CThreadHolder::Create(6);
 #endif // 

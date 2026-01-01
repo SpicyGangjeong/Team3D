@@ -65,7 +65,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Player.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -253,9 +253,6 @@ HRESULT CPlayer::Render()
 
 		for (_uint i = 0; i < iNumMeshes; i++)
 		{
-			if (PLAYER_MESH_ORDER::LOWER == (PLAYER_MESH_ORDER)i) {
-				continue;
-			}
 			if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 				return E_FAIL;
 			}

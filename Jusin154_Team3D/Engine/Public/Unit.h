@@ -94,6 +94,8 @@ protected:
 	void Play_Event();
 	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bKeep = false);
 	void Check_HitAngle(_vector ProjectileDir);
+	void Load_AnimXML(const string& path);
+	STATEANIM::ESTATE StringToStateAnim(const string& s);
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;
