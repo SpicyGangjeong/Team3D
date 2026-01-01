@@ -221,7 +221,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	////////////////////////////////////////////////////////////////////////////
 	
 #ifdef 기무리
-#else Bin
 	if (nullptr == m_pRobePart) {
 		{
 			CPlayerRobe::PlayerRobe_DESC Desc{};
@@ -597,8 +596,6 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		iColorMixerMethod = 1;
 		break;
 #ifdef _DEBUG
-#ifdef 기무리
-#elif Bin
 	case PLAYER_MESH_ORDER::ROBE_CLOTH:
 	{
 		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
@@ -616,8 +613,8 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		for (_uint i = 0; i < MeshBoneCount; ++i)
 		{
 			_uint global = boneIndices[i];
-			if (global == 38)
-				continue;
+			//if (global == 38)
+			//	continue;
 			if (globalMask[global] == 1)
 			{
 				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
@@ -661,7 +658,6 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		}
 	}
 		break;
-#endif
 #endif // _DEBUG
 
 	default:
