@@ -33,8 +33,8 @@ private:
 	
 public:
 	void Set_Start();
-	void Set_Finish();
 	void Rece_Results();
+	void Race_Setting();
 
 private:
 	void Finish_SizeUp(_float fTime);
