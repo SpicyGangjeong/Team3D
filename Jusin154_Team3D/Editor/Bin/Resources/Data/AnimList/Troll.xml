@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animations owner="Troll">
+
+	<!-- IDLE -->
+	<Anim state="IDLE" index="16" loop="true"/>
+	<Anim state="IDLE_COMBAT_TURN_BWD_R" index="7" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_BWD_L" index="8" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_90_L" index="9" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_90_R" index="10" loop="false"/>
+
+	<Anim state="IDLE_BREAK1" index="11" loop="false"/>
+	<!-- 땅 2번 구르기 -->
+	<Anim state="IDLE_BREAK2" index="141" loop="false"/>
+	<!-- 방망이 -->
+	<Anim state="IDLE_BREAK3" index="14" loop="false"/>
+	<!-- 땅 구르기 -->
+	<Anim state="IDLE_BREAK4" index="143" loop="false"/>
+	<!-- 소리 지르기 -->
+
+	<!-- MOVE -->
+	<Anim state="WALK_FWD" index="22" loop="true"/>
+
+	<!-- JOG -->
+	<Anim state="JOG_START" index="104" loop="false"/>
+	<Anim state="JOG_LEFT_TURN" index="112" loop="false"/>
+	<Anim state="JOG_RIGHT_TURN" index="108" loop="false"/>
+	<Anim state="JOG_FWD" index="103" loop="true"/>
+
+	<!-- MOVE / EVADE -->
+	<Anim state="DODGE_LEFT" index="125" loop="false"/>
+	<Anim state="DODGE_RIGHT" index="126" loop="false"/>
+	<Anim state="SPRINT" index="90" loop="true"/>
+
+	<!-- ATTACK / SKILL -->
+	<Anim state="SLAM" index="66" loop="false"/>
+	<!-- 도끼 찍기 -->
+	<Anim state="SKILL2" index="70" loop="false"/>
+
+	<Anim state="THROW_ROCK_START" index="77" loop="false"/>
+	<Anim state="THROW_ROCK" index="74" loop="false"/>
+
+	<Anim state="RUSH_START" index="55" loop="false"/>
+	<Anim state="RUSH_LOOP" index="54" loop="true"/>
+	<Anim state="RUSH_END" index="56" loop="false"/>
+
+	<Anim state="BACKHAND_SWING_JOG" index="89" loop="false"/>
+	<Anim state="SWING_FWD" index="91" loop="false"/>
+
+	<!-- HIT -->
+	<Anim state="HIT_BWD" index="167" loop="false"/>
+	<Anim state="HIT_BWD2" index="168" loop="false"/>
+	<Anim state="HIT_BWD3" index="169" loop="false"/>
+
+	<Anim state="HIT_FWD" index="170" loop="false"/>
+
+	<Anim state="HIT_FACE" index="156" loop="false"/>
+	<Anim state="HIT_FACE_END" index="157" loop="false"/>
+
+	<Anim state="STUN" index="60" loop="false"/>
+
+	<!-- KNOCKDOWN -->
+	<Anim state="KNOCKDOWN_BWD" index="165" loop="false"/>
+
+</Animations>

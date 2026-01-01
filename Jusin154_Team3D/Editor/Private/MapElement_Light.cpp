@@ -78,8 +78,7 @@ void CMapElement_Light::Late_Update(_float fTimeDelta)
 	}
 #endif 
 
-	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) 
-	{
+	
 		if (m_isLightOn)
 		{
 			_float fDistance = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
@@ -100,16 +99,15 @@ void CMapElement_Light::Late_Update(_float fTimeDelta)
 				}
 			}
 
-			m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+			//m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
 		}
 
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	}
+		//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CMapElement_Light::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
+	/*if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
@@ -155,7 +153,7 @@ HRESULT CMapElement_Light::Render()
 		if (FAILED(m_pModelComs[m_iLodIndex]->Render(i))) {
 			return E_FAIL;
 		}
-	}
+	}*/
 
 	return S_OK;
 }
@@ -166,37 +164,37 @@ HRESULT CMapElement_Light::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
-	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
-	{
-		CModel* pModel = { nullptr };
+	//for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
+	//{
+	//	CModel* pModel = { nullptr };
 
-		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
-			reinterpret_cast<CComponent**>(&pModel))))
-			return E_FAIL;
+	//	/* Com_Model */
+	//	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
+	//		reinterpret_cast<CComponent**>(&pModel))))
+	//		return E_FAIL;
 
-		m_pModelComs.push_back(pModel);
-	}
+	//	m_pModelComs.push_back(pModel);
+	//}
 
-	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	///* Com_Shader */
+	//if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
+	//	reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	//	return E_FAIL;
 
-	/* Com_Texture */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Emissive"),
-		reinterpret_cast<CComponent**>(&m_pEmissiveTextureCom))))
-		return E_FAIL;
+	///* Com_Texture */
+	//if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Emissive"),
+	//	reinterpret_cast<CComponent**>(&m_pEmissiveTextureCom))))
+	//	return E_FAIL;
 
-	/* Com_Texture */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Mask"),
-		reinterpret_cast<CComponent**>(&m_pMaskTextureCom))))
-		return E_FAIL;
+	///* Com_Texture */
+	//if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Mask"),
+	//	reinterpret_cast<CComponent**>(&m_pMaskTextureCom))))
+	//	return E_FAIL;
 
-	/* Com_Texture */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Base"),
-		reinterpret_cast<CComponent**>(&m_pGlassTextureCom))))
-		return E_FAIL;
+	///* Com_Texture */
+	//if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Base"),
+	//	reinterpret_cast<CComponent**>(&m_pGlassTextureCom))))
+	//	return E_FAIL;
 
 
 	MAPELEMENT_LIGHT_DESC* pDesc = static_cast<MAPELEMENT_LIGHT_DESC*>(pArg);
@@ -253,10 +251,10 @@ HRESULT CMapElement_Light::Render_Bloom()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_fBloomStrength ,sizeof(_float))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_SRV("g_EmissiveTexture", m_pEmissiveTextureCom->Get_SRV(0))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_SRV("g_DiffuseTexture", m_pGlassTextureCom->Get_SRV(0))))
-		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_SRV("g_EmissiveTexture", m_pEmissiveTextureCom->Get_SRV(0))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_SRV("g_DiffuseTexture", m_pGlassTextureCom->Get_SRV(0))))
+	//	return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::BLOOM)))) {
 		return E_FAIL;
@@ -310,9 +308,9 @@ void CMapElement_Light::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pLightCom);
-	SAFE_RELEASE(m_pEmissiveTextureCom);
-	SAFE_RELEASE(m_pMaskTextureCom);
-	SAFE_RELEASE(m_pGlassTextureCom);
+	//SAFE_RELEASE(m_pEmissiveTextureCom);
+	//SAFE_RELEASE(m_pMaskTextureCom);
+	//SAFE_RELEASE(m_pGlassTextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
 	for (auto& pModel : m_pModelComs)

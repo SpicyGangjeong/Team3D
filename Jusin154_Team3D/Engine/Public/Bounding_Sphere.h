@@ -26,6 +26,7 @@ public:
 #ifdef _DEBUG
 public:
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor)override;
+	virtual void Set_Desc(void* pDesc)override;
 #endif
 
 private:

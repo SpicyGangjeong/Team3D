@@ -28,10 +28,62 @@ void CMapObject_Collision::Update(_float fTimeDelta)
 
 void CMapObject_Collision::Late_Update(_float fTimeDelta)
 {
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(XMLoadFloat4((_float4*)&m_CombinedWorldMatrix.m[3][0]), m_fRadius));
 }
 
 HRESULT CMapObject_Collision::Render()
 {
+	return S_OK;
+}
+
+HRESULT CMapObject_Collision::Render_Shadow(SHADOW eType)
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
+		return E_FAIL;
+	}
+	_uint iMeshes = m_pModelComs[0]->Get_NumMeshes();
+
+	for (_uint i = 0; i < iMeshes; i++)
+	{
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SHADOW)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelComs[0]->Render(i))) {
+			return E_FAIL;
+		}if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
+			return E_FAIL;
+		}
+		_uint iMeshes = m_pModelComs[0]->Get_NumMeshes();
+
+		for (_uint i = 0; i < iMeshes; i++)
+		{
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SHADOW)))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pModelComs[0]->Render(i))) {
+				return E_FAIL;
+			}
+		}
+
+		return S_OK;
+	}
+
+	return S_OK;
+
 	return S_OK;
 }
 
@@ -69,6 +121,8 @@ HRESULT CMapObject_Collision::Initialize(void* pArg)
 
 	ReadyForPhysX();
 	ConvertToPhysX();
+
+	m_fRadius = m_pModelComs[0]->Get_Radius();
 
 	return S_OK;
 }

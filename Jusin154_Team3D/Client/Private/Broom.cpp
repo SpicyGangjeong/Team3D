@@ -37,7 +37,8 @@ HRESULT CBroom::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Broom.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};

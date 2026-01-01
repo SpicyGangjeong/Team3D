@@ -107,7 +107,6 @@ public:
 #pragma region STATE
 	void Camera_InterpTurn(_float fTimeDelta);
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 
 	_float		m_fAmount = { 1.f };
 	_float		m_fInputTime = {};

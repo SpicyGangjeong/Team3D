@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animations owner="BroomRacerAI">
+
+	<!-- BROOM MOVE -->
+	<Anim state="BROOM_IDLE" index="35" loop="true"/>
+	<Anim state="BROOM_FWD" index="36" loop="true"/>
+	<Anim state="BROOM_LEFT" index="38" loop="true"/>
+	<Anim state="BROOM_RIGHT" index="39" loop="true"/>
+	<Anim state="BROOM_DOWN" index="37" loop="true"/>
+	<Anim state="BROOM_UP" index="40" loop="true"/>
+	<Anim state="BROOM_REVELIO" index="3" loop="false"/>
+
+	<!-- BROOM MOUNT / DISMOUNT -->
+	<Anim state="BROOM_MOUNT" index="59" loop="false"/>
+	<Anim state="BROOM_MOUNT_END" index="62" loop="false"/>
+	<Anim state="BROOM_HOVER_START" index="24" loop="false"/>
+	<Anim state="BROOM_DISMOUNT" index="63" loop="false"/>
+
+	<!-- BROOM HOVER -->
+	<Anim state="BROOM_HOVER_IDLE" index="28" loop="true"/>
+	<Anim state="BROOM_HOVER_FWD" index="25" loop="true"/>
+	<Anim state="BROOM_HOVER_LEFT" index="26" loop="true"/>
+	<Anim state="BROOM_HOVER_RIGHT" index="27" loop="true"/>
+	<Anim state="BROOM_HOVER_REVELIO" index="46" loop="false"/>
+
+	<!-- BROOM TURBO -->
+	<Anim state="BROOM_TURBO_DOWN" index="41" loop="true"/>
+	<Anim state="BROOM_TURBO_FWD" index="42" loop="true"/>
+	<Anim state="BROOM_TURBO_LEFT" index="43" loop="true"/>
+	<Anim state="BROOM_TURBO_RIGHT" index="44" loop="true"/>
+	<Anim state="BROOM_TURBO_UP" index="45" loop="true"/>
+
+</Animations>

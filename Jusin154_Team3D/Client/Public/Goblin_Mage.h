@@ -73,7 +73,6 @@ public:
 
 private:
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 private:
 	class CEffectPool* m_pEffectPool = { nullptr };
 

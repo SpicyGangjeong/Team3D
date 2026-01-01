@@ -12,6 +12,7 @@
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
+#include "InstancedProp_Light.h"
 #include "Land.h"
 #include "Unified.h"
 #include "MapElement_Lake.h"
@@ -590,6 +591,28 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 
 
+	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
+
+	/* LightPost */
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 0;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &LightDesc)))
+		return E_FAIL;
+
+	/* LightPost_Floating */
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 1;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &LightDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -771,14 +794,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {
-		for (_uint i = 0; i < 0; ++i)
+		for (_uint i = 0; i < 1; ++i)
 		{
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 				return E_FAIL;
 			}
 		}
 
-		for (_uint i = 0; i < 0; ++i)
+		for (_uint i = 0; i < 1; ++i)
 		{
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 				return E_FAIL;
@@ -797,9 +820,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 			return E_FAIL;
 		}
 
-		/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
-		}*/
+		}
 
 	}
 #if 진우
