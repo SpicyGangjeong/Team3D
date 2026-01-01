@@ -944,6 +944,26 @@ void CGoblin_Assassin::Add_FSM()
 
 }
 
+//
+//void CGoblin_Assassin::Load_AnimXML(const string& path)
+//{
+//	tinyxml2::XMLDocument doc;
+//	doc.LoadFile(path.c_str());
+//
+//	tinyxml2::XMLElement* root = doc.FirstChildElement("Animations");
+//	for (tinyxml2::XMLElement* elem = root->FirstChildElement("Anim");
+//		elem; elem = elem->NextSiblingElement("Anim"))
+//	{
+//		const char* stateStr = elem->Attribute("state");
+//		_int index = elem->IntAttribute("index");
+//		_bool loop = elem->BoolAttribute("loop");
+//
+//		STATEANIM::ESTATE state = StringToStateAnim(stateStr);
+//		m_Animation[state] = { index, loop };
+//	}
+//}
+
+
 void CGoblin_Assassin::Set_Anim()
 {
 	m_Animation[STATEANIM::IDLE] = { 22,true };
@@ -1035,48 +1055,4 @@ void CGoblin_Assassin::Set_Anim()
 	m_Animation[STATEANIM::DEAD_L2] = { 322, false };
 	m_Animation[STATEANIM::DEAD_R] = { 323, false };
 	m_Animation[STATEANIM::DEAD_R2] = { 324, false };
-
-	//Tp 426
-	// Tp Start 428
-	// 76 공격끝
-
-
-
-
-
-
-
-
-	// 걷기 시작 57
-	// 걷기 루프 50
-	// 뛰기 시작 157
-	// 뛰기 루프 45
-	// 나이프 던지기 85
-	// 도끼 공격 444
-	// 도끼 공격 후 76
-	// 도끼 찍기 439
-	// 
-
-	// 텀블링 히트 380
-	// 디센도 찍기전 띄우기 371
-	// 디센도 찍기 372
-
-	// 레비오소 피격 381
-	// 착지 376
-	//
-
-	// Shuffle1 211
-	// Shuffle2 215
-	// Shuffle3 219
-	// Shuffle4 223	
-
-	//Jog 112도 L 148
-	//Jog 112도 R 152
-	// Jog 90 L 151
-	// Jog 90 R 155
-
-
-	// L 394
-	// R 395
-	// fwd 396
 }

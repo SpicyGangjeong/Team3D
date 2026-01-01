@@ -79,6 +79,7 @@ public:
 
 private:
 	virtual void Add_FSM();
+	void Load_AnimXML(const string& path);
 	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::END)] = {};

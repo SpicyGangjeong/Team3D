@@ -42,6 +42,9 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 
 	Add_FSM();
 
+	//Load_AnimXML("../Bin/Resources/Data/AnimIndex/Goblin_Assassin.xml");
+
+
 	Set_Anim();
 
 	{
