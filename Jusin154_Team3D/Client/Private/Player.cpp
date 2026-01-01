@@ -252,9 +252,6 @@ HRESULT CPlayer::Render()
 
 		for (_uint i = 0; i < iNumMeshes; i++)
 		{
-			if (PLAYER_MESH_ORDER::LOWER == (PLAYER_MESH_ORDER)i) {
-				continue;
-			}
 			if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 				return E_FAIL;
 			}
@@ -600,10 +597,7 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		break;
 #ifdef _DEBUG
 	case PLAYER_MESH_ORDER::ROBE_CLOTH:
-	{//if (FAILED(m_pModelCom->Bind_BoneMatrices(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH), m_pShaderCom, "g_BoneMatrices"))) {
-		//	return E_FAIL;
-		//}
-
+	{
 		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
 		_uint paletteCount = pMesh->Get_NumBone();
 
@@ -619,8 +613,8 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		for (_uint i = 0; i < paletteCount; ++i)
 		{
 			_uint global = boneIndices[i];
-			//if (global == 38)
-			//	continue;
+			if (global == 38)
+				continue;
 			if (globalMask[global] == 1)
 			{
 				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
@@ -632,8 +626,8 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 
 		for (_uint i = 0; i < paletteCount; ++i)
 		{
-			//if (i == 29)
-			//	continue;
+			if (i == 29)
+				continue;
 			_uint global = boneIndices[i];
 			paletteMask[i] = globalMask[global];
 		}

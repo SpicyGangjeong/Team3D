@@ -266,7 +266,7 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
     VS_OUT Out = (VS_OUT) 0;
 
     float4 w = In.vBlendWeight;
-    float sumW = max(dot(w, 1.0f), 1e-6f);
+    float sumW = max(dot(w, 1.0f), FLT_EPSILON5);
     w /= sumW;
 
     uint4 idx = In.vBlendIndex;
@@ -278,26 +278,88 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
         + g_RobeBoneMask[idx.w] * w.w;
 
     bool isRobe = robeWeight > g_TempWeight;
-
     matrix BoneMatrix = (matrix) 0;
-
-    if (isRobe)
     {
-        BoneMatrix += w.x * mul(g_OffsetMatrix[idx.x], g_BoneMatrices[idx.x]);
-        BoneMatrix += w.y * mul(g_OffsetMatrix[idx.y], g_BoneMatrices[idx.y]);
-        BoneMatrix += w.z * mul(g_OffsetMatrix[idx.z], g_BoneMatrices[idx.z]);
-        BoneMatrix += w.w * mul(g_OffsetMatrix[idx.w], g_BoneMatrices[idx.w]);
+        uint iIndex = idx.x;
+        float fWeight = w.x;
+        if (isRobe)
+        {
+            if (29 == iIndex)
+            {
+                BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+
+            }
+            else
+            {
+                BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneMatrices[iIndex]));
+            }
+        }
+        else
+        {
+            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+        }
     }
-    else
     {
-        BoneMatrix += w.x * mul(g_OffsetMatrix[idx.x], g_BoneBuffer[idx.x].LocalCombined);
-        BoneMatrix += w.y * mul(g_OffsetMatrix[idx.y], g_BoneBuffer[idx.y].LocalCombined);
-        BoneMatrix += w.z * mul(g_OffsetMatrix[idx.z], g_BoneBuffer[idx.z].LocalCombined);
-        BoneMatrix += w.w * mul(g_OffsetMatrix[idx.w], g_BoneBuffer[idx.w].LocalCombined);
+        uint iIndex = idx.y;
+        float fWeight = w.y;
+        if (isRobe)
+        {
+            if (29 == iIndex)
+            {
+                BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+
+            }
+            else
+            {
+                BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneMatrices[iIndex]));
+            }
+        }
+        else
+        {
+            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+        }
     }
+    {
+        uint iIndex = idx.z;
+        float fWeight = w.z;
+        if (isRobe)
+        {
+            if (29 == iIndex)
+            {
+                BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
 
+            }
+            else
+            {
+                BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneMatrices[iIndex]));
+            }
+        }
+        else
+        {
+            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+        }
+    }
+    {
+        uint iIndex = idx.w;
+        float fWeight = w.w;
+        if (isRobe)
+        {
+            if (29 == iIndex)
+            {
+                BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
 
-    matrix PrevBoneMatrix =
+            }
+            else
+            {
+                BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneMatrices[iIndex]));
+            }
+        }
+        else
+        {
+            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+        }
+    }
+        matrix PrevBoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
             mul(g_PrevBoneMatrices[In.vBlendIndex.x], w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
