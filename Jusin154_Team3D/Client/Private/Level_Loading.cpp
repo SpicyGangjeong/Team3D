@@ -40,6 +40,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 	{
 #ifdef _DEBUG
 #ifdef 기무리
+		m_bNextLevel = true;
 #elif Bin
 		m_bNextLevel = true;
 #endif // 기무리
