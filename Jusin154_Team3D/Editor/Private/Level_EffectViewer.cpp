@@ -85,7 +85,7 @@ HRESULT CLevel_EffectViewer::Initialize()
 	}
 
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
-	//	return E_FAIL;
+	//	return E_FAIL;	
 
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 	//	return E_FAIL;
@@ -102,7 +102,9 @@ HRESULT CLevel_EffectViewer::Initialize()
 	//m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
-	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+
+	m_pGameInstance->Setting_Volumetirc(0.15f, 0.025f, 0.902f, 2.0f, 0.f);
+
 	return S_OK;
 }
 

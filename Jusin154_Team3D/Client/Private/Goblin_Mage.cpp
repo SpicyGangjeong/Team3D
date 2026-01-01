@@ -48,7 +48,8 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Goblin_Mage.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};

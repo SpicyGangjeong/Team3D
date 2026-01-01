@@ -48,8 +48,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
 
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Ranrok.xml");
 	{
 		CFSM::FSM_DESC FSMDesc{};
 		FSMDesc.pStates = &m_States;

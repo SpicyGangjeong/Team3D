@@ -17,6 +17,7 @@
 #include "MapElement_Lake.h"
 #include "RaceRing.h"
 #include "BroomRaceManager.h"
+#include "ReparoObject.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -55,7 +56,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef 기무리
 	m_isDay = true;
 #endif // 
-#ifdef 인혁
+#ifdef 나
 	m_isDay = true;
 #endif // 
 #endif // _DEBUG
@@ -93,6 +94,10 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	}
 
 	if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 		return E_FAIL;
 	}
 
@@ -337,9 +342,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // 
-#ifdef 인혁
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
+#ifdef 나
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
 #endif // 
 #endif // _DEBUG
@@ -663,7 +668,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 #ifdef 기무리
 	isLoad_NPC = false;
 #endif // 
-#ifdef 인혁
+#ifdef 나
 
 #endif // 
 #ifdef Bin
@@ -725,6 +730,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
+{
+	for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))) {
@@ -747,7 +763,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 #ifdef 기무리
 	isLoad_Monster = false;
 #endif // 
-#ifdef 인혁
+#ifdef 나
 
 #endif // 
 #ifdef Bin

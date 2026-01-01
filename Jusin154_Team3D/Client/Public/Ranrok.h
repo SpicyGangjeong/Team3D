@@ -89,7 +89,6 @@ public:
 
 private:
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 
 	_int m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_AIR);
 

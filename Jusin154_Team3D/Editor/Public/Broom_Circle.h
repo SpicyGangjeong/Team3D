@@ -31,6 +31,7 @@ public:
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
@@ -43,7 +44,9 @@ private:
 	_bool	m_bTimer = { false };
 	_bool	m_bSizeDown = { false };
 	_bool	m_bSizeUp = { false };
+	_bool	m_bFinish = { false };
 
+	_float4	m_vImagePosi{};
 public:
 	static CBroom_Circle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

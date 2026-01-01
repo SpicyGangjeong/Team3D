@@ -65,6 +65,7 @@ public:
 	void Set_HeadAimWeight(_float fWeight) { m_fHeadAimWeight = fWeight; }
 	_bool Get_PlayHeadBone() const { return m_bHeadBone; }
 	_int Get_SkipBoneIndex(_int Index) { return m_SkipBoneindex[Index]; }
+	vector<_uint> Get_BoneMask(_int iIndex){ return m_BoneMask[iIndex]; }
 #pragma endregion 
 #pragma region Animation
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
@@ -105,6 +106,7 @@ public:
 	void				Apply_CPU_HeadAim();
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
+	class CMesh* Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
 #pragma endregion
 #pragma region Bone
 	const _float4x4*	Get_BoneMatrixPtr(const _char* pBoneName);
@@ -213,7 +215,7 @@ private:
 
 	_float						m_fRadius = { 0.f };			// 컬링용 Radius
 	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
-	_int						m_iIndexAnimPlayableMesh = { -1 };
+	_uint						m_iIndexAnimPlayableMesh = { 0 };
 	_vector						m_vector[3];
 
 	vector<_uint>			m_iBoneMask;

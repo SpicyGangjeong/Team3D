@@ -31,6 +31,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	void Set_Ride(_bool bRide) { m_bRide = bRide; }
+	void Set_Hover(_bool bHover) { m_bHoverToggle = bHover; }
 	_bool Get_Hover() { return m_bHoverToggle; }
 	_bool Get_Turbo() { return m_bTurbo; }
 
@@ -106,7 +107,6 @@ public:
 #pragma region STATE
 	void Camera_InterpTurn(_float fTimeDelta);
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 
 	_float		m_fAmount = { 1.f };
 	_float		m_fInputTime = {};

@@ -44,8 +44,10 @@ HRESULT CBroom_Circle::Initialize(void* pArg)
 	m_fFontX = 918.f;
 	m_fFontY = 345.f;
 	m_fFontAlpha = 1.f;
+	m_fSortZ = 0.02f;
 	m_fAngle = XMConvertToRadians(90.f);
 	m_bTimer = false;
+	m_vImagePosi = _float4(50.f, 50.f, 150.f, 150.f);
 	return S_OK;
 }
 
@@ -124,7 +126,23 @@ void CBroom_Circle::Update(_float fTimeDelta)
 		if (m_fDissolve >= 0.f)
 			m_fDissolve += fTimeDelta;
 		else if (m_fDissolve >= 1.f)
+		{
 			m_bHover = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	m_bFinish = true;
+
+	if (m_bFinish == true)
+	{
+		MoveY(220.f);
+		SizeUpdate(250.f, 250.f);
+	}
+	else
+	{
+		MoveY(220.f);
+		SizeUpdate(220.f, 220.f);
 	}
 
 	__super::Update(fTimeDelta);
@@ -204,6 +222,10 @@ HRESULT CBroom_Circle::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
@@ -232,6 +254,18 @@ HRESULT CBroom_Circle::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos1", &m_vImagePosi, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iFinish", &m_bFinish, sizeof(_int))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -246,6 +280,10 @@ HRESULT CBroom_Circle::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_VFX_T_Repairo_Wisp_04_D"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_Collections_Brooms"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -346,6 +384,7 @@ void CBroom_Circle::Free()
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
