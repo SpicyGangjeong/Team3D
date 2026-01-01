@@ -613,8 +613,8 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		for (_uint i = 0; i < MeshBoneCount; ++i)
 		{
 			_uint global = boneIndices[i];
-			//if (global == 38)
-			//	continue;
+			if (global == 38)
+				continue;
 			if (globalMask[global] == 1)
 			{
 				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
