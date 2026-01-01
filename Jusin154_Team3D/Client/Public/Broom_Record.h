@@ -38,6 +38,7 @@ private:
 public:
 	void Rece_Results();
 	void Finish(_float fTime);
+	_bool NewScore();
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };

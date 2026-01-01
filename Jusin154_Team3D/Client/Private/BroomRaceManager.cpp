@@ -72,6 +72,7 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 			if (m_bRaceStart == true)
 			{
 				m_pInfoInstance->Event_CallBack(TEXT("RaceEnd"));
+				m_iCount = 3;
 				m_bRaceStart = false;
 			}
 		}
@@ -214,7 +215,6 @@ void CBroomRaceManager::Describe_Entity()
 void CBroomRaceManager::Update_Countdown(_float fTimeDelta)
 {
 	m_fCountTimer += fTimeDelta;
-
 	if (m_fCountTimer >= 1.f)
 	{
 		m_fCountTimer = 0.f;

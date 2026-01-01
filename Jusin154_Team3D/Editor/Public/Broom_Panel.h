@@ -34,9 +34,10 @@ private:
 	CGameObject* m_pBroom_Flag = { nullptr };
 	CGameObject* m_pBroom_Circle = { nullptr };
 	CGameObject* m_pBroom_Scoreboard = { nullptr };
-	CGameObject* m_pBroom_Fiish = { nullptr };
+	CGameObject* m_pBroom_Finish = { nullptr };
 	CGameObject* m_pBroom_Record = { nullptr };
 	CGameObject* m_pBroom_Exit = { nullptr };
+	CGameObject* m_pBroom_Trophy = { nullptr };
 
 public:
 	static CBroom_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

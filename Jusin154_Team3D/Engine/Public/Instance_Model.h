@@ -255,7 +255,7 @@ public:
 		_float	  fLoopCount = {};
 
 		_float4x4  PreWorldMatrix = {};
-		//_float4x4  LocalMatrixInv = {};
+		_float4x4  LocalMatrixInv = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 

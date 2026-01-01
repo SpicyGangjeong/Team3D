@@ -1,16 +1,17 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CBroom_Flag final : public CElementObject
+
+class CBroom_Trophy final : public CElementObject
 {
 private:
-	CBroom_Flag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBroom_Flag(const CBroom_Flag& rhs);
-	virtual ~CBroom_Flag() = default;
+	CBroom_Trophy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CBroom_Trophy(const CBroom_Trophy& rhs);
+	virtual ~CBroom_Trophy() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -24,24 +25,24 @@ private:
 	virtual HRESULT	Ready_Components(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	
+
 public:
 	void Set_Start();
+	void Score(_bool bScore);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float	m_fStart{};
-
-	_bool	m_fFinish = { false };
 
 public:
-	static CBroom_Flag* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CBroom_Trophy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // DEBUG
 };
 
 NS_END

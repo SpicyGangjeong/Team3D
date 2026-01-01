@@ -133,6 +133,7 @@
 #include "Broom_Fiish.h"
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
+#include "broom_Trophy.h"
 
 #include "NPCInteraction.h"
 
@@ -1203,6 +1204,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Exit>(g_iStaticLevel, CBroom_Exit::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Trophy>(g_iStaticLevel, CBroom_Trophy::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

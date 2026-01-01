@@ -41,6 +41,7 @@ HRESULT CNPCInteraction::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_vNine_Slice = _float4(160.f, 256.f, 32.f, 32.f);
 	m_fFontSize = 0.f;
+	Set_ImageSizePosition();	
 	return S_OK;
 }
 
