@@ -26,6 +26,7 @@ public:
 	virtual _bool Intersect(COLLIDER eType, class CBounding* pTarget)override;
 #ifdef _DEBUG
 public:
+	virtual void Set_Desc(void* pDesc)override;
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor)override;
 #endif
 

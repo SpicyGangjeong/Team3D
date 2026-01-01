@@ -59,33 +59,33 @@ void CMapElement_Light::Update(_float fTimeDelta)
 
 void CMapElement_Light::Late_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius()))
-	{
-		if (m_isLightOn)
-		{
-			_float fDistance = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
-			if (m_LightAdded_Distance > fDistance) // 카메라 범위 안
-			{
-				if (!m_isLightAdded)
-				{
-					m_isLightAdded = true;
-					m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
-				}
-			}
-			else
-			{
-				if (m_isLightAdded)
-				{
-					m_isLightAdded = false;
-					m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
-				}
-			}
+	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius()))
+	//{
+	//	if (m_isLightOn)
+	//	{
+	//		_float fDistance = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
+	//		if (m_LightAdded_Distance > fDistance) // 카메라 범위 안
+	//		{
+	//			if (!m_isLightAdded)
+	//			{
+	//				m_isLightAdded = true;
+	//				m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+	//			}
+	//		}
+	//		else
+	//		{
+	//			if (m_isLightAdded)
+	//			{
+	//				m_isLightAdded = false;
+	//				m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+	//			}
+	//		}
 
-			m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
-		}
+	//		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+	//	}
 
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	}
+	//	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	//}
 }
 
 HRESULT CMapElement_Light::Render()

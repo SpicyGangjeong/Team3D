@@ -219,6 +219,7 @@
 #include "MapObject_Render.h"
 #include "MapObject_Collision.h"
 #include "InstancedProp.h"
+#include "InstancedProp_Light.h"
 #include "MapElement_Light.h"
 #include "MapElement_Interactable.h"
 #include "MapElement_Lake.h"
@@ -699,6 +700,42 @@ HRESULT CLoader::Loading_For_GamePlay()
 				));
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/GroundSurfaces",
+					".bin", false
+				));
+			}
+			{	/* SUB_HogsHead */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_HogsHead/SUB_HogsHead_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* SUB_PippensPotions */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_PippensPotions/SUB_Pippens_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_E_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_E/SUB_GEN_E_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_F_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_F/SUB_GEN_F_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_G_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_G/SUB_GEN_G_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_H_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_H/SUB_GEN_H_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_J_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_J/SUB_GEN_J_EXTLOD/ProxyAssets",
 					".bin", false
 				));
 			}
@@ -2765,6 +2802,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Models/InstanceProp/SM_ScotsPine_LargeA_Master.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightPost */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightPost"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_LightPost.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Light_Post_Floating.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
 #pragma endregion
 
 	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
@@ -2844,6 +2893,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_CInstancedProp */
 	if (FAILED(m_pGameInstance->Add_Prototype<CInstancedProp>(g_iStaticLevel, CInstancedProp::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CInstancedProp_Light */
+	if (FAILED(m_pGameInstance->Add_Prototype<CInstancedProp_Light>(g_iStaticLevel, CInstancedProp_Light::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapElement_Light */

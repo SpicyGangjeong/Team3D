@@ -6,6 +6,7 @@
 #include "VIBuffer_Terrain.h"
 #include "MapObject_LOD.h"
 #include "Bounding_OBB.h"
+#include "Collider.h"
 
 CBuildingContainer::CBuildingContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CMapContainer(pDevice, pContext)
@@ -36,6 +37,7 @@ void CBuildingContainer::Update(_float fTimeDelta)
     for (auto& pCollisiton : m_ColiisonPartObjects)
         pCollisiton->Update(fTimeDelta);
 
+  
     if (m_bOcclusionPassed)
     {
         _vector WorldPosition = XMVector3TransformCoord(
@@ -45,8 +47,10 @@ void CBuildingContainer::Update(_float fTimeDelta)
         _vector		vCamPosition = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
 
        // m_fCamDepth = XMVectorGetX(XMVector3LengthSq(vCamPosition - XMVectorSetW(XMLoadFloat3(&m_vExtentPosition), 1.f)));
-        m_fCamDepth = XMVectorGetX(XMVector3LengthSq(vCamPosition - WorldPosition));
+        m_fCamDepth = XMVectorGetX(XMVector3Length(vCamPosition - WorldPosition)) - m_fMaxRadius;
     }
+
+    m_pCollider->Update(m_pTransformCom->Get_XMWorldMatrix());
 }
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
@@ -63,27 +67,34 @@ void CBuildingContainer::Late_Update(_float fTimeDelta)
 
     for (auto& pCollisiton : m_ColiisonPartObjects)
         pCollisiton->Late_Update(fTimeDelta);
-
-    if (m_bOcclusionPassed)
-    {
-        if(m_fCamDepth > 3000.f)
+    if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vWorldExtentPosition), 1.f), m_fMaxRadius)) {
+        if (m_bOcclusionPassed)
         {
-            if (m_pOcclusionQueryCom->isDraw())
+            if (m_fCamDepth > 100.f)
+            {
+                if (m_pOcclusionQueryCom->isDraw())
+                    __super::Late_Update(fTimeDelta);
+            }
+            else
                 __super::Late_Update(fTimeDelta);
+
+            m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
         }
         else
+        {
             __super::Late_Update(fTimeDelta);
-
-        m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
+        }
+        m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
     }
-    else
-    {
-       __super::Late_Update(fTimeDelta);
-    }
+   
+ 
 }
 
 HRESULT CBuildingContainer::Render()
 {
+    if(m_bSelected)
+		m_pCollider->Render();
+
     return S_OK;
 }
 
@@ -127,7 +138,7 @@ void CBuildingContainer::Set_BoundingBox()
 {
     _float3 vCurrentMin = {};
     _float3 vCurrentMax = {};
-   
+
 
     for (auto& piar : m_PartObjects)
     {
@@ -149,7 +160,7 @@ void CBuildingContainer::Set_BoundingBox()
     m_vExtentPosition.x = vContainerMin.x + m_vExtentRadius.x;
     m_vExtentPosition.y = vContainerMin.y + m_vExtentRadius.y;
     m_vExtentPosition.z = vContainerMin.z + m_vExtentRadius.z;
-    
+
     m_vBoxCorners[0] = _float3(vContainerMin.x, vContainerMax.y, vContainerMin.z);
     m_vBoxCorners[1] = _float3(vContainerMax.x, vContainerMax.y, vContainerMin.z);
     m_vBoxCorners[2] = _float3(vContainerMax.x, vContainerMin.y, vContainerMin.z);
@@ -161,9 +172,26 @@ void CBuildingContainer::Set_BoundingBox()
 
     m_pVIBufferCom->Update(m_vBoxCorners);
 
-	//XMStoreFloat4x4(&m_BoundingBoxWorldMatirx, m_pTransformCom->Get_XMWorldMatrix());
+    //XMStoreFloat4x4(&m_BoundingBoxWorldMatirx, m_pTransformCom->Get_XMWorldMatrix());
 
-	//memcpy(&m_BoundingBoxWorldMatirx.m[3], &m_vExtentPosition, sizeof(_float3));
+    //memcpy(&m_BoundingBoxWorldMatirx.m[3], &m_vExtentPosition, sizeof(_float3));
+
+    m_fMaxRadius = max(m_vExtentRadius.x, max(m_vExtentRadius.y, m_vExtentRadius.z));
+
+    _float4 vPosition = {};
+
+	XMStoreFloat4(&vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+    m_vWorldExtentPosition = _float3(vPosition.x + m_vExtentPosition.x,
+        vPosition.y + m_vExtentPosition.y,
+        vPosition.z + m_vExtentPosition.z);
+
+    CBounding_OBB::BOUNDING_OBB_DESC OBBDesc = {};
+    OBBDesc.eType = COLLIDER::OBB;
+    OBBDesc.vCenter = m_vExtentPosition;
+    OBBDesc.vSize = _float3(m_vExtentRadius.x * 2.f, m_vExtentRadius.y * 2.f, m_vExtentRadius.z * 2.f);
+    OBBDesc.vAngles = _float3(0.f,0.f,0.f);
+
+    m_pCollider->Set_Desc(&OBBDesc);
 }
 
 HRESULT CBuildingContainer::Initialize_Prototype()
@@ -221,6 +249,17 @@ HRESULT CBuildingContainer::Ready_Components(void* pArg)
         reinterpret_cast<CComponent**>(&m_pOcclusionQueryCom))))
         return E_FAIL;
 
+    CBounding_OBB::BOUNDING_OBB_DESC OBBDesc = {};
+    OBBDesc.eType = COLLIDER::OBB;
+    OBBDesc.vCenter = m_vExtentPosition;
+    OBBDesc.vSize = m_vExtentRadius;
+	OBBDesc.vAngles = m_vRotation;
+
+    /* CBounding_OBB */
+    if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Collider"),
+        reinterpret_cast<CComponent**>(&m_pCollider), &OBBDesc)))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -262,6 +301,7 @@ void CBuildingContainer::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 	SAFE_RELEASE(m_pOcclusionQueryCom);
+	SAFE_RELEASE(m_pCollider);
 
     for (auto& pCollision : m_ColiisonPartObjects)
         SAFE_RELEASE(pCollision);
@@ -273,6 +313,18 @@ void CBuildingContainer::Describe_Entity()
         return;
     if (nullptr == m_pGameInstance)
         return;
+
+    if (GUI::Button("Set Collider"))
+    {
+        CBounding_OBB::BOUNDING_OBB_DESC OBBDesc = {};
+        OBBDesc.eType = COLLIDER::OBB;
+        OBBDesc.vCenter = m_vExtentPosition;
+        OBBDesc.vSize = m_vExtentRadius;
+        OBBDesc.vAngles = m_vRotation;
+
+        m_pCollider->Set_Desc(&OBBDesc);
+    }
+
     if (GUI::Button("BoundingBox"))
     {
         Set_BoundingBox();
@@ -316,7 +368,6 @@ void CBuildingContainer::Describe_Entity()
     m_vScale.x = max(0.01f, m_vScale.x);
     m_vScale.y = max(0.01f, m_vScale.y);
     m_vScale.z = max(0.01f, m_vScale.z);
-
 
 	GUI::InputFloat3("Extent Radius", &m_vExtentRadius.x);
 	GUI::InputFloat3("Extent Position", &m_vExtentPosition.x);

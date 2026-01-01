@@ -58,6 +58,11 @@ HRESULT CBounding_Sphere::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _f
 	return	S_OK;
 }
 
+void CBounding_Sphere::Set_Desc(void* pDesc)
+{
+	return;
+}
+
 #endif
 
 CBounding_Sphere* CBounding_Sphere::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const void* pArg)

@@ -766,13 +766,15 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_NearToMiddle);
     
     // 1번째 방법
-    // Dynamic->Static 부드럽게 전환
-    //float fVisibilityCombinedLogical = min(fVisibilityDynamic, fVisibility_Static);
-    //float fStaticShadowBlendStartRatio = g_fCascadeSplitRatioFar;
-    //float fStaticShadowBlendWidthRatio = 0.05f;
-    //float fStaticShadowBlendEndRatio = min(1.0f, fStaticShadowBlendStartRatio + fStaticShadowBlendWidthRatio);
-    //float fStaticShadowBlendWeight = smoothstep(fStaticShadowBlendStartRatio, fStaticShadowBlendEndRatio, fDepthRatio);
-    //float fVisibilityCombined = lerp(fVisibilityDynamic, fVisibilityCombinedLogical, fStaticShadowBlendWeight);
+    //Dynamic - > Static
+    //부드럽게 전환
+
+    float fVisibilityCombinedLogical = min(fVisibilityDynamic, fVisibility_Static);
+    float fStaticShadowBlendStartRatio = g_fCascadeSplitRatioFar;
+    float fStaticShadowBlendWidthRatio = 0.05f;
+    float fStaticShadowBlendEndRatio = min(1.0f, fStaticShadowBlendStartRatio + fStaticShadowBlendWidthRatio);
+    float fStaticShadowBlendWeight = smoothstep(fStaticShadowBlendStartRatio, fStaticShadowBlendEndRatio, fDepthRatio);
+    float fVisibilityCombined = lerp(fVisibilityDynamic, fVisibilityCombinedLogical, fStaticShadowBlendWeight);
     
     // 2번째 방법
     // Dynamic * Static 항상 최소곱
@@ -780,7 +782,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     // 3번째 방법
     // Dynamic , Static 최소값만 취함
-    float fVisibilityCombined = min(fVisibilityDynamic, fVisibility_Static);
+    //float fVisibilityCombined = min(fVisibilityDynamic, fVisibility_Static);
 
     // 최소 밝기
     float fMinShadowBrightness = 0.25f;
