@@ -220,7 +220,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::LOOK, look);
 	////////////////////////////////////////////////////////////////////////////
 	
-#ifdef 기무리
+
 	if (nullptr == m_pRobePart) {
 		{
 			CPlayerRobe::PlayerRobe_DESC Desc{};
@@ -232,7 +232,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 			}
 		}
 	}
-#endif // 기무리
+
 }
 
 
