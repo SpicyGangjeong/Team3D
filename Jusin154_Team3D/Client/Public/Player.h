@@ -35,9 +35,6 @@ public:
 	void	Set_RaceRing(class CRaceRing* pRaceRing);
 	class CBroom* Get_Broom() { return m_pBroom; }
 	void Set_RaceInfo();
-#ifdef _DEBUG
-	void Render_CameraCoordinateSystem();
-#endif // _DEBUG
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
 	void UpdateGrapInteractive(_float fTimeDelta);
