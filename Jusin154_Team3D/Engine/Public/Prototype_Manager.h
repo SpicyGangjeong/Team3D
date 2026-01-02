@@ -134,13 +134,13 @@ public:
 					return strName;
 				}
 
-				if (ImGui::IsItemHovered()) {
+				if (GUI::IsItemHovered()) {
 
-					ImGui::BeginTooltip();           // 툴팁 창 시작
+					GUI::BeginTooltip();           // 툴팁 창 시작
 
-					ImGui::TextUnformatted(CMyTools::ToString(wstrComponentName).c_str());    // 텍스트 출력 (Text 대신 Unformatted 추천)
+					GUI::TextUnformatted(CMyTools::ToString(wstrComponentName).c_str());    // 텍스트 출력 (Text 대신 Unformatted 추천)
 
-					ImGui::EndTooltip();             // 툴팁 창 종료
+					GUI::EndTooltip();             // 툴팁 창 종료
 				};
 
 				if ((iIndex++ + 1) % 4 != 0)
@@ -159,9 +159,9 @@ public:
 		if(GUI::BeginCombo(pComponentName, (s_iCurrentItem >= 0 && s_iCurrentItem < pComponentNames.size())
 			? pComponentNames[s_iCurrentItem] : "NONE"))
 		{
-			if (ImGui::IsWindowAppearing())
+			if (GUI::IsWindowAppearing())
 			{
-				ImGui::SetKeyboardFocusHere();
+				GUI::SetKeyboardFocusHere();
 				filter.Clear();
 			}
 
@@ -184,7 +184,7 @@ public:
 					if (is_selected)
 					{
 				
-						ImGui::SetItemDefaultFocus();
+						GUI::SetItemDefaultFocus();
 					}
 
 				}

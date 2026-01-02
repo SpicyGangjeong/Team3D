@@ -75,13 +75,27 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 			case PXOBJECT::DOOR:
 			{
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-				_float fDot = vDir.dot(PSX::PxVec3(0.f, 1.f, 0.f));
-				if (fDot > 0) {
-					pDynamic->addTorque(PSX::PxVec3(0.f, 1.f, 0.f) * fLength * 100.f, PSX::PxForceMode::eFORCE);
+				if (pDynamic->getRigidBodyFlags().isSet(PSX::PxRigidBodyFlag::eKINEMATIC)){
+					pDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
 				}
-				else {
-					pDynamic->addTorque(PSX::PxVec3(0.f, -1.f, 0.f) * fLength * 100.f, PSX::PxForceMode::eFORCE);
+				pDynamic->wakeUp();
+				PSX::PxVec3 vCompressedDir = hit.dir;
+				if (vCompressedDir.magnitudeSquared() < FLT_EPSILON5) {
+					vCompressedDir = -hit.worldNormal;
 				}
+				vCompressedDir.normalize();
+				PSX::PxVec3 hingeAxis = PSX::PxVec3(0.f, 1.f, 0.f);
+
+				PSX::PxVec3 vForceDir = vCompressedDir - hingeAxis * vCompressedDir.dot(hingeAxis);
+				if (vForceDir.magnitudeSquared() < FLT_EPSILON5){
+					break;
+				}
+				vForceDir.normalize();
+
+				float forceMagnitude = PSX::PxClamp(fLength * 600.f, 0.f, 2000.f);
+				PSX::PxRigidBodyExt::addForceAtPos(*pDynamic, vForceDir * forceMagnitude, { (_float)hit.worldPos.x, (_float)hit.worldPos.y, (_float)hit.worldPos.z }, PSX::PxForceMode::eFORCE);
+				pTargetActorData->pOwner->OnCollision();
+
 			} break;
 			default:
 			{

@@ -580,7 +580,7 @@ void CGoblin::Free()
 void CGoblin::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("Goblin")) {
 		GUI::Checkbox("LookAt", &m_bLookAt);
 

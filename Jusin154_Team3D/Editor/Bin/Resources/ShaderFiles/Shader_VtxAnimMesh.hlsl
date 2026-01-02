@@ -473,7 +473,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     float fRim = saturate((1.0f - fNdotV) * g_fOutLineScale);
     fRim = pow(fRim, g_fOutLinePower);
     
-    Out.vAlbedo = float4(g_vOutLineColor.rgb, fRim);
+    Out.vAlbedo = float4(g_vOutLineColor.rgb * 5.f, fRim);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 

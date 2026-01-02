@@ -451,25 +451,25 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 			_bool isSelected = (m_SelectedKey == keyName);
 
-			if (ImGui::Selectable(keyName.c_str(), isSelected))
+			if (GUI::Selectable(keyName.c_str(), isSelected))
 			{
 				m_SelectedKey = keyName;
 			}
 
 			if (isSelected)
 			{
-				ImGui::Indent();
+				GUI::Indent();
 
-				ImGui::DragFloat("KeyFrame", &iter.second, 0.01f);
+				GUI::DragFloat("KeyFrame", &iter.second, 0.01f);
 
-				if (ImGui::Button("Delete KeyFrame"))
+				if (GUI::Button("Delete KeyFrame"))
 				{
 					m_KeyFrames.erase(keyName);
 					m_SelectedKey.clear();   
 					break;                     
 				}
 
-				ImGui::Unindent();
+				GUI::Unindent();
 			}
 		}
 
@@ -563,8 +563,8 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 			}
 			for (auto& iter : m_KeyFrames)
 			{
-				ImDrawList* draw = ImGui::GetForegroundDrawList();
-				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+				ImDrawList* draw = GUI::GetForegroundDrawList();
+				ImVec2 center = GUI::GetMainViewport()->GetCenter();
 				float scale = 50.f;
 
 				GUI::DragFloat(iter.first.c_str(), &iter.second);

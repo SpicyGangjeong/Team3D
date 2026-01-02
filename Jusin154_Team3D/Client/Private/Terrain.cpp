@@ -252,7 +252,7 @@ void CTerrain::Free()
 void CTerrain::Describe_Entity()
 {
 	GUI::Begin("Renderer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	size_t iIndex = (size_t)this;
 
 	

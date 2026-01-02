@@ -22,6 +22,10 @@ CNPC_Ollivander::CNPC_Ollivander(const CNPC_Ollivander& Prototype)
 void CNPC_Ollivander::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->RewindMomentum();
+	m_iEntered -= 1;
+	if (m_iEntered < 0) {
+		m_iEntered = 0;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
@@ -33,82 +37,14 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-	if (false == m_bEntered) 
-	{
-		if (true == CastToPlayer()) {
-			m_vEnteringTimer.x += fTimeDelta;
-			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
-				m_vEnteringTimer.x -= m_vEnteringTimer.y;
-				m_bEntered = true;
-				// Active();
-			}
-#ifdef _DEBUG
-			GUI::Begin("UNIT");
-			if (GUI::CollapsingHeader("Ollivander")) {
-				GUI::Text("Timer :%.1f", m_vEnteringTimer.x);
-				GUI::Text("Hello");
-			}
-			GUI::End();
-#endif // _DEBUG
-		}
-	}
-	else {
-		if (false == CastToPlayer()) {
-			m_vEnteringTimer.x += fTimeDelta;
-			if (m_vEnteringTimer.x > m_vEnteringTimer.y) {
-				m_vEnteringTimer.x -= m_vEnteringTimer.y;
-				m_bEntered = false;
-				// DeActive(), Ready To Enter;
-			}
-#ifdef _DEBUG
-			GUI::Begin("UNIT");
-			if (GUI::CollapsingHeader("Ollivander")) {
-				GUI::Text("Timer :%.1f", m_vEnteringTimer.x);
-				GUI::Text("CoolTime");
-			}
-			GUI::End();
-#endif // _DEBUG
-		}
-		else {
-#ifdef _DEBUG
-			GUI::Begin("UNIT");
-			if (GUI::CollapsingHeader("Ollivander")) {
-				GUI::Text("Timer :%.1f", m_vEnteringTimer.x);
-				GUI::Text("You must go Out");
-			}
-			GUI::End();
-#endif // _DEBUG
-		}
-	}
-
-	if (false == CastToPlayer() && false == m_bEntered) {
-#ifdef _DEBUG
-		GUI::Begin("UNIT");
-		if (GUI::CollapsingHeader("Ollivander")) {
-			GUI::Text("Timer :%.1f", m_vEnteringTimer.x);
-			GUI::Text("Waiting For ReEnter");
-		}
-		GUI::End();
-#endif // _DEBUG
-	}
-
-
 	{ // 세트
 		m_pCallBack_HitReport->BeginFrame();
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 
-	m_pNPCInteraction->Set_Visible(m_bEntered);
-
-	if (m_bEntered == true)
-	{
-		if (m_pGameInstance->Key_Down(DIK_F))
-		{
-
-		}
-	}
-
+	m_pNPCInteraction->Set_Visible(0 < m_iEntered);
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 }
 
 void CNPC_Ollivander::Late_Update(_float fTimeDelta)
@@ -197,6 +133,17 @@ HRESULT CNPC_Ollivander::Render_Shadow(SHADOW eType)
 	return S_OK;
 }
 
+void CNPC_Ollivander::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
+{
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
+	if (nullptr == pPlayer) {
+		return;
+	}
+	if (fDistance < m_fEncounterDistance) {
+		m_iEntered = 4;
+	}
+}
+
 HRESULT CNPC_Ollivander::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
@@ -221,19 +168,6 @@ HRESULT CNPC_Ollivander::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	return S_OK;
-}
-
-_bool CNPC_Ollivander::CastToPlayer()
-{
-	_vector vCurrentPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_vector vTargetPos = {};
-	pair<CUnit*, CTransform*> pairAllyInfo = m_pInfoInstance->Get_NearestPlayerAlly(m_pTransformCom->Get_State(STATE::POSITION));
-	vTargetPos = pairAllyInfo.second->Get_State(STATE::POSITION);
-	_float fLength = XMVectorGetX(XMVector4Length(vTargetPos - vCurrentPos));
-	if (fLength < m_fEncounterDistance) {
-		return true;
-	}
-	return false;
 }
 
 HRESULT CNPC_Ollivander::Initialize_Prototype()
@@ -295,8 +229,8 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.02f };
-		Desc.fRadius = 0.5f;
-		Desc.fHeight = 0.6f;
+		Desc.fRadius = 0.2f;
+		Desc.fHeight = 0.3f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_NonPlayable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
@@ -306,6 +240,15 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		}
 		m_pCharacter_Controller->SetGravity(true);
 	}
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
+		Desc.bAutoOwnerTranslation = false;
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_NPC_HITBOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+	}
+
 
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("OLLIVENDER"), (CComponent**)&m_pNpcStat))) {
 		return E_FAIL;
@@ -350,6 +293,7 @@ void CNPC_Ollivander::Free()
 
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pNpcStat);
+	SAFE_RELEASE(m_pRigidBody);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

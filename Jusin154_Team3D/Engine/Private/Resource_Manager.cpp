@@ -127,24 +127,24 @@ HRESULT CResource_Manager::Replacer_SrcFilePath(filesystem::path& pathFile)
 {
 	if (true == pathFile.is_absolute()) {
 
-		const std::filesystem::path inputRootPath = pathFile.root_path();
-		const std::filesystem::path inputRelativePath = pathFile.relative_path();
-		auto relativePathIterator = inputRelativePath.begin();
-		if (relativePathIterator == inputRelativePath.end()){
+		filesystem::path pathRoot = pathFile.root_path();
+		filesystem::path pathReleative = pathFile.relative_path();
+		auto iterPath = pathReleative.begin();
+		if (iterPath == pathReleative.end()){
 			return E_FAIL;
 		}
-		else if ("MeshTable" != (*relativePathIterator).string()) {
+		else if ("MeshTable" != (*iterPath).string()) {
 			return E_FAIL;
 		}
 
-		++relativePathIterator;
+		++iterPath;
 
-		std::filesystem::path outputPath = inputRootPath / "MeshTableTexture";
-		for (; relativePathIterator != inputRelativePath.end(); ++relativePathIterator)
+		filesystem::path pathOutPut = pathRoot / "MeshTableTexture_512";
+		for (; iterPath != pathReleative.end(); ++iterPath)
 		{
-			outputPath /= *relativePathIterator;
+			pathOutPut /= *iterPath;
 		}
-		pathFile = outputPath;
+		pathFile = pathOutPut;
 	}
 	else {
 		return E_FAIL;
@@ -192,7 +192,7 @@ void CResource_Manager::Free()
 void CResource_Manager::Describe_Entity()
 {
 	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("ResourceManager")) {
 		static vector<pair<_wstring, _uint>> vecHit = {};
 		static vector<pair<_wstring, _uint>> vecMiss = {};

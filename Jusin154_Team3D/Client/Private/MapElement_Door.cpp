@@ -40,91 +40,59 @@ HRESULT CMapElement_Door::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
-	m_pTransformCom->Set_Scale(pDesc->vScale);
-	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
-
-	XMStoreFloat4((_float4*)&m_pxStartQuat, m_pTransformCom->Get_QuarternionVector());
-	XMStoreFloat4x4(&m_InitialMatrix, m_pTransformCom->Get_XMWorldMatrix());
-
-	m_vRadianYAngle.y = pDesc->vRotation.z;
-	m_vRadianYAngle.x = m_vRadianYAngle.y + XMConvertToRadians(-70.f);
-	m_vRadianYAngle.z = m_vRadianYAngle.y + XMConvertToRadians(70.f);
-
-	{ // RIGID_BODY
-		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::DOOR);
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), (CComponent**)&m_pRigidBody, &Desc))) {
-			return E_FAIL;
-		}
-	}
-	m_pActor = (PSX::PxRigidDynamic*)m_pRigidBody->Get_Actor();
-
 	return S_OK;
 }
 
 void CMapElement_Door::Priority_Update(_float fTimeDelta)
 {
-	if (m_pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC) {
+	GUI::Text("m_vKinematicTimer %.3f", m_vKinematicTimer.x);
+	if (m_vKinematicTimer.x != 0) {
 		m_vKinematicTimer.x += fTimeDelta;
-		if (m_vKinematicTimer.x < m_vKinematicTimer.z) {
-			// 행렬없이 럴프 버전
-			_float fTime = max(0.f, ((m_vKinematicTimer.x - m_vKinematicTimer.y) / (m_vKinematicTimer.z - m_vKinematicTimer.y)));
-			Lerp_Matrix(fTime);
-			//Lerp_NonMatrix(fTime);
+		if (m_vKinematicTimer.y < m_vKinematicTimer.x) {
+			m_vKinematicTimer.x = 0.f;
 		}
-		else {
-			m_pActor->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
+	}
+	else {
+		ActingIdle();
+	}
+}
+
+void CMapElement_Door::ActingIdle()
+{
+	_float fCurrentDegree = XMConvertToDegrees(m_pJoint->getAngle());
+	GUI::Text("%.2f", fCurrentDegree);
+	GUI::Text("%.2f", m_pJoint->getVelocity());
+	if (fabsf(fCurrentDegree) >= 2.f) { // 각도가 벌어져 있는데
+		if (false == m_bDrive) { // 드라이브 중이 아니면 드라이브시킴
+			m_bDrive = true;
+			m_pJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
+			m_pJoint->setDriveForceLimit(120.f);
+		}
+		if (true == m_bDrive) { // 드라이브 중이면
+			if (fCurrentDegree > 0.f) {
+
+			}
+			else {
+				m_pJoint->setDriveVelocity(40.f);
+			}
+		}
+	}
+	else { // 각도가 안벌어져 있음
+		if (true == m_bDrive && fCurrentDegree < 0.3f) { // 드라이브 중지 트리거
+			m_pJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eDRIVE_ENABLED, false);
 		}
 	}
 }
 
 void CMapElement_Door::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
 }
 
 void CMapElement_Door::Late_Update(_float fTimeDelta)
 {
-
-	_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
-	if (!(m_pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)) {
-		_float fPitch = XMVectorGetX(vRPY);
-		_float fYaw = XMVectorGetY(vRPY);
-		_float fRoll = XMVectorGetZ(vRPY);
-
-		_float fClampedYaw = ClampRadian(fYaw);
-		if (fClampedYaw != fYaw) {
-			_vector vNewQuat = XMQuaternionRotationRollPitchYaw(fPitch, fClampedYaw, fRoll);
-
-			PSX::PxTransform actorPose = m_pActor->getGlobalPose();
-			PSX::PxTransform massLocalPose = m_pActor->getCMassLocalPose();
-
-			PSX::PxVec3 vpxMassLocal = massLocalPose.p;
-			PSX::PxVec3 vpxMassWorld = actorPose.transform(vpxMassLocal);
-
-			_vector vMassLocal = XMVectorSet(vpxMassLocal.x, vpxMassLocal.y, vpxMassLocal.z, 0.f);
-			_vector vMassWorld = XMVectorSet(vpxMassWorld.x, vpxMassWorld.y, vpxMassWorld.z, 1.f);
-
-			_float3 vScale = m_pTransformCom->Get_Scale();
-			_matrix ScaleMatrix = XMMatrixScalingFromVector(XMLoadFloat3(&vScale));
-			_matrix RotationMatrix = XMMatrixRotationQuaternion(vNewQuat);
-
-			_matrix TranslationLocal = XMMatrixTranslationFromVector(-vMassLocal);
-			_matrix TranslationWorld = XMMatrixTranslationFromVector(vMassWorld);
-
-			// 최종 월드 행렬
-			_matrix world = TranslationLocal // 피벗중심으로 좌표계를 이동시킴
-				* (ScaleMatrix * RotationMatrix * TranslationWorld); // 그 후 SRT 적용
-
-			m_pTransformCom->Set_WorldMatrix(world);
-			m_pActor->setGlobalPose(XMWorldToPx_NoScaleNoFlip(world));
-
-			m_pActor->setAngularVelocity(PSX::PxVec3(0));
-			m_pActor->setLinearVelocity(PSX::PxVec3(0));
-			m_pActor->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, true);
-			m_vKinematicTimer.x = 0.f;
-		}
-	}
 	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
@@ -161,6 +129,15 @@ HRESULT CMapElement_Door::Render()
 	return S_OK;
 }
 
+void CMapElement_Door::OnCollision(CGameObject* pOther, void* pDesc)
+{
+	if (0.f != m_vKinematicTimer.x) {
+		return;
+	}
+	
+	m_vKinematicTimer.x = FLT_EPSILON3;
+}
+
 HRESULT CMapElement_Door::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
@@ -187,12 +164,49 @@ HRESULT CMapElement_Door::Ready_Components(void* pArg)
 
 	ELEMENT_DOOR_DESC* pPhysXDummyDesc = static_cast<ELEMENT_DOOR_DESC*>(pArg);
 
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pPhysXDummyDesc->vPosition), 1.f));
+	m_pTransformCom->Set_Scale(pPhysXDummyDesc->vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(pPhysXDummyDesc->vRotation.x), XMConvertToRadians(pPhysXDummyDesc->vRotation.y), XMConvertToRadians(pPhysXDummyDesc->vRotation.z));
+
+	{ // RIGID_BODY
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::DOOR);
+		Desc.bAutoOwnerTranslation = false;
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+		m_pActor = (PSX::PxRigidDynamic*)m_pRigidBody->Get_Actor();
+		m_pRigidBody->Move_Kinematic(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_QuarternionVector(), true);
+	}
+	PSX::PxTransform doorWorldPose = m_pActor->getGlobalPose();
+	PSX::PxVec3 hingePivotWorld = PSX::PxVec3(39.64f, 5.12f, 71.f);
+	PSX::PxVec3 hingeAxisWorld = doorWorldPose.q.rotate(PSX::PxVec3(0.f, 1.f, 0.f)).getNormalized();
+	PSX::PxTransform jointWorldPose;
+	jointWorldPose.p = hingePivotWorld;
+	jointWorldPose.q = CMyTools::Calc_RevJointPosFromWorldHingeAxis(hingeAxisWorld);
+	PSX::PxTransform localFrameDoor = doorWorldPose.transformInv(jointWorldPose);
+	
+	m_pJoint = (PSX::PxRevoluteJoint*)m_pGameInstance->Create_PxJoint(PHYSX_JOINT::REVOLUTE, nullptr, jointWorldPose, m_pActor, localFrameDoor);
+
+	m_pJoint->setLimit(PSX::PxJointAngularLimitPair(-XMConvertToRadians(100.f), XMConvertToRadians(100.f)));
+	m_pJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eLIMIT_ENABLED, true);
+
+	m_pJoint->setDriveForceLimit(120.f);
+
+	m_pJoint->setConstraintFlag(PSX::PxConstraintFlag::eVISUALIZATION, true);
+	m_pActor->setLinearVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+	m_pActor->setAngularVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+	m_pActor->putToSleep();
 	return S_OK;
 }
 
 HRESULT CMapElement_Door::Bind_ShaderResources()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
+	_float3 vScale = m_pTransformCom->Get_Scale();
+	_float4x4 WorldMatirx = {};
+	PSX::PxTransform pxPos = m_pRigidBody->Get_GlobalPosition();
+	XMStoreFloat4x4(&WorldMatirx, XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorZero(), XMLoadFloat4((_float4*)&pxPos.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxPos.p), 1.f)));
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatirx))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
@@ -207,67 +221,6 @@ HRESULT CMapElement_Door::Bind_ShaderResources()
 	}
 
 	return S_OK;
-}
-
-void CMapElement_Door::Lerp_Matrix(_float fTime)
-{
-	{
-		_float4x4 OutMatrix = {};
-		_float4x4 CurrentMatrix = {};
-		XMStoreFloat4x4(&CurrentMatrix, m_pTransformCom->Get_XMWorldMatrix());
-		CMyTools::MatrixLerp(&CurrentMatrix, &m_InitialMatrix, OutMatrix, fTime);
-		m_pTransformCom->Set_WorldMatrix(OutMatrix);
-	}
-}
-
-void CMapElement_Door::Lerp_NonMatrix(_float fTime)
-{
-	{
-		_vector vCurrQ = m_pTransformCom->Get_QuarternionVector();
-		_vector vInitialQ = XMLoadFloat4((_float4*)&m_pxStartQuat);
-		_vector vLerpQuat = XMVector4Normalize(XMVectorLerp(vCurrQ, vInitialQ, fTime));
-
-		PSX::PxTransform actorPose = m_pActor->getGlobalPose();
-		PSX::PxTransform massLocalPose = m_pActor->getCMassLocalPose();
-
-		PSX::PxVec3 vpxMassLocal = massLocalPose.p;
-		PSX::PxVec3 vpxMassWorld = actorPose.transform(vpxMassLocal);
-
-		_vector vMassLocal = XMVectorSet(vpxMassLocal.x, vpxMassLocal.y, vpxMassLocal.z, 0.f);
-		_vector vMassWorld = XMVectorSet(vpxMassWorld.x, vpxMassWorld.y, vpxMassWorld.z, 1.f);
-
-
-		_float3 vScale = m_pTransformCom->Get_Scale();
-		_matrix ScaleMatrix = XMMatrixScalingFromVector(XMLoadFloat3(&vScale));
-		_matrix RotationMatrix = XMMatrixRotationQuaternion(vLerpQuat);
-
-		_matrix TranslationLocal = XMMatrixTranslationFromVector(-vMassLocal);
-		_matrix TranslationWorld = XMMatrixTranslationFromVector(vMassWorld);
-
-		// 최종 월드 행렬
-		_matrix world = TranslationLocal // 피벗중심으로 좌표계를 이동시킴
-			* (ScaleMatrix * RotationMatrix * TranslationWorld); // 그 후 SRT 적용
-
-		m_pTransformCom->Set_WorldMatrix(world);
-	}
-}
-
-_float CMapElement_Door::ClampRadian(_float fNewRadian)
-{
-	// [x, z] 사이로 잘라주는 단순한 클램프
-	_float minYaw = m_vRadianYAngle.x;
-	_float maxYaw = m_vRadianYAngle.z;
-
-	// 라디안 노멀라이즈 ([-pi, pi] 같은 범위로)
-	fNewRadian = CMyTools::NormalizeRadian(fNewRadian);
-
-	if (fNewRadian < minYaw) {
-		fNewRadian = minYaw;
-	}
-	else if (fNewRadian > maxYaw) {
-		fNewRadian = maxYaw;
-	}
-	return fNewRadian;
 }
 
 CMapElement_Door* CMapElement_Door::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -313,7 +266,50 @@ void CMapElement_Door::Free()
 #ifdef _DEBUG
 void CMapElement_Door::Describe_Entity()
 {
-
+	GUI::Begin("PhysX");
+	if (GUI::CollapsingHeader("Door")) {
+		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
+		if (GUI::CollapsingHeader("DOOR")) {
+			{
+				GUI::Text("Velo : %.2f", m_pJoint->getVelocity());
+				PSX::PxTransform pxActorLocalPos = m_pJoint->getLocalPose(PSX::PxJointActorIndex::eACTOR1);
+				if (true == CMyTools::DescribePxTransform(pxActorLocalPos, (size_t)this)) {
+					m_pJoint->setLocalPose(PSX::PxJointActorIndex::eACTOR1, pxActorLocalPos);
+				}
+			}
+			{
+				PSX::PxTransform pxRelativeLocalPos = m_pJoint->getRelativeTransform();
+				PSX::PxVec3 vAxis = {};
+				_float fAngle = {};
+				pxRelativeLocalPos.q.toRadiansAndUnitAxis(fAngle, vAxis);
+				GUI::Text("RelPos : %.2f %.2f %.2f", pxRelativeLocalPos.p.x, pxRelativeLocalPos.p.y, pxRelativeLocalPos.p.z);
+				GUI::Text("fAngle vAxis : %.2f %.2f %.2f %.2f", fAngle, vAxis.x, vAxis.y, vAxis.z);
+			}
+			_float fDrive = m_pJoint->getDriveVelocity();
+			_float fDriveDegree = XMConvertToDegrees(fDrive);
+			if (GUI::DragFloat("Drive", &fDriveDegree, 1.f, -180.f, 180.f, "%.2f")) {
+				fDrive = XMConvertToRadians(fDriveDegree);
+				m_pJoint->setDriveVelocity(fDrive);
+			}
+			_float2 vDriveLimit = {};
+			_float2 vSpring = {};
+			{
+				auto pxDriveLimit = m_pJoint->getLimit();
+				vDriveLimit = { pxDriveLimit.lower,  pxDriveLimit.upper };
+				vSpring.x = pxDriveLimit.stiffness;
+				vSpring.y = pxDriveLimit.damping;
+				//pxDriveLimit.;
+			}
+			if (GUI::DragFloat2("Limit ", (_float*)&vDriveLimit, XMConvertToRadians(1.f), -XMConvertToRadians(180.f), XMConvertToRadians(180.f), "%.2f")) {
+				m_pJoint->setLimit(PSX::PxJointAngularLimitPair(vDriveLimit.x, vDriveLimit.y, PSX::PxSpring(vSpring.x, vSpring.y)));
+			}
+			if (GUI::DragFloat2("Spring Damping", (_float*)&vSpring, 1.f, 0.f, 100.f, "%.2f")) {
+				m_pJoint->setLimit(PSX::PxJointAngularLimitPair(vDriveLimit.x, vDriveLimit.y, PSX::PxSpring(vSpring.x, vSpring.y)));
+			}
+			m_pRigidBody->Describe_Entity();
+		}
+	}
+	GUI::End();
 }
 #endif // _DEBUG
 

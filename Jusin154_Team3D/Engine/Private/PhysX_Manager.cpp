@@ -177,7 +177,7 @@ PSX::PxJoint* CPhysX_Manager::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActo
 	return pOut;
 }
 
-PSX::PxD6Joint* CPhysX_Manager::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
+PSX::PxD6Joint* CPhysX_Manager::Create_BasicPxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
 {
 	const PSX::PxTransform pxWorldParentPos = pActor0->getGlobalPose();
 	const PSX::PxTransform pxWorldChildPos = pActor1->getGlobalPose();
@@ -206,12 +206,11 @@ PSX::PxD6Joint* CPhysX_Manager::Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, P
 	pJoint->setMotion(PSX::PxD6Axis::eSWING2, PSX::PxD6Motion::eLIMITED);
 
 
-	pJoint->setTwistLimit(PSX::PxJointAngularLimitPair(-0.35f, 0.35f)); // 20도
-	pJoint->setSwingLimit(PSX::PxJointLimitCone(0.10f, 0.10f));         // 40도
+	pJoint->setTwistLimit(PSX::PxJointAngularLimitPair(-XMConvertToRadians(1.f), XMConvertToRadians(1.f))); // 20도
+	pJoint->setSwingLimit(PSX::PxJointLimitCone(XMConvertToRadians(1.f), XMConvertToRadians(1.f)));
 
-	pJoint->setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(50.0f, 10.0f, FLT_MAX, true));
+	pJoint->setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(50.0f, 100.0f, FLT_MAX, true));
 	pJoint->setDrivePosition(PSX::PxTransform(PSX::PxIdentity)); //생성 시 프레임 기준
-	//pJoint->setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(0.0f, 0.0f, 0.0f, false));
 
 	pJoint->setConstraintFlag(PSX::PxConstraintFlag::eVISUALIZATION, true);
 	pJoint->setConstraintFlag(PSX::PxConstraintFlag::eIMPROVED_SLERP, true);
