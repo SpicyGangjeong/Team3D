@@ -738,11 +738,16 @@ float4 DrawEffect(PS_IN In)
         
         float2 vDissolveUV = In.vTexcoord + SelectLerpUV(g_vDissolveUVGainAmount, (vDissolveUVMoveTime.x / vDissolveUVMoveTime.y), 0);
             
-        if (g_isDissolveMove)
-            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV);
-        else
-            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
-         
+        
+        if (g_fDissolveCutRatio > FLT_EPSILON5)
+        {
+            if (g_isDissolveMove)
+                vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV);
+            else
+                vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
+        }
+
+     
         /* */
         
         float fDissolveValue = vMtrlDissolve.r;

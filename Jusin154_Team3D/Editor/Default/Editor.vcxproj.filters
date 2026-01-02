@@ -706,6 +706,9 @@
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record">
       <UniqueIdentifier>{cfd0b003-cc18-48cf-a881-94e137b5dadc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse">
+      <UniqueIdentifier>{935b6ab0-e01b-4b4b-80d0-649a507d21c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1430,6 +1433,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Broom_Record.h">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Pulse.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2163,6 +2169,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Broom_Record.cpp">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Pulse.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

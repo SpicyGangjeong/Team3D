@@ -477,9 +477,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 				return E_FAIL;
 			}
 
-			m_strNomalMapName = szName;
+			m_strNormalMapName = szName;
 
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNomalMapName),
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNormalMapName),
 				reinterpret_cast<CComponent**>(&m_pNormal_TextureCom))))
 				return E_FAIL;
 		}
@@ -757,9 +757,9 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 				return E_FAIL;
 			}
 
-			m_strNomalMapName = szName;
+			m_strNormalMapName = szName;
 
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNomalMapName),
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNormalMapName),
 				reinterpret_cast<CComponent**>(&m_pNormal_TextureCom))))
 				return E_FAIL;
 		}

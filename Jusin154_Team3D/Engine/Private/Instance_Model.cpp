@@ -582,19 +582,16 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isLocal_Located_Not_TakeDelay = m_InstanceDesc.isLocal_Located_Not_TakeDelay;
 		pDesc->isCompute_LocalInverse = m_InstanceDesc.isCompute_LocalInverse;
 		pDesc->isRoundLengthLerp = m_InstanceDesc.isRoundLengthLerp;
-		
-		
-		
-		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
+
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
 		pDesc->fMoveLerpOption = m_InstanceDesc.fMoveLerpOption;
 
-		pDesc->ViewMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW);
-		pDesc->ProjMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ);
 		pDesc->fFar = *m_pGameInstance->Get_CurrentCameraFar();
 		pDesc->vScreenSize = m_pGameInstance->Get_ViewPortSize();
 
-
+		memcpy(&pDesc->WorldMatrix, m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr(), sizeof(_float4x4));
+		memcpy(&pDesc->ViewMatrix, m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW), sizeof(_float4x4));
+		memcpy(&pDesc->ProjMatrix, m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ), sizeof(_float4x4));
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -998,6 +995,7 @@ void CInstance_Model::Describe_Entity()
 				{
 					Instane_Buffer_ReStruct();
 				}
+
 
 				if (ImGui::DragFloat("fRoundLengthLerpSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.fRoundLengthLerpSpeed)))
 				{

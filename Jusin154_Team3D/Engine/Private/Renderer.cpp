@@ -307,6 +307,7 @@ void CRenderer::Render_NonBlend()
 	COMPUTE_TIMEDELTA("Timer_Render_NonBlend");
 	EVENTSCOPE_("Render_NonBlend");
 	m_eType = RENDER::NONBLEND;
+
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects")))) {
 		return;
 	}

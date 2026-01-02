@@ -58,7 +58,7 @@ HRESULT CEffect_Editor::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Z_Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
 	return S_OK;
@@ -622,6 +622,11 @@ void CEffect_Editor::Describe_Entity()
 			}
 		}
 
+		if (GUI::Button("Reset Hierarchy"))
+		{
+			Reset_EditEffect();
+		}
+
 		ImGui::EndPopup();
 	}
 #pragma endregion
@@ -802,6 +807,8 @@ void CEffect_Editor::Describe_Entity()
 
 
 	m_pEffectPool->Describe_Entity();
+
+
 
 	ImGui::End();
 

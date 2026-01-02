@@ -178,20 +178,19 @@ void CS_MAIN(
     
     if (isRoundLengthLerp == true)
     {
-        if(particle.vLifeTime.x < particle.vLifeTime.y)
+        if (particleValue.vDelay.x < particleValue.vDelay.y)
         {
             float3 vRoundRange = float3(
 					 particleValue.fRoundRangeLength * cos(particleValue.fAzimuthAngle) * sin(particleValue.fPolarAngle),
 					 particleValue.fRoundRangeLength * sin(particleValue.fAzimuthAngle) * sin(particleValue.fPolarAngle),
-					 particleValue.fRoundRangeLength * cos(particleValue.fPolarAngle)
-        );
+					 particleValue.fRoundRangeLength * cos(particleValue.fPolarAngle));
         
         
             particleValue.vOriginTranslation.xyz += particleValue.fRoundLengthLerpSpeed * vRoundRange * fTimeDelta;
             particle.vTranslation.xyz += particleValue.fRoundLengthLerpSpeed * vRoundRange * fTimeDelta;
+            
         }
     }
-    
     particleValue.vDelay.x += fTimeDelta;
     
     if (particleValue.vDelay.x < particleValue.vDelay.y)

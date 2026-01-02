@@ -622,9 +622,11 @@ void CRanrok::Behavior_PulseEnter()
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-	/*Add_Event(pairAnimInfo.first,
-		[this]() {	CameraShake(10.f, 2.f, 5.f, 1.2f); },
-		0.39f);*/
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PURSE, this);
+		},0.39f);
 }
 
 HRESULT CRanrok::Behavior_PulseExitCheck(_float fTimeDelta)
