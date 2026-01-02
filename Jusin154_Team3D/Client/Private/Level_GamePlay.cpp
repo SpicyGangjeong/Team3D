@@ -111,9 +111,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	/*if (FAILED(Ready_Layer_BroomRacerAI(TEXT("Layer_BroomRacerAI")))) {
 		return E_FAIL;
 	}*/
-	//if (FAILED(Ready_Layer_Monster())) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_Monster())) {
+		return E_FAIL;
+	}
 	
 	if(FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;

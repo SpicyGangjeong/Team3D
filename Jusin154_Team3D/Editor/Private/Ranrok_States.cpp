@@ -303,9 +303,14 @@ void CRanrok::Behavior_FireBreathEnter()
 		m_bLookAt = true; 
 			},0.95f);
 
+
 		Add_Event(m_Animation[STATEANIM::FIREBREATH_A].first,
 			[this]() {
-				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this);
+
+				_float fBreathTime = 1.f;
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this , &fBreathTime);
+
 			}, 0.1f);
 
 	}
@@ -368,7 +373,11 @@ void CRanrok::Behavior_FireSweepEnter()
 
 		Add_Event(m_Animation[STATEANIM::FIRESWEEP_A].first,
 			[this]() {
-				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this);
+
+				_float fBreathTime = 3.f;
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this, &fBreathTime);
+
 			}, 0.08f);
 	}
 	else if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
@@ -621,6 +630,12 @@ void CRanrok::Behavior_PulseEnter()
 	pairAnimInfo = m_Animation[STATEANIM::PULSE];
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_CHARGE, this);
+		}, 0.f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {

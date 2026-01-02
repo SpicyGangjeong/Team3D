@@ -42,8 +42,8 @@ HRESULT CEffectObject::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
-			return E_FAIL;
+		//if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
+		//	return E_FAIL;
 
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
@@ -104,7 +104,7 @@ HRESULT CEffectObject::Render_Blur()
 		|| m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NONWB_NONPOS)
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NONPOS_BLUR;
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::WB_CULLING || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_CULLING)
 	{
 		if (m_EffectInfo.isBlurNoEmissive == false)
 		{

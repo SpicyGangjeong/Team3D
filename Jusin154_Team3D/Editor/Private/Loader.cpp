@@ -209,6 +209,7 @@
 #include "Ranrok_Breath.h"
 #include "Ranrok_Point.h"
 #include "Ranrok_Pulse.h"
+#include "Ranrok_Charge.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1908,6 +1909,10 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Pulse>(NEXT_LEVEL, CRanrok_Pulse::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Charge>(NEXT_LEVEL, CRanrok_Charge::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

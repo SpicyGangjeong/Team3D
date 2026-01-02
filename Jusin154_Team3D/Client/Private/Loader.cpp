@@ -196,6 +196,8 @@
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
 #include "Ranrok_Point.h"
+#include "Ranrok_Charge.h"
+#include "Ranrok_Pulse.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -2222,6 +2224,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Point>(g_iStaticLevel, CRanrok_Point::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Pulse>(g_iStaticLevel, CRanrok_Pulse::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Charge>(g_iStaticLevel, CRanrok_Charge::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

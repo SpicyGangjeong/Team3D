@@ -290,6 +290,8 @@ VS_BULR_MESH_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_BULR_MESH_OUT Out = (VS_BULR_MESH_OUT) 0;
 
+    
+
     matrix matW, matWV, matWVP;
     
     row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
@@ -531,6 +533,10 @@ float4 DrawEffect(PS_IN In)
         discard;
     }
     
+    if (In.vLifeTime.x > In.vLifeTime.y)
+        discard;
+    
+    
     if (g_isDiffuse == true)
     {
         float2 UV; // 이미지의 UV값
@@ -745,54 +751,56 @@ float4 DrawEffect(PS_IN In)
                 vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV);
             else
                 vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
+            
+            float fDissolveValue = vMtrlDissolve.r;
+        
+            if (g_isDissolve_G == true)
+                fDissolveValue = vMtrlDissolve.g;
+        
+            if (g_isDissolve_B == true)
+                fDissolveValue = vMtrlDissolve.b;
+        
+            float fSoftDissolve;
+    
+            if (g_fDissolveSoftMask > FLT_EPSILON5)
+                fSoftDissolve = saturate((fDissolveValue - g_fDissolveMaskEdge) * g_fDissolveSoftMask);
+            else
+                fSoftDissolve = fDissolveValue;
+        
+            vMtrlDissolve.r = fSoftDissolve;
+       
+            if (g_isReverseDissolve == true)
+            {
+                if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
+                    discard;
+            }
+            else
+            {
+            
+                        
+                if (g_fDissolveCutRatio <= fTimeRatio) // 일정 수준 이상 넘어가지 못하도록 막기
+                {
+                    fTimeRatio = g_fDissolveCutRatio;
+
+                }
+            
+            
+                float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
+            
+                if (g_isNoDissolveSmoothStep == true)
+                {
+                    fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
+                }
+            
+                vMtrlDiffuse.a *= fFade;
+
+            }
         }
 
      
         /* */
         
-        float fDissolveValue = vMtrlDissolve.r;
-        
-        if (g_isDissolve_G == true)
-            fDissolveValue = vMtrlDissolve.g;
-        
-        if (g_isDissolve_B == true)
-            fDissolveValue = vMtrlDissolve.b;
-        
-        float fSoftDissolve;
-    
-        if (g_fDissolveSoftMask > FLT_EPSILON5)
-            fSoftDissolve = saturate((fDissolveValue - g_fDissolveMaskEdge) * g_fDissolveSoftMask);
-        else
-            fSoftDissolve = fDissolveValue;
-        
-        vMtrlDissolve.r = fSoftDissolve;
-       
-        if (g_isReverseDissolve == true)
-        {
-            if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
-                discard;
-        }
-        else
-        {
-            
-                        
-            if (g_fDissolveCutRatio <= fTimeRatio) // 일정 수준 이상 넘어가지 못하도록 막기
-            {
-                fTimeRatio = g_fDissolveCutRatio;
 
-            }
-            
-            
-            float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
-            
-            if (g_isNoDissolveSmoothStep == true)
-            {
-                fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
-            }
-            
-            vMtrlDiffuse.a *= fFade;
-
-        }
        
         clip(vMtrlDiffuse.a - FLT_EPSILON5);
     }
@@ -931,6 +939,9 @@ float4 SoftEffect(PS_IN In, float4 vMtrlDiffuse)
     
     vDiffuse.a = vDiffuse.a * saturate(fDistance);
    
+    if(vDiffuse.a < FLT_EPSILON5)
+        discard;
+    
     return vDiffuse;
     
 }
@@ -1048,20 +1059,21 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
 {
     PS_OUT Out = (PS_OUT)0;
     
+    
+    //int2 iTexel = int2(In.vPosition.xy);
+    
+    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    
+    //float fbias = 0.000005f;
+    
+    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+    //    discard;
+    
     float4 vMtrlDiffuse;
     
     vMtrlDiffuse = DrawEffect(In);
     
     vMtrlDiffuse = SoftEffect(In, vMtrlDiffuse);
-    
-    int2 iTexel = int2(In.vPosition.xy);
-    
-    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
-    
-    float fbias = 0.000005f;
-    
-    if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
-        discard;
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
@@ -1829,6 +1841,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_DECAL_BLUR();
+    }
+//28
+    pass Blend_Culling
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLEND();
     }
 }
 

@@ -708,7 +708,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse">
       <UniqueIdentifier>{935b6ab0-e01b-4b4b-80d0-649a507d21c8}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy">
       <UniqueIdentifier>{cbb99946-a4d6-4ad8-842c-e67ca5de3f3a}</UniqueIdentifier>
     </Filter>
@@ -717,6 +717,9 @@
     </Filter>
     <Filter Include="02.GameObjects\RaceRing">
       <UniqueIdentifier>{189b5f72-c985-4bf8-a33e-4257f6d74d25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge">
+      <UniqueIdentifier>{c9d234fd-d9dc-4740-9e9e-32b986335ee7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1445,7 +1448,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Pulse.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\Broom_Trophy.h">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
     </ClInclude>
@@ -1454,6 +1457,9 @@
     </ClInclude>
     <ClInclude Include="..\public\RaceRing.h">
       <Filter>02.GameObjects\RaceRing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Charge.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2190,7 +2196,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Broom_Trophy.cpp">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
     </ClCompile>
@@ -2199,6 +2205,9 @@
     </ClCompile>
     <ClCompile Include="..\private\RaceRing.cpp">
       <Filter>02.GameObjects\RaceRing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Charge.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

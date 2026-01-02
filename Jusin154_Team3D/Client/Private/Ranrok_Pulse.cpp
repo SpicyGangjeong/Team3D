@@ -2,7 +2,7 @@
 #include "Ranrok_Pulse.h"
 
 #include "GameInstance.h"
-#include "EditEffect.h"
+#include "EffectParts.h"
 #include "Wand.h"
 #include "Player.h"
 #include "InfoInstance.h"
@@ -22,6 +22,8 @@ CRanrok_Pulse::CRanrok_Pulse(const CRanrok_Pulse& rhs)
 HRESULT CRanrok_Pulse::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/Ranrok/RanrokPulse")))
+		return E_FAIL;
 
 	return S_OK;
 
@@ -35,8 +37,7 @@ HRESULT CRanrok_Pulse::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/Ranrok/RanrokPulse")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_wstrEffectName = L"RanrokPulse";
@@ -88,12 +89,12 @@ HRESULT CRanrok_Pulse::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	 /* 초기 객체 비지블*/
 
-	CEditEffect* pBottomDecal = Get_PartObject<CEditEffect>("Bottom_Decal");
-	CEditEffect* pBottomSplatter = Get_PartObject<CEditEffect>("BottomSplatter");
-	CEditEffect* pBottomSplatter2 = Get_PartObject<CEditEffect>("BottomSplatter2");
-	CEditEffect* pRed_Sphere = Get_PartObject<CEditEffect>("Red_Sphere");
-	CEditEffect* pRock_PT = Get_PartObject<CEditEffect>("Rock_PT");
-	CEditEffect* pSmoke = Get_PartObject<CEditEffect>("Smoke");
+	CEffectParts* pBottomDecal = Get_PartObject<CEffectParts>("Bottom_Decal");
+	CEffectParts* pBottomSplatter = Get_PartObject<CEffectParts>("BottomSplatter");
+	CEffectParts* pBottomSplatter2 = Get_PartObject<CEffectParts>("BottomSplatter2");
+	CEffectParts* pRed_Sphere = Get_PartObject<CEffectParts>("Red_Sphere");
+	CEffectParts* pRock_PT = Get_PartObject<CEffectParts>("Rock_PT");
+	CEffectParts* pSmoke = Get_PartObject<CEffectParts>("Smoke");
 
 	pBottomDecal->Set_Visible(true);
 	pBottomSplatter->Set_Visible(true);

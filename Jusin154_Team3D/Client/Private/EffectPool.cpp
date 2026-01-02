@@ -45,6 +45,8 @@
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
 #include "Ranrok_Point.h"
+#include "Ranrok_Pulse.h"
+#include "Ranrok_Charge.h"
 
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -588,6 +590,26 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		CRanrok_Point* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Point>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PURSE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Pulse* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Pulse>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_CHARGE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Charge* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Charge>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 
