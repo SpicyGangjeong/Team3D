@@ -329,9 +329,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;

@@ -228,17 +228,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     return TRUE;
 }
 
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-    g_hInstance = hInstance;
-
-    // 원하는 해상도
-
-
-    return TRUE;
-}
-
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam)) {
