@@ -781,7 +781,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // gimch
 #ifdef 진우
-
+	isLoad_Monster = false;
 #endif // 
 #ifdef 기무리
 	isLoad_Monster = false;
