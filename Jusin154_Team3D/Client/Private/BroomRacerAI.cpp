@@ -59,7 +59,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Load_AnimXML("../Bin/Resources/Data/AnimList/RacerAI.xml");
+	Load_AnimXML("../Bin/Resources/Data/AnimList/BroomRacerAI.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -90,13 +90,13 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	m_pBroomRaceManager = static_cast<CBroomRaceManager*>(pArg);
 
-	/*CBroomRaceManager::RacerInfo Info;
+	CBroomRaceManager::RacerInfo Info;
 
 	Info.pAI = this;
 	Info.curRing = 0;
 	Info.prevPos = Get_WorldPostion();
 
-	m_pBroomRaceManager->Push_BroomRacer(Info);*/
+	m_pBroomRaceManager->Push_BroomRacer(Info);
 
 	m_LaneOffsetX = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
 	m_LaneOffsetY = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
@@ -750,12 +750,12 @@ void CBroomRacerAI::Set_Input(_float fTimeDelta)
 	InputDesc.Y = 0.f;
 	InputDesc.Z = 0.f;
 
-	/*if (m_bMove)
-	{*/
+	if (m_pBroom->Get_Move())
+	{
 		InputDesc.Z = 1.f;
 		InputDesc.X = targetX*m_TurnGain;
 		InputDesc.Y = targetY*m_HeightGain;
-	//}
+	}
 
 	InputDesc.bHoverToggle = (m_pBroomRaceManager->Get_RaceState() != ENUM_CLASS(CBroomRaceManager::RACE_STATE::RACING));
 

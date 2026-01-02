@@ -98,9 +98,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	//	return E_FAIL;
 	//}
 
-	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
+	//	return E_FAIL;
+	//}
 
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
@@ -108,12 +108,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_BroomRacerAI(TEXT("Layer_BroomRacerAI")))) {
+	/*if (FAILED(Ready_Layer_BroomRacerAI(TEXT("Layer_BroomRacerAI")))) {
 		return E_FAIL;
-	}
-	if (FAILED(Ready_Layer_Monster())) {
-		return E_FAIL;
-	}
+	}*/
+	//if (FAILED(Ready_Layer_Monster())) {
+	//	return E_FAIL;
+	//}
 	
 	if(FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
@@ -329,9 +329,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -695,7 +695,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 #endif // 
 #ifdef Bin
-
+	isLoad_NPC = false;
 #endif // Bin
 #endif // _DEBUG
 
@@ -724,7 +724,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
 {
 #ifdef Bin
-	for (_uint i = 0; i < 0; ++i) {
+	for (_uint i = 0; i < 5; ++i) {
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
 			return E_FAIL;
 		}
@@ -740,7 +740,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
+	for (_uint i = 0; i < 10; ++i) {
 
 		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;

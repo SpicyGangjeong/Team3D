@@ -344,6 +344,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_IdleExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLE | FSMSTATE::IDLE_TURN);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_MoveEnter()
@@ -781,6 +782,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_MoveExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::MOVE | FSMSTATE::SPRINT | FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::STOP);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_JumpEnter()
@@ -831,6 +833,7 @@ HRESULT CPlayer::Behavior_JumpExitCheck()
 void CPlayer::Behavior_JumpExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::JUMP);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_LandEnter()
@@ -884,6 +887,7 @@ void CPlayer::Behavior_LandExit()
 	m_pFSM->Disable_State(FSMSTATE::LAND);
 	m_pCharacter_Controller->Set_GravityAmount(m_fOriginGravityAmount);
 	m_fGravityAmount = 0.f;
+	Reset_Event();
 }
 
 void CPlayer::Behavior_FallEnter()
@@ -906,6 +910,7 @@ HRESULT CPlayer::Behavior_FallExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_FallExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FALL);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_DodgeEnter()
@@ -943,6 +948,7 @@ HRESULT CPlayer::Behavior_DodgeExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_DodgeExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::DODGE);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_BlinkEnter()
@@ -1001,6 +1007,7 @@ void CPlayer::Behavior_BlinkExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BLINK);
 	m_fBlinkTime = 0.f;
+	Reset_Event();
 }
 
 void CPlayer::Behavior_SlideEnter()
@@ -1053,6 +1060,7 @@ void CPlayer::Behavior_SlideExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SLIDE);
 	m_fSlideSpeed = 0.f;
+	Reset_Event();
 }
 
 void CPlayer::Behavior_CombatEnter()
@@ -1062,64 +1070,71 @@ void CPlayer::Behavior_CombatEnter()
 
 	if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
 	{
-		m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R) ,-1) ;
+		m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), -1);
 		m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 	}
-	if (m_pGameInstance->Key_Down(DIK_R)) {
-		m_pFSM->Enable_State(FSMSTATE::SKILL);
-		pairAnimInfo = m_Animation[STATEANIM::SKILL];
-		m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
-	}
-	else if (m_pGameInstance->Key_Down(DIK_Q)) {
 
-		m_pFSM->Change_State(FSMSTATE::SHIELD);
-		return;
-	}
-	else if (m_pGameInstance->Mouse_Down(DIM_LBUTTON)) {
-		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
-		return;
-	}
-	else if (SUCCEEDED(InputSpell())) {
-		m_pFSM->Change_State(FSMSTATE::SPELL);
-		return;
-	}
-	else if (m_pGameInstance->Key_Down(DIK_V)) {
-		m_pFSM->Enable_State(FSMSTATE::MAPHELP);
-		pairAnimInfo = m_Animation[STATEANIM::MAPHELP];
-	}
-	else if (m_pGameInstance->Key_Down(DIK_X)) {
-		m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
-		return;
-	}
-	else if (m_pGameInstance->Key_Down(DIK_Z)) {
-
-		if (nullptr != m_LockOnInfo.pInteractive) {
-			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
-			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
-			m_pGrapInteractive = m_LockOnInfo.pInteractive;
-			SAFE_ADDREF(m_pGrapInteractive);
-			m_pGrapInteractive->Set_KinematicFlag(true);
-			m_vGrapInteratableLerp.x = 0.f;
+	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell()))
+	{
+		if (m_pGameInstance->Key_Down(DIK_R)) {
+			m_pFSM->Enable_State(FSMSTATE::SKILL);
+			pairAnimInfo = m_Animation[STATEANIM::SKILL];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
 		}
-		else {
+		else if (m_pGameInstance->Key_Down(DIK_Q)) {
+
+			m_pFSM->Change_State(FSMSTATE::SHIELD);
 			return;
 		}
+		else if (m_pGameInstance->Mouse_Down(DIM_LBUTTON)) {
+			m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
+			return;
+		}
+		else if (SUCCEEDED(InputSpell())) {
+			m_pFSM->Change_State(FSMSTATE::SPELL);
+			return;
+		}
+		else if (m_pGameInstance->Key_Down(DIK_V)) {
+			m_pFSM->Enable_State(FSMSTATE::MAPHELP);
+			pairAnimInfo = m_Animation[STATEANIM::MAPHELP];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_X)) {
+			m_pFSM->Change_State(FSMSTATE::ANCIENT_SPELL);
+			return;
+		}
+		else if (m_pGameInstance->Key_Down(DIK_Z)) {
 
-		Add_Event(pairAnimInfo.first,
-			[this]() { m_bLookAt = true; },
-			0.12f);
+			if (nullptr != m_LockOnInfo.pInteractive) {
+				m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
+				pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_pGrapInteractive = m_LockOnInfo.pInteractive;
+				SAFE_ADDREF(m_pGrapInteractive);
+				m_pGrapInteractive->Set_KinematicFlag(true);
+				m_vGrapInteratableLerp.x = 0.f;
+			}
+			else {
+				return;
+			}
 
-		Add_Event(pairAnimInfo.first,
-			[this]() { Throwing_Interactive(); },
-			0.2f);
+			Add_Event(pairAnimInfo.first,
+				[this]() { m_bLookAt = true; },
+				0.12f);
 
-		Add_Event(pairAnimInfo.first,
-			[this]() {
-				m_pGameInstance->SlowMotion(0.1f, 0.35f);
-			},
-			0.1f);
+			Add_Event(pairAnimInfo.first,
+				[this]() { Throwing_Interactive(); },
+				0.2f);
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pGameInstance->SlowMotion(0.1f, 0.35f);
+				},
+				0.1f);
+		}
 	}
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	
 }
 
 HRESULT CPlayer::Behavior_CombatExitCheck()
@@ -1209,6 +1224,7 @@ void CPlayer::Behavior_CombatExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::SKILL |
 		 FSMSTATE::MAPHELP | FSMSTATE::ANCIENT_THROW);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_LightAttackEnter()
@@ -1391,6 +1407,7 @@ void CPlayer::Behavior_LightAttackExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::LIGHT_ATTACK);
 	m_pModelCom->Set_BlendDuration(0.3f);
+	Reset_Event();
 	m_bLookAt = false;
 }
 
@@ -1422,12 +1439,21 @@ void CPlayer::Behavior_SpellEnter()
 			_vector vCross = XMVector3Cross(vLook, vCameraLook);
 			_float Cross = XMVectorGetY(vCross);
 
-			if (Degree <= 45.f)
+			if (Degree <= 30.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::SPELL];
 				fRatio = 0.2f;
 			}
-			else if (Degree <= 85.f)
+			else if (Degree <= 60.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::SPELL];
+				fRatio = 0.2f;
+				Add_Event(m_Animation[STATEANIM::SPELL].first,
+					[this]() {m_bLookAt = true;
+					},
+					0.01f);
+			}
+			else if (Degree <= 120.f)
 			{
 				if (Cross < 0.f)
 				{
@@ -1441,7 +1467,10 @@ void CPlayer::Behavior_SpellEnter()
 						pairAnimInfo = m_Animation[STATEANIM::SPELL_90_L2];
 						break;
 					}
-
+					Add_Event(pairAnimInfo.first,
+						[this]() {m_bLookAt = true;
+						},
+						0.95f);
 					fRatio = 0.17f;
 				}
 				else {
@@ -1458,8 +1487,14 @@ void CPlayer::Behavior_SpellEnter()
 						break;
 					case 1:
 						pairAnimInfo = m_Animation[STATEANIM::SPELL_90_R];
-						fRatio = 0.17f;
-						fAnimSpeed = 1.3f;
+						fRatio = 0.14f;
+						if (Degree >= 120.f)
+						{
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_bLookAt = true;
+								},
+								0.01f);
+						}
 						break;
 					}
 				}
@@ -1467,6 +1502,10 @@ void CPlayer::Behavior_SpellEnter()
 			else {
 				pairAnimInfo = m_Animation[STATEANIM::SPELL_180_R];
 				fRatio = 0.23f;
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_bLookAt = true;
+					},
+					0.01f);
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, fAnimSpeed);
 
@@ -1546,15 +1585,19 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 		}
 		else if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell()))
 		{
-			if (fRatio >= 0.5f)
-			{
-			m_pFSM->Change_State(FSMSTATE::COMBAT);
-			return E_FAIL;
+			if (iIndex != m_Animation[STATEANIM::AVADA_KEDAVRA].first) {
+				if (fRatio >= 0.5f)
+				{
+					m_pFSM->Change_State(FSMSTATE::COMBAT);
+					return E_FAIL;
+				}
+				return S_OK;
 			}
-			return S_OK;
 		}
 	}
-	else if (m_pGameInstance->Key_Down(DIK_Q)) {
+	else if (iIndex != m_Animation[STATEANIM::AVADA_KEDAVRA].first)
+	{
+	if (m_pGameInstance->Key_Down(DIK_Q)) {
 		m_pFSM->Change_State(FSMSTATE::SHIELD);
 		return E_FAIL;
 	}
@@ -1575,6 +1618,8 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 		}
 		return S_OK;
 	}
+	}
+
 
 	Play_SpellHitAnim();
 
@@ -1604,10 +1649,11 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 void CPlayer::Behavior_SpellExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SPELL);
-
 	m_pModelCom->Set_BlendDuration(0.3f);
+	Reset_Event();
 	m_bLookAt = false;
 	m_bSpellHit = false;
+
 }
 
 void CPlayer::Behavior_AncientSpellEnter()
@@ -1663,6 +1709,7 @@ HRESULT CPlayer::Behavior_AncientSpellExitCheck()
 void CPlayer::Behavior_AncientSpellExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::ANCIENT_SPELL);
+	Reset_Event();
 	m_bLookAt = false;
 }
 
@@ -1798,6 +1845,7 @@ void CPlayer::Behavior_ShieldExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SHIELD);
 	m_pFSM->Disable_State(FSMSTATE::PARRY);
+	Reset_Event();
 	m_bShield = false;
 	m_bLookAt = false;
 }
@@ -1930,6 +1978,7 @@ HRESULT CPlayer::Behavior_HitExitCheck()
 void CPlayer::Behavior_HitExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::HIT);
+	Reset_Event();
 	m_bLookAt = false;
 }
 
@@ -1978,6 +2027,7 @@ HRESULT CPlayer::Behavior_Broom_RideExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_Broom_RideExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BROOM_RIDE);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_Broom_Ride_MoveEnter()
@@ -2007,6 +2057,7 @@ HRESULT CPlayer::Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_Broom_Ride_MoveExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BROOM_RIDE_MOVE);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_Broom_HoverEnter()
@@ -2153,6 +2204,7 @@ void CPlayer::Behavior_Broom_HoverExit()
 void CPlayer::Behavior_Broom_FlyEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::FLY);
+	Reset_Event();
 	m_fNeutralTime = 0.f;
 	m_fNoInputTime = 0.f;
 }
@@ -2344,6 +2396,7 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_Broom_FlyExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FLY);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_Broom_TurboFlyEnter()
@@ -2493,6 +2546,7 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_Broom_TurboFlyExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::TURBOFLY);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_Broom_DismountEnter()
@@ -2552,6 +2606,7 @@ HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_Broom_DismountExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BROOM_DISMOUNT);
+	Reset_Event();
 }
 
 void CPlayer::Player_InterpTurn(_float fTimeDelta)

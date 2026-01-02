@@ -162,6 +162,11 @@ void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,
 	m_PendingEvents.push_back(Desc);
 }
 
+void CUnit::Reset_Event()
+{
+    m_PendingEvents.clear();
+}
+
 void CUnit::Check_HitAngle(_vector ProjectileDir)
 {
 	_vector vProjectileDir = ProjectileDir;
