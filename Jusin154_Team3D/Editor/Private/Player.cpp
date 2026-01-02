@@ -109,7 +109,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	ReLockOnTarget();
-	SetGravity();
+	if (m_pCharacter_Controller->Get_GravityAmount() > 0.f)
+		SetGravity();
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
@@ -497,6 +498,13 @@ void CPlayer::Describe_Entity()
 {
 	GUI::Begin("PLAYER_DESC");
 	m_pCharacter_Controller->Describe_Entity();
+
+	if (m_pGameInstance->Key_Up(DIK_HOME))
+	{
+		m_pCharacter_Controller->Set_GravityAmount(0.f);
+		m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
+	}
+
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
 	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);

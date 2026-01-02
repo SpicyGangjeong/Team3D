@@ -180,7 +180,6 @@ _float2 CMonster::Get_Hp()
 {
 	return { m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp };
 }
-
 CStat* CMonster::Get_Stat()
 {
 	return m_pStat;
@@ -189,6 +188,11 @@ CStat* CMonster::Get_Stat()
 const _float4x4* CMonster::Get_HeadMatrix()
 {
 	return m_pModelCom->Get_BoneMatrixPtr("Head");
+}
+
+float  CMonster::Get_HpRatio()
+{
+	return Get_Hp().x / Get_Hp().y;
 }
 
 void CMonster::CameraShake(_float ClampValue, _float Min, _float Max, _float Time)
