@@ -214,6 +214,8 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\RaceRing.h" />
     <ClInclude Include="..\Public\Ranrok.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
+    <ClInclude Include="..\Public\Ranrok_Charge.h" />
+    <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
@@ -475,6 +477,8 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\RaceRing.cpp" />
     <ClCompile Include="..\Private\Ranrok.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Charge.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\Ranrok_States.cpp" />

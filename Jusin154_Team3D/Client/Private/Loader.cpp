@@ -197,6 +197,8 @@
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
 #include "Ranrok_Point.h"
+#include "Ranrok_Charge.h"
+#include "Ranrok_Pulse.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -1582,6 +1584,52 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/Nomal", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+	});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/Decal", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+	});
+
+
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/DecalNormal", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+		});
+
 
 
 #pragma endregion
@@ -2215,6 +2263,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Point>(g_iStaticLevel, CRanrok_Point::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Pulse>(g_iStaticLevel, CRanrok_Pulse::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Charge>(g_iStaticLevel, CRanrok_Charge::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
