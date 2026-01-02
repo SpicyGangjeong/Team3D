@@ -34,6 +34,8 @@ public:
 	virtual HRESULT Render() override;
 	HRESULT Update_RobeSocketPosition();
 	HRESULT Bind_PrevBoneMatrices(CShader* pShader, const _char* pConstant);
+	vector<_float4x4> Get_RobeJointAnchorMatrix() const { return m_ReconstructedJointAnchorMatirces; }
+	_float4x4 Get_RobeJointAnchorMatrix(_uint iIndex) const { return m_ReconstructedJointAnchorMatirces[iIndex]; }
 private:
 	_float4x4  m_PreTransformMatrix = { };
 	const _float4x4* m_pSocketMatrix			= { nullptr };
@@ -42,7 +44,8 @@ private:
 	const _float4x4* m_pRightFootLocalMatrix	= { nullptr };
 	const _float4x4* m_pRightLegLocalMatrix		= { nullptr };
 	const _float4x4* m_RobeJointAnchorMatrices[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
-	_float4x4 m_ReconstructedJointAnchorMatirces[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { };
+	vector<_float4x4> m_ReconstructedJointAnchorMatirces = { };
+	//_float4x4 m_ReconstructedJointAnchorMatirces[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { };
 
 	CModel*				m_pModelCom = { nullptr };
 	_int				m_iBoneNum = -1;
@@ -53,10 +56,6 @@ private:
 	CRigidBody_Dynamic* m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
 	PSX::PxD6Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
 	
-	ID3D11Buffer*				m_pBoneCombinedMatrixBuffer = { nullptr };
-	ID3D11ShaderResourceView*	m_pBoneCombinedMatrixSRV = { nullptr };
-
-	CModel::BONEINSERTION_DESC m_BoneInsertionDesc = {};
 	vector<_float4x4>	m_PrevRobeBoneMatrices = { };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
@@ -73,7 +72,6 @@ private:
 
 	HRESULT Update_LegsPosition();
 	HRESULT Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld);
-	HRESULT Create_BoneCombinedMatrixSRV();
 #ifdef _DEBUG
 	HRESULT Render_BonePhysX();
 	HRESULT Render_Legs();

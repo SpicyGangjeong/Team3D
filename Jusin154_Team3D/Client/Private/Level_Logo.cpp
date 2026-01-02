@@ -29,6 +29,8 @@ void CLevel_Logo::Update(_float fTimeDelta)
 #ifdef _DEBUG
 #ifdef 기무리
 	m_pGameInstance->Set_LevelToChange();
+#elif Bin
+	m_pGameInstance->Set_LevelToChange();
 #endif // 기무리
 #endif // _DEBUG
 

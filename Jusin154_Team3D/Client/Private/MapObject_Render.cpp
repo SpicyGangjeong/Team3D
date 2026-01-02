@@ -83,7 +83,6 @@ void CMapObject_Render::Late_Update(_float fTimeDelta)
 		m_iNumMeshe = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
 
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-		Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(XMLoadFloat4((_float4*)&m_CombinedWorldMatrix.m[3][0]), m_fRadius));
 	}
 }
 

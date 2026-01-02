@@ -178,6 +178,8 @@ void CLevel_ObjectViewer::Show_ModelFilePath()
 		Category_ModelList("Human");
 
 		Category_ModelList("Object");
+
+		Category_ModelList("VFX");
 	}
 	GUI::EndTabBar();
 	GUI::End();

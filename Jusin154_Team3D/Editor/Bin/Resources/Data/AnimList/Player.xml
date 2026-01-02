@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animations owner="Player">
+
+	<!-- IDLE -->
+	<Anim state="IDLE" index="894" loop="true"/>
+	<Anim state="IDLE_AIM" index="6" loop="true"/>
+	<Anim state="IDLE_TURN_L" index="271" loop="false"/>
+	<Anim state="IDLE_TURN_R" index="431" loop="false"/>
+	<Anim state="IDLE_TURN_BWD" index="269" loop="false"/>
+
+	<!-- WALK -->
+	<Anim state="WALK_FWD" index="626" loop="true"/>
+	<Anim state="WALK_LEFT" index="338" loop="false"/>
+	<Anim state="WALK_RIGHT" index="505" loop="false"/>
+	<Anim state="WALK_BWD" index="353" loop="false"/>
+	<Anim state="WALK_STOP_L" index="345" loop="false"/>
+	<Anim state="WALK_STOP_R" index="508" loop="false"/>
+
+	<!-- JOG -->
+	<Anim state="JOG_FWD" index="168" loop="true"/>
+	<Anim state="JOG_LEFT" index="304" loop="false"/>
+	<Anim state="JOG_RIGHT" index="308" loop="false"/>
+	<Anim state="JOG_BWD" index="155" loop="false"/>
+	<Anim state="JOG_STOP" index="447" loop="false"/>
+
+	<Anim state="JOG_AIM_LEFT" index="172" loop="true"/>
+	<Anim state="JOG_AIM_RIGHT" index="176" loop="true"/>
+	<Anim state="JOG_AIM_BWD" index="167" loop="true"/>
+
+	<!-- JUMP / FALL -->
+	<Anim state="JUMP" index="206" loop="false"/>
+	<Anim state="JUMP_JOG" index="204" loop="false"/>
+	<Anim state="JUMP_SPRINT" index="208" loop="false"/>
+	<Anim state="FALL_LOOP" index="30" loop="true"/>
+
+	<!-- SPRINT -->
+	<Anim state="SPRINT" index="600" loop="true"/>
+
+	<!-- LAND -->
+	<Anim state="LAND" index="260" loop="false"/>
+	<Anim state="LAND_TO_JOG" index="248" loop="false"/>
+	<Anim state="LAND_TO_SPRINT" index="250" loop="false"/>
+	<Anim state="LAND_HARD" index="256" loop="false"/>
+	<Anim state="LAND_MID" index="258" loop="false"/>
+	<Anim state="LAND_SOFT" index="260" loop="false"/>
+
+	<!-- SLIDE -->
+	<Anim state="SLIDE_START_R" index="567" loop="false"/>
+	<Anim state="SLIDE_LOOP_R" index="565" loop="true"/>
+	<Anim state="SLIDE_STOP_R" index="569" loop="false"/>
+
+	<!-- DODGE -->
+	<Anim state="DODGE" index="879" loop="false"/>
+	<Anim state="DODGE_BLINK" index="875" loop="false"/>
+
+	<!-- SKILL / ATTACK -->
+	<Anim state="SKILL" index="594" loop="false"/>
+	<Anim state="SKILL2" index="992" loop="false"/>
+
+	<Anim state="LIGHT_ATTACK" index="414" loop="false"/>
+	<Anim state="LIGHT_ATTACK_180_R" index="810" loop="false"/>
+
+	<Anim state="LIGHT_ATTACK_90_L" index="802" loop="false"/>
+	<Anim state="LIGHT_ATTACK_90_R1" index="850" loop="false"/>
+	<Anim state="LIGHT_ATTACK_90_R2" index="854" loop="false"/>
+	<Anim state="LIGHT_ATTACK_90_R3" index="855" loop="false"/>
+
+	<!-- SPELL -->
+	<Anim state="SPELL" index="773" loop="false"/>
+	<Anim state="SPELL_180_R" index="838" loop="false"/>
+	<Anim state="SPELL_90_R" index="849" loop="false"/>
+	<Anim state="SPELL_90_L" index="823" loop="false"/>
+	<Anim state="SPELL_90_L2" index="827" loop="false"/>
+
+	<Anim state="MAPHELP" index="123" loop="false"/>
+	<Anim state="POTION" index="116" loop="false"/>
+	<Anim state="ACCIO" index="760" loop="false"/>
+	<Anim state="DESCENDO" index="858" loop="false"/>
+	<Anim state="DEPULSO" index="859" loop="false"/>
+	<Anim state="DIFFINDO" index="863" loop="false"/>
+
+	<Anim state="LUMOS" index="911" loop="true"/>
+	<Anim state="LUMOS_STOP" index="913" loop="false"/>
+
+	<Anim state="DISILLUSION_ENTER" index="586" loop="false"/>
+	<Anim state="DISILLUSION_EXIT" index="587" loop="false"/>
+
+	<Anim state="ANCIENT_THROW" index="920" loop="false"/>
+	<Anim state="AVADA_KEDAVRA" index="0" loop="false"/>
+
+	<!-- REPARO -->
+	<Anim state="REPARO_START" index="759" loop="false"/>
+	<Anim state="REPARO_LOOP" index="758" loop="true"/>
+	<Anim state="REPARO_END" index="757" loop="false"/>
+
+	<Anim state="ANCIENT_LIGHTNING" index="1002" loop="false"/>
+	<Anim state="SPELL_FAIL" index="907" loop="false"/>
+
+	<!-- PARRY -->
+	<Anim state="PARRY_180" index="954" loop="false"/>
+	<Anim state="PARRY2" index="914" loop="false"/>
+	<Anim state="PARRY3" index="916" loop="false"/>
+	<Anim state="PARRY4" index="922" loop="false"/>
+
+	<!-- HIT / FLINCH -->
+	<Anim state="HIT_L" index="1210" loop="false"/>
+	<Anim state="HIT_R" index="1211" loop="false"/>
+	<Anim state="HIT_FWD" index="1212" loop="false"/>
+
+	<Anim state="FLINCH_BWD" index="1070" loop="false"/>
+	<Anim state="FLINCH_FWD" index="1071" loop="false"/>
+	<Anim state="FLINCH_LEFT" index="1072" loop="false"/>
+	<Anim state="FLINCH_RIGHT" index="1073" loop="false"/>
+
+	<!-- KNOCKDOWN -->
+	<Anim state="KNOCKDOWN_BWD" index="1081" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD" index="1083" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD_SPLT" index="1085" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD_SPLT" index="1084" loop="false"/>
+
+	<!-- GETUP -->
+	<Anim state="GETUP_BWD" index="1089" loop="false"/>
+	<Anim state="GETUP_FWD" index="1094" loop="false"/>
+
+	<!-- BROOM -->
+	<Anim state="BROOM_IDLE" index="711" loop="true"/>
+	<Anim state="BROOM_FWD" index="712" loop="true"/>
+	<Anim state="BROOM_LEFT" index="714" loop="true"/>
+	<Anim state="BROOM_RIGHT" index="715" loop="true"/>
+	<Anim state="BROOM_DOWN" index="713" loop="true"/>
+	<Anim state="BROOM_UP" index="716" loop="true"/>
+	<Anim state="BROOM_REVELIO" index="679" loop="false"/>
+
+	<Anim state="BROOM_TURBO_DOWN" index="717" loop="true"/>
+	<Anim state="BROOM_TURBO_FWD" index="718" loop="true"/>
+	<Anim state="BROOM_TURBO_LEFT" index="719" loop="true"/>
+	<Anim state="BROOM_TURBO_RIGHT" index="720" loop="true"/>
+	<Anim state="BROOM_TURBO_UP" index="721" loop="true"/>
+
+	<Anim state="BROOM_MOUNT" index="735" loop="false"/>
+	<Anim state="BROOM_MOUNT_END" index="738" loop="false"/>
+	<Anim state="BROOM_HOVER_START" index="700" loop="false"/>
+	<Anim state="BROOM_DISMOUNT" index="676" loop="false"/>
+
+	<Anim state="BROOM_HOVER_IDLE" index="704" loop="true"/>
+	<Anim state="BROOM_HOVER_FWD" index="701" loop="true"/>
+	<Anim state="BROOM_HOVER_LEFT" index="702" loop="true"/>
+	<Anim state="BROOM_HOVER_RIGHT" index="703" loop="true"/>
+	<Anim state="BROOM_HOVER_REVELIO" index="722" loop="false"/>
+
+	<!-- JOG AIM STOP -->
+	<Anim state="JOG_AIM_STOP_L" index="296" loop="false"/>
+	<Anim state="JOG_AIM_STOP_R" index="457" loop="false"/>
+	<Anim state="JOG_AIM_STOP_BWD" index="445" loop="false"/>
+
+	<!-- SPELL LEARNING -->
+	<Anim state="SPELL_LEARNING_FAIL" index="1286" loop="false"/>
+	<Anim state="SPELL_LEARNING_LOOP" index="1287" loop="true"/>
+	<Anim state="SPELL_LEARNING_START" index="1288" loop="false"/>
+	<Anim state="SPELL_LEARNING_SUCCESS" index="1289" loop="false"/>
+	<Anim state="SPELL_LEARNING_WANDWAVE" index="1290" loop="false"/>
+
+</Animations>

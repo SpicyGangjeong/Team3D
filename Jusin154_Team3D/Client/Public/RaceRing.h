@@ -11,7 +11,9 @@ public:
 	typedef struct RaceRingDesc
 	{
 		class CBroomRaceManager* pBroomRaceManager = { nullptr };
-		_int iIndex = { 0 };
+		_float3 vPosition{};
+		_float3 vRotation{};
+		_float3 vScale{};
 	}RACERING_DESC;
 private:
 	CRaceRing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

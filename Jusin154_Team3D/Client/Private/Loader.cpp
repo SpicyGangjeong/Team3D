@@ -24,6 +24,7 @@
 #include "Goblin_Sword.h"
 #include "Goblin_BattleAxe.h"
 #include "BroomRaceManager.h"
+#include "ReparoObject.h"
 
 #pragma region ACTOR
 
@@ -140,6 +141,7 @@
 #include "Broom_Finish.h"
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
+#include "Broom_Trophy.h"
 
 #include "Interaction_Key.h"
 
@@ -217,6 +219,7 @@
 #include "MapObject_Render.h"
 #include "MapObject_Collision.h"
 #include "InstancedProp.h"
+#include "InstancedProp_Light.h"
 #include "MapElement_Light.h"
 #include "MapElement_Interactable.h"
 #include "MapElement_Lake.h"
@@ -371,8 +374,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_Background = true;
-	isLoad_Hogwart = false;
+	isLoad_Background = false;
+	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
 #endif // gimch
 #ifdef 진우
@@ -387,9 +390,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_NPC = false;
 	isLoad_Monster = false;
 #endif // 
-#ifdef 인혁
-	isLoad_Background = false;
-	isLoad_Hogwart = false;
+#ifdef 나
+	isLoad_Background = true;
+	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef Bin
@@ -697,6 +700,42 @@ HRESULT CLoader::Loading_For_GamePlay()
 				));
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/GroundSurfaces",
+					".bin", false
+				));
+			}
+			{	/* SUB_HogsHead */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_HogsHead/SUB_HogsHead_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* SUB_PippensPotions */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_PippensPotions/SUB_Pippens_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_E_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_E/SUB_GEN_E_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_F_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_F/SUB_GEN_F_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_G_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_G/SUB_GEN_G_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_H_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_H/SUB_GEN_H_EXTLOD/ProxyAssets",
+					".bin", false
+				));
+				/* GEN_J_LOD */
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_GEN_J/SUB_GEN_J_EXTLOD/ProxyAssets",
 					".bin", false
 				));
 			}
@@ -1983,7 +2022,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Weapon_Model"),
@@ -2009,6 +2048,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_BattleAxe_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin",  XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerA.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerB.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
 
 #pragma endregion
 
@@ -2610,6 +2658,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_Trophy*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Trophy>(g_iStaticLevel, CBroom_Trophy::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_Interaction_Key*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CInteraction_Key>(g_iStaticLevel, CInteraction_Key::Create(m_pDevice, m_pContext))))
@@ -2795,6 +2848,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Models/InstanceProp/SM_ScotsPine_LargeA_Master.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightPost */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightPost"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_LightPost.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Light_Post_Floating.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
 #pragma endregion
 
 	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
@@ -2874,6 +2939,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_CInstancedProp */
 	if (FAILED(m_pGameInstance->Add_Prototype<CInstancedProp>(g_iStaticLevel, CInstancedProp::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CInstancedProp_Light */
+	if (FAILED(m_pGameInstance->Add_Prototype<CInstancedProp_Light>(g_iStaticLevel, CInstancedProp_Light::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapElement_Light */
@@ -3029,6 +3098,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Broom */
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom>(g_iStaticLevel, CBroom::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_ReparoObject */
+	if (FAILED(m_pGameInstance->Add_Prototype<CReparoObject>(g_iStaticLevel, CReparoObject::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_BroomRaceManager */

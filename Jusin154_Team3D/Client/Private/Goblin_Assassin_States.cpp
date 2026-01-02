@@ -132,7 +132,7 @@ HRESULT CGoblin_Assassin::Behavior_MoveExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
-	if (m_fTargetDistance >= 6.f)
+	if (m_fTargetDistance >= 7.f)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -141,7 +141,6 @@ HRESULT CGoblin_Assassin::Behavior_MoveExitCheck(_float fTimeDelta)
 		if (!m_bFirstMove)
 		{
 			_uint Rand = m_pGameInstance->Real_Random_Int(0, 3);
-
 			switch (Rand)
 			{
 			case  0:
@@ -168,7 +167,6 @@ HRESULT CGoblin_Assassin::Behavior_MoveExitCheck(_float fTimeDelta)
 				break;
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
-
 			m_bFirstMove = true;
 			m_fMoveTime = 0.f;
 			return S_OK;
@@ -183,7 +181,7 @@ HRESULT CGoblin_Assassin::Behavior_MoveExitCheck(_float fTimeDelta)
 	}
 
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 4.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 5.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
@@ -217,12 +215,7 @@ HRESULT CGoblin_Assassin::Behavior_CombatExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (m_fTargetDistance <= 6.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::SLASH)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::SLASH);
-		return E_FAIL;
-	}
-	else if (m_fTargetDistance <= 10.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::DASH)] <= 0.f)
+	if (m_fTargetDistance <= 7.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::DASH)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::DASH);
 		return E_FAIL;
@@ -251,8 +244,7 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 	m_pFSM->Enable_State(FSMSTATE::SLASH);
 
 	pairAnimInfo = m_Animation[STATEANIM::SLASH];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.5f);
-	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::SLASH)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::SLASH)];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.3f,false,1.3f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -262,6 +254,12 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_ATTACK, m_pGoblinSpector->Get_PartObject<CGoblin_Sword>(), (void*)&m_pGoblinSpector->Get_PartObject<CGoblin_Sword>()->Get_SwordMatrix());
 		},
 		0.05f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_CanTakeDamage(true);
+			Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_CanTakeDamage(true); },
+		0.15f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -280,8 +278,11 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 
 HRESULT CGoblin_Assassin::Behavior_SlashExitCheck(_float fTimeDelta)
 {
-	if (m_pModelCom->IsFinishedAnim())
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (fRatio >= 0.9f)
 	{
+		Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_CanTakeDamage(false);
+		Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_CanTakeDamage(false);
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
@@ -307,7 +308,8 @@ void CGoblin_Assassin::Behavior_DashEnter()
 
 HRESULT CGoblin_Assassin::Behavior_DashExitCheck(_float fTimeDelta)
 {
-	if (m_pModelCom->IsFinishedAnim())
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (fRatio >= 0.7f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SLASH);
 		return E_FAIL;
@@ -340,7 +342,8 @@ HRESULT CGoblin_Assassin::Behavior_BlinkExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-	if (!m_bDisolve && iCurrAnimIndex != m_Animation[STATEANIM::BLINK].first)
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (m_fDisolveTime >= 0.8f && iCurrAnimIndex != m_Animation[STATEANIM::BLINK].first)
 	{
 		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::TP)];
 		_vector vPlayerPos = XMLoadFloat4(&m_vTargetPos);
@@ -365,7 +368,7 @@ HRESULT CGoblin_Assassin::Behavior_BlinkExitCheck(_float fTimeDelta)
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}
 
-	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::BLINK].first)
+	if (fRatio >= 0.8f && iCurrAnimIndex == m_Animation[STATEANIM::BLINK].first)
 	{
 		m_bLookAt = true;
 		m_fTpTime = 0.f;
@@ -939,141 +942,4 @@ void CGoblin_Assassin::Add_FSM()
 #pragma endregion
 
 
-}
-
-void CGoblin_Assassin::Set_Anim()
-{
-	m_Animation[STATEANIM::IDLE] = { 22,true };
-	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 24, false };
-	m_Animation[STATEANIM::IDLE_TURN_L] = { 26, false };
-	m_Animation[STATEANIM::IDLE_TURN_R] = { 30, false };
-
-	m_Animation[STATEANIM::IDLE_BREAK1] = { 137, false };
-	m_Animation[STATEANIM::IDLE_BREAK2] = { 138, false };
-	m_Animation[STATEANIM::IDLE_BREAK3] = { 139, false };
-	m_Animation[STATEANIM::IDLE_BREAK4] = { 37, false };
-	m_Animation[STATEANIM::IDLE_BREAK5] = { 38, false };
-	m_Animation[STATEANIM::IDLE_BREAK6] = { 39, false };
-	m_Animation[STATEANIM::IDLE_BREAK7] = { 41, false };
-
-	m_Animation[STATEANIM::WALK_FWD] = { 45,true };
-	m_Animation[STATEANIM::WALK_START] = { 57,false };
-	m_Animation[STATEANIM::WALK_STOP] = { 58,false };
-	m_Animation[STATEANIM::WALK_BWD] = { 252, true };
-
-	m_Animation[STATEANIM::JOG_FWD] = { 147,true }; // 147
-	m_Animation[STATEANIM::JOG_START] = { 157,false };
-	m_Animation[STATEANIM::JOG_BWD] = { 146,false };
-	m_Animation[STATEANIM::JOG_112_L] = { 148,true };
-	m_Animation[STATEANIM::JOG_112_R] = { 152,true };
-	m_Animation[STATEANIM::JOG_90_L] = { 151,true };
-	m_Animation[STATEANIM::JOG_90_R] = { 155,true };
-
-	m_Animation[STATEANIM::SHUFFLE1] = { 203,false };
-	m_Animation[STATEANIM::SHUFFLE2] = { 204,false };
-	m_Animation[STATEANIM::SHUFFLE3] = { 205,false };
-	m_Animation[STATEANIM::SHUFFLE4] = { 206,false };
-
-	m_Animation[STATEANIM::DODGE_LEFT] = { 125, false };
-	m_Animation[STATEANIM::DODGE_RIGHT] = { 126, false };
-	m_Animation[STATEANIM::SPRINT] = { 90, true };
-
-	m_Animation[STATEANIM::BLINK_START] = { 428,false }; // 텔레포트
-	m_Animation[STATEANIM::BLINK] = { 426,false }; // 텔레포트
-	m_Animation[STATEANIM::ATTACK_END] = { 76,false };
-	m_Animation[STATEANIM::SLASH] = { 72,false };
-	m_Animation[STATEANIM::DASH] = { 73,false };
-
-	m_Animation[STATEANIM::HIT_FWD] = { 353, false };
-	m_Animation[STATEANIM::HIT_BWD] = { 352, false };
-	m_Animation[STATEANIM::HIT_BWD2] = { 349, false };
-	m_Animation[STATEANIM::HIT_BWD3] = { 350, false };
-	m_Animation[STATEANIM::HIT_BWD4] = { 351, false };
-	m_Animation[STATEANIM::HIT_L] = { 354, false };
-	m_Animation[STATEANIM::HIT_R] = { 355, false };
-
-	m_Animation[STATEANIM::KNOCKDOWN_BWD] = { 374, false };
-	m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT] = { 375, false };
-	m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT_HOLD] = { 370, false };
-	m_Animation[STATEANIM::KNOCKDOWN_FWD] = { 371, false };
-	m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT] = { 372, false };
-	m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT_HOLD] = { 373, false };
-
-	m_Animation[STATEANIM::GETUP_BWD] = { 330, false };
-	m_Animation[STATEANIM::GETUP_FWD] = { 332, false };
-	m_Animation[STATEANIM::GETUP_L] = { 334, false };
-	m_Animation[STATEANIM::GETUP_L_FD] = { 336, false };
-	m_Animation[STATEANIM::GETUP_L_FU] = { 338, false };
-	m_Animation[STATEANIM::GETUP_R] = { 340, false };
-	m_Animation[STATEANIM::GETUP_R_FD] = { 342, false };
-	m_Animation[STATEANIM::GETUP_R_FU] = { 344, false };
-	m_Animation[STATEANIM::GETUP_SLOUCH] = { 346, false };
-
-	m_Animation[STATEANIM::KNOCKBACK] = { 377, true };
-	m_Animation[STATEANIM::KNOCKBACK2] = { 378, true };
-	m_Animation[STATEANIM::TUMBLE] = { 379, true };
-	m_Animation[STATEANIM::TUMBLE2] = { 380, true };// 원래 true 였음
-	m_Animation[STATEANIM::TUMBLE_FWD] = { 429, true };
-	m_Animation[STATEANIM::PETRIFICUSED_START] = { 383, false };
-
-	m_Animation[STATEANIM::LAND] = { 376, false };
-	m_Animation[STATEANIM::HIT_LEVIOSO] = { 381, false };
-	m_Animation[STATEANIM::INCARCEROUS] = { 382,false };
-
-	m_Animation[STATEANIM::STUMBLE_BWD_L] = { 394, false };
-	m_Animation[STATEANIM::STUMBLE_BWD_R] = { 395, false };
-	m_Animation[STATEANIM::STUMBLE_FWD] = { 396, false };
-
-	m_Animation[STATEANIM::DEAD_BWD] = { 317, false };
-	m_Animation[STATEANIM::DEAD_BWD2] = { 318, false };
-	m_Animation[STATEANIM::DEAD_FWD] = { 319, false };
-	m_Animation[STATEANIM::DEAD_FWD2] = { 320, false };
-	m_Animation[STATEANIM::DEAD_L] = { 321, false };
-	m_Animation[STATEANIM::DEAD_L2] = { 322, false };
-	m_Animation[STATEANIM::DEAD_R] = { 323, false };
-	m_Animation[STATEANIM::DEAD_R2] = { 324, false };
-
-	//Tp 426
-	// Tp Start 428
-	// 76 공격끝
-
-
-
-
-
-
-
-
-	// 걷기 시작 57
-	// 걷기 루프 50
-	// 뛰기 시작 157
-	// 뛰기 루프 45
-	// 나이프 던지기 85
-	// 도끼 공격 444
-	// 도끼 공격 후 76
-	// 도끼 찍기 439
-	// 
-
-	// 텀블링 히트 380
-	// 디센도 찍기전 띄우기 371
-	// 디센도 찍기 372
-
-	// 레비오소 피격 381
-	// 착지 376
-	//
-
-	// Shuffle1 211
-	// Shuffle2 215
-	// Shuffle3 219
-	// Shuffle4 223	
-
-	//Jog 112도 L 148
-	//Jog 112도 R 152
-	// Jog 90 L 151
-	// Jog 90 R 155
-
-
-	// L 394
-	// R 395
-	// fwd 396
 }

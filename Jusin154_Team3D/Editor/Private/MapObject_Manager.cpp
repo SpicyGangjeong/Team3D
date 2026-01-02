@@ -15,6 +15,7 @@
 #include "MapElement_Lake.h"
 #include "LightSpawner.h"
 #include "DummyDecal.h"
+#include "RaceRing.h"
 
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -66,8 +67,7 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 
 	//if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
 	//	return E_FAIL;
-	if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
-		return E_FAIL;
+	
 
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
 	
@@ -88,8 +88,17 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
 	//	return E_FAIL;
 
-	m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
-	m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+#pragma region DUNGEON
+	//if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
+	//	return E_FAIL;
+	//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	//m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+#pragma endregion
+	if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
+		return E_FAIL;
+	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
+		return E_FAIL;
+
 
 #pragma region Light
 	m_Light_Desc.eType = LIGHT::POINT;
@@ -202,8 +211,9 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 
 	Update_Edit();
 
-	Update_LightSpawer();
+	//Update_LightSpawer();
 	//Update_Decal();
+	Update_RaceRing();
 
 	Update_Unified();
 
@@ -1941,6 +1951,51 @@ HRESULT CMapObject_Manager::Save_Decal(const _char* pFileName)
 	return S_OK;
 }
 
+HRESULT CMapObject_Manager::Save_RaceRing(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_RaceRing"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/RaceRing/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("Ring");
+	doc.InsertEndChild(root);
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CRaceRing* pRaceRing = dynamic_cast<CRaceRing*>(pGamObject);
+
+			if (nullptr == pRaceRing)
+				return E_FAIL;
+
+			if (FAILED(pRaceRing->Save_XML(doc, root)))
+				return E_FAIL;
+		}
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save DummyDecals");
+	}
+
+	return S_OK;
+}
+
 void CMapObject_Manager::Update_PrototypeList()
 {
 	GUI::Begin("Model Prototype List");
@@ -2270,6 +2325,40 @@ void CMapObject_Manager::Update_Decal()
 		{
 			if (m_iSelectedIndex == iIndex)
 				pLightSpawner->Describe_Entity();
+
+			++iIndex;
+		}
+	}
+
+	GUI::End();
+}
+
+void CMapObject_Manager::Update_RaceRing()
+{
+	GUI::Begin("RaceRing Editor");
+	if (GUI::Button("Save RaceRings"))
+	{
+		Save_RaceRing("RaceRing_Data");
+	}
+	if (GUI::Button("Load Ring"))
+	{
+		//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	}
+	if (GUI::Button("Add Ring"))
+	{
+		m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_RaceRing"));
+	}
+
+	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_RaceRing"));
+
+	if (nullptr != pLayer)
+	{
+		_uint iIndex = {};
+		for (auto& pObject : *pLayer->Get_Objects())
+		{
+			if (m_iSelectedIndex == iIndex)
+				pObject->Describe_Entity();
 
 			++iIndex;
 		}

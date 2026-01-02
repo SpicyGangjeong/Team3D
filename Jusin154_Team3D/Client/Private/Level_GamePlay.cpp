@@ -12,11 +12,13 @@
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
+#include "InstancedProp_Light.h"
 #include "Land.h"
 #include "Unified.h"
 #include "MapElement_Lake.h"
 #include "RaceRing.h"
 #include "BroomRaceManager.h"
+#include "ReparoObject.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -44,7 +46,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef _DEBUG
 	// 낮, 밤 설정
 #ifdef gimch
-	m_isDay = false;
+	m_isDay = true;
 #endif // gimch
 #ifdef Bin
 	m_isDay = true;
@@ -55,7 +57,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef 기무리
 	m_isDay = true;
 #endif // 
-#ifdef 인혁
+#ifdef 나
 	m_isDay = true;
 #endif // 
 #endif // _DEBUG
@@ -92,7 +94,11 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
+	//if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
+	//	return E_FAIL;
+	//}
+
+	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 		return E_FAIL;
 	}
 
@@ -219,7 +225,8 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			1.251f,                         // 밀도
 			0.0253f,                          // 빛 강도
 			0.9f,                          // 산란 계수
-			1.78f                           // 깊이 분포 계수
+			1.78f,                           // 깊이 분포 계수
+			0.f
 		);
 	}
 	else
@@ -228,7 +235,8 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			0.626f,                         // 밀도
 			0.01f,                          // 빛 강도
 			0.11f,                          // 산란 계수
-			1.0f                           // 깊이 분포 계수
+			1.0f,                           // 깊이 분포 계수
+			0.f
 		);
 	}
 
@@ -317,8 +325,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
@@ -335,9 +343,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // 
-#ifdef 인혁
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
+#ifdef 나
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
 #endif // 
 #endif // _DEBUG
@@ -583,6 +591,28 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 
 
+	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
+
+	/* LightPost */
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 0;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &LightDesc)))
+		return E_FAIL;
+
+	/* LightPost_Floating */
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 1;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &LightDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -661,7 +691,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 #ifdef 기무리
 	isLoad_NPC = false;
 #endif // 
-#ifdef 인혁
+#ifdef 나
 
 #endif // 
 #ifdef Bin
@@ -714,8 +744,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 
 		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
-		RaceRingDesc.iIndex = i;
+	
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
+{
+	for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
 			return E_FAIL;
 		}
 	}
@@ -745,7 +786,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 #ifdef 기무리
 	isLoad_Monster = false;
 #endif // 
-#ifdef 인혁
+#ifdef 나
 
 #endif // 
 #ifdef Bin

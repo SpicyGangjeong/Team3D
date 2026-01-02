@@ -18,6 +18,8 @@
 #include "MapElement_Door.h"
 #include "MapElement_Chest.h"
 #include "DummyDecal.h"
+#include "EffectPool.h"
+#include "InstancedProp_Light.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -49,31 +51,34 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+	{
+		return E_FAIL;
+	}
+
 	if (FAILED(Ready_Layer_Player_And_Ranrok())) {
 		return E_FAIL;
 	}
 
+	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
+		return E_FAIL;
+	}
 
+	if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
+		return E_FAIL;
+	}
 
-	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
-	//	return E_FAIL;
-	//}
-
-	//if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
-	//	return E_FAIL;
-	//}
-
-	//if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
-	//	return E_FAIL;
-	//}
+	/*if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+		return E_FAIL;
+	}*/
 
 	//if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
 	//	return E_FAIL;
 	//}
 
-	//if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
+		return E_FAIL;
+	}
 
 	/*if (FAILED(Ready_Layer_Door(TEXT("Layer_Door")))) {
 		return E_FAIL;
@@ -86,6 +91,8 @@ HRESULT CLevel_MapViewer::Initialize()
 	if (FAILED(Ready_Layer_MapObjectManager(LAYER_MAPOBJECTMANAGER))) {
 		return E_FAIL;
 	}
+
+	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
 
 	return S_OK;
 }
@@ -141,7 +148,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	CTerrain::TERRAIN_DESC Desc = {};
 
 	/* Hogsmeade */
-	/*Desc.isEdit = false;
+	Desc.isEdit = false;
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2048;
 	Desc.vPosition = _float3(-194, 18.5f, -153.f);
@@ -149,7 +156,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
 	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	/* Hogwart */
 	Desc.isEdit = false;
@@ -418,6 +425,30 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
+CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
+
+	///* LightPost */
+	//LightDesc.bEditMode = false;
+	//LightDesc.isShake = false;
+	//LightDesc.iGlassMeshIndex = 0;
+	//LightDesc.vRadius = _float2(0.f, 0.f);
+	//LightDesc.vSpeed = _float2(0.f, 0.f);
+	//LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
+	//LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
+	//	return E_FAIL;
+
+	///* LightPost_Floating */
+	//LightDesc.bEditMode = false;
+	//LightDesc.isShake = false;
+	//LightDesc.iGlassMeshIndex = 1;
+	//LightDesc.vRadius = _float2(0.f, 0.f);
+	//LightDesc.vSpeed = _float2(0.f, 0.f);
+	//LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
+	//LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
+	//	return E_FAIL;
+
 	return S_OK;
 }
 
@@ -538,8 +569,8 @@ HRESULT CLevel_MapViewer::Ready_Layer_Player_And_Ranrok()
 	}
 
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
-		return E_FAIL;
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+		return E_FAIL;*/
 
 	return S_OK;
 }

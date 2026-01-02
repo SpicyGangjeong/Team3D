@@ -100,6 +100,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// UI 연동 추가
 	m_pModelCom->Set_Temp(true);
 
+#ifdef gimch	
+	m_pCharacter_Controller->Set_GravityAmount(0.f);
+#endif
 	return S_OK;
 }
 
@@ -559,6 +562,20 @@ void CPlayer::Describe_Entity()
 	GUI::Text("Angle %.2f", degree);
 
 	m_pLightCom->Describe_Entity();
+
+#ifdef gimch
+
+	if(m_pGameInstance->Key_Down(DIK_K))
+	{
+		_float3 vPos;
+		if (m_pGameInstance->isPicking(&vPos))
+		{
+			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&vPos),1.f));
+		}
+	}
+	
+#endif // 
+
 
 	GUI::End();
 }

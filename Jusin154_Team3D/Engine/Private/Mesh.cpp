@@ -383,6 +383,12 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 		{
 			SaveBoneWeight _SaveBoneWeight = _SaveBone.Weights[j];
 
+			if (_SaveBoneWeight.VertexId >= m_iNumVertices)
+			{
+				continue;
+			}
+
+
 			if (0.f == pVertices[_SaveBoneWeight.VertexId].vBlendWeight.x)
 			{
 				pVertices[_SaveBoneWeight.VertexId].vBlendIndex.x = i;
@@ -405,6 +411,22 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 			}
 		}
 	}
+
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		_float sum =
+			pVertices[i].vBlendWeight.x +
+			pVertices[i].vBlendWeight.y +
+			pVertices[i].vBlendWeight.z +
+			pVertices[i].vBlendWeight.w;
+
+		if (sum <= 0.f)
+		{
+			pVertices[i].vBlendIndex.x = 0;
+			pVertices[i].vBlendWeight.x = 1.f;
+		}
+	}
+
 
 	if (0 == m_iNumBones)
 	{

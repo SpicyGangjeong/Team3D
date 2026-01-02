@@ -212,7 +212,8 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 	}
 
 
-	m_Bones[m_iRootBoneIndex]->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+	if (m_iRootBoneIndex >= 0)
+		m_Bones[m_iRootBoneIndex]->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 
 	for (_uint i = 0; i < m_Bones.size(); ++i)
 	{
@@ -433,6 +434,8 @@ void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLo
 
 void CModel::Update_RootBone(_float Amount)
 {
+	if (m_iRootBoneIndex < 0 || m_iRootBoneIndex >= (_int)m_Bones.size())
+		return;
 	if (m_Bones[m_iRootBoneIndex]->Compare_Name("Reference")|| m_Bones[m_iRootBoneIndex]->Compare_Name("root") &&
 		m_pTransform != nullptr)
 	{
@@ -1503,6 +1506,8 @@ void CModel::Initialize_BoneMasks()
 		{
 			if (m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)][i] == 1)
 			{
+				if (i == m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)])
+					continue;
 				m_iSkipBoneCount++;
 				m_SkipBoneindex.push_back(i);
 			}

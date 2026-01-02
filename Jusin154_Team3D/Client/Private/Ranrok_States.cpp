@@ -744,9 +744,9 @@ void CRanrok::Behavior_LandEnter()
 	pairAnimInfo = m_Animation[STATEANIM::LAND];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-	/*Add_Event(pairAnimInfo.first,
+	Add_Event(pairAnimInfo.first,
 		[this]() {	CameraShake(30.f, 5.f, 10.f, 1.2f); },
-		0.53f);*/
+		0.53f);
 }
 
 HRESULT CRanrok::Behavior_LandExitCheck(_float fTimeDelta)
@@ -1054,68 +1054,5 @@ void CRanrok::Add_FSM()
 		m_States.emplace(FSMSTATE::DEAD, CState_Dead::Create(&Desc));
 	}
 #pragma endregion
-
-}
-
-void CRanrok::Set_Anim()
-{
-	m_Animation[STATEANIM::IDLE_G] = { 100,true };
-	m_Animation[STATEANIM::IDLE_BREAK2] = { 28,false };
-
-	m_Animation[STATEANIM::IDLE_TURN_L] = { 124,false };
-	m_Animation[STATEANIM::IDLE_TURN_R] = { 125,false };
-
-	m_Animation[STATEANIM::HOVER_LOOP] = { 29,true };
-	m_Animation[STATEANIM::HOVER_DASH_BWD] = { 23,false };
-	m_Animation[STATEANIM::HOVER_DASH_FWD] = { 24,false };
-	m_Animation[STATEANIM::HOVER_DASH_LEFT] = { 25,false };
-	m_Animation[STATEANIM::HOVER_DASH_RIGHT] = { 26,false };
-
-	m_Animation[STATEANIM::FIREBREATH_A] = { 9,false };
-	m_Animation[STATEANIM::FIREBREATH_COOLDOWN_A] = { 10,false };
-	m_Animation[STATEANIM::FIREBREATH_WINDUP_A] = { 11,false };
-
-	m_Animation[STATEANIM::FIRESWEEP_A] = { 15,false };
-	m_Animation[STATEANIM::FIRESWEEP_COOLDOWN_A] = { 16,false };
-	m_Animation[STATEANIM::FIRESWEEP_WINDUP_A] = { 17,false };
-
-	m_Animation[STATEANIM::FIREBALL1_A] = { 0,false };
-	m_Animation[STATEANIM::FIREBALL2_A] = { 1,false };
-
-	m_Animation[STATEANIM::GROUND_SWIPE_L] = { 3,false };
-	m_Animation[STATEANIM::GROUND_SWIPE_R] = { 4,false };
-
-	m_Animation[STATEANIM::FIREBREATH_G] = { 6,false };
-
-	m_Animation[STATEANIM::FIRESWEEP_G] = { 7,false };
-
-	m_Animation[STATEANIM::FIREBALL1_G] = { 2,false };
-	m_Animation[STATEANIM::FIREBALL2_G] = { 5,false };
-
-	m_Animation[STATEANIM::PULSE] = { 33,false };
-
-	m_Animation[STATEANIM::TUCKED] = { 21,true }; // 21
-	m_Animation[STATEANIM::FLY_TO_HOVER] = { 22,false };
-
-	m_Animation[STATEANIM::LAND] = { 32,false };
-
-	m_Animation[STATEANIM::SKILL] = { 12,false }; // FireBurst 
-
-	m_Animation[STATEANIM::RUSH_LOOP] = { 91,true }; // 앞으로 물면서 돌진
-
-	m_Animation[STATEANIM::FIREBURST_REEL] = { 13,false }; // Air reel
-
-	m_Animation[STATEANIM::HIT_BWD] = { 22,false }; // Air Small
-	m_Animation[STATEANIM::HIT_BWD2] = { 37,false }; // Air Large
-
-	m_Animation[STATEANIM::HIT_BWD3] = { 35,false }; // Ground Large
-	m_Animation[STATEANIM::HIT_BWD4] = { 36,false }; // Ground Small
-
-	m_Animation[STATEANIM::DEAD] = { 34,false };
-
-	m_Animation[STATEANIM::FLY] = { 18,true };
-
-
-
 
 }

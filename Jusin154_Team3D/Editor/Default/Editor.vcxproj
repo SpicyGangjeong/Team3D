@@ -185,6 +185,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Broom_Flag.h" />
     <ClInclude Include="..\public\Broom_Record.h" />
     <ClInclude Include="..\public\Broom_Scoreboard.h" />
+    <ClInclude Include="..\public\Broom_Trophy.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\public\DummyDecal.h" />
     <ClInclude Include="..\public\Dialogue.h" />
@@ -193,6 +194,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
+    <ClInclude Include="..\public\InstancedProp_Light.h" />
     <ClInclude Include="..\public\Interaction_Panel.h" />
     <ClInclude Include="..\public\LightSpawner.h" />
     <ClInclude Include="..\public\MapElement_Chest.h" />
@@ -209,6 +211,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Quest_Panel.h" />
     <ClInclude Include="..\public\Quest_Slot.h" />
     <ClInclude Include="..\public\Quest_Status.h" />
+    <ClInclude Include="..\public\RaceRing.h" />
     <ClInclude Include="..\Public\Ranrok.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
@@ -443,6 +446,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Broom_Flag.cpp" />
     <ClCompile Include="..\private\Broom_Record.cpp" />
     <ClCompile Include="..\private\Broom_Scoreboard.cpp" />
+    <ClCompile Include="..\private\Broom_Trophy.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\private\DummyDecal.cpp" />
@@ -451,6 +455,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
+    <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\private\Interaction_Panel.cpp" />
     <ClCompile Include="..\private\LightSpawner.cpp" />
     <ClCompile Include="..\Private\Loader_ObjectViewer.cpp" />
@@ -468,6 +473,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Quest_Panel.cpp" />
     <ClCompile Include="..\private\Quest_Slot.cpp" />
     <ClCompile Include="..\private\Quest_Status.cpp" />
+    <ClCompile Include="..\private\RaceRing.cpp" />
     <ClCompile Include="..\Private\Ranrok.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />

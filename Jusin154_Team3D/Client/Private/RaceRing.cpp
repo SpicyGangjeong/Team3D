@@ -30,14 +30,19 @@ HRESULT CRaceRing::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_pBroomRaceManager = static_cast<RACERING_DESC*>(pArg)->pBroomRaceManager;
-	m_iIndex = static_cast<RACERING_DESC*>(pArg)->iIndex;
-	_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Y = m_pGameInstance->Real_Random_Float(15.f, 60.f);
-	_float Z = m_pGameInstance->Real_Random_Float(-50.f, 50.f);
+	
+	//m_iIndex = static_cast<RACERING_DESC*>(pArg)->iIndex;
+	//_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
+	//_float Y = m_pGameInstance->Real_Random_Float(15.f, 60.f);
+	//_float Z = m_pGameInstance->Real_Random_Float(-50.f, 50.f);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet((_float)m_iIndex *100.f, Y, Z, 1.f));
+	RACERING_DESC* pDesc = static_cast<RACERING_DESC*>(pArg);
 
+	m_pBroomRaceManager = pDesc->pBroomRaceManager;
+	_float3 vRotation = pDesc->vRotation;
+	m_pTransformCom->Rotation(XMConvertToRadians(vRotation.x), XMConvertToRadians(vRotation.y), XMConvertToRadians(vRotation.z));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(pDesc->vPosition.x, pDesc->vPosition.y, pDesc->vPosition.z, 1.f));
+	m_pTransformCom->Set_Scale(pDesc->vScale);
 	m_pBroomRaceManager->Push_RaceRing(this);
 
 	return S_OK;
@@ -54,7 +59,6 @@ void CRaceRing::Priority_Update(_float fTimeDelta)
 void CRaceRing::Update(_float fTimeDelta)
 {
 	m_pModelCom->Combined_BoneMatrix();
-
 }
 
 void CRaceRing::Late_Update(_float fTimeDelta)

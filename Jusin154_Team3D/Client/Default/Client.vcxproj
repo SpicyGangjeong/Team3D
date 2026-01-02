@@ -171,12 +171,14 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Broom_Record.h" />
     <ClInclude Include="..\Public\Broom_Scoreboard.h" />
     <ClInclude Include="..\public\Broom_TargetGate.h" />
+    <ClInclude Include="..\Public\Broom_Trophy.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\Public\Goblin_Assassin.h" />
     <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
     <ClInclude Include="..\Public\Goblin_Sword.h" />
+    <ClInclude Include="..\public\InstancedProp_Light.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\CamPosition_AI.h" />
@@ -188,6 +190,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
+    <ClInclude Include="..\Public\ReparoObject.h" />
     <ClInclude Include="..\Public\State_Dash.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
@@ -428,6 +431,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Broom_Record.cpp" />
     <ClCompile Include="..\Private\Broom_Scoreboard.cpp" />
     <ClCompile Include="..\private\Broom_TargetGate.cpp" />
+    <ClCompile Include="..\Private\Broom_Trophy.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
@@ -435,6 +439,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />
     <ClCompile Include="..\Private\Goblin_Sword.cpp" />
+    <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\CamPosition_AI.cpp" />
@@ -445,6 +450,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\PointLight.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
+    <ClCompile Include="..\Private\ReparoObject.cpp" />
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\State_Slash.cpp" />

@@ -33,36 +33,39 @@ float g_fDisolveAmount;
 float g_fDisolveRatio;
 
 
+float g_TempWeight;
 
-Texture2D g_DiffuseTexture                   : register(t00);
-Texture2D g_SpecularTexture                  : register(t01);
-Texture2D g_AmbientTexture                   : register(t02);
-Texture2D g_EmissiveTexture                  : register(t03);
-Texture2D g_HeightTexture                    : register(t04);
-Texture2D g_NormalTexture                    : register(t05);
-Texture2D g_ShininessTexture                 : register(t06);
-Texture2D g_NormalBlendTexture               : register(t07); // OPACITY
-Texture2D g_SROBlendTexture                  : register(t08);
-Texture2D g_LightMapTexture                  : register(t09);
-Texture2D g_ReflectionTexture                : register(t10);
-Texture2D g_DiffuseBlend                     : register(t11); // BASE_COLOR
-Texture2D g_NormalCameraTexture              : register(t12);
-Texture2D g_EmissionColorTexture             : register(t13);
-Texture2D g_MetalnessTexture                 : register(t14);
-Texture2D g_Diffuse_RoughnessTexture         : register(t15);
-Texture2D g_AmbientOcclusionTexture          : register(t16);
-Texture2D g_UnknownTexture                   : register(t17);
-Texture2D g_SheenTexture                     : register(t18);
-Texture2D g_ClearcoatTexture                 : register(t19);
-Texture2D g_TransmissionTexture              : register(t20);
-Texture2D g_Maya_BaseTexture                 : register(t21);
-Texture2D g_Maya_SpecularTexture             : register(t22);
-Texture2D g_Maya_Specular_ColorTexture       : register(t23);
-Texture2D g_Maya_Specular_RoughnessTexture   : register(t24);
-Texture2D g_AnisotropyTexture                : register(t25);
 
-StructuredBuffer<BoneOut> g_BoneBuffer       : register(t26);
-StructuredBuffer<BoneOut> g_PrevBoneBuffer   : register(t27);
+
+Texture2D g_DiffuseTexture : register(t00);
+Texture2D g_SpecularTexture : register(t01);
+Texture2D g_AmbientTexture : register(t02);
+Texture2D g_EmissiveTexture : register(t03);
+Texture2D g_HeightTexture : register(t04);
+Texture2D g_NormalTexture : register(t05);
+Texture2D g_ShininessTexture : register(t06);
+Texture2D g_NormalBlendTexture : register(t07); // OPACITY
+Texture2D g_SROBlendTexture : register(t08);
+Texture2D g_LightMapTexture : register(t09);
+Texture2D g_ReflectionTexture : register(t10);
+Texture2D g_DiffuseBlend : register(t11); // BASE_COLOR
+Texture2D g_NormalCameraTexture : register(t12);
+Texture2D g_EmissionColorTexture : register(t13);
+Texture2D g_MetalnessTexture : register(t14);
+Texture2D g_Diffuse_RoughnessTexture : register(t15);
+Texture2D g_AmbientOcclusionTexture : register(t16);
+Texture2D g_UnknownTexture : register(t17);
+Texture2D g_SheenTexture : register(t18);
+Texture2D g_ClearcoatTexture : register(t19);
+Texture2D g_TransmissionTexture : register(t20);
+Texture2D g_Maya_BaseTexture : register(t21);
+Texture2D g_Maya_SpecularTexture : register(t22);
+Texture2D g_Maya_Specular_ColorTexture : register(t23);
+Texture2D g_Maya_Specular_RoughnessTexture : register(t24);
+Texture2D g_AnisotropyTexture : register(t25);
+
+StructuredBuffer<BoneOut> g_BoneBuffer : register(t26);
+StructuredBuffer<BoneOut> g_PrevBoneBuffer : register(t27);
 
 
 
@@ -74,6 +77,7 @@ Texture2D g_DeadDisolveBurnTexture;
 int g_iBinded_Texture[27];
 matrix g_BoneMatrices[256];
 matrix g_PrevBoneMatrices[256];
+int g_RobeBoneMask[256];
 
 struct VS_IN_MESH
 {
@@ -108,7 +112,7 @@ struct VS_OUT
 };
 VS_OUT VS_MAIN_MESH(VS_IN_MESH In)
 {
-    VS_OUT Out = (VS_OUT)0;
+    VS_OUT Out = (VS_OUT) 0;
     
     matrix matWV, matWVP;
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
@@ -131,7 +135,7 @@ VS_OUT VS_MAIN_MESH(VS_IN_MESH In)
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out = (VS_OUT)0;
+    VS_OUT Out = (VS_OUT) 0;
     
     float4 w = In.vBlendWeight;
     float sumW = max(dot(w, 1.0f), 1e-6f);
@@ -185,21 +189,174 @@ VS_OUT VS_MAIN(VS_IN In)
 
 VS_OUT VS_MAIN_LEGACY(VS_IN In)
 {
-    VS_OUT Out = (VS_OUT)0;
-    
+    VS_OUT Out = (VS_OUT) 0;
+
     float4 w = In.vBlendWeight;
     float sumW = max(dot(w, 1.0f), 1e-6f);
     w /= sumW;
 
-    matrix BoneMatrix =
-        mul(g_OffsetMatrix[In.vBlendIndex.x],
-            mul(g_BoneMatrices[In.vBlendIndex.x], w.x))
-      + mul(g_OffsetMatrix[In.vBlendIndex.y],
-            mul(g_BoneMatrices[In.vBlendIndex.y], w.y))
-      + mul(g_OffsetMatrix[In.vBlendIndex.z],
-            mul(g_BoneMatrices[In.vBlendIndex.z], w.z))
-      + mul(g_OffsetMatrix[In.vBlendIndex.w],
+    uint4 idx = In.vBlendIndex;
+    
+    matrix BoneMatrix = (matrix) 0;
+    matrix TempBoneMatrix = (matrix) 0;
+    
+    int MinIdx = 30;
+    int MaxIdx = 41;
+    
+    if (idx.x >= MinIdx && idx.x <= MaxIdx)
+        //g_RobeBoneMask[idx.x] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.x],
+            mul(g_BoneMatrices[In.vBlendIndex.x], w.x));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.x],
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x));
+    }
+    if (idx.y >= MinIdx && idx.y <= MaxIdx)
+    //if (g_RobeBoneMask[idx.y]  == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.y],
+            mul(g_BoneMatrices[In.vBlendIndex.y], w.y));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.y],
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y));
+    }
+    if (idx.z >= MinIdx && idx.z <= MaxIdx)
+    //if (g_RobeBoneMask[idx.z] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.z],
+            mul(g_BoneMatrices[In.vBlendIndex.z], w.z));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.z],
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z));
+    }
+    if (idx.w >= MinIdx && idx.w <= MaxIdx)
+    //if (g_RobeBoneMask[idx.w] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.w],
             mul(g_BoneMatrices[In.vBlendIndex.w], w.w));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.w],
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
+    }
+    
+    BoneMatrix = TempBoneMatrix;
+    
+    //matrix BoneMatrix = (matrix) 0;
+    //{
+    //    uint iIndex = idx.x;
+    //    float fWeight = w.x;
+    //    if (isRobe)
+    //    {
+    //        if (29 == iIndex)
+    //        {
+    //            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+
+    //        }
+    //        else
+    //        {
+    //            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneMatrices[iIndex]));
+    //        }
+    //    }
+    //    else
+    //    {
+    //        BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+    //    }
+    //}
+    //{
+    //    uint iIndex = idx.y;
+    //    float fWeight = w.y;
+    //    if (isRobe)
+    //    {
+    //        if (29 == iIndex)
+    //        {
+    //            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+
+    //        }
+    //        else
+    //        {
+    //            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneMatrices[iIndex]));
+    //        }
+    //    }
+    //    else
+    //    {
+    //        BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+    //    }
+    //}
+    //{
+    //    uint iIndex = idx.z;
+    //    float fWeight = w.z;
+    //    if (isRobe)
+    //    {
+    //        if (29 == iIndex)
+    //        {
+    //            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+
+    //        }
+    //        else
+    //        {
+    //            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneMatrices[iIndex]));
+    //        }
+    //    }
+    //    else
+    //    {
+    //        BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+    //    }
+    //}
+    //{
+    //    uint iIndex = idx.w;
+    //    float fWeight = w.w;
+    //    if (isRobe)
+    //    {
+    //        if (29 == iIndex)
+    //        {
+    //            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+
+    //        }
+    //        else
+    //        {
+    //            BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneMatrices[iIndex]));
+    //        }
+    //    }
+    //    else
+    //    {
+    //        BoneMatrix += mul(fWeight, mul(g_OffsetMatrix[iIndex], g_BoneBuffer[iIndex].LocalCombined));
+    //    }
+    //}
+
+    //float robeWeight =
+    //      g_RobeBoneMask[idx.x] * w.x
+    //    + g_RobeBoneMask[idx.y] * w.y
+    //    + g_RobeBoneMask[idx.z] * w.z
+    //    + g_RobeBoneMask[idx.w] * w.w;
+
+    //bool isRobe = robeWeight > g_TempWeight;
+
+    //matrix BoneMatrix = (matrix) 0;
+
+    //if (isRobe)
+    //{
+    //    BoneMatrix += w.x * mul(g_OffsetMatrix[idx.x], g_BoneMatrices[idx.x]);
+    //    BoneMatrix += w.y * mul(g_OffsetMatrix[idx.y], g_BoneMatrices[idx.y]);
+    //    BoneMatrix += w.z * mul(g_OffsetMatrix[idx.z], g_BoneMatrices[idx.z]);
+    //    BoneMatrix += w.w * mul(g_OffsetMatrix[idx.w], g_BoneMatrices[idx.w]);
+    //}
+    //else
+    //{
+    //    BoneMatrix += w.x * mul(g_OffsetMatrix[idx.x], g_BoneBuffer[idx.x].LocalCombined);
+    //    BoneMatrix += w.y * mul(g_OffsetMatrix[idx.y], g_BoneBuffer[idx.y].LocalCombined);
+    //    BoneMatrix += w.z * mul(g_OffsetMatrix[idx.z], g_BoneBuffer[idx.z].LocalCombined);
+    //    BoneMatrix += w.w * mul(g_OffsetMatrix[idx.w], g_BoneBuffer[idx.w].LocalCombined);
+    //}
+
 
     matrix PrevBoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
@@ -239,7 +396,7 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
 
 VS_OUT VS_MAIN_OUTLINE_READ(VS_IN In)
 {
-    VS_OUT Out = (VS_OUT)0;
+    VS_OUT Out = (VS_OUT) 0;
     
     float4 w = In.vBlendWeight;
     float sumW = max(dot(w, 1.0f), 1e-6f);
@@ -399,7 +556,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_READ(PS_IN In)
 
 PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -442,7 +599,7 @@ PS_OUT PS_EYELASH_DAOTHV_ToSRO(PS_IN In)
 
 PS_OUT PS_TEETH_SRXO_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -475,7 +632,7 @@ PS_OUT PS_TEETH_SRXO_ToSRO(PS_IN In)
 
 PS_OUT PS_EYE_DN_SRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -505,7 +662,7 @@ PS_OUT PS_EYE_DN_SRO(PS_IN In)
 
 PS_OUT PS_EYE_OCC(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     discard;
     return Out;
 }
@@ -513,7 +670,7 @@ PS_OUT PS_EYE_OCC(PS_IN In)
 PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
 {
 
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -557,7 +714,7 @@ PS_OUT PS_FACIAL_HAIR_DAOTHV_ToSRO(PS_IN In)
 PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
 {
 
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDAO_Mask = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -600,7 +757,7 @@ PS_OUT PS_HEAD_HAIR_DAOTHV_ToSRO(PS_IN In)
 
 PS_OUT PS_HEADwtHAND_DSRXON_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -632,7 +789,7 @@ PS_OUT PS_HEADwtHAND_DSRXON_ToSRO(PS_IN In)
 
 PS_OUT PS_LOWER_DSRON_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -664,7 +821,7 @@ PS_OUT PS_LOWER_DSRON_ToSRO(PS_IN In)
 
 PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -696,7 +853,7 @@ PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
 
 PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -728,7 +885,7 @@ PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
 
 PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -762,7 +919,7 @@ PS_OUT PS_EmissiveMetalness_DENMRO_ToMRO(PS_IN In)
 
 PS_OUT PS_DNMRO_ToMRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -796,7 +953,7 @@ PS_OUT PS_DNMRO_ToMRO(PS_IN In)
 
 PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -830,7 +987,7 @@ PS_OUT PS_MI_ClothSim_DSEN_ToSRO(PS_IN In)
 
 PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -869,7 +1026,7 @@ PS_OUT PS_MI_DANSROMRO_ToSRO(PS_IN In)
 
 PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (true == g_bDisolve)
@@ -909,7 +1066,7 @@ PS_OUT PS_Troll_Club_DAENMROSRXO_ToMROX(PS_IN In)
 }
 PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     float2 uv = In.vTexcoord;
     float2 center = float2(0.5f, 0.5f);
     float2 p = uv - center;
@@ -954,7 +1111,7 @@ PS_OUT PS_Player_EyeLash_DAOTHV_ToSRO(PS_IN In)
 }
 PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -984,7 +1141,7 @@ PS_OUT PS_Player_Eye_ToMRO(PS_IN In)
 }
 PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -1016,7 +1173,7 @@ PS_OUT PS_Player_Robe_ToMRO(PS_IN In)
 }
 PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     float2 uv = In.vTexcoord;
     float4 vDiffuseColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -1046,7 +1203,7 @@ PS_OUT PS_Player_Suit_DSRON_ToSRO(PS_IN In)
 }
 PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     float2 uv = In.vTexcoord;
     float4 vDAOColor = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -1056,17 +1213,17 @@ PS_OUT PS_Player_HairDAOTHV_ToSRO(PS_IN In)
     }
     float3 vHairBaseColor = g_NormalBlendTexture.Sample(DefaultSampler, uv).rrr;
     float4 vNormalColor = g_NormalTexture.Sample(DefaultSampler, uv);
-    float4 vTHVColor    = g_DiffuseBlend.Sample(DefaultSampler, uv);
+    float4 vTHVColor = g_DiffuseBlend.Sample(DefaultSampler, uv);
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    float AlphaMask     = vDAOColor.g;
-    float AoMask_Dao    = vDAOColor.b;
-    float RootTip       = vTHVColor.r;
-    float SpecMask      = vTHVColor.g;
-    float AoMask_Thv    = vTHVColor.b; // Volume
+    float AlphaMask = vDAOColor.g;
+    float AoMask_Dao = vDAOColor.b;
+    float RootTip = vTHVColor.r;
+    float SpecMask = vTHVColor.g;
+    float AoMask_Thv = vTHVColor.b; // Volume
     
     float3 vColorHair = clamp(ColorMixer(vHairBaseColor, UnpackRGB8(g_iPackedBlendColor), g_fMixerFactor, g_iColorMixerMethod), 0.f, 1.f);
     float3 vColorRoot = vColorHair * 0.6f;
@@ -1122,19 +1279,20 @@ PS_OUT_BLEND PS_Dragon_EtherealWings(PS_IN In)
 {
     PS_OUT_BLEND Out;
     float2 uv = In.vTexcoord;
-    float2 uvDiffuse = uv; uvDiffuse.y -= g_fEtherealRatio;
+    float2 uvDiffuse = uv;
+    uvDiffuse.y -= g_fEtherealRatio;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uvDiffuse);
     float4 vEmissive = g_EmissiveTexture.Sample(DefaultSampler, uv);
     vDiffuse += vEmissive;
     float fOppacity = g_NormalBlendTexture.Sample(DefaultSampler, uvDiffuse).a;
-    vDiffuse.a =  (1- fOppacity);
+    vDiffuse.a = (1 - fOppacity);
     Out.vAlbedo = vDiffuse;
     return Out;
 }
 
 PS_OUT PS_Dragon_Body(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -1170,7 +1328,7 @@ PS_OUT PS_Dragon_Body(PS_IN In)
 
 PS_OUT PS_Dragon_Wings(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
     float2 uv = In.vTexcoord;
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, uv);
     if (true == g_bDisolve)
@@ -1478,7 +1636,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN_LEGACY();
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Player_Suit_DSRON_ToSRO();
     }

@@ -41,6 +41,7 @@ HRESULT CBroom_Flag::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 10.f;
 	m_fStart = 500.f;
+	m_fSortZ = 0.03f;
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("BroomEnd"), [this](void* p) {this->Set_Hover(*reinterpret_cast<_bool*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("BroomStart"), [this](void* p) {this->Set_Start(); });
 	return S_OK;
@@ -105,6 +106,13 @@ void CBroom_Flag::Update(_float fTimeDelta)
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
+	m_fFinish = true;
+
+	if (m_fFinish == true)
+	{
+		MoveY(200.f);
+		SizeUpdate(600.f, 300.f);
+	}
 
 	__super::Update(fTimeDelta);
 }

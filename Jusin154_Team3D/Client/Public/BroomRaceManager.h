@@ -41,6 +41,8 @@ public:
 	void Push_BroomRacer(RacerInfo Info);
 	void Push_RaceRing(class CRaceRing* Ring);
 	_int Get_RaceState() const { return m_eRaceState; }
+
+	HRESULT Load_RaceRing();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
@@ -65,6 +67,7 @@ private:
 	void			Update_Countdown(_float fTimeDelta);
 	void			StartRaceMove();
 	void			Check_RingPassed();
+	void			Finish();
 
 public:
 	static CBroomRaceManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -72,7 +75,6 @@ public:
 	virtual void Free() override;
 #ifdef _DEBUG
 	virtual void Describe_Entity() override;
-
 #endif 
 
 };
