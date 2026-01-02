@@ -43,7 +43,9 @@ void CPlayerRobe::Late_Update(_float fTimeDelta)
 HRESULT CPlayerRobe::Render()
 {
 #ifdef _DEBUG
-	Render_BonePhysX();
+#ifdef 기무리
+	//Render_BonePhysX();
+#endif // 기무리
 #endif // _DEBUG
 	return S_OK;
 }

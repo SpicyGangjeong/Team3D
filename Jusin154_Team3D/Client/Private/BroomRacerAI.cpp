@@ -59,7 +59,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Load_AnimXML("../Bin/Resources/Data/AnimList/RacerAI.xml");
+	Load_AnimXML("../Bin/Resources/Data/AnimList/BroomRacerAI.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -748,12 +748,12 @@ void CBroomRacerAI::Set_Input(_float fTimeDelta)
 	InputDesc.Y = 0.f;
 	InputDesc.Z = 0.f;
 
-	/*if (m_bMove)
-	{*/
+	if (m_pBroom->Get_Move())
+	{
 		InputDesc.Z = 1.f;
 		InputDesc.X = targetX*m_TurnGain;
 		InputDesc.Y = targetY*m_HeightGain;
-	//}
+	}
 
 	InputDesc.bHoverToggle = (m_pBroomRaceManager->Get_RaceState() != ENUM_CLASS(CBroomRaceManager::RACE_STATE::RACING));
 

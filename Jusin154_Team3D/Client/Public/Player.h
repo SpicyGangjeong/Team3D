@@ -34,6 +34,10 @@ public:
 	_int Get_UIState() { return m_eUIState; }
 	void	Set_RaceRing(class CRaceRing* pRaceRing);
 	class CBroom* Get_Broom() { return m_pBroom; }
+	void Set_RaceInfo();
+#ifdef _DEBUG
+	void Render_CameraCoordinateSystem();
+#endif // _DEBUG
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
 	void UpdateGrapInteractive(_float fTimeDelta);
@@ -61,6 +65,8 @@ private:
 	_float m_fOriginGravityAmount = {};
 	_float m_fGravityAmount = {};
 
+	_float m_fTempWeight = {};
+
 	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
 	class CCamPosition_Head* m_pCamPosition_HeadPart = { nullptr };
 	_float	m_fRayDistance = { 10.f };
@@ -83,13 +89,6 @@ private:
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };
 
-
-
-
-
-
-
-	_float m_fTempWeight = {};
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

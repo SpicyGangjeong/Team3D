@@ -38,6 +38,7 @@ public:
 	void Set_Input(BroomInput broomInput) { m_Input = broomInput; }
 	void Set_AISpeed(_float speedMul, _float accelMul);
 	void Set_Move(_bool bMove) { m_bMove = bMove; }	
+	_bool Get_Move() { return m_bMove; }
 	HRESULT         Ready_Child();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };

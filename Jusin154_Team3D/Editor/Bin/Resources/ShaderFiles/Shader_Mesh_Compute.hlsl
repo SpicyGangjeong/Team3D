@@ -54,7 +54,7 @@ void CS_MAIN(uint3 DTid : SV_DispatchThreadID)
     int p = g_ParentBuffer[global];
     while (p != -1)
     {
-        combined = mul(combined,g_LocalMatIn[p]);
+        combined = mul(combined, g_LocalMatIn[p]);
         p = g_ParentBuffer[p];
     }
 
