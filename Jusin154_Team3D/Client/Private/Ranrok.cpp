@@ -67,8 +67,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 	if (NEXT_LEVEL == ENUM_CLASS(LEVEL::FIELD))
 	{
-		m_pCharacter_Controller->Set_Position(XMVectorSet(58.990f, 71.321f, 241.628f, 1.f));
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(58.990f, 71.321f, 241.628f, 1.f));
+		m_pCharacter_Controller->Set_Position(XMVectorSet(75.550f, 33.734f, 164.013f, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(75.550f, 33.734f, 164.013f, 1.f));
 	}
 	else {
 
@@ -250,7 +250,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
-	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+	//m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
 
 	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
@@ -302,17 +302,32 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 
-	m_DamageInfo.fDamage = damagePair.first;
-	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	/*m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);*/
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
 		return;
 	}
-	if (damagePair.second <= Get_Hp().y / 2.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
+
+
+	if (Get_HpRatio() == 0.85f)
 	{
-		m_pFSM->Change_State(FSMSTATE::LAND);
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
 		return;
 	}
+	else if (Get_HpRatio() == 0.7f) {
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		return;
+	}
+	else  if (Get_HpRatio() == 0.5f)
+	{
+		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		return;
+	}
+
+	
+
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
@@ -627,8 +642,9 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
+	GUI::Text("Dist %.2f", fDist);
 
-	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 30.f)
+	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 15.f)
 	{
 		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
 	}
@@ -638,7 +654,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 	{
-		if (fDist < 10.f)
+		if (fDist < 5.f)
 		{
 			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 			{
@@ -650,7 +666,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 			return;
 		}
 	}
-	else if (fDist < 20.f)
+	else if (fDist < 10.f)
 	{
 		if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 		{
@@ -664,7 +680,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector LerpTarget = XMVectorLerp(Target, NextTarget, 0.5f);
 
-	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,2.5f);
+	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,5.f);
 
 	m_pCharacter_Controller->Set_Position(CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
 }
@@ -778,55 +794,65 @@ void CRanrok::Describe_Entity()
 			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&Pos), 1.f));
 		}
 
-		GUI::SameLine();
-
-		if (GUI::SmallButton("Copy"))
-		{	
-			char buf[128];
-			sprintf_s(buf, "<Pos x=\"%.3f\" y=\"%.3f\" z=\"%.3f\"/>", Pos.x, Pos.y, Pos.z);
-
-			GUI::SetClipboardText(buf);
-
-			m_Points[0].push_back(XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
-		}
-
-		GUI::SameLine();
-
-		if (GUI::SmallButton("Clear"))
-		{
-			m_Points[0].clear();
-		}
-
-		GUI::Separator();
-		GUI::Text("Points[0] Count : %d", (_int)m_Points[0].size());
-
-		for (_uint i = 0; i < m_Points[0].size();)
-		{
-			_vector v = m_Points[0][i];
-			XMFLOAT3 p;
-			XMStoreFloat3(&p, v);
-
-			GUI::PushID(i);
-
-			GUI::Text("[%d] (%.2f, %.2f, %.2f)", i, p.x, p.y, p.z);
-
-			GUI::SameLine();
-
-			if (GUI::SmallButton("X"))
-			{
-				m_Points[0].erase(m_Points[0].begin() + i);
-				GUI::PopID();
-				continue; 
-			}
-
-			GUI::PopID();
-			i++;
-		}
-
-
 		if (GUI::Button("MovePos"))
 		{
-			m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z,1.f));
+			m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
+		}
+
+		for (_uint i = 0; i < m_Points.size(); ++i)
+		{
+			GUI::Separator();
+
+			if (GUI::TreeNode(("Points " + to_string(i)).c_str()))
+			{
+				if (GUI::SmallButton("Copy"))
+				{
+					char buf[128];
+					sprintf_s(buf, "<Pos x=\"%.3f\" y=\"%.3f\" z=\"%.3f\"/>", Pos.x, Pos.y, Pos.z);
+
+					GUI::SetClipboardText(buf);
+
+					m_Points[i].push_back(XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
+				}
+
+				GUI::Text("Points[%d] Count : %d", i, (_int)m_Points[i].size());
+
+				for (_uint j = 0; j < m_Points[i].size(); )
+				{
+					_float3 p;
+					XMStoreFloat3(&p, m_Points[i][j]);
+
+					GUI::PushID((int)(i * 10000 + j));
+
+					GUI::Text("[%d] (%.2f, %.2f, %.2f)", j, p.x, p.y, p.z);
+					GUI::SameLine();
+
+					if (GUI::SmallButton("Move"))
+					{
+						m_pCharacter_Controller->Set_Position(
+							XMVectorSet(p.x, p.y, p.z, 1.f));
+					}
+
+					GUI::SameLine();
+
+					if (GUI::SmallButton("X"))
+					{
+						m_Points[i].erase(m_Points[i].begin() + j);
+						GUI::PopID();
+						continue;
+					}
+
+					GUI::PopID();
+					++j;
+				}
+
+				if (GUI::SmallButton(("Clear##" + to_string(i)).c_str()))
+				{
+					m_Points[i].clear();
+				}
+				GUI::TreePop();
+			}
+
 		}
 		
 		m_pTransformCom->Describe_Entity();

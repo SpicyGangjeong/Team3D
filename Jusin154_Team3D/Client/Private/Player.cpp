@@ -93,17 +93,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pTransformCom->Rotation(vRotQ);
 
 		m_pBroomRaceManager = pDesc->pBroomRaceManager;
-
-		/*if (m_pBroomRaceManager)
-		{
-			CBroomRaceManager::RacerInfo Info;
-
-			Info.pRacer = this;
-			Info.curRing = 0;
-			Info.prevPos = Get_WorldPostion();
-
-			m_pBroomRaceManager->Push_BroomRacer(Info);
-		}*/
 	}
 
 #ifdef _DEBUG
@@ -121,7 +110,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_bAI = false;
 
-	//XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
+	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 
 	m_pModelCom->Set_Temp(true);
 
@@ -219,20 +208,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::UP, up);
 	m_pTransformCom->Set_State(STATE::LOOK, look);
 	////////////////////////////////////////////////////////////////////////////
-	
-
-	if (nullptr == m_pRobePart) {
-		{
-			CPlayerRobe::PlayerRobe_DESC Desc{};
-			Desc.pModel = m_pModelCom;
-			Desc.pParentTransform = m_pTransformCom;
-			Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
-			if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
-				assert(false);
-			}
-		}
-	}
-
 }
 
 
@@ -419,6 +394,20 @@ void CPlayer::Set_RaceRing(CRaceRing* pRaceRing)
 	SAFE_ADDREF(m_pRaceRing);
 }
 
+void CPlayer::Set_RaceInfo()
+{
+	if (m_pBroomRaceManager)
+	{
+		CBroomRaceManager::RacerInfo Info;
+
+		Info.pRacer = this;
+		Info.curRing = 0;
+		Info.prevPos = Get_WorldPostion();
+
+		m_pBroomRaceManager->Push_BroomRacer(Info);
+	}
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -529,6 +518,19 @@ HRESULT CPlayer::Ready_Parts()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this, &m_pBroom))) {
 		return E_FAIL;
 	}
+
+	//m_pModelCom->Play_Animation()
+	//XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("broomSocket"));
+	{
+		CPlayerRobe::PlayerRobe_DESC Desc{};
+		Desc.pModel = m_pModelCom;
+		Desc.pParentTransform = m_pTransformCom;
+		Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
+		if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
+			assert(false);
+		}
+	}
+
 
 	return S_OK;
 }

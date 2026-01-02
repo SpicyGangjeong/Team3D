@@ -314,6 +314,11 @@ void CRanrok::Behavior_FireBreathEnter()
 	{
 		pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_G];
 		m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBREATH)];
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {
+				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this);
+			}, 0.1f);
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -521,7 +526,7 @@ HRESULT CRanrok::Behavior_FireBallExitCheck(_float fTimeDelta)
 			return E_FAIL;
 		}
 		else if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND)) {
-			m_pFSM->Change_State(FSMSTATE::GROUND);
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
 			return E_FAIL;
 		}
 	}
@@ -711,8 +716,15 @@ HRESULT CRanrok::Behavior_TuckedExitCheck(_float fTimeDelta)
 	if (m_bTucked && iCurrAnimIndex != m_Animation[STATEANIM::FLY_TO_HOVER].first)
 	{
 		m_iCurrentFlow++;
-		pairAnimInfo = m_Animation[STATEANIM::FLY_TO_HOVER];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND)) {
+			pairAnimInfo = m_Animation[STATEANIM::LAND];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.5f);
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::FLY_TO_HOVER];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+
 	}
 
 	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::FLY_TO_HOVER].first)
@@ -739,7 +751,6 @@ void CRanrok::Behavior_LandEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::LAND);
 	m_pCharacter_Controller->SetGravity(true);
-	m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
 
 	pairAnimInfo = m_Animation[STATEANIM::LAND];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
