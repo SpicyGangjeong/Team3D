@@ -1817,6 +1817,25 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 	}
 	{
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		Desc.eType = ACTOR::SPHERE;
+		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+		Desc.vMatInfo = { 0.01f, 0.01f, 0.01f };
+		Desc.fContactOffset = { 0.01f };
+		Desc.vhalfGeometryInfo = { 0.120f, 0.460f, 0.010f };
+		Desc.fDensity = 100.f;
+		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+		Desc.eLockFlag = {};
+		Desc.vAutoDamping = { 1.f, 1.f };
+		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_Player_LowerBound"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	}
+	{
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DynamicJoint"), CDynamic_D6Joint::Create(m_pDevice, m_pContext)))) {
 			return E_FAIL;
 		}

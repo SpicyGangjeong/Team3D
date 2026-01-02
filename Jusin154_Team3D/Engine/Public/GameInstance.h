@@ -41,7 +41,7 @@ public:
 	HRESULT	Add_Timer(const _wstring& strTimerTag);
 	void	Compute_TimeDelta(const _wstring& strTimerTag);
 	void	Compute_FrameCount();
-	void	Present_TimeCost() const;
+	void	Present_TimeCost() ;
 #pragma endregion
 
 #pragma region LEVEL_MANAGER
@@ -331,6 +331,8 @@ private:
 	_float							m_fSlowIntense = {};
 #ifdef _DEBUG
 private:
+	_bool							m_bRendererTimerOpen = false;
+
 	_float							m_fTimer_PriorityUpdate = { 0.f };
 	_float							m_fTimer_Update = { 0.f };
 	_float							m_fTimer_LateUpdate = { 0.f };
@@ -361,6 +363,7 @@ private:
 	_float							m_fTimer_Render_Tone_Mapping = { 0.f };
 	_float							m_fTimer_Render_UI = { 0.f };
 	_float							m_fTimer_Render_UI_Overley = { 0.f };
+
 
 	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;

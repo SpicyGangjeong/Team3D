@@ -433,13 +433,13 @@ HRESULT CRanrok::Render_Nonblend()
 			return E_FAIL;
 		}
 
-#ifdef _DEBUG
-#ifdef 기무리
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-			return E_FAIL;
-		}
-#endif // 기무리
-#endif // _DEBUG
+//#ifdef _DEBUG
+//#ifdef 기무리
+//		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+//			return E_FAIL;
+//		}
+//#endif // 기무리
+//#endif // _DEBUG
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}

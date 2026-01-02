@@ -50,10 +50,13 @@ private:
 	_int				m_iBoneNum = -1;
 	CRigidBody_Dynamic* m_pRightLeg = { nullptr };
 	CRigidBody_Dynamic* m_pLeftLeg = { nullptr };
+	CRigidBody_Dynamic* m_pLower0Bound = { nullptr };
+	CRigidBody_Dynamic* m_pLower1Bound = { nullptr };
 	CRigidBody_Dynamic* m_pRobeMainAnchor = { nullptr };
 	CRigidBody_Dynamic* m_pRobeJointRoute[ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END)] = { nullptr };
 	CRigidBody_Dynamic* m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
 	PSX::PxD6Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
+	D6JOINTDESC			m_JointDescriptions[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { };
 	
 	vector<_float4x4>	m_PrevRobeBoneMatrices = { };
 #ifdef _DEBUG
@@ -74,6 +77,7 @@ private:
 #ifdef _DEBUG
 	HRESULT Render_BonePhysX();
 	HRESULT Render_Legs();
+	HRESULT Update_RobeJoints();
 #endif // _DEBUG
 public:
 	static CPlayerRobe* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

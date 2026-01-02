@@ -396,7 +396,7 @@ void CGameInstance::Compute_FrameCount()
 #endif // _DEBUG
 }
 
-void CGameInstance::Present_TimeCost() const
+void CGameInstance::Present_TimeCost() 
 {
 #pragma region TimeCost
 #ifdef _DEBUG
@@ -444,138 +444,148 @@ void CGameInstance::Present_TimeCost() const
 			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 			GUI::Text("Level %d", int(m_fTimer_Level / fTotal * 100.f));
 		}
-		if (GUI::IsPopupOpen("Renderer_Timer"))
+		if (GUI::Button("Renderer_Timer"))
 		{
-			if (GUI::BeginPopup("Renderer_Timer")) {
-				_float fRenderer_Total = m_fTimer_Render_Priority
-					+ m_fTimer_Render_Shadow
-					+ m_fTimer_Render_NonBlend
-					+ m_fTimer_Render_SSAO
-					+ m_fTimer_Render_SSAO_BLUR
-					+ m_fTimer_Render_LightAcc
-					+ m_fTimer_Render_Blur
-					+ m_fTimer_Render_Combined
-					+ m_fTimer_Render_Occlusion
-					+ m_fTimer_Render_EnvironmentPostProcess
-					+ m_fTimer_Render_Fog
-					+ m_fTimer_Render_Effect
-					+ m_fTimer_Render_NonLight
-					+ m_fTimer_Render_Blend
-					+ m_fTimer_Render_WeightBlend
-					+ m_fTimer_Render_PostProcessing
-					+ m_fTimer_Render_LastColor
-					+ m_fTimer_Render_Tone_Mapping
-					+ m_fTimer_Render_UI
-					+ m_fTimer_Render_UI_Overley;
+			m_bRendererTimerOpen = !m_bRendererTimerOpen;
+		}
+		if (m_bRendererTimerOpen)
+			{
+				GUI::SetNextWindowSize(ImVec2(320.f, 0.f), ImGuiCond_FirstUseEver);
+
+				if (GUI::Begin("Renderer_Timer", &m_bRendererTimerOpen, ImGuiWindowFlags_AlwaysAutoResize))
 				{
-					GUI::ProgressBar(m_fTimer_Render_Priority / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Priority %d", int(m_fTimer_Render_Priority / fRenderer_Total * 100.f));
+					_float fRenderer_Total = m_fTimer_Render_Priority
+						+ m_fTimer_Render_Shadow
+						+ m_fTimer_Render_NonBlend
+						+ m_fTimer_Render_SSAO
+						+ m_fTimer_Render_SSAO_BLUR
+						+ m_fTimer_Render_LightAcc
+						+ m_fTimer_Render_Blur
+						+ m_fTimer_Render_Combined
+						+ m_fTimer_Render_Occlusion
+						+ m_fTimer_Render_EnvironmentPostProcess
+						+ m_fTimer_Render_Fog
+						+ m_fTimer_Render_Effect
+						+ m_fTimer_Render_NonLight
+						+ m_fTimer_Render_Blend
+						+ m_fTimer_Render_WeightBlend
+						+ m_fTimer_Render_PostProcessing
+						+ m_fTimer_Render_LastColor
+						+ m_fTimer_Render_Tone_Mapping
+						+ m_fTimer_Render_UI
+						+ m_fTimer_Render_UI_Overley;
+
+					// 0으로 나눔 방지
+					if (fRenderer_Total <= FLT_EPSILON)
+						fRenderer_Total = 1.f;
+
+					{
+						GUI::ProgressBar(m_fTimer_Render_Priority / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Priority %d", int(m_fTimer_Render_Priority / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Shadow / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Shadow %d", int(m_fTimer_Render_Shadow / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_NonBlend / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_NonBlend %d", int(m_fTimer_Render_NonBlend / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_SSAO / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_SSAO %d", int(m_fTimer_Render_SSAO / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_SSAO_BLUR / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_SSAO_BLUR %d", int(m_fTimer_Render_SSAO_BLUR / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_LightAcc / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_LightAcc %d", int(m_fTimer_Render_LightAcc / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Blur / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Blur %d", int(m_fTimer_Render_Blur / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Combined / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Combined %d", int(m_fTimer_Render_Combined / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Occlusion / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Occlusion %d", int(m_fTimer_Render_Occlusion / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_EnvironmentPostProcess %d", int(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Fog / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Fog %d", int(m_fTimer_Render_Fog / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Effect / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Effect %d", int(m_fTimer_Render_Effect / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_NonLight / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_NonLight %d", int(m_fTimer_Render_NonLight / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Blend / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Blend %d", int(m_fTimer_Render_Blend / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_WeightBlend / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_PostProcessing / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_PostProcessing %d", int(m_fTimer_Render_PostProcessing / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_LastColor %d", int(m_fTimer_Render_LastColor / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Tone_Mapping / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Tone_Mapping %d", int(m_fTimer_Render_Tone_Mapping / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_UI / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_UI %d", int(m_fTimer_Render_UI / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_UI_Overley / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_UI_Overley %d", int(m_fTimer_Render_UI_Overley / fRenderer_Total * 100.f));
+					}
 				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Shadow / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Shadow %d", int(m_fTimer_Render_Shadow / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_NonBlend / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_NonBlend %d", int(m_fTimer_Render_NonBlend / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_SSAO / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_SSAO %d", int(m_fTimer_Render_SSAO / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_SSAO_BLUR / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_SSAO_BLUR %d", int(m_fTimer_Render_SSAO_BLUR / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_LightAcc / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_LightAcc %d", int(m_fTimer_Render_LightAcc / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Blur / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Blur %d", int(m_fTimer_Render_Blur / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Combined / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Combined %d", int(m_fTimer_Render_Combined / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Occlusion / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Occlusion %d", int(m_fTimer_Render_Occlusion / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_EnvironmentPostProcess %d", int(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Fog / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Fog %d", int(m_fTimer_Render_Fog / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Effect / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Effect %d", int(m_fTimer_Render_Effect / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_NonLight / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_NonLight %d", int(m_fTimer_Render_NonLight / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Blend / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Blend %d", int(m_fTimer_Render_Blend / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_WeightBlend / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_PostProcessing / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_PostProcessing %d", int(m_fTimer_Render_PostProcessing / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_LastColor %d", int(m_fTimer_Render_LastColor / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Tone_Mapping / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Tone_Mapping %d", int(m_fTimer_Render_Tone_Mapping / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_UI / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_UI %d", int(m_fTimer_Render_UI / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_UI_Overley / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_UI_Overley %d", int(m_fTimer_Render_UI_Overley / fRenderer_Total * 100.f));
-				}
-				GUI::EndPopup();
-			}
+
+				GUI::End();
+
 		}
 		{
 			GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
-			GUI::SameLine();
-			if (GUI::SmallButton("Renderer_Timer")) {
-				GUI::OpenPopup("Renderer_Timer");
-			}
 			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 			GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
 		}
