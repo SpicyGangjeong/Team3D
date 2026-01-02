@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ring>
+    <Object Type="0">
+        <Position x="-624.6828" y="-5.8805885" z="-346.03726"/>
+        <Scale x="0.99942404" y="1" z="0.99942404"/>
+        <Rotation x="0" y="90" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-538.65613" y="-9.7019424" z="-220.7928"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-337.73676" y="22.321819" z="-370.07764"/>
+        <Scale x="1.000001" y="1" z="1.000001"/>
+        <Rotation x="0" y="99" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-406.02249" y="84.212677" z="-460.5611"/>
+        <Scale x="0.99931335" y="1" z="0.99931335"/>
+        <Rotation x="0" y="105" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-310.34567" y="69.336639" z="-551.00226"/>
+        <Scale x="0.9941389" y="0.99323529" z="0.99999595"/>
+        <Rotation x="0" y="7" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-261.31503" y="41.564301" z="-528.52368"/>
+        <Scale x="0.99999613" y="0.99954367" z="0.9994064"/>
+        <Rotation x="-90" y="-45" z="-8"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-238.78645" y="-10.563053" z="-466.24268"/>
+        <Scale x="0.99976027" y="0.99999475" z="0.99999315"/>
+        <Rotation x="30" y="-63" z="-14"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-96.618591" y="-16.054264" z="-351.12924"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-128.33682" y="38.68256" z="-522.79828"/>
+        <Scale x="0.99999386" y="1" z="0.99999386"/>
+        <Rotation x="0" y="105" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-128.85426" y="20.893711" z="-592.85968"/>
+        <Scale x="0.9999308" y="0.99835175" z="0.99809289"/>
+        <Rotation x="-90" y="-15" z="-20"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-213.46817" y="135.46735" z="-562.4892"/>
+        <Scale x="0.99988467" y="0.99907112" z="0.99889481"/>
+        <Rotation x="-90" y="48" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-276.20966" y="50.973507" z="-426.81964"/>
+        <Scale x="0.99997073" y="1" z="0.99997073"/>
+        <Rotation x="0" y="75" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-263.67758" y="20.335052" z="-315.45111"/>
+        <Scale x="0.99999481" y="1" z="0.99999481"/>
+        <Rotation x="0" y="60" z="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-567.87341" y="6.0618649" z="-402.6113"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+    </Object>
+</Ring>

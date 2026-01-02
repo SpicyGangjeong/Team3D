@@ -712,6 +712,9 @@
     <Filter Include="02.GameObjects\Env\06.InstancedProp\Light">
       <UniqueIdentifier>{1402a2f4-a28b-4f95-b4ec-249a840fa819}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\RaceRing">
+      <UniqueIdentifier>{189b5f72-c985-4bf8-a33e-4257f6d74d25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1442,6 +1445,9 @@
     </ClInclude>
     <ClInclude Include="..\public\InstancedProp_Light.h">
       <Filter>02.GameObjects\Env\06.InstancedProp\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RaceRing.h">
+      <Filter>02.GameObjects\RaceRing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2181,6 +2187,9 @@
     </ClCompile>
     <ClCompile Include="..\private\InstancedProp_Light.cpp">
       <Filter>02.GameObjects\Env\06.InstancedProp\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RaceRing.cpp">
+      <Filter>02.GameObjects\RaceRing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

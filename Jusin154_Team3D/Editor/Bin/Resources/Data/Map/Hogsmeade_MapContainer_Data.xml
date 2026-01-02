@@ -6,7 +6,7 @@
         <Rotation x="-0" y="-60" z="-0"/>
         <MapContainerType type="0"/>
         <BoundingBox_Min x="-7.0020647" y="-0.45976496" z="-1.5148951"/>
-        <BoundingBox_Max x="6.3698497" y="12.858675" z="14.645905"/>
+        <BoundingBox_Max x="20.3698497" y="12.858675" z="30.645905"/>
         <PartObject Lod_Level="1" Key_Index="4">
             <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A_Lod1</PrototypeTag>
