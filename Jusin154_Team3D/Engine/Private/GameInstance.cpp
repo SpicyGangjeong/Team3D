@@ -1073,6 +1073,10 @@ PSX::PxD6Joint* CGameInstance::Create_BasicPxD6Joint(PSX::PxRigidDynamic* pActor
 {
 	return m_pPhysX_Manager->Create_BasicPxD6Joint(pActor0, pActor1, pxJointWorldPos);
 }
+PSX::PxFixedJoint* CGameInstance::Create_BasicPxFixedJoint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	return m_pPhysX_Manager->Create_BasicPxFixedJoint(pActor0, pActor0, pxJointWorldPos);
+}
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);

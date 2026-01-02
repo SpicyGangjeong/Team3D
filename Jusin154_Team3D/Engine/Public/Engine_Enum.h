@@ -122,6 +122,7 @@ enum class PHYSX_JOINT {
 	D6,
 	DISTANCE,
 	REVOLUTE,
+	FIXED,
 	END
 };
 

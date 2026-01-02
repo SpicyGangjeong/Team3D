@@ -23,44 +23,56 @@ enum class PLAYER_MESH_ORDER {
 	END
 };
 
-static const _char* PLAYER_JOINT_BONE_NAMES[12] = {
+static const _char* PLAYER_JOINT_BONE_NAMES[16] = {
 			"RightUpLeg_Cloth"
 		,	"RightLeg_Cloth"
 		,	"RightDownLeg_Cloth"
-		,	"RightDownRightLeg_Cloth"
 
 		,	"LeftUpLeg_Cloth"
 		,	"LeftLeg_Cloth"
 		,	"LeftDownLeg_Cloth"
-		,	"LeftDownLeftLeg_Cloth"
 
 		,	"TailUp_Cloth"
 		,	"Tail_Cloth"
 		,	"TailLeftDown_Cloth"
 		,	"TailRightDown_Cloth"
 
+		,	"RightSideUpLeg_Cloth"
+		,	"RightSideLeg_Cloth"
+		,	"RightDownSideLeg_Cloth"
+
+		,	"LeftSideUpLeg_Cloth"
+		,	"LeftSideLeg_Cloth"
+		,	"LeftDownSideLeg_Cloth"
 };
 
 enum class PLAYER_JOINT_BONE_ORDER {
 		RIGHTUP
 	,	RIGHT
 	,	RIGHTDOWN
-	,	RIGHTDOWNRIGHT
 
 	,	LEFTUP
 	,	LEFT
 	,	LEFTDOWN
-	,	LEFTDOWNLEFT
 
 	,	TAILUP
 	,	TAIL
 	,	TAILLEFTDOWN
 	,	TAILRIGHTDOWN
 
+	,	RIGHTSIDEUP
+	,	RIGHTSIDE
+	,	RIGHTDOWNSIDE
+
+	,	LEFTSIDEUP
+	,	LEFTSIDE
+	,	LEFTDOWNSIDE
+
 	,	END
 };
 
 enum class PLAYER_JOINT_ORDER {
+#pragma region ORIGIN_TO_UP
 	ORIGIN_TO_RUP_START
 	, ORIGIN_TO_RUP_END
 
@@ -70,7 +82,13 @@ enum class PLAYER_JOINT_ORDER {
 	, ORIGIN_TO_LUP_START
 	, ORIGIN_TO_LUP_END
 
-
+	, ORIGIN_TO_RSIDEUP_START
+	, ORIGIN_TO_RSIDEUP_END
+	
+	, ORIGIN_TO_LSIDEUP_START
+	, ORIGIN_TO_LSIDEUP_END
+#pragma endregion
+#pragma region UP_TO_MIDDLE
 	, RUP_TO_RMIDDLE_START
 	, RUP_TO_RMIDDLE_END
 
@@ -80,12 +98,15 @@ enum class PLAYER_JOINT_ORDER {
 	, LUP_TO_LMIDDLE_START
 	, LUP_TO_LMIDDLE_END
 
+	, RSIDEUP_TO_RSIDE_START
+	, RSIDEUP_TO_RSIDE_END
 
+	, LSIDEUP_TO_LSIDE_START
+	, LSIDEUP_TO_LSIDE_END
+#pragma endregion
+#pragma region MIDDLE_TO_BOTTOM
 	, RMIDDLE_TO_RR_START
 	, RMIDDLE_TO_RR_END
-
-	, RMIDDLE_TO_R_START
-	, RMIDDLE_TO_R_END
 
 	, TMIDDLE_TO_TR_START
 	, TMIDDLE_TO_TR_END
@@ -93,13 +114,23 @@ enum class PLAYER_JOINT_ORDER {
 	, TMIDDLE_TO_TL_START
 	, TMIDDLE_TO_TL_END
 
-	, LMIDDLE_TO_L_START
-	, LMIDDLE_TO_L_END
-
 	, LMIDDLE_TO_LL_START
 	, LMIDDLE_TO_LL_END
 
+	, RSIDE_TO_R_START
+	, RSIDE_TO_R_END
 
+	, LSIDE_TO_L_START
+	, LSIDE_TO_L_END
+#pragma endregion
+#pragma region ORIGIN_HORIZONTAL
+#pragma endregion
+#pragma region UP_HORIZONTAL
+#pragma endregion
+#pragma region MIDDLE_HORIZONTAL
+#pragma endregion
+#pragma region DOWN_HORIZONTAL
+#pragma endregion
 	, END
 };
 
@@ -107,17 +138,24 @@ enum class PLAYER_JOINT_ROUTE_ORDER {
 	ORIGIN_TO_RUP
 	, ORIGIN_TO_TUP
 	, ORIGIN_TO_LUP
+	, ORIGIN_TO_RSIDEUP
+	, ORIGIN_TO_LSIDEUP
 
 	, RUP_TO_RMIDDLE
 	, TUP_TO_TMIDDLE
 	, LUP_TO_LMIDDLE
 
+	, RSIDEUP_TO_RSIDE
+	, LSIDEUP_TO_LSIDE
+
 	, RMIDDLE_TO_RR
-	, RMIDDLE_TO_R
 	, TMIDDLE_TO_TR
 	, TMIDDLE_TO_TL
-	, LMIDDLE_TO_L
 	, LMIDDLE_TO_LL
+
+	, RSIDE_TO_R
+	, LSIDE_TO_L
+
 	, END
 };
 

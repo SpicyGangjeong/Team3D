@@ -169,6 +169,12 @@ PSX::PxJoint* CPhysX_Manager::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActo
 		pOut = pJoint;
 	}
 		break;
+	case PHYSX_JOINT::FIXED:
+	{
+		PSX::PxFixedJoint* pJoint = PSX::PxFixedJointCreate(*m_pPhysics, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
+		pOut = pJoint;
+	}
+		break;
 	default:
 		break;
 	}
@@ -198,22 +204,25 @@ PSX::PxD6Joint* CPhysX_Manager::Create_BasicPxD6Joint(PSX::PxRigidDynamic* pActo
 	pActor1->setSolverIterationCounts(4, 1);
 #endif // 기무리
 
-	pJoint->setMotion(PSX::PxD6Axis::eX, PSX::PxD6Motion::eLOCKED);
-	pJoint->setMotion(PSX::PxD6Axis::eY, PSX::PxD6Motion::eLOCKED);
-	pJoint->setMotion(PSX::PxD6Axis::eZ, PSX::PxD6Motion::eLOCKED);
-	pJoint->setMotion(PSX::PxD6Axis::eTWIST, PSX::PxD6Motion::eLIMITED);
-	pJoint->setMotion(PSX::PxD6Axis::eSWING1, PSX::PxD6Motion::eLIMITED);
-	pJoint->setMotion(PSX::PxD6Axis::eSWING2, PSX::PxD6Motion::eLIMITED);
-
-
-	pJoint->setTwistLimit(PSX::PxJointAngularLimitPair(-XMConvertToRadians(1.f), XMConvertToRadians(1.f))); // 20도
-	pJoint->setSwingLimit(PSX::PxJointLimitCone(XMConvertToRadians(1.f), XMConvertToRadians(1.f)));
-
-	pJoint->setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(50.0f, 100.0f, FLT_MAX, true));
-	pJoint->setDrivePosition(PSX::PxTransform(PSX::PxIdentity)); //생성 시 프레임 기준
-
 	pJoint->setConstraintFlag(PSX::PxConstraintFlag::eVISUALIZATION, true);
 	pJoint->setConstraintFlag(PSX::PxConstraintFlag::eIMPROVED_SLERP, true);
+	pJoint->setConstraintFlag(PSX::PxConstraintFlag::eCOLLISION_ENABLED, false);
+
+	pJoint->setBreakForce(1e30f, 1e30f);
+	return pJoint;
+}
+
+PSX::PxFixedJoint* CPhysX_Manager::Create_BasicPxFixedJoint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	const PSX::PxTransform pxWorldParentPos = pActor0->getGlobalPose();
+	const PSX::PxTransform pxWorldChildPos = pActor1->getGlobalPose();
+
+	const PSX::PxTransform pxLocalParentPOs = pxWorldParentPos.transformInv(pxJointWorldPos);
+	const PSX::PxTransform pxLocalChildPos = pxWorldChildPos.transformInv(pxJointWorldPos);
+
+	PSX::PxFixedJoint* pJoint = PSX::PxFixedJointCreate(*m_pPhysics, pActor0, pxLocalParentPOs, pActor1, pxLocalChildPos);
+
+	pJoint->setConstraintFlag(PSX::PxConstraintFlag::eVISUALIZATION, true);
 	pJoint->setConstraintFlag(PSX::PxConstraintFlag::eCOLLISION_ENABLED, false);
 
 	pJoint->setBreakForce(1e30f, 1e30f);

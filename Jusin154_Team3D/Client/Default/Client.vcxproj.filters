@@ -2412,6 +2412,9 @@
     <ClCompile Include="..\private\InstancedProp_Light.cpp">
       <Filter>02.GameObjects\Environment\02.InstancedProp\Light</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp">
+      <Filter>02.GameObjects\Player\Robe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Goblin_States.cpp">

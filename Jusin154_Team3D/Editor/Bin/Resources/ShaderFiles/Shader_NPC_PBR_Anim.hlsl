@@ -201,7 +201,7 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
     matrix TempBoneMatrix = (matrix) 0;
     
     int MinIdx = 30;
-    int MaxIdx = 41;
+    int MaxIdx = 45;
     
     if (idx.x >= MinIdx && idx.x <= MaxIdx)
         //g_RobeBoneMask[idx.x] == 1)
