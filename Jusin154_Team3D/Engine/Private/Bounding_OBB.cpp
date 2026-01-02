@@ -52,6 +52,16 @@ _bool CBounding_OBB::Intersect(COLLIDER eType, CBounding* pTarget)
 
 #ifdef _DEBUG
 
+void CBounding_OBB::Set_Desc(void* pDesc)
+{
+	BOUNDING_OBB_DESC* pBoundingDesc = static_cast<BOUNDING_OBB_DESC*>(pDesc);
+
+	_float4		vQuaternion = {};
+	XMStoreFloat4(&vQuaternion, XMQuaternionRotationRollPitchYaw(pBoundingDesc->vAngles.x, pBoundingDesc->vAngles.y, pBoundingDesc->vAngles.z));
+	Safe_Delete(m_pOriginalDesc);
+	m_pOriginalDesc = new BoundingOrientedBox(pBoundingDesc->vCenter, _float3(pBoundingDesc->vSize.x * 0.5f, pBoundingDesc->vSize.y * 0.5f, pBoundingDesc->vSize.z * 0.5f), vQuaternion);
+}
+
 HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor)
 {
 	pBatch->Begin();

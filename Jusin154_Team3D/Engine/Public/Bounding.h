@@ -23,6 +23,7 @@ public:
 #ifdef _DEBUG
 public:
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor) = 0;
+	virtual void Set_Desc(void* pDesc)PURE;
 #endif
 protected:
 	HRESULT Initialize();

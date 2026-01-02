@@ -12,6 +12,7 @@
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
+#include "InstancedProp_Light.h"
 #include "Land.h"
 #include "Unified.h"
 #include "MapElement_Lake.h"
@@ -93,9 +94,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
+	//	return E_FAIL;
+	//}
 
 	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 		return E_FAIL;
@@ -324,8 +325,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
@@ -590,6 +591,28 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 
 
+	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
+
+	/* LightPost */
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 0;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &LightDesc)))
+		return E_FAIL;
+
+	/* LightPost_Floating */
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 1;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &LightDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -721,7 +744,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 
 		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
-		RaceRingDesc.iIndex = i;
+	
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
 			return E_FAIL;
 		}

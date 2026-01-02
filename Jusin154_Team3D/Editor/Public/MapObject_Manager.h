@@ -84,6 +84,10 @@ private:
 
 	HRESULT		Save_PointLightObject(const _char* pFileName);
 	HRESULT		Save_Decal(const _char* pFileName);
+
+	HRESULT		Save_RaceRing(const _char* pFileName);
+
+
 #pragma endregion
 
 	void		Update_PrototypeList();
@@ -93,6 +97,7 @@ private:
 	void		Update_Unified();
 	void 		Update_LightSpawer();
 	void 		Update_Decal();
+	void 		Update_RaceRing();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
 	void		Create_Elemnt(_wstring& strPrototypeTag);

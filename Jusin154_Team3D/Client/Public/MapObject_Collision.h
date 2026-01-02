@@ -17,19 +17,22 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT	Render_Shadow(SHADOW eType) override;
 
 public:
 	virtual _wstring Get_PrototypeTag(_uint iLodIndex = 0);
 	void ReadyForPhysX();
 	void ConvertToPhysX();
 private:
-	CShader* m_pShaderCom = { nullptr };
+	CShader*			m_pShaderCom = { nullptr };
 	vector<vector<CRigidBody_Static*>> m_RigidBodies;
 	vector<CModel*>		m_pModelComs;
 
-	_uint				m_iLodIndex = {};
 	_bool				m_bReadyToCreatePhysX = { false };
 	_bool				m_bConverted = { false };
+
+	_uint				m_iLodIndex = {};
+	_float				m_fRadius = { 0.f };
 
 	vector<_wstring>	m_ModelPrototypeTags;
 	vector<_uint>		m_ModelPathIndices = { };

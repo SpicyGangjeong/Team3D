@@ -210,4 +210,32 @@
         <Surface>SRO</Surface>
     </Mesh>
    </SM_ScotsPine_LargeA_Master>
+   <SM_HM_LightPost mesh="2">
+    <Mesh>
+        <Material>T_HM_LampPost_Glass_Dark_D</Material>
+        <Material>T_HM_LampPost_Glass_MRO</Material>
+        <Material>T_HM_LampPost_Glass_MRO</Material>
+        <Surface>MRO</Surface>
+    </Mesh>
+    <Mesh>
+        <Material>T_HM_LampPost_D</Material>
+        <Material>T_HM_LampPost_N</Material>
+        <Material>T_HM_LampPost_MRO</Material>
+        <Surface>MRO</Surface>
+    </Mesh>
+   </SM_HM_LightPost>
+   <SM_HM_Light_Post_Floating mesh="2">
+        <Mesh>
+            <Material>T_HM_LampPost_D</Material>
+            <Material>T_HM_LampPost_N</Material>
+            <Material>T_HM_LampPost_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_HM_LampPost_Glass_Dark_D</Material>
+            <Material>T_HM_LampPost_Glass_MRO</Material>
+            <Material>T_HM_LampPost_Glass_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SM_HM_Light_Post_Floating>
 </Instance>

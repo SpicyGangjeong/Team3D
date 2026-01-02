@@ -44,7 +44,7 @@ HRESULT CInstancedProp::Render()
 		if (FAILED(m_pVIBufferInstanceCom->Bind_Matrial(m_pShaderCom, i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_WORLDMODLE_INSTANCE::DEFAULT))))
 			return E_FAIL;
 
 		m_pVIBufferInstanceCom->Render(i);

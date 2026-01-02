@@ -94,7 +94,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 		m_pBroomRaceManager = pDesc->pBroomRaceManager;
 
-		if (m_pBroomRaceManager)
+		/*if (m_pBroomRaceManager)
 		{
 			CBroomRaceManager::RacerInfo Info;
 
@@ -103,7 +103,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 			Info.prevPos = Get_WorldPostion();
 
 			m_pBroomRaceManager->Push_BroomRacer(Info);
-		}
+		}*/
 	}
 
 #ifdef _DEBUG
