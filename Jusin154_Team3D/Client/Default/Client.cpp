@@ -179,7 +179,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     g_hInstance = hInstance;
-
+#ifdef _DEBUG
     RECT     rcWindow = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
     AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, FALSE);
@@ -196,9 +196,48 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     UpdateWindow(hWnd);
 
     g_hWnd = hWnd;
+#endif // _DEBUG
+
+#ifdef Bin
+#ifndef _DEBUG
+    int screenX = GetSystemMetrics(SM_CXSCREEN);
+    int screenY = GetSystemMetrics(SM_CYSCREEN);
+
+    HWND hWnd = CreateWindowW(
+        szWindowClass,
+        szTitle,
+        WS_POPUP,
+        0, 0,
+        screenX, screenY,
+        nullptr,
+        nullptr,
+        hInstance,
+        nullptr
+    );
+
+    if (!hWnd)
+        return FALSE;
+
+    g_hWnd = hWnd;
+
+    ShowWindow(hWnd, SW_SHOW);
+    UpdateWindow(hWnd);
+
+#endif // !_DEBUG
+#endif // Bin
+    return TRUE;
+}
+
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+{
+    g_hInstance = hInstance;
+
+    // 원하는 해상도
+
 
     return TRUE;
 }
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
