@@ -111,7 +111,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_bAI = false;
 
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
-
+	m_fRayDistance = 10.f;
 	m_pModelCom->Set_Temp(true);
 
 
@@ -134,6 +134,7 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
+	Update_RaycastElements();
 
 	m_pFSM->Update_State(fTimeDelta);
 
@@ -252,7 +253,6 @@ HRESULT CPlayer::Render()
 				return E_FAIL;
 			}
 
-
 			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 			m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
@@ -303,6 +303,39 @@ void CPlayer::Update_CameraShake(_float fTimeDelta)
 			);
 		}
 	}
+}
+HRESULT CPlayer::Update_RaycastElements()
+{
+	if (E_FAIL == m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER)) {
+		m_iRayHitCount = 0;
+		return E_FAIL;
+	}
+	_vector vCameraPos = m_pGameInstance->Get_CamXMPosition();
+	_vector vCameraDir = m_pGameInstance->Get_CameraLook();
+	vector<PSX::PxRaycastHit> m_vRayHits = {};
+	m_vRayHits.resize(12);
+	_bool bHit = m_pGameInstance->RayCast(vCameraPos, vCameraDir, m_fRayDistance, m_vRayHits.data(), (_uint)m_vRayHits.size(), m_iRayHitCount);
+	if (true == bHit) {
+		CMyTools::SortHitsByDistance(m_vRayHits);
+		for (_uint i = 0; i < m_iRayHitCount; ++i) {
+			if (nullptr != m_vRayHits[i].actor->userData) {
+				PHYSX_USERDATA* pData = (PHYSX_USERDATA*)m_vRayHits[i].actor->userData;
+				switch (pData->eKind)
+				{
+				case PHYSX_KIND::BODY_STATIC:
+					break;
+				case PHYSX_KIND::BODY_DYNAMIC:
+					pData->pBody->OnRayCollision(this, i, m_vRayHits[i].distance, _float3(m_vRayHits[i].position.x, m_vRayHits[i].position.y, m_vRayHits[i].position.z));
+					break;
+				case PHYSX_KIND::CCTActor:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+	return S_OK;
 }
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
@@ -623,19 +656,6 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 			}
 		}
 
-		//array<_int, 256> paletteMask{};
-		//paletteMask.fill(0);
-
-		//for (_uint i = 0; i < paletteCount; ++i)
-		//{
-		//	if (i == 29)
-		//		continue;
-		//	_uint global = boneIndices[i];
-		//	paletteMask[i] = globalMask[global];
-		//}
-
-		//m_pShaderCom->Bind_IntArray("g_RobeBoneMask", paletteMask.data(), 256);
-
 		GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
 
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
@@ -650,13 +670,6 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		)))
 		{
 			return E_FAIL;
-		}
-
-
-		if (nullptr != m_pRobePart) {
-			if (FAILED(m_pRobePart->Bind_PrevBoneMatrices(m_pShaderCom, "g_PrevBoneMatrices"))) {
-				return E_FAIL;
-			}
 		}
 	}
 		break;
@@ -766,6 +779,7 @@ void CPlayer::Free()
 
 	SAFE_RELEASE(m_pRobePart);
 	SAFE_RELEASE(m_pGrapInteractive);
+
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;
@@ -803,7 +817,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 
 
 	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
 
 		GUI::Text("%d", m_LockOnInfo.pUnit);
@@ -846,7 +860,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 void CPlayer::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("PLAYER_DESC")) {
 		if (true == GUI::Button("ShaderRefresh")) {
 			m_pShaderCom->Shader_Refresh();

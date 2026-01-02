@@ -73,6 +73,8 @@ private:
 
 #pragma region TunningParameters
 	/* TunningParam  */
+	// Variable
+	_float m_fLightSpecularMaximum = { 1.f };
 
 	// MotionBlur 
 	_float	m_fMBBlurRadius = { 28.f };

@@ -881,14 +881,14 @@ void CInstance_Model::Free()
 
 void CInstance_Model::Describe_Entity()
 {
-	if (ImGui::TreeNode("Model Option"))
+	if (GUI::TreeNode("Model Option"))
 	{
 		const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 
-		ImGui::Separator(); ImGui::Spacing();
-		ImGui::PushItemWidth(120);
+		GUI::Separator(); GUI::Spacing();
+		GUI::PushItemWidth(120);
 
-		if (ImGui::InputInt("NumInstance", &m_InstanceDesc.iNumInstance))
+		if (GUI::InputInt("NumInstance", &m_InstanceDesc.iNumInstance))
 		{
 			Change_NumInstance();
 		}
@@ -930,43 +930,59 @@ void CInstance_Model::Describe_Entity()
 		if (GUI::TreeNode("Transform"))
 		{
 
-			if (ImGui::DragFloat3("Center", reinterpret_cast<_float*>(&m_InstanceDesc.vCenter)))
+			if (GUI::DragFloat3("Center", reinterpret_cast<_float*>(&m_InstanceDesc.vCenter)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("Range", reinterpret_cast<_float*>(&m_InstanceDesc.vRange)))
+			if (GUI::DragFloat3("Range", reinterpret_cast<_float*>(&m_InstanceDesc.vRange)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
+			if (GUI::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("SizeMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMax)))
+			if (GUI::DragFloat3("SizeMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMax)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("RotationMin", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMin)))
+			if (GUI::DragFloat3("RotationMin", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMin)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("RotationMax", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMax)))
+			if (GUI::DragFloat3("RotationMax", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMax)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
 
-			if (ImGui::DragFloat3("WolrdOffsetMin", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMin)))
+			if (GUI::DragFloat2("RoundRangeLength", reinterpret_cast<_float*>(&m_InstanceDesc.vRoundRangeLength)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("WolrdOffsetMax", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMax)))
+			if (GUI::DragFloat2("AzimuthAngle", reinterpret_cast<_float*>(& m_InstanceDesc.vAzimuthAngle)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat2("PolarAngle", reinterpret_cast<_float*>(&m_InstanceDesc.vPolarAngle)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+
+			if (GUI::DragFloat3("WolrdOffsetMin", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMin)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat3("WolrdOffsetMax", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMax)))
 			{
 				Instane_Buffer_ReStruct();
 			}
@@ -1013,34 +1029,34 @@ void CInstance_Model::Describe_Entity()
 		{
 			_int iMoveLerpOption = (_int)m_InstanceDesc.fMoveLerpOption;
 
-			if (ImGui::Combo("Move Lerp Option", &iMoveLerpOption, pLerp, 9))
+			if (GUI::Combo("Move Lerp Option", &iMoveLerpOption, pLerp, 9))
 			{
 				Instane_Buffer_ReStruct();
 
 				m_InstanceDesc.fMoveLerpOption = (_float)iMoveLerpOption;
 			}
 
-			if (ImGui::DragFloat2("Speed", reinterpret_cast<_float*>(&m_InstanceDesc.vSpeed)))
+			if (GUI::DragFloat2("Speed", reinterpret_cast<_float*>(&m_InstanceDesc.vSpeed)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vDrag)))
+			if (GUI::DragFloat2("Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vDrag)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("Acceleration", reinterpret_cast<_float*>(&m_InstanceDesc.vAcceleration)))
+			if (GUI::DragFloat2("Acceleration", reinterpret_cast<_float*>(&m_InstanceDesc.vAcceleration)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("VelocityMin", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMin)))
+			if (GUI::DragFloat3("VelocityMin", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMin)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("VelocityMax", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMax)))
+			if (GUI::DragFloat3("VelocityMax", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMax)))
 			{
 				Instane_Buffer_ReStruct();
 			}
@@ -1081,12 +1097,12 @@ void CInstance_Model::Describe_Entity()
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("PivotMin", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMin)))
+				if (GUI::DragFloat3("PivotMin", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMin)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("PivotMax", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMax)))
+				if (GUI::DragFloat3("PivotMax", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMax)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1102,12 +1118,12 @@ void CInstance_Model::Describe_Entity()
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat2("Gravity", reinterpret_cast<_float*>(&m_InstanceDesc.vGravity)))
+				if (GUI::DragFloat2("Gravity", reinterpret_cast<_float*>(&m_InstanceDesc.vGravity)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat2("DropAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vDropAttenuation)))
+				if (GUI::DragFloat2("DropAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vDropAttenuation)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1121,17 +1137,17 @@ void CInstance_Model::Describe_Entity()
 		if (GUI::TreeNode("Rotate"))
 		{
 
-			if (ImGui::DragFloat2("RotationSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationSpeed)))
+			if (GUI::DragFloat2("RotationSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationSpeed)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("RotateAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vRotateAttenuation)))
+			if (GUI::DragFloat2("RotateAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vRotateAttenuation)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("RotateAttDelay", reinterpret_cast<_float*>(&m_InstanceDesc.vRotateAttDelay)))
+			if (GUI::DragFloat2("RotateAttDelay", reinterpret_cast<_float*>(&m_InstanceDesc.vRotateAttDelay)))
 			{
 				Instane_Buffer_ReStruct();
 			}
@@ -1145,12 +1161,12 @@ void CInstance_Model::Describe_Entity()
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("DeltaAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMin)))
+				if (GUI::DragFloat3("DeltaAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMin)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("DeltaAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMax)))
+				if (GUI::DragFloat3("DeltaAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMax)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1170,12 +1186,12 @@ void CInstance_Model::Describe_Entity()
 
 
 
-				if (ImGui::DragFloat3("DeltaAxisAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMin)))
+				if (GUI::DragFloat3("DeltaAxisAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMin)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("DeltaAxisAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMax)))
+				if (GUI::DragFloat3("DeltaAxisAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMax)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1193,12 +1209,12 @@ void CInstance_Model::Describe_Entity()
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("SinWaveMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMinAmount)))
+				if (GUI::DragFloat3("SinWaveMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMinAmount)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
+				if (GUI::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1221,19 +1237,19 @@ void CInstance_Model::Describe_Entity()
 
 			_int iSizeLerpOption = (_int)m_InstanceDesc.fSizeLerpOption;
 
-			if (ImGui::Combo("Size Lerp Option", &iSizeLerpOption, pLerp, 9))
+			if (GUI::Combo("Size Lerp Option", &iSizeLerpOption, pLerp, 9))
 			{
 				Instane_Buffer_ReStruct();
 
 				m_InstanceDesc.fSizeLerpOption = (_float)iSizeLerpOption;
 			}
 
-			if (ImGui::DragFloat3("LerpSizeAmount", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaSize)))
+			if (GUI::DragFloat3("LerpSizeAmount", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaSize)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("Size Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeDrag)))
+			if (GUI::DragFloat2("Size Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeDrag)))
 			{
 				Instane_Buffer_ReStruct();
 			}
@@ -1251,53 +1267,53 @@ void CInstance_Model::Describe_Entity()
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat("TimeMult", reinterpret_cast<_float*>(&m_InstanceDesc.fTimeMult)))
+			if (GUI::DragFloat("TimeMult", reinterpret_cast<_float*>(&m_InstanceDesc.fTimeMult)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
+			if (GUI::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("Delay", reinterpret_cast<_float*>(&m_InstanceDesc.vDelay)))
+			if (GUI::DragFloat2("Delay", reinterpret_cast<_float*>(&m_InstanceDesc.vDelay)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("DiffuseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDiffuseUVMoveTime)))
+			if (GUI::DragFloat2("DiffuseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDiffuseUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("MaskingUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vMaskingUVMoveTime)))
+			if (GUI::DragFloat2("MaskingUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vMaskingUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
 
-			if (ImGui::DragFloat2("DistortionUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDistortionUVMoveTime)))
+			if (GUI::DragFloat2("DistortionUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDistortionUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
+			if (GUI::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("DissolveUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDissolveUVMoveTime)))
+			if (GUI::DragFloat2("DissolveUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDissolveUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("AniTime", reinterpret_cast<_float*>(&m_InstanceDesc.vAniTime)))
+			if (GUI::DragFloat2("AniTime", reinterpret_cast<_float*>(&m_InstanceDesc.vAniTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("AniIndex", reinterpret_cast<_float*>(&m_InstanceDesc.vAniIndex)))
+			if (GUI::DragFloat2("AniIndex", reinterpret_cast<_float*>(&m_InstanceDesc.vAniIndex)))
 			{
 				Instane_Buffer_ReStruct();
 			}
@@ -1326,11 +1342,11 @@ void CInstance_Model::Describe_Entity()
 
 
 
-		ImGui::PopItemWidth();
-		ImGui::TreePop();
+		GUI::PopItemWidth();
+		GUI::TreePop();
 	}
 
-	ImGui::Separator();
+	GUI::Separator();
 }
 
 #endif // _DEBUG

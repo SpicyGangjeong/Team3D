@@ -130,7 +130,7 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 
 	const char* pCompute[] = { "DIFFUSE" , "MASK", "NOISE", "DISSOLVE" , "DISTORTION" , "EMISSIVE"};
 
-	if (ImGui::Combo("OPTION", &m_iSelectTextureNum, pCompute, 6))
+	if (GUI::Combo("OPTION", &m_iSelectTextureNum, pCompute, 6))
 	{
 	}
 	switch (m_iSelectTextureNum)
@@ -481,18 +481,18 @@ void CEditEffect::Describe_Entity()
 		
 	}
 
-	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
+	if (GUI::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
 
 
-	if (ImGui::Combo("Effect Type", &iCurrentType, pEffectType, ENUM_CLASS(EFFECT_TYPE::END)))
+	if (GUI::Combo("Effect Type", &iCurrentType, pEffectType, ENUM_CLASS(EFFECT_TYPE::END)))
 	{
 		m_EffectInfo.eEffectType = static_cast<EFFECT_TYPE>(iCurrentType);
 	}
 
-	if (ImGui::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::END)))
+	if (GUI::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::END)))
 	{
 		m_EffectInfo.eShaderPass = static_cast<SHADER_PASS_INSTANCE_MODEL>(iCurrentPass);
 	}
@@ -522,11 +522,11 @@ void CEditEffect::Describe_Entity()
 
 	GUI::ColorEdit4("MixColor", (_float*)&m_EffectInfo.vColor);
 
-	ImGui::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 
 	m_pShaderCom->Describe_Entity();
 
-	ImGui::PopItemWidth();
+	GUI::PopItemWidth();
 
 
 
@@ -539,13 +539,13 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("BlurNoEmissive", &m_EffectInfo.isBlurNoEmissive);
 			GUI::Checkbox("BlurDissolve", &m_EffectInfo.isBlurDissolve);
 			
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
 			GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 2.f, 0, 128);
 
 
 			GUI::Checkbox("BlurColor", &m_EffectInfo.isBlurColor);
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 			GUI::ColorEdit4("BlurColor", (_float*)&m_EffectInfo.vBlurColor);
 
 			GUI::TreePop();
@@ -564,7 +564,7 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("BLOOM"))
 		{
-			if (ImGui::Combo("Bloom Type", &iCurrentBloomType, pBloomType, ENUM_CLASS(BLOOM_TYPE::END)))
+			if (GUI::Combo("Bloom Type", &iCurrentBloomType, pBloomType, ENUM_CLASS(BLOOM_TYPE::END)))
 			{
 				m_EffectInfo.eBloomType = static_cast<BLOOM_TYPE>(iCurrentBloomType);
 			}
@@ -572,9 +572,9 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("BloomDissolve", &m_EffectInfo.isBloomDissolve);
 			GUI::Checkbox("BloomReverseDissolve", &m_EffectInfo.isBloomReverseDissolve);
 
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::DragFloat("fBloomStrength", &m_EffectInfo.fBloomStrength, 0.001f, 0.f);
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 			GUI::TreePop();
 		}
@@ -589,7 +589,7 @@ void CEditEffect::Describe_Entity()
 	if (GUI::TreeNode("EMISSIVE"))
 	{
 
-		ImGui::PushItemWidth(80);
+		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 		GUI::DragFloat("EmissiveStrength", &m_EffectInfo.fEmissiveStrength, 0.005f, 0.f, 1.f);
 		GUI::DragFloat("Radius", &m_EffectInfo.fRadius, 0.005f , 0.f);
 		GUI::DragFloat("CoreBoost", &m_EffectInfo.fCoreBoost, 0.005f , 0.f);
@@ -597,7 +597,7 @@ void CEditEffect::Describe_Entity()
 		GUI::DragFloat("SoftenExp", &m_EffectInfo.fSoftenExp, 0.005f , 0.f);
 		GUI::DragFloat("EmissiveColorCut", &m_EffectInfo.fEmissiveColorCut, 0.005f , 0.f);
 
-		ImGui::PopItemWidth();
+		GUI::PopItemWidth();
 
 		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
 
@@ -731,7 +731,7 @@ void CEditEffect::Describe_Entity()
 
 			GUI::DragFloat("Diffuse Alpha", &m_EffectInfo.fDiffuseAlpha , 0.01f, 0.f, 1.f);
 
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::Checkbox("DiffuseUVMove", &m_EffectInfo.isDiffuseUVMove);
 			GUI::InputFloat2("DiffuseUVCutting", (_float*)&m_EffectInfo.vUVCutting);
 
@@ -743,14 +743,14 @@ void CEditEffect::Describe_Entity()
 
 			_int iDiffuseMoveLerpOption = (_int)m_EffectInfo.iDiffuseMoveLerpOption;
 
-			if (ImGui::Combo("Lerp DiffuseMove Option", &iDiffuseMoveLerpOption, pLerp, 9))
+			if (GUI::Combo("Lerp DiffuseMove Option", &iDiffuseMoveLerpOption, pLerp, 9))
 			{
 				m_EffectInfo.iDiffuseMoveLerpOption = iDiffuseMoveLerpOption;
 			}
 
 			GUI::Spacing();
 
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 			if (GUI::TreeNode("DIFFUSE_TEX"))
 			{
@@ -805,14 +805,14 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("MaskUVMove", &m_EffectInfo.isMaskUVMove);
 			GUI::Checkbox("MaskClampSample", &m_EffectInfo.isMaskClampSample);
 
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::DragFloat2("MaskOffset", (_float*)&m_EffectInfo.vMaskOffset, 0.01f);
 			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_EffectInfo.vMaskingUVGainAmount, 0.01f);
 			GUI::Spacing();
 			GUI::DragFloat("SoftMask", &m_EffectInfo.fSoftMask, 0.01f, 0.f);
 			GUI::DragFloat("fSoftMaskEdge", &m_EffectInfo.fSoftMaskEdge, 0.01f, 0.f);
 			
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 
 			GUI::Spacing();
@@ -820,7 +820,7 @@ void CEditEffect::Describe_Entity()
 
 			_int iMaskMoveLerpOption = (_int)m_EffectInfo.iMaskMoveLerpOption;
 
-			if (ImGui::Combo("Lerp MaskMove Option", &iMaskMoveLerpOption, pLerp, 9))
+			if (GUI::Combo("Lerp MaskMove Option", &iMaskMoveLerpOption, pLerp, 9))
 			{
 				m_EffectInfo.iMaskMoveLerpOption = iMaskMoveLerpOption;
 			}
@@ -879,7 +879,7 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("StopDissolveSmoothStep", &m_EffectInfo.isNoDissolveSmoothStep);
 			
 
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::Spacing();
 			GUI::Checkbox("DissolveMove", &m_EffectInfo.isDissolveMove);
 			GUI::DragFloat2("DissolveUVGainAmount", (_float*)&m_EffectInfo.vDissolveUVGainAmount, 0.01f);
@@ -896,7 +896,7 @@ void CEditEffect::Describe_Entity()
 
 			GUI::Spacing();
 
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 			if (GUI::TreeNode("DISSOLV_TEX"))
 			{
@@ -927,7 +927,7 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("DISTORTION"))
 		{
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 
 			GUI::DragFloat("DistortionIntensity", &m_EffectInfo.fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
 
@@ -937,7 +937,7 @@ void CEditEffect::Describe_Entity()
 
 			_int iDiffuseNoiseMoveLerpOption = (_int)m_EffectInfo.iDiffuseDistortionMoveLerpOption;
 
-			if (ImGui::Combo("LerpDiffuseDistortionMove Option", &iDiffuseNoiseMoveLerpOption, pLerp, 9))
+			if (GUI::Combo("LerpDiffuseDistortionMove Option", &iDiffuseNoiseMoveLerpOption, pLerp, 9))
 			{
 				m_EffectInfo.iDiffuseDistortionMoveLerpOption = iDiffuseNoiseMoveLerpOption;
 			}
@@ -948,14 +948,14 @@ void CEditEffect::Describe_Entity()
 
 			_int iMaskNoiseMoveLerpOption = (_int)m_EffectInfo.iMaskDistortionMoveLerpOption;
 
-			if (ImGui::Combo("Lerp MaskDistortionMove Option", &iMaskNoiseMoveLerpOption, pLerp, 9))
+			if (GUI::Combo("Lerp MaskDistortionMove Option", &iMaskNoiseMoveLerpOption, pLerp, 9))
 			{
 				m_EffectInfo.iMaskDistortionMoveLerpOption = iMaskNoiseMoveLerpOption;
 			}
 
 			GUI::Spacing();
 
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 			if (GUI::TreeNode("DISTORTION_TEX"))
 			{
@@ -1000,11 +1000,11 @@ void CEditEffect::Describe_Entity()
 
 
 			GUI::ColorEdit4("NoiseColor", (_float*)&m_EffectInfo.vNoiseColor);
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::DragFloat2("NoiseUVGainAmount", (_float*)&m_EffectInfo.vNoiseUVGainAmount, 0.01f);
 			GUI::DragFloat2("UVNoiseCutting", (_float*)&m_EffectInfo.vUVNoiseCutting, 0.01f);
 			
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 
 			GUI::Spacing();
@@ -1012,7 +1012,7 @@ void CEditEffect::Describe_Entity()
 
 			_int iNoiseMoveLerpOption = (_int)m_EffectInfo.iNoiseMoveLerpOption;
 
-			if (ImGui::Combo("Lerp NoiseMove Option", &iNoiseMoveLerpOption, pLerp, 9))
+			if (GUI::Combo("Lerp NoiseMove Option", &iNoiseMoveLerpOption, pLerp, 9))
 			{
 				m_EffectInfo.iNoiseMoveLerpOption = iNoiseMoveLerpOption;
 			}

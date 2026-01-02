@@ -329,9 +329,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -340,8 +340,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = true;
@@ -689,7 +689,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 #endif // 
 #ifdef 나
 
@@ -784,7 +784,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = false;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 나
 

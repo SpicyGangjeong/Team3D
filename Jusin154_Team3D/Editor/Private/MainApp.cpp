@@ -200,13 +200,13 @@ HRESULT CMainApp::Ready_Prototypes()
 HRESULT CMainApp::Ready_IMGUI()
 {
 	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	GUI::CreateContext();
+	ImGuiIO& io = GUI::GetIO(); (void)io;
 	ImFont* font = nullptr;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 
-	ImGui::StyleColorsDark();
+	GUI::StyleColorsDark();
 
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
@@ -233,7 +233,7 @@ HRESULT CMainApp::Release_IMGUI()
 {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	GUI::DestroyContext();
 	return S_OK;
 }
 

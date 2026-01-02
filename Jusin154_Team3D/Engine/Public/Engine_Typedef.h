@@ -12,6 +12,9 @@ typedef		unsigned short				_ushort;
 
 typedef		signed int					_int;
 typedef		unsigned int				_uint;
+typedef		XMUINT2						_uint2;
+typedef		XMUINT3						_uint3;
+typedef		XMUINT4						_uint4;
 
 typedef		signed long					_long;
 typedef		unsigned long				_ulong;

@@ -551,7 +551,7 @@ void CEffect_Editor::Free()
 
 void CEffect_Editor::Describe_Entity()
 {
-	ImGui::Begin("Effect Editor");
+	GUI::Begin("Effect Editor");
 
 	GUI::TextColored(ImVec4(1.f, 0.f, 1.f, 1.f), m_strCurrentEffectName.c_str());
 
@@ -566,27 +566,27 @@ void CEffect_Editor::Describe_Entity()
 		GUI::Checkbox("TRAIL WAND POS", &m_isWandPos);
 	}
 
-	ImGui::End();
+	GUI::End();
 
-	ImGui::Begin("Reference Material");
+	GUI::Begin("Reference Material");
 
 	if (m_pEditEffect != nullptr)
 		m_pEditEffect->Reference_Mat_For_EditEffect();
 
 
-	ImGui::End();
+	GUI::End();
 
-	ImGui::Begin("Effect Hierarchy");
+	GUI::Begin("Effect Hierarchy");
 
 #pragma region PopUp
 	
-	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-		ImGui::OpenPopup("Effect Hierarchy");
+	if (GUI::IsItemClicked(ImGuiMouseButton_Right))
+		GUI::OpenPopup("Effect Hierarchy");
 
 
-	if (ImGui::BeginPopup("Effect Hierarchy"))
+	if (GUI::BeginPopup("Effect Hierarchy"))
 	{
-		if (ImGui::MenuItem("Create Effect"))
+		if (GUI::MenuItem("Create Effect"))
 		{
 
 			CPartObject::PARTOBJECT_DESC PartsDesc{};
@@ -595,12 +595,12 @@ void CEffect_Editor::Describe_Entity()
 
 			if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + to_string(m_iNumPart++), ENUM_CLASS(LEVEL::EFFECT), nullptr, &PartsDesc)))
 			{
-				ImGui::EndPopup();
+				GUI::EndPopup();
 				return;
 			}
 		}
 
-		if (ImGui::MenuItem("Create Trail"))
+		if (GUI::MenuItem("Create Trail"))
 		{
 
 			if (m_pTrailObject == nullptr)
@@ -612,7 +612,7 @@ void CEffect_Editor::Describe_Entity()
 
 				if (FAILED(Add_PartObject<CTrailObject>("TrailObject", ENUM_CLASS(LEVEL::EFFECT), &m_pTrailObject, &PartsDesc)))
 				{
-					ImGui::EndPopup();
+					GUI::EndPopup();
 				}
 
 				CTrailObject* pTrailObject = m_pTrailObject;
@@ -628,6 +628,7 @@ void CEffect_Editor::Describe_Entity()
 		}
 
 		ImGui::EndPopup();
+
 	}
 #pragma endregion
 
@@ -655,7 +656,7 @@ void CEffect_Editor::Describe_Entity()
 			if (GUI::BeginPopup(strName.c_str()))
 			{
 	
-				if (ImGui::MenuItem("Delete Effect"))
+				if (GUI::MenuItem("Delete Effect"))
 				{
 					auto iter = m_PartObjects.begin();
 					advance(iter, iIndex); // 이터레이터를 증가시킨다
@@ -713,9 +714,9 @@ void CEffect_Editor::Describe_Entity()
 
 
 
-	ImGui::End();
+	GUI::End();
 
-	ImGui::Begin("Effect Save");
+	GUI::Begin("Effect Save");
 
 	GUI::InputTextMultiline("FILE PATH", m_szBuffer, sizeof(m_szBuffer), ImVec2(250, 25));
 
@@ -808,9 +809,8 @@ void CEffect_Editor::Describe_Entity()
 
 	m_pEffectPool->Describe_Entity();
 
+	GUI::End();
 
-
-	ImGui::End();
 
 }
 

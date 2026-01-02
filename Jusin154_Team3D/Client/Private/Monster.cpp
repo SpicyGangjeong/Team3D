@@ -290,11 +290,11 @@ void CMonster::Free()
 
 void CMonster::Describe_Entity()
 {
-	if (ImGui::TreeNode("ANIM STATE")) {
+	if (GUI::TreeNode("ANIM STATE")) {
 
 		for (auto& pState : m_States)
 		{
-			if (ImGui::Button(to_string(pState.first).c_str()))
+			if (GUI::Button(to_string(pState.first).c_str()))
 			{
 				m_pFSM->Change_State(pState.first);
 			}
@@ -303,7 +303,7 @@ void CMonster::Describe_Entity()
 
 		GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 }
 
