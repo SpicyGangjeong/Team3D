@@ -341,7 +341,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef 기무리
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
-	isReady_Hogwart = false;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = true;
