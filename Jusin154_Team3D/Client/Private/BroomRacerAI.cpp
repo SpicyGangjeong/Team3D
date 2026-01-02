@@ -90,13 +90,13 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	m_pBroomRaceManager = static_cast<CBroomRaceManager*>(pArg);
 
-	CBroomRaceManager::RacerInfo Info;
+	/*CBroomRaceManager::RacerInfo Info;
 
 	Info.pAI = this;
 	Info.curRing = 0;
 	Info.prevPos = Get_WorldPostion();
 
-	m_pBroomRaceManager->Push_BroomRacer(Info);
+	m_pBroomRaceManager->Push_BroomRacer(Info);*/
 
 	m_LaneOffsetX = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
 	m_LaneOffsetY = m_pGameInstance->Real_Random_Float(-3.f, 3.f);

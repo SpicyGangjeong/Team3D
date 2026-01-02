@@ -94,9 +94,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
+	//	return E_FAIL;
+	//}
 
 	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 		return E_FAIL;
@@ -325,8 +325,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
@@ -744,7 +744,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 
 		CRaceRing::RACERING_DESC RaceRingDesc{};
 		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
-		RaceRingDesc.iIndex = i;
+	
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
 			return E_FAIL;
 		}

@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "RaceRing.h"
 
-#include "BroomRaceManager.h"
 #include "GameInstance.h"
 
 CRaceRing::CRaceRing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -25,25 +24,11 @@ HRESULT CRaceRing::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
 
-	
-	//m_iIndex = static_cast<RACERING_DESC*>(pArg)->iIndex;
-	//_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	//_float Y = m_pGameInstance->Real_Random_Float(15.f, 60.f);
-	//_float Z = m_pGameInstance->Real_Random_Float(-50.f, 50.f);
-
-	RACERING_DESC* pDesc = static_cast<RACERING_DESC*>(pArg);
-
-	m_pBroomRaceManager = pDesc->pBroomRaceManager;
-	_float3 vRotation = pDesc->vRotation;
-	m_pTransformCom->Rotation(XMConvertToRadians(vRotation.x), XMConvertToRadians(vRotation.y), XMConvertToRadians(vRotation.z));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(pDesc->vPosition.x, pDesc->vPosition.y, pDesc->vPosition.z, 1.f));
-	m_pTransformCom->Set_Scale(pDesc->vScale);
-	m_pBroomRaceManager->Push_RaceRing(this);
+	m_iIndex = 0;
 
 	return S_OK;
 }
@@ -51,7 +36,6 @@ HRESULT CRaceRing::Initialize(void* pArg)
 void CRaceRing::Priority_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	Describe_Entity();
 
 #endif // _DEBUG
 }
@@ -103,7 +87,6 @@ HRESULT CRaceRing::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
 
-
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RaceRing_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
@@ -145,8 +128,6 @@ HRESULT CRaceRing::Bind_ShaderResources()
 	return S_OK;
 }
 
-
-
 CRaceRing* CRaceRing::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CRaceRing* pInstance = new CRaceRing(pDevice, pContext);
@@ -185,7 +166,53 @@ void CRaceRing::Free()
 
 void CRaceRing::Describe_Entity()
 {
+	m_pTransformCom->Describe_Entity();
 
+	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		_float3 vPosition = {};
+		if (m_pGameInstance->isPicking(&vPosition))
+		{
+			vPosition.y += 20.7f;
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+		}
+	}
+}
+
+HRESULT CRaceRing::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
+{
+	tinyxml2::XMLElement* object = doc.NewElement("Object");
+	object->SetAttribute("Type", 0);
+	root->InsertEndChild(object);
+
+#pragma region TRANSFORM
+	_float3 vPosition = {};
+	XMStoreFloat3(&vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+
+	_float3 vScale = m_pTransformCom->Get_Scale();
+
+	_float3 vRotation = m_pTransformCom->Get_Rotation();
+
+	tinyxml2::XMLElement* Position = doc.NewElement("Position");
+	Position->SetAttribute("x", vPosition.x);
+	Position->SetAttribute("y", vPosition.y);
+	Position->SetAttribute("z", vPosition.z);
+	object->InsertEndChild(Position);
+
+	tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
+	Scale->SetAttribute("x", vScale.x);
+	Scale->SetAttribute("y", vScale.y);
+	Scale->SetAttribute("z", vScale.z);
+	object->InsertEndChild(Scale);
+
+	tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
+	Rotation->SetAttribute("x", vRotation.x);
+	Rotation->SetAttribute("y", vRotation.y);
+	Rotation->SetAttribute("z", vRotation.z);
+	object->InsertEndChild(Rotation);
+#pragma endregion
+
+	return S_OK;
 }
 
 #endif // _DEBUG

@@ -41,6 +41,8 @@ public:
 	void Push_BroomRacer(RacerInfo Info);
 	void Push_RaceRing(class CRaceRing* Ring);
 	_int Get_RaceState() const { return m_eRaceState; }
+
+	HRESULT Load_RaceRing();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
@@ -73,7 +75,6 @@ public:
 	virtual void Free() override;
 #ifdef _DEBUG
 	virtual void Describe_Entity() override;
-
 #endif 
 
 };

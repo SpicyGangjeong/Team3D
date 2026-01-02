@@ -160,6 +160,13 @@ void CBroomRaceManager::Free()
 
 void CBroomRaceManager::Describe_Entity()
 {
+	if (GUI::Button("Add Race Ring"))
+	{
+		if (FAILED(Load_RaceRing()))
+		{
+			MSG_BOX("Failed Load RaceRing");
+		}
+	}
 	if (GUI::Button("Race Start"))
 	{
 		m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
@@ -377,5 +384,51 @@ void CBroomRaceManager::Push_RaceRing(CRaceRing* Ring)
 {
 	m_pRaceRings.push_back(Ring);
 	SAFE_ADDREF(Ring);
+}
+
+HRESULT CBroomRaceManager::Load_RaceRing()
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/RaceRing/RaceRing_Data.xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Ring");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CRaceRing::RACERING_DESC Desc = {};
+
+		Desc.pBroomRaceManager = this;	
+
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Scale");
+		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Scale = Object->FirstChildElement("Rotation");
+		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
