@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Ride_InfoBG.h"
+#include "Ride_HpSlot.h"
 #include "GameInstance.h"
 
-CRide_InfoBG::CRide_InfoBG(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+CRide_HpSlot::CRide_HpSlot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
-CRide_InfoBG::CRide_InfoBG(const CRide_InfoBG& rhs)
-    :CElementObject(rhs)
+CRide_HpSlot::CRide_HpSlot(const CRide_HpSlot& rhs)
+	:CElementObject(rhs)
 {
 }
 
-HRESULT CRide_InfoBG::Initialize_Prototype()
+HRESULT CRide_HpSlot::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
-HRESULT CRide_InfoBG::Initialize(void* pArg)
+HRESULT CRide_HpSlot::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 80.f;
-	Desc.fY = 100.f;
-	Desc.fSizeX = 400.f;
-	Desc.fSizeY = 370.f;
+	Desc.fX = 170.f;
+	Desc.fY = -180.f;
+	Desc.fSizeX = 80.f;
+	Desc.fSizeY = 80.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,21 +37,15 @@ HRESULT CRide_InfoBG::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 0.6f;
+	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
-	m_fAlphaTime = 10.f;
+	m_fAlphaTime = 3.f;
+	m_fAngle = XMConvertToRadians(-130.f);
+	m_fImagePosi = _float4(20.5f, 20.5f, 40.f, 40.f);
 	return S_OK;
 }
 
-void CRide_InfoBG::Set_Hover(_bool bVisible)
-{
-	Visible(bVisible);
-	m_bHover = true;
-	m_fTime = 0.f;
-	m_fAlpha = 1.f;
-}
-
-void CRide_InfoBG::Priority_Update(_float fTimeDelta)
+void CRide_HpSlot::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -60,7 +54,7 @@ void CRide_InfoBG::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CRide_InfoBG::Update(_float fTimeDelta)
+void CRide_HpSlot::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -88,22 +82,14 @@ void CRide_InfoBG::Update(_float fTimeDelta)
 		{
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
-			Visible(false);
 		}
 	}
 
-	if (m_bHover == true)
-		m_fTime += fTimeDelta * m_fTimeMult;
-
-	if (m_fTime >= 1.f)
-	{
-		Set_FadeOut();
-	}
-
+	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CRide_InfoBG::Late_Update(_float fTimeDelta)
+void CRide_HpSlot::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -115,12 +101,12 @@ void CRide_InfoBG::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CRide_InfoBG::Render()
+HRESULT CRide_HpSlot::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::RIDE_HPSLOT)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -132,12 +118,13 @@ HRESULT CRide_InfoBG::Render()
 
 	return S_OK;
 }
-_vector CRide_InfoBG::Get_WorldPostion()
+
+_vector CRide_HpSlot::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CRide_InfoBG::Bind_ShaderResources()
+HRESULT CRide_HpSlot::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -155,11 +142,15 @@ HRESULT CRide_InfoBG::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
+	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -175,16 +166,36 @@ HRESULT CRide_InfoBG::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAngle", &m_fAngle, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos1", &m_fImagePosi, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
-HRESULT CRide_InfoBG::Ready_Components(void* pArg)
+HRESULT CRide_HpSlot::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_DropShadow"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_CreatureHappiness_Positive"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -195,41 +206,46 @@ HRESULT CRide_InfoBG::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CRide_InfoBG* CRide_InfoBG::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CRide_HpSlot* CRide_HpSlot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CRide_InfoBG* pInstance = new CRide_InfoBG(pDevice, pContext);
+	CRide_HpSlot* pInstance = new CRide_HpSlot(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CRide_InfoBG");
+		MSG_BOX("Failed to Created : CRide_HpSlot");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CRide_InfoBG::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CRide_HpSlot::Clone(void* pArg, CGameObject* pOwner)
 {
-	CRide_InfoBG* pInstance = new CRide_InfoBG(*this);
+	CRide_HpSlot* pInstance = new CRide_HpSlot(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CRide_InfoBG");
+		MSG_BOX("Failed to Cloned : CRide_HpSlot");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CRide_InfoBG::Free()
+void CRide_HpSlot::Free()
 {
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CRide_InfoBG::Describe_Entity()
+
+#ifdef _DEBUG
+void CRide_HpSlot::Describe_Entity()
 {
 }
+#endif // _DEBUG

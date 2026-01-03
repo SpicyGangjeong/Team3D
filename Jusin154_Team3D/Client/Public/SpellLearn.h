@@ -63,7 +63,7 @@ private:
 
 	_int	m_iChaseiTrailIndex{};
 	vector<_float2> m_ChaseTrail;
-	vector<_vector> m_MoveLine;
+	vector<_float4> m_MoveLine;
 
 public:
 	static CSpellLearn* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

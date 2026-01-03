@@ -54,7 +54,7 @@ HRESULT CRide_Panel::Initialize(void* pArg)
 	m_fAlphaTime = 3.f;
 	Visible(false);
 	ElementAllVisible(true);
-	m_vLerp_Position = XMVectorSet(1750.f, m_fY, 0.f, 1.f);
+	m_vLerp_Position = _float4(1750.f, m_fY, 0.f, 1.f);
 	static_cast<CUIObject*>(m_pRide_Info)->Visible(false);
 	static_cast<CUIObject*>(m_pRide_InfoBG)->Visible(false);
 	return S_OK;
@@ -243,11 +243,11 @@ void CRide_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CRide_Panel::Describe_Entity()
 {
 }
+#endif // _DEBUG

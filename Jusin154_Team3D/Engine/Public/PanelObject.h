@@ -34,6 +34,9 @@ public:
 	virtual void Add_Function(wstring Name, function<void(void*)> Evnet) override;
 	virtual void Function_Callback(wstring Name, void* pArg = nullptr) override;
 
+	virtual _bool Start_Lerp(_float fTimeDelta) override;
+	virtual void Reset_Pos(_float fTimeDelta)override;
+
 protected:
 	virtual void Add_Element(wstring Name, class CGameObject* pElement);
 	virtual _bool Chack_Visible() override;

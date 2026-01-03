@@ -11,12 +11,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CSpellLearn_LookPointer final : public CElementObject
+class CRide_Info_Key final : public CElementObject
 {
 private:
-	CSpellLearn_LookPointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpellLearn_LookPointer(const CSpellLearn_LookPointer& rhs);
-	virtual ~CSpellLearn_LookPointer() = default;
+	CRide_Info_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRide_Info_Key(const CRide_Info_Key& rhs);
+	virtual ~CRide_Info_Key() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -31,24 +31,22 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-public:
-	void Set_SpellLearn(_int Index);
+private:
+	_float4 Compute_UV(_tchar Alphabet);
+	void	Set_Posi();
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-
-	_bool	m_bMoveStart = { false };
-
-	_int	m_iLineIndex{};
-	_int	m_iCurrentLine{};
-	vector<_float4> m_MoveLine;
-	_float m_localX{};
-	_float m_localY{};
+	_float4 m_vUV{};
+	_float4	m_vImagePosi1{};
+	_float4	m_vImagePosi2{};
 public:
-	static CSpellLearn_LookPointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRide_Info_Key* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG

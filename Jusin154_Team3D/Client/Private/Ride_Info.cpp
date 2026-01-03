@@ -250,23 +250,23 @@ HRESULT CRide_Info::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_MissionBanner_BorderOrnament_Left"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_MissionBanner_BorderOrnament_Left"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Mouse_LeftClick"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_Mouse_LeftClick"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_Shift"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_Keyboard_Shift"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_Control"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_Keyboard_Control"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_Space"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom4), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_Keyboard_Space"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom4), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -312,10 +312,12 @@ void CRide_Info::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pDiffuse_TextureCom3);
 	SAFE_RELEASE(m_pDiffuse_TextureCom4);
-	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
+	SAFE_RELEASE(m_pShaderCom);
 }
 
+#ifdef _DEBUG
 void CRide_Info::Describe_Entity()
 {
 }
+#endif // _DEBUG

@@ -11,12 +11,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CSpellLearn_LookPointer final : public CElementObject
+class CRide_BboosterBar final : public CElementObject
 {
 private:
-	CSpellLearn_LookPointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpellLearn_LookPointer(const CSpellLearn_LookPointer& rhs);
-	virtual ~CSpellLearn_LookPointer() = default;
+	CRide_BboosterBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRide_BboosterBar(const CRide_BboosterBar& rhs);
+	virtual ~CRide_BboosterBar() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -31,24 +31,31 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-public:
-	void Set_SpellLearn(_int Index);
+private:
+	void Active(_float fTimeDelta);
+	void NonActive(_float fTimeDelta);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_float				m_fBlinkTime{};
+	_float				m_fMaxGauge{};
+	_float				m_fCurrentGauge{};
+	_float				m_fGaugeBar{};
+	_float				m_fDamage{};
+	_float				m_fTargetGauge{};
+	_float2				m_fGaugeBG{};
+	_float2				m_fGaugeBGPos{};
+	_float2				m_fGaugeBGSize{};
 
-	_bool	m_bMoveStart = { false };
+	_int				m_iClick{};
 
-	_int	m_iLineIndex{};
-	_int	m_iCurrentLine{};
-	vector<_float4> m_MoveLine;
-	_float m_localX{};
-	_float m_localY{};
 public:
-	static CSpellLearn_LookPointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRide_BboosterBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG

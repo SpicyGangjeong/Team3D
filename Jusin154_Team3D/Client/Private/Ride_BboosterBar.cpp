@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Ride_HpBar.h"
+#include "Ride_BboosterBar.h"
 #include "GameInstance.h"
 
-CRide_HpBar::CRide_HpBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+CRide_BboosterBar::CRide_BboosterBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
-CRide_HpBar::CRide_HpBar(const CRide_HpBar& rhs)
-    :CElementObject(rhs)
+CRide_BboosterBar::CRide_BboosterBar(const CRide_BboosterBar& rhs)
+	:CElementObject(rhs)
 {
 }
 
-HRESULT CRide_HpBar::Initialize_Prototype()
+HRESULT CRide_BboosterBar::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
-HRESULT CRide_HpBar::Initialize(void* pArg)
+HRESULT CRide_BboosterBar::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 60.f;
-	Desc.fY = -220.f;
+	Desc.fX = -20.f;
+	Desc.fY = -180.f;
 	Desc.fSizeX = 144.f;
-	Desc.fSizeY = 24.f;
+	Desc.fSizeY = 50.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,19 +37,32 @@ HRESULT CRide_HpBar::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 5.f;
+	m_fTimeMult = 10.f;
 	m_fAlpha = 1.f;
-	m_fAlphaTime = 1.f;
+	m_fAlphaTime = 10.f;
 	m_vNine_Slice = _float4(27.f, 125.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
-	m_fMaxHp = 200.f;
-	m_fCurrentHp = m_fMaxHp;
+	m_fMaxGauge = 100.f;
+	m_fCurrentGauge = m_fMaxGauge;
+	m_fTargetGauge = m_fMaxGauge;
 	m_fMoveSpeed = 5.f;
-	m_fHpBG = _float2(0, m_fSizeX);
+	m_fGaugeBGSize = _float2(144.f, 24.f);
+	m_fGaugeBGPos = _float2(0.f, 13.f);
+	m_fGaugeBG = _float2(0, m_fSizeX);
 	SizeUpX(200.f);
 	return S_OK;
 }
 
-void CRide_HpBar::Priority_Update(_float fTimeDelta)
+void CRide_BboosterBar::Active(_float fTimeDelta)
+{
+	m_fCurrentGauge = CMyTools::Lerp_f1D(m_fCurrentGauge, m_fTargetGauge, fTimeDelta * m_fMoveSpeed);
+}
+
+void CRide_BboosterBar::NonActive(_float fTimeDelta)
+{
+	m_fCurrentGauge = CMyTools::Lerp_f1D(m_fTargetGauge, m_fCurrentGauge, fTimeDelta * m_fMoveSpeed);
+}
+
+void CRide_BboosterBar::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -58,7 +71,7 @@ void CRide_HpBar::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CRide_HpBar::Update(_float fTimeDelta)
+void CRide_BboosterBar::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -89,33 +102,43 @@ void CRide_HpBar::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_fCurrentHp < 0.f)
-		m_fCurrentHp = 0.f;
-	if (m_fDamage < 0.f)
-		m_fDamage = 0.f;
-	m_fTargetHp = m_fMaxHp - m_fDamage;
+	if (m_fCurrentGauge < 0.f)
+		m_fCurrentGauge = 0.f;
 
-	if (m_fTargetHp > m_fCurrentHp)
-		Heal(fTimeDelta);
-	else if (m_fTargetHp < m_fCurrentHp)
-		Hit(fTimeDelta);
-	m_fHpBar = m_fCurrentHp / m_fMaxHp;
 
-	if (m_pGameInstance->Key_Down(DIK_3))
+	if (m_iClick == 1)
+		Active(fTimeDelta);
+	else
+		NonActive(fTimeDelta);
+
+	m_fGaugeBar = m_fCurrentGauge / m_fMaxGauge;
+
+	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 	{
-		m_fDamage += 20.f;
+		m_fTargetGauge -= fTimeDelta * m_fTimeMult;
+		m_iClick = 1;
+	}
+	else
+	{
+		m_iClick = 0;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_4))
+	if (m_fTargetGauge <= 0.f)
+		m_fTargetGauge = 0.f;
+	if (m_fTargetGauge >= m_fMaxGauge)
+		m_fTargetGauge = m_fMaxGauge;
+
+	if (m_iClick == 0)
 	{
-		m_fDamage -= 21.f;
+		m_fTargetGauge += fTimeDelta * m_fTimeMult;
 	}
-	if (m_fHpBar <= 0.3f)
+
+	if (m_iClick == 1)
 	{
-		m_fBlinkTime += fTimeDelta * m_fTimeMult;
+		m_fBlinkTime += fTimeDelta;
 		if (m_fTime <= 1.f)
 		{
-			m_fTime += fTimeDelta * m_fTimeMult;
+			m_fTime += fTimeDelta;
 		}
 	}
 	else
@@ -127,7 +150,7 @@ void CRide_HpBar::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 }
 
-void CRide_HpBar::Late_Update(_float fTimeDelta)
+void CRide_BboosterBar::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -139,12 +162,12 @@ void CRide_HpBar::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CRide_HpBar::Render()
+HRESULT CRide_BboosterBar::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::BOOSTERHPBAR)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::BOOSTERGAUGE)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -157,22 +180,12 @@ HRESULT CRide_HpBar::Render()
 	return S_OK;
 }
 
-_vector CRide_HpBar::Get_WorldPostion()
+_vector CRide_BboosterBar::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-void CRide_HpBar::Heal(_float fTimeDelta)
-{
-	m_fCurrentHp = CMyTools::Lerp_f1D(m_fTargetHp, m_fCurrentHp, fTimeDelta * m_fMoveSpeed);
-}
-
-void CRide_HpBar::Hit(_float fTimeDelta)
-{
-	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, m_fTargetHp, fTimeDelta * m_fMoveSpeed);
-}
-
-HRESULT CRide_HpBar::Bind_ShaderResources()
+HRESULT CRide_BboosterBar::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -191,6 +204,10 @@ HRESULT CRide_HpBar::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
 	{
 		return E_FAIL;
 	}
@@ -230,28 +247,44 @@ HRESULT CRide_HpBar::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHp", &m_fHpBar, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHp", &m_fGaugeBar, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHpBG", &m_fHpBG, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHpBG", &m_fGaugeBG, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSize", &m_fGaugeBGSize, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Pos", &m_fGaugeBGPos, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iClick", &m_iClick, sizeof(_int))))
 	{
 		return E_FAIL;
 	}
 	return S_OK;
 }
 
-HRESULT CRide_HpBar::Ready_Components(void* pArg)
+HRESULT CRide_BboosterBar::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_GlowBar"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -262,43 +295,45 @@ HRESULT CRide_HpBar::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CRide_HpBar* CRide_HpBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CRide_BboosterBar* CRide_BboosterBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CRide_HpBar* pInstance = new CRide_HpBar(pDevice, pContext);
+	CRide_BboosterBar* pInstance = new CRide_BboosterBar(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CRide_HpBar");
+		MSG_BOX("Failed to Created : CRide_BboosterBar");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CRide_HpBar::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CRide_BboosterBar::Clone(void* pArg, CGameObject* pOwner)
 {
-	CRide_HpBar* pInstance = new CRide_HpBar(*this);
+	CRide_BboosterBar* pInstance = new CRide_BboosterBar(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CRide_HpBar");
+		MSG_BOX("Failed to Cloned : CRide_BboosterBar");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CRide_HpBar::Free()
+void CRide_BboosterBar::Free()
 {
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-
-void CRide_HpBar::Describe_Entity()
+#ifdef _DEBUG
+void CRide_BboosterBar::Describe_Entity()
 {
 }
+#endif // _DEBUG

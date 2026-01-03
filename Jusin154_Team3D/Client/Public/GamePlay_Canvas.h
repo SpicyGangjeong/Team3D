@@ -41,6 +41,9 @@ private:
 	CGameObject* m_pAction_Panel = { nullptr };
 	CGameObject* m_pEnemy_Panel = { nullptr };
 	CGameObject* m_pBroom_Panel = { nullptr };
+	CGameObject* m_pRide_Panel = { nullptr };
+
+	_bool			m_bRide = { false };
 
 public:
 	static CGamePlay_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

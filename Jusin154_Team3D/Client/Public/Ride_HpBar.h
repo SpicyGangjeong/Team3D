@@ -11,12 +11,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CSpellLearn_LookPointer final : public CElementObject
+class CRide_HpBar final : public CElementObject
 {
 private:
-	CSpellLearn_LookPointer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpellLearn_LookPointer(const CSpellLearn_LookPointer& rhs);
-	virtual ~CSpellLearn_LookPointer() = default;
+	CRide_HpBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRide_HpBar(const CRide_HpBar& rhs);
+	virtual ~CRide_HpBar() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -25,30 +25,32 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+public:
+	void Heal(_float fTimeDelta);
+	void Hit(_float fTimeDelta);
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-public:
-	void Set_SpellLearn(_int Index);
-
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_float				m_fBlinkTime{};
+	_float				m_fMaxHp{};
+	_float				m_fCurrentHp{};
+	_float				m_fHpBar{};
+	_float				m_fDamage{};
+	_float				m_fTargetHp{};
+	_float2				m_fHpBG{};
 
-	_bool	m_bMoveStart = { false };
-
-	_int	m_iLineIndex{};
-	_int	m_iCurrentLine{};
-	vector<_float4> m_MoveLine;
-	_float m_localX{};
-	_float m_localY{};
 public:
-	static CSpellLearn_LookPointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRide_HpBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG

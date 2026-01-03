@@ -53,7 +53,7 @@ void CBroom_TargetGate::Update(_float fTimeDelta)
 	m_vPlayerPos = m_pInfoInstance->Get_PalyerPos();
 	if (m_vActive == true)
 	{
-		m_Distance = to_wstring(_int(floor(XMVectorGetX(XMVector3Length(XMVectorSubtract(m_vTargetPos, m_vPlayerPos))))));
+		m_Distance = to_wstring(_int(floor(XMVectorGetX(XMVector3Length(XMVectorSubtract(XMLoadFloat4(&m_vTargetPos), XMLoadFloat4(&m_vPlayerPos)))))));
 	}
 }
 
@@ -79,7 +79,7 @@ HRESULT CBroom_TargetGate::Render()
 		return E_FAIL;
 	}
 
-	_vector Pos = XMVectorAdd(m_vTargetPos, XMVectorSet(0.f, -3.f, 0.f, 0.f));
+	_vector Pos = XMVectorAdd(XMLoadFloat4(&m_vTargetPos), XMVectorSet(0.f, -3.f, 0.f, 0.f));
 
 	m_pGameInstance->Perspective_Render_Text(m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
 		m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
@@ -156,10 +156,9 @@ HRESULT CBroom_TargetGate::Ready_Components()
 	return S_OK;
 }
 
-void CBroom_TargetGate::Set_TargetPosition(_vector TargetPos)
+void CBroom_TargetGate::Set_TargetPosition(_fvector TargetPos)
 {
-	m_vTargetPos = TargetPos;
-	m_pTransformCom->Set_State(STATE::POSITION, m_vTargetPos);
+	m_pTransformCom->Set_State(STATE::POSITION, TargetPos);
 	m_vActive = true;
 }
 

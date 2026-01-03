@@ -806,6 +806,30 @@
     <ClInclude Include="..\Public\Ranrok_Charge.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ride_Bbooster_Slot.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_BboosterBar.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_HpBar.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_HpSlot.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_Info.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_Info_Key.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_InfoBG.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1677,6 +1701,30 @@
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge">
       <UniqueIdentifier>{fd036f05-4c10-4322-b0c2-aac65e7011a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel">
+      <UniqueIdentifier>{5bf233fa-6f9c-40d5-85c6-adbc7fcf7d28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot">
+      <UniqueIdentifier>{9c357e12-18b3-461e-b74c-76f85280796f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar">
+      <UniqueIdentifier>{8b69e309-b90b-47f6-8f2d-3dd778b468fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar">
+      <UniqueIdentifier>{d3ad8db7-ff00-498d-ba50-aa4c38a56d4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot">
+      <UniqueIdentifier>{721edad8-8be2-4e4c-9730-1c1cf8655880}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key">
+      <UniqueIdentifier>{76eaa3a8-b4ba-4530-9369-61666e660e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG">
+      <UniqueIdentifier>{99c0bf2f-3686-4171-b23d-2c0bdf3c6d9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info">
+      <UniqueIdentifier>{7876ff7e-f456-49ce-8fd6-766116613ff4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2429,6 +2477,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Charge.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_Bbooster_Slot.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_BboosterBar.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_HpBar.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_HpSlot.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_Info.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_Info_Key.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_InfoBG.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

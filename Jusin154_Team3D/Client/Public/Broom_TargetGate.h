@@ -27,7 +27,7 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void Set_TargetPosition(_vector TargetPos);
+	void Set_TargetPosition(_fvector TargetPos);
 
 private:
 	void Visibie();
@@ -41,13 +41,13 @@ private:
 	_bool	m_vActive = { false };
 	_wstring m_Distance;
 
-	_vector m_vFontPosition{};
+	_float4 m_vFontPosition{};
 
-	_vector m_vPlayerPos{};
-	_vector m_vTargetPos{};
+	_float4 m_vPlayerPos{};
+	_float4 m_vTargetPos{};
 
 	_float m_fAlpha{};
-	_vector m_vPosition{};
+	_float4 m_vPosition{};
 
 	_float3 m_fSize{};
 	_float2 m_fViewPort{};
