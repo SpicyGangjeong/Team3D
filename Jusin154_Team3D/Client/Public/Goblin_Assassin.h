@@ -10,13 +10,6 @@ NS_BEGIN(Client)
 
 class CGoblin_Assassin final : public CMonster
 {
-	enum class STRAFE_DIR
-	{
-		LEFT,
-		RIGHT,
-		NONE
-	};
-
 	enum class GOBLIN_ASSASSIN_SKILL
 	{
 		DASH,
@@ -86,7 +79,6 @@ private:
 	_bool	m_bStep = { true };
 	_float	m_fTpTime = {};
 	_float	m_fAirTime = {};
-	_vector m_vOriginPos = {};
 	_float	m_fLength = {};
 	_float	m_fMoveTime = {};
 	_bool	m_bFirstMove = {};
@@ -99,12 +91,10 @@ private:
 	_float	m_fHitTimer = {};
 	_float	m_fTumbleTimer = {};
 
+	_float	m_fMoveDecisionTime = 0.f;
+	_float	m_fMoveDecisionLimit = 1.2f;
 
-	STRAFE_DIR m_eStrafeDir = STRAFE_DIR::NONE;
-	STRAFE_DIR m_ePrevStrafeDir = STRAFE_DIR::NONE;
-
-	_float m_fDecisionTimer = 0.f;
-	_float m_fDecisionInterval = 2.f; 
+	_float4 m_vDashDir = {};
 
 
 	void	Behavior_IdleEnter();
@@ -138,6 +128,10 @@ private:
 	void	Behavior_ShuffleEnter();
 	HRESULT Behavior_ShuffleExitCheck(_float fTimeDelta);
 	void	Behavior_ShuffleExit();
+
+	void	Behavior_FearEnter();
+	HRESULT Behavior_FearExitCheck(_float fTimeDelta);
+	void	Behavior_FearExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);

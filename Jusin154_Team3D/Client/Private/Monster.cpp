@@ -284,6 +284,33 @@ void CMonster::Set_Easing(_uint iAnimIndex,_float fEasingStartRatio,_float fEasi
 }
 
 
+void CMonster::Update_Disolve(_float fTimeDelta,_float fRatio)
+{
+	if (!m_bDisolve)
+		return;
+
+	if (!m_bDisolveReverse)
+	{
+		m_fDisolveTime += fTimeDelta * fRatio;
+
+		if (m_fDisolveTime >= 1.f)
+		{
+			m_fDisolveTime = 1.f;
+		}
+	}
+	else
+	{
+		m_fDisolveTime -= fTimeDelta * fRatio;
+
+		if (m_fDisolveTime <= 0.f)
+		{
+			m_fDisolveTime = 0.f;
+			m_bDisolve = false;
+			m_bDisolveReverse = false;
+		}
+	}
+}
+
 void CMonster::Free()
 {
 	__super::Free();

@@ -405,55 +405,31 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 		return S_OK;
 	}
 
-	//for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
-	//{
-	//	CRaceRing::RACERING_DESC Desc = {};
-
-	//	Desc.pBroomRaceManager = this;	
-
-	//	/* Transform */
-	//	auto* Rotation = Object->FirstChildElement("Scale");
-	//	Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
-	//	Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
-	//	Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
-
-	//	auto* Scale = Object->FirstChildElement("Rotation");
-	//	Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
-	//	Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
-	//	Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
-
-	//	auto* Position = Object->FirstChildElement("Position");
-	//	Position->QueryFloatAttribute("x", &Desc.vPosition.x);
-	//	Position->QueryFloatAttribute("y", &Desc.vPosition.y);
-	//	Position->QueryFloatAttribute("z", &Desc.vPosition.z);
-
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
-	//		return E_FAIL;
-	//}
-
-
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
 		CRaceRing::RACERING_DESC Desc = {};
 
-		Desc.pBroomRaceManager = this;
+		Desc.pBroomRaceManager = this;	
 
 		/* Transform */
-		auto* Rotation = root->FirstChildElement("Object")->FirstChildElement("Scale");
+		auto* Rotation = Object->FirstChildElement("Scale");
 		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
 		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
 		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
 
-		auto* Scale = root->FirstChildElement("Object")->FirstChildElement("Rotation");
+		auto* Scale = Object->FirstChildElement("Rotation");
 		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
 		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
 		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
 
-		auto* Position = root->FirstChildElement("Object")->FirstChildElement("Position");
+		auto* Position = Object->FirstChildElement("Position");
 		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
 		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
 		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
 			return E_FAIL;
+	}
 
 	return S_OK;
 }
