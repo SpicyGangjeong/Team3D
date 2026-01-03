@@ -760,6 +760,12 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 					m_bHit = true;
 				}
 				break;
+				case PXOBJECT::GOBLIN_ASSASSIN:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
 				case PXOBJECT::TROLL:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);

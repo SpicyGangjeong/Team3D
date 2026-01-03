@@ -505,6 +505,9 @@ void CModel::Update_RootBone(_float Amount)
 		if (m_bRootBone) {
 			m_pTransform->AccumulateMomentum(vDeltaWorld);
 		}
+		else {
+			m_RootBoneMomentum = vDeltaWorld;
+		}
 
 		m_vPrevRootPos = vCurRootPos;
 

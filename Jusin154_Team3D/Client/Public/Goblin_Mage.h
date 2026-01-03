@@ -84,7 +84,6 @@ private:
 	_bool	m_bStep = { false };
 	_float	m_fTpTime = {};
 	_float	m_fAirTime = {};
-	_vector m_vOriginPos = {};
 	_float	m_fLength = {};
 	_bool	m_bShield = { false };
 	_bool	m_bPos = {};
@@ -131,6 +130,10 @@ private:
 	void	Behavior_BlinkEnter();
 	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);
 	void	Behavior_BlinkExit();
+
+	void	Behavior_FearEnter();
+	HRESULT Behavior_FearExitCheck(_float fTimeDelta);
+	void	Behavior_FearExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);

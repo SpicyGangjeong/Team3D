@@ -77,7 +77,6 @@ private:
 	HRESULT Render_Nonblend();
 	HRESULT Render_Blend();
 	void MoveTo(_float fTimeDelta);
-	void Update_Disolve(_float fTimeDelta);
 	HRESULT Load_RanrokPos(const _char* pFilePath);
 public:
 	static CRanrok* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -100,13 +99,8 @@ private:
 	_bool m_bFireBurst = { false };
 	_bool m_bTucked = {false};
 	_bool m_bHoverDash = { false };
-	_vector m_vMoveDir = XMVectorZero();
 
-	_bool  m_bDisolveReverse = { false };
-	_float m_fDisolveDelay = 0.f;      
-
-
-	vector<vector<_vector>> m_Points;
+	vector<vector<_float4>> m_Points;
 	_int m_iCurrentPoint = 0;
 	_int m_iCurrentFlow = 0;
 
@@ -117,10 +111,10 @@ private:
 	_float m_fRushTime = {};
 	_float m_fHeadAimWeight = {};
 	_float m_fPrevHpRatio = {};
-	_int m_iBreathRand = {};
+	_int   m_iBreathRand = {};
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
-	_float					 m_fTuckedSpeed = { 50.f };
+	_float					 m_fTuckedSpeed = { 90.f };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
