@@ -571,7 +571,7 @@ void CRenderer::Render_Fog()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_Texture"))) {
 		return;
 	}
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::FOG));
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::PRINT_BACKBUFFER));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
@@ -586,8 +586,8 @@ void CRenderer::Render_Fog()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 		return;
 	}
-
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::PRINT_BACKBUFFER));
+	
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::FOG));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();

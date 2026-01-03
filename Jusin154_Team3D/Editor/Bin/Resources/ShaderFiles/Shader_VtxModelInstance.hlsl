@@ -153,6 +153,7 @@ bool   g_isDissolve_G;
 float  g_fDissolveMaskEdge;
 float  g_fDissolveSoftMask;
 float  g_fDissolveCutRatio;
+float2 g_vDissolveSmoothRange;
 
 /* 디스토션 */
 
@@ -785,7 +786,7 @@ float4 DrawEffect(PS_IN In)
                 }
             
             
-                float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
+                float fFade = smoothstep(fTimeRatio - g_vDissolveSmoothRange.x, fTimeRatio + g_vDissolveSmoothRange.y, vMtrlDissolve.r);
             
                 if (g_isNoDissolveSmoothStep == true)
                 {
