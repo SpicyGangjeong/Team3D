@@ -15,7 +15,7 @@ void CPlayerRobe::Priority_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
 #ifdef 기무리
-	Update_RobeJoints();
+	//Update_RobeJoints();
 #endif // 기무리
 
 	Describe_Entity();

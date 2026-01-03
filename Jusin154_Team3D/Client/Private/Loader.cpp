@@ -1959,21 +1959,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.1f };
 			Desc.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 0.5f, 1.f, 0.125f };
-			Desc.fDensity = 1.f;
+			Desc.vhalfGeometryInfo = { 0.5f, 1.f, 0.01f };
+			Desc.fDensity = 100.f;
 			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 1.f, 0.f));
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.5f, 1.375f, 0.f };
 
 			Desc.pxMassCenter = pxPivotTransform;
-			Desc.eLockFlag = {
-				//PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X |
-				//PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y |
-				//PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z |
-				//PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y |
-				//PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_X |
-				//PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z
-			};
 			Desc.vAutoDamping = { 10.f, 10.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
