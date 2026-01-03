@@ -65,7 +65,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, 5.f, -20.f, 1.f));
 
-	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Z_Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
 	m_pLeftHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("LeftHand");

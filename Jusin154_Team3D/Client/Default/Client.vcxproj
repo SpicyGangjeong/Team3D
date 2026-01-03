@@ -180,6 +180,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Goblin_Sword.h" />
     <ClInclude Include="..\public\InstancedProp_Light.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
+    <ClInclude Include="..\Public\Ranrok_Charge.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\CamPosition_AI.h" />
     <ClInclude Include="..\public\Dialogue.h" />
@@ -190,6 +191,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
+    <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\ReparoObject.h" />
     <ClInclude Include="..\Public\State_Dash.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
@@ -441,6 +443,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Sword.cpp" />
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Charge.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\CamPosition_AI.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
@@ -450,6 +453,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\PointLight.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\ReparoObject.cpp" />
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />

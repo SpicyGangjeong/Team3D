@@ -329,8 +329,8 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 
 	if (m_EffectInfo.isNomalMap)
 	{
-		size_t iComponentLength = m_strNomalMapName.length();
-		const _char* pFileComponentPath = m_strNomalMapName.c_str();
+		size_t iComponentLength = m_strNormalMapName.length();
+		const _char* pFileComponentPath = m_strNormalMapName.c_str();
 
 		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
 			return E_FAIL;
@@ -457,7 +457,7 @@ void CEditEffect::Describe_Entity()
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", 
 		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" ,"BLUR_CULLING_NO_EMISSIVE" ,
-		"BLOOM_CULLING" , "DEFAULT_NONPOS" , "NONWB_NONPOS",  "DECAL", "DECAL_WB" , "DECAL_BLUR"};
+		"BLOOM_CULLING" , "DEFAULT_NONPOS" , "NONWB_NONPOS",  "DECAL", "DECAL_WB" , "DECAL_BLUR", "BLEND_CULLING"};
 
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -763,6 +763,17 @@ void CEditEffect::Describe_Entity()
 					GUI::Spacing(); GUI::Spacing();
 				}
 
+				if (GUI::TreeNode("DECAL TEX"))
+				{
+					_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NORMAL_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this, L"DECAL");
+
+					if (strName != "") {
+						m_strDiffuseName = strName;
+					}
+
+					GUI::TreePop();
+				}
+
 
 				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
 				
@@ -827,6 +838,18 @@ void CEditEffect::Describe_Entity()
 
 					GUI::Spacing(); GUI::Spacing();
 				}
+
+				if (GUI::TreeNode("DECAL TEX"))
+				{
+					_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NORMAL_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this, L"DECAL");
+
+					if (strName != "") {
+						m_strMaskingName = strName;
+					}
+
+					GUI::TreePop();
+				}
+
 
 				string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
 				
@@ -1005,11 +1028,24 @@ void CEditEffect::Describe_Entity()
 					GUI::Spacing(); GUI::Spacing();
 				}
 
+				if (GUI::TreeNode("DECAL TEX"))
+				{
+					_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NORMAL_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this, L"DECAL");
+
+					if (strName != "") {
+						m_strNoiseName = strName;
+					}
+
+					GUI::TreePop();
+				}
+
 				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
 
 				if (strName != "") {
 					m_strNoiseName = strName;
 				}
+
+		
 
 				GUI::TreePop();
 			}
@@ -1020,7 +1056,7 @@ void CEditEffect::Describe_Entity()
 
 	if (m_EffectInfo.isNomalMap == true)
 	{
-		if (GUI::TreeNode("NOMAL_TEX"))
+		if (GUI::TreeNode("NORMAL_TEX"))
 		{
 			if (m_pNormal_TextureCom != nullptr)
 			{
@@ -1031,11 +1067,31 @@ void CEditEffect::Describe_Entity()
 				GUI::Spacing(); GUI::Spacing();
 			}
 
-			_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOMAL_TEXTURE", (CComponent**)&m_pNormal_TextureCom, nullptr, this , L"NOMAL");
+			if (GUI::TreeNode("NORMAL"))
+			{
+				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NORMAL_TEXTURE", (CComponent**)&m_pNormal_TextureCom, nullptr, this, L"NORMAL");
 
-			if (strName != "") {
-				m_strNomalMapName = strName;
+				if (strName != "") {
+					m_strNormalMapName = strName;
+				}
+
+				GUI::TreePop();
 			}
+
+			if (GUI::TreeNode("DECAL NORMAL"))
+			{
+				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NORMAL_TEXTURE", (CComponent**)&m_pNormal_TextureCom, nullptr, this, L"DECALNORMAL");
+
+				if (strName != "") {
+					m_strNormalMapName = strName;
+				}
+
+				GUI::TreePop();
+			}
+		
+	
+
+		
 
 			GUI::TreePop();
 		}

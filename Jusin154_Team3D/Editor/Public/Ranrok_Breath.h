@@ -30,6 +30,8 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
+	void			Set_BreathTime(_float fTime);
+
 private:
 	_wstring						  m_wstrEffectName = {};
 
