@@ -806,6 +806,9 @@
     <ClInclude Include="..\Public\Ranrok_Charge.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Fear.h">
+      <Filter>04.Mechanic\State\Focus\Fear</Filter>
+          </ClInclude>
     <ClInclude Include="..\Public\Ride_Bbooster_Slot.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
     </ClInclude>
@@ -1701,6 +1704,9 @@
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge">
       <UniqueIdentifier>{fd036f05-4c10-4322-b0c2-aac65e7011a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Fear">
+      <UniqueIdentifier>{99712e38-b76a-4c04-8ba3-16ddaac72679}</UniqueIdentifier>
+          </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel">
       <UniqueIdentifier>{5bf233fa-6f9c-40d5-85c6-adbc7fcf7d28}</UniqueIdentifier>
     </Filter>
@@ -2478,6 +2484,9 @@
     <ClCompile Include="..\Private\Ranrok_Charge.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Fear.cpp">
+      <Filter>04.Mechanic\State\Focus\Fear</Filter>
+         </ClCompile>
     <ClCompile Include="..\Private\Ride_Bbooster_Slot.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
     </ClCompile>

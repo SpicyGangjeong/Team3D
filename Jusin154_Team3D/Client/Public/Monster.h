@@ -41,6 +41,7 @@ protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };
 	CStat*			m_pStat = { nullptr };
+	CMotion_Trail*	m_pMotionTrailCom = { nullptr };
 	_float4			m_vTargetPos = { };
 	_float3			m_vToTargetDir = { };
 	_float			m_fTargetDistance = { FLT_MAX };
@@ -57,6 +58,8 @@ protected:
 	_float			m_fCross = {};
 	_float			m_fEasing = { 1.f };
 	_int			m_eHitState = { ENUM_CLASS(HIT_STATE::END) };
+	_bool			m_bDisolveReverse = { false };
+	_float			m_fDisolveDelay = 0.f;
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;
@@ -67,6 +70,7 @@ protected:
 	void Set_Easing(_uint iAnimIndex, _float fEasingStartRatio, _float fEasingEndRatio, _float fEasingTime);
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
+	void	Update_Disolve(_float fTimeDelta,_float fRatio);
 	virtual void Free() override;
 #ifdef _DEBUG
 	virtual void Describe_Entity() override;

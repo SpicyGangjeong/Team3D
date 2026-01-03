@@ -95,6 +95,10 @@
 	<Anim state="STUMBLE_BWD_R" index="395" loop="false"/>
 	<Anim state="STUMBLE_FWD" index="396" loop="false"/>
 
+	<!-- FEAR -->
+	<Anim state="FEAR_L" index="327" loop="false"/>
+	<Anim state="FEAR_R" index="328" loop="false"/>
+
 	<!-- DEAD -->
 	<Anim state="DEAD_BWD" index="317" loop="false"/>
 	<Anim state="DEAD_BWD2" index="318" loop="false"/>

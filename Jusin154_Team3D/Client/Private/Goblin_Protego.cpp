@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "EffectParts.h"
+#include "MapElement_Interactable.h"
 
 
 CGoblin_Protego::CGoblin_Protego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -176,8 +177,61 @@ void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	if (!m_bVisible)
 		return;
-	//CTransform* pOtherTransform = p
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	pair<_float, _float> damagePair = {};
+
+	if (pEffect_Container != nullptr)
+	{
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_bVisible = false;
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ACCIO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_bVisible = false;
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_bVisible = false;
+			break;
+		}
+	}
+	else
+	{
+		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+		if (pProps != nullptr)
+		{
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_bVisible = false;
+		}
+	}
 
 }
 

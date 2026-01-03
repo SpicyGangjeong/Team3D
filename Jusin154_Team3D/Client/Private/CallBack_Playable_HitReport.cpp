@@ -2,6 +2,7 @@
 #include "CallBack_Playable_HitReport.h"
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "Player.h"
 
 CCallBack_Playable_HitReport::CCallBack_Playable_HitReport()
 {
@@ -95,7 +96,7 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 				float forceMagnitude = PSX::PxClamp(fLength * 600.f, 0.f, 2000.f);
 				PSX::PxRigidBodyExt::addForceAtPos(*pDynamic, vForceDir * forceMagnitude, { (_float)hit.worldPos.x, (_float)hit.worldPos.y, (_float)hit.worldPos.z }, PSX::PxForceMode::eFORCE);
 				pTargetActorData->pOwner->OnCollision();
-
+				dynamic_cast<CPlayer*>(m_pController->Get_Owner())->Set_OpenDoor(true);
 			} break;
 			default:
 			{

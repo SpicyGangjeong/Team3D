@@ -50,6 +50,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 
 	Load_AnimXML("../Bin/Resources/Data/AnimList/Ranrok.xml");
+
+	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
 	{
 		CFSM::FSM_DESC FSMDesc{};
 		FSMDesc.pStates = &m_States;
@@ -76,7 +78,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, 6.860f, 16.071f, 1.f));
 	}
 
-	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
+	m_pModelCom->Set_DisableRootMotionScale(true);
+
 
 	return S_OK;
 }
@@ -104,6 +107,14 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 
 	m_pFSM->Update_State(fTimeDelta);
+
+	m_vCaptureTimer.x += fTimeDelta;
+	if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
+		m_vCaptureTimer.x = 0.f;
+		if (FAILED(m_pModelCom->Capture_BoneBuffer(m_pMotionTrailCom, *m_pTransformCom->Get_WorldMatrixPtr()))) {
+			assert(false);
+		}
+	}
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
@@ -148,7 +159,8 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 
 
-	Update_Disolve(fTimeDelta);
+	Update_Disolve(fTimeDelta,0.8f);
+
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -170,7 +182,10 @@ void CRanrok::Late_Update(_float fTimeDelta)
 		_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
 		_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
 
-		m_pModelCom->Set_TargetPos(vPos + (vRight* (_float)m_iBreathRand));
+		_float4 SetPos = {};
+		XMStoreFloat4(&SetPos,vPos + (vRight * (_float)m_iBreathRand));
+
+		m_pModelCom->Set_TargetPos(SetPos);
 
 	}
 
@@ -231,6 +246,30 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
+{
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		m_pContext->VSSetShaderResources(26, 1, &pSRV);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -408,6 +447,14 @@ HRESULT CRanrok::Ready_Components()
 		return E_FAIL;
 	}
 
+	{
+		CMotion_Trail::MOTIONTRAIL_RENDERFUNC funcDesc{};
+		funcDesc.funcRenderCall = [this](ID3D11ShaderResourceView* pSRV) { Render_MotionTrail(pSRV); };
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Ranrok_MotionTrail"), (CComponent**)&m_pMotionTrailCom, &funcDesc))) {
+			return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -456,18 +503,11 @@ HRESULT CRanrok::Render_Nonblend()
 	{
 		if (FAILED(m_pShaderCom->Bind_Matrices( "g_OffsetMatrix",
 			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size() )))
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
 		{
 			return E_FAIL;
 		}
 
-//#ifdef _DEBUG
-//#ifdef 기무리
-//		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-//			return E_FAIL;
-//		}
-//#endif // 기무리
-//#endif // _DEBUG
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
@@ -480,36 +520,6 @@ HRESULT CRanrok::Render_Nonblend()
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
-		}
-
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_OffsetMatrix",
-			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
-		)))
-		{
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-
-		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
-
-		if (true == m_bDrawOutLine) {
-			m_pGameInstance->Begin_OutLine_Write(2);
-		}
-		if (FAILED(m_pModelCom->Render(i))) {
-			return E_FAIL;
-		}
-		if (true == m_bDrawOutLine) {
-			m_pGameInstance->End_OutLine_Write();
 		}
 	}
 
@@ -542,6 +552,9 @@ HRESULT CRanrok::Render_Nonblend()
 		_float zero = 0.f;
 		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
+	}
+	if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+		return E_FAIL;
 	}
 	return S_OK;
 }
@@ -653,7 +666,15 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	if (m_iCurrentFlow >= m_Points.size())
 		m_iCurrentFlow = 0;
 
-	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+	if (m_iCurrentFlow == m_Points.size() - 1)
+	{
+		if (m_iCurrentPoint >= m_Points[m_iCurrentFlow].size() * 0.3f)
+		{
+			m_fTuckedSpeed = 55.f;
+		}
+	}
+
+	_vector Target = XMLoadFloat4(&m_Points[m_iCurrentFlow][m_iCurrentPoint]);
 	_vector NextTarget;
 
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
@@ -665,7 +686,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 15.f)
 	{
-		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
+		 NextTarget = XMLoadFloat4(&m_Points[m_iCurrentFlow][m_iCurrentPoint + 1]);
 	}
 	else {
 		NextTarget = Target;
@@ -729,7 +750,7 @@ HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
 				pPos->QueryFloatAttribute("x", &px);
 				pPos->QueryFloatAttribute("y", &py);
 				pPos->QueryFloatAttribute("z", &pz);
-				m_Points[iCurrentFlow].emplace_back(XMVectorSet(px, py, pz, 1.f));
+				m_Points[iCurrentFlow].emplace_back(px, py, pz, 1.f);
 			}
 			pPosition = pPosition->NextSiblingElement("Position");
 		}
@@ -737,33 +758,6 @@ HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
 	}
 
 	return S_OK;
-}
-
-void CRanrok::Update_Disolve(_float fTimeDelta)
-{
-	if (!m_bDisolve)
-		return;
-
-	if (!m_bDisolveReverse)
-	{
-		m_fDisolveTime += fTimeDelta * 0.8f;
-
-		if (m_fDisolveTime >= 1.f)
-		{
-			m_fDisolveTime = 1.f;
-		}
-	}
-	else
-	{
-		m_fDisolveTime -= fTimeDelta * 0.8f;
-
-		if (m_fDisolveTime <= 0.f)
-		{
-			m_fDisolveTime = 0.f;
-			m_bDisolve = false;
-			m_bDisolveReverse = false;
-		}
-	}
 }
 
 
@@ -802,6 +796,7 @@ void CRanrok::Free()
 		m_pCallBack_HitReport->Finalize();
 	}
 
+	SAFE_RELEASE(m_pMotionTrailCom);
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pEffectPool);
@@ -853,15 +848,15 @@ void CRanrok::Describe_Entity()
 
 					GUI::SetClipboardText(buf);
 
-					m_Points[i].push_back(XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
+					_float4 vPos = { Pos.x, Pos.y, Pos.z, 1.f };
+					m_Points[i].push_back(vPos);
 				}
 
 				GUI::Text("Points[%d] Count : %d", i, (_int)m_Points[i].size());
 
 				for (_uint j = 0; j < m_Points[i].size(); )
 				{
-					_float3 p;
-					XMStoreFloat3(&p, m_Points[i][j]);
+					_float3 p = { m_Points[i][j].x,m_Points[i][j].y,m_Points[i][j].z };
 
 					GUI::PushID((int)(i * 10000 + j));
 

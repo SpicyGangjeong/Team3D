@@ -35,6 +35,7 @@ public:
 	virtual HRESULT		Render_OutLine() override;
 	void				Set_KinematicFlag(_bool bFlag);
 	void				ActivateAt(_fvector vPos); // 풀링 꺼내기, 위치 지정
+	void				Set_Throw(_bool bThrow) { m_bThrow = bThrow; }
 
 private:
 	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END };
@@ -53,6 +54,7 @@ private:
 	/* 충돌을 위한 변수*/
 	_bool							m_isGraped = { false };
 	_bool                           m_bHit = { false };
+	_bool							m_bThrow = { false };
 	_float4							m_vStartPos = { 0.f, 0.f, 0.f, 1.f };
 	class CEffectPool*				m_pEffectPool = { nullptr };
 private:

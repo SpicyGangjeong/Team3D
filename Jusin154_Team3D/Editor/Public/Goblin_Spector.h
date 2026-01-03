@@ -69,7 +69,6 @@ public:
 	_bool m_bStep = { false };
 	_float m_fTpTime = {};
 	_float m_fAirTime = {};
-	_vector m_vOriginPos = {};
 	_float m_fLength = {};
 
 };

@@ -467,6 +467,13 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
 
         { "FIREBURST_REEL", FIREBURST_REEL },
 
+        { "OPEN_DOOR", OPEN_DOOR },
+        { "OPEN_DOOR_L", OPEN_DOOR_L },
+        { "OPEN_DOOR_R", OPEN_DOOR_R },
+
+        { "FEAR_L", FEAR_L },
+        { "FEAR_R", FEAR_R },
+
         // SPELL LEARNING
         { "SPELL_LEARNING_FAIL", SPELL_LEARNING_FAIL },
         { "SPELL_LEARNING_LOOP", SPELL_LEARNING_LOOP },

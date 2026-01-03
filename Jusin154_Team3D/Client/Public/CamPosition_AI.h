@@ -32,7 +32,7 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_SubParts();
 	_vector Calc_LookTargetPos();
-	_vector Calc_FollowTargetPos(_vector vLookTargetWorldPos);
+	_vector Calc_FollowTargetPos(_fvector vLookTargetWorldPos);
 	_vector Calc_DampingParentPos();
 
 #pragma region Base
