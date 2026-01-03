@@ -529,13 +529,9 @@ float4 DrawEffect(PS_IN In)
     float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
     
     
-    if (vDelay.x < vDelay.y)
-    {
-        discard;
-    }
-    
-    if (In.vLifeTime.x > In.vLifeTime.y)
-        discard;
+                  
+    clip(vDelay.x - vDelay.y);
+    clip(In.vLifeTime.y - In.vLifeTime.x);
     
     
     if (g_isDiffuse == true)
@@ -791,7 +787,7 @@ float4 DrawEffect(PS_IN In)
                 
                 if (g_isNoDissolveSmoothStep == true)
                 {
-                    fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
+                    fFade = smoothstep(fTimeRatio, fTimeRatio + FLT_EPSILON5, vMtrlDissolve.r);
                 }
             
                 vMtrlDiffuse.a *= fFade;

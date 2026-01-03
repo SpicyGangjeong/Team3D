@@ -501,7 +501,7 @@ HRESULT CRanrok::Render_Nonblend()
 
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
 	{
-		if (FAILED(m_pShaderCom->Bind_Matrices( "g_OffsetMatrix",
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",
 			m_pModelCom->Get_OffsetMatrix(i).data(),
 			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
 		{
@@ -525,6 +525,7 @@ HRESULT CRanrok::Render_Nonblend()
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
+	}
 
 	if (m_bDrawOutLine) {
 		Render_OutLine();
@@ -561,6 +562,7 @@ HRESULT CRanrok::Render_Nonblend()
 	}
 	return S_OK;
 }
+
 HRESULT CRanrok::Render_Blend()
 {
 	_float fDiffuseUVRatio = (m_vEtherealTimer.x / m_vEtherealTimer.y);
