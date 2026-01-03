@@ -237,73 +237,73 @@ _vector CRanrok::Get_LockOnPos()
 
 void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	//if (true == m_bDead) {
-	//	return;
-	//}
-	//if (m_bFireBurst)
-	//	return;
+	if (true == m_bDead) {
+		return;
+	}
+	if (m_bFireBurst)
+		return;
 
-	//ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-
-
-	////m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
-
-	//CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
-
-	//pair<_float, _float> damagePair = {};
-
-	//if (pEffect_Container != nullptr)
-	//{
-	//	_uint iSkillType = pEffect_Container->Get_SkillType();
-	//	//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
-
-	//	switch (iSkillType)
-	//	{
-	//	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-	//		break;
-	//	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
-	//		break;
-	//	case ENUM_CLASS(SKILL_TYPE::JAP):
-	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-	//		break;
-	//	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
-	//		break;
-	//	case ENUM_CLASS(SKILL_TYPE::ACCIO):
-	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
-	//		break;
-	//	case ENUM_CLASS(SKILL_TYPE::STUPEFY):
-	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
-	//		break;
-	//	}
-	//}
-	//else
-	//{
-	//	//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
-
-	//	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
-
-	//	if (pProps != nullptr)
-	//	{
-	//		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
-	//	}
-	//}
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
-	///*m_DamageInfo.fDamage = damagePair.first;
-	//m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
-	//if (0 == damagePair.second) {
-	//	m_pFSM->Change_State(FSMSTATE::DEAD);
-	//	return;
-	//}
-	//if (damagePair.second <= Get_Hp().y / 2.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
-	//{
-	//	m_pFSM->Change_State(FSMSTATE::LAND);
-	//	return;
-	//}*/
-	//m_pFSM->Change_State(FSMSTATE::HIT);
+	//m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	pair<_float, _float> damagePair = {};
+
+	if (pEffect_Container != nullptr)
+	{
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ACCIO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		}
+	}
+	else
+	{
+		//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
+
+		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+
+		if (pProps != nullptr)
+		{
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
+		}
+	}
+
+
+	/*m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	if (0 == damagePair.second) {
+		m_pFSM->Change_State(FSMSTATE::DEAD);
+		return;
+	}
+	if (damagePair.second <= Get_Hp().y / 2.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
+	{
+		m_pFSM->Change_State(FSMSTATE::LAND);
+		return;
+	}*/
+	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
 void CRanrok::OnHit(CGameObject* pOther, CGameObject* pCaller)
@@ -526,7 +526,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	if (m_iCurrentFlow >= m_Points.size())
 		m_iCurrentFlow = 0;
 
-	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+	_vector Target = XMLoadFloat4(&m_Points[m_iCurrentFlow][m_iCurrentPoint]);
 	_vector NextTarget;
 
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
@@ -538,7 +538,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 15.f)
 	{
-		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
+		NextTarget = XMLoadFloat4(&m_Points[m_iCurrentFlow][m_iCurrentPoint + 1]);
 	}
 	else {
 		NextTarget = Target;
@@ -608,7 +608,7 @@ HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
 				pPos->QueryFloatAttribute("x", &px);
 				pPos->QueryFloatAttribute("y", &py);
 				pPos->QueryFloatAttribute("z", &pz);
-				m_Points[iCurrentFlow].emplace_back(XMVectorSet(px, py, pz, 1.f));
+				m_Points[iCurrentFlow].emplace_back(px, py, pz, 1.f);
 			}
 			pPosition = pPosition->NextSiblingElement("Position");
 		}
@@ -684,8 +684,7 @@ void CRanrok::Describe_Entity()
 
 			for (_uint j = 0; j < m_Points[i].size(); )
 			{
-				_float3 p;
-				XMStoreFloat3(&p, m_Points[i][j]);
+				_float3 p = { m_Points[i][j].x,m_Points[i][j].y,m_Points[i][j].z };
 
 				GUI::PushID((int)(i * 10000 + j));
 

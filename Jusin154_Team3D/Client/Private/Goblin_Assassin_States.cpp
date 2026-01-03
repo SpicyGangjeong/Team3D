@@ -328,7 +328,8 @@ void CGoblin_Assassin::Behavior_DashEnter()
 HRESULT CGoblin_Assassin::Behavior_DashExitCheck(_float fTimeDelta)
 {
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
-	_vector RootDelta = m_pModelCom->Get_RootBoneMomentum();
+	_float4 RootMomentum = m_pModelCom->Get_RootBoneMomentum();
+	_vector RootDelta = XMLoadFloat4(&RootMomentum);
 	_float dashDist = XMVectorGetX(XMVector3Length(RootDelta));
 	m_pTransformCom->AccumulateMomentum(XMLoadFloat4(&m_vDashDir) * dashDist * 1.5f);
 

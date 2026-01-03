@@ -312,20 +312,20 @@ void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 	Set_State(STATE::LOOK, vLook);
 }
 
-void CTransform::TurnAngle(_vector vAxis, _float fAngle)
+void CTransform::TurnAngle(_float4 vAxis, _float fAngle)
 {
 	_vector vRight = Get_State(STATE::RIGHT);
 	_vector vUp = Get_State(STATE::UP);
 	_vector vLook = Get_State(STATE::LOOK);
-
-	if (vAxis.m128_f32[0] == 0 &&
-		vAxis.m128_f32[1] == 0 &&
-		vAxis.m128_f32[2] == 0)
+	_vector Axis = XMVectorZero();
+	if (vAxis.x == 0 &&
+		vAxis.y == 0 &&
+		vAxis.z == 0)
 		return;
+	Axis = XMLoadFloat4(&vAxis);
+	Axis = XMVector3Normalize(Axis);
 
-	vAxis = XMVector3Normalize(vAxis);
-
-	_matrix TurnMatrix = XMMatrixRotationAxis(vAxis, fAngle);
+	_matrix TurnMatrix = XMMatrixRotationAxis(Axis, fAngle);
 
 	vRight = XMVector3TransformNormal(vRight, TurnMatrix);
 	vUp = XMVector3TransformNormal(vUp, TurnMatrix);

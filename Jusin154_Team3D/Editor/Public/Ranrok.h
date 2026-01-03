@@ -98,11 +98,10 @@ private:
 	_bool m_bFireBurst = { false };
 	_bool m_bTucked = {false};
 	_bool m_bHoverDash = { false };
-	_vector m_vMoveDir = XMVectorZero();
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 
-	vector<vector<_vector>> m_Points;
+	vector<vector<_float4>> m_Points;
 	_int m_iCurrentPoint = 0;
 	_int m_iCurrentFlow = 0;
 

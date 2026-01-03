@@ -182,7 +182,10 @@ void CRanrok::Late_Update(_float fTimeDelta)
 		_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
 		_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
 
-		m_pModelCom->Set_TargetPos(vPos + (vRight* (_float)m_iBreathRand));
+		_float4 SetPos = {};
+		XMStoreFloat4(&SetPos,vPos + (vRight * (_float)m_iBreathRand));
+
+		m_pModelCom->Set_TargetPos(SetPos);
 
 	}
 

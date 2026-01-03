@@ -280,7 +280,7 @@ void CBroomRaceManager::Check_RingPassed()
 
 		_vector currPos = racer.pAI ? racer.pAI->Get_WorldPostion() : racer.pRacer->Get_WorldPostion();
 
-		_vector prevPos = racer.prevPos;
+		_vector prevPos = XMLoadFloat4(&racer.prevPos);
 
 		_float Prev = XMVectorGetX(XMVector3Dot(prevPos - ringPos, ringFwd));
 		_float Curr = XMVectorGetX(XMVector3Dot(currPos - ringPos, ringFwd));
@@ -320,7 +320,7 @@ void CBroomRaceManager::Check_RingPassed()
 			}
 		}
 
-		racer.prevPos = currPos;
+		XMStoreFloat4(&racer.prevPos, currPos);
 	}
 }
 
