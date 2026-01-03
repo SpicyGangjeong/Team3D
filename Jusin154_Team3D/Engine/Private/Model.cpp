@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Animation.h"
 #include "Bone.h"
+#include "Motion_Trail.h"
 #include "ComputeShader.h"
 #include "GameObject.h"
 #include "Material.h"
@@ -631,6 +632,12 @@ void CModel::Mark_CPUChain(_int boneIdx)
 	}
 }
 
+vector<pair<class CMesh*, _uint>> CModel::Get_PairMeshPass()
+{
+
+	return vector<pair<class CMesh*, _uint>>();
+}
+
 
 const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName)
 {
@@ -746,6 +753,11 @@ _int CModel::Find_BoneIndex(const _char* pBoneName)
 	return -1;
 }
 
+_uint CModel::Get_BoneAbsoluteCount()
+{
+	return (_uint)m_Bones.size();
+}
+
 HRESULT CModel::Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix newTransformation)
 {
 	_int iBoneIndex = Find_BoneIndex(pBoneName);
@@ -754,6 +766,11 @@ HRESULT CModel::Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix 
 	}
 	m_Bones[iBoneIndex]->Set_CombinedTransformationMatrix(newTransformation);
 	return S_OK;
+}
+
+HRESULT CModel::Capture_BoneBuffer(CMotion_Trail* pTrail, const _float4x4& CurrentWorldMatrix)
+{
+	return pTrail->Capture_Model(m_pBoneMatrixBuffer, CurrentWorldMatrix);
 }
 
 //HRESULT CModel::Set_BoneLocalTransformationMatrix(const _char* pBoneName, _fmatrix newTransformation)

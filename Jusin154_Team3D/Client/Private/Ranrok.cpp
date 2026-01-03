@@ -105,6 +105,14 @@ void CRanrok::Update(_float fTimeDelta)
 
 	m_pFSM->Update_State(fTimeDelta);
 
+	m_vCaptureTimer.x += fTimeDelta;
+	if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
+		m_vCaptureTimer.x = 0.f;
+		if (FAILED(m_pModelCom->Capture_BoneBuffer(m_pMotionTrailCom, *m_pTransformCom->Get_WorldMatrixPtr()))) {
+			assert(false);
+		}
+	}
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	__super::Update(fTimeDelta);
@@ -231,6 +239,30 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
+{
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		m_pContext->VSSetShaderResources(26, 1, &pSRV);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -408,6 +440,14 @@ HRESULT CRanrok::Ready_Components()
 		return E_FAIL;
 	}
 
+	{
+		CMotion_Trail::MOTIONTRAIL_RENDERFUNC funcDesc{};
+		funcDesc.funcRenderCall = [this](ID3D11ShaderResourceView* pSRV) { Render_MotionTrail(pSRV); };
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Ranrok_MotionTrail"), (CComponent**)&m_pMotionTrailCom, &funcDesc))) {
+			return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -456,18 +496,11 @@ HRESULT CRanrok::Render_Nonblend()
 	{
 		if (FAILED(m_pShaderCom->Bind_Matrices( "g_OffsetMatrix",
 			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size() )))
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
 		{
 			return E_FAIL;
 		}
 
-//#ifdef _DEBUG
-//#ifdef 기무리
-//		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-//			return E_FAIL;
-//		}
-//#endif // 기무리
-//#endif // _DEBUG
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
@@ -480,36 +513,6 @@ HRESULT CRanrok::Render_Nonblend()
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
-		}
-
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_OffsetMatrix",
-			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
-		)))
-		{
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-
-		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
-
-		if (true == m_bDrawOutLine) {
-			m_pGameInstance->Begin_OutLine_Write(2);
-		}
-		if (FAILED(m_pModelCom->Render(i))) {
-			return E_FAIL;
-		}
-		if (true == m_bDrawOutLine) {
-			m_pGameInstance->End_OutLine_Write();
 		}
 	}
 
@@ -542,6 +545,9 @@ HRESULT CRanrok::Render_Nonblend()
 		_float zero = 0.f;
 		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
+	}
+	if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+		return E_FAIL;
 	}
 	return S_OK;
 }
@@ -802,6 +808,7 @@ void CRanrok::Free()
 		m_pCallBack_HitReport->Finalize();
 	}
 
+	SAFE_RELEASE(m_pMotionTrailCom);
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pEffectPool);

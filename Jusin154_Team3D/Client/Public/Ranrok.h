@@ -50,6 +50,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_OutLine() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	HRESULT Render_MotionTrail(ID3D11ShaderResourceView* pSRV);
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -118,6 +119,8 @@ private:
 	_float m_fHeadAimWeight = {};
 	_float m_fPrevHpRatio = {};
 	_int m_iBreathRand = {};
+
+	_float2 m_vCaptureTimer = { 0.f, 0.3f };
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 	_float					 m_fTuckedSpeed = { 50.f };

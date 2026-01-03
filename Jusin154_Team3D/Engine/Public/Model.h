@@ -108,7 +108,8 @@ public:
 	void				Apply_CPU_HeadAim();
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
-	class CMesh* Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
+	class CMesh*		Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
+	vector<pair<class CMesh*, _uint>> Get_PairMeshPass();
 #pragma endregion
 #pragma region Bone
 	const _float4x4*	Get_BoneMatrixPtr(const _char* pBoneName);
@@ -122,7 +123,9 @@ public:
 	void				Combined_BoneMatrix();
 	void				Combined_BoneMatrix(_int iStartBoneIndex, _uint iBoneCount);
 	_int				Find_BoneIndex(const _char* pBoneName);
+	_uint				Get_BoneAbsoluteCount();
 	HRESULT				Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix newTransformation);
+	HRESULT				Capture_BoneBuffer(class CMotion_Trail* pTrail, const _float4x4& CurrentWorldMatrix);
 //	HRESULT				Set_BoneLocalTransformationMatrix(const _char* pBoneName, _fmatrix newTransformation);
 
 #pragma endregion
