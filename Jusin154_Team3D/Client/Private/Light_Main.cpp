@@ -97,7 +97,7 @@ HRESULT CLight_Main::Capture_PreShadow()
 HRESULT CLight_Main::Ready_Components(void* pArg)
 {
 	__super::Ready_Components(nullptr);
-	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(-1.716f, 0.121f, 0.211f, 0.f));
+	m_pTransformCom->Rotation(60.f, 0.f, 0.f);
 
 	LIGHT_DESC* pLightDescArg = static_cast<LIGHT_DESC*>(pArg);
 
