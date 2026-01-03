@@ -56,7 +56,7 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	Magic_Meter_UV();
 	Magic_Meter_Visible(1, true);
 	Magic_Meter_Visible(5, true);
-	Visible(true);
+	Visible(false);
 	ElementAllVisible(true);
 	return S_OK;
 }

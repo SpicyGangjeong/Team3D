@@ -572,10 +572,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 				));
 			}
 			{ /* BLDG_Potions */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
+				/*jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Potions/Meshes",
 					".bin", false
-				));
+				));*/
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Potions/Collisions",
 					".bin", false
@@ -704,10 +704,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 				));
 			}
 			{	/* SUB_HogsHead */
-				jobMapModels.emplace_back(Deferred_FolderLoad(
+				/*jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_HogsHead/SUB_HogsHead_EXTLOD/ProxyAssets",
 					".bin", false
-				));
+				));*/
 				/* SUB_PippensPotions */
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/SUB_PippensPotions/SUB_Pippens_EXTLOD/ProxyAssets",
