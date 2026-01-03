@@ -227,8 +227,8 @@ void CMotion_Trail::Free()
 }
 #ifdef _DEBUG
 
+#ifdef _DEBUG
 void CMotion_Trail::Describe_Entity()
 {
 }
-
-#endif // _DEBUG
+#endif // DEBUG

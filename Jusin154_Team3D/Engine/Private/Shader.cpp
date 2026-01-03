@@ -192,11 +192,21 @@ HRESULT CShader::Hash_Variables()
 	if (nullptr == m_pEffect) {
 		return E_FAIL;
 	}
+
+#ifdef _DEBUG /* 쉐이더 리프레쉬할때 변수더미를 지워서 터져버림*/
+	if (false == m_bCloned) {
+		Safe_Delete(m_umapShaderRawVariables);
+		m_umapShaderRawVariables = new unordered_map<size_t, SHADERVARIABLE>;
+	}
+#else
 	Safe_Delete(m_umapShaderRawVariables);
 	m_umapShaderRawVariables = new unordered_map<size_t, SHADERVARIABLE>;
+#endif
+
 	HRESULT hr = m_pEffect->GetDesc(&m_EffectDesc);
 	if (FAILED(hr))
 		return hr;
+
 	m_umapShaderRawVariables->clear();
 	m_umapShaderRawVariables->reserve(m_EffectDesc.GlobalVariables);
 

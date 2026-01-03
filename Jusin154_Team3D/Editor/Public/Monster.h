@@ -21,6 +21,7 @@ public:
 	_float4 Get_TargetPos() { return m_vTargetPos; }
 	pair<_float, _float> Get_Damage(_float fDamage);
 	virtual _float2 Get_Hp();
+	float Get_HpRatio();
 
 protected:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
@@ -32,6 +33,9 @@ protected:
 	_bool			m_bDrawOutLine = { false };
 	_bool			m_bLookAt = { true };
 	_float			m_fDeadRatio = { 0.f };
+
+	_float m_fHp = { 100.f };
+	_float m_fMaxHp = { 100.f };
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

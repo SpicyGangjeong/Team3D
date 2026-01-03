@@ -501,7 +501,7 @@ HRESULT CRanrok::Render_Nonblend()
 
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
 	{
-		if (FAILED(m_pShaderCom->Bind_Matrices( "g_OffsetMatrix",
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",
 			m_pModelCom->Get_OffsetMatrix(i).data(),
 			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
 		{
@@ -511,6 +511,7 @@ HRESULT CRanrok::Render_Nonblend()
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
+
 		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
@@ -518,6 +519,9 @@ HRESULT CRanrok::Render_Nonblend()
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->Begin_OutLine_Write(2);
+		}
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
@@ -558,6 +562,7 @@ HRESULT CRanrok::Render_Nonblend()
 	}
 	return S_OK;
 }
+
 HRESULT CRanrok::Render_Blend()
 {
 	_float fDiffuseUVRatio = (m_vEtherealTimer.x / m_vEtherealTimer.y);

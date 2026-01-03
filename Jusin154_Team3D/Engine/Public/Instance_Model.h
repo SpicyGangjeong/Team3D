@@ -120,7 +120,7 @@ public:
 		_float2		vDiffuseUVMoveTime = { 1.f, 1.f };
 		_float2     vDistortionUVMoveTime = { 1.f , 1.f };
 		_float2		vNoiseUVMoveTime = { 1.f ,1.f };
-		_float2		vAniTime = { 0.01f , 0.01f };
+		_float2		vAniTime = { 1.f , 1.f };
 		_float2	    vAniIndex = {};
 
 		_bool		isMoveForward = {};
@@ -154,15 +154,41 @@ public:
 
 		_float2		vDropAttenuation = { 1.f , 1.f };
 
-		_float		fPadding0 = {};
-		_float3		vPadding1 = {};
+		_float2		vRotateAttenuation = {};
+		_float2		vRotateAttDelay = {};
 
 		_float		fSizeLerpOption = {};
 		_float		fMoveLerpOption = {};
 
 		_bool		isDetphCompareStop = {};
-		_bool		isRandomAniIndex = {};
+		_bool		isNoPos = {};
 
+		_float3     vVelocityMin = {};
+		_float3     vVelocityMax = {};
+
+		_float2      vAcceleration = {};
+
+		_bool       isNoResetTime = {};
+		_bool       isLocal_Located_Not_TakeDelay = {};
+		_bool       isCompute_LocalInverse = {};
+		_bool       isRoundLengthLerp = {};
+
+		_float		fTimeMult = { 1.f };
+		_float2     vRoundRangeLength = {};
+		_float2     vAzimuthAngle = {};
+		_float2     vPolarAngle = {};
+		_float		fRoundLengthLerpSpeed = {};
+
+		_float3     vPadding6 = {};
+
+		_bool		isRandomAniIndex = {};
+		_bool		isMoveUp = {};
+		_bool		isMoveRight = {};
+		_bool		isExcludePos = {};
+		_bool		isStop_Move_For_Depth_Compare = {};
+
+		_float3     vWolrdOffsetMax = {};
+		_float3     vWolrdOffsetMin = {};
 	}PRE_INSTANCE_DESC;
 
 	typedef struct tagCSParticleDesc

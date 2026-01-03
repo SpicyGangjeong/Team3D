@@ -1430,12 +1430,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* HogsmeadeAlphaMap */
 	if(FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Hogsmeade_AlphaMap"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Terrain/Hogsmeade_AlphaMap.dds"), 0)))) {
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Hogsmeade_AlphaMap.dds"), 0)))) {
 		return E_FAIL;
 	}
 	/* HogwartAlphaMap */
 	if(FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Hogwart_AlphaMap"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Terrain/Hogwart_AlphaMap.dds"), 0)))) {
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Hogwart_AlphaMap.dds"), 0)))) {
 		return E_FAIL;
 	}
 

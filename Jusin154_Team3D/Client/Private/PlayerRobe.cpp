@@ -672,7 +672,7 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 		JointDesc.ApplyToJoint(*m_pDynamicJoints[i]);
 		m_JointDescriptions[i] = JointDesc;
 	}
-	Update_RobeJoints();
+	//Update_RobeJoints();
 
 #ifdef _DEBUG
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.05f, 22, false, false));

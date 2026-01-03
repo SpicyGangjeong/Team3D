@@ -113,6 +113,7 @@ private:
 	_float m_fTuckedSpeed = { 75.f};
 
 
+
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();

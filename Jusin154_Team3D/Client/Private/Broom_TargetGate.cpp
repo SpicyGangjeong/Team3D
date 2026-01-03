@@ -158,6 +158,7 @@ HRESULT CBroom_TargetGate::Ready_Components()
 
 void CBroom_TargetGate::Set_TargetPosition(_fvector TargetPos)
 {
+	XMStoreFloat4(&m_vTargetPos ,TargetPos);
 	m_pTransformCom->Set_State(STATE::POSITION, TargetPos);
 	m_vActive = true;
 }

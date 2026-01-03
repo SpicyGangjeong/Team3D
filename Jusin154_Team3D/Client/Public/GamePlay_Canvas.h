@@ -34,6 +34,11 @@ public:
 	void Clear_Penel();
 
 private:
+	void Set_Ride(_bool bRide) { m_bRide = bRide; }
+
+private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CGameObject* m_pMission_Panel = { nullptr };
 	CGameObject* m_pMinimap_Panel = { nullptr };
@@ -44,6 +49,7 @@ private:
 	CGameObject* m_pRide_Panel = { nullptr };
 
 	_bool			m_bRide = { false };
+	_bool			m_bCurrentRide = { false };
 
 public:
 	static CGamePlay_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

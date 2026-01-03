@@ -55,10 +55,9 @@ public:
 	static CMotion_Trail* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELCAPTURE_DESC* pDesc);
 	virtual CMotion_Trail* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
-
 #ifdef _DEBUG
 	void Describe_Entity() override;
-#endif // _DEBUG
+#endif // DEBUG
 };
 
 NS_END
