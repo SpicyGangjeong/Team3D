@@ -198,7 +198,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     g_hWnd = hWnd;
 #endif // _DEBUG
 
-#ifdef Bin
+
 #ifndef _DEBUG
     int screenX = GetSystemMetrics(SM_CXSCREEN);
     int screenY = GetSystemMetrics(SM_CYSCREEN);
@@ -224,7 +224,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     UpdateWindow(hWnd);
 
 #endif // !_DEBUG
-#endif // Bin
+
     return TRUE;
 }
 

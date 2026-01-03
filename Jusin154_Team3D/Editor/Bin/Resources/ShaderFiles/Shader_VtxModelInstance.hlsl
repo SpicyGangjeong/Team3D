@@ -784,12 +784,13 @@ float4 DrawEffect(PS_IN In)
 
                 }
             
-            
+                vMtrlDissolve.r = saturate(vMtrlDissolve.r);
+                
                 float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
             
                 if (g_isNoDissolveSmoothStep == true)
                 {
-                    fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
+                    fFade = smoothstep(fTimeRatio, fTimeRatio + FLT_EPSILON7, vMtrlDissolve.r);
                 }
             
                 vMtrlDiffuse.a *= fFade;
