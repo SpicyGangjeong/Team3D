@@ -2948,7 +2948,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 #pragma endregion
 
-_bool bLoadHogsmeade = false;
+_bool bLoadHogsmeade = true;
 	if (bLoadHogsmeade)
 	{
 #pragma region HOGSMEADE_OBJECT
@@ -3335,10 +3335,10 @@ if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Mes
 
 vector<future<void>> jobFutures;
 
-_uint iLoadCount = 46;
+_uint iLoadCount = 44;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { false };
+_bool isLoad_Map = { true };
 if(isLoad_Map)
 {
 	{ /* Terrain */
@@ -3418,11 +3418,6 @@ if(isLoad_Map)
 	}
 	{ /* BLDG_HogsheadInn */
 		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_HogsheadInn/Meshes",
-			".bin", false,
-			&Contents[jobFutures.size()]
-		));
-		jobFutures.emplace_back(Deferred_FolderLoad(
 			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_HogsheadInn/Collision",
 			".bin", false,
 			&Contents[jobFutures.size()]
@@ -3489,11 +3484,6 @@ if(isLoad_Map)
 		));
 	}
 	{ /* BLDG_Potions */
-		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Potions/Meshes",
-			".bin", false,
-			&Contents[jobFutures.size()]
-		));
 		jobFutures.emplace_back(Deferred_FolderLoad(
 			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Potions/Collisions",
 			".bin", false,

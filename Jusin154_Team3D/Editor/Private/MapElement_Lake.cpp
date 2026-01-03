@@ -51,8 +51,21 @@ HRESULT CMapElement_Lake::Initialize(void* pArg)
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 #endif // _DEBUG
 
-	m_vRefractionColor = _float4(1.f, 1.f, 1.f, 1.f);
-	m_vSurfaceColor = _float4(1.f, 1.f, 1.f, 1.f);
+	m_fTimeSpeed = pDesc->fTimeSpeed;
+
+	m_fRefractionStrength = pDesc->fRefractionStrength;
+	m_fRefractionPow = pDesc->fRefractionPow;
+
+	m_fUVValue1 = pDesc->fUVValue1;
+	m_fUVValue2 = pDesc->fUVValue2;
+	m_fUVValue3 = pDesc->fUVValue3;
+
+	m_vUVSpeed = pDesc->vUVSpeed;
+	m_vLargeUVSpeed = pDesc->vLargeUVSpeed;
+	m_vSubUVSpeed3 = pDesc->vSubUVSpeed3;
+
+	memcpy(&m_vRefractionColor, &pDesc->vRefractionColor, sizeof(_float4));
+	memcpy(&m_vSurfaceColor, &pDesc->vSurfaceColor, sizeof(_float4));
 
 	return S_OK;
 }

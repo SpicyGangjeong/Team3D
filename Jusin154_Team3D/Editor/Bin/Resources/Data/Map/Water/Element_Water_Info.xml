@@ -22,12 +22,12 @@
     <Object Type="4" Name="HN_LakeA" Lod_Level="0">
         <PrototypeTag>Prototype_Component_Hogwart_Lake</PrototypeTag>
         <ShollowPrototypeTag>Prototype_Component_Hogwart_LakeSurFace</ShollowPrototypeTag>
-        <Position x="-92" y="-77.900002" z="-611"/>
-        <Scale x="1.1" y="1.1" z="1.1"/>
+        <Position x="-89.2" y="-61.6" z="-657.8"/>
+        <Scale x="1.3" y="1" z="1.3"/>
         <Rotation x="0" y="0" z="0"/>
         <Radius value="472.7"/>
         <TimeSpeed value="0.0099999998"/>
-        <RefractionStrength value="0.029999999"/>
+        <RefractionStrength value="0.08"/>
         <RefractionPow value="1.5"/>
         <UVValue1 value="10"/>
         <UVValue2 value="20"/>
@@ -35,7 +35,7 @@
         <UVSpeed x="0.1" y="0"/>
         <LargeUVSpeed x="0.30000001" y="0.1"/>
         <SubUVSpeed3 x="100" y="1"/>
-        <RefractionColor x="0.80590719" y="0.89926827" z="1" w="1"/>
-        <SurfaceColor x="1" y="0" z="1" w="1"/>
+        <RefractionColor x="0.3" y="0.3" z="0.3" w="1"/>
+        <SurfaceColor x="0.25" y="0" z="1" w="1"/>
     </Object>
 </MapObjects_Water>

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+﻿	#include "pch.h"
 #include "VIBuffer_Terrain.h"
 #include "GameInstance.h"
 #include "QuadTree.h"
@@ -455,29 +455,104 @@ void CVIBuffer_Terrain::Culling(_fmatrix WorldMatrix)
 	m_iNumIndices = iNumIndices;
 }
 
-void CVIBuffer_Terrain::FitY(_fmatrix WorldMatrix, _float fY)
+void CVIBuffer_Terrain::FitY(_fmatrix WorldMatrix, _float fY, _float3 vPickingPos, _uint iRange)
 {
 	m_pGameInstance->Transform_Frustum_ToLocalSpace(XMMatrixInverse(nullptr, WorldMatrix));
 
-	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+	//D3D11_MAPPED_SUBRESOURCE	SubResource{};
 
-	m_pContext->Map(m_pVB, 0, D3D11_MAP_READ_WRITE, 0, &SubResource);
+	//m_pContext->Map(m_pVB, 0, D3D11_MAP_READ_WRITE, 0, &SubResource);
 
-	VTXNORTEX* pVertices = static_cast<VTXNORTEX*>(SubResource.pData);
+	//VTXNORTEX* pVertices = static_cast<VTXNORTEX*>(SubResource.pData);
 
+	//_matrix WorldInv = XMMatrixInverse(nullptr, WorldMatrix);
+
+	
+
+	//m_pQuadTree->Set_Y(m_pGameInstance, m_pVertexPositions, pVertices, WorldMatrix, fY);
+
+	//for (_uint i = 0; i < m_iNumVertices; ++i)
+	//{
+	//	memcpy(&m_pVertexPositions[i], &pVertices[i].vPosition, sizeof(_float3));
+	//}
+	_float3 Out{};
+	_float3 vLocalPosition = {};
 	_matrix WorldInv = XMMatrixInverse(nullptr, WorldMatrix);
-
 	m_pGameInstance->Ray_WorldToLocal(&WorldInv);
+	XMStoreFloat3(&vLocalPosition, XMVector3TransformCoord(XMVectorSetW(XMLoadFloat3(&vPickingPos), 1.f), WorldInv));
+	_uint iIndex = static_cast<_uint>(vLocalPosition.x) + static_cast<_uint>(vLocalPosition.z) * m_iNumVerticesX;
 
-	m_pQuadTree->Set_Y(m_pGameInstance, m_pVertexPositions, pVertices, WorldMatrix, fY);
+	_uint	iIndices[4] = {
+		iIndex + m_iNumVerticesX,
+		iIndex + m_iNumVerticesX + 1,
+		iIndex + 1,
+		iIndex
+	};
 
-	for (_uint i = 0; i < m_iNumVertices; ++i)
-	{
-		memcpy(&m_pVertexPositions[i], &pVertices[i].vPosition, sizeof(_float3));
-	}
-
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_READ_WRITE, 0, &SubResource);
+	VTXNORTEX* pVertices = static_cast<VTXNORTEX*>(SubResource.pData);
+	Add_Y(pVertices, iIndex, fY);
+	Add_NeighborY(pVertices, static_cast<_uint>(vLocalPosition.x), static_cast<_uint>(vLocalPosition.z), fY, iRange);
 
 	m_pContext->Unmap(m_pVB, 0);
+}
+
+void CVIBuffer_Terrain::Add_NeighborY(VTXNORTEX* pVertices, _uint iX, _uint iZ, _float fY, _uint iRange)
+{
+	_int Range = iRange; // 이웃 범위 설정
+
+	for (_int dz = -Range; dz <= Range; ++dz)
+	{
+		for (_int dx = -Range; dx <= Range; ++dx)
+		{
+			_int nx = iX + dx;
+			_int nz = iZ + dz;
+
+			// 범위 체크 (0 ~ m_iNumVerticesX/Z-1)
+			if (nx < 0 || nz < 0 ||
+				nx >= (_int)m_iNumVerticesX ||
+				nz >= (_int)m_iNumVerticesZ)
+				continue;
+
+			_uint iNeighborIndex =
+				static_cast<_uint>(nx) +
+				static_cast<_uint>(nz) * m_iNumVerticesX;
+
+			Add_Y(pVertices, iNeighborIndex, fY);
+		}
+	}
+	
+}
+
+void CVIBuffer_Terrain::Add_Y(VTXNORTEX* pVertices, _uint iIndex, _float fY)
+{
+	_uint	iIndices[4] = {
+		iIndex + m_iNumVerticesX,
+		iIndex + m_iNumVerticesX + 1,
+		iIndex + 1,
+		iIndex
+	};
+
+	for (_uint i = 0; i < 4; i++)
+	{
+		if (0 > iIndices[i] || m_iNumVertices <= iIndices[i])
+			return;
+	}
+	_float fHieght = {  };
+	_float fAvgHieght = {  };
+	for (_uint i = 0; i < 4; i++)
+	{
+		fHieght += pVertices[iIndices[i]].vPosition.y;
+	}
+	
+	fAvgHieght = fHieght / 4.f;
+
+	for (_uint i = 0; i < 4; i++)
+	{
+		pVertices[iIndices[i]].vPosition.y = fAvgHieght + fY;
+		memcpy(&m_pVertexPositions[iIndices[i]], &pVertices[iIndices[i]].vPosition, sizeof(_float3));
+	}
 }
 
 
