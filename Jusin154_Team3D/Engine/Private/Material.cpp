@@ -945,18 +945,18 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 HRESULT CMaterial::UnbindAllMaterialTextures(CShader* shader)
 {
-	if (shader == nullptr) {
-		return E_FAIL;
-	}
+	//if (shader == nullptr) {
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(shader->Bind_SRV("g_DiffuseTexture", nullptr))) { return E_FAIL; }
-	if (FAILED(shader->Bind_SRV("g_NormalTexture", nullptr))) { return E_FAIL; }
-	if (FAILED(shader->Bind_SRV("g_AmbientTexture", nullptr))) { return E_FAIL; }
-	if (FAILED(shader->Bind_SRV("g_EmissiveTexture", nullptr))) { return E_FAIL; }
-	if (FAILED(shader->Bind_SRV("g_AmbientOcclusionTexture", nullptr))) { return E_FAIL; }
-	if (FAILED(shader->Bind_SRV("g_TransmissionTexture", nullptr))) { return E_FAIL; }
-	if (FAILED(shader->Bind_SRV("g_SurfaceParamsTexture", nullptr))) { return E_FAIL; }
-	if (FAILED(shader->Bind_SRV("g_UnknownTexture", nullptr))) { return E_FAIL; }
+	//if (FAILED(shader->Bind_SRV("g_DiffuseTexture", nullptr))) { return E_FAIL; }
+	//if (FAILED(shader->Bind_SRV("g_NormalTexture", nullptr))) { return E_FAIL; }
+	//if (FAILED(shader->Bind_SRV("g_AmbientTexture", nullptr))) { return E_FAIL; }
+	//if (FAILED(shader->Bind_SRV("g_EmissiveTexture", nullptr))) { return E_FAIL; }
+	//if (FAILED(shader->Bind_SRV("g_AmbientOcclusionTexture", nullptr))) { return E_FAIL; }
+	//if (FAILED(shader->Bind_SRV("g_TransmissionTexture", nullptr))) { return E_FAIL; }
+	//if (FAILED(shader->Bind_SRV("g_SurfaceParamsTexture", nullptr))) { return E_FAIL; }
+	//if (FAILED(shader->Bind_SRV("g_UnknownTexture", nullptr))) { return E_FAIL; }
 
 	return S_OK;
 }
