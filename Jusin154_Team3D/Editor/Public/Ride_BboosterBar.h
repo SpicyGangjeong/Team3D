@@ -26,9 +26,27 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	void Active(_float fTimeDelta);
+	void NonActive(_float fTimeDelta);
+
+private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
+	_float				m_fBlinkTime{};
+	_float				m_fMaxGauge{};
+	_float				m_fCurrentGauge{};
+	_float				m_fGaugeBar{};
+	_float				m_fDamage{};
+	_float				m_fTargetGauge{};
+	_float2				m_fGaugeBG{};
+	_float2				m_fGaugeBGPos{};
+	_float2				m_fGaugeBGSize{};
+
+	_int				m_iClick{};
 
 public:
 	static CRide_BboosterBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

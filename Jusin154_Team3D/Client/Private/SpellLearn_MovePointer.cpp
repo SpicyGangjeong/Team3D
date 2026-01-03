@@ -85,7 +85,7 @@ void CSpellLearn_MovePointer::Line(_float fTime, _float2 fMouse)
 		if (m_iCurrentLine < m_iLineIndex - 1)
 		{
 			++m_iCurrentLine;
-			m_fPerPosition = _float2(m_MoveLine[m_iCurrentLine - 1].m128_f32[0], m_MoveLine[m_iCurrentLine - 1].m128_f32[1]);
+			m_fPerPosition = _float2(m_MoveLine[m_iCurrentLine - 1].x, m_MoveLine[m_iCurrentLine - 1].y);
 		}
 		else
 		{

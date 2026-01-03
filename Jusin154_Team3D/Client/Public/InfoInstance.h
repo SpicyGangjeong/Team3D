@@ -36,8 +36,8 @@ public:
 	pair<_float3, _float3> Get_CameraCoordinateSystem();
 	_float Player_Damage();
 	void Set_Damage(_float fDamage);
-	void Set_PlayerPos(_vector Position);
-	_vector Get_PalyerPos();
+	void Set_PlayerPos(_fvector Position);
+	_float4 Get_PalyerPos();
 #pragma endregion
 #pragma region MONSTER_INFO
 	HRESULT Regist_PlayerAlly(CUnit* pUnit);

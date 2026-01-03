@@ -22,7 +22,7 @@ HRESULT CDamage_Font::Initialize_Prototype()
 HRESULT CDamage_Font::Initialize(void* pArg)
 {
 	m_pInfoInstance->Add_Event(TEXT("Monster_Hit"), [this](void* p) {this->Add_Damage(p); });
-	m_vWhite_Color = XMVectorSet(1.f, 1.f, 1.f, 1.f);
+	m_vWhite_Color = _float4(1.f, 1.f, 1.f, 1.f);
 	return S_OK;
 }
 
@@ -70,13 +70,8 @@ HRESULT CDamage_Font::Render()
 					m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
 					TEXT("Font_size30"),
 					iter->pDamage.c_str(),
-					iter->vTarget_Pos,
-					XMVectorSet(
-						iter->vColor.m128_f32[0] * iter->fAlpha,
-						iter->vColor.m128_f32[1] * iter->fAlpha,
-						iter->vColor.m128_f32[2] * iter->fAlpha,
-						iter->fAlpha)
-				);
+					XMLoadFloat4(&iter->vTarget_Pos),	
+					XMVectorSet(iter->vColor.x * iter->fAlpha,iter->vColor.y * iter->fAlpha,iter->vColor.z * iter->fAlpha,iter->fAlpha)	);
 			}
 		}
 	}
@@ -112,7 +107,7 @@ void CDamage_Font::Add_Damage(void* pArg)
 	}
 	else
 	{
-		Desc.vColor = XMVectorSet((215.f / 255.f), (185.f / 255.f), (95.f / 255.f), 1.f);
+		Desc.vColor = _float4((215.f / 255.f), (185.f / 255.f), (95.f / 255.f), 1.f);
 	}
 
 	m_DamageInfos.push_back(Desc);

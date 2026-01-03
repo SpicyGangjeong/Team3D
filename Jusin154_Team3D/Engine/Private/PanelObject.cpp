@@ -27,6 +27,16 @@ HRESULT CPanelObject::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
+	if (pDesc->m_bowner == true)
+	{
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
+			m_fX + m_pOwner->Get_WorldPostion().m128_f32[0],
+			m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
+			m_fSortZ, 1.f));
+
+		m_fCurrent_Position = _float4(m_fX, m_fY, 0.f, 1.f);
+	}
 
 	m_fAlpha = 1.f;
 	return S_OK;
@@ -47,7 +57,7 @@ void CPanelObject::Update(_float fTimeDelta)
 		m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
 		m_fSortZ, 1.f));
 
-	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+	m_fCurrent_Position = _float4(m_fX, m_fY, 0.f, 1.f);
 
 	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
 
@@ -149,6 +159,61 @@ void CPanelObject::Function_Callback(wstring Name, void* pArg)
 	for (auto it = range.first; it != range.second; ++it)
 	{
 		it->second(pArg);
+	}
+}
+
+_bool CPanelObject::Start_Lerp(_float fTimeDelta)
+{
+	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
+
+	_vector Target = XMLoadFloat4(&m_vLerp_Position);
+
+	_vector Dir = XMVectorSubtract(Target, Pos);
+	_vector LenVec = XMVector3Length(Dir);
+	_float Distance = XMVectorGetX(LenVec);
+
+	_float move = m_fMoveSpeed * fTimeDelta;
+
+	if (Distance <= move)
+	{
+		m_fX = m_vLerp_Position.x;
+		m_fY = m_vLerp_Position.y;
+		return true;
+	}
+
+	else
+	{
+		XMVECTOR DirNorm = XMVector3Normalize(Dir);
+		m_fX = (Pos + DirNorm * move).m128_f32[0];
+		m_fY = (Pos + DirNorm * move).m128_f32[1];
+		return false;
+	}
+}
+
+void CPanelObject::Reset_Pos(_float fTimeDelta)
+{
+	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
+
+	_vector Target = XMVectorSet(m_fOrigin_Position.x, m_fOrigin_Position.y, 0.f, 0.f);
+
+	_vector Dir = XMVectorSubtract(Target, Pos);
+	_vector LenVec = XMVector3Length(Dir);
+	_float Distance = XMVectorGetX(LenVec);
+
+	_float move = m_fMoveSpeed * fTimeDelta;
+
+	if (Distance <= move)
+	{
+		m_fX = m_fOrigin_Position.x;
+		m_fY = m_fOrigin_Position.y;
+		m_bLerpOff = false;
+	}
+
+	else
+	{
+		XMVECTOR DirNorm = XMVector3Normalize(Dir);
+		m_fX = (Pos + DirNorm * move).m128_f32[0];
+		m_fY = (Pos + DirNorm * move).m128_f32[1];
 	}
 }
 

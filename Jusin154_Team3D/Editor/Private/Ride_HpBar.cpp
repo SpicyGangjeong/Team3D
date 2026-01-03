@@ -21,10 +21,10 @@ HRESULT CRide_HpBar::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 170.f;
-	Desc.fY = -180.f;
-	Desc.fSizeX = 80.f;
-	Desc.fSizeY = 80.f;
+	Desc.fX = 60.f;
+	Desc.fY = -220.f;
+	Desc.fSizeX = 144.f;
+	Desc.fSizeY = 24.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,11 +37,15 @@ HRESULT CRide_HpBar::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
+	m_fTimeMult = 5.f;
 	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
-	m_fAngle = XMConvertToRadians(-130.f);
-	m_fImagePosi = _float4(20.5f, 20.5f, 40.f, 40.f);
+	m_fAlphaTime = 1.f;
+	m_vNine_Slice = _float4(27.f, 125.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
+	m_fMaxHp = 200.f;
+	m_fCurrentHp = m_fMaxHp;
+	m_fMoveSpeed = 5.f;
+	m_fHpBG = _float2(0, m_fSizeX);
+	SizeUpX(200.f);
 	return S_OK;
 }
 
@@ -85,7 +89,40 @@ void CRide_HpBar::Update(_float fTimeDelta)
 		}
 	}
 
-	m_fTime += fTimeDelta * m_fTimeMult;
+	if (m_fCurrentHp < 0.f)
+		m_fCurrentHp = 0.f;
+	if (m_fDamage < 0.f)
+		m_fDamage = 0.f;
+	m_fTargetHp = m_fMaxHp - m_fDamage;
+
+	if (m_fTargetHp > m_fCurrentHp)
+		Heal(fTimeDelta);
+	else if (m_fTargetHp < m_fCurrentHp)
+		Hit(fTimeDelta);
+	m_fHpBar = m_fCurrentHp / m_fMaxHp;
+
+	if (m_pGameInstance->Key_Down(DIK_3))
+	{
+		m_fDamage += 20.f;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_4))
+	{
+		m_fDamage -= 21.f;
+	}
+	if (m_fHpBar <= 0.3f)
+	{
+		m_fBlinkTime += fTimeDelta * m_fTimeMult;
+		if (m_fTime <= 1.f)
+		{
+			m_fTime += fTimeDelta * m_fTimeMult;
+		}
+	}
+	else
+	{
+		m_fBlinkTime = 0.f;
+		m_fTime = 0.f;
+	}
 
 	__super::Update(fTimeDelta);
 }
@@ -107,7 +144,7 @@ HRESULT CRide_HpBar::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::RIDE_HPSLOT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::BOOSTERHPBAR)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -123,6 +160,16 @@ HRESULT CRide_HpBar::Render()
 _vector CRide_HpBar::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
+void CRide_HpBar::Heal(_float fTimeDelta)
+{
+	m_fCurrentHp = CMyTools::Lerp_f1D(m_fTargetHp, m_fCurrentHp, fTimeDelta * m_fMoveSpeed);
+}
+
+void CRide_HpBar::Hit(_float fTimeDelta)
+{
+	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, m_fTargetHp, fTimeDelta * m_fMoveSpeed);
 }
 
 HRESULT CRide_HpBar::Bind_ShaderResources()
@@ -147,11 +194,15 @@ HRESULT CRide_HpBar::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlinkTime", &m_fBlinkTime, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -167,15 +218,23 @@ HRESULT CRide_HpBar::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAngle", &m_fAngle, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNine_Slice", &m_vNine_Slice, sizeof(_float4))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos1", &m_fImagePosi, sizeof(_float4))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOrigin_Size", &m_fOrigin_Size, sizeof(_float2))))
 	{
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHp", &m_fHpBar, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHpBG", &m_fHpBG, sizeof(_float2))))
 	{
 		return E_FAIL;
 	}
@@ -188,15 +247,11 @@ HRESULT CRide_HpBar::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_BroomHUDIcon"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -239,7 +294,6 @@ void CRide_HpBar::Free()
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
-	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

@@ -94,7 +94,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	Info.pAI = this;
 	Info.curRing = 0;
-	Info.prevPos = Get_WorldPostion();
+	XMStoreFloat4(&Info.prevPos,Get_WorldPostion());
 
 	m_pBroomRaceManager->Push_BroomRacer(Info);
 

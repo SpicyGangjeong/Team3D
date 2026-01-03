@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Animation.h"
 #include "Bone.h"
+#include "Motion_Trail.h"
 #include "ComputeShader.h"
 #include "GameObject.h"
 #include "Material.h"
@@ -168,7 +169,7 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
 		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
 
-		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector,m_iRootBoneIndex);
+		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale,m_OutRotation, m_OutTranslation,m_iRootBoneIndex);
 
 		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
 
@@ -180,7 +181,7 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 	}
 	else
 	{
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector, m_iRootBoneIndex);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
@@ -197,9 +198,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 			m_bLoopRestarted = true;
 			m_vPrevRootPos = { 0,0,0 };
 		}
-		else {
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-		}
+		//else {
+		//	XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		//}
 	}
 
 
@@ -268,9 +269,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		CAnimation* pSecondAnim = m_Animations[m_iCurrSecondAnimIndex];
 
-		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector, m_iRootBoneIndex);
+		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
-		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask,nullptr, m_iRootBoneIndex);
+		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
 		if (m_fRatio >= 1.f)
 		{
@@ -299,9 +300,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 
 
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation);
 
-		m_bIsSecondFinishedAnim = m_Animations[m_iCurrSecondAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask);
+		m_bIsSecondFinishedAnim = m_Animations[m_iCurrSecondAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation);
 		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 
@@ -321,9 +322,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			m_bLoopRestarted = true;
 			m_vPrevRootPos = { 0,0,0 };
 		}
-		else {
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-		}
+		//else {
+		//	XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		//}
 	}
 
 	if (m_bRatio) {
@@ -478,7 +479,7 @@ void CModel::Update_RootBone(_float Amount)
 		_float4x4 Root = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
 		_matrix local = XMLoadFloat4x4(&Root);
 		_float3 vCurRootPos;
-		XMStoreFloat3(&vCurRootPos, m_vector[2]);
+		XMStoreFloat3(&vCurRootPos, XMLoadFloat4(&m_OutTranslation));
 
 		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
 
@@ -505,11 +506,14 @@ void CModel::Update_RootBone(_float Amount)
 		if (m_bRootBone) {
 			m_pTransform->AccumulateMomentum(vDeltaWorld);
 		}
+		else {
+			XMStoreFloat4(&m_RootBoneMomentum, vDeltaWorld);
+		}
 
 		m_vPrevRootPos = vCurRootPos;
 
-		_float4 curRotF4;
-		XMStoreFloat4(&curRotF4, m_vector[1]);
+		_float4 curRotF4 = m_OutRotation;
+
 		_vector qCur = XMLoadFloat4(&curRotF4);
 
 		if (!m_bInitialRootRotSaved)
@@ -536,7 +540,7 @@ void CModel::Update_RootBone(_float Amount)
 
 			swap(axis.z, axis.y);
 			if (m_bRootBone) {
-				m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
+				m_pTransform->TurnAngle(axis, angle);
 			}
 		}
 		XMStoreFloat4(&m_vPrevRootRot, qCur);
@@ -582,7 +586,7 @@ void CModel::Apply_CPU_HeadAim()
 
 	_vector headFwd = XMVector3Normalize(local.r[2]);
 
-	_vector dirWS = XMVector3Normalize(m_vTargetPos - m_pTransform->Get_State(STATE::POSITION));
+	_vector dirWS = XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - m_pTransform->Get_State(STATE::POSITION));
 
 	_matrix worldInv = m_pTransform->Get_WorldMatrixInv();
 
@@ -630,7 +634,6 @@ void CModel::Mark_CPUChain(_int boneIdx)
 		boneIdx = m_Parent[boneIdx];
 	}
 }
-
 
 const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName)
 {
@@ -746,6 +749,11 @@ _int CModel::Find_BoneIndex(const _char* pBoneName)
 	return -1;
 }
 
+_uint CModel::Get_BoneAbsoluteCount()
+{
+	return (_uint)m_Bones.size();
+}
+
 HRESULT CModel::Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix newTransformation)
 {
 	_int iBoneIndex = Find_BoneIndex(pBoneName);
@@ -754,6 +762,11 @@ HRESULT CModel::Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix 
 	}
 	m_Bones[iBoneIndex]->Set_CombinedTransformationMatrix(newTransformation);
 	return S_OK;
+}
+
+HRESULT CModel::Capture_BoneBuffer(CMotion_Trail* pTrail, const _float4x4& CurrentWorldMatrix)
+{
+	return pTrail->Capture_Model(m_pBoneMatrixBuffer, CurrentWorldMatrix);
 }
 
 //HRESULT CModel::Set_BoneLocalTransformationMatrix(const _char* pBoneName, _fmatrix newTransformation)
@@ -1963,7 +1976,7 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 
 		if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] != -1)
 		{
-			_vector dirWS = XMVector3Normalize(m_vTargetPos - m_pTransform->Get_State(STATE::POSITION));
+			_vector dirWS = XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - m_pTransform->Get_State(STATE::POSITION));
 
 			_matrix worldInv = m_pTransform->Get_WorldMatrixInv();
 

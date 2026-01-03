@@ -62,8 +62,8 @@ private:
 
 	_int	m_iLineIndex{};
 	_int	m_iCurrentLine{};
-	vector<_vector> m_MoveLine;
-	vector<_vector> m_Boosters;
+	vector<_float4> m_MoveLine;
+	vector<_float4> m_Boosters;
 
 public:
 	static CSpellLearn_MovePointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

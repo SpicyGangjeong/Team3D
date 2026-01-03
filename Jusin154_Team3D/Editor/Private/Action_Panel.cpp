@@ -56,7 +56,7 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	Magic_Meter_UV();
 	Magic_Meter_Visible(1, true);
 	Magic_Meter_Visible(5, true);
-	Visible(false);
+	Visible(true);
 	ElementAllVisible(true);
 	return S_OK;
 }
@@ -75,6 +75,31 @@ void CAction_Panel::Update(_float fTimeDelta)
 	if (!__super::Chack_Visible())
 	{
 		return;
+	}
+
+	if (m_bFadeIn == true)
+	{
+		if (m_fAlpha <= 1.f)
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	if (m_bFadeOut == true)
+	{
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+			Visible(false);
+		}
 	}
 
 	Magic_Meter_Move();

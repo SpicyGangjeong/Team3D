@@ -84,7 +84,7 @@ namespace Client
 
 	typedef struct tagDamageInfo
 	{
-		_vector		vTarget_Pos{};
+		_float4		vTarget_Pos{};
 		_float		fDamage{};
 		DAMAGE_TYPE eType = DAMAGE_TYPE::NOMAL;
 	}DAMAGE_INFO;
@@ -123,8 +123,8 @@ namespace Client
 		_float			fSpellSize{};
 		_float2			fStartPosition{};
 		_float2			fEndPosition{};
-		vector<_vector> Booster;
-		vector<_vector> Lines;
+		vector<_float4> Booster;
+		vector<_float4> Lines;
 	}SPELLLEARNINFO;
 
 	typedef struct tagDialougeInfo

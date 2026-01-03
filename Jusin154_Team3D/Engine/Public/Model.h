@@ -59,8 +59,8 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 	MODEL Get_Type() { return m_eType; }
 	void Set_DisableRootMotionScale(_bool Disable) { m_bDisableRootMotionScale = Disable; }
-	void Set_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
-	void Set_HeadPos(_vector vHeadPos) { m_vHeadPos = vHeadPos; }
+	void Set_TargetPos(_float4 vTargetPos) { m_vTargetPos = vTargetPos; }
+	void Set_HeadPos(_float4 vHeadPos) { m_vHeadPos = vHeadPos; }
 	void Play_HeadBone(_bool bPlay) { m_bHeadBone = bPlay; }
 	void Set_HeadAimWeight(_float fWeight) { m_fHeadAimWeight = fWeight; }
 	_float Get_HeadAimWeight() { return m_fHeadAimWeight; }
@@ -95,6 +95,8 @@ public:
 	HRESULT Anim_Event(_float fRatio, _uint AnimIndex, function<void()> Event);
 
 	void Set_BlendDuration(_float Duration) { m_fBlendDuration = Duration; }
+
+	_float4 Get_RootBoneMomentum() { return m_RootBoneMomentum; }
 #pragma endregion
 #pragma region Mesh
 	const _char*		Get_MeshName(_uint iIndex);
@@ -108,7 +110,7 @@ public:
 	void				Apply_CPU_HeadAim();
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
-	class CMesh* Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
+	class CMesh*		Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
 #pragma endregion
 #pragma region Bone
 	const _float4x4*	Get_BoneMatrixPtr(const _char* pBoneName);
@@ -122,7 +124,9 @@ public:
 	void				Combined_BoneMatrix();
 	void				Combined_BoneMatrix(_int iStartBoneIndex, _uint iBoneCount);
 	_int				Find_BoneIndex(const _char* pBoneName);
+	_uint				Get_BoneAbsoluteCount();
 	HRESULT				Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix newTransformation);
+	HRESULT				Capture_BoneBuffer(class CMotion_Trail* pTrail, const _float4x4& CurrentWorldMatrix);
 //	HRESULT				Set_BoneLocalTransformationMatrix(const _char* pBoneName, _fmatrix newTransformation);
 
 #pragma endregion
@@ -218,7 +222,10 @@ private:
 	_float						m_fRadius = { 0.f };			// 컬링용 Radius
 	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
 	_uint						m_iIndexAnimPlayableMesh = { 0 };
-	_vector						m_vector[3];
+	_float4						m_OutScale;
+	_float4						m_OutRotation;
+	_float4						m_OutTranslation;
+
 
 	vector<_uint>				m_iBoneMask;
 	_bool						m_bInitialRootPos = { false };
@@ -230,8 +237,8 @@ private:
 	_bool						m_bRootBone = {};
 	_float4x4					m_RootMatrix = {};
 	_bool						m_bDisableRootMotionScale = {false};
-	_vector						m_vTargetPos = XMVectorZero();
-	_vector						m_vHeadPos = XMVectorZero();
+	_float4						m_vTargetPos = {};
+	_float4						m_vHeadPos = {};
 	_bool						m_bHeadBone = { false };
 	_float						m_fHeadAimWeight = { 0.f };
 	_int						m_iSkipBoneCount = {};
@@ -239,6 +246,7 @@ private:
 	_int						m_iQueuedAnimIndex = -1;
 	_bool						m_bQueuedLoop = false;
 	_bool						m_bQueuedAnim = { false };
+	_float4						m_RootBoneMomentum = {};
 
 
 private:

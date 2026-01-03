@@ -43,7 +43,7 @@ void CCanvasObject::Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, 0.f, 1.f));
 
-	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+	m_fCurrent_Position = _float4(m_fX, m_fY, 0.f, 1.f);
 
 	if (m_bFadeIn == true)
 	{

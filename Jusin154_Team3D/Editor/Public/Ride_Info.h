@@ -28,6 +28,9 @@ private:
 private:
 	void	Set_Posi();
 
+public:
+	virtual void Set_Hover(_bool bVisible) override;
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
@@ -41,6 +44,7 @@ private:
 	_float4	m_vImagePosi2{};
 	_float4	m_vImagePosi3{};
 	_float4	m_vImagePosi4{};
+
 public:
 	static CRide_Info* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

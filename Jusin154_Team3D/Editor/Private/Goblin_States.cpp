@@ -34,7 +34,6 @@ HRESULT CGoblin::Behavior_IdleExitCheck()
 {
 	if (m_fTargetDistance <= 20.f && m_fTargetDistance != 0.f)
 	{
-		m_vOriginPos = m_pTransformCom->Get_State(STATE::POSITION);
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 	}
 
