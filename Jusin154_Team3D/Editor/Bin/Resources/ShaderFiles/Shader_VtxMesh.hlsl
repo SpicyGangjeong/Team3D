@@ -737,7 +737,7 @@ PS_OUT PS_LAKE(PS_IN In)
     
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f);
     float3 vNoise = (g_NoiseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord + g_fTime * 0.1f).rgb - 0.5f) * 0.3f;
-    float4 vCaustics = g_CausticsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f + vNoise.g);
+    float4 vCaustics = g_CausticsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 10.f + vNoise.g);
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, vUV + vNoise.g);
     float3 vNormalLarge = DecodeNormalFromRG(g_NormalLargeTexture, AnisoTropy_BLUR_Sampler, vUVLarge + vNoise.r);

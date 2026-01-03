@@ -370,33 +370,6 @@
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Hover_Effect">
       <UniqueIdentifier>{62f1bdfb-9162-434a-a462-b63f5e763277}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80.State">
-      <UniqueIdentifier>{9c21aba5-00c1-4b4c-8a82-dac7a156fd9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Combat">
-      <UniqueIdentifier>{a56502cb-b0b8-4ea7-bc5e-5482b416fef9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Movement">
-      <UniqueIdentifier>{8a70232d-f917-4ff6-b617-302e325996ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Movement\State_Move">
-      <UniqueIdentifier>{dac78c4e-b898-45dc-8740-794899de0c69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Movement\State_Idle">
-      <UniqueIdentifier>{d5681f71-af29-4418-bf3a-a1486c6ba171}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Focus">
-      <UniqueIdentifier>{029a22c4-ab06-4db0-9527-4e3cfa1a2e0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Focus\State_Dodge">
-      <UniqueIdentifier>{b017e167-f48d-4417-a924-765ab802cff5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Focus\State_Jump">
-      <UniqueIdentifier>{904a7ae5-33fe-49a1-9f31-27443acc9e1a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Focus\State_Land">
-      <UniqueIdentifier>{0b8cac41-419f-48ce-87bc-805b8962b4df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Preview">
       <UniqueIdentifier>{99125f58-acb9-4e9c-af15-87bf4e09c9b1}</UniqueIdentifier>
     </Filter>
@@ -622,9 +595,6 @@
     <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer">
       <UniqueIdentifier>{d9382839-c0b8-4b3d-9227-6dcf65fba44f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80.State\Focus\Slide">
-      <UniqueIdentifier>{eef1db06-8a9f-42b4-93e2-cc29de2b275d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\SpellLearn_Data">
       <UniqueIdentifier>{6e769435-83c4-4f64-b306-1b8c5f2d228d}</UniqueIdentifier>
     </Filter>
@@ -651,12 +621,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Monster\Ranrok">
       <UniqueIdentifier>{7f9672aa-71b3-4b77-9c3b-790014eccdba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Troll_State">
-      <UniqueIdentifier>{ed83440e-f038-4fe2-b005-4ba4093e8462}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Combat\State_Rush">
-      <UniqueIdentifier>{0a3dcff9-5567-4984-a8e7-b1d2ee8d6bce}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Monster\Ranrok\RanrokState">
       <UniqueIdentifier>{0c039454-c5e4-4fbc-832e-06acb0f86f43}</UniqueIdentifier>
@@ -711,6 +675,66 @@
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy">
       <UniqueIdentifier>{cbb99946-a4d6-4ad8-842c-e67ca5de3f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel">
+      <UniqueIdentifier>{d60155b8-01ad-4234-825c-0041caf965ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key">
+      <UniqueIdentifier>{34d67344-ac98-41d4-aea3-9fa1bac8624a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State">
+      <UniqueIdentifier>{9c21aba5-00c1-4b4c-8a82-dac7a156fd9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat">
+      <UniqueIdentifier>{a56502cb-b0b8-4ea7-bc5e-5482b416fef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat\State_Rush">
+      <UniqueIdentifier>{0a3dcff9-5567-4984-a8e7-b1d2ee8d6bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Movement">
+      <UniqueIdentifier>{8a70232d-f917-4ff6-b617-302e325996ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Movement\State_Move">
+      <UniqueIdentifier>{dac78c4e-b898-45dc-8740-794899de0c69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Movement\State_Idle">
+      <UniqueIdentifier>{d5681f71-af29-4418-bf3a-a1486c6ba171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus">
+      <UniqueIdentifier>{029a22c4-ab06-4db0-9527-4e3cfa1a2e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus\State_Dodge">
+      <UniqueIdentifier>{b017e167-f48d-4417-a924-765ab802cff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus\State_Jump">
+      <UniqueIdentifier>{904a7ae5-33fe-49a1-9f31-27443acc9e1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus\State_Land">
+      <UniqueIdentifier>{0b8cac41-419f-48ce-87bc-805b8962b4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus\Slide">
+      <UniqueIdentifier>{eef1db06-8a9f-42b4-93e2-cc29de2b275d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Troll_State">
+      <UniqueIdentifier>{ed83440e-f038-4fe2-b005-4ba4093e8462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Info">
+      <UniqueIdentifier>{50d8b575-674f-4bff-84bd-3bdb4b22e6ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG">
+      <UniqueIdentifier>{8ada79e8-727c-40c3-95dc-ce34b8924e69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot">
+      <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar">
+      <UniqueIdentifier>{d26ffa70-5843-4e91-8a54-907abcc35a77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar">
+      <UniqueIdentifier>{12d83369-3413-478f-920e-c3c0ddeabfe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot">
+      <UniqueIdentifier>{353f9458-6fe9-4159-a1c6-1f3a85cffda9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Env\06.InstancedProp\Light">
       <UniqueIdentifier>{1402a2f4-a28b-4f95-b4ec-249a840fa819}</UniqueIdentifier>
@@ -1451,6 +1475,30 @@
     </ClInclude>
     <ClInclude Include="..\public\Broom_Trophy.h">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ride_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ride_Info_Key.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ride_Info.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ride_InfoBG.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ride_HpBar.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ride_Bbooster_Slot.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ride_BboosterBar.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ride_HpSlot.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
     </ClInclude>
     <ClInclude Include="..\public\InstancedProp_Light.h">
       <Filter>02.GameObjects\Env\06.InstancedProp\Light</Filter>
@@ -2199,6 +2247,30 @@
     </ClCompile>
     <ClCompile Include="..\private\Broom_Trophy.cpp">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ride_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ride_Info_Key.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ride_Info.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ride_InfoBG.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ride_HpBar.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ride_Bbooster_Slot.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ride_BboosterBar.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ride_HpSlot.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
     </ClCompile>
     <ClCompile Include="..\private\InstancedProp_Light.cpp">
       <Filter>02.GameObjects\Env\06.InstancedProp\Light</Filter>

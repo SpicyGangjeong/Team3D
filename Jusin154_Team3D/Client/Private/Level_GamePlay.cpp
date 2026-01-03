@@ -201,7 +201,6 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc))) {
 		return E_FAIL;
 	}
@@ -306,7 +305,11 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
 		return E_FAIL;
 	 
-	
+	/* 물 오브젝트 */
+	if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
+		return E_FAIL;
+	}
+
 	// ---------------------------------
 	// >> M A P Configuration <<
 	// 맵 로드할지 안할지 bool 설정
@@ -366,11 +369,6 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		{
 			if (FAILED(Ready_Layer_Hogwart()))
 				return E_FAIL;
-		}
-
-		/* 물 오브젝트 */
-		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
-			return E_FAIL;
 		}
 #endif
 		

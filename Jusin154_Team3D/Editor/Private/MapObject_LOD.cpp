@@ -120,7 +120,7 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(vCamPosition - XMLoadFloat4(&m_vExtentPosition)));
 
-		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (fRaius * fRaius + 40000.f)));
+		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (fRaius * fRaius + 10000.f)));
 
 		if (m_pGameInstance->Key_Pressing(DIK_Z))
 			m_iLodIndex = 0;
