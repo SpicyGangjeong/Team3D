@@ -2443,6 +2443,7 @@ void CPlayer::Behavior_Broom_DismountEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	m_bOnce = false;
+	m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
 	pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_DISMOUNT);
 	m_pFSM->Enable_State(FSMSTATE::BROOM_DISMOUNT);
 	m_pBroom->Set_Ride(false);
@@ -3104,6 +3105,7 @@ void CPlayer::Add_FSM()
 				_float3 vScale = { 0.3f,0.3f,0.3f };
 				m_pBroomTransform->Set_Scale(vScale);
 				m_bOnce = true;
+				m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
 			}
 			m_BroomScale.x += (m_TargetScale.x - m_BroomScale.x) * fTimeDelta * m_fScaleSmoothSpeed;
 			m_BroomScale.y += (m_TargetScale.y - m_BroomScale.y) * fTimeDelta * m_fScaleSmoothSpeed;

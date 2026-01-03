@@ -9,6 +9,7 @@
 //#include "Mouse_Cursor.h"
 #include "Broom_Panel.h"
 #include "Ride_Panel.h"
+#include "InfoInstance.h"
 
 CGamePlay_Canvas::CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CCanvasObject(pDevice, pContext)
@@ -16,7 +17,8 @@ CGamePlay_Canvas::CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* p
 }
 
 CGamePlay_Canvas::CGamePlay_Canvas(const CGamePlay_Canvas& rhs)
-	:CCanvasObject(rhs)
+	:CCanvasObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -47,6 +49,7 @@ HRESULT CGamePlay_Canvas::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	m_pInfoInstance->Add_Event(TEXT("BroomRide"), [this](void* p) {this->Set_Ride(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -57,10 +60,9 @@ void CGamePlay_Canvas::Priority_Update(_float fTimeDelta)
 
 void CGamePlay_Canvas::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_B))
-	{
-		m_bRide = !m_bRide;
 
+	if (m_bCurrentRide != m_bRide)
+	{
 		if (m_bRide == true)
 		{
 			static_cast<CUIObject*>(m_pRide_Panel)->Visible(true);
@@ -73,8 +75,9 @@ void CGamePlay_Canvas::Update(_float fTimeDelta)
 			static_cast<CUIObject*>(m_pAction_Panel)->Visible(true);
 			static_cast<CUIObject*>(m_pAction_Panel)->Set_FadeIn();
 		}
-
+		m_bCurrentRide = m_bRide;
 	}
+
 	__super::Update(fTimeDelta);
 }
 
