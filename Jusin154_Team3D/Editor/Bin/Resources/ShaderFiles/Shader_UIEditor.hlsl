@@ -174,7 +174,7 @@ PS_OUT PS_Logo_Text(PS_IN In)
     
     Color.rgb = (Color.rgb - 0.5f) * 1.2f + 0.5f;
 
-    Color.rgb = pow(Color.rgb, 1.25f);
+    Color.rgb = pow(clamp(Color.rgb, 0.f, 1.f), 1.25f);
 
     float luminance = dot(Color.rgb, float3(0.299f, 0.587f, 0.114f));
     float light = smoothstep(0.7f, 0.92f, luminance);

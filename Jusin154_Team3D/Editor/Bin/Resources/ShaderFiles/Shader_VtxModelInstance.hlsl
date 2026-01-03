@@ -541,7 +541,7 @@ float4 DrawEffect(PS_IN In)
     {
         float2 UV; // 이미지의 UV값
    
-        UV = UV_Cutting(In.vTexcoord, g_vUVCutting, int(fAnimIndex));
+        UV = UV_Cutting(In.vTexcoord, g_vUVCutting, uint(fAnimIndex));
         
         if (g_isDiffuseUVMove)
         {
@@ -602,7 +602,7 @@ float4 DrawEffect(PS_IN In)
         if (length(vNoiseCut) < FLT_EPSILON3)
             vNoiseCut = float2(1.f, 1.f);
         
-        float2 vNoiseUV = UV_Cutting(In.vTexcoord, vNoiseCut, int(fAnimIndex));
+        float2 vNoiseUV = UV_Cutting(In.vTexcoord, vNoiseCut, uint(fAnimIndex));
         
         if (g_isNoiseUVMove == true)
             vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
@@ -647,7 +647,7 @@ float4 DrawEffect(PS_IN In)
     {
         float2 vMaskTexcoord = In.vTexcoord;
         
-        vMaskTexcoord = UV_Cutting(In.vTexcoord, g_vUVMaskCutting, int(fAnimIndex));
+        vMaskTexcoord = UV_Cutting(In.vTexcoord, g_vUVMaskCutting, uint(fAnimIndex));
         
         vMaskTexcoord += g_vMaskOffset;
         // 마스크 디스토션 
@@ -789,7 +789,7 @@ float4 DrawEffect(PS_IN In)
             
                 if (g_isNoDissolveSmoothStep == true)
                 {
-                    fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);
+                    fFade = smoothstep(fTimeRatio, fTimeRatio + FLT_EPSILON7, vMtrlDissolve.r);
                 }
             
                 vMtrlDiffuse.a *= fFade;

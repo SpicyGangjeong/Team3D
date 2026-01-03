@@ -111,7 +111,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_bAI = false;
 
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
-	m_fRayDistance = 10.f;
+	m_fRayDistance = 60.f;
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
 	return S_OK;

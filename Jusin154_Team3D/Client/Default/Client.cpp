@@ -179,7 +179,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     g_hInstance = hInstance;
-#ifdef _DEBUG
     RECT     rcWindow = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
     AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, FALSE);
@@ -196,7 +195,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     UpdateWindow(hWnd);
 
     g_hWnd = hWnd;
-#endif // _DEBUG
 
 #ifdef Bin
 #ifndef _DEBUG

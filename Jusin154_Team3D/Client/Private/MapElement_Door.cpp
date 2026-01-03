@@ -45,7 +45,6 @@ HRESULT CMapElement_Door::Initialize(void* pArg)
 
 void CMapElement_Door::Priority_Update(_float fTimeDelta)
 {
-	GUI::Text("m_vKinematicTimer %.3f", m_vKinematicTimer.x);
 	if (m_vKinematicTimer.x != 0) {
 		m_vKinematicTimer.x += fTimeDelta;
 		if (m_vKinematicTimer.y < m_vKinematicTimer.x) {
@@ -60,8 +59,7 @@ void CMapElement_Door::Priority_Update(_float fTimeDelta)
 void CMapElement_Door::ActingIdle()
 {
 	_float fCurrentDegree = XMConvertToDegrees(m_pJoint->getAngle());
-	GUI::Text("%.2f", fCurrentDegree);
-	GUI::Text("%.2f", m_pJoint->getVelocity());
+
 	if (fabsf(fCurrentDegree) >= 2.f) { // 각도가 벌어져 있는데
 		if (false == m_bDrive) { // 드라이브 중이 아니면 드라이브시킴
 			m_bDrive = true;
@@ -269,6 +267,10 @@ void CMapElement_Door::Describe_Entity()
 	GUI::Begin("PhysX");
 	if (GUI::CollapsingHeader("Door")) {
 		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
+		GUI::Text("m_vKinematicTimer %.3f", m_vKinematicTimer.x);
+		_float fCurrentDegree = XMConvertToDegrees(m_pJoint->getAngle());
+		GUI::Text("%.2f", fCurrentDegree);
+		GUI::Text("%.2f", m_pJoint->getVelocity());
 		if (GUI::CollapsingHeader("DOOR")) {
 			{
 				GUI::Text("Velo : %.2f", m_pJoint->getVelocity());

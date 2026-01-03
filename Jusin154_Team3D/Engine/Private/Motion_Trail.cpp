@@ -225,7 +225,10 @@ void CMotion_Trail::Free()
 		SAFE_RELEASE(m_pClearBuffer);
 	}
 }
+#ifdef _DEBUG
 
 void CMotion_Trail::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
