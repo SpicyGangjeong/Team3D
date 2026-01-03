@@ -619,7 +619,6 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		fMixerFactor = 0.658333f;
 		iColorMixerMethod = 1;
 		break;
-#ifdef _DEBUG
 	case PLAYER_MESH_ORDER::ROBE_CLOTH:
 	{
 		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
@@ -662,7 +661,6 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		}
 	}
 		break;
-#endif // _DEBUG
 
 	default:
 		break;

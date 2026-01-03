@@ -208,19 +208,6 @@ HRESULT CGoblin_Assassin::Render()
 		Render_OutLine();
 	}
 
-#ifdef _DEBUG
-	//if (true == m_pCharacter_Controller->IsActive()) {
-	//	if (FAILED(m_pCharacter_Controller->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
-	//else {
-	//	if (FAILED(m_pRigidBody->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
-#endif
-
 	if (0.f < m_fDeadRatio) {
 		_bool bDisolve = false;
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
@@ -327,7 +314,7 @@ HRESULT CGoblin_Assassin::Render_Shadow(SHADOW eType)
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 

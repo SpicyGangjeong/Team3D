@@ -233,6 +233,9 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir
 
 _bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
+	if (fDistance < FLT_EPSILON3) {
+		return false;
+	}
 	_float3 vDir = {};
 	_float3 vStartPos = {};
 
@@ -766,6 +769,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 		PxInitExtensions(*m_pPhysics, m_pPvd);
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
+		m_pCookingParam->meshWeldTolerance = FLT_EPSILON3;
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
 		PSX::PxSceneDesc sceneDesc = { m_pPhysics->getTolerancesScale() };
 

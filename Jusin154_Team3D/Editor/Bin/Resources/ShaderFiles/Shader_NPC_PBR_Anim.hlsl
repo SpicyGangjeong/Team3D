@@ -205,8 +205,8 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
     matrix BoneMatrix = (matrix) 0;
     matrix TempBoneMatrix = (matrix) 0;
     
-    int MinIdx = 30;
-    int MaxIdx = 41;
+    uint MinIdx = 30;
+    uint MaxIdx = 41;
     
     if (idx.x >= MinIdx && idx.x <= MaxIdx)
         //g_RobeBoneMask[idx.x] == 1)
@@ -412,8 +412,8 @@ VS_OUT_SHADOW VS_MAIN_SHADOW_LEGACY(VS_IN In)
     matrix BoneMatrix = (matrix) 0;
     matrix TempBoneMatrix = (matrix) 0;
     
-    int MinIdx = 30;
-    int MaxIdx = 41;
+    uint MinIdx = 30;
+    uint MaxIdx = 41;
     
     if (idx.x >= MinIdx && idx.x <= MaxIdx)
         //g_RobeBoneMask[idx.x] == 1)

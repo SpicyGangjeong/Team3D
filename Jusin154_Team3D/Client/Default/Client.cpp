@@ -196,32 +196,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     g_hWnd = hWnd;
 
-#ifndef _DEBUG
-    int screenX = GetSystemMetrics(SM_CXSCREEN);
-    int screenY = GetSystemMetrics(SM_CYSCREEN);
-
-    HWND hWnd = CreateWindowW(
-        szWindowClass,
-        szTitle,
-        WS_POPUP,
-        0, 0,
-        screenX, screenY,
-        nullptr,
-        nullptr,
-        hInstance,
-        nullptr
-    );
-
-    if (!hWnd)
-        return FALSE;
-
-    g_hWnd = hWnd;
-
-    ShowWindow(hWnd, SW_SHOW);
-    UpdateWindow(hWnd);
-
-#endif // !_DEBUG
-
     return TRUE;
 }
 
