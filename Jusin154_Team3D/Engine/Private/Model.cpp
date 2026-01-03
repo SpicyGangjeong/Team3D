@@ -635,13 +635,6 @@ void CModel::Mark_CPUChain(_int boneIdx)
 	}
 }
 
-vector<pair<class CMesh*, _uint>> CModel::Get_PairMeshPass()
-{
-
-	return vector<pair<class CMesh*, _uint>>();
-}
-
-
 const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName)
 {
 	_int boneIdx = Get_BoneIndex(pBoneName);
