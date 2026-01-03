@@ -147,9 +147,9 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 {
 	CTerrain::TERRAIN_DESC Desc = {};
 
-	/* Hogsmeade */
+	///* Hogsmeade */
 	Desc.isEdit = false;
-	Desc.iAlphaSizeX = 2048;
+	Desc.iAlphaSizeX = 2048; 
 	Desc.iAlphaSizeY = 2048;
 	Desc.vPosition = _float3(-194, 18.5f, -153.f);
 	Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
@@ -159,7 +159,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	/* Hogwart */
-	Desc.isEdit = false;
+	/*Desc.isEdit = false;
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2560;
 	Desc.strAlphaMapTag = "Hogwart_AlphaMap.bin";
@@ -167,7 +167,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	Desc.vPosition = _float3(-451.f, 18.5f, -791.f);
 	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	/* North_Hogwart */
 	//Desc.isEdit = false;

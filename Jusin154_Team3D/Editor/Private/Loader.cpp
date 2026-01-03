@@ -2948,7 +2948,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 #pragma endregion
 
-_bool bLoadHogsmeade = true;
+_bool bLoadHogsmeade = false;
 	if (bLoadHogsmeade)
 	{
 #pragma region HOGSMEADE_OBJECT
@@ -3034,7 +3034,7 @@ _bool bLoadHogsmeade = true;
 	}
 
 #pragma region HOGWART
-_bool bHogwartLoad = { true };
+_bool bHogwartLoad = { false };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
@@ -3338,7 +3338,7 @@ vector<future<void>> jobFutures;
 _uint iLoadCount = 44;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { true };
+_bool isLoad_Map = { false };
 if(isLoad_Map)
 {
 	{ /* Terrain */

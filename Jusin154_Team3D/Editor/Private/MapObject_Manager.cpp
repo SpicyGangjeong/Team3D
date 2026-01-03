@@ -65,9 +65,9 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 
 	m_iContainerObjectIndex = 99;
 
-	if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
+	/*if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
 		return E_FAIL;
-	
+	*/
 
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
 	
@@ -94,10 +94,10 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
 	//m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
 #pragma endregion
-	if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
+	/*if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
 		return E_FAIL;
 	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 
 #pragma region Light
