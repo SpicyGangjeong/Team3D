@@ -49,6 +49,16 @@ RasterizerState RS_Front
     CullMode = Front;
 };
 
+RasterizerState RS_Shadow
+{
+    FillMode = Solid;
+    CullMode = Back;
+    FrontCounterClockwise = false;
+    DepthClipEnable = true;
+    ScissorEnable = false;
+    MultisampleEnable = false;
+    AntialiasedLineEnable = false;
+};
 
 /*
 typedef struct D3D10_DEPTH_STENCIL_DESC
@@ -173,6 +183,15 @@ DepthStencilState DSS_Default_OutLine_SRead
     BackFaceStencilDepthFail = Keep;
     BackFaceStencilPass = Keep;
     BackFaceStencilFunc = NOT_Equal;
+};
+
+DepthStencilState DSS_ShadowWrite
+{
+    DepthEnable = true;
+    DepthWriteMask = all;
+    DepthFunc = less_equal;
+
+    StencilEnable = false;
 };
 
 DepthStencilState DSS_Occlusion

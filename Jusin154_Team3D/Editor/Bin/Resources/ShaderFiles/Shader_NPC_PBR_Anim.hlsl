@@ -99,6 +99,11 @@ struct VS_IN
     uint4 vBlendIndex : BLENDINDEX;
     float4 vBlendWeight : BLENDWEIGHT;
 };
+struct VS_OUT_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+};
+
 struct VS_OUT
 {
     float4 vPosition : SV_Position;
@@ -394,6 +399,82 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
     return Out;
 }
 
+VS_OUT_SHADOW VS_MAIN_SHADOW_LEGACY(VS_IN In)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+
+    float4 w = In.vBlendWeight;
+    float sumW = max(dot(w, 1.0f), 1e-6f);
+    w /= sumW;
+
+    uint4 idx = In.vBlendIndex;
+    
+    matrix BoneMatrix = (matrix) 0;
+    matrix TempBoneMatrix = (matrix) 0;
+    
+    int MinIdx = 30;
+    int MaxIdx = 41;
+    
+    if (idx.x >= MinIdx && idx.x <= MaxIdx)
+        //g_RobeBoneMask[idx.x] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.x],
+            mul(g_BoneMatrices[In.vBlendIndex.x], w.x));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.x],
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x));
+    }
+    if (idx.y >= MinIdx && idx.y <= MaxIdx)
+    //if (g_RobeBoneMask[idx.y]  == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.y],
+            mul(g_BoneMatrices[In.vBlendIndex.y], w.y));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.y],
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y));
+    }
+    if (idx.z >= MinIdx && idx.z <= MaxIdx)
+    //if (g_RobeBoneMask[idx.z] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.z],
+            mul(g_BoneMatrices[In.vBlendIndex.z], w.z));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.z],
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z));
+    }
+    if (idx.w >= MinIdx && idx.w <= MaxIdx)
+    //if (g_RobeBoneMask[idx.w] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.w],
+            mul(g_BoneMatrices[In.vBlendIndex.w], w.w));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.w],
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
+    }
+    
+    BoneMatrix = TempBoneMatrix;
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+    vector vBinormal = mul(vector(In.vBinormal, 0.f), BoneMatrix);
+    vector vTangent = mul(vector(In.vTangent, 0.f), BoneMatrix);
+    
+    matrix matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vPosition, matWVP);
+    return Out;
+}
+
 VS_OUT VS_MAIN_OUTLINE_READ(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
@@ -451,12 +532,6 @@ VS_OUT VS_MAIN_OUTLINE_READ(VS_IN In)
 
     return Out;
 }
-struct VS_OUT_SHADOW
-{
-    float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
-};
-
 VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
 {
     VS_OUT_SHADOW Out;
@@ -483,7 +558,6 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(vPosition, matWVP);
-    Out.vProjPos = Out.vPosition;
 
     return Out;
 }
@@ -1393,7 +1467,6 @@ PS_OUT_BLEND PS_Dragon_YellowHot(PS_IN In)
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
 };
 
 struct PS_OUT_SHADOW
@@ -1405,7 +1478,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
     
-    Out.fShadowLightDepth = In.vProjPos.z;
+    Out.fShadowLightDepth = In.vPosition.z;
     
     return Out;
 }
@@ -1666,5 +1739,21 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN_LEGACY();
         
         PixelShader = compile ps_5_0 PS_Player_Robe_ToMRO();
+    }
+    pass Shadow // 28
+    {
+        SetRasterizerState(RS_Shadow);
+        SetDepthStencilState(DSS_ShadowWrite, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
+        PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
+    }
+    pass Shadow_Legacy // 29
+    {
+        SetRasterizerState(RS_Shadow);
+        SetDepthStencilState(DSS_ShadowWrite, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_SHADOW_LEGACY();
+        PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 }
