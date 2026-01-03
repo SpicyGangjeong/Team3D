@@ -105,7 +105,7 @@
 #endif
 
 #define FX_DEFERRED			TEXT("FX_DEFERRED")
-#define FX_BLUR		TEXT("FX_BLUR")
+#define FX_BLUR				TEXT("FX_BLUR")
 #define FX_WEIGHTBELND		TEXT("FX_WEIGHTBELND")
 #define FX_DISTORTION       TEXT("FX_DISTORTION")
 

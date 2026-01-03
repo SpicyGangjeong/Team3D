@@ -221,13 +221,6 @@ HRESULT CPlayer::Render()
 			if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 				return E_FAIL;
 			}
-//#ifdef _DEBUG
-//#ifdef 기무리
-//			if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-//				return E_FAIL;
-//			}
-//#endif // 기무리
-//#endif // _DEBUG
 			if (FAILED(m_pShaderCom->Bind_Matrices(
 				"g_OffsetMatrix",
 				m_pModelCom->Get_OffsetMatrix(i).data(),
@@ -338,31 +331,37 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
 		return E_FAIL;
 	}
+
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_OffsetMatrix",
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",
 			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
-		)))
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
 		{
 			return E_FAIL;
 		}
-
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
+		if (FAILED(Bind_ShaderParameters(i))) {
 			return E_FAIL;
 		}
-
+		if (i == ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH)){
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW_LEGACY)))) {
+				return E_FAIL;
+			}
+		}
+		else {
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
+				return E_FAIL;
+			}
+		}
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
-
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
 	}
-
 	return S_OK;
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)

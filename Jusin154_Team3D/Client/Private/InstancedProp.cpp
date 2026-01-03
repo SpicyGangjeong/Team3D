@@ -27,11 +27,9 @@ void CInstancedProp::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	//pair<_bool, _ubyte> pairShadowResult = m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius());
-	//if (0 == ((_ubyte)SHADOW::SHADOW_FAR & pairShadowResult.second)) {
-	//	pairShadowResult.first = true;
-	//	Set_Shadow(pairShadowResult);
-	//}
+
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
 }
 
 HRESULT CInstancedProp::Render()
@@ -66,7 +64,10 @@ HRESULT CInstancedProp::Render_Shadow(SHADOW eType)
 	}
 	for (_uint i = 0; i < m_iNumMesh; i++)
 	{
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pVIBufferInstanceCom->Bind_Matrial(m_pShaderCom, i)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Begin(3)))
 			return E_FAIL;
 
 		m_pVIBufferInstanceCom->Render(i);
