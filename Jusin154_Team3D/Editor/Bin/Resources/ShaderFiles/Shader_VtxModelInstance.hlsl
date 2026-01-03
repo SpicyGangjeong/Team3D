@@ -788,6 +788,7 @@ float4 DrawEffect(PS_IN In)
             
                 float fFade = smoothstep(fTimeRatio - g_vDissolveSmoothRange.x, fTimeRatio + g_vDissolveSmoothRange.y, vMtrlDissolve.r);
             
+                
                 if (g_isNoDissolveSmoothStep == true)
                 {
                     fFade = smoothstep(fTimeRatio, fTimeRatio, vMtrlDissolve.r);

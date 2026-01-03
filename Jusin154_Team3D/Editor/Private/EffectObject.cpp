@@ -573,12 +573,6 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 	}
 
 
-	if (m_EffectInfo.vDissolveSmoothRange.x == 0.f)
-		m_EffectInfo.vDissolveSmoothRange.x = 1.f;
-
-	if (m_EffectInfo.vDissolveSmoothRange.y == 0.f)
-		m_EffectInfo.vDissolveSmoothRange.y = 1.f;
-
 
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
@@ -1166,9 +1160,6 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveSmoothRange", &m_EffectInfo.vDissolveSmoothRange, sizeof(_float2)))) {
 		return E_FAIL;
 	}
-
-	
-
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fModelBlurIntensity", &m_EffectInfo.fModelBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;

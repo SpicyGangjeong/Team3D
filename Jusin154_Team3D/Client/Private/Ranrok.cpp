@@ -448,36 +448,6 @@ HRESULT CRanrok::Render_Nonblend()
 			return E_FAIL;
 		}
 
-//#ifdef _DEBUG
-//#ifdef 기무리
-//		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-//			return E_FAIL;
-//		}
-//#endif // 기무리
-//#endif // _DEBUG
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-
-		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
-
-		if (FAILED(m_pModelCom->Render(i))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_OffsetMatrix",
-			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
-		)))
-		{
-			return E_FAIL;
-		}
-
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}

@@ -260,13 +260,20 @@ namespace Client
 		_bool       isNoDissolveSmoothStep = {};
 		_bool       isPadding3 = {};
 
-		_float4     vPadding5 = {};
+		_float2     vDissolveSmoothRange = { 0.1f , 0.1f };
+		_float2     vPadding0 = {};
 
 		_bool		isRimLight = {};
 		_bool		isMask_G = {};
 		_bool		isMask_B = {};
 		_bool		isDissolve_B = {};
 
+		_float4     vPadding1 = {};
+		_float4     vPadding2 = {};
+		_float4     vPadding3 = {};
+		_float4     vPadding4 = {};
+		_float4     vPadding5 = {};
+		_float4     vPadding6 = {};
 	}EFFECT_INFO;
 	
 	typedef struct tagTrailInfo
