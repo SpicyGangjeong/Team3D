@@ -11,8 +11,8 @@ private:
 	CAnimation(const CAnimation& rhs);
 	virtual ~CAnimation() = default;
 public:
-	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones,  _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask,_vector vector[3] = nullptr, _int RootBoneIndex = -1);
-	void			ProgressAnimation(const vector<CBone*>& Bones, _bool bIsSpine, vector<_uint> BoneMask, _vector vector[3], _int RootBoneIndex);
+	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones,  _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex = -1);
+	void			ProgressAnimation(const vector<CBone*>& Bones, _bool bIsSpine, vector<_uint> BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex);
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }
 	_float			Get_AnimProgressRatio();

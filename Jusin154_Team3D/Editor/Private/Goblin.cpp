@@ -487,13 +487,6 @@ void CGoblin::Describe_Entity()
 		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
 	}
 
-	XMFLOAT3 f3;
-	XMStoreFloat3(&f3, m_vOriginPos);
-
-	GUI::Text("Origin: %.2f, %.2f, %.2f", f3.x, f3.y, f3.z);
-
-	m_fLength = XMVectorGetX(XMVector2Length(m_pTransformCom->Get_State(STATE::POSITION) - m_vOriginPos));
-
 	GUI::Text("Length %.2f", m_fLength);
 
 	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);

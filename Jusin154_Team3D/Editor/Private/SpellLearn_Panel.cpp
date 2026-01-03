@@ -55,8 +55,8 @@ HRESULT CSpellLearn_Panel::Initialize(void* pArg)
 
 	for (size_t i = 0; i < m_pBooster.size(); ++i)
 	{
-		static_cast<CSpellLearn_Booster*>(m_pBooster[i])->Move(Get_Learninfo(Index).Booster[i].m128_f32[0],
-			Get_Learninfo(Index).Booster[i].m128_f32[1]);
+		static_cast<CSpellLearn_Booster*>(m_pBooster[i])->Move(Get_Learninfo(Index).Booster[i].x,
+			Get_Learninfo(Index).Booster[i].y);
 	}
 	for (size_t i = 0; i < m_pBooster.size(); ++i)
 	{
@@ -86,8 +86,8 @@ void CSpellLearn_Panel::Set_Learn(_int Index)
 	static_cast<CSpellLearn_Slot*>(m_pSpellLearn_Slot)->Set_SpellLearn(Index);
 	for (size_t i = 0; i < m_pBooster.size(); ++i)
 	{
-		static_cast<CSpellLearn_Booster*>(m_pBooster[i])->Move(Get_Learninfo(Index).Booster[i].m128_f32[0],
-			Get_Learninfo(Index).Booster[i].m128_f32[1]);
+		static_cast<CSpellLearn_Booster*>(m_pBooster[i])->Move(Get_Learninfo(Index).Booster[i].x,
+			Get_Learninfo(Index).Booster[i].y);
 		static_cast<CSpellLearn_Booster*>(m_pBooster[i])->Reset();
 	}
 }

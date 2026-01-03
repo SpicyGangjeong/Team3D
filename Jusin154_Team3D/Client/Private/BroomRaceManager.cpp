@@ -86,7 +86,6 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 void CBroomRaceManager::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
-	m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 }
 
 HRESULT CBroomRaceManager::Render()
@@ -158,10 +157,6 @@ void CBroomRaceManager::Free()
 
 void CBroomRaceManager::Describe_Entity()
 {
-	if (GUI::Button("Add Race Ring"))
-	{
-		
-	}
 	if (GUI::Button("Race Start"))
 	{
 		m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
@@ -285,7 +280,7 @@ void CBroomRaceManager::Check_RingPassed()
 
 		_vector currPos = racer.pAI ? racer.pAI->Get_WorldPostion() : racer.pRacer->Get_WorldPostion();
 
-		_vector prevPos = racer.prevPos;
+		_vector prevPos = XMLoadFloat4(&racer.prevPos);
 
 		_float Prev = XMVectorGetX(XMVector3Dot(prevPos - ringPos, ringFwd));
 		_float Curr = XMVectorGetX(XMVector3Dot(currPos - ringPos, ringFwd));
@@ -325,7 +320,7 @@ void CBroomRaceManager::Check_RingPassed()
 			}
 		}
 
-		racer.prevPos = currPos;
+		XMStoreFloat4(&racer.prevPos, currPos);
 	}
 }
 
@@ -342,14 +337,14 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 		{
 			if (racer.pAI == pRacer)
 			{
+				if (racer.curRing == m_pRaceRings.size() - 1 ) {
+					racer.pAI->Get_Broom()->Set_Hover(true);
+					racer.pAI->Get_Broom()->Set_Move(false);
+				}
+				
 				if (racer.pAI)
 				{
 					racer.pAI->Set_RaceRing(m_pRaceRings[racer.curRing]);
-					if (racer.curRing == m_pRaceRings.size())
-					{
-						racer.pAI->Get_Broom()->Set_Hover(true);
-						racer.pAI->Get_Broom()->Set_Move(false);
-					}
 				}
 			}
 		}
@@ -357,13 +352,11 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 		{
 			if (racer.pRacer == pRacer)
 			{
-				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
-				if (racer.curRing == m_pRaceRings.size())
-				{
+				if (racer.curRing == m_pRaceRings.size() - 1) {
 					racer.pRacer->Get_Broom()->Set_Hover(true);
 					racer.pRacer->Get_Broom()->Set_Move(false);
-
 				}
+				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
 				m_pInfoInstance->Event_CallBack(TEXT("CurrentRing"));
 				m_iLastRing++;
 			}

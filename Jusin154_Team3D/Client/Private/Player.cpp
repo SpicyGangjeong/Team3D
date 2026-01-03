@@ -112,10 +112,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 	m_fRayDistance = 10.f;
-	m_pModelCom->Set_Temp(true);
-
-
-
+	m_pModelCom->Set_DisableRootMotionScale(true);
 
 	return S_OK;
 }
@@ -155,14 +152,7 @@ void CPlayer::Update(_float fTimeDelta)
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 
-	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)){
-		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
-	}
-	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
-	{
-		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
-		m_bAim = false;
-	}
+	CheckMouseInput();
 
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 
@@ -381,7 +371,8 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) || 
 		m_bShield ||
 		iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first||
-		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first)
+		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first || 
+		iCurrAnim == m_Animation[STATEANIM::ANCIENT_THROW].first)
 		return;
 
 #ifdef _DEBUG
@@ -435,7 +426,7 @@ void CPlayer::Set_RaceInfo()
 
 		Info.pRacer = this;
 		Info.curRing = 0;
-		Info.prevPos = Get_WorldPostion();
+		XMStoreFloat4(&Info.prevPos, Get_WorldPostion());
 
 		m_pBroomRaceManager->Push_BroomRacer(Info);
 	}
@@ -519,7 +510,6 @@ HRESULT CPlayer::Ready_Components()
 HRESULT CPlayer::Ready_Parts()
 {
 	CWand::WAND_DESC WandDesc{};
-
 	WandDesc.pParentTransform = m_pTransformCom;
 	WandDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
 
@@ -694,6 +684,18 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 	return S_OK;
 }
 
+void CPlayer::CheckMouseInput()
+{
+	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)) {
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
+	}
+	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	{
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
+		m_bAim = false;
+	}
+}
+
 void CPlayer::ReLockOnTarget()
 {
 	m_pInfoInstance->Get_LockOnInfo(m_LockOnInfo);
@@ -717,7 +719,7 @@ void CPlayer::SetGravity()
 	eCollisionFlags;
 	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
 		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
 		else { // 점프 중일 땐 off

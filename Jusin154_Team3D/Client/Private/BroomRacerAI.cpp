@@ -94,7 +94,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	Info.pAI = this;
 	Info.curRing = 0;
-	Info.prevPos = Get_WorldPostion();
+	XMStoreFloat4(&Info.prevPos,Get_WorldPostion());
 
 	m_pBroomRaceManager->Push_BroomRacer(Info);
 
@@ -734,8 +734,6 @@ void CBroomRacerAI::Add_FSM()
 #pragma endregion
 
 }
-
-
 
 void CBroomRacerAI::Set_Input(_float fTimeDelta)
 {

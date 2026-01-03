@@ -76,7 +76,7 @@ void CRanrok_Breath::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	_matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("tongue_01"));
+	_matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("jaw"));
 
 	for (int i = 0; i < 3; ++i) {
 		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);
@@ -146,7 +146,7 @@ HRESULT CRanrok_Breath::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	/* 초기 객체 위치 초기화*/
 
-	_matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("tongue_01"));
+	 _matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("jaw"));
 
 	for (int i = 0; i < 3; ++i) {
 		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);

@@ -94,10 +94,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
-	//	return E_FAIL;
-	//}
-
 	//if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 	//	return E_FAIL;
 	//}
@@ -108,9 +104,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
-	/*if (FAILED(Ready_Layer_BroomRacerAI(TEXT("Layer_BroomRacerAI")))) {
-		return E_FAIL;
-	}*/
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
@@ -207,7 +200,6 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 		Desc.vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
 		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
-
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc))) {
 		return E_FAIL;
@@ -313,7 +305,11 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
 		return E_FAIL;
 	 
-	
+	/* 물 오브젝트 */
+	if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
+		return E_FAIL;
+	}
+
 	// ---------------------------------
 	// >> M A P Configuration <<
 	// 맵 로드할지 안할지 bool 설정
@@ -329,9 +325,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -373,11 +369,6 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		{
 			if (FAILED(Ready_Layer_Hogwart()))
 				return E_FAIL;
-		}
-
-		/* 물 오브젝트 */
-		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
-			return E_FAIL;
 		}
 #endif
 		
@@ -695,7 +686,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 #endif // 
 #ifdef Bin
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 #endif // Bin
 #endif // _DEBUG
 
@@ -721,37 +712,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
-{
-#ifdef Bin
-	for (_uint i = 0; i < 5; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
-			return E_FAIL;
-		}
-	}
-#endif // Bin
-	return S_OK;
-}
-
 HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
-{
-	for (_uint i = 0; i < 10; ++i) {
-
-		CRaceRing::RACERING_DESC RaceRingDesc{};
-		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
-	
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
-			return E_FAIL;
-		}
-	}
-
-	return S_OK;
-}
 
 HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
 {

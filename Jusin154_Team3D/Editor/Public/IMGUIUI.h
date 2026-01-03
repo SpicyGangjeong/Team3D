@@ -52,7 +52,7 @@ private:
 	_int					m_iSpellType{};
 	_int					m_iSkillType{};
 
-	_vector					m_vLerpPosition{};
+	_float4					m_vLerpPosition{};
 	_float					m_fLerpX{};
 	_float					m_fLerpY{};
 	_float					m_fMoveSpeed{};

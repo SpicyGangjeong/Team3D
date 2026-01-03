@@ -367,7 +367,7 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::RUSH_LOOP].first)
 		return;
 
-	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
@@ -428,8 +428,10 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	if(m_eHitSpell != ENUM_CLASS(SKILL_TYPE::JAP))
+	if (m_pFSM->IsEnable(FSMSTATE::SLAM) || IsHitSpellDisabled()) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
+	}
+
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)

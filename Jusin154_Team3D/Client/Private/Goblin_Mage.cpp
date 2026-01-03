@@ -69,6 +69,17 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -4.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -4.f, 1.f));
 
+	m_pInfoInstance->Add_Event(TEXT("Goblin_Fear"),
+		[this](void* p)
+		{
+			CGameObject* pSender = static_cast<CGameObject*>(p);
+
+			if (pSender == this)
+				return;
+
+			m_pFSM->Change_State(FSMSTATE::FEAR);
+		});
+
 #ifdef _DEBUG
 #if 진우
 	m_isDebugMode = true;
@@ -79,11 +90,15 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 
 void CGoblin_Mage::Priority_Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CGoblin_Mage::Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -120,6 +135,8 @@ void CGoblin_Mage::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++){
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 	}
+
+	Update_Disolve(fTimeDelta, 0.8f);
 
 
 }
@@ -286,11 +303,11 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
-	if (m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+	if (m_pFSM->IsEnable(FSMSTATE::BLINK | FSMSTATE::DEAD)) {
 		return;
 	}
 	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
-	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f));
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
@@ -331,9 +348,11 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
+			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
 			break;
 		}
 	}
@@ -540,13 +559,6 @@ void CGoblin_Mage::Describe_Entity()
 		{
 			m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
 		}
-
-		XMFLOAT3 f3;
-		XMStoreFloat3(&f3, m_vOriginPos);
-
-		GUI::Text("Origin: %.2f, %.2f, %.2f", f3.x, f3.y, f3.z);
-
-		m_fLength = XMVectorGetX(XMVector2Length(m_pTransformCom->Get_State(STATE::POSITION) - m_vOriginPos));
 
 		GUI::Text("Length %.2f", m_fLength);
 

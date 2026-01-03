@@ -47,7 +47,7 @@ private:
 
 	_wstring m_fFont[5];
 	_float2 m_fFontPos[6];
-	_vector m_fFontColor[2];
+	_float4 m_fFontColor[2];
 
 	_float	m_fBaseTime{};
 

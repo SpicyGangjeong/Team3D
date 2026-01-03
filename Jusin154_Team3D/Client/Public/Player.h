@@ -37,6 +37,7 @@ public:
 	void Set_RaceInfo();
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
+	void Set_OpenDoor(_bool bOpen) { m_bOpenDoor = bOpen; }
 	void UpdateGrapInteractive(_float fTimeDelta);
 	void Update_CameraShake(_float fTimeDelta);
 	HRESULT Update_RaycastElements();
@@ -93,6 +94,7 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
+	void CheckMouseInput();
 	void ReLockOnTarget();
 	void SetGravity();
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
@@ -159,9 +161,8 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	_float			m_fNoInputTime = 0.f;
-	_float			m_fNeutralTime = 0.f; 
 	array<_float4x4, 256> SkinMatrices;
+	_bool			m_bOpenDoor = { false };
 
 	/* 무적 불 변수*/
 #ifdef _DEBUG

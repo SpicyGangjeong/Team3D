@@ -316,6 +316,9 @@
     <Filter Include="03.Management\04.Font_Manager">
       <UniqueIdentifier>{bba1e91b-87a8-4a7b-8e4e-b42d2041d8eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Motion_Trail">
+      <UniqueIdentifier>{65468ca4-fa85-43ff-a574-02e68fba1b36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -602,6 +605,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dynamic_D6Joint.cpp">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Motion_Trail.cpp">
+      <Filter>02.Element\02.Component\06.Model\Motion_Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1255,6 +1261,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Dynamic_D6Joint.h">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Motion_Trail.h">
+      <Filter>02.Element\02.Component\06.Model\Motion_Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

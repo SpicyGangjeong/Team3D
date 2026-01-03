@@ -98,7 +98,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 #endif // _DEBUG
 
 	// UI 연동 추가
-	m_pModelCom->Set_Temp(true);
+	m_pModelCom->Set_DisableRootMotionScale(true);
 
 #ifdef gimch	
 	m_pCharacter_Controller->Set_GravityAmount(0.f);

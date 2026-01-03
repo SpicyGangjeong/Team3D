@@ -222,6 +222,11 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "IDLE_BREAK5", IDLE_BREAK5 }, { "IDLE_BREAK6", IDLE_BREAK6 },
         { "IDLE_BREAK7", IDLE_BREAK7 },
 
+        { "IDLE_TURN_180_L", IDLE_TURN_180_L }, { "IDLE_TURN_180_R", IDLE_TURN_180_R },
+        { "IDLE_TURN_45_L", IDLE_TURN_45_L },  { "IDLE_TURN_45_R", IDLE_TURN_45_R },
+        { "IDLE_TURN_90_L", IDLE_TURN_90_L },  { "IDLE_TURN_90_R", IDLE_TURN_90_R },
+
+
         // MOVE
         { "MOVE", MOVE },
 
@@ -461,6 +466,13 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "FLY", FLY },
 
         { "FIREBURST_REEL", FIREBURST_REEL },
+
+        { "OPEN_DOOR", OPEN_DOOR },
+        { "OPEN_DOOR_L", OPEN_DOOR_L },
+        { "OPEN_DOOR_R", OPEN_DOOR_R },
+
+        { "FEAR_L", FEAR_L },
+        { "FEAR_R", FEAR_R },
 
         // SPELL LEARNING
         { "SPELL_LEARNING_FAIL", SPELL_LEARNING_FAIL },

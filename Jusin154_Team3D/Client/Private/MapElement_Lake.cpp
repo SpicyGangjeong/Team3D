@@ -94,6 +94,9 @@ HRESULT CMapElement_Lake::Render()
 	if (FAILED(m_pModelComs[0]->Render(0))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pShallowModels[0]->Render(0))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

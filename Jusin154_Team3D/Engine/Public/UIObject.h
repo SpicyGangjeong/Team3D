@@ -15,6 +15,7 @@ typedef struct tagUIObjectDesc
 {
 	_float fX, fY = {};
 	_float fSizeX, fSizeY = {};
+	_bool  m_bowner = true;
 }UIOBJECT_DESC;
 
 typedef struct tagSpellInfo
@@ -83,8 +84,8 @@ typedef struct tagSpellLearnInfo
 	_float			fSpellSize{};
 	_float2			fStartPosition{};
 	_float2			fEndPosition{};
-	vector<_vector> Booster;
-	vector<_vector> Lines;
+	vector<_float4> Booster;
+	vector<_float4> Lines;
 }SPELLLEARNINFO;
 
 protected:
@@ -149,7 +150,7 @@ public:
 	virtual _float Get_Nine_Slice_Bottom();
 
 	virtual _float2 Get_Origin_Position();			// Start Position
-	virtual _vector Get_Current_Position();			// Current Position
+	virtual _float4 Get_Current_Position();			// Current Position
 	virtual _float3 Get_Origin_Size();				// Start Size
 	virtual _float3 Get_Current_Size();				// Current Size
 
@@ -160,7 +161,7 @@ public:
 	virtual void Reset_Pos(_float fTimeDelta);
 	virtual void Start_Size_Lerp(_float fTimeDelta);
 	virtual void Reset_Size_Lerp(_float fTimeDelta);
-	virtual _vector Get_Lerp_Pos();
+	virtual _float4 Get_Lerp_Pos();
 	virtual void LerpOn();
 	virtual void LerpOff();
 	virtual _bool Get_LerpOn();
@@ -195,11 +196,11 @@ public:
 	virtual void Set_FontY(_float fFontY);
 	virtual _float2 Get_Font();
 	virtual _float2 Get_PerPosition();
+
 protected:
-	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
-	_vector					m_fCurrent_Position{};
-	_vector					m_vLerp_Position{};
+	_float4					m_fCurrent_Position{};
+	_float4					m_vLerp_Position{};
 	_float					m_fLerpX{};
 	_float					m_fLerpY{};
 	_float3					m_fOrigin_Size{};
