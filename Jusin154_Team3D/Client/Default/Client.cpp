@@ -198,7 +198,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     g_hWnd = hWnd;
 #endif // _DEBUG
 
-
 #ifndef _DEBUG
     int screenX = GetSystemMetrics(SM_CXSCREEN);
     int screenY = GetSystemMetrics(SM_CYSCREEN);

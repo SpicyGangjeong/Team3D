@@ -54,9 +54,6 @@ private:
 	_float3	    m_PreHigh[4] = {};
 	_float3	    m_PreLow[4] = {};
 
-	_vector     m_PreFixedHigh[3] = {};
-	_vector     m_PreFixedLow[3] = {};
-
 	VTXPOSTEX*  m_pVertices = { nullptr };
 	
 	_float3*    m_pOldPosition = { nullptr };

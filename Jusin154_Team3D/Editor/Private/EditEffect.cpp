@@ -878,6 +878,7 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 			GUI::Checkbox("StopDissolveSmoothStep", &m_EffectInfo.isNoDissolveSmoothStep);
 			
+			GUI::DragFloat2("DissolveSmoothRange", (_float*)&m_EffectInfo.vDissolveSmoothRange, 0.01f);
 
 			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::Spacing();
@@ -907,6 +908,17 @@ void CEditEffect::Describe_Entity()
 					}
 
 					GUI::Spacing(); GUI::Spacing();
+				}
+
+				if (GUI::TreeNode("DECAL TEX"))
+				{
+					_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DECAL_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this, L"DECAL");
+
+					if (strName != "") {
+						m_strDissolveName = strName;
+					}
+
+					GUI::TreePop();
 				}
 
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);

@@ -153,6 +153,7 @@ bool   g_isDissolve_G;
 float  g_fDissolveMaskEdge;
 float  g_fDissolveSoftMask;
 float  g_fDissolveCutRatio;
+float2 g_vDissolveSmoothRange;
 
 /* 디스토션 */
 
@@ -528,13 +529,9 @@ float4 DrawEffect(PS_IN In)
     float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
     
     
-    if (vDelay.x < vDelay.y)
-    {
-        discard;
-    }
-    
-    if (In.vLifeTime.x > In.vLifeTime.y)
-        discard;
+                  
+    clip(vDelay.x - vDelay.y);
+    clip(In.vLifeTime.y - In.vLifeTime.x);
     
     
     if (g_isDiffuse == true)
@@ -784,13 +781,14 @@ float4 DrawEffect(PS_IN In)
 
                 }
             
-                vMtrlDissolve.r = saturate(vMtrlDissolve.r);
-                
-                float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
+                float fFade = smoothstep(fTimeRatio - g_vDissolveSmoothRange.x, fTimeRatio + g_vDissolveSmoothRange.y, vMtrlDissolve.r);
+
             
+                
                 if (g_isNoDissolveSmoothStep == true)
                 {
-                    fFade = smoothstep(fTimeRatio, fTimeRatio + FLT_EPSILON7, vMtrlDissolve.r);
+                    fFade = smoothstep(fTimeRatio, fTimeRatio + FLT_EPSILON5, vMtrlDissolve.r);
+
                 }
             
                 vMtrlDiffuse.a *= fFade;
