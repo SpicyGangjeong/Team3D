@@ -20,6 +20,13 @@ CRigidBody::CRigidBody(const CRigidBody& rhs) :
 {
 }
 
+void CRigidBody::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
+{
+	if (nullptr != m_pOwner) {
+		m_pOwner->OnRayCollision(pCaster, iCastedOrder, fDistance, vCastedWorldPos);
+	}
+}
+
 HRESULT CRigidBody::Initialize(void* pArg)
 {
 	RIGIDBODY_DESC* pDesc = (RIGIDBODY_DESC*)pArg;

@@ -180,7 +180,6 @@ _float2 CMonster::Get_Hp()
 {
 	return { m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp };
 }
-
 CStat* CMonster::Get_Stat()
 {
 	return m_pStat;
@@ -191,6 +190,11 @@ const _float4x4* CMonster::Get_HeadMatrix()
 	return m_pModelCom->Get_BoneMatrixPtr("Head");
 }
 
+_float  CMonster::Get_HpRatio()
+{
+	return Get_Hp().x / Get_Hp().y;
+}
+
 void CMonster::CameraShake(_float ClampValue, _float Min, _float Max, _float Time)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
@@ -199,6 +203,16 @@ void CMonster::CameraShake(_float ClampValue, _float Min, _float Max, _float Tim
 	_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
 	_float fShakeValue = clamp(ClampValue / fDistance, Min, Max);
 	pPlayer->Start_CameraShake(Time, fShakeValue);
+}
+
+_bool CMonster::IsHitStateDisabled()
+{
+	return _bool();
+}
+
+_bool CMonster::IsHitSpellDisabled()
+{
+	return _bool();
 }
 
 HRESULT CMonster::Ready_Components(void*pArg)
@@ -286,11 +300,11 @@ void CMonster::Free()
 
 void CMonster::Describe_Entity()
 {
-	if (ImGui::TreeNode("ANIM STATE")) {
+	if (GUI::TreeNode("ANIM STATE")) {
 
 		for (auto& pState : m_States)
 		{
-			if (ImGui::Button(to_string(pState.first).c_str()))
+			if (GUI::Button(to_string(pState.first).c_str()))
 			{
 				m_pFSM->Change_State(pState.first);
 			}
@@ -299,7 +313,7 @@ void CMonster::Describe_Entity()
 
 		GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 }
 

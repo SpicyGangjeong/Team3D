@@ -64,7 +64,7 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	m_pModelCom->Set_Temp(true);
+	m_pModelCom->Set_DisableRootMotionScale(true);
 
 	return S_OK;
 }
@@ -661,7 +661,7 @@ void CGoblin_Assassin::Free()
 void CGoblin_Assassin::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("Goblin")) {
 		GUI::Checkbox("LookAt", &m_bLookAt);
 

@@ -38,6 +38,7 @@ public:
 	void Set_Input(BroomInput broomInput) { m_Input = broomInput; }
 	void Set_AISpeed(_float speedMul, _float accelMul);
 	void Set_Move(_bool bMove) { m_bMove = bMove; }	
+	_bool Get_Move() { return m_bMove; }
 	HRESULT         Ready_Child();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
@@ -52,7 +53,7 @@ private:
 	_float m_fSpeed = 0.f; 
 	_float m_fTurnSpeed = 0.f;
 	_float m_fTargetSpeed = 0.f;
-	_float m_fTurnMaxSpeed = 8.f;
+	_float m_fTurnMaxSpeed = 12.f;
 	_float m_fFlyTurnMaxSpeed = 9.f;
 	_float m_fTurboTurnMaxSpeed = 12.f;
 	_float m_fHoverMaxSpeed = 5.f;

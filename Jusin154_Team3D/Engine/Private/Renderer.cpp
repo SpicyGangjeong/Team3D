@@ -248,11 +248,11 @@ void CRenderer::Render_Shadow()
 		m_pContext->RSSetViewports(1, &ViewPortDesc);
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_NEAR)]) {
-			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR))) {
-					assert(false);
-				}
-			}
+			//if (nullptr != pRenderObject) {
+			//	if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR))) {
+			//		assert(false);
+			//	}
+			//}
 
 			SAFE_RELEASE(pRenderObject);
 		}
@@ -282,11 +282,11 @@ void CRenderer::Render_Shadow()
 		m_pContext->RSSetViewports(1, &ViewPortDesc);
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_MIDDLE)]) {
-			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE))) {
-					assert(false);
-				}
-			}
+			//if (nullptr != pRenderObject) {
+			//	if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE))) {
+			//		assert(false);
+			//	}
+			//}
 
 			SAFE_RELEASE(pRenderObject);
 		}
@@ -307,6 +307,7 @@ void CRenderer::Render_NonBlend()
 	COMPUTE_TIMEDELTA("Timer_Render_NonBlend");
 	EVENTSCOPE_("Render_NonBlend");
 	m_eType = RENDER::NONBLEND;
+
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects")))) {
 		return;
 	}
@@ -372,6 +373,7 @@ void CRenderer::Render_LightAcc()
 	m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
 	m_pShader->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4));
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
+	m_pShader->Bind_RawValue("g_fLightSpecularMaximum", &m_fLightSpecularMaximum, sizeof(_float));
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture"))) {
 		return;
@@ -569,6 +571,7 @@ void CRenderer::Render_Fog()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_Texture"))) {
 		return;
 	}
+
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::PRINT_BACKBUFFER));
 
 	m_pVIBuffer->Bind_Resources();
@@ -586,6 +589,7 @@ void CRenderer::Render_Fog()
 	}
 
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::FOG));
+	
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();

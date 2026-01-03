@@ -534,11 +534,11 @@ void CTrailObject::Describe_Entity()
 
 	if (GUI::TreeNode("TRAIL"))
 	{
-		if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
+		if (GUI::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 		{
 			m_TrailInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 		}
-		if (ImGui::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_POSTEX::END)))
+		if (GUI::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_POSTEX::END)))
 		{
 			m_TrailInfo.eShaderPass = static_cast<SHADER_PASS_POSTEX>(iCurrentPass);
 		}
@@ -586,10 +586,10 @@ void CTrailObject::Describe_Entity()
 			GUI::Checkbox("Blur", &m_TrailInfo.isBlur);
 			GUI::Checkbox("OnlyBlur", &m_TrailInfo.isOnlyBlur);
 
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::DragFloat("BlurIntensity", &m_TrailInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
 			GUI::DragInt("BlurWeight", &m_TrailInfo.iBlurWeight, 2.f, 0, 128);
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 			GUI::TreePop();
 		}
@@ -599,7 +599,7 @@ void CTrailObject::Describe_Entity()
 		{
 			GUI::ColorEdit4("MixColor", (_float*)&m_TrailInfo.vEmissive);
 
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 
 			GUI::DragFloat("EmissiveStrength", &m_TrailInfo.fEmissiveStrength, 0.01f, 0.f);
 			GUI::DragFloat("SoftenExp", &m_TrailInfo.fSoftenExp, 0.01f, 0.f);
@@ -607,7 +607,7 @@ void CTrailObject::Describe_Entity()
 			GUI::DragFloat("CoreBoost", &m_TrailInfo.fCoreBoost, 0.01f, 0.f);
 			GUI::DragFloat("Radius", &m_TrailInfo.fRadius, 0.01f, 0.f , 1.f);
 			
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 			GUI::TreePop();
 		}
@@ -616,7 +616,7 @@ void CTrailObject::Describe_Entity()
 		{
 			if (GUI::TreeNode("BLOOM"))
 			{
-				if (ImGui::Combo("Bloom Type", &iCurrentBloomType, pBloomType, ENUM_CLASS(BLOOM_TYPE::END)))
+				if (GUI::Combo("Bloom Type", &iCurrentBloomType, pBloomType, ENUM_CLASS(BLOOM_TYPE::END)))
 				{
 					m_TrailInfo.eBloomType = static_cast<BLOOM_TYPE>(iCurrentBloomType);
 				}
@@ -624,7 +624,7 @@ void CTrailObject::Describe_Entity()
 				GUI::Checkbox("BloomDissolve", &m_TrailInfo.isBloomDissolve);
 				GUI::Checkbox("BloomReverseDissolve", &m_TrailInfo.isBloomReverseDissolve);
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::DragFloat("fBloomStrength", &m_TrailInfo.fBloomStrength, 0.001f, 0.f);
 				GUI::DragFloat2("fBloomTime", (_float*)&m_TrailInfo.vBloomTime, 0.001f, 0.f);
 
@@ -639,9 +639,9 @@ void CTrailObject::Describe_Entity()
 			{
 				_string		strName = {};
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::DragFloat("Diffuse Alpha", &m_TrailInfo.fDiffuseAlpha, 0.01f, 0.f, 1.f);
-				ImGui::PopItemWidth();
+				GUI::PopItemWidth();
 
 				if (GUI::TreeNode("DIFFUSE TEX"))
 				{
@@ -666,10 +666,10 @@ void CTrailObject::Describe_Entity()
 			{
 				_string strName = {};
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::DragFloat("SoftMask", &m_TrailInfo.fSoftMask, 0.01f, 0.f);
 				GUI::DragFloat("fSoftMaskEdge", &m_TrailInfo.fSoftMaskEdge, 0.01f, 0.f);
-				ImGui::PopItemWidth();
+				GUI::PopItemWidth();
 
 				if (GUI::TreeNode("MASK TEX"))
 				{
@@ -693,11 +693,11 @@ void CTrailObject::Describe_Entity()
 			{
 				_string strName = {};
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::Checkbox("NoiseColor", &m_TrailInfo.isNoiseColor);
 				GUI::Checkbox("NoiseAlpha", &m_TrailInfo.isNoiseAlpha);
 				GUI::DragFloat("NoiseStrength", &m_TrailInfo.fNoiseStrength, 0.01f, 0.f);
-				ImGui::PopItemWidth();
+				GUI::PopItemWidth();
 
 				if (GUI::TreeNode("NOISE TEX"))
 				{
@@ -725,14 +725,14 @@ void CTrailObject::Describe_Entity()
 				_float2		vDiffuseDistortioUVAmount = {};
 				_float2		vMaskDistortionUVAmount = {};
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::DragFloat("DistortionIntensity", &m_TrailInfo.fDistortionIntensity, 0.005f, 0.f, 1.f);
 				GUI::InputFloat("DistortionTime", &m_TrailInfo.vDistortionTime.y, 0.1f, 0.f);
 
 				GUI::DragFloat2("DiffuseDistortionUVAmount", (_float*)&m_TrailInfo.vDiffuseDistortioUVAmount, 0.1f);
 				GUI::DragFloat2("MaskDistortionUVAmount", (_float*)&m_TrailInfo.vMaskDistortionUVAmount, 0.1f);
 
-				ImGui::PopItemWidth();
+				GUI::PopItemWidth();
 
 				if (GUI::TreeNode("DISTORTION TEX"))
 				{

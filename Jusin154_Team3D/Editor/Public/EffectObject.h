@@ -307,7 +307,7 @@ protected:
 	_string		m_strModelName = {};
 	_string     m_strEmissiveName = {};
 	_string     m_strDistortionName = {};
-	_string     m_strNomalMapName = {};
+	_string     m_strNormalMapName = {};
 
 	_string		m_strPath = {};
 	_string     m_strName = {};

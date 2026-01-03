@@ -63,7 +63,7 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody,&m_bCollisionPlayer);
 
-	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Z_Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, -75.f, -15.f, 1.f));
@@ -532,10 +532,11 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
 
+
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
 
-	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 30.f)
+	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 15.f)
 	{
 		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
 	}
@@ -545,7 +546,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 	{
-		if (fDist < 20.f)
+		if (fDist < 5.f)
 		{
 			if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 			{
@@ -557,7 +558,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 			return;
 		}
 	}
-	else if (fDist < 20.f)
+	else if (fDist < 10.f)
 	{
 		if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
 		{
@@ -571,7 +572,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector LerpTarget = XMVectorLerp(Target, NextTarget, 0.5f);
 
-	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta, 2.5f);
+	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta, 5.f);
 
 	m_pCharacter_Controller->Set_Position(CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
 }
@@ -671,6 +672,54 @@ void CRanrok::Describe_Entity()
 		m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
 	}
 
+	GUI::DragFloat("Tucked Speed", &m_fTuckedSpeed);
+
+	for (_uint i = 0; i < m_Points.size(); ++i)
+	{
+		GUI::Separator();
+
+		if (GUI::TreeNode(("Points " + to_string(i)).c_str()))
+		{
+			GUI::Text("Points[%d] Count : %d", i, (_int)m_Points[i].size());
+
+			for (_uint j = 0; j < m_Points[i].size(); )
+			{
+				_float3 p;
+				XMStoreFloat3(&p, m_Points[i][j]);
+
+				GUI::PushID((int)(i * 10000 + j));
+
+				GUI::Text("[%d] (%.2f, %.2f, %.2f)", j, p.x, p.y, p.z);
+				GUI::SameLine();
+
+				if (GUI::SmallButton("Move"))
+				{
+					m_pCharacter_Controller->Set_Position(
+						XMVectorSet(p.x, p.y, p.z, 1.f));
+				}
+
+				GUI::SameLine();
+
+				if (GUI::SmallButton("X"))
+				{
+					m_Points[i].erase(m_Points[i].begin() + j);
+					GUI::PopID();
+					continue;
+				}
+
+				GUI::PopID();
+				++j;
+			}
+
+			if (GUI::SmallButton(("Clear##" + to_string(i)).c_str()))
+			{
+				m_Points[i].clear();
+			}
+			GUI::TreePop();
+		}
+
+	}
+
 #ifdef gimch
 
 	if (m_pGameInstance->Key_Down(DIK_L))
@@ -686,7 +735,7 @@ void CRanrok::Describe_Entity()
 
 	m_pTransformCom->Describe_Entity();
 
-	GUI::DragFloat("Tucked Speed", &m_fTuckedSpeed);
+
 }
 
 #endif // _DEBUG

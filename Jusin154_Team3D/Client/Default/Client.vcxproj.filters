@@ -800,6 +800,12 @@
     <ClInclude Include="..\public\InstancedProp_Light.h">
       <Filter>02.GameObjects\Environment\02.InstancedProp\Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Pulse.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Pulse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Charge.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1665,6 +1671,12 @@
     <Filter Include="99.Define\00.DEFAULT">
       <UniqueIdentifier>{05a0db73-4fbf-456c-9137-bb605c632d68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Pulse">
+      <UniqueIdentifier>{0464c6ff-87b8-4a3e-bc06-c912b32a65eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge">
+      <UniqueIdentifier>{fd036f05-4c10-4322-b0c2-aac65e7011a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2411,6 +2423,12 @@
     </ClCompile>
     <ClCompile Include="..\private\InstancedProp_Light.cpp">
       <Filter>02.GameObjects\Environment\02.InstancedProp\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Pulse.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Pulse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Charge.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

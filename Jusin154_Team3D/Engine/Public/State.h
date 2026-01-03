@@ -4,12 +4,12 @@
 NS_BEGIN(STATEANIM)
 enum ESTATE
 {
-    IDLE, IDLE_G,IDLE_AIM, IDLE_TURN_L, IDLE_TURN_R, IDLE_TURN_BWD, IDLE_COMBAT_TURN_BWD_L, IDLE_COMBAT_TURN_BWD_R, IDLE_COMBAT_TURN_90_L, IDLE_COMBAT_TURN_90_R,IDLE_BREAK1,IDLE_BREAK2,IDLE_BREAK3,IDLE_BREAK4, IDLE_BREAK5, IDLE_BREAK6, IDLE_BREAK7,
-    MOVE, 
-    WALK, WALK_FWD,WALK_RIGHT,WALK_LEFT, WALK_BWD,WALK_START, WALK_STOP,WALK_STOP_L, WALK_STOP_R,
-	JOG,JOG_START, JOG_FWD, JOG_RIGHT, JOG_LEFT, JOG_BWD, JOG_STOP, JOG_AIM_LEFT, JOG_AIM_RIGHT, JOG_AIM_BWD, JOG_AIM_STOP_L, JOG_AIM_STOP_R, JOG_AIM_STOP_BWD,JOG_LEFT_TURN,JOG_RIGHT_TURN,JOG_112_L,JOG_112_R,JOG_90_L,JOG_90_R,
-    SPRINT,
-    SLIDE_START_R,SLIDE_LOOP_R,SLIDE_STOP_R,
+    IDLE, IDLE_G,IDLE_AIM, IDLE_TURN_L, IDLE_TURN_R, IDLE_TURN_BWD, IDLE_COMBAT_TURN_BWD_L, IDLE_COMBAT_TURN_BWD_R, IDLE_COMBAT_TURN_90_L, IDLE_COMBAT_TURN_90_R,IDLE_BREAK1,IDLE_BREAK2,IDLE_BREAK3,IDLE_BREAK4, IDLE_BREAK5, IDLE_BREAK6, IDLE_BREAK7,IDLE_TURN_180_L, IDLE_TURN_180_R, IDLE_TURN_45_L, IDLE_TURN_45_R, IDLE_TURN_90_L, IDLE_TURN_90_R,
+    MOVE,                                                                                                                                                                                                                                               
+    WALK, WALK_FWD,WALK_RIGHT,WALK_LEFT, WALK_BWD,WALK_START, WALK_STOP,WALK_STOP_L, WALK_STOP_R,                                                                                                                                                       
+	JOG,JOG_START, JOG_FWD, JOG_RIGHT, JOG_LEFT, JOG_BWD, JOG_STOP, JOG_AIM_LEFT, JOG_AIM_RIGHT, JOG_AIM_BWD, JOG_AIM_STOP_L, JOG_AIM_STOP_R, JOG_AIM_STOP_BWD,JOG_LEFT_TURN,JOG_RIGHT_TURN,JOG_112_L,JOG_112_R,JOG_90_L,JOG_90_R,                      
+    SPRINT,                                                                                                                                                                                                                                             
+    SLIDE_START_R,SLIDE_LOOP_R,SLIDE_STOP_R,                                                                                                                                                                                                            
     JUMP,JUMP_JOG,JUMP_SPRINT,FALL_LOOP,
     LAND,LAND_TO_JOG,LAND_TO_SPRINT,LAND_HARD,LAND_MID,LAND_SOFT,
     DODGE,DODGE_BLINK, DODGE_LEFT, DODGE_RIGHT,DODGE_ATTACK,

@@ -38,6 +38,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
 
 private:
 	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END };
@@ -46,6 +47,9 @@ private:
 
 	_uint							m_iShaderPass_Index = {};
 
+	_int							m_iEntered = { 0 };
+	_float2							m_vEnteringTimer = { 0.f, 1.f };
+	_float							m_fEncounterDistance = { 3.f };
 	_float							m_fTimeAcc = {};
 	_float							m_fRimLightPower = { 0.7f };
 	_float							m_fRimLightStrength = { 3.7f };
@@ -53,7 +57,7 @@ private:
 	_float4							m_vRimLightColor = { 0.71f, 0.39f, 0.02f, 1.f };
 
 	CTexture*						m_pNoiseTextureCom = { nullptr };
-	CRigidBody*						m_pRigidBody = { nullptr };
+	CRigidBody_Dynamic*				m_pRigidBody = { nullptr };
 	PSX::PxRigidDynamic*			m_pActor = { nullptr };
 
 	class CMapElement_Chest_Lid*	m_pLid = { nullptr };

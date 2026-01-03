@@ -41,7 +41,7 @@ public:
 	HRESULT	Add_Timer(const _wstring& strTimerTag);
 	void	Compute_TimeDelta(const _wstring& strTimerTag);
 	void	Compute_FrameCount();
-	void	Present_TimeCost() const;
+	void	Present_TimeCost() ;
 #pragma endregion
 
 #pragma region LEVEL_MANAGER
@@ -133,27 +133,27 @@ public:
 #pragma endregion
 
 #pragma region PIPELINE
-	void Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix);
-	const _float4x4* Get_Transform_Float4x4(D3DTS eState);
-	_matrix Get_Transform_Matrix(D3DTS eState);
-	_matrix Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType);
-	const _float4* Get_CamPosition();
-	const _vector Get_CamXMPosition();
-	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
-	_bool IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
-	_bool IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
-	pair<_bool, _ubyte> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
-	HRESULT Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
-	HRESULT Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
-	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
-	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
+	void					Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix);
+	const _float4x4*		Get_Transform_Float4x4(D3DTS eState);
+	_matrix					Get_Transform_Matrix(D3DTS eState);
+	_matrix					Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType);
+	const _float4*			Get_CamPosition();
+	const _vector			Get_CamXMPosition();
+	void					Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
+	_bool					IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
+	_bool					IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+	pair<_bool, _ubyte>		IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
+	HRESULT					Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
+	HRESULT					Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
+	HRESULT					Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
+	HRESULT					Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
-	HRESULT Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
-	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
-	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
-	_float  Get_ShadowBoxFar(_uint iShadowBoxIndex);
-	HRESULT Begin_OutLine_Write(_uint iDSSMask);
-	HRESULT End_OutLine_Write();
+	HRESULT					Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
+	HRESULT					Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
+	const _float4x4*		Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
+	_float					Get_ShadowBoxFar(_uint iShadowBoxIndex);
+	HRESULT					Begin_OutLine_Write(_uint iDSSMask);
+	HRESULT					End_OutLine_Write();
 #pragma endregion
 #pragma region LIGHT_MANAGER
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
@@ -219,7 +219,7 @@ public:
 	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel);
 	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel);
 	PSX::PxJoint* Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1);
-	PSX::PxD6Joint* Create_PxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos);
+	PSX::PxD6Joint* Create_BasicPxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 	_bool SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
@@ -331,6 +331,8 @@ private:
 	_float							m_fSlowIntense = {};
 #ifdef _DEBUG
 private:
+	_bool							m_bRendererTimerOpen = false;
+
 	_float							m_fTimer_PriorityUpdate = { 0.f };
 	_float							m_fTimer_Update = { 0.f };
 	_float							m_fTimer_LateUpdate = { 0.f };
@@ -361,6 +363,7 @@ private:
 	_float							m_fTimer_Render_Tone_Mapping = { 0.f };
 	_float							m_fTimer_Render_UI = { 0.f };
 	_float							m_fTimer_Render_UI_Overley = { 0.f };
+
 
 	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;

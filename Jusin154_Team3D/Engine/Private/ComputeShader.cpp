@@ -51,6 +51,7 @@ HRESULT CComputeShader::Initialize_Prototype(const _tchar* pShaderFilePath, cons
 #else
 	HLSLFlags = D3DCOMPILE_OPTIMIZATION_LEVEL1;
 #endif // _DEBUG
+	ID3DBlob* pErrorBlob = nullptr;
 
 	HRESULT hr = D3DCompileFromFile(pShaderFilePath,
 		nullptr,
@@ -60,7 +61,18 @@ HRESULT CComputeShader::Initialize_Prototype(const _tchar* pShaderFilePath, cons
 		HLSLFlags,
 		0,
 		&m_pCSBlob,
-		nullptr);
+		&pErrorBlob);
+
+	if (FAILED(hr))
+	{
+#ifdef _DEBUG
+
+		if (pErrorBlob)
+			OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
+#endif // DEBUG
+
+		return E_FAIL;
+	}
 
 
 	return S_OK;
