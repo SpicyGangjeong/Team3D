@@ -23,7 +23,7 @@ public:
 	CHANNEL_DESC Fill_GPU_ChannelDesc();
 
 public:
-	void Update_TransformationMatirx(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, _bool bIsSpine, vector<_uint> BoneMask, _vector vector[3], _int RootBoneIndex);
+	void Update_TransformationMatirx(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, _bool bIsSpine, vector<_uint> BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex);
 	_int Get_BoneIndex() { return { m_iBoneIndex }; }
 	void Set_BoneIndex(_int iBoneIndex) { m_iBoneIndex = iBoneIndex; }
 	_matrix Get_BoneTransformationMatrix() { return m_BoneTransformationMatrix; }

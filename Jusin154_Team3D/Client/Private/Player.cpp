@@ -426,7 +426,7 @@ void CPlayer::Set_RaceInfo()
 
 		Info.pRacer = this;
 		Info.curRing = 0;
-		Info.prevPos = Get_WorldPostion();
+		XMStoreFloat4(&Info.prevPos, Get_WorldPostion());
 
 		m_pBroomRaceManager->Push_BroomRacer(Info);
 	}
