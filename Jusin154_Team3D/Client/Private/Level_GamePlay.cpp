@@ -94,10 +94,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
-	//	return E_FAIL;
-	//}
-
 	//if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 	//	return E_FAIL;
 	//}
@@ -108,9 +104,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
-	/*if (FAILED(Ready_Layer_BroomRacerAI(TEXT("Layer_BroomRacerAI")))) {
-		return E_FAIL;
-	}*/
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
@@ -721,37 +714,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
-{
-#ifdef Bin
-	for (_uint i = 0; i < 5; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
-			return E_FAIL;
-		}
-	}
-#endif // Bin
-	return S_OK;
-}
-
 HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
-{
-	for (_uint i = 0; i < 10; ++i) {
-
-		CRaceRing::RACERING_DESC RaceRingDesc{};
-		RaceRingDesc.pBroomRaceManager = m_pBroomRaceManager;
-	
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &RaceRingDesc))) {
-			return E_FAIL;
-		}
-	}
-
-	return S_OK;
-}
 
 HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
 {

@@ -86,7 +86,6 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 void CBroomRaceManager::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
-	m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 }
 
 HRESULT CBroomRaceManager::Render()
@@ -158,10 +157,6 @@ void CBroomRaceManager::Free()
 
 void CBroomRaceManager::Describe_Entity()
 {
-	if (GUI::Button("Add Race Ring"))
-	{
-		
-	}
 	if (GUI::Button("Race Start"))
 	{
 		m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
@@ -342,14 +337,14 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 		{
 			if (racer.pAI == pRacer)
 			{
+				if (racer.curRing == m_pRaceRings.size() - 1 ) {
+					racer.pAI->Get_Broom()->Set_Hover(true);
+					racer.pAI->Get_Broom()->Set_Move(false);
+				}
+				
 				if (racer.pAI)
 				{
 					racer.pAI->Set_RaceRing(m_pRaceRings[racer.curRing]);
-					if (racer.curRing == m_pRaceRings.size())
-					{
-						racer.pAI->Get_Broom()->Set_Hover(true);
-						racer.pAI->Get_Broom()->Set_Move(false);
-					}
 				}
 			}
 		}
@@ -357,13 +352,11 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 		{
 			if (racer.pRacer == pRacer)
 			{
-				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
-				if (racer.curRing == m_pRaceRings.size())
-				{
+				if (racer.curRing == m_pRaceRings.size() - 1) {
 					racer.pRacer->Get_Broom()->Set_Hover(true);
 					racer.pRacer->Get_Broom()->Set_Move(false);
-
 				}
+				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
 				m_pInfoInstance->Event_CallBack(TEXT("CurrentRing"));
 				m_iLastRing++;
 			}
@@ -412,31 +405,55 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 		return S_OK;
 	}
 
-	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
-	{
+	//for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	//{
+	//	CRaceRing::RACERING_DESC Desc = {};
+
+	//	Desc.pBroomRaceManager = this;	
+
+	//	/* Transform */
+	//	auto* Rotation = Object->FirstChildElement("Scale");
+	//	Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+	//	Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+	//	Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+
+	//	auto* Scale = Object->FirstChildElement("Rotation");
+	//	Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+	//	Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+	//	Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+	//	auto* Position = Object->FirstChildElement("Position");
+	//	Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+	//	Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+	//	Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
+	//		return E_FAIL;
+	//}
+
+
 		CRaceRing::RACERING_DESC Desc = {};
 
-		Desc.pBroomRaceManager = this;	
+		Desc.pBroomRaceManager = this;
 
 		/* Transform */
-		auto* Rotation = Object->FirstChildElement("Scale");
+		auto* Rotation = root->FirstChildElement("Object")->FirstChildElement("Scale");
 		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
 		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
 		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
 
-		auto* Scale = Object->FirstChildElement("Rotation");
+		auto* Scale = root->FirstChildElement("Object")->FirstChildElement("Rotation");
 		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
 		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
 		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
 
-		auto* Position = Object->FirstChildElement("Position");
+		auto* Position = root->FirstChildElement("Object")->FirstChildElement("Position");
 		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
 		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
 		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
 			return E_FAIL;
-	}
 
 	return S_OK;
 }

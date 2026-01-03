@@ -73,7 +73,7 @@ void CWand::Late_Update(_float fTimeDelta)
 
 HRESULT CWand::Render()
 {
-	if (!m_pModelCom)
+	if (!m_bVisible)
 		return S_OK;
 
 	if (FAILED(Bind_ShaderResources())) {

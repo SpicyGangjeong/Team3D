@@ -185,9 +185,13 @@ HRESULT CPlayer::InputBroom()
 }
 
 void CPlayer::Behavior_IdleEnter() {
+	pair<_uint, _bool> pairAnimInfo;
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	m_bSprintToggle = false;
 	m_bWalkToggle = false;
+
+	pairAnimInfo = m_Animation[STATEANIM::IDLE];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	
 }
 
@@ -955,6 +959,7 @@ void CPlayer::Behavior_BlinkEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::BLINK);
 	m_bVisible = false;
+	Get_PartObject<CWand>()->Set_Visible(false);
 	Add_Event(m_Animation[STATEANIM::DODGE].first,
 		[&]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::BLINK, this);
@@ -973,6 +978,7 @@ HRESULT CPlayer::Behavior_BlinkExitCheck(_float fTimeDelta)
 	if (m_fBlinkTime >= 0.8f && iCurrAnimIndex != m_Animation[STATEANIM::DODGE_BLINK].first)
 	{
 		m_bVisible = true;
+		Get_PartObject<CWand>()->Set_Visible(true);
 		pairAnimInfo = m_Animation[STATEANIM::DODGE_BLINK];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.8f,false,1.5f);
 	}
@@ -1267,10 +1273,12 @@ void CPlayer::Behavior_LightAttackEnter()
 			if (Cross < 0.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_L];
+				fRatio = 0.15f;
 			}
 			else
 			{
 				pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_R2];
+				fRatio = 0.15f;
 			}
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_bLookAt = true;
@@ -1907,8 +1915,9 @@ void CPlayer::Behavior_HitEnter()
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD].first,
 				[&]() {pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			m_pCharacter_Controller->SetGravity(true); },
-				0.7f);
+			m_pCharacter_Controller->SetGravity(true);
+			m_eHitType = ENUM_CLASS(HIT_TYPE::END); },
+				0.9f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
 				[&]() {pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
@@ -1921,8 +1930,9 @@ void CPlayer::Behavior_HitEnter()
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_FWD].first,
 				[&]() {pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			m_pCharacter_Controller->SetGravity(true); },
-				0.7f);
+			m_pCharacter_Controller->SetGravity(true);
+			m_eHitType = ENUM_CLASS(HIT_TYPE::END); },
+				0.9f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT].first,
 				[&]() {pairAnimInfo = m_Animation[STATEANIM::GETUP_FWD];
@@ -1979,6 +1989,7 @@ void CPlayer::Behavior_HitExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::HIT);
 	Reset_Event();
+	m_eHitType = ENUM_CLASS(HIT_TYPE::END);
 	m_bLookAt = false;
 }
 
@@ -2205,8 +2216,6 @@ void CPlayer::Behavior_Broom_FlyEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::FLY);
 	Reset_Event();
-	m_fNeutralTime = 0.f;
-	m_fNoInputTime = 0.f;
 }
 
 HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
@@ -2224,7 +2233,6 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	{
 		if (SUCCEEDED(InputBroom()) || SUCCEEDED(InputMove()))
 		{
-			m_fNoInputTime = 0.f;
 			_float3 vInput = { 0.f, 0.f, 0.f };
 
 			if (bFwd)  vInput.z += 1.f;
@@ -2307,44 +2315,26 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 				}
 			}
 
-			_bool bNeutralAnim =
-				(pairAnimInfo.first == m_Animation[STATEANIM::BROOM_FWD].first ||
-					pairAnimInfo.first == m_Animation[STATEANIM::BROOM_IDLE].first);
-
-			if (!bNeutralAnim)
+			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_fNeutralTime = 0.f;
-				if (iCurrAnimIndex != pairAnimInfo.first)
-				{
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-				}
-			}
-			else
-			{
-				m_fNeutralTime += fTimeDelta;
-
-				if (m_fNeutralTime > 0.25f)
-				{
-					if (iCurrAnimIndex != pairAnimInfo.first)
-					{
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-					}
-				}
+				m_pModelCom->Set_AnimationIndex(
+					pairAnimInfo.first,
+					pairAnimInfo.second,
+					1.f, false, 1.f, true, true
+				);
 			}
 		}
 		else {
+
 			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_IDLE);
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			m_fNoInputTime += fTimeDelta;
 
-			if (m_fNoInputTime > 0.25f)
+			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_IDLE);
-
-				if (iCurrAnimIndex != pairAnimInfo.first)
-				{
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-				}
+				m_pModelCom->Set_AnimationIndex(
+					pairAnimInfo.first,
+					pairAnimInfo.second,
+					1.f, false, 1.f, true, true
+				);
 			}
 		}
 
@@ -2402,8 +2392,6 @@ void CPlayer::Behavior_Broom_FlyExit()
 void CPlayer::Behavior_Broom_TurboFlyEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::TURBOFLY);
-	m_fNeutralTime = 0.f;
-	m_fNoInputTime = 0.f;
 }
 
 HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
@@ -2421,7 +2409,6 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 	{
 		if (SUCCEEDED(InputBroom()) || SUCCEEDED(InputMove()))
 		{
-			m_fNoInputTime = 0.f;
 			_float3 vInput = { 0.f, 0.f, 0.f };
 
 			if (bFwd)  vInput.z += 1.f;
@@ -2464,6 +2451,9 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
 					else if(vInput.y<0.f)
 						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_FWD];
+					}
 				}
 				else {
 					if (vInput.x < 0.f)
@@ -2486,34 +2476,18 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 				}
 			}
 
-			_bool bNeutralAnim =
-				(pairAnimInfo.first == m_Animation[STATEANIM::BROOM_TURBO_FWD].first);
-
-			if (!bNeutralAnim)
+			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_fNeutralTime = 0.f;
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true,1.f,false);
-			}
-			else
-			{
-				m_fNeutralTime += fTimeDelta;
-
-				if (m_fNeutralTime > 0.25f)
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first,pairAnimInfo.second,1.f, false, 1.f, false,true);
 			}
 		}
 		else {
 
-			m_fNoInputTime += fTimeDelta;
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_TURBO_FWD);
 
-			if (m_fNoInputTime > 0.25f)
+			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_TURBO_FWD);
-
-				if (iCurrAnimIndex != pairAnimInfo.first)
-				{
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
-				}
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first,pairAnimInfo.second,1.f, false, 1.f, false, true);
 			}
 		}
 	}

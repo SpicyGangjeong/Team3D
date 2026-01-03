@@ -35,7 +35,8 @@ public:
 	const _float4x4*  Get_HeadMatrix();
 	_float Get_HpRatio();
 	void CameraShake(_float ClampValue, _float Min, _float Max, _float Time);
-
+	virtual _bool IsHitStateDisabled();
+	virtual _bool IsHitSpellDisabled();
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };
@@ -71,6 +72,8 @@ public:
 	virtual void Describe_Entity() override;
 
 #endif // _DEBUG
+
+
 
 };
 

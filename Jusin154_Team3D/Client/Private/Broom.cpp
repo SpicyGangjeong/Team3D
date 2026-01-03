@@ -84,9 +84,6 @@ void CBroom::Update(_float fTimeDelta)
 	if(!m_pParentUnit->IsAI())
 		PlayerInput();
 	else {
-		m_bHoverToggle = m_Input.bHoverToggle;
-		m_bTurbo = m_Input.bTurbo;
-
 		m_fAITime += fTimeDelta;
 
 		_float target = 1.f + sinf(m_fAITime * 0.3f + m_fAISeed) * 0.15f;
@@ -130,7 +127,7 @@ void CBroom::Update(_float fTimeDelta)
 			return;
 		}
 
-		m_pWindEffect->Set_Visible(false);
+		m_pWindEffect->Set_Visible(true);
 		m_pWindEffect->Get_Component<CInstance_Model>()->Set_TimeMult(0.5f + m_fSpeed / 20.f);
 		m_pWindEffect->Get_Effect_Info()->fBlurIntensity = m_fSpeed / 30.f;
 

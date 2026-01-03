@@ -735,8 +735,6 @@ void CBroomRacerAI::Add_FSM()
 
 }
 
-
-
 void CBroomRacerAI::Set_Input(_float fTimeDelta)
 {
 	_float targetX = ComputeTurnToRing();
