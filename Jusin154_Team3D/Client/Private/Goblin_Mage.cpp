@@ -307,7 +307,7 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
-	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f));
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));

@@ -44,7 +44,7 @@ private:
 
 	_int	m_iLineIndex{};
 	_int	m_iCurrentLine{};
-	vector<_vector> m_MoveLine;
+	vector<_float4> m_MoveLine;
 	_float m_localX{};
 	_float m_localY{};
 public:

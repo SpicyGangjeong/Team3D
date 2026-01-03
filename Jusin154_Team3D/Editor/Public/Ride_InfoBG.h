@@ -25,6 +25,9 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	virtual void Set_Hover(_bool bVisible) override;
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };

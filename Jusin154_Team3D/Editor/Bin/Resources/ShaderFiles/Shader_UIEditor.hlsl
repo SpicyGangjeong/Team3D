@@ -2255,6 +2255,177 @@ PS_OUT PS_Ride_HpSlot(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_BoosterGauge(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 Color1 = float4(1.f, 1.f, 1.f, 1.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+    
+    float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
+    if (g_iClick == 1)
+    {
+        tex1.rgb = float3(255.f, 255.f, 0.f) / 255.f;
+        float blink = abs(sin(g_fBlinkTime));
+        tex1.a = saturate(tex1.a * blink);
+    }
+    else if (g_iClick == 0)
+    {
+        tex1.a = 0.f;
+    }
+    Color = tex1;
+    
+    float2 BGPos = g_Pos;
+    float2 BGSize = g_fImageSize;
+    float2 BGPixel = Finaluv * g_fOrigin_Size;
+    float2 localUV = (BGPixel - BGPos) / BGSize;
+    bool inside = all(localUV >= 0.0f && localUV <= 1.0f);
+    
+    float4 tex2 = g_Texture1.Sample(ClampSampler, localUV);
+    
+    if (inside)
+        Color = lerp(Color, tex2, tex2.a);
+    
+    float2 reversuv = In.vTexcoord;
+    
+    reversuv.x = 1.0f - localUV.x;
+
+    float4 tex3 = g_Texture2.Sample(ClampSampler, localUV);
+    
+    if (reversuv.x >= g_fHp)
+    {
+        tex3.rgb *= float3(0.f, 0.f, 0.f);
+    }
+    else
+    {
+        tex3.rgb *= float3(1.f, 1.f, 0.f);
+    }
+    if (all(tex2.rgb >= float3(55.f / 255.f, 0.f / 255.f, 55.f / 255.f)))
+        Color = lerp(Color, tex3, tex3.a);
+        
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_BoosterHpBar(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 Color1 = float4(1.f, 1.f, 1.f, 1.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+
+    float4 tex2 = g_Texture.Sample(ClampSampler, Finaluv);
+    Color = tex2;
+    
+    float2 reversuv = In.vTexcoord;
+    
+    reversuv.x = 1.0f - Finaluv.x;
+
+    float4 tex3 = g_Texture1.Sample(ClampSampler, Finaluv);
+    
+    if (reversuv.x >= g_fHp)
+    {
+        tex3.rgb *= float3(0.f, 0.f, 0.f);
+    }
+    else
+    {
+        tex3.rgb *= float3(0.f, 1.f, 0.f);
+    }
+    if (all(tex2.rgb >= float3(55.f / 255.f, 0.f / 255.f, 55.f / 255.f)))
+        Color = lerp(Color, tex3, tex3.a);
+        
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
 struct VS_IN3D
 {
     float3 vPosition : POSITION;
@@ -2647,7 +2818,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Sptire_Sheet();
     }
 
-    pass Key_Hold_Rotation// 9
+    pass Key_Hold_Rotation // 9
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -2707,7 +2878,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Rotation();
     }
 
-    pass Slot//15
+    pass Slot //15
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -2755,7 +2926,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Magic_Icon();
     }
 
-    pass RemapUV//20
+    pass RemapUV //20
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -2805,7 +2976,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Spell_Preview();
     }
 
-    pass Spell_Header//25
+    pass Spell_Header //25
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -2855,7 +3026,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Loding_Screen();
     }
 
-    pass Enemy_HpBer//30
+    pass Enemy_HpBer //30
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -2905,7 +3076,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Quest_Status();
     }
 
-    pass Broomstick//35
+    pass Broomstick //35
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
@@ -2955,7 +3126,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_NPCInteraction();
     }
 
-    pass CanvasFade//40
+    pass CanvasFade //40
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
@@ -3005,7 +3176,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Ride_Info();
     }
 
-    pass Ride_HpSlot//45
+    pass Ride_HpSlot //45
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
@@ -3013,6 +3184,26 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Ride_HpSlot();
+    }
+
+    pass BoosterGauge
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BoosterGauge();
+    }
+
+    pass BoosterHpBar
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BoosterHpBar();
     }
 
     pass Enemy_Detection
@@ -3045,7 +3236,7 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Interaction_Npc();
     }
 
-    pass BroomGateTarget//49
+    pass BroomGateTarget //51
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_None, 0);

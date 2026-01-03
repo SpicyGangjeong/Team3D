@@ -64,12 +64,14 @@ void CInfoInstance::Set_Damage(_float fDamage)
 		m_pSkillInfo->Update_Damage(fDamage);
 }
 
-_vector CInfoInstance::Get_PalyerPos()
+_float4 CInfoInstance::Get_PalyerPos()
 {
-	return m_pPlayerPos;
+	_float4 Pos{};
+	XMStoreFloat4(&Pos, m_pPlayerPos);
+	return Pos;
 }
 
-void CInfoInstance::Set_PlayerPos(_vector Position)
+void CInfoInstance::Set_PlayerPos(_fvector Position)
 {
 	m_pPlayerPos = Position;
 }

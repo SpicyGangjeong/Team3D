@@ -144,6 +144,15 @@
 #include "Broom_Exit.h"
 #include "Broom_Trophy.h"
 
+#include "Ride_Panel.h"
+#include "Ride_Info_Key.h"
+#include "Ride_Info.h"
+#include "Ride_InfoBG.h"
+#include "Ride_Bbooster_Slot.h"
+#include "Ride_BboosterBar.h"
+#include "Ride_HpBar.h"
+#include "Ride_HpSlot.h"
+
 #include "Interaction_Key.h"
 
 #include "NPCInteraction.h"
@@ -2725,6 +2734,47 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_SpellLearn_Broom_Trophy*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Trophy>(g_iStaticLevel, CBroom_Trophy::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_SpellLearn_Ride_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Panel>(g_iStaticLevel, CRide_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Ride_Info_Key*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Info_Key>(g_iStaticLevel, CRide_Info_Key::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Ride_Info*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Info>(g_iStaticLevel, CRide_Info::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Ride_InfoBG*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_InfoBG>(g_iStaticLevel, CRide_InfoBG::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Ride_Bbooster_Slot*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Bbooster_Slot>(g_iStaticLevel, CRide_Bbooster_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Ride_BboosterBar*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_BboosterBar>(g_iStaticLevel, CRide_BboosterBar::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Ride_HpSlot*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_HpSlot>(g_iStaticLevel, CRide_HpSlot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_SpellLearn_Ride_HpBar*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_HpBar>(g_iStaticLevel, CRide_HpBar::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

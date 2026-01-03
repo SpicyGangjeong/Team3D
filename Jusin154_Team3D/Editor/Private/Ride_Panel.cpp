@@ -50,8 +50,13 @@ HRESULT CRide_Panel::Initialize(void* pArg)
 	}
 
 	m_fCanvasAlpha = 1.f;
-	Visible(true);
+	m_fMoveSpeed = 100.f;
+	m_fAlphaTime = 3.f;
+	Visible(false);
 	ElementAllVisible(true);
+	m_vLerp_Position = _float4(1750.f, m_fY, 0.f, 1.f);
+	static_cast<CUIObject*>(m_pRide_Info)->Visible(false);
+	static_cast<CUIObject*>(m_pRide_InfoBG)->Visible(false);
 	return S_OK;
 }
 
@@ -69,6 +74,54 @@ void CRide_Panel::Update(_float fTimeDelta)
 	if (!__super::Chack_Visible())
 	{
 		return;
+	}
+
+	if (m_bFadeIn == true)
+	{
+
+		if (m_bHover == true)
+			m_bHover = false;
+
+		if (m_fAlpha <= 1.f)
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	if (m_bFadeOut == true)
+	{
+
+		if (m_bHover == false)
+			m_bHover = true;
+
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+			Visible(false);
+		}
+	}
+
+	if (m_bHover == true)
+	{
+		Start_Lerp(fTimeDelta);
+	}
+	else
+	{
+		Move(1650.f, -800.f);
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_Q))
+	{
+		static_cast<CUIObject*>(m_pRide_Info)->Set_Hover(true);
+		static_cast<CUIObject*>(m_pRide_InfoBG)->Set_Hover(true);
 	}
 
 	__super::Update(fTimeDelta);
@@ -190,8 +243,6 @@ void CRide_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 

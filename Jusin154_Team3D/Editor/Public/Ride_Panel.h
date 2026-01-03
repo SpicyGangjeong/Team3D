@@ -27,8 +27,6 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	CGameObject* m_pRide_Info_Key = { nullptr };

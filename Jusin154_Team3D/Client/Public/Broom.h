@@ -40,6 +40,7 @@ public:
 	void Set_Move(_bool bMove) { m_bMove = bMove; }	
 	_bool Get_Move() { return m_bMove; }
 	HRESULT         Ready_Child();
+
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 

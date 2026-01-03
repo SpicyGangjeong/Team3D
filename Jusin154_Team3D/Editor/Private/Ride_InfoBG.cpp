@@ -37,10 +37,18 @@ HRESULT CRide_InfoBG::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
+	m_fTimeMult = 0.6f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 10.f;
 	return S_OK;
+}
+
+void CRide_InfoBG::Set_Hover(_bool bVisible)
+{
+	Visible(bVisible);
+	m_bHover = true;
+	m_fTime = 0.f;
+	m_fAlpha = 1.f;
 }
 
 void CRide_InfoBG::Priority_Update(_float fTimeDelta)
@@ -80,10 +88,17 @@ void CRide_InfoBG::Update(_float fTimeDelta)
 		{
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
+			Visible(false);
 		}
 	}
 
-	m_fTime += fTimeDelta * m_fTimeMult;
+	if (m_bHover == true)
+		m_fTime += fTimeDelta * m_fTimeMult;
+
+	if (m_fTime >= 1.f)
+	{
+		Set_FadeOut();
+	}
 
 	__super::Update(fTimeDelta);
 }
