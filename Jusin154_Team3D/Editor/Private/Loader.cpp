@@ -135,6 +135,15 @@
 #include "Broom_Exit.h"
 #include "broom_Trophy.h"
 
+#include "Ride_Panel.h"
+#include "Ride_Info_Key.h"
+#include "Ride_Info.h"
+#include "Ride_InfoBG.h"
+#include "Ride_Bbooster_Slot.h"
+#include "Ride_BboosterBar.h"
+#include "Ride_HpBar.h"
+#include "Ride_HpSlot.h"
+
 #include "NPCInteraction.h"
 
 #include "Dialogue.h"
@@ -1216,9 +1225,43 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-		
-	if (FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Panel>(g_iStaticLevel, CRide_Panel::Create(m_pDevice, m_pContext))))
 	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Info_Key>(g_iStaticLevel, CRide_Info_Key::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Info>(g_iStaticLevel, CRide_Info::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_InfoBG>(g_iStaticLevel, CRide_InfoBG::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Bbooster_Slot>(g_iStaticLevel, CRide_Bbooster_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_BboosterBar>(g_iStaticLevel, CRide_BboosterBar::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_HpSlot>(g_iStaticLevel, CRide_HpSlot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_HpBar>(g_iStaticLevel, CRide_HpBar::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+		
+		if(FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
+	{
+		
 		return E_FAIL;
 	}
 	

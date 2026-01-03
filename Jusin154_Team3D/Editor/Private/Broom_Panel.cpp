@@ -49,7 +49,7 @@ HRESULT CBroom_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	Visible(true);
+	Visible(false);
 	ElementAllVisible(true);
 	return S_OK;	
 }
