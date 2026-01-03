@@ -41,6 +41,7 @@ protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };
 	CStat*			m_pStat = { nullptr };
+	CMotion_Trail*	m_pMotionTrailCom = { nullptr };
 	_float4			m_vTargetPos = { };
 	_float3			m_vToTargetDir = { };
 	_float			m_fTargetDistance = { FLT_MAX };

@@ -203,7 +203,7 @@ _vector CCamPosition_Shoulder::Calc_LookTargetPos()
 
 	return XMVectorLerp(vHeadPos, vFowardPos, m_vFocalRatio.x);
 }
-_vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
+_vector CCamPosition_Shoulder::Calc_FollowTargetPos(_fvector vLookTargetWorldPos)
 {
 	_float fBestFollowTargetDistance = m_fCameraBarrelLength * (1.f - m_fDefaultCameraBackToFrontRatio);
 
