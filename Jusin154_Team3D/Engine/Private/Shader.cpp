@@ -98,21 +98,53 @@ HRESULT CShader::Bind_Matrices(const _char* pConstantName, const _float4x4* pMat
 HRESULT CShader::Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV)
 {
 	SHADERVARIABLE* pTagVariable = Find_VariableByName(pConstantName);
-	if (nullptr == pTagVariable) {
+	if (nullptr == pTagVariable || nullptr == pTagVariable->pSRV){
 		return E_FAIL;
 	}
 
-	return pTagVariable->pSRV->SetResource(pSRV);
+	if (pSRV == pTagVariable->pBeforeBindedSRV){
+		return S_OK;
+	}
+
+	HRESULT hr = pTagVariable->pSRV->SetResource(pSRV);
+	if (SUCCEEDED(hr)){
+		pTagVariable->pBeforeBindedSRV = pSRV;
+	}
+	return hr;
 }
 
 HRESULT CShader::Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView** ppSRV, _uint iNumSRVs)
 {
 	SHADERVARIABLE* pTagVariable = Find_VariableByName(pConstantName);
-	if (nullptr == pTagVariable) {
+	if (nullptr == pTagVariable || nullptr == pTagVariable->pSRV){
 		return E_FAIL;
 	}
 
-	return pTagVariable->pSRV->SetResourceArray(ppSRV, 0, iNumSRVs);
+	if (iNumSRVs == 0){
+		return S_OK;
+	}
+
+	if (ppSRV == nullptr){
+		return E_INVALIDARG;
+	}
+
+	if (pTagVariable->beforeBindedSRVs.size() == iNumSRVs)
+	{
+		if (0 == memcmp(pTagVariable->beforeBindedSRVs.data(), ppSRV,
+			sizeof(ID3D11ShaderResourceView*) * iNumSRVs))
+		{
+			return S_OK;
+		}
+	}
+
+	HRESULT hr = pTagVariable->pSRV->SetResourceArray(ppSRV, 0, iNumSRVs);
+	if (SUCCEEDED(hr))
+	{
+		pTagVariable->beforeBindedSRVs.assign(ppSRV, ppSRV + iNumSRVs);
+		pTagVariable->pBeforeBindedSRV = ppSRV[0];
+	}
+
+	return hr;
 }
 
 HRESULT CShader::Bind_IntArray(const _char* pConstantName, const int* pData, _uint elementCount)
