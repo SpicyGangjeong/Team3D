@@ -162,6 +162,11 @@ void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,
 	m_PendingEvents.push_back(Desc);
 }
 
+void CUnit::Reset_Event()
+{
+    m_PendingEvents.clear();
+}
+
 void CUnit::Check_HitAngle(_vector ProjectileDir)
 {
 	_vector vProjectileDir = ProjectileDir;
@@ -216,6 +221,11 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "IDLE_BREAK3", IDLE_BREAK3 }, { "IDLE_BREAK4", IDLE_BREAK4 },
         { "IDLE_BREAK5", IDLE_BREAK5 }, { "IDLE_BREAK6", IDLE_BREAK6 },
         { "IDLE_BREAK7", IDLE_BREAK7 },
+
+        { "IDLE_TURN_180_L", IDLE_TURN_180_L }, { "IDLE_TURN_180_R", IDLE_TURN_180_R },
+        { "IDLE_TURN_45_L", IDLE_TURN_45_L },  { "IDLE_TURN_45_R", IDLE_TURN_45_R },
+        { "IDLE_TURN_90_L", IDLE_TURN_90_L },  { "IDLE_TURN_90_R", IDLE_TURN_90_R },
+
 
         // MOVE
         { "MOVE", MOVE },

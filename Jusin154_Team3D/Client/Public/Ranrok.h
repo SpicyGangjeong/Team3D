@@ -77,6 +77,7 @@ private:
 	HRESULT Render_Nonblend();
 	HRESULT Render_Blend();
 	void MoveTo(_float fTimeDelta);
+	void Update_Disolve(_float fTimeDelta);
 	HRESULT Load_RanrokPos(const _char* pFilePath);
 public:
 	static CRanrok* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -101,6 +102,8 @@ private:
 	_bool m_bHoverDash = { false };
 	_vector m_vMoveDir = XMVectorZero();
 
+	_bool  m_bDisolveReverse = { false };
+	_float m_fDisolveDelay = 0.f;      
 
 
 	vector<vector<_vector>> m_Points;
@@ -113,16 +116,18 @@ private:
 	_float m_fAroundTime = {};
 	_float m_fRushTime = {};
 	_float m_fHeadAimWeight = {};
+	_float m_fPrevHpRatio = {};
+	_int m_iBreathRand = {};
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
-	_float					 m_fTuckedSpeed = { 75.f };
+	_float					 m_fTuckedSpeed = { 50.f };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
 
 	void	Behavior_IdleBreakEnter();
-	HRESULT Behavior_IdleBreakExitCheck();
+	HRESULT Behavior_IdleBreakExitCheck(_float fTimeDelta);
 	void	Behavior_IdleBreakExit();
 
 	void	Behavior_MoveEnter();
@@ -188,6 +193,10 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
+
+
+	virtual _bool IsHitStateDisabled() override;
+	virtual _bool IsHitSpellDisabled() override;
 };
 
 NS_END

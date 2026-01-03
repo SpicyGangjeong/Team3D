@@ -326,7 +326,7 @@ public:
 				return hitLeft.distance < hitRight.distance;
 			});
 	}
-
+	
 
 	inline static _uint AlphabetToInt(_tchar Alphabet)
 	{
@@ -337,24 +337,197 @@ public:
 
 		return (Alphabet - 'A');
 	}
+#ifdef _DEBUG
 
-	inline static PSX::PxTransform MakeJointWorldPoseFromRouteEnd(PSX::PxRigidActor* routeRigidActor, _float3 vCapsuleHalfLengths, bool isHeadEnd)
+	inline static _bool DescribePxTransform(PSX::PxTransform& pxTransform, size_t iID)
+	{
+		PSX::PxVec3 vAxis = {};
+		_float fAngle = {};
+		pxTransform.q.toRadiansAndUnitAxis(fAngle, vAxis);
+		GUI::Text((to_string((_int)iID) + "Pos : %.2f %.2f %.2f").c_str(), pxTransform.p.x, pxTransform.p.y, pxTransform.p.z);
+		GUI::Text((to_string((_int)iID) + "fAngle vAxis : %.2f %.2f %.2f %.2f").c_str(), fAngle, vAxis.x, vAxis.y, vAxis.z);
+		if (GUI::DragFloat3((to_string((_int)iID) + " Pos").c_str(), (_float*)&pxTransform.p, 0.01f, -2.f, 2.f, "%.2f")) {
+			return true;
+		}
+		if (GUI::DragFloat((to_string((_int)iID) + " fAngle").c_str(), &fAngle, XMConvertToRadians(1.f), XMConvertToRadians(0.1f), 2.f * XM_2PI, "%.2f")) {
+			pxTransform.q = PSX::PxQuat(fAngle, vAxis);
+			return true;
+		}
+		return false;
+	}
+
+#endif // _DEBUG
+
+	// 루트의 끝에 있는 조인트 위치를 구함
+	inline static PSX::PxTransform Calc_JointPosFromRoute(PSX::PxRigidActor* pRouteActor, _float3 vCapsuleHalfLengths, bool bIsHead)
 	{
 		PSX::PxShape* shapeArray[1] = {};
-		routeRigidActor->getShapes(shapeArray, 1);
+		pRouteActor->getShapes(shapeArray, 1);
 
 		PSX::PxShape* routeShape = shapeArray[0];
+		PSX::PxTransform pxRouteWorld = PSX::PxShapeExt::getGlobalPose(*routeShape, *pRouteActor);
+		PSX::PxVec3 capsuleAxisWorld = pxRouteWorld.q.rotate(PSX::PxVec3(1.f, 0.f, 0.f));
 
-		const PSX::PxTransform pxRouteWorldTransfom = PSX::PxShapeExt::getGlobalPose(*routeShape, *routeRigidActor);
+		PSX::PxTransform pxResult;
+		pxResult.q = pxRouteWorld.q;
+		pxResult.p = pxRouteWorld.p + (bIsHead ? 1.f : -1.f) * capsuleAxisWorld * (vCapsuleHalfLengths.y + vCapsuleHalfLengths.x);
 
-		const PSX::PxVec3 capsuleAxisWorld = pxRouteWorldTransfom.q.rotate(PSX::PxVec3(1.f, 0.f, 0.f));
-
-		PSX::PxTransform jointWorldPose;
-		jointWorldPose.q = pxRouteWorldTransfom.q;
-		jointWorldPose.p = pxRouteWorldTransfom.p + (isHeadEnd ? 1.f : -1.f) * capsuleAxisWorld * (vCapsuleHalfLengths.y + vCapsuleHalfLengths.x);
-
-		return jointWorldPose;
+		return pxResult;
 	}
+	static _bool Modify_D6Joint(PSX::PxD6Joint& joint, _uint iID)
+	{
+		_bool bIsModified = false;
+
+		const char* motionItems[] = { "Locked", "Limited", "Free" };
+
+		struct AxisRow { PSX::PxD6Axis::Enum axis; const char* label; };
+		const AxisRow axisRows[] =
+		{
+			{ PSX::PxD6Axis::eX,      "X Motion"      },
+			{ PSX::PxD6Axis::eY,      "Y Motion"      },
+			{ PSX::PxD6Axis::eZ,      "Z Motion"      },
+			{ PSX::PxD6Axis::eTWIST,  "Twist Motion"  },
+			{ PSX::PxD6Axis::eSWING1, "Swing1 Motion" },
+			{ PSX::PxD6Axis::eSWING2, "Swing2 Motion" },
+		};
+
+		for (const AxisRow& row : axisRows)
+		{
+			const PSX::PxD6Motion::Enum pxCurMotion = joint.getMotion(row.axis);
+
+			int iCurIndex = 0;
+			if (pxCurMotion == PSX::PxD6Motion::eLOCKED)  iCurIndex = 0;
+			else if (pxCurMotion == PSX::PxD6Motion::eLIMITED) iCurIndex = 1;
+			else                                               iCurIndex = 2; // eFREE
+
+			int iNewIndex = iCurIndex;
+			std::string uiId = std::string(row.label) + " ##" + std::to_string(iID);
+
+			if (GUI::Combo(uiId.c_str(), &iNewIndex, motionItems, IM_ARRAYSIZE(motionItems)) && iNewIndex != iCurIndex)
+			{
+				PSX::PxD6Motion::Enum pxNewMotion =
+					(iNewIndex == 0) ? PSX::PxD6Motion::eLOCKED :
+					(iNewIndex == 1) ? PSX::PxD6Motion::eLIMITED :
+					PSX::PxD6Motion::eFREE;
+
+				joint.setMotion(row.axis, pxNewMotion);
+				bIsModified = true;
+			}
+		}
+
+		const _bool bIsLinearLimited =
+			(joint.getMotion(PSX::PxD6Axis::eX) == PSX::PxD6Motion::eLIMITED) ||
+			(joint.getMotion(PSX::PxD6Axis::eY) == PSX::PxD6Motion::eLIMITED) ||
+			(joint.getMotion(PSX::PxD6Axis::eZ) == PSX::PxD6Motion::eLIMITED);
+
+		const _bool bIsSwingLimited =
+			(joint.getMotion(PSX::PxD6Axis::eSWING1) == PSX::PxD6Motion::eLIMITED) ||
+			(joint.getMotion(PSX::PxD6Axis::eSWING2) == PSX::PxD6Motion::eLIMITED);
+
+		const _bool bIsTwistLimited =
+			(joint.getMotion(PSX::PxD6Axis::eTWIST) == PSX::PxD6Motion::eLIMITED);
+
+		PSX::PxJointLinearLimit pxLinearLimit = joint.getLinearLimit();
+		_float fLinearLimit = pxLinearLimit.value;
+
+		if (GUI::DragFloat((std::string("LinearLimit ##") + std::to_string(iID)).c_str(), &fLinearLimit, 0.01f, 0.f, 10.f, "%.3f"))
+			bIsModified = true;
+
+		PSX::PxJointLimitCone pxSwingLimit = joint.getSwingLimit();
+		PSX::PxJointAngularLimitPair pxTwistLimit = joint.getTwistLimit();
+
+		_float fSwingDeg = XMConvertToDegrees(pxSwingLimit.yAngle);
+		_float fTwistAbsDeg = XMConvertToDegrees(PSX::PxMax(PSX::PxAbs(pxTwistLimit.lower), PSX::PxAbs(pxTwistLimit.upper)));
+
+		if (GUI::DragFloat((std::string("SwingDeg ##") + std::to_string(iID)).c_str(), &fSwingDeg, 1.f, 0.f, 180.f, "%.2f"))
+			bIsModified = true;
+
+		if (GUI::DragFloat((std::string("TwistAbsDeg ##") + std::to_string(iID)).c_str(), &fTwistAbsDeg, 1.f, 0.f, 180.f, "%.2f"))
+			bIsModified = true;
+
+		PSX::PxD6JointDrive pxSlerpDrive = joint.getDrive(PSX::PxD6Drive::eSLERP);
+		_bool bIsSlerpDriveEnabled = (pxSlerpDrive.stiffness > 0.f) || (pxSlerpDrive.damping > 0.f) || (pxSlerpDrive.forceLimit > 0.f);
+
+		if (GUI::Checkbox((std::string("Enable SLERP Drive ##") + std::to_string(iID)).c_str(), &bIsSlerpDriveEnabled))
+			bIsModified = true;
+
+		if (GUI::SliderFloat((std::string("SLERP stiffness ##") + std::to_string(iID)).c_str(), &pxSlerpDrive.stiffness, 0.f, 100.f, "%.2f"))
+			bIsModified = true;
+
+		GUI::SameLine();
+
+		if (GUI::SliderFloat((std::string("SLERP damping ##") + std::to_string(iID)).c_str(), &pxSlerpDrive.damping, 0.f, 100.f, "%.2f"))
+			bIsModified = true;
+
+		PSX::PxD6JointDrive pxLinearDriveX = joint.getDrive(PSX::PxD6Drive::eX);
+		_bool bIsLinearDriveEnabled = (pxLinearDriveX.stiffness > 0.f) || (pxLinearDriveX.damping > 0.f) || (pxLinearDriveX.forceLimit > 0.f);
+
+		if (GUI::Checkbox((std::string("Enable Linear Drive(XYZ) ##") + std::to_string(iID)).c_str(), &bIsLinearDriveEnabled))
+			bIsModified = true;
+
+		if (GUI::SliderFloat((std::string("Linear stiffness ##") + std::to_string(iID)).c_str(), &pxLinearDriveX.stiffness, 0.f, 100.f, "%.2f"))
+			bIsModified = true;
+
+		GUI::SameLine();
+
+		if (GUI::SliderFloat((std::string("Linear damping ##") + std::to_string(iID)).c_str(), &pxLinearDriveX.damping, 0.f, 100.f, "%.2f"))
+			bIsModified = true;
+
+		if (bIsModified)
+		{
+			pxLinearLimit.value = PSX::PxMax(0.f, fLinearLimit);
+			joint.setLinearLimit(pxLinearLimit);
+
+			const _float fSwingRad = XMConvertToRadians(fSwingDeg);
+			pxSwingLimit.yAngle = fSwingRad;
+			pxSwingLimit.zAngle = fSwingRad;
+			joint.setSwingLimit(pxSwingLimit);
+
+			const _float fTwistAbsRad = XMConvertToRadians(fTwistAbsDeg);
+			pxTwistLimit.lower = -fTwistAbsRad;
+			pxTwistLimit.upper = +fTwistAbsRad;
+			joint.setTwistLimit(pxTwistLimit);
+
+			if (!bIsSlerpDriveEnabled)
+				joint.setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(0.f, 0.f, 0.f, pxSlerpDrive.flags & PSX::PxD6JointDriveFlag::eACCELERATION));
+			else
+				joint.setDrive(PSX::PxD6Drive::eSLERP, pxSlerpDrive);
+
+			if (!bIsLinearDriveEnabled)
+			{
+				const PSX::PxD6JointDrive pxOff(0.f, 0.f, 0.f, pxLinearDriveX.flags & PSX::PxD6JointDriveFlag::eACCELERATION);
+				joint.setDrive(PSX::PxD6Drive::eX, pxOff);
+				joint.setDrive(PSX::PxD6Drive::eY, pxOff);
+				joint.setDrive(PSX::PxD6Drive::eZ, pxOff);
+			}
+			else
+			{
+				joint.setDrive(PSX::PxD6Drive::eX, pxLinearDriveX);
+				joint.setDrive(PSX::PxD6Drive::eY, pxLinearDriveX);
+				joint.setDrive(PSX::PxD6Drive::eZ, pxLinearDriveX);
+			}
+		}
+
+		return bIsModified;
+	}
+
+
+	// 힌지 월드축을 가져와서 레볼루트 조인트의 회전 쿼터니언을 구함
+	inline static PSX::PxQuat Calc_RevJointPosFromWorldHingeAxis(const PSX::PxVec3& pxHingeWorldAxis)
+	{
+		PSX::PxVec3 pxBasicAxis = PSX::PxVec3(0.f, 1.f, 0.f);
+		if (PSX::PxAbs(pxHingeWorldAxis.dot(pxBasicAxis)) > 0.99f)
+		{
+			pxBasicAxis = PSX::PxVec3(0.f, 0.f, 1.f);
+		}
+
+		PSX::PxVec3 zAxis = pxHingeWorldAxis.cross(pxBasicAxis).getNormalized();
+		PSX::PxVec3 yAxis = zAxis.cross(pxHingeWorldAxis).getNormalized();
+
+		PSX::PxMat33 pxResultMatrix(pxHingeWorldAxis, yAxis, zAxis);
+		return PSX::PxQuat(pxResultMatrix);
+	}
+
 #pragma endregion
 #pragma region FileSystem
 	//static void Folder_Func(/* 재귀적으로 탐색할지		*/	_In_	_bool											bRecursive,

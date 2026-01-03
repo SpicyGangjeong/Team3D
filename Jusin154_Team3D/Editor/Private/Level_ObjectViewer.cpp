@@ -451,25 +451,25 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 			_bool isSelected = (m_SelectedKey == keyName);
 
-			if (ImGui::Selectable(keyName.c_str(), isSelected))
+			if (GUI::Selectable(keyName.c_str(), isSelected))
 			{
 				m_SelectedKey = keyName;
 			}
 
 			if (isSelected)
 			{
-				ImGui::Indent();
+				GUI::Indent();
 
-				ImGui::DragFloat("KeyFrame", &iter.second, 0.01f);
+				GUI::DragFloat("KeyFrame", &iter.second, 0.01f);
 
-				if (ImGui::Button("Delete KeyFrame"))
+				if (GUI::Button("Delete KeyFrame"))
 				{
 					m_KeyFrames.erase(keyName);
 					m_SelectedKey.clear();   
 					break;                     
 				}
 
-				ImGui::Unindent();
+				GUI::Unindent();
 			}
 		}
 
@@ -563,8 +563,8 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 			}
 			for (auto& iter : m_KeyFrames)
 			{
-				ImDrawList* draw = ImGui::GetForegroundDrawList();
-				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+				ImDrawList* draw = GUI::GetForegroundDrawList();
+				ImVec2 center = GUI::GetMainViewport()->GetCenter();
 				float scale = 50.f;
 
 				GUI::DragFloat(iter.first.c_str(), &iter.second);
@@ -759,13 +759,14 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
-	//{
-	//	return E_FAIL;
-	//}
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_Test)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_Test)))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;

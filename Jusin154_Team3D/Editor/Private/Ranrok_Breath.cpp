@@ -55,35 +55,6 @@ HRESULT CRanrok_Breath::Initialize(void* pArg)
 	m_fDuration = 5.f;
 
 
-	m_Events.emplace(0.5f, [&]() {
-		m_isStartRayCast = true;
-		});
-
-
-	m_Events.emplace(3.f, [&]() {
-
-		// 파티클 제어
-		m_isParticleEnd = true;
-
-		CEditEffect* pRock_PT = Get_PartObject<CEditEffect>("Rock_PT");
-		CEditEffect* pBottomFire = Get_PartObject<CEditEffect>("BottomFire");
-		CEditEffect* pSplatterBottom0 = Get_PartObject<CEditEffect>("SplatterBottom0");
-
-		m_pMouthFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
-
-		pRock_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
-		pBottomFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
-		pSplatterBottom0->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
-
-		m_pBreath->Get_Component<CInstance_Model>()->Set_Loop(false);
-		m_pBreath->Get_Effect_Info()->isDissolve = true;
-
-		m_pBreath_Black->Get_Component<CInstance_Model>()->Set_Loop(false);
-		m_pBreath_Black->Get_Effect_Info()->isDissolve = true;
-
-		m_pBreathSlog->Set_Visible(false);
-
-		});
 	return S_OK;
 }
 
@@ -154,6 +125,12 @@ HRESULT CRanrok_Breath::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
+
+	/* 브레스 시간 제어 */
+
+	_float fBreathTime = *static_cast<_float*>(pArg);
+
+	Set_BreathTime(fBreathTime);
 
 	/* 초기 객체 비지블*/
 
@@ -277,6 +254,42 @@ void CRanrok_Breath::OnCollision(CGameObject* pOther, void* pDesc)
 	pSplatterBottom0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + vDir * 3.f);
 
 	XMStoreFloat4(&m_vPreCollisionPos, vPos);
+}
+
+void CRanrok_Breath::Set_BreathTime(_float fTime)
+{
+	m_Events.clear();
+
+	m_Events.emplace(fTime, [&]() {
+
+		m_pBreath->Get_Component<CInstance_Model>()->Set_Loop(false);
+		m_pBreath->Get_Effect_Info()->isDissolve = true;
+
+		m_pBreath_Black->Get_Component<CInstance_Model>()->Set_Loop(false);
+		m_pBreath_Black->Get_Effect_Info()->isDissolve = true;
+
+		m_pBreathSlog->Set_Visible(false);
+
+		});
+
+	m_Events.emplace(fTime + 0.5f, [&]() {
+		// 파티클 제어
+		m_isParticleEnd = true;
+
+		CEditEffect* pRock_PT = Get_PartObject<CEditEffect>("Rock_PT");
+		CEditEffect* pBottomFire = Get_PartObject<CEditEffect>("BottomFire");
+		CEditEffect* pSplatterBottom0 = Get_PartObject<CEditEffect>("SplatterBottom0");
+
+		m_pMouthFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+
+		pRock_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+		pBottomFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+		pSplatterBottom0->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+		});
+
+	m_Events.emplace(0.25f, [&]() {
+		m_isStartRayCast = true;
+		});
 }
 
 void CRanrok_Breath::Free()

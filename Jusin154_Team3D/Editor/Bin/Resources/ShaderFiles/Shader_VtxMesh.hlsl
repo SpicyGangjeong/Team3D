@@ -694,8 +694,8 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     float fNdotV = saturate(dot(vNormal, vToView));
     float fRim = saturate((1.0f - fNdotV) * g_fOutLineScale);
     fRim = pow(fRim, g_fOutLinePower);
-
-    Out.vAlbedo = float4(g_vOutLineColor.rgb, fRim);
+    
+    Out.vAlbedo = float4(g_vOutLineColor.rgb * 5.f, fRim);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 源딆씠 ( 0~ 1)
         (In.vProjPos.w / g_fFar), // 酉??ㅽ럹?댁뒪 Z 

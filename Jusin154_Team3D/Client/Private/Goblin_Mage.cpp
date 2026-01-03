@@ -518,7 +518,7 @@ void CGoblin_Mage::Free()
 void CGoblin_Mage::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("Goblin_Mage")) {
 
 		GUI::Checkbox("LookAt", &m_bLookAt);

@@ -34,13 +34,15 @@ public:
 	_int Get_UIState() { return m_eUIState; }
 	void	Set_RaceRing(class CRaceRing* pRaceRing);
 	class CBroom* Get_Broom() { return m_pBroom; }
-#ifdef _DEBUG
-	void Render_CameraCoordinateSystem();
-#endif // _DEBUG
+	void Set_RaceInfo();
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
 	void UpdateGrapInteractive(_float fTimeDelta);
 	void Update_CameraShake(_float fTimeDelta);
+	HRESULT Update_RaycastElements();
+#ifdef _DEBUG
+	void Render_CameraCoordinateSystem();
+#endif // _DEBUG
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	LOCKON_INFO m_LockOnInfo = {};
@@ -60,8 +62,12 @@ private:
 	_float m_fOriginGravityAmount = {};
 	_float m_fGravityAmount = {};
 
+	_float m_fTempWeight = {};
+
 	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
 	class CCamPosition_Head* m_pCamPosition_HeadPart = { nullptr };
+	_float	m_fRayDistance = { 10.f };
+	_uint	m_iRayHitCount = { 0 };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -80,13 +86,6 @@ private:
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };
 
-
-
-
-
-
-
-	_float m_fTempWeight = {};
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -160,8 +159,6 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	_float			m_fNoInputTime = 0.f;
-	_float			m_fNeutralTime = 0.f; 
 	array<_float4x4, 256> SkinMatrices;
 
 	/* 무적 불 변수*/

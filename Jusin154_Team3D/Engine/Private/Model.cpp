@@ -229,6 +229,25 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 	}
 
+	if (m_bQueuedAnim)
+	{
+		if (m_fRatio >= 1.f)
+		{
+			m_fRatio = 1.f;
+			m_iPreAnimIndex = m_iCurrentAnimIndex;
+			m_fBlendTime = 0.f;
+
+			if (m_iQueuedAnimIndex != -1)
+			{
+				_int next = m_iQueuedAnimIndex;
+				_bool loop = m_bQueuedLoop;
+				m_iQueuedAnimIndex = -1;
+
+				Set_AnimationIndex(next, loop,m_fAmount,m_bRatio,1.f,false);
+			}
+		}
+	}
+
 	return m_bIsFinishedAnim;
 }
 
@@ -362,10 +381,27 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone)
+_bool CModel::IsBlending() const
 {
+	return m_iPreAnimIndex != m_iCurrentAnimIndex &&
+		m_fRatio < 1.f;
+}
+
+
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone,_bool bQueuedAnim)
+{
+	m_bQueuedAnim = bQueuedAnim;
 	if (m_iCurrentAnimIndex == iIndex)
 		return;
+
+	if (bQueuedAnim) {
+		if (IsBlending())
+		{
+			m_iQueuedAnimIndex = iIndex;
+			m_bQueuedLoop = isLoop;
+			return;
+		}
+	}
 
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
@@ -459,14 +495,16 @@ void CModel::Update_RootBone(_float Amount)
 
 		_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
 
-		if(!m_bTemp)
+		if (!m_bDisableRootMotionScale) {
 			vDeltaWorld *= 0.01f;
+		}
 		vDeltaWorld *= Amount;
 
 		vDeltaWorld = XMVectorSetW(vDeltaWorld, 1.f);
 
-		if(m_bRootBone)
+		if (m_bRootBone) {
 			m_pTransform->AccumulateMomentum(vDeltaWorld);
+		}
 
 		m_vPrevRootPos = vCurRootPos;
 
@@ -497,9 +535,9 @@ void CModel::Update_RootBone(_float Amount)
 			XMStoreFloat4(&axis, axisWorld);
 
 			swap(axis.z, axis.y);
-			if (m_bRootBone)
+			if (m_bRootBone) {
 				m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
-
+			}
 		}
 		XMStoreFloat4(&m_vPrevRootRot, qCur);
 
@@ -568,8 +606,8 @@ void CModel::Apply_CPU_HeadAim()
 
 	m_Bones[headIdx]->Set_TransformationMatrix(newLocal);
 
-	Mark_CPUChain(headIdx);
-	Apply_CPUMask_ToBones();
+	//Mark_CPUChain(headIdx);
+	//Apply_CPUMask_ToBones();
 }
 
 
@@ -1458,7 +1496,7 @@ void CModel::InItialize_BoneIndex()
 		{
 			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::NECK)] = i;
 		}
-		if (m_Bones[i]->Compare_Name("head"))
+		if (m_Bones[i]->Compare_Name("neck_06"))
 		{
 			m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HEAD)] = i;
 		}
@@ -1892,6 +1930,8 @@ void CModel::ComputeAnimation(_uint AnimIndex,_uint MeshIndex)
 void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 {
 
+	if (m_iPreAnimIndex < 0 || m_iPreAnimIndex >= (_int)m_iNumAnimations)
+		m_iPreAnimIndex = m_iCurrentAnimIndex;
 
 	D3D11_MAPPED_SUBRESOURCE ConstantSubResource = {};
 

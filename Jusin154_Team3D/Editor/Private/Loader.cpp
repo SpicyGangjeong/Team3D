@@ -176,6 +176,8 @@
 #include "MapElement_Chest.h"
 #include "MapElement_Chest_Lid.h"
 #include "LightSpawner.h"
+#include "RaceRing.h"
+
 #pragma endregion
 
 
@@ -215,6 +217,8 @@
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
 #include "Ranrok_Point.h"
+#include "Ranrok_Pulse.h"
+#include "Ranrok_Charge.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1459,7 +1463,38 @@ HRESULT CLoader::Loading_For_Effect()
 
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
-			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0 , L"NOMAL")))) {
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0 , L"NORMAL")))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+	});
+
+
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/Decal", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0, L"DECAL")))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/DecalNormal", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0, L"DECALNORMAL")))) {
 			return E_FAIL;
 		}
 
@@ -1674,6 +1709,12 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Collision>(g_iStaticLevel, CMapObject_Collision::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	/* For.Prototype_Component_Collider */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Collider"),
+		CCollider::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_VTXPOS,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"),
@@ -1907,6 +1948,14 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Point>(NEXT_LEVEL, CRanrok_Point::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Pulse>(NEXT_LEVEL, CRanrok_Pulse::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Charge>(NEXT_LEVEL, CRanrok_Charge::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -2454,10 +2503,10 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+	//	return E_FAIL;
+	//}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
@@ -2706,6 +2755,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
 
+
 #pragma region HOGSMEADE
 	/* Hogsmead LOD */
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\HogsmeadeLOD\\ProxyAssets",
@@ -2895,106 +2945,104 @@ HRESULT CLoader::Loading_For_MapViewer()
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Collision",
 	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	
-
 
 #pragma endregion
 
-
+_bool bLoadHogsmeade = false;
+	if (bLoadHogsmeade)
+	{
 #pragma region HOGSMEADE_OBJECT
+		/* Light */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\LightPosts",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 
-//	/* Fences */
-//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\fences",
-//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
-//	return E_FAIL;
+		/* Doors */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Doors",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 
-/* Light */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\LightPosts",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+		/* Step */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\GroundSurfaces",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 
-/* Doors */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Doors",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\GroundSurfaces",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 
-/* Step */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\GroundSurfaces",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+		/* Box */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\MiscProps",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\GroundSurfaces",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+		/* TeaShop Table */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Tables",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 
-/* Box */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\MiscProps",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
-
-/* TeaShop Table */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Tables",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
-
-/* TeaShop Chair*/
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Chairs",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+		/* TeaShop Chair*/
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Chairs",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 
 
 
-/* Barrel */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Meshes",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+		/* Barrel */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Meshes",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 
-/* Object Interactables */
-/* Chest */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactables",
-	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+		/* Object Interactables */
+		/* Chest */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactables",
+			".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 #pragma endregion
 
 #pragma region HOGSMEADE_LOD
-/* SUB_HogsHead */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_HogsHead\\SUB_HogsHead_EXTLOD\\ProxyAssets",
-	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
-/* SUB_PippensPotions */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_PippensPotions\\SUB_Pippens_EXTLOD\\ProxyAssets",
-	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
-/* GEN_E_LOD */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_E\\SUB_GEN_E_EXTLOD\\ProxyAssets",
-	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
-/* GEN_F_LOD */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_F\\SUB_GEN_F_EXTLOD\\ProxyAssets",
-	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
-/* GEN_G_LOD */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_G\\SUB_GEN_G_EXTLOD\\ProxyAssets",
-	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
-/* GEN_H_LOD */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_H\\SUB_GEN_H_EXTLOD\\ProxyAssets",
-	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
-/* GEN_J_LOD */
-if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_J\\SUB_GEN_J_EXTLOD\\ProxyAssets",
-	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
-	return E_FAIL;
+		/* SUB_HogsHead */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_HogsHead\\SUB_HogsHead_EXTLOD\\ProxyAssets",
+			".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
+		/* SUB_PippensPotions */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_PippensPotions\\SUB_Pippens_EXTLOD\\ProxyAssets",
+			".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
+		/* GEN_E_LOD */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_E\\SUB_GEN_E_EXTLOD\\ProxyAssets",
+			".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
+		/* GEN_F_LOD */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_F\\SUB_GEN_F_EXTLOD\\ProxyAssets",
+			".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
+		/* GEN_G_LOD */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_G\\SUB_GEN_G_EXTLOD\\ProxyAssets",
+			".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
+		/* GEN_H_LOD */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_H\\SUB_GEN_H_EXTLOD\\ProxyAssets",
+			".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
+		/* GEN_J_LOD */
+		if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\SUB_GEN_J\\SUB_GEN_J_EXTLOD\\ProxyAssets",
+			".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+			return E_FAIL;
 #pragma endregion
 
-
+	}
 
 #pragma region HOGWART
-_bool bHogwartLoad = { false };
+_bool bHogwartLoad = { true };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
 	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+
+if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_RaceRing_Model"),
+	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/RaceRing/SM_BRR_RaceRing_01.bin", XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixIdentity()))))
 	return E_FAIL;
 
 if(bHogwartLoad)
@@ -3290,7 +3338,7 @@ vector<future<void>> jobFutures;
 _uint iLoadCount = 46;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { true };
+_bool isLoad_Map = { false };
 if(isLoad_Map)
 {
 	{ /* Terrain */
@@ -3893,6 +3941,10 @@ if(isLoad_Map)
 
 	/* For.Prototype_GameObject_CDummyDecal */
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummyDecal>(g_iStaticLevel, CDummyDecal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_RaceRing */
+	if (FAILED(m_pGameInstance->Add_Prototype<CRaceRing>(g_iStaticLevel, CRaceRing::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapObject_Manager */

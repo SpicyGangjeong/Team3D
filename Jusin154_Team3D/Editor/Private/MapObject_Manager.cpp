@@ -15,6 +15,7 @@
 #include "MapElement_Lake.h"
 #include "LightSpawner.h"
 #include "DummyDecal.h"
+#include "RaceRing.h"
 
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -93,6 +94,10 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
 	//m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
 #pragma endregion
+	if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
+		return E_FAIL;
+	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
+		return E_FAIL;
 
 
 #pragma region Light
@@ -206,8 +211,9 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 
 	Update_Edit();
 
-	Update_LightSpawer();
+	//Update_LightSpawer();
 	//Update_Decal();
+	Update_RaceRing();
 
 	Update_Unified();
 
@@ -1945,6 +1951,51 @@ HRESULT CMapObject_Manager::Save_Decal(const _char* pFileName)
 	return S_OK;
 }
 
+HRESULT CMapObject_Manager::Save_RaceRing(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_RaceRing"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/RaceRing/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("Ring");
+	doc.InsertEndChild(root);
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CRaceRing* pRaceRing = dynamic_cast<CRaceRing*>(pGamObject);
+
+			if (nullptr == pRaceRing)
+				return E_FAIL;
+
+			if (FAILED(pRaceRing->Save_XML(doc, root)))
+				return E_FAIL;
+		}
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save DummyDecals");
+	}
+
+	return S_OK;
+}
+
 void CMapObject_Manager::Update_PrototypeList()
 {
 	GUI::Begin("Model Prototype List");
@@ -1958,7 +2009,7 @@ void CMapObject_Manager::Update_PrototypeList()
 			continue;
 		}
 
-		if (ImGui::Button(CMyTools::ToString(Tag).c_str()))
+		if (GUI::Button(CMyTools::ToString(Tag).c_str()))
 		{
 			if (ADD_TYPE::CONTAINER == m_eType)
 				Create_PartObject(Tag);
@@ -1978,7 +2029,7 @@ void CMapObject_Manager::Update_PrototypeList()
 			auto& Tag = m_ModelPrototypeTags[i];
 
 			if (_wstring::npos != Tag.find(L"COL") && _wstring::npos == Tag.find(L"Lod")) {
-				if (ImGui::Button(CMyTools::ToString(Tag).c_str()))
+				if (GUI::Button(CMyTools::ToString(Tag).c_str()))
 				{
 					vector<_uint> LodModelIndices;
 
@@ -2033,7 +2084,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 	if (ADD_TYPE::CONTAINER == m_eType)
 	{
-		if (ImGui::CollapsingHeader("Map Objects", ImGuiTreeNodeFlags_DefaultOpen))
+		if (GUI::CollapsingHeader("Map Objects", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			if (false == m_MapObjects.empty())
 			{
@@ -2048,7 +2099,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 					strSrc = CMyTools::ToString(strPrototypeTag) + to_string(iObjectIndex) + "##" + to_string(iObjectIndex++);
 
-					if (ImGui::Button(strSrc.c_str()))
+					if (GUI::Button(strSrc.c_str()))
 					{
 						m_pSelectObject = pCurrentMapObject;
 					}
@@ -2056,7 +2107,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 			}
 		}
-		if (ImGui::CollapsingHeader("COL", ImGuiTreeNodeFlags_DefaultOpen))
+		if (GUI::CollapsingHeader("COL", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			for (auto pMapObject : m_Collision)
 			{
@@ -2069,7 +2120,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 				strSrc = CMyTools::ToString(strPrototypeTag) + to_string(iObjectIndex) + "##" + to_string(iObjectIndex++);
 
-				if (ImGui::Button(strSrc.c_str()))
+				if (GUI::Button(strSrc.c_str()))
 				{
 					m_pSelectObject = pCurrentMapObject;
 				}
@@ -2104,7 +2155,7 @@ void CMapObject_Manager::Update_ObjectList()
 
 			strSrc = CMyTools::ToString(strPrototypeTag) + to_string(iObjectIndex) + "##" + to_string(iObjectIndex++);
 
-			if (ImGui::Button(strSrc.c_str()))
+			if (GUI::Button(strSrc.c_str()))
 			{
 				m_pSelectElemnt = pCurrentMapObject;
 			}
@@ -2274,6 +2325,40 @@ void CMapObject_Manager::Update_Decal()
 		{
 			if (m_iSelectedIndex == iIndex)
 				pLightSpawner->Describe_Entity();
+
+			++iIndex;
+		}
+	}
+
+	GUI::End();
+}
+
+void CMapObject_Manager::Update_RaceRing()
+{
+	GUI::Begin("RaceRing Editor");
+	if (GUI::Button("Save RaceRings"))
+	{
+		Save_RaceRing("RaceRing_Data");
+	}
+	if (GUI::Button("Load Ring"))
+	{
+		//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	}
+	if (GUI::Button("Add Ring"))
+	{
+		m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_RaceRing"));
+	}
+
+	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_RaceRing"));
+
+	if (nullptr != pLayer)
+	{
+		_uint iIndex = {};
+		for (auto& pObject : *pLayer->Get_Objects())
+		{
+			if (m_iSelectedIndex == iIndex)
+				pObject->Describe_Entity();
 
 			++iIndex;
 		}

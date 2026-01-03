@@ -60,6 +60,9 @@ void CGameObject::OnCollision(CGameObject* pOther , void* pDesc)
 void CGameObject::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
+void CGameObject::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
+{
+}
 _vector CGameObject::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);

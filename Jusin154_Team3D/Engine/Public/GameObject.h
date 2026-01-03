@@ -28,11 +28,9 @@ public:
 
 	virtual _float Get_Depth(); // z 소팅 할 때 쓰시면 됨
 
-	// 내가 맞음 ( Collider_Manager가 부름 )
 	virtual void OnCollision(CGameObject* pOther = nullptr ,void* pDesc = nullptr);
-
-	// 내가 때림 ( 히트박스가 부름 )
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr);
+	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos);
 
 	virtual _vector Get_WorldPostion();
 
