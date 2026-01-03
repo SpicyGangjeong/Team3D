@@ -333,6 +333,10 @@ HRESULT CPlayerRobe::Update_RobeJoints()
 		default:
 			break;
 		}
+
+		//m_JointDescriptions[i].iMotionTwist = 0;
+		//m_JointDescriptions[i].iMotionSwing1 = 0;
+		//m_JointDescriptions[i].iMotionSwing2 = 0;
 		m_JointDescriptions[i].ApplyToJoint(*m_pDynamicJoints[i]);
 	}
 	return S_OK;

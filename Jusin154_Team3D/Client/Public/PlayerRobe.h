@@ -61,7 +61,7 @@ private:
 	CRigidBody_Dynamic* m_pRobeMainAnchor = { nullptr };
 	CRigidBody_Dynamic* m_pRobeJointRoute[ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END)] = { nullptr };
 	CRigidBody_Dynamic* m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
-	PSX::PxD6Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
+	PSX::PxJoint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
 	D6JOINTDESC			m_JointDescriptions[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { };
 	
 	vector<_float4x4>	m_PrevRobeBoneMatrices = { };
@@ -82,7 +82,7 @@ private:
 	HRESULT Bind_ShaderResources() { return S_OK; }
 
 	HRESULT Update_LegsPosition();
-	HRESULT Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld);
+	HRESULT Helper_RouteJointGenerater(PHYSX_JOINT eType, CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld);
 	HRESULT Update_RobeJoints();
 #ifdef _DEBUG
 	HRESULT Render_BonePhysX();
