@@ -95,6 +95,8 @@ public:
 	HRESULT Anim_Event(_float fRatio, _uint AnimIndex, function<void()> Event);
 
 	void Set_BlendDuration(_float Duration) { m_fBlendDuration = Duration; }
+
+	_vector Get_RootBoneMomentum() { return m_RootBoneMomentum; }
 #pragma endregion
 #pragma region Mesh
 	const _char*		Get_MeshName(_uint iIndex);
@@ -108,7 +110,7 @@ public:
 	void				Apply_CPU_HeadAim();
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
-	class CMesh* Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
+	class CMesh*		Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
 #pragma endregion
 #pragma region Bone
 	const _float4x4*	Get_BoneMatrixPtr(const _char* pBoneName);
@@ -239,6 +241,7 @@ private:
 	_int						m_iQueuedAnimIndex = -1;
 	_bool						m_bQueuedLoop = false;
 	_bool						m_bQueuedAnim = { false };
+	_vector						m_RootBoneMomentum = {};
 
 
 private:

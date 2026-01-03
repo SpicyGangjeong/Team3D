@@ -206,6 +206,10 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 
 	CCharacter_Controller* pCCT = CollisionDesc.pObject->Get_Component<CCharacter_Controller>();
 
+	if (pCCT == nullptr) {
+		return;
+	}
+
 	_vector vHitPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
 	_vector vFootPos = pCCT->Get_FootPosition();

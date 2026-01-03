@@ -50,6 +50,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 
 	Load_AnimXML("../Bin/Resources/Data/AnimList/Ranrok.xml");
+
+	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
 	{
 		CFSM::FSM_DESC FSMDesc{};
 		FSMDesc.pStates = &m_States;
@@ -76,7 +78,8 @@ HRESULT CRanrok::Initialize(void* pArg)
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, 6.860f, 16.071f, 1.f));
 	}
 
-	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
+	m_pModelCom->Set_DisableRootMotionScale(true);
+
 
 	return S_OK;
 }
@@ -148,7 +151,8 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 
 
-	Update_Disolve(fTimeDelta);
+	Update_Disolve(fTimeDelta,0.8f);
+
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -653,7 +657,15 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	if (m_iCurrentFlow >= m_Points.size())
 		m_iCurrentFlow = 0;
 
-	_vector Target = m_Points[m_iCurrentFlow][m_iCurrentPoint];
+	if (m_iCurrentFlow == m_Points.size() - 1)
+	{
+		if (m_iCurrentPoint >= m_Points[m_iCurrentFlow].size() * 0.3f)
+		{
+			m_fTuckedSpeed = 55.f;
+		}
+	}
+
+	_vector Target = XMLoadFloat4(&m_Points[m_iCurrentFlow][m_iCurrentPoint]);
 	_vector NextTarget;
 
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
@@ -665,7 +677,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 15.f)
 	{
-		NextTarget = m_Points[m_iCurrentFlow][m_iCurrentPoint + 1];
+		 NextTarget = XMLoadFloat4(&m_Points[m_iCurrentFlow][m_iCurrentPoint + 1]);
 	}
 	else {
 		NextTarget = Target;
@@ -729,7 +741,7 @@ HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
 				pPos->QueryFloatAttribute("x", &px);
 				pPos->QueryFloatAttribute("y", &py);
 				pPos->QueryFloatAttribute("z", &pz);
-				m_Points[iCurrentFlow].emplace_back(XMVectorSet(px, py, pz, 1.f));
+				m_Points[iCurrentFlow].emplace_back(px, py, pz, 1.f);
 			}
 			pPosition = pPosition->NextSiblingElement("Position");
 		}
@@ -737,33 +749,6 @@ HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
 	}
 
 	return S_OK;
-}
-
-void CRanrok::Update_Disolve(_float fTimeDelta)
-{
-	if (!m_bDisolve)
-		return;
-
-	if (!m_bDisolveReverse)
-	{
-		m_fDisolveTime += fTimeDelta * 0.8f;
-
-		if (m_fDisolveTime >= 1.f)
-		{
-			m_fDisolveTime = 1.f;
-		}
-	}
-	else
-	{
-		m_fDisolveTime -= fTimeDelta * 0.8f;
-
-		if (m_fDisolveTime <= 0.f)
-		{
-			m_fDisolveTime = 0.f;
-			m_bDisolve = false;
-			m_bDisolveReverse = false;
-		}
-	}
 }
 
 
@@ -853,15 +838,15 @@ void CRanrok::Describe_Entity()
 
 					GUI::SetClipboardText(buf);
 
-					m_Points[i].push_back(XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
+					_float4 vPos = { Pos.x, Pos.y, Pos.z, 1.f };
+					m_Points[i].push_back(vPos);
 				}
 
 				GUI::Text("Points[%d] Count : %d", i, (_int)m_Points[i].size());
 
 				for (_uint j = 0; j < m_Points[i].size(); )
 				{
-					_float3 p;
-					XMStoreFloat3(&p, m_Points[i][j]);
+					_float3 p = { m_Points[i][j].x,m_Points[i][j].y,m_Points[i][j].z };
 
 					GUI::PushID((int)(i * 10000 + j));
 

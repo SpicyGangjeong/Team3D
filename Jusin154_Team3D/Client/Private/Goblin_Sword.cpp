@@ -39,7 +39,7 @@ HRESULT CGoblin_Sword::Initialize(void* pArg)
 
 void CGoblin_Sword::Priority_Update(_float fTimeDelta)
 {
-
+	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 
 
 #ifdef _DEBUG
@@ -63,7 +63,7 @@ void CGoblin_Sword::Update(_float fTimeDelta)
 
 void CGoblin_Sword::Late_Update(_float fTimeDelta)
 {
-	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
+
 
 	_matrix socketMatrix = {};
 

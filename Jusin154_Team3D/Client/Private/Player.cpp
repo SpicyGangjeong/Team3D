@@ -152,14 +152,7 @@ void CPlayer::Update(_float fTimeDelta)
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 
-	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)){
-		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
-	}
-	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
-	{
-		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
-		m_bAim = false;
-	}
+	CheckMouseInput();
 
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 
@@ -378,7 +371,8 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) || 
 		m_bShield ||
 		iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first||
-		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first)
+		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first || 
+		iCurrAnim == m_Animation[STATEANIM::ANCIENT_THROW].first)
 		return;
 
 #ifdef _DEBUG
@@ -688,6 +682,18 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		}
 	}
 	return S_OK;
+}
+
+void CPlayer::CheckMouseInput()
+{
+	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)) {
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
+	}
+	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	{
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
+		m_bAim = false;
+	}
 }
 
 void CPlayer::ReLockOnTarget()
