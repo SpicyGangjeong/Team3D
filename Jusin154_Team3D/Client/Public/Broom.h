@@ -53,7 +53,7 @@ private:
 	_float m_fSpeed = 0.f; 
 	_float m_fTurnSpeed = 0.f;
 	_float m_fTargetSpeed = 0.f;
-	_float m_fTurnMaxSpeed = 8.f;
+	_float m_fTurnMaxSpeed = 12.f;
 	_float m_fFlyTurnMaxSpeed = 9.f;
 	_float m_fTurboTurnMaxSpeed = 12.f;
 	_float m_fHoverMaxSpeed = 5.f;

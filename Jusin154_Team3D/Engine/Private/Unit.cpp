@@ -222,6 +222,11 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "IDLE_BREAK5", IDLE_BREAK5 }, { "IDLE_BREAK6", IDLE_BREAK6 },
         { "IDLE_BREAK7", IDLE_BREAK7 },
 
+        { "IDLE_TURN_180_L", IDLE_TURN_180_L }, { "IDLE_TURN_180_R", IDLE_TURN_180_R },
+        { "IDLE_TURN_45_L", IDLE_TURN_45_L },  { "IDLE_TURN_45_R", IDLE_TURN_45_R },
+        { "IDLE_TURN_90_L", IDLE_TURN_90_L },  { "IDLE_TURN_90_R", IDLE_TURN_90_R },
+
+
         // MOVE
         { "MOVE", MOVE },
 

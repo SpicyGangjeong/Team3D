@@ -112,10 +112,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 	m_fRayDistance = 10.f;
-	m_pModelCom->Set_Temp(true);
-
-
-
+	m_pModelCom->Set_DisableRootMotionScale(true);
 
 	return S_OK;
 }
@@ -519,7 +516,6 @@ HRESULT CPlayer::Ready_Components()
 HRESULT CPlayer::Ready_Parts()
 {
 	CWand::WAND_DESC WandDesc{};
-
 	WandDesc.pParentTransform = m_pTransformCom;
 	WandDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
 
@@ -717,7 +713,7 @@ void CPlayer::SetGravity()
 	eCollisionFlags;
 	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
 		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
 		else { // 점프 중일 땐 off

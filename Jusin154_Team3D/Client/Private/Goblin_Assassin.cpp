@@ -64,7 +64,7 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	m_pModelCom->Set_Temp(true);
+	m_pModelCom->Set_DisableRootMotionScale(true);
 
 	return S_OK;
 }

@@ -463,7 +463,7 @@ void CTroll::Behavior_SwingEnter()
 		0.6f);
 
 
-	Set_Easing(pairAnimInfo.first, 0.1f, 0.47f, 1.5f);
+	Set_Easing(pairAnimInfo.first, 0.1f, 0.47f, 1.8f);
 	Set_Easing(pairAnimInfo.first, 0.47f, 0.5f, 0.5f);
 }
 
@@ -520,7 +520,7 @@ void CTroll::Behavior_SlamEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
 		}, 0.3f);
 
-	Set_Easing(pairAnimInfo.first, 0.1f, 0.42f, 1.5f);
+	Set_Easing(pairAnimInfo.first, 0.1f, 0.42f, 1.8f);
 
 	Set_Easing(pairAnimInfo.first, 0.42f, 0.45f, 0.5f);
 
@@ -573,7 +573,7 @@ void CTroll::Behavior_BackHandSwingEnter()
 		},
 		0.9f);
 
-	Set_Easing(pairAnimInfo.first, 0.1f, 0.45f, 1.5f);
+	Set_Easing(pairAnimInfo.first, 0.1f, 0.45f, 1.8f);
 	Set_Easing(pairAnimInfo.first, 0.65f, 0.7f, 0.5f);
 }
 
@@ -725,6 +725,17 @@ HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
 void CTroll::Behavior_DeadExit()
 {
 	m_bDead = true;
+}
+
+_bool CTroll::IsHitSpellDisabled()
+{
+	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC) ||
+		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW) ||
+		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA))
+	{
+		return true;
+	}
+	return false;
 }
 
 

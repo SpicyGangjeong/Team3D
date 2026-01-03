@@ -159,8 +159,6 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	_float			m_fNoInputTime = 0.f;
-	_float			m_fNeutralTime = 0.f; 
 	array<_float4x4, 256> SkinMatrices;
 
 	/* 무적 불 변수*/

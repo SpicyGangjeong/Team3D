@@ -146,6 +146,9 @@ void CRanrok::Update(_float fTimeDelta)
 	if (m_vEtherealTimer.x > m_vEtherealTimer.y) {
 		m_vEtherealTimer.x -= m_vEtherealTimer.y;
 	}
+
+
+	Update_Disolve(fTimeDelta);
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -161,10 +164,14 @@ void CRanrok::Late_Update(_float fTimeDelta)
 	if (!m_pFSM->IsEnable(FSMSTATE::TUCKED))
 	{
 		if (true == m_bLookAt) {
-			m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
+			m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 2.5f);
 
 		}
-		m_pModelCom->Set_TargetPos((XMLoadFloat4(&m_vTargetPos)));
+		_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+		_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
+
+		m_pModelCom->Set_TargetPos(vPos + (vRight* (_float)m_iBreathRand));
+
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
@@ -309,26 +316,32 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
+	_float curr = Get_HpRatio();
 
-	if (Get_HpRatio() == 0.85f)
+	if (m_fPrevHpRatio > 0.85f && curr <= 0.85f)
 	{
 		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		m_fPrevHpRatio = curr;
 		return;
 	}
-	else if (Get_HpRatio() == 0.7f) {
+	else if (m_fPrevHpRatio > 0.7f && curr <= 0.7f)
+	{
 		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		m_fPrevHpRatio = curr;
 		return;
 	}
-	else  if (Get_HpRatio() == 0.5f)
+	else if (m_fPrevHpRatio > 0.5f && curr <= 0.5f)
 	{
 		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
 		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		m_fPrevHpRatio = curr;
 		return;
 	}
+	m_fPrevHpRatio = curr;
 
-	
-
-	m_pFSM->Change_State(FSMSTATE::HIT);
+	if (IsHitStateDisabled() && IsHitSpellDisabled()) {
+		m_pFSM->Change_State(FSMSTATE::HIT);
+	}
 }
 
 void CRanrok::OnHit(CGameObject* pOther, CGameObject* pCaller)
@@ -649,7 +662,6 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
-	GUI::Text("Dist %.2f", fDist);
 
 	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 15.f)
 	{
@@ -675,12 +687,6 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	}
 	else if (fDist < 10.f)
 	{
-		if (m_iCurrentPoint == m_Points[m_iCurrentFlow].size() - 1)
-		{
-			m_bTucked = true;
-			m_pFSM->Disable_State(FSMSTATE::TUCKED);
-		}
-
 		m_iCurrentPoint = (m_iCurrentPoint + 1) % m_Points[m_iCurrentFlow].size();
 		return;
 	}
@@ -732,6 +738,34 @@ HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
 
 	return S_OK;
 }
+
+void CRanrok::Update_Disolve(_float fTimeDelta)
+{
+	if (!m_bDisolve)
+		return;
+
+	if (!m_bDisolveReverse)
+	{
+		m_fDisolveTime += fTimeDelta * 0.8f;
+
+		if (m_fDisolveTime >= 1.f)
+		{
+			m_fDisolveTime = 1.f;
+		}
+	}
+	else
+	{
+		m_fDisolveTime -= fTimeDelta * 0.8f;
+
+		if (m_fDisolveTime <= 0.f)
+		{
+			m_fDisolveTime = 0.f;
+			m_bDisolve = false;
+			m_bDisolveReverse = false;
+		}
+	}
+}
+
 
 CRanrok* CRanrok::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

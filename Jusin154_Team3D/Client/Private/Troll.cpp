@@ -428,8 +428,10 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	if(m_eHitSpell != ENUM_CLASS(SKILL_TYPE::JAP))
+	if (m_pFSM->IsEnable(FSMSTATE::SLAM) || IsHitSpellDisabled()) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
+	}
+
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)

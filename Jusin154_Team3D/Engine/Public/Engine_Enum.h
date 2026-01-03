@@ -226,12 +226,13 @@ enum class PXOBJECT : _uint {
 	END = 999
 };
 
-enum class HIT_TYPE : _ubyte
+enum class HIT_TYPE
 {
 	HIT_NONE = 0,				// 히트모션 없음
-	HIT_PROJECTILE = 1 << 0,   // 발사체
-	HIT_MEDIUM = 1 << 1,   // 적당한 공격
-	HIT_HEAVY = 1 << 2,   // 강공격
+	HIT_PROJECTILE,				// 발사체
+	HIT_MEDIUM,				// 적당한 공격
+	HIT_HEAVY,				// 강공격
+	END
 };
 
 
