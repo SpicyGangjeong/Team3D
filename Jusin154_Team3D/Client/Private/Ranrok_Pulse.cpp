@@ -97,7 +97,7 @@ HRESULT CRanrok_Pulse::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEffectParts* pSmoke = Get_PartObject<CEffectParts>("Smoke");
 
 	pBottomDecal->Set_Visible(true);
-	pBottomSplatter->Set_Visible(true);
+	//pBottomSplatter->Set_Visible(true);
 	pBottomSplatter2->Set_Visible(true);
 	pRock_PT->Set_Visible(true);
 	pSmoke->Set_Visible(true);

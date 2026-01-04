@@ -47,6 +47,8 @@
 #include "Ranrok_Point.h"
 #include "Ranrok_Pulse.h"
 #include "Ranrok_Charge.h"
+#include "Ranrok_Hit.h"
+#include "Ranrok_Impact.h"
 
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -158,9 +160,9 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 #if 진우
 
 
-	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA_SIDE)].begin())->Describe_Entity();
+	//(*m_EffectList[ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA_SIDE)].begin())->Describe_Entity();
 
-	Describe_Entity();
+	//Describe_Entity();
 
 #endif
 #endif
@@ -610,6 +612,26 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		CRanrok_Charge* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Charge>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_HIT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Hit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Hit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_IMPACT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Impact* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Impact>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 

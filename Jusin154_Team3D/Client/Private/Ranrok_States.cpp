@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Effect_Container.h"
 #include "EffectPool.h"
+#include "EffectParts.h"
+#include "TrailObject.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -784,6 +786,11 @@ void CRanrok::Behavior_PulseEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_CHARGE, this);
+
+			m_pLeftSmoke->Set_Visible(false);
+			m_pRightSmoke->Set_Visible(false);
+			m_pBottomSmoke->Set_Visible(false);
+
 		}, 0.f);
 
 }
@@ -802,6 +809,10 @@ HRESULT CRanrok::Behavior_PulseExitCheck(_float fTimeDelta)
 		else {
 			m_pFSM->Change_State(FSMSTATE::LAND);
 		}
+
+		m_pLeftSmoke->Set_Visible(true);
+		m_pRightSmoke->Set_Visible(true);
+		m_pBottomSmoke->Set_Visible(true);
 		return E_FAIL;
 	}
 	return S_OK;
@@ -824,6 +835,10 @@ void CRanrok::Behavior_TuckedEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_POINT, this, nullptr, &m_pRanrok_Point);
+
+			m_pLeftEye_Trail->Set_Visible(false);
+			m_pRightEye_Trail->Set_Visible(false);
+
 		}, 0.05f);
 
 }
@@ -861,8 +876,14 @@ HRESULT CRanrok::Behavior_TuckedExitCheck(_float fTimeDelta)
 void CRanrok::Behavior_TuckedExit()
 {
 	/* 이펙트를 서서히 사라지게 하기위해 도착 이후에 나오는 이펙트를 아래로 떨굼 */
-	m_pRanrok_Point->Setting_Pos(XMVectorSet(0.f, -500.f, 0.f, 1.f));
-	SAFE_RELEASE(m_pRanrok_Point);
+	if (m_bTucked == true)
+	{
+		m_pRanrok_Point->Setting_Pos(XMVectorSet(0.f, -500.f, 0.f, 1.f));
+		SAFE_RELEASE(m_pRanrok_Point);
+	}
+
+	m_pLeftEye_Trail->Set_Visible(true);
+	m_pRightEye_Trail->Set_Visible(true);
 
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;
