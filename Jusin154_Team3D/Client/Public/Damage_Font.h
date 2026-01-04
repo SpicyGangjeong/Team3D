@@ -15,11 +15,11 @@ class CDamage_Font final : public CGameObject
 {
 	typedef struct tagDamageFontInfo
 	{
-		_vector		vTarget_Pos{};
+		_float4		vTarget_Pos{};
 		_wstring	pDamage;
 		_float		fTime = 2.f;
 		_float		fAlpha = 1.f;
-		_vector		vColor{};
+		_float4		vColor{};
 	}DAMAGE_FONT_INFO;
 private:
 	CDamage_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -47,7 +47,7 @@ private:
 
 	vector<DAMAGE_FONT_INFO> m_DamageInfos;
 
-	_vector m_vWhite_Color{};
+	_float4 m_vWhite_Color{};
 
 public:
 	static CDamage_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

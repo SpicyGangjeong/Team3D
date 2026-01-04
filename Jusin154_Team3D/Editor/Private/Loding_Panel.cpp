@@ -25,6 +25,7 @@ HRESULT CLoding_Panel::Initialize(void* pArg)
 	Desc.fY = 540.f;
 	Desc.fSizeX = g_iWinSizeX;
 	Desc.fSizeY = g_iWinSizeY;
+	Desc.m_bowner = false;
 
 	if (FAILED(__super::Initialize(&Desc)))
 	{

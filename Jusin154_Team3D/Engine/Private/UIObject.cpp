@@ -45,8 +45,6 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	m_fOrigin_Position = _float2(pDesc->fX, pDesc->fY);
 
-	m_fOrigin_Position_vector = XMVectorSet(m_fOrigin_Position.x, m_fOrigin_Position.y, 0.f, 1.f);
-
 	m_fWinSizeX = ViewportDesc.Width;
 	m_fWinSizeY = ViewportDesc.Height;
 
@@ -347,7 +345,7 @@ _float2 CUIObject::Get_Origin_Position()
 	return m_fOrigin_Position;
 }
 
-_vector CUIObject::Get_Current_Position()
+_float4 CUIObject::Get_Current_Position()
 {
 	return m_fCurrent_Position;
 }
@@ -394,7 +392,7 @@ void CUIObject::Reset_Size_Lerp(_float fTimeDelta)
 {
 }
 
-_vector CUIObject::Get_Lerp_Pos()
+_float4 CUIObject::Get_Lerp_Pos()
 {
 	return m_vLerp_Position;
 }

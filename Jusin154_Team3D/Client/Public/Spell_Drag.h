@@ -48,8 +48,8 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_vector m_vStart_MousePos{};
-	_vector m_vMove_MousePos{};
+	_float4 m_vStart_MousePos{};
+	_float4 m_vMove_MousePos{};
 	_float4 m_vUV{};
 
 	_int	m_iCurrent_Slot_Index{};

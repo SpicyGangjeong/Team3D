@@ -184,10 +184,19 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixIdentity(),
-		TEXT("Prototype_Component_VictorRookWood_Model")
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/Camera.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_Camera_Model")
 	));
 
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/Camera_Spell.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Camera_DSModel")
+	//));
+
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/Camera_BossFight.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Camera_DSModel")
+	//));
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_CCL_CameraRig.001_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/CCL_CameraRig.001.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))

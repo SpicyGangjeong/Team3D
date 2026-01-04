@@ -40,14 +40,14 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_vector m_vFontPosition{};
-	_vector m_vFontPosition1{};
+	_float4 m_vFontPosition{};
+	_float4 m_vFontPosition1{};
 
 	_float m_fAlpha{};
 
 	_wstring	m_NpcName;
 
-	_vector m_vPosition{};
+	_float4 m_vPosition{};
 	_float4 m_vUV{};
 	_float4 m_vNine_Slice{};
 	_float4 m_vImagePosi1{};

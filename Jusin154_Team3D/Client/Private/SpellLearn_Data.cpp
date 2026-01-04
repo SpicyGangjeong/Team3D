@@ -72,7 +72,7 @@ HRESULT CSpellLearn_Data::Load_SpellInfo(const _char* pFilePath)
 				_float px{}, py{};
 				pPos->QueryFloatAttribute("x", &px);
 				pPos->QueryFloatAttribute("y", &py);
-				Info.Booster.push_back(XMVectorSet(px, py, 0.f, 1.f));
+				Info.Booster.push_back(_float4(px, py, 0.f, 1.f));
 			}
 
 			// 다음 Position으로 이동
@@ -89,7 +89,7 @@ HRESULT CSpellLearn_Data::Load_SpellInfo(const _char* pFilePath)
 				_float px{}, py{};
 				pPos->QueryFloatAttribute("x", &px);
 				pPos->QueryFloatAttribute("y", &py);
-				Info.Lines.push_back(XMVectorSet(px, py, 0.f, 1.f));
+				Info.Lines.push_back(_float4(px, py, 0.f, 1.f));
 			}
 
 			// 다음 Position으로 이동

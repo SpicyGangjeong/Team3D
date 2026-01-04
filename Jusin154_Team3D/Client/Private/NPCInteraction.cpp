@@ -92,7 +92,7 @@ void CNPCInteraction::Priority_Update(_float fTimeDelta)
 
 	_vector HeadPos = XMVectorAdd(MonsterPos, XMVectorSet(fOffsetX, fOffsetY, 0.f, 0.f));
 
-	m_vPosition = HeadPos;
+	XMStoreFloat4(&m_vPosition, HeadPos);
 
 	_vector ScreenPos = XMVector3Project(
 		HeadPos,
@@ -116,10 +116,10 @@ void CNPCInteraction::Priority_Update(_float fTimeDelta)
 		XMMatrixIdentity()
 	);
 
-	m_vFontPosition = WorldOffsetPos;
+	XMStoreFloat4(&m_vFontPosition, WorldOffsetPos);
 	m_fSize = _float3(m_fSize.x, m_fOrigin_Size.y, m_fOrigin_Size.z);
 	m_fFontSize = 0;
-	m_pTransformCom->Set_State(STATE::POSITION, m_vPosition);
+	m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
 }
 
 void CNPCInteraction::Update(_float fTimeDelta)
@@ -161,14 +161,14 @@ HRESULT CNPCInteraction::Render()
 		m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
 		TEXT("Font_size20"),
 		m_NpcName.c_str(),
-		m_vFontPosition);
+		XMLoadFloat4(&m_vFontPosition));
 
 	m_pGameInstance->Perspective_Render_Text(
 		m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
 		m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
 		TEXT("Font_size15"),
 		TEXT("대화하기"),
-		m_vPosition);
+		XMLoadFloat4(&m_vPosition));
 
 
 	return S_OK;

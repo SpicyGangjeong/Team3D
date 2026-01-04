@@ -59,6 +59,24 @@ void CGamePlay_Canvas::Priority_Update(_float fTimeDelta)
 
 void CGamePlay_Canvas::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_B))
+	{
+		m_bRide = !m_bRide;
+
+		if (m_bRide == true)
+		{
+			static_cast<CUIObject*>(m_pRide_Panel)->Visible(true);
+			static_cast<CUIObject*>(m_pRide_Panel)->Set_FadeIn();
+			static_cast<CUIObject*>(m_pAction_Panel)->Visible(false);
+		}
+		else
+		{
+			static_cast<CUIObject*>(m_pRide_Panel)->Set_FadeOut();
+			static_cast<CUIObject*>(m_pAction_Panel)->Visible(true);
+			static_cast<CUIObject*>(m_pAction_Panel)->Set_FadeIn();
+		}
+
+	}
 	__super::Update(fTimeDelta);
 }
 

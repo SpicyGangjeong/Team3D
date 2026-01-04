@@ -37,7 +37,7 @@ HRESULT CRide_Info::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
+	m_fTimeMult = 1.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 10.f;
 	m_vNine_Slice = _float4(256.f, 500.f, 80.f, 150.f);
@@ -45,6 +45,8 @@ HRESULT CRide_Info::Initialize(void* pArg)
 	SizeUpY(400.f);
 	MoveX(210);
 	MoveY(20);
+	Set_Posi();
+	m_bActive = false;
 	return S_OK;
 }
 
@@ -54,6 +56,14 @@ void CRide_Info::Set_Posi()
 	m_vImagePosi2 = _float4(50.f, 137.5f, 32.f, 32.f);
 	m_vImagePosi3 = _float4(50.f, 192.5f, 32.f, 32.f);
 	m_vImagePosi4 = _float4(90.f, 192.5f, 32.f, 32.f);
+}
+
+void CRide_Info::Set_Hover(_bool bVisible)
+{
+	Visible(bVisible);
+	m_bHover = true;
+	m_fTime = 0.f;
+	m_fAlpha = 1.f;
 }
 
 void CRide_Info::Priority_Update(_float fTimeDelta)
@@ -93,11 +103,17 @@ void CRide_Info::Update(_float fTimeDelta)
 		{
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
+			Visible(false);
 		}
 	}
 
-	Set_Posi();
-	m_fTime += fTimeDelta * m_fTimeMult;
+	if (m_bHover == true)
+		m_fTime += fTimeDelta * m_fTimeMult;
+
+	if (m_fTime >= 1.f)
+	{
+		Set_FadeOut();
+	}
 
 	__super::Update(fTimeDelta);
 }
@@ -130,9 +146,9 @@ HRESULT CRide_Info::Render()
 	}
 
 	m_pGameInstance->Render_Text(TEXT("Font_size15"), TEXT("빗자루 컨트롤"), _float2(1480.f + m_fX, 585.f + m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f) * m_fAlpha, m_fAlpha));
-	m_pGameInstance->Render_Text(TEXT("Font_size15"), TEXT("스피드 버스트"), _float2(1500.f + m_fX, 635.f + m_fY));
-	m_pGameInstance->Render_Text(TEXT("Font_size15"), TEXT("(전환)비행 가속"), _float2(1490.f + m_fX, 700.f + m_fY));
-	m_pGameInstance->Render_Text(TEXT("Font_size15"), TEXT("하강 / 상승"), _float2(1525.f + m_fX, 755.f + m_fY));
+	m_pGameInstance->Render_Text(TEXT("Font_size15"), TEXT("스피드 버스트"), _float2(1500.f + m_fX, 635.f + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size15"), TEXT("(전환)비행 가속"), _float2(1490.f + m_fX, 700.f + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size15"), TEXT("하강 / 상승"), _float2(1525.f + m_fX, 755.f + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }
@@ -294,6 +310,8 @@ void CRide_Info::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pDiffuse_TextureCom2);
+	SAFE_RELEASE(m_pDiffuse_TextureCom3);
+	SAFE_RELEASE(m_pDiffuse_TextureCom4);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

@@ -36,19 +36,11 @@ void CNPC_EleazarFig::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
-	{ // 세트
-		m_pCallBack_HitReport->BeginFrame();
-		m_pCharacter_Controller->Move(fTimeDelta);
-		m_pCallBack_HitReport->Set_CurrentSlop();
-	}
-
-	//m_pNPCInteraction->Set_Visible(0 < m_iEntered);
 }
 
 void CNPC_EleazarFig::Late_Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
@@ -185,12 +177,9 @@ HRESULT CNPC_EleazarFig::Initialize(void* pArg)
 	
 	_vector vPos = XMLoadFloat4(&pDesc->vPos);
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
-	m_pCharacter_Controller->Set_Position(vPos);
 	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
 
 	m_pModelCom->Set_AnimationIndex(0, true);
-	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
-	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	return S_OK;
 }
 
@@ -214,28 +203,6 @@ HRESULT CNPC_EleazarFig::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Professor_EleazarFig_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
-	}
-
-	{ // CCT
-		CCharacter_Controller::Character_Controller_DESC Desc{};
-
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::ELEAZARFIG);
-		Desc.pTransform = m_pTransformCom;
-		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.0001f;
-		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
-		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.02f };
-		Desc.fRadius = 0.5f;
-		Desc.fHeight = 0.6f;
-		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();
-		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_NonPlayable_Behavior::Create();
-		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
-		Desc.fWalkableSlope = 45.f;
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
-			return E_FAIL;
-		}
-		m_pCharacter_Controller->SetGravity(true);
 	}
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
@@ -278,19 +245,10 @@ void CNPC_EleazarFig::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pRigidBody);
-	SAFE_RELEASE(m_pCharacter_Controller);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;
 	}
-	if (nullptr != m_pCallBack_Behavior) {
-		m_pCallBack_Behavior->Finalize();
-	}
-	if (nullptr != m_pCallBack_HitReport) {
-		m_pCallBack_HitReport->Finalize();
-	}
-	Safe_Delete(m_pCallBack_Behavior);
-	Safe_Delete(m_pCallBack_HitReport);
 }
 #ifdef _DEBUG
 

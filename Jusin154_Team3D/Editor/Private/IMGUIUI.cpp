@@ -143,8 +143,8 @@ void CIMGUIUI::Update(_float fTimeDelta)
 	}
 	if (m_pPanelObject != nullptr)
 	{
-		m_fPanelPos.x = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[0];
-		m_fPanelPos.y = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[1];
+		m_fPanelPos.x = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().x;
+		m_fPanelPos.y = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().y;
 
 		m_fPanelSize.x = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size().x;
 		m_fPanelSize.y = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size().y;
@@ -157,8 +157,8 @@ void CIMGUIUI::Update(_float fTimeDelta)
 
 	if (m_pElementObject != nullptr)
 	{
-		m_fPos.x = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().m128_f32[0];
-		m_fPos.y = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().m128_f32[1];
+		m_fPos.x = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().x;
+		m_fPos.y = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().y;
 
 		m_fSize.x = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().x;
 		m_fSize.y = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().y;
@@ -180,8 +180,8 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fBottom = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Bottom();
 
 		m_vLerpPosition = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos();
-		m_fLerpX = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[0];
-		m_fLerpY = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[1];
+		m_fLerpX = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().x;
+		m_fLerpY = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().y;
 		m_fMoveSpeed = static_cast<CElementObject*>(m_pElementObject)->Get_Speed();
 		m_fAngle = static_cast<CElementObject*>(m_pElementObject)->Get_Angle();
 		m_iSpellType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
@@ -259,7 +259,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 				static_cast<CPanelObject*>(m_pPanelObject)->Set_FadeOut();
 			}
 			GUI::Text("Origin Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Origin_Position().y);
-			GUI::Text("Current Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[1]);
+			GUI::Text("Current Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Position().y);
 			GUI::Text("Origin Size : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Origin_Size().y);
 			GUI::Text("Current Size : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Size().y);
 			GUI::Text("PanelAlph : %.1f", m_fPanelAlpha);
@@ -339,7 +339,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			static_cast<CElementObject*>(m_pElementObject)->Set_FadeOut();
 		}
 		GUI::Text("Origin Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Position().y);
-		GUI::Text("Current Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().m128_f32[1]);
+		GUI::Text("Current Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().x, static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().y);
 		GUI::Text("Origin Size : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Size().y);
 		GUI::Text("Current Size : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size().y);
 		GUI::Text("Alpha : %.1f", m_fAlpha);
@@ -440,7 +440,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		}
 
 		GUI::Text("Lerp");
-		GUI::Text("Lerp Position : %.1f, %.1f", m_vLerpPosition.m128_f32[0], m_vLerpPosition.m128_f32[1]);
+		GUI::Text("Lerp Position : %.1f, %.1f", m_vLerpPosition.x, m_vLerpPosition.y);
 		if (GUI::DragFloat("LerpX", &m_fLerpX, 0.1f, -1920.f, 1920.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Lerp_PosX(m_fLerpX);

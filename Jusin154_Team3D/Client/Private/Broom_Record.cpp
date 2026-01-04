@@ -121,13 +121,13 @@ HRESULT CBroom_Record::Render()
 	if (m_bNewScore == false)
 	{
 		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_fFont[0].c_str(), m_fFontPos[0]);
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_fFont[1].c_str(), m_fFontPos[1], m_fFontColor[0]);
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_fFont[1].c_str(), m_fFontPos[1], XMLoadFloat4(&m_fFontColor[0]));
 		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_fFont[2].c_str(), m_fFontPos[2]);
 		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_fFont[3].c_str(), m_fFontPos[3]);
 	}
 	else
 	{
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_fFont[4].c_str(), m_fFontPos[4], m_fFontColor[1]);
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_fFont[4].c_str(), m_fFontPos[4], XMLoadFloat4(&m_fFontColor[1]));
 		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_fFont[1].c_str(), m_fFontPos[5]);
 	}
 
@@ -213,8 +213,8 @@ void CBroom_Record::Set_Font()
 	m_fFontPos[4] = _float2(m_fX + 880, m_fY + 140.f);
 	m_fFontPos[5] = _float2(m_fX + 900, m_fY + 180.f);
 
-	m_fFontColor[0] = XMVectorSet(0.f, 1.f, 0.f, 1.f);
-	m_fFontColor[1] = XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f) * m_fAlpha, m_fAlpha);
+	m_fFontColor[0] = _float4(0.f, 1.f, 0.f, 1.f);
+	m_fFontColor[1] = _float4((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f) * m_fAlpha, m_fAlpha);
 
 }
 

@@ -36,7 +36,7 @@ public:
 	virtual void Reset_Pos(_float fTimeDelta)override;
 	virtual void Start_Size_Lerp(_float fTimeDelta) override;
 	virtual void Reset_Size_Lerp(_float fTimeDelta) override;
-	virtual _vector Get_Lerp_Pos() override;
+	virtual _float4 Get_Lerp_Pos() override;
 
 protected:
 	virtual HRESULT Initialize_Prototype();
@@ -45,7 +45,7 @@ protected:
 
 	_float m_fBezierTime = 0;
 
-	vector<_vector> m_vector;
+	vector<_float4> m_vector;
 
 
 public:

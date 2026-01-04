@@ -99,6 +99,11 @@ struct VS_IN
     uint4 vBlendIndex : BLENDINDEX;
     float4 vBlendWeight : BLENDWEIGHT;
 };
+struct VS_OUT_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+};
+
 struct VS_OUT
 {
     float4 vPosition : SV_Position;
@@ -394,6 +399,82 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
     return Out;
 }
 
+VS_OUT_SHADOW VS_MAIN_SHADOW_LEGACY(VS_IN In)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+
+    float4 w = In.vBlendWeight;
+    float sumW = max(dot(w, 1.0f), 1e-6f);
+    w /= sumW;
+
+    uint4 idx = In.vBlendIndex;
+    
+    matrix BoneMatrix = (matrix) 0;
+    matrix TempBoneMatrix = (matrix) 0;
+    
+    int MinIdx = 30;
+    int MaxIdx = 41;
+    
+    if (idx.x >= MinIdx && idx.x <= MaxIdx)
+        //g_RobeBoneMask[idx.x] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.x],
+            mul(g_BoneMatrices[In.vBlendIndex.x], w.x));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.x],
+            mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x));
+    }
+    if (idx.y >= MinIdx && idx.y <= MaxIdx)
+    //if (g_RobeBoneMask[idx.y]  == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.y],
+            mul(g_BoneMatrices[In.vBlendIndex.y], w.y));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.y],
+            mul(g_BoneBuffer[In.vBlendIndex.y].LocalCombined, w.y));
+    }
+    if (idx.z >= MinIdx && idx.z <= MaxIdx)
+    //if (g_RobeBoneMask[idx.z] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.z],
+            mul(g_BoneMatrices[In.vBlendIndex.z], w.z));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.z],
+            mul(g_BoneBuffer[In.vBlendIndex.z].LocalCombined, w.z));
+    }
+    if (idx.w >= MinIdx && idx.w <= MaxIdx)
+    //if (g_RobeBoneMask[idx.w] == 1)
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.w],
+            mul(g_BoneMatrices[In.vBlendIndex.w], w.w));
+    }
+    else
+    {
+        TempBoneMatrix += mul(g_OffsetMatrix[In.vBlendIndex.w],
+            mul(g_BoneBuffer[In.vBlendIndex.w].LocalCombined, w.w));
+    }
+    
+    BoneMatrix = TempBoneMatrix;
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+    vector vBinormal = mul(vector(In.vBinormal, 0.f), BoneMatrix);
+    vector vTangent = mul(vector(In.vTangent, 0.f), BoneMatrix);
+    
+    matrix matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vPosition, matWVP);
+    return Out;
+}
+
 VS_OUT VS_MAIN_OUTLINE_READ(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
@@ -451,12 +532,6 @@ VS_OUT VS_MAIN_OUTLINE_READ(VS_IN In)
 
     return Out;
 }
-struct VS_OUT_SHADOW
-{
-    float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
-};
-
 VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
 {
     VS_OUT_SHADOW Out;
@@ -483,7 +558,6 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(vPosition, matWVP);
-    Out.vProjPos = Out.vPosition;
 
     return Out;
 }
@@ -1393,7 +1467,6 @@ PS_OUT_BLEND PS_Dragon_YellowHot(PS_IN In)
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
 };
 
 struct PS_OUT_SHADOW
@@ -1405,7 +1478,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
     
-    Out.fShadowLightDepth = In.vProjPos.z;
+    Out.fShadowLightDepth = In.vPosition.z;
     
     return Out;
 }
@@ -1418,7 +1491,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EYELASH_DAOTHV_ToSRO();
     }
     pass TEETH_SRXO_ToSRO // 1
@@ -1427,7 +1500,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_TEETH_SRXO_ToSRO();
     }
     pass EYE_DN_ToSRO // 2
@@ -1436,7 +1509,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EYE_DN_SRO();
     }
     pass EYE_OCC // 3
@@ -1445,7 +1518,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EYE_OCC();
     }
     pass FACIAL_HAIR_DAOTHV_ToSRO // 4
@@ -1454,7 +1527,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_FACIAL_HAIR_DAOTHV_ToSRO();
     }
     pass HEAD_HAIR_DAOTHV_ToSRO // 5
@@ -1463,7 +1536,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_HEAD_HAIR_DAOTHV_ToSRO();
     }
     pass HEADwtHAND_DSRXON_ToSRO // 6
@@ -1472,7 +1545,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_HEADwtHAND_DSRXON_ToSRO();
     }
     pass LOWER_DSRON_ToSRO // 7
@@ -1481,7 +1554,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_LOWER_DSRON_ToSRO();
     }
     pass UPPER_DMRON_ToMRO // 8
@@ -1490,7 +1563,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_UPPER_DMRON_ToMRO();
     }
     pass GLASSES_DMRON_ToMRO // 9
@@ -1499,7 +1572,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_GLASSES_DMRON_ToMRO();
     }
     pass EmissiveMetalness_DENMRO_ToMRO // 10
@@ -1508,7 +1581,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EmissiveMetalness_DENMRO_ToMRO();
     }
     pass MI_ClothSim_DSEN_ToSRO // 11
@@ -1517,7 +1590,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MI_ClothSim_DSEN_ToSRO();
     }
     pass MI_Troll_Club_DAENMROSRXO_To // 12
@@ -1526,7 +1599,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_MESH();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Troll_Club_DAENMROSRXO_ToMROX();
     }
 /////
@@ -1536,7 +1609,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default_OutLine_SRead, 2);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE_READ();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_READ();
     }
     pass MI_DANSROMRO_ToSRO // 14
@@ -1545,7 +1618,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MI_DANSROMRO_ToSRO();
     }
 //// DRAGON
@@ -1555,7 +1628,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Dragon_Aura();
     }
     pass DragonEtherealEyesPass // 16
@@ -1564,7 +1637,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Dragon_EtherealEyes();
     }
     pass DragonEtherealWingsPass // 17
@@ -1573,7 +1646,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Dragon_EtherealWings();
     }
     pass DragonWingsPass // 18
@@ -1582,7 +1655,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Dragon_Wings();
     }
     pass DragonBodyPass // 19
@@ -1591,7 +1664,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Dragon_Body();
     }
     pass DragonRedHotPass // 20
@@ -1600,7 +1673,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Dragon_RedHot();
     }
     pass DragonPinkHotPass // 21
@@ -1609,7 +1682,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Dragon_PinkHot();
     }
     pass DragonYellowHotPass // 22
@@ -1618,7 +1691,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Dragon_YellowHot();
     }
 //// PLAYER_
@@ -1628,7 +1701,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Player_HairDAOTHV_ToSRO();
     }
     pass PLAYER_Suit_DSRON_ToSRO // 24
@@ -1637,7 +1710,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Player_Suit_DSRON_ToSRO();
     }
     pass PLAYER_EyeLash_DAOTHV_ToSRO // 25
@@ -1646,7 +1719,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Player_EyeLash_DAOTHV_ToSRO();
     }
     pass PLAYER_Eye_ToSRO // 26
@@ -1655,7 +1728,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Player_Eye_ToMRO();
     }
     pass PLAYER_Robe_ToMRO // 27
@@ -1664,7 +1737,23 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_LEGACY();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Player_Robe_ToMRO();
+    }
+    pass Shadow // 28
+    {
+        SetRasterizerState(RS_Shadow);
+        SetDepthStencilState(DSS_ShadowWrite, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
+        PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
+    }
+    pass Shadow_Legacy // 29
+    {
+        SetRasterizerState(RS_Shadow);
+        SetDepthStencilState(DSS_ShadowWrite, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_SHADOW_LEGACY();
+        PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 }

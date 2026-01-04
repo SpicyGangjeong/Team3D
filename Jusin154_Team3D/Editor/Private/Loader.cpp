@@ -219,6 +219,8 @@
 #include "Ranrok_Point.h"
 #include "Ranrok_Pulse.h"
 #include "Ranrok_Charge.h"
+#include "Ranrok_Hit.h"
+#include "Ranrok_Impact.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -396,12 +398,6 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_CELL,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_Cell.hlsl"),
 			VTXPOS::Elements, VTXPOS::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_PARTICLE,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPointParticle.hlsl"),
-			VTX_POS_INSTANCE_PARTICLE::Elements, VTX_POS_INSTANCE_PARTICLE::iNumElements)))) {
 		return E_FAIL;
 	}
 
@@ -1959,6 +1955,14 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Hit>(NEXT_LEVEL, CRanrok_Hit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Impact>(NEXT_LEVEL, CRanrok_Impact::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	/* For.Prototype_GameObject_Wand */
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -2948,7 +2952,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 #pragma endregion
 
-_bool bLoadHogsmeade = true;
+_bool bLoadHogsmeade = false;
 	if (bLoadHogsmeade)
 	{
 #pragma region HOGSMEADE_OBJECT
@@ -3034,7 +3038,7 @@ _bool bLoadHogsmeade = true;
 	}
 
 #pragma region HOGWART
-_bool bHogwartLoad = { true };
+_bool bHogwartLoad = { false };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
@@ -3338,7 +3342,7 @@ vector<future<void>> jobFutures;
 _uint iLoadCount = 44;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { true };
+_bool isLoad_Map = { false };
 if(isLoad_Map)
 {
 	{ /* Terrain */

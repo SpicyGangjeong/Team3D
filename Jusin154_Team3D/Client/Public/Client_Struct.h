@@ -84,7 +84,7 @@ namespace Client
 
 	typedef struct tagDamageInfo
 	{
-		_vector		vTarget_Pos{};
+		_float4		vTarget_Pos{};
 		_float		fDamage{};
 		DAMAGE_TYPE eType = DAMAGE_TYPE::NOMAL;
 	}DAMAGE_INFO;
@@ -123,8 +123,8 @@ namespace Client
 		_float			fSpellSize{};
 		_float2			fStartPosition{};
 		_float2			fEndPosition{};
-		vector<_vector> Booster;
-		vector<_vector> Lines;
+		vector<_float4> Booster;
+		vector<_float4> Lines;
 	}SPELLLEARNINFO;
 
 	typedef struct tagDialougeInfo
@@ -260,13 +260,20 @@ namespace Client
 		_bool       isNoDissolveSmoothStep = {};
 		_bool       isPadding3 = {};
 
-		_float4     vPadding5 = {};
+		_float2     vDissolveSmoothRange = { 0.1f , 0.1f };
+		_float2     vPadding0 = {};
 
 		_bool		isRimLight = {};
 		_bool		isMask_G = {};
 		_bool		isMask_B = {};
 		_bool		isDissolve_B = {};
 
+		_float4     vPadding1 = {};
+		_float4     vPadding2 = {};
+		_float4     vPadding3 = {};
+		_float4     vPadding4 = {};
+		_float4     vPadding5 = {};
+		_float4     vPadding6 = {};
 	}EFFECT_INFO;
 	
 	typedef struct tagTrailInfo

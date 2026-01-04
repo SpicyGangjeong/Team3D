@@ -360,7 +360,7 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_pFSM->IsEnable(FSMSTATE::BLINK | FSMSTATE::DEAD)) {
 		return;
 	}
-	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
 
 	m_pGoblinSpector->Set_Visible(false);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
