@@ -2,6 +2,7 @@
 
 #include "Client_Define.h"
 #include "Unit.h"
+#include "NPC_Ollivander.h"
 
 NS_BEGIN(Client)
 
@@ -29,12 +30,15 @@ protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	CUnit* m_pPlayerAllyUnit = { nullptr };
+	CRandomNpc* m_pNPC_Ollivander = { nullptr };
 
+	class CNPCInteraction* m_pNPCInteraction = { nullptr };
 
-	_int				m_iEntered = { 0 };
-	_float2				m_vEnteringTimer = { 0.f, 1.f };
-	_float				m_fEncounterDistance = { 8.f };
-	_int				m_iIndex = {};
+	CNPCStat* m_pNpcStat = { nullptr };
+	_int									m_iEntered = { 0 };
+	_float2									m_vEnteringTimer = { 0.f, 1.f };
+	_float									m_fEncounterDistance = { 8.f };
+	_int									m_iIndex = {};
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
