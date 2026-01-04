@@ -4,8 +4,7 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Player.h"
-#include "CallBack_NonPlayable_Behavior.h"
-#include "CallBack_NonPlayable_HitReport.h"
+#include "NPCInteraction.h"
 
 CRandomNpc::CRandomNpc(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -36,11 +35,9 @@ HRESULT CRandomNpc::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-
 	_vector vPos = XMLoadFloat4(&pDesc->vPos);
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
-
 
 	m_pModelCom->Set_AnimationIndex(0, true);
 	return S_OK;
@@ -64,16 +61,14 @@ void CRandomNpc::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+
+	m_pNPCInteraction->Set_Visible(0 < m_iEntered);
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 }
 
 void CRandomNpc::Late_Update(_float fTimeDelta)
 {
-	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
-
-	if (m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	}
-
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
@@ -140,7 +135,7 @@ HRESULT CRandomNpc::Render_Shadow(SHADOW eType)
 		{
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
@@ -153,6 +148,17 @@ HRESULT CRandomNpc::Render_Shadow(SHADOW eType)
 	}
 
 	return S_OK;
+}
+
+void CRandomNpc::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
+{
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
+	if (nullptr == pPlayer) {
+		return;
+	}
+	if (fDistance < m_fEncounterDistance) {
+		m_iEntered = 4;
+	}
 }
 
 HRESULT CRandomNpc::Bind_ShaderResources()
@@ -181,17 +187,6 @@ HRESULT CRandomNpc::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CRandomNpc::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
-{
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
-	if (nullptr == pPlayer) {
-		return;
-	}
-	if (fDistance < m_fEncounterDistance) {
-		m_iEntered = 4;
-	}
-}
-
 HRESULT CRandomNpc::Ready_Components(void* pArg)
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -204,26 +199,43 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
-
 	switch (m_iIndex)
 	{
 	case 0:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_MatildaWeasely_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MATILDAWEASELY"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
 		break;
 	case 1:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_SatyavatiShah_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("SATYAVATI"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
 		break;
 	case 2:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_Ghost_Peeves_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PEEVES"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
 		break;
 	case 3:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_M_Student_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("M_STUDENT"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
 		break;
 	case 4:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_F_Student_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("F_STUDENT"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
 		break;
 	case 5:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_Elf_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("ELF"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
 		break;
 	}
 
@@ -239,15 +251,20 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
-
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::ELEAZARFIG);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
 		Desc.bAutoOwnerTranslation = false;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_NPC_HITBOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
+		return E_FAIL;
+	}
+
+	m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
 
 	return S_OK;
 }
@@ -280,6 +297,7 @@ void CRandomNpc::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pNpcStat);
 	SAFE_RELEASE(m_pRigidBody);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;

@@ -1,4 +1,12 @@
 ﻿<StatInfo>
 	<OLLIVENDER ID="0" Name="올리벤더" TAG="1" SizeX="256"/>
+	<SATYAVATI ID="1" Name="사티아바티" TAG="1" SizeX="256"/>
+	<MATILDAWEASELY ID="2" Name="마틸다 위즐리" TAG="1" SizeX="256"/>
+	<ELEAZARFIG ID="3" Name="엘리아자르 피그" TAG="1" SizeX="256"/>
+	<ELF ID="4" Name="도비" TAG="1" SizeX="256"/>
+	<PEEVES ID="5" Name="피브스" TAG="1" SizeX="256"/>
+	<PHINEASBLACK ID="6" Name="피니어스 블랙" TAG="1" SizeX="256"/>
+	<F_STUDENT ID="7" Name="여학생" TAG="1" SizeX="256"/>
+	<M_STUDENT ID="8" Name="남학생" TAG="1" SizeX="256"/>
 </StatInfo>
  
