@@ -29,7 +29,7 @@ void CPlayerRobe::Update(_float fTimeDelta)
 		XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr());
 
 	m_pRobeMainAnchor->Move_Kinematic(SocketMatrixFixed, false);
-	m_pRobeMainAnchor->Get_Actor()->wakeUp();
+	//m_pRobeMainAnchor->Get_Actor()->wakeUp();
 
 	Update_LegsPosition();
 	Update_RobeSocketPosition();

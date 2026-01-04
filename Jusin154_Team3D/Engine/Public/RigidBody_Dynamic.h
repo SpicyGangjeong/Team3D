@@ -93,6 +93,7 @@ private:
 	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPE_DYNAMIC_DESC& Desc);
 	virtual HRESULT Initialize(void* pArg) override;
 //	void Move(PSX::PxTransform& pxTransform, _bool bTeleport);
+	_bool IsKinematic();
 
 #ifdef _DEBUG
 	HRESULT Add_DebugShape();
