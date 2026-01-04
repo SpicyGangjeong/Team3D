@@ -6,6 +6,7 @@
 NS_BEGIN(Engine)
 class CGameInstance;
 class CModel;
+class CVIBuffer_Model_Instance;
 NS_END
 
 NS_BEGIN(Client)
@@ -43,6 +44,7 @@ private:
 	future<vector<FOLDER_LOAD*>*> Deferred_FolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag);
 	future<pair<_wstring, CModel*>*> Deferred_ModelLoad(MODEL eType, const _char* pDirectoryPath, _fmatrix PreTransform, const _tchar* pPrototypeTag);
 	void Ready_MapModels(vector<future<vector<FOLDER_LOAD*>*>>& jobMapModels);
+	HRESULT Ready_RigidBody_Static(CVIBuffer_Model_Instance* pModel_Instance);
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);

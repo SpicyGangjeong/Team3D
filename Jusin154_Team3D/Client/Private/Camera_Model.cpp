@@ -17,6 +17,16 @@ CCamera_Model::CCamera_Model(const CCamera_Model& rhs)
 
 void CCamera_Model::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->RewindMomentum();
+	_float3 vCamPos = {};
+	_float3 vCamMomentum = {};
+	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
+	XMStoreFloat3(&vCamMomentum, m_pTransformCom->Get_CurrentMomentum());
+#ifdef _DEBUG
+	GUI::Text("Cam_Model Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
+	GUI::Text("v %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
+#endif // _DEBUG
+	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 #ifdef _DEBUG
 	m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_MODEL, false);
 #endif // _DEBUG
@@ -24,13 +34,7 @@ void CCamera_Model::Priority_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_MODEL))) {
 		return;
 	}
-	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-	_float3 vCamPos = {};
-	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
-#ifdef _DEBUG
-	GUI::Text("Cam_Model Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
-#endif // _DEBUG
 
 	__super::Bind_Matrices();
 }
@@ -39,12 +43,15 @@ void CCamera_Model::Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
 	Describe_Entity();
+	_matrix matBoneSKT = m_pModelCom->Get_BoneMatrix(m_pModelCom->Get_BoneIndex("ctrl_1"));
+	m_pTransformCom->Set_WorldMatrix(matBoneSKT);
+
 #endif // _DEBUG
 }
 
 void CCamera_Model::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CCamera_Model::Render()
@@ -61,23 +68,9 @@ HRESULT CCamera_Model::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_OffsetMatrix",
-			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
-		)))
-		{
-			return E_FAIL;
-		}
-
-
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
 			return E_FAIL;
 		}
-
-		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
-		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
-		
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -103,6 +96,7 @@ HRESULT CCamera_Model::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
 	}
+	m_pModelCom->Set_DisableRootMotionScale(true);
 	m_matInitial = *m_pTransformCom->Get_WorldMatrixPtr();
 	m_bActive = true;
 
@@ -190,6 +184,8 @@ void CCamera_Model::Describe_Entity()
 {
 	_float3 vPosition = {};
 	GUI::Begin("CameraAnim List");
+	//GUI::Text("%f", m_pModelCom->Get_CurrentTrackProgressRatio());
+	
 	for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
 	{
 		if (GUI::Button(m_pModelCom->Get_AnimList(i)))

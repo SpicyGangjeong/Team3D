@@ -234,7 +234,7 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 			return E_FAIL;
 
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 

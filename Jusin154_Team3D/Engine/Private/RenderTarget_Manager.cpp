@@ -516,6 +516,24 @@ HRESULT CRenderTarget_Manager::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CS
     return S_OK;
 }
 
+void CRenderTarget_Manager::Flush_All_SRVs(_uint iStartSlot, _uint numSlots)
+{
+    ID3D11ShaderResourceView* nullSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = {};
+
+    m_pContext->VSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->PSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->GSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->HSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->DSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->CSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+}
+
+void CRenderTarget_Manager::Flush_All_CSUAVs(_uint iStartSlot, _uint numSlots)
+{
+    ID3D11UnorderedAccessView* nullUavs[D3D11_PS_CS_UAV_REGISTER_COUNT] = {};
+    m_pContext->CSSetUnorderedAccessViews(iStartSlot, numSlots, nullUavs, nullptr);
+}
+
 
 HRESULT CRenderTarget_Manager::End_MRT()
 {
@@ -525,7 +543,8 @@ HRESULT CRenderTarget_Manager::End_MRT()
 
     SAFE_RELEASE(m_pBackBufferRTV);
     SAFE_RELEASE(m_pOriginalDSV);
-
+    Flush_All_SRVs();
+    Flush_All_CSUAVs();
     return S_OK;
 }
 

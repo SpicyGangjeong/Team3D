@@ -68,7 +68,7 @@ HRESULT CLight_Main::Capture_PreShadow()
 	vector<_float3> vNeededPos = {};
 	vNeededPos.reserve(12);
 	{ 
-		// 외곽이 더 많아지면 많아질수록 더 정밀한 경계가 가능
+		// 외곽이 더 많아지면 많아질수록 더 정밀한 경계가 가능함
 		// 하지만 더 실제보다 멀리 외곽을 두르면 필요한 것보다 더 많이 찍게 됨
 		// 결국 딱 맞춰서 찍는게 제일 중요함
 		vNeededPos.emplace_back(_float3(-112.f, 155.f, 362.f));
@@ -97,7 +97,13 @@ HRESULT CLight_Main::Capture_PreShadow()
 HRESULT CLight_Main::Ready_Components(void* pArg)
 {
 	__super::Ready_Components(nullptr);
-	m_pTransformCom->Rotation(60.f, 0.f, 0.f);
+
+	_matrix LIGHT_WorldMatrixDoNotModify = 
+		_matrix(0.819145918f, 0.f, -0.573572040f, 0.f,
+				0.553958654f, 0.258784860f, 0.791134834f, 0.f
+				, 0.148416296f, -0.965690017f, 0.211960629f, 0.f
+				, 0.f, 0.f, 0.f, 1.f);
+	m_pTransformCom->Set_WorldMatrix(LIGHT_WorldMatrixDoNotModify);
 
 	LIGHT_DESC* pLightDescArg = static_cast<LIGHT_DESC*>(pArg);
 
