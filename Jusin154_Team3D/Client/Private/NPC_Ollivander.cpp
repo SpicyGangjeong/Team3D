@@ -43,13 +43,13 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 
-	m_pNPCInteraction->Set_Visible(0 < m_iEntered);
-	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
+//	m_pNPCInteraction->Set_Visible(0 < m_iEntered);
 }
 
 void CNPC_Ollivander::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
@@ -118,7 +118,7 @@ HRESULT CNPC_Ollivander::Render_Shadow(SHADOW eType)
 		{
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
@@ -142,6 +142,11 @@ void CNPC_Ollivander::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _
 	if (fDistance < m_fEncounterDistance) {
 		m_iEntered = 4;
 	}
+}
+
+_wstring CNPC_Ollivander::Get_Name()
+{
+	return m_pNpcStat->Get_Stat().pNpc_Name;
 }
 
 HRESULT CNPC_Ollivander::Bind_ShaderResources()
@@ -194,6 +199,7 @@ HRESULT CNPC_Ollivander::Initialize(void* pArg)
 	m_pModelCom->Set_AnimationIndex(0, true);
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
+	m_bNpc = true;
 	return S_OK;
 }
 
@@ -254,11 +260,11 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
+	//	return E_FAIL;
+	//}
 
-	m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
+	//m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
 
 	return S_OK;
 }

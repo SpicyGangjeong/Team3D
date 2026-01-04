@@ -4,8 +4,14 @@
 	<!-- IDLE -->
 	<Anim state="IDLE_G" index="100" loop="true"/>
 	<Anim state="IDLE_BREAK2" index="28" loop="false"/>
-	<Anim state="IDLE_TURN_L" index="124" loop="false"/>
-	<Anim state="IDLE_TURN_R" index="125" loop="false"/>
+	<Anim state="IDLE_BREAK3" index="104" loop="false"/>
+	<Anim state="IDLE_BREAK4" index="105" loop="false"/>
+	<Anim state="IDLE_TURN_180_L" index="120" loop="false"/>
+	<Anim state="IDLE_TURN_180_R" index="121" loop="false"/>
+	<Anim state="IDLE_TURN_45_L" index="122" loop="false"/>
+	<Anim state="IDLE_TURN_45_R" index="123" loop="false"/>
+	<Anim state="IDLE_TURN_90_L" index="124" loop="false"/>
+	<Anim state="IDLE_TURN_90_R" index="125" loop="false"/>
 
 	<!-- HOVER / MOVE -->
 	<Anim state="HOVER_LOOP" index="29" loop="true"/>
@@ -56,7 +62,7 @@
 	<!-- HIT -->
 	<Anim state="HIT_BWD" index="22" loop="false"/>
 	<!-- Air Small -->
-	<Anim state="HIT_BWD2" index="37" loop="false"/>
+	<Anim state="HIT_BWD2" index="13" loop="false"/>
 	<!-- Air Large -->
 	<Anim state="HIT_BWD3" index="35" loop="false"/>
 	<!-- Ground Large -->

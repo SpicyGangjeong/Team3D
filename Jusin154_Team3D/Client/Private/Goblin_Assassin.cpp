@@ -64,7 +64,18 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	m_pModelCom->Set_Temp(true);
+	m_pInfoInstance->Add_Event(TEXT("Goblin_Fear"),
+		[this](void* p)
+		{
+			CGameObject* pSender = static_cast<CGameObject*>(p);
+
+			if (pSender == this)
+				return;
+
+			m_pFSM->Change_State(FSMSTATE::FEAR);
+		});
+
+	m_pModelCom->Set_DisableRootMotionScale(true);
 
 	return S_OK;
 }
@@ -80,6 +91,14 @@ void CGoblin_Assassin::Update(_float fTimeDelta)
 		return;
 
 	m_pFSM->Update_State(fTimeDelta);
+
+	m_vCaptureTimer.x += fTimeDelta;
+	if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
+		m_vCaptureTimer.x = 0.f;
+		if (FAILED(m_pModelCom->Capture_BoneBuffer(m_pMotionTrailCom, *m_pTransformCom->Get_WorldMatrixPtr()))) {
+			assert(false);
+		}
+	}
 
 	m_pModelCom->Play_Animation(fTimeDelta * m_fEasing, m_pTransformCom);
 
@@ -115,18 +134,9 @@ void CGoblin_Assassin::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
-
 	//m_pDetection->Set_Active(m_bDetection);
 
-
-	if (m_bDisolve) {
-		m_fDisolveTime += fTimeDelta*0.8f;
-		if (m_fDisolveTime >= 1.f)
-		{
-			m_fDisolveTime = 0.f;
-			m_bDisolve = false;
-		}
-	}
+	Update_Disolve(fTimeDelta, 0.8f);
 }
 
 void CGoblin_Assassin::Late_Update(_float fTimeDelta)
@@ -152,6 +162,9 @@ void CGoblin_Assassin::Late_Update(_float fTimeDelta)
 
 HRESULT CGoblin_Assassin::Render()
 {
+	if (m_bVisible == false)
+		return S_OK;
+
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -203,19 +216,6 @@ HRESULT CGoblin_Assassin::Render()
 		Render_OutLine();
 	}
 
-#ifdef _DEBUG
-	//if (true == m_pCharacter_Controller->IsActive()) {
-	//	if (FAILED(m_pCharacter_Controller->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
-	//else {
-	//	if (FAILED(m_pRigidBody->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
-#endif
-
 	if (0.f < m_fDeadRatio) {
 		_bool bDisolve = false;
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
@@ -228,6 +228,10 @@ HRESULT CGoblin_Assassin::Render()
 		_float zero = 0.f;
 		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
+	}
+
+	if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+		return E_FAIL;
 	}
 
 	return S_OK;
@@ -322,7 +326,7 @@ HRESULT CGoblin_Assassin::Render_Shadow(SHADOW eType)
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
@@ -333,6 +337,30 @@ HRESULT CGoblin_Assassin::Render_Shadow(SHADOW eType)
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CGoblin_Assassin::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
+{
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	for (_uint i = 0; i < iNumMeshes; i++) {
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix", m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		m_pContext->VSSetShaderResources(26, 1, &pSRV);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -352,10 +380,10 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
-	if (m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+	if (m_pFSM->IsEnable(FSMSTATE::BLINK | FSMSTATE::DEAD)) {
 		return;
 	}
-	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
 
 	m_pGoblinSpector->Set_Visible(false);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -398,9 +426,11 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
+			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
 			break;
 		}
 	}
@@ -470,7 +500,7 @@ HRESULT CGoblin_Assassin::Ready_Components()
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_ASSASSIN);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.001f;
@@ -490,7 +520,7 @@ HRESULT CGoblin_Assassin::Ready_Components()
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_ASSASSIN);
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
@@ -500,6 +530,16 @@ HRESULT CGoblin_Assassin::Ready_Components()
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN_ASSASSIN"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
+
+
+	{
+		CMotion_Trail::MOTIONTRAIL_RENDERFUNC funcDesc{};
+		funcDesc.funcRenderCall = [this](ID3D11ShaderResourceView* pSRV) { Render_MotionTrail(pSRV); };
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), (CComponent**)&m_pMotionTrailCom, &funcDesc))) {
+			return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -646,7 +686,7 @@ void CGoblin_Assassin::Free()
 	if (nullptr != m_pCallBack_HitReport) {
 		m_pCallBack_HitReport->Finalize();
 	}
-
+	SAFE_RELEASE(m_pMotionTrailCom);
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pSmoke);
@@ -682,13 +722,6 @@ void CGoblin_Assassin::Describe_Entity()
 		{
 			m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
 		}
-
-		XMFLOAT3 f3;
-		XMStoreFloat3(&f3, m_vOriginPos);
-
-		GUI::Text("Origin: %.2f, %.2f, %.2f", f3.x, f3.y, f3.z);
-
-		m_fLength = XMVectorGetX(XMVector2Length(m_pTransformCom->Get_State(STATE::POSITION) - m_vOriginPos));
 
 		GUI::Text("Length %.2f", m_fLength);
 

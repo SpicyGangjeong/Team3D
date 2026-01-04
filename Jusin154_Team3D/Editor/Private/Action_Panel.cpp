@@ -77,6 +77,31 @@ void CAction_Panel::Update(_float fTimeDelta)
 		return;
 	}
 
+	if (m_bFadeIn == true)
+	{
+		if (m_fAlpha <= 1.f)
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	if (m_bFadeOut == true)
+	{
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+			Visible(false);
+		}
+	}
+
 	Magic_Meter_Move();
 
 	__super::Update(fTimeDelta);

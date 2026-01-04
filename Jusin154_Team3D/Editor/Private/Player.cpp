@@ -77,7 +77,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Z_Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
 	m_pInfoInstance->Regist_PlayerAlly(this);
@@ -98,7 +98,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 #endif // _DEBUG
 
 	// UI 연동 추가
-	m_pModelCom->Set_Temp(true);
+	m_pModelCom->Set_DisableRootMotionScale(true);
 
 #ifdef gimch	
 	m_pCharacter_Controller->Set_GravityAmount(0.f);
@@ -571,8 +571,9 @@ void CPlayer::Describe_Entity()
 
 	m_pLightCom->Describe_Entity();
 
-#ifdef gimch
+#ifdef _DEBUG
 
+#if gimchi || 진우
 	if(m_pGameInstance->Key_Down(DIK_K))
 	{
 		_float3 vPos;
@@ -581,7 +582,8 @@ void CPlayer::Describe_Entity()
 			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&vPos),1.f));
 		}
 	}
-	
+#endif
+
 #endif // 
 
 

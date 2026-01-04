@@ -13,9 +13,6 @@
     <Filter Include="00.System\00.Device">
       <UniqueIdentifier>{f69b37d9-7bbc-4df3-9500-59519fc972d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Management">
-      <UniqueIdentifier>{6d1b87d2-f89a-4d0b-ab45-59354f66d995}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element">
       <UniqueIdentifier>{f56f4248-8206-42a9-935c-58a3da5f170e}</UniqueIdentifier>
     </Filter>
@@ -33,18 +30,6 @@
     </Filter>
     <Filter Include="01.Utility\03.RenderTargets">
       <UniqueIdentifier>{d7596dbd-fa1c-414b-9f4e-f05a1a982434}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Management\10.Collider_Manager">
-      <UniqueIdentifier>{ab763fcc-ac5b-4a2e-a99e-e96924a06c84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Management\11.Obstacle_Manager">
-      <UniqueIdentifier>{b22c46db-a0c1-469b-911c-47719a76ff7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Management\01.Prototype_Manager">
-      <UniqueIdentifier>{053fca41-962f-483d-a3d0-6569cdf188ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Management\00.GameObject_Manager">
-      <UniqueIdentifier>{1cc7e2f7-559a-4b58-9e84-bbfafb84f81c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Element\00.Level">
       <UniqueIdentifier>{beb918fe-e798-41b2-8076-6d0cbc525ada}</UniqueIdentifier>
@@ -76,9 +61,6 @@
     <Filter Include="02.Element\00.Level\Manager">
       <UniqueIdentifier>{b6b69002-3802-473d-85ec-6263e54cfe5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Management\00.GameObject_Manager\Layer">
-      <UniqueIdentifier>{84644f2b-5f42-44e4-a193-68914e22f66d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\02.Component\00.Transform">
       <UniqueIdentifier>{89f6e50e-7dd3-4abb-b77b-3ce6250bf1ee}</UniqueIdentifier>
     </Filter>
@@ -96,9 +78,6 @@
     </Filter>
     <Filter Include="02.Element\02.Component\02.VIBuffer\Rect">
       <UniqueIdentifier>{5fec6152-84b6-4811-a2ee-f5f1044cc1eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Management\20.Camera_Manager">
-      <UniqueIdentifier>{b89f3382-3069-4263-8e56-6116866a2518}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Element\02.Component\03.Texture">
       <UniqueIdentifier>{56c197ea-fb6f-4138-91da-c5b0c7625d82}</UniqueIdentifier>
@@ -187,9 +166,6 @@
     <Filter Include="01.Utility\06.ComputeShader">
       <UniqueIdentifier>{96600587-16b1-4627-914d-7fc413c501ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Management\21.PhysX_Manager">
-      <UniqueIdentifier>{5e6a85cd-455a-4161-83c8-ba5f4ce2ba41}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\02.Component\07.RigidBody">
       <UniqueIdentifier>{5c89d610-7e57-40a5-bc65-04e5fa25df89}</UniqueIdentifier>
     </Filter>
@@ -213,9 +189,6 @@
     </Filter>
     <Filter Include="02.Element\02.Component\07.RigidBody\00.Static">
       <UniqueIdentifier>{fda41884-634b-4dd4-8bd2-f6f7ad68ab1f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Management\03.Light_Manager">
-      <UniqueIdentifier>{8727e975-e9e2-4b59-9a52-27ad3ad79f2f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Element\02.Component\08.Character_Controller\CallBack">
       <UniqueIdentifier>{05865481-fa20-4432-a5a7-945d4f8c7f3c}</UniqueIdentifier>
@@ -286,14 +259,8 @@
     <Filter Include="01.Utility\07.Fog">
       <UniqueIdentifier>{d566d9e6-6183-48dc-a196-25fd47a10c48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Management\02.Resource_Manager">
-      <UniqueIdentifier>{685d2cc6-b29a-4018-b72f-d66a2807463d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\02.Component\09.Light">
       <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Element\01.GameObject\01. Font">
-      <UniqueIdentifier>{7eab7292-025e-40d7-aa71-73e7a3c71ea7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Element\02.Component\12.Stat">
       <UniqueIdentifier>{ea9648d8-6a9a-41d2-8b8f-ea6937017372}</UniqueIdentifier>
@@ -313,8 +280,44 @@
     <Filter Include="01.Utility\08.Volumetric">
       <UniqueIdentifier>{950977f0-f3c9-42f1-83f1-270b4bebf7ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Motion_Trail">
+      <UniqueIdentifier>{65468ca4-fa85-43ff-a574-02e68fba1b36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management">
+      <UniqueIdentifier>{6d1b87d2-f89a-4d0b-ab45-59354f66d995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\10.Collider_Manager">
+      <UniqueIdentifier>{ab763fcc-ac5b-4a2e-a99e-e96924a06c84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\11.Obstacle_Manager">
+      <UniqueIdentifier>{b22c46db-a0c1-469b-911c-47719a76ff7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\01.Prototype_Manager">
+      <UniqueIdentifier>{053fca41-962f-483d-a3d0-6569cdf188ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\00.GameObject_Manager">
+      <UniqueIdentifier>{1cc7e2f7-559a-4b58-9e84-bbfafb84f81c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\00.GameObject_Manager\Layer">
+      <UniqueIdentifier>{84644f2b-5f42-44e4-a193-68914e22f66d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\20.Camera_Manager">
+      <UniqueIdentifier>{b89f3382-3069-4263-8e56-6116866a2518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\21.PhysX_Manager">
+      <UniqueIdentifier>{5e6a85cd-455a-4161-83c8-ba5f4ce2ba41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\03.Light_Manager">
+      <UniqueIdentifier>{8727e975-e9e2-4b59-9a52-27ad3ad79f2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\02.Resource_Manager">
+      <UniqueIdentifier>{685d2cc6-b29a-4018-b72f-d66a2807463d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="03.Management\04.Font_Manager">
       <UniqueIdentifier>{bba1e91b-87a8-4a7b-8e4e-b42d2041d8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\01.Font">
+      <UniqueIdentifier>{7eab7292-025e-40d7-aa71-73e7a3c71ea7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -577,7 +580,7 @@
       <Filter>03.Management\04.Font_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Font.cpp">
-      <Filter>02.Element\01.GameObject\01. Font</Filter>
+      <Filter>02.Element\01.GameObject\01.Font</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Stat.cpp">
       <Filter>02.Element\02.Component\12.Stat</Filter>
@@ -602,6 +605,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dynamic_D6Joint.cpp">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Motion_Trail.cpp">
+      <Filter>02.Element\02.Component\06.Model\Motion_Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1230,7 +1236,7 @@
       <Filter>03.Management\04.Font_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Font.h">
-      <Filter>02.Element\01.GameObject\01. Font</Filter>
+      <Filter>02.Element\01.GameObject\01.Font</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Stat.h">
       <Filter>02.Element\02.Component\12.Stat</Filter>
@@ -1255,6 +1261,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Dynamic_D6Joint.h">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Motion_Trail.h">
+      <Filter>02.Element\02.Component\06.Model\Motion_Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -77,9 +77,9 @@ protected:
 	void				Update_Event(_float fTimeDelta);
 	HRESULT				Reset_EffectParts();
 	_int				CollisionCheck();
-	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
-	ON_COLLISION_INFO	MonsterSweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
-	ON_COLLISION_INFO	MonsterRayCast(_vector StartPos, _vector vDir, _float fLength, _uint iMaxHitCapacity);
+	ON_COLLISION_INFO	SweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	MonsterSweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	MonsterRayCast(_fvector StartPos, _fvector vDir, _float fLength, _uint iMaxHitCapacity);
 
 protected:
 	_float4							m_vStartPos = {};

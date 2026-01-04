@@ -127,8 +127,6 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pVIBufferInstanceCom))))
 		return E_FAIL;
 
-
-
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))

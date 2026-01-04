@@ -50,6 +50,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_OutLine() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	HRESULT Render_MotionTrail(ID3D11ShaderResourceView* pSRV);
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -99,11 +100,8 @@ private:
 	_bool m_bFireBurst = { false };
 	_bool m_bTucked = {false};
 	_bool m_bHoverDash = { false };
-	_vector m_vMoveDir = XMVectorZero();
 
-
-
-	vector<vector<_vector>> m_Points;
+	vector<vector<_float4>> m_Points;
 	_int m_iCurrentPoint = 0;
 	_int m_iCurrentFlow = 0;
 
@@ -113,16 +111,36 @@ private:
 	_float m_fAroundTime = {};
 	_float m_fRushTime = {};
 	_float m_fHeadAimWeight = {};
+	_float m_fPrevHpRatio = {};
+	_int   m_iBreathRand = {};
+	_bool  m_bMotionTrail = {};
+
+	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
-	_float					 m_fTuckedSpeed = { 50.f };
+	_float					 m_fTuckedSpeed = { 90.f };
+
+
+	class CEffectParts* m_pLeftSmoke = { nullptr };
+	class CEffectParts* m_pRightSmoke = { nullptr };
+	class CEffectParts* m_pBottomSmoke = { nullptr };
+
+	class CEffectParts* m_pRightPt = { nullptr };
+	class CEffectParts* m_pLeftPt = { nullptr };
+
+	class CTrailObject* m_pRightEye_Trail = { nullptr };
+	class CTrailObject* m_pLeftEye_Trail = { nullptr };
+
+
+	const _float4x4* m_pLeftEye_BoneMat = { nullptr };
+	const _float4x4* m_pRightEye_BoneMat = { nullptr };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
 
 	void	Behavior_IdleBreakEnter();
-	HRESULT Behavior_IdleBreakExitCheck();
+	HRESULT Behavior_IdleBreakExitCheck(_float fTimeDelta);
 	void	Behavior_IdleBreakExit();
 
 	void	Behavior_MoveEnter();
@@ -188,6 +206,10 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
+
+
+	virtual _bool IsHitStateDisabled() override;
+	virtual _bool IsHitSpellDisabled() override;
 };
 
 NS_END

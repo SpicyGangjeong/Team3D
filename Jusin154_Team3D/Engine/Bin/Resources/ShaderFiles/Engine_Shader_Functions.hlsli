@@ -18,7 +18,7 @@ bool AlmostEqual3(float fA, float fB)
     return abs(fA - fB) < FLT_EPSILON3;
 }
 
-float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vShadowMapSize, float bias)
+float ShadowVisibility_hwPCF(Texture2D<float> ShadowMap, float4 vLightClip, float2 vShadowMapSize, float bias, float fRange)
 {
     float2 uv = float2(vLightClip.x / vLightClip.w, -vLightClip.y / vLightClip.w) * 0.5f + 0.5f;
     float fDepthCenter = saturate(vLightClip.z / vLightClip.w);
@@ -29,8 +29,8 @@ float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vSha
     {
         for (int u = -1; u <= 1; ++u)
         {
-            float2 vOffset = float2(u, v) * vTexel;
-            float fDepth = ShadowMap.Sample(BorderOneSampler, uv + vOffset).x;
+            float2 vOffset = float2(u, v) * vTexel * fRange;
+            float fDepth = ShadowMap.Sample(BorderOneSampler, uv + vOffset);
             fVisibility += (fDepthCenter - bias > fDepth) ? 0.f : 1.f;
         }
     }
@@ -70,14 +70,15 @@ float2 Get_MovedUV(float2 vOriginalUV, float fDeltaU, float fDeltaV, uint iIndex
     float2 vOffset = float2(iIndexU * fDeltaU, iIndexV * fDeltaV);
     return vOriginalUV * vDelta + vOffset;
 }
-float2 UV_Cutting(float2 vUV, float2 vUVCutting, int iCurrentFrame)
+
+float2 UV_Cutting(float2 vUV, float2 vUVCutting, uint iCurrentFrame)
 {
     float2 UV = vUV; // 이미지의 UV값
     
-    int iTotalFrame = vUVCutting.x * vUVCutting.y; // 이미지의 최대 프레임 (몇 곱하기 몇인지)
+    uint iTotalFrame = vUVCutting.x * vUVCutting.y; // 이미지의 최대 프레임 (몇 곱하기 몇인지)
     
-    int iFrameX = iCurrentFrame % (int) vUVCutting.x; // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
-    int iFrameY = iCurrentFrame / (int) vUVCutting.x; // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
+    uint iFrameX = iCurrentFrame % (uint) vUVCutting.x; // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
+    uint iFrameY = iCurrentFrame / (uint) vUVCutting.x; // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
     
     float fFreamWidth = 1.0 / vUVCutting.x; // 1.0 나누기 이미지 갯수를 해서 한칸에 얼마나 갈지 정해준다.
     float fFreamHeight = 1.0 / vUVCutting.y; // 1.0 나누기 이미지 갯수를 해서 한줄에 얼마나 갈지 정해준다.

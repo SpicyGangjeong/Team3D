@@ -237,7 +237,7 @@ technique11 NorTexTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
     pass TerrainPass // 1
@@ -246,7 +246,7 @@ technique11 NorTexTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
     pass Environment_Terrain_Pass // 2
@@ -255,16 +255,15 @@ technique11 NorTexTechnique11
         SetDepthStencilState(DSS_Default_Environment_SWrite, 1);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_TERRAIN_ANISO();
     }
     pass ShadowPass // 3
     {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_Less, 0);
+        SetRasterizerState(RS_Shadow);
+        SetDepthStencilState(DSS_ShadowWrite, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
-        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 }

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Transform.h"
 #include "VIBuffer_Rect.h"
+#include "Motion_Trail.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Cell.h"
 #include "Shader.h"

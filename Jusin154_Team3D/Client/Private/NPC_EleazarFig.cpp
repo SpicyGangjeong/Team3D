@@ -36,20 +36,17 @@ void CNPC_EleazarFig::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
 	{ // 세트
 		m_pCallBack_HitReport->BeginFrame();
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
-
-	//m_pNPCInteraction->Set_Visible(0 < m_iEntered);
 }
 
 void CNPC_EleazarFig::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
-
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
@@ -117,7 +114,7 @@ HRESULT CNPC_EleazarFig::Render_Shadow(SHADOW eType)
 		{
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
@@ -191,6 +188,7 @@ HRESULT CNPC_EleazarFig::Initialize(void* pArg)
 	m_pModelCom->Set_AnimationIndex(0, true);
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
+	m_bNpc = true;
 	return S_OK;
 }
 
@@ -215,19 +213,18 @@ HRESULT CNPC_EleazarFig::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
 	}
-
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::ELEAZARFIG);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.0001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.02f };
-		Desc.fRadius = 0.5f;
-		Desc.fHeight = 0.6f;
+		Desc.fRadius = 0.2f;
+		Desc.fHeight = 0.3f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_NonPlayable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
@@ -277,8 +274,8 @@ void CNPC_EleazarFig::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pCharacter_Controller);
+	SAFE_RELEASE(m_pRigidBody);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

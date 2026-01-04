@@ -43,6 +43,12 @@ struct VS_OUT
     float4 vPrevProjPos : TEXCOORD4;
 };
 
+struct VS_OUT_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
 VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_OUT Out = (VS_OUT) 0;
@@ -74,6 +80,26 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
     return Out;
 }
 
+VS_OUT_SHADOW VS_SHADOW(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+
+    matrix matW, matWV, matWVP;
+    matrix matPrevW, matPrevWV, matPrevWVP;
+    
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    
+    matW = TransformMatrix;
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    
+    Out.vPosition = vPosition;
+    return Out;
+}
+
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -94,6 +120,17 @@ struct PS_OUT
     float4 vColor : SV_Target3;
     float4 vSurface : SV_Target4;
     float2 vVelocityUV : SV_Target5;
+};
+
+struct PS_OUT_SHADOW
+{
+    float fShadowLightDepth : SV_TARGET0;
+};
+
+struct PS_IN_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
 };
 
 struct PS_OUT_BLOOM
@@ -124,6 +161,16 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vSurface = float4(g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord).xy, 1.f, 1.f);
     Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
 
+    return Out;
+}
+
+PS_OUT_SHADOW PS_SHADOW(PS_IN_SHADOW In)
+{
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+    
+    clip(g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord).a - 0.4f);
+    
+    Out.fShadowLightDepth = In.vPosition.z;
     return Out;
 }
 
@@ -164,7 +211,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -174,7 +221,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_LIGHT();
     }
 
@@ -184,8 +231,17 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_BLOOM();
+    }
+
+    pass Shadow
+    {
+        SetRasterizerState(RS_Shadow);
+        SetDepthStencilState(DSS_ShadowWrite, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_SHADOW();
+        PixelShader = compile ps_5_0 PS_SHADOW();
     }
 }
 

@@ -94,7 +94,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	Info.pAI = this;
 	Info.curRing = 0;
-	Info.prevPos = Get_WorldPostion();
+	XMStoreFloat4(&Info.prevPos,Get_WorldPostion());
 
 	m_pBroomRaceManager->Push_BroomRacer(Info);
 
@@ -269,7 +269,7 @@ HRESULT CBroomRacerAI::Ready_Components()
 		m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
 		break;
 	case 2:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_Ghost_Peeves_Model");
+		m_strModelPrototypeTag = TEXT("Prototype_Component_ChiyoKogawa_Model");
 		break;
 	default:
 		break;
@@ -734,8 +734,6 @@ void CBroomRacerAI::Add_FSM()
 #pragma endregion
 
 }
-
-
 
 void CBroomRacerAI::Set_Input(_float fTimeDelta)
 {

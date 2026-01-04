@@ -34,7 +34,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 		SAFE_ADDREF(pChannel);
 	}
 }
-_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask,_vector vector[3], _int RootBoneIndex)
+_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex)
 {
 	m_fTempTrack += fTimeDelta * m_fAnimSpeed;
 	m_fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
@@ -50,12 +50,12 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 			Depart_Animation();
 			m_fCurrentTrackPosition = m_fProgress;
 			m_fTempTrack = 0.f;
-			ProgressAnimation(Bones,  bIsSpine, BoneMask, vector, RootBoneIndex);
+			ProgressAnimation(Bones,  bIsSpine, BoneMask, OutScale,OutRotation,OutTranslation, RootBoneIndex);
 			return true;
 		}
 	}
 
-	ProgressAnimation(Bones, bIsSpine, BoneMask, vector, RootBoneIndex);
+	ProgressAnimation(Bones, bIsSpine, BoneMask, OutScale, OutRotation, OutTranslation, RootBoneIndex);
 
 	return false;
 }
@@ -420,14 +420,14 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const CModel* pModel
 	return S_OK;
 }
 
-void CAnimation::ProgressAnimation(const vector<CBone*>& Bones,  _bool bIsSpine,vector<_uint>BoneMask,_vector vector[3], _int RootBoneIndex)
+void CAnimation::ProgressAnimation(const vector<CBone*>& Bones,  _bool bIsSpine,vector<_uint>BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex)
 {
 	_uint iIndex = {};
 	if (m_vBoneTransformationMatrix.size() > 0) {
 		m_vBoneTransformationMatrix.clear();
 	}
 	for (auto& pChannel : m_Channels) {
-		pChannel->Update_TransformationMatirx(Bones,  m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++], bIsSpine, BoneMask, vector,RootBoneIndex);
+		pChannel->Update_TransformationMatirx(Bones,  m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++], bIsSpine, BoneMask, OutScale, OutRotation, OutTranslation,RootBoneIndex);
 		m_vBoneTransformationMatrix.push_back(pChannel->Get_BoneTransformationMatrix());
 	}
 }

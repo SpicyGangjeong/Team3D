@@ -111,16 +111,22 @@ HRESULT CInstancedProp_Light::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_bEnableRigidbody = pDesc->bEnableRigidbody;
 	m_iGlassMeshIndex = pDesc->iGlassMeshIndex;
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	Load_InstancedProp(pDesc->strInstanceDataPath.c_str());
-
 	m_iNumMesh = m_pVIBufferInstanceCom->Get_NumMesh();
 
+	if(m_bEnableRigidbody)
+	{
+		if (FAILED(ReadyForPhysX()))
+			return E_FAIL;
+	}
+
+	if (FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str())))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -133,7 +139,7 @@ HRESULT CInstancedProp_Light::Ready_Components(void* pArg)
 	INSTANCE_PROP_LIGHT_DESC* pDesc = static_cast<INSTANCE_PROP_LIGHT_DESC*>(pArg);
 
 	/* Com_VIBuffer_Instance_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->strPrototypeTag,
+	if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, pDesc->strPrototypeTag,
 		reinterpret_cast<CComponent**>(&m_pVIBufferInstanceCom))))
 		return E_FAIL;
 
@@ -180,6 +186,15 @@ HRESULT CInstancedProp_Light::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CInstancedProp_Light::ReadyForPhysX()
+{
+	if (FAILED(m_pVIBufferInstanceCom->Ready_PhysXMeshes(NEXT_LEVEL))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CInstancedProp_Light::Load_InstancedProp(const _char* pFilePath)
 {
 	ifstream FileIn(pFilePath, ios::binary);
@@ -192,18 +207,47 @@ HRESULT CInstancedProp_Light::Load_InstancedProp(const _char* pFilePath)
 
 	vector<_float4x4> WorldMatrices = {};
 
-	_uint iNumWorldMatrix = 0;
+#pragma region FOR RIGIDBODY
+	CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
 
-	FileIn.read(reinterpret_cast<char*>(&iNumWorldMatrix), sizeof(_uint));
-	WorldMatrices.reserve(iNumWorldMatrix);
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+
+	vector<_wstring> RigidBodyTags;
+
+
+	for (_uint i = 0; i < m_iNumMesh; ++i)
+	{
+		RigidBodyTags.push_back(CMyTools::ToWstring(m_pVIBufferInstanceCom->Get_MeshName(i)) + to_wstring(i));
+	}
+#pragma endregion
+
+	FileIn.read(reinterpret_cast<char*>(&m_iNumInstacne), sizeof(_uint));
+	WorldMatrices.reserve(m_iNumInstacne);
 
 	_float4x4 WorldMatrix = {};
 
-	for (_uint i = 0; i < iNumWorldMatrix; ++i)
+	for (_uint i = 0; i < m_iNumInstacne; ++i)
 	{
 		FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
 
 		WorldMatrices.push_back(WorldMatrix);
+
+		if (m_bEnableRigidbody)
+		{
+			for (_uint i = 0; i < m_iNumMesh; ++i)
+			{
+				CRigidBody_Static* pRigidBody = { nullptr };
+				CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+				Desc.pMeshName = RigidBodyTags[i].c_str();
+				Desc.pWorldMatrix = &WorldMatrix;
+				if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, RigidBodyTags[i], (CComponent**)&pRigidBody, &Desc))) {
+					return E_FAIL;
+				}
+
+				m_RigidBody.push_back(pRigidBody);
+			}
+
+		}
 	}
 	FileIn.close();
 
@@ -245,6 +289,11 @@ CGameObject* CInstancedProp_Light::Clone(void* pArg, CGameObject* pOwner)
 void CInstancedProp_Light::Free()
 {
 	__super::Free();
+
+	for (auto& pRigidBody : m_RigidBody)
+	{
+		SAFE_RELEASE(pRigidBody);
+	}
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferInstanceCom);

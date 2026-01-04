@@ -58,11 +58,12 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 	MODEL Get_Type() { return m_eType; }
-	void Set_Temp(_bool Temp) { m_bTemp = Temp; }
-	void Set_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
-	void Set_HeadPos(_vector vHeadPos) { m_vHeadPos = vHeadPos; }
+	void Set_DisableRootMotionScale(_bool Disable) { m_bDisableRootMotionScale = Disable; }
+	void Set_TargetPos(_float4 vTargetPos) { m_vTargetPos = vTargetPos; }
+	void Set_HeadPos(_float4 vHeadPos) { m_vHeadPos = vHeadPos; }
 	void Play_HeadBone(_bool bPlay) { m_bHeadBone = bPlay; }
 	void Set_HeadAimWeight(_float fWeight) { m_fHeadAimWeight = fWeight; }
+	_float Get_HeadAimWeight() { return m_fHeadAimWeight; }
 	_bool Get_PlayHeadBone() const { return m_bHeadBone; }
 	_int Get_SkipBoneIndex(_int Index) { return m_SkipBoneindex[Index]; }
 	vector<_uint> Get_BoneMask(_int iIndex){ return m_BoneMask[iIndex]; }
@@ -71,7 +72,8 @@ public:
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
 	_bool			Play_Anim(_float fTimeDelta, CTransform* pTransform);
 	_bool			Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform);
-	void			Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false,_float fAnimSpeed = 1.f,_bool bRootBone = true);
+	_bool			IsBlending() const;
+	void			Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false,_float fAnimSpeed = 1.f,_bool bRootBone = true, _bool bQueuedAnim = false);
 	void			Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLoop = false);
 	_bool			IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool			IsFinishedSecondAnim() const { return m_bIsSecondFinishedAnim; }
@@ -93,6 +95,8 @@ public:
 	HRESULT Anim_Event(_float fRatio, _uint AnimIndex, function<void()> Event);
 
 	void Set_BlendDuration(_float Duration) { m_fBlendDuration = Duration; }
+
+	_float4 Get_RootBoneMomentum() { return m_RootBoneMomentum; }
 #pragma endregion
 #pragma region Mesh
 	const _char*		Get_MeshName(_uint iIndex);
@@ -106,7 +110,7 @@ public:
 	void				Apply_CPU_HeadAim();
 	void				Apply_CPUMask_ToBones();
 	void				Mark_CPUChain(_int boneIdx);
-	class CMesh* Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
+	class CMesh*		Get_Mesh(_uint iIndex) { return m_Meshes[iIndex]; }
 #pragma endregion
 #pragma region Bone
 	const _float4x4*	Get_BoneMatrixPtr(const _char* pBoneName);
@@ -120,7 +124,9 @@ public:
 	void				Combined_BoneMatrix();
 	void				Combined_BoneMatrix(_int iStartBoneIndex, _uint iBoneCount);
 	_int				Find_BoneIndex(const _char* pBoneName);
+	_uint				Get_BoneAbsoluteCount();
 	HRESULT				Set_BoneCombinedTransformation(const _char* pBoneName, _fmatrix newTransformation);
+	HRESULT				Capture_BoneBuffer(class CMotion_Trail* pTrail, const _float4x4& CurrentWorldMatrix);
 //	HRESULT				Set_BoneLocalTransformationMatrix(const _char* pBoneName, _fmatrix newTransformation);
 
 #pragma endregion
@@ -163,7 +169,7 @@ private:
 
 	_float4x4					m_PreTransformMatrix = {};			// 사전에 루트본에 곱해줄 매트릭스
 	vector<class CMesh*>		m_Meshes;							// 메쉬의 벡터
-	vector<PSX::PxTriangleMesh*> m_TriMeshes = {};			// 피직스 메쉬의 갯수
+	vector<PSX::PxTriangleMesh*>m_TriMeshes = {};			// 피직스 메쉬의 갯수
 	_uint						m_iNumPhysXMeshes = {};				// 피직스 메쉬의 갯수
 	_uint						m_iNumMeshes = {};					// 메쉬의 갯수
 	_uint						m_iNumMaterials = {};				// 머테리얼의 갯수
@@ -193,7 +199,7 @@ private:
 
 	_matrix						m_PrevAnimationMatrix = XMMatrixIdentity(); // 루트본의 이전 위치
 	_matrix						m_DeltaAnimationMatrix = {};		// 루트본의 델타애니메이션
-	class CTransform* m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
+	class CTransform*			m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
 
 	_float						m_fRatio = {};
 	_int						m_iCurrSecondAnimIndex = { -1 };
@@ -216,24 +222,31 @@ private:
 	_float						m_fRadius = { 0.f };			// 컬링용 Radius
 	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
 	_uint						m_iIndexAnimPlayableMesh = { 0 };
-	_vector						m_vector[3];
+	_float4						m_OutScale;
+	_float4						m_OutRotation;
+	_float4						m_OutTranslation;
 
-	vector<_uint>			m_iBoneMask;
-	_bool					m_bInitialRootPos = { false };
-	_bool					m_bInitialRootRotSaved = { false };
-	_bool					m_bLoopRestarted = false;
-	_bool					m_bIsSecondFinishedAnim = { false };
-	_bool					m_bIsSecondLoop = { false };
-	_bool					m_bRatio = { false };
-	_bool					m_bRootBone = {};
-	_float4x4				m_RootMatrix = {};
-	_bool					m_bTemp = {false};
-	_vector					m_vTargetPos = XMVectorZero();
-	_vector					m_vHeadPos = XMVectorZero();
-	_bool					m_bHeadBone = { false };
-	_float					m_fHeadAimWeight = { 0.f };
-	_int					m_iSkipBoneCount = {};
-	vector<_int>			m_SkipBoneindex = {};
+
+	vector<_uint>				m_iBoneMask;
+	_bool						m_bInitialRootPos = { false };
+	_bool						m_bInitialRootRotSaved = { false };
+	_bool						m_bLoopRestarted = false;
+	_bool						m_bIsSecondFinishedAnim = { false };
+	_bool						m_bIsSecondLoop = { false };
+	_bool						m_bRatio = { false };
+	_bool						m_bRootBone = {};
+	_float4x4					m_RootMatrix = {};
+	_bool						m_bDisableRootMotionScale = {false};
+	_float4						m_vTargetPos = {};
+	_float4						m_vHeadPos = {};
+	_bool						m_bHeadBone = { false };
+	_float						m_fHeadAimWeight = { 0.f };
+	_int						m_iSkipBoneCount = {};
+	vector<_int>				m_SkipBoneindex = {};
+	_int						m_iQueuedAnimIndex = -1;
+	_bool						m_bQueuedLoop = false;
+	_bool						m_bQueuedAnim = { false };
+	_float4						m_RootBoneMomentum = {};
 
 
 private:

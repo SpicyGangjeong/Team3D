@@ -74,7 +74,10 @@ private:
 #pragma region TunningParameters
 	/* TunningParam  */
 	// Variable
-	_float m_fLightSpecularMaximum = { 1.f };
+	_float m_fLightSpecularMaximum = { 2.f };
+	_float m_fNearShadowBias = { 0.05f };
+	_float m_fFarShadowBias = { 1.f };
+	_float m_fMinShadowBrightness = { 0.47f };
 
 	// MotionBlur 
 	_float	m_fMBBlurRadius = { 28.f };
@@ -94,16 +97,16 @@ private:
 	_float	m_fBloomThreshold = { 1.26f };
 	
 	// DOF Environment
-	_float	m_fDOF_ENV_CutThreshold = { 0.1350f };
-	_float	m_fDOF_ENV_FocusDistance = { 31.1f };
-	_float	m_fDOF_ENV_StartDistance = { 130.f };
-	_float	m_fDOF_ENV_MaxEnd = { 350.f };
-	_float	m_fDOF_ENV_AmountRadius = { 1.f };
+	_float	m_fDOF_ENV_CutThreshold = { 0.191f };
+	_float	m_fDOF_ENV_FocusDistance = { 38.f };
+	_float	m_fDOF_ENV_StartDistance = { 88.f };
+	_float	m_fDOF_ENV_MaxEnd = { 237.f };
+	_float	m_fDOF_ENV_AmountRadius = { 1.2f };
 
 	// SSAO
-	_float	m_fSSAO_Radius	= { 1.6300f };
-	_float	m_fSSAO_BIAS	= { 0.234f };
-	_float	m_fSSAOStrength = { 2.83f };
+	_float	m_fSSAO_Radius	= { 0.543f };
+	_float	m_fSSAO_BIAS	= { 0.401f };
+	_float	m_fSSAOStrength = { 4.f };
 
 	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
 	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};

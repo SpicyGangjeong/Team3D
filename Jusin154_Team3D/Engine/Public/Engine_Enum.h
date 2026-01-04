@@ -14,7 +14,7 @@ enum class STAT { NAME, CURRENTHP, MAXHP, TARGETHP, MELEE, MAGIC, DEFENSE, SPEED
 enum class SHADOW : _ubyte { 
 		SHADOW_NEAR		= 1 << 0
 	,	SHADOW_MIDDLE	= 1 << 1
-	,	SHADOW_FAR		= 1 << 2
+	,	SHADOW_FAR		= 1 << 2 // Far는 현재 미사용
 	,	SHADOW_PRE		= 1 << 3
 ////////////////
 	,	END = 3 // 케스케이드 셰도우 한정
@@ -139,7 +139,7 @@ enum class PXOBJECT : _uint {
 	MONSTER = 30,
 	GOBLIN_WARRIOR,		// 31
 	GOBLIN_MAGICIAN,
-	GOBLIN_THEIF,
+	GOBLIN_ASSASSIN,
 	TROLL,
 	PENSIVE_GUARDIAN,
 	RANROK,
@@ -227,12 +227,13 @@ enum class PXOBJECT : _uint {
 	END = 999
 };
 
-enum class HIT_TYPE : _ubyte
+enum class HIT_TYPE
 {
 	HIT_NONE = 0,				// 히트모션 없음
-	HIT_PROJECTILE = 1 << 0,   // 발사체
-	HIT_MEDIUM = 1 << 1,   // 적당한 공격
-	HIT_HEAVY = 1 << 2,   // 강공격
+	HIT_PROJECTILE,				// 발사체
+	HIT_MEDIUM,				// 적당한 공격
+	HIT_HEAVY,				// 강공격
+	END
 };
 
 

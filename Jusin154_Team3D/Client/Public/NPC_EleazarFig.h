@@ -35,7 +35,7 @@ protected:
 
 	_int				m_iEntered = { 0 };
 	_float2				m_vEnteringTimer = { 0.f, 1.f };
-	_float				m_fEncounterDistance = { 3.f };
+	_float				m_fEncounterDistance = { 8.f };
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

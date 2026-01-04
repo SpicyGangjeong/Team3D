@@ -168,6 +168,9 @@ void CMapElement_Interactable::GrapToPlayer(_fvector vPos, _float fRatio)
 
 void CMapElement_Interactable::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (m_bThrow == false)
+		return;
+
 	if (m_bHit == false)
 		return;
 
@@ -275,12 +278,12 @@ HRESULT CMapElement_Interactable::Render_OutLine()
 	Compute_Depth();
 	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
 	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
-	m_fOutLineThickness = CMyTools::Lerp_f1D(1.5f, 2.f, fRatio);
-	if (m_fOutLineThickness > 0.15f) {
-		m_fOutLineThickness = 0.15f;
+	m_fOutLineThickness = CMyTools::Lerp_f1D(0.8f, 1.2f, fRatio);
+	if (m_fOutLineThickness > 0.023f) {
+		m_fOutLineThickness = 0.023f;
 	}
-	else if (m_fOutLineThickness < 0.07f) {
-		m_fOutLineThickness = 0.07f;
+	else if (m_fOutLineThickness < 0.013f) {
+		m_fOutLineThickness = 0.013f;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
@@ -384,7 +387,19 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 					m_bHit = true;
 				}
 				break;
+				case PXOBJECT::GOBLIN_ASSASSIN:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
 				case PXOBJECT::TROLL:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::RANROK:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;

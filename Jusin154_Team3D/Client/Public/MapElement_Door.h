@@ -34,7 +34,7 @@ private:
 	PSX::PxRevoluteJoint* m_pJoint = { nullptr };
 
 	_float3		m_vRadianYAngle = {};
-	_float3		m_vKinematicTimer = { 0.f, 2.f, 2.3f };
+	_float3		m_vKinematicTimer = { 0.f, 3.f, 3.3f };
 	_bool		m_bDrive = { false };
 #ifdef _DEBUG
 	_bool m_bUseSelectColor = { true };

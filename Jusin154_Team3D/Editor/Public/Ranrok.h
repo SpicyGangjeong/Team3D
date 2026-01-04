@@ -98,11 +98,24 @@ private:
 	_bool m_bFireBurst = { false };
 	_bool m_bTucked = {false};
 	_bool m_bHoverDash = { false };
-	_vector m_vMoveDir = XMVectorZero();
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 
-	vector<vector<_vector>> m_Points;
+	class CEditEffect* m_pLeftSmoke = { nullptr };
+	class CEditEffect* m_pRightSmoke = { nullptr };
+	class CEditEffect* m_pBottomSmoke = { nullptr };
+
+	class CEditEffect* m_pRightPt = { nullptr };
+	class CEditEffect* m_pLeftPt= { nullptr };
+
+	class CTrailObject* m_pRightEye_Trail = { nullptr };
+	class CTrailObject* m_pLeftEye_Trail = { nullptr };
+
+
+	const _float4x4* m_pLeftEye_BoneMat = { nullptr };
+	const _float4x4* m_pRightEye_BoneMat = { nullptr };
+
+	vector<vector<_float4>> m_Points;
 	_int m_iCurrentPoint = 0;
 	_int m_iCurrentFlow = 0;
 
@@ -112,6 +125,7 @@ private:
 	_float m_fAroundTime = {};
 	_float m_fRushTime = {};
 	_float m_fTuckedSpeed = { 75.f};
+
 
 
 	void	Behavior_IdleEnter();

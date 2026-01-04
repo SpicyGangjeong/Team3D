@@ -120,7 +120,7 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(vCamPosition - XMLoadFloat4(&m_vExtentPosition)));
 
-		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (fRaius * fRaius + 40000.f)));
+		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (fRaius * fRaius + 10000.f)));
 
 		if (m_pGameInstance->Key_Pressing(DIK_Z))
 			m_iLodIndex = 0;
@@ -407,7 +407,7 @@ void CMapObject_LOD::Describe_Entity()
 					_wstring dest = CMyTools::ToWstring(m_pModelComs[iModelIndex]->Get_MeshName(iMeshIndex) + to_string(iMeshIndex)).c_str();
 					Desc.pMeshName = dest.c_str();
 					Desc.iSubKind = 998;
-
+					Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 					if (FAILED(Add_Asset_Component(g_iStaticLevel, Desc.pMeshName, nullptr, &Desc))) {
 						assert(false);
 					}

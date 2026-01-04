@@ -37,6 +37,7 @@ public:
 	void Set_RaceInfo();
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
+	void Set_OpenDoor(_bool bOpen) { m_bOpenDoor = bOpen; }
 	void UpdateGrapInteractive(_float fTimeDelta);
 	void Update_CameraShake(_float fTimeDelta);
 	HRESULT Update_RaycastElements();
@@ -49,9 +50,13 @@ private:
 	class CMapElement_Interactable* m_pGrapInteractive = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
+	CGameObject* m_pCurrentNpcInteraction = { nullptr };
+
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
 	_bool m_bCameraShake = { false };
+
+	_bool m_bNpcInteraction = { false };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
@@ -93,6 +98,7 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
+	void CheckMouseInput();
 	void ReLockOnTarget();
 	void SetGravity();
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
@@ -159,9 +165,8 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	_float			m_fNoInputTime = 0.f;
-	_float			m_fNeutralTime = 0.f; 
 	array<_float4x4, 256> SkinMatrices;
+	_bool			m_bOpenDoor = { false };
 
 	/* 무적 불 변수*/
 #ifdef _DEBUG

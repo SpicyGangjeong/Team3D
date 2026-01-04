@@ -237,7 +237,7 @@ CGameObject* CBroom_Finish::Clone(void* pArg, CGameObject* pOwner)
 }
 
 void CBroom_Finish::Free()
-{
+{	
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);

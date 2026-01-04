@@ -783,9 +783,9 @@ HRESULT CGameInstance::Bind_CascadeSplitRatio(CShader* pShader, const _char* pCo
 	return m_pPipeLine->Bind_CascadeSplitRatio(pShader, pConstantName, bNear);
 }
 
-HRESULT CGameInstance::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+HRESULT CGameInstance::Bind_CascadeValues(CShader* pShader)
 {
-	return m_pPipeLine->Bind_CascadeBias(pShader, pConstantName);
+	return m_pPipeLine->Bind_CascadeValues(pShader);
 }
 
 HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
@@ -1064,6 +1064,10 @@ PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBo
 PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel);
+}
+PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel, const _float4x4* pWorldMatrix)
+{
+	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel, pWorldMatrix);
 }
 PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1)
 {

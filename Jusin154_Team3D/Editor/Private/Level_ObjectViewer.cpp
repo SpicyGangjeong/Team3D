@@ -418,6 +418,12 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 			pModel->Set_PlayAnim(bPlayAnim);
 		}
 
+		_int iIndex = pModel->Get_AnimIndex();
+		if (GUI::InputInt("Anim Index", &iIndex))
+		{
+			pModel->Set_AnimationIndex(iIndex);
+		}
+
 		if (GUI::Button("Load KeyFrame"))
 		{
 			_char szName[MAX_PATH] = {};
@@ -759,7 +765,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Z_Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
 	{
 		return E_FAIL;
 	}

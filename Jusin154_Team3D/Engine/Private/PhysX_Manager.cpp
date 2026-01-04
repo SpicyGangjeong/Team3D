@@ -72,7 +72,6 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 	 PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScaleNoFlip(WorldMatrix);
 
-
 	// PxRigidStatic		씬의 정적 바디 인터페이스
 	PSX::PxRigidStatic* pActorStatic = m_pPhysics->createRigidStatic(pxWorldMatrix);
 	PSX::PxShape* pShape = { nullptr };
@@ -139,6 +138,85 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	pShape->setContactOffset(RigidBody.Get_ContactOffset());
 	pShape->setRestOffset(0.f);
 	
+	m_pRestBodies[iLevel].insert(pActorStatic);
+	ApplyFilterData(pActorStatic);
+	Attach_Actor(*pActorStatic, iLevel);
+
+	return pActorStatic;
+}
+
+PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel, const _float4x4* pWorldMatrix)
+{
+	_matrix WorldMatrix = XMLoadFloat4x4(pWorldMatrix);
+
+	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScaleNoFlip(WorldMatrix);
+
+	// PxRigidStatic		씬의 정적 바디 인터페이스
+	PSX::PxRigidStatic* pActorStatic = m_pPhysics->createRigidStatic(pxWorldMatrix);
+	PSX::PxShape* pShape = { nullptr };
+	PSX::PxGeometry* pGeometry = { nullptr };
+
+	switch (RigidBody.Get_Type())
+	{
+	case ACTOR::PLANE:
+		break;
+	case ACTOR::TRIANGLEMESH:
+	{ // SetUp Geometry
+		PSX::PxTriangleMesh* pPxMesh = Find_TriangleMesh(RigidBody.Get_PxMeshKey(), iLevel);
+		PSX::PxTriangleMeshGeometry* pPxMeshGeometry = { nullptr };
+
+		_vector vPos, vRotq, vScale;
+		XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
+		vRotq = XMQuaternionNormalize(vRotq);
+
+		PSX::PxTransform out;
+		XMStoreFloat3((_float3*)&out.p, vPos);
+		XMStoreFloat4((_float4*)&out.q, vRotq);
+		PSX::PxMeshScale meshScale(
+			PSX::PxVec3(fabsf(vScale.m128_f32[0]), fabsf(vScale.m128_f32[1]), fabsf(vScale.m128_f32[2])),
+			PSX::PxQuat(PSX::PxIdentity) // 스케일 축은 로컬 기준
+		);
+		pPxMeshGeometry = new PSX::PxTriangleMeshGeometry(pPxMesh, meshScale);
+
+		// GeoFlag 중 더블사이드는 이제 지원 안함, 할거면 노말 뒤집어서 하라고 함
+		// pPxMeshGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
+		// 유효성 체크
+		PX_ASSERT(pPxMeshGeometry->isValid());
+		pGeometry = pPxMeshGeometry;
+		_bool bEmplaceSuccess = m_TriangleMeshGeometry[iLevel].emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry).second;
+		if (false == bEmplaceSuccess) {
+			Safe_Delete(pPxMeshGeometry);
+			pGeometry = (*m_TriangleMeshGeometry[iLevel].find(RigidBody.Get_PxMeshKey())).second;
+		}
+	}
+	break;
+	case ACTOR::HEIGHTFIELD:
+	{ // SetUp HeightField
+		PSX::PxHeightField* pHeightField = Find_HeightField(RigidBody.Get_PxMeshKey(), iLevel);
+		PSX::PxHeightFieldGeometry* pPxHeightGeometry = new PSX::PxHeightFieldGeometry(pHeightField);
+		pPxHeightGeometry->heightScale = 0.01f/* 기본 정밀도 100배 0.01 -> 1cm, 1 -> 1m */;
+
+		// 유효성 체크
+		PX_ASSERT(pPxHeightGeometry->isValid());
+		pGeometry = pPxHeightGeometry;
+		_bool bEmplaceSuccess = m_HeightFieldGeometry[iLevel].emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry).second;
+		if (false == bEmplaceSuccess) {
+			Safe_Delete(pPxHeightGeometry);
+			pGeometry = (*m_HeightFieldGeometry[iLevel].find(RigidBody.Get_PxMeshKey())).second;
+		}
+	}
+	break;
+	default:
+		assert(false);
+		break;
+	}
+
+	pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorStatic, *pGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
+
+	pShape->setFlags(RigidBody.Get_ShapeFlags());
+	pShape->setContactOffset(RigidBody.Get_ContactOffset());
+	pShape->setRestOffset(0.f);
+
 	m_pRestBodies[iLevel].insert(pActorStatic);
 	ApplyFilterData(pActorStatic);
 	Attach_Actor(*pActorStatic, iLevel);
@@ -242,6 +320,9 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir
 
 _bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
+	if (fDistance < FLT_EPSILON3) {
+		return false;
+	}
 	_float3 vDir = {};
 	_float3 vStartPos = {};
 
@@ -775,6 +856,7 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 		PxInitExtensions(*m_pPhysics, m_pPvd);
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
+		m_pCookingParam->meshWeldTolerance = FLT_EPSILON3;
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
 		PSX::PxSceneDesc sceneDesc = { m_pPhysics->getTolerancesScale() };
 

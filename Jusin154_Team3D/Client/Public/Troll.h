@@ -146,6 +146,8 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
+
+	virtual _bool IsHitSpellDisabled() override;
 };
 
 NS_END

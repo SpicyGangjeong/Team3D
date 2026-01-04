@@ -73,11 +73,26 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
+	m_pInfoInstance->Add_Event(TEXT("Goblin_Fear"),
+		[this](void* p)
+		{
+			CGameObject* pSender = static_cast<CGameObject*>(p);
+
+			if (pSender == this)
+				return;
+
+			m_pFSM->Change_State(FSMSTATE::FEAR);
+		});
+
+	m_pModelCom->Set_DisableRootMotionScale(true);
+
 	return S_OK;
 }
 
 void CGoblin::Priority_Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
 	__super::Priority_Update(fTimeDelta);
 }
 
@@ -125,15 +140,7 @@ void CGoblin::Update(_float fTimeDelta)
 
 	//m_pDetection->Set_Active(m_bDetection);
 
-
-	if (m_bDisolve) {
-		m_fDisolveTime += fTimeDelta*0.8f;
-		if (m_fDisolveTime >= 1.f)
-		{
-			m_fDisolveTime = 0.f;
-			m_bDisolve = false;
-		}
-	}
+	Update_Disolve(fTimeDelta, 0.8f);
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -280,6 +287,74 @@ HRESULT CGoblin::Render_Shadow(SHADOW eType)
 	return S_OK;
 }
 
+HRESULT CGoblin::Render_OutLine()
+{
+	m_bDrawOutLine = false;
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+
+	Compute_Depth();
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(0.024f, 0.5f, fRatio);
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &m_fOutLineThickness, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineScale", &m_fOutLineScale, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLinePower", &m_fOutLinePower, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+		return E_FAIL;
+	}
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
+			return E_FAIL;
+		}
+
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_READ)))) {
+			return E_FAIL;
+		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
 _vector CGoblin::Get_LockOnPos()
 {
 	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
@@ -296,10 +371,10 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
-	if (m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+	if (m_pFSM->IsEnable(FSMSTATE::BLINK | FSMSTATE::DEAD)) {
 		return;
 	}
-	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
 
 	m_pGoblinSpector->Set_Visible(false);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -342,9 +417,11 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
+			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
 			break;
 		}
 	}
@@ -601,13 +678,6 @@ void CGoblin::Describe_Entity()
 		{
 			m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
 		}
-
-		XMFLOAT3 f3;
-		XMStoreFloat3(&f3, m_vOriginPos);
-
-		GUI::Text("Origin: %.2f, %.2f, %.2f", f3.x, f3.y, f3.z);
-
-		m_fLength = XMVectorGetX(XMVector2Length(m_pTransformCom->Get_State(STATE::POSITION) - m_vOriginPos));
 
 		GUI::Text("Length %.2f", m_fLength);
 

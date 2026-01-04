@@ -190,7 +190,7 @@ const _float4x4* CMonster::Get_HeadMatrix()
 	return m_pModelCom->Get_BoneMatrixPtr("Head");
 }
 
-float  CMonster::Get_HpRatio()
+_float  CMonster::Get_HpRatio()
 {
 	return Get_Hp().x / Get_Hp().y;
 }
@@ -203,6 +203,16 @@ void CMonster::CameraShake(_float ClampValue, _float Min, _float Max, _float Tim
 	_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
 	_float fShakeValue = clamp(ClampValue / fDistance, Min, Max);
 	pPlayer->Start_CameraShake(Time, fShakeValue);
+}
+
+_bool CMonster::IsHitStateDisabled()
+{
+	return _bool();
+}
+
+_bool CMonster::IsHitSpellDisabled()
+{
+	return _bool();
 }
 
 HRESULT CMonster::Ready_Components(void*pArg)
@@ -273,6 +283,33 @@ void CMonster::Set_Easing(_uint iAnimIndex,_float fEasingStartRatio,_float fEasi
 		fEasingEndRatio);
 }
 
+
+void CMonster::Update_Disolve(_float fTimeDelta,_float fRatio)
+{
+	if (!m_bDisolve)
+		return;
+
+	if (!m_bDisolveReverse)
+	{
+		m_fDisolveTime += fTimeDelta * fRatio;
+
+		if (m_fDisolveTime >= 1.f)
+		{
+			m_fDisolveTime = 1.f;
+		}
+	}
+	else
+	{
+		m_fDisolveTime -= fTimeDelta * fRatio;
+
+		if (m_fDisolveTime <= 0.f)
+		{
+			m_fDisolveTime = 0.f;
+			m_bDisolve = false;
+			m_bDisolveReverse = false;
+		}
+	}
+}
 
 void CMonster::Free()
 {

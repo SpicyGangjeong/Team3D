@@ -14,6 +14,7 @@ float g_fShadowFar_MIDDDLE;
 float g_fShadowFar_FAR;
 float g_fCascadeSplitRatioNear;
 float g_fCascadeSplitRatioFar;
+float g_fMinShadowBrightness;
 float2 g_vNearShadowResolution;
 float2 g_vMiddleShadowResolution;
 float2 g_vFarShadowResolution;
@@ -21,6 +22,7 @@ float2 g_vPreShadowResolution;
 float2 g_vResolution;
 float2 g_vSrcResolution;
 float4 g_vShadowBias;
+float4 g_vShadowRadiusTexel;
 
 uint g_iBloomEmbossingPass;
 float g_fBloomThreshold;
@@ -62,9 +64,9 @@ Texture2D g_DiffuseTexture;
 Texture2D g_ShadeTexture;
 Texture2D g_DepthTexture;
 Texture2D g_SpecularTexture;
-Texture2D g_ShadowNearTexture;
-Texture2D g_ShadowMiddleTexture;
-Texture2D g_PreShadowTexture;
+Texture2D<float> g_ShadowNearTexture;
+Texture2D<float> g_ShadowMiddleTexture;
+Texture2D<float> g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
 
@@ -231,7 +233,11 @@ struct PS_OUT_FLT4_DOUBLE
 struct PS_OUT_BLUR_X
 {
     float4 vBlurX : SV_TARGET0;
-    float4 vBlurWeight : SV_TARGET1;
+};
+struct PS_OUT_BLUR_X_ENV
+{
+    float4 vBlurX : SV_TARGET0;
+    float   fBlurWeight : SV_TARGET1;
 };
 struct PS_OUT_SSAO_AMBIENT_OCCLUSION
 {
@@ -691,7 +697,12 @@ PS_OUT_BACKBUFFER PS_MAIN_PRINT(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
     
-    Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    vector vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    if (0.f == vColor.a)
+        discard;
+    
+    Out.vBackBuffer = vColor;
     Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
     return Out;
 
@@ -710,12 +721,11 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     float4 vSpecular = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
     vSpecular.a = 0.f;
     Out.vBackBuffer = vDiffuse * vShade + vSpecular;
-    
+    Out.vBackBuffer.a = vDiffuse.a;
     
     float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
 
     float fViewZ = vDepthDesc.y * g_fFar;
-    
     
     float4 vPosition, vPreShadowPosition;
     
@@ -746,9 +756,9 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
         vPreShadowPosition = mul(vPreShadowPosition, g_PreShadowLightProjMatrix);
     }
     /* 광원의 NDC에서 샘플링 */
-    float fVisibility_Dynamic_Near = ShadowVisibility_hwPCF(g_ShadowNearTexture, vNearShadowPos, g_vNearShadowResolution, g_vShadowBias.x);
-    float fVisibility_Dynamic_Middle = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos, g_vMiddleShadowResolution, g_vShadowBias.y);
-    float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, g_vPreShadowResolution, g_vShadowBias.w);
+    float fVisibility_Dynamic_Near      = ShadowVisibility_hwPCF(g_ShadowNearTexture,   vNearShadowPos,     g_vNearShadowResolution,    g_vShadowBias.x, g_vShadowRadiusTexel.x);
+    float fVisibility_Dynamic_Middle    = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos,   g_vMiddleShadowResolution,  g_vShadowBias.y, g_vShadowRadiusTexel.y);
+    float fVisibility_Static            = ShadowVisibility_hwPCF(g_PreShadowTexture,    vPreShadowPosition, g_vPreShadowResolution,     g_vShadowBias.w, g_vShadowRadiusTexel.w);
     
 ////////////////////////////
     // 케스케이드
@@ -761,7 +771,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     float fCascadeBlend_NearToMiddle = smoothstep(g_fCascadeSplitRatioNear - fShadowCascadeBlendWidthRatio,
         g_fCascadeSplitRatioNear + fShadowCascadeBlendWidthRatio, fDepthRatio);
     //float fCascadeBlend_MiddleToFar = smoothstep(g_fCascadeSplitRatioFar - fShadowCascadeBlendWidthRatio,
-    //    g_fCascadeSplitRatioFar + fShadowCascadeBlendWidthRatio, fDepthRatio);
+        //g_fCascadeSplitRatioFar + fShadowCascadeBlendWidthRatio, fDepthRatio);
 
     // Near -> Middle
     float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_NearToMiddle);
@@ -786,8 +796,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     //float fVisibilityCombined = min(fVisibilityDynamic, fVisibility_Static);
 
     // 최소 밝기
-    float fMinShadowBrightness = 0.25f;
-    float fShadowMultiplier = lerp(fMinShadowBrightness, 1.0f, saturate(fVisibilityCombined));
+    float fShadowMultiplier = lerp(g_fMinShadowBrightness, 1.0f, saturate(fVisibilityCombined));
 
     Out.vBackBuffer.rgb *= fShadowMultiplier;
     Out.vEnvironment = Out.vBackBuffer;
@@ -951,13 +960,12 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     }
     
     Out.vBlurX = vColor;
-    Out.vBlurWeight = 0.f;
     
     return Out;
 }
-PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
+PS_OUT_BLUR_X_ENV PS_MAIN_BLUR_X_ENV(PS_IN In)
 {
-    PS_OUT_BLUR_X Out;
+    PS_OUT_BLUR_X_ENV Out;
     
     float4 vDepthDesc = float4(0.f, 0.f, 0.f, 1.f);
     float3 vColor = float3(0.f, 0.f, 0.f);
@@ -974,7 +982,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     if (false == AlmostEqual3(vCenter.a, fTerrain))
     { // 터레인셀이 아니면 스킵
         Out.vBlurX = vOriginal;
-        Out.vBlurWeight = 0.0f;
+        Out.fBlurWeight = 0.f;
         return Out;
     }
     
@@ -989,7 +997,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     if (fBlurAmount <= FLT_EPSILON3)  {
         // 최소치 이내면 블러 안함
         Out.vBlurX = vOriginal;
-        Out.vBlurWeight = 0.0f;
+        Out.fBlurWeight = 0.f;
         return Out;
     }
     
@@ -1019,7 +1027,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     if (fAcc <= FLT_EPSILON3)
     { // 블러 실패하면 원본값 씀
         Out.vBlurX = vOriginal;
-        Out.vBlurWeight = 0.0f;
+        Out.fBlurWeight = 0.f;
         return Out;
     }
     else
@@ -1041,7 +1049,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     float3 vFinalColor = lerp(vOriginal.rgb, vBlurAdjusted, fBlendAmount);
     
     Out.vBlurX = float4(vColor, fOriginalAlpha);
-    Out.vBlurWeight = fAcc;
+    Out.fBlurWeight = fAcc;
     
     return Out;
 }
@@ -1152,7 +1160,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     }
     
     Out.vBlurX = vColor;
-    Out.vBlurWeight = 0.f;
     
     return Out;
 }
@@ -1165,14 +1172,14 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     
     float3 vVolumeUV = float3(In.vTexcoord.xy, pow(vDepthDesc.y, g_fDepthPackExponent));
     
-    if (0.f == g_fFogPow)
-    {
-        if (1 == vDepthDesc.y)
-            Out.vFirstTarget = float4(vColor.rgb, 0.f);
-        else
-            Out.vFirstTarget = float4(vColor.rgb, 1.f);
-        return Out;
-    }
+    //if (0.f == g_fFogPow)
+    //{
+    //    if (1 == vDepthDesc.y)
+    //        Out.vFirstTarget = float4(vColor.rgb, 0.f);
+    //    else
+    //        Out.vFirstTarget = float4(vColor.rgb, 1.f);
+    //    return Out;
+    //}
     
     float4 vVolumeValue = g_VolumeTexture.Sample(DefaultSampler, vVolumeUV);
     float fViewZ = vDepthDesc.y * g_fFar;
@@ -1204,10 +1211,10 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     vVolumeValue.a = saturate(1.f - vVolumeValue.a);
     vFinalColor = float4(lerp(vColor.rgb, vVolumeValue.rgb, vVolumeValue.a), 1.f);
     
-    if (1.f == vDepthDesc.y)
-    {
-        vFinalColor = float4(vVolumeValue.rgb, 1.f);
-    }
+    //if (1.f == vDepthDesc.y)
+    //{
+    //    vFinalColor = float4(vVolumeValue.rgb, 1.f);
+    //}
    
     
     Out.vFirstTarget = vVolumeValue;
@@ -1335,7 +1342,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_DEBUG();
     }
 
@@ -1345,7 +1352,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
     }
 
@@ -1355,7 +1362,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_POINT();
     }
 
@@ -1365,7 +1372,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_COMBINED();
     }
 
@@ -1375,7 +1382,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_BLUR_X();
     }
 
@@ -1385,7 +1392,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_SPOT();
     }
 
@@ -1395,7 +1402,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_UPSAMPLE();
     }
     pass PS_MAIN_BLOOM_BLUR_XPASS // 7
@@ -1404,7 +1411,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_BLOOM_BLUR_X();
     }
     pass PS_MAIN_BLOOM_BLUR_COMBINEPASS // 8
@@ -1413,7 +1420,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_BLOOM_BLUR_COMBINE();
     }
 
@@ -1423,7 +1430,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_EMBOSS();
     }
 
@@ -1433,7 +1440,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_BLOOM_ACCUM();
     }
 
@@ -1443,7 +1450,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_BLOOM_FINISH();
     }
     pass BlurX_ENV_Pass // 12
@@ -1452,7 +1459,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_BLUR_X_ENV();
     }
     pass PostCombinedPass // 13
@@ -1461,7 +1468,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default_Environment_SRead, 1);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_POSTCOMBINED();
     }
 
@@ -1471,7 +1478,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_FOG();
     }
 
@@ -1481,7 +1488,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_TONE_MAPPING();
     }
 
@@ -1491,7 +1498,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_SSAO_AMBIENT_OCCLUSION();
     }
 
@@ -1501,7 +1508,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_SSAO_BLUR();
     }
 
@@ -1511,7 +1518,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MOTIONBLUR();
     }
     pass DownSamplePass // 19
@@ -1520,7 +1527,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_DOWNSAMPLE();
     }
     pass MotionBlurTileSamplePass // 20
@@ -1529,7 +1536,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MOTIONBLUR_TILESAMPLE();
     }
     pass MotionBlurTentSamplePass // 21
@@ -1538,7 +1545,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTURE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MOTIONBLUR_TENTSAMPLE();
     }
     pass PrintToBackBufferPass // 22
@@ -1547,7 +1554,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_PRINT();
     }
 }

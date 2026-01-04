@@ -144,7 +144,7 @@ public:
 	_bool					IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
 	pair<_bool, _ubyte>		IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
 	HRESULT					Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
-	HRESULT					Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
+	HRESULT					Bind_CascadeValues(class CShader* pShader);
 	HRESULT					Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
 	HRESULT					Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
@@ -218,6 +218,7 @@ public:
 	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel);
 	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel);
 	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel, const _float4x4* pWorldMatrix);
 	PSX::PxJoint* Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1);
 	PSX::PxD6Joint* Create_BasicPxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos);
 	PSX::PxFixedJoint* Create_BasicPxFixedJoint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos);

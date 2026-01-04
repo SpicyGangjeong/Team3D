@@ -24,6 +24,7 @@
 #include "State_Hit.h"
 #include "State_Dead.h"
 #include "State_Shuffle.h"
+#include "State_Fear.h"
 #pragma endregion
 
 
@@ -46,7 +47,6 @@ HRESULT CGoblin::Behavior_IdleExitCheck()
 	}
 	if ((m_fTargetDistance <= 10.f && m_fTargetDistance != 0.f) /*|| m_pDetection->Get_Step() == true*/)
 	{
-		m_vOriginPos = m_pTransformCom->Get_State(STATE::POSITION);
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
@@ -120,12 +120,7 @@ void CGoblin::Behavior_MoveEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 	m_bLookAt = true;
-	m_pFSM->Enable_State(FSMSTATE::JOG);
-
-	if (!m_pFSM->IsEnable_Previous(FSMSTATE::COMBAT))
-	{
-		m_bFirstMove = false;
-	}
+	m_bFirstMove = false;
 }
 
 HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
@@ -142,7 +137,6 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 		if (!m_bFirstMove)
 		{
 			_uint Rand = m_pGameInstance->Real_Random_Int(0, 3);
-
 			switch (Rand)
 			{
 			case  0:
@@ -168,8 +162,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 				}
 				break;
 			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
-
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.8f, true);
 			m_bFirstMove = true;
 			m_fMoveTime = 0.f;
 			return S_OK;
@@ -183,11 +176,15 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 	}
 
-
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 4.f && m_fTargetDistance != 0.f)
+	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++)
 	{
-		m_pFSM->Change_State(FSMSTATE::COMBAT);
-		return E_FAIL;
+		if (i == ENUM_CLASS(GOBLIN_SKILL::THROW))
+			continue;
+		if (m_fSkillCoolTime[i] == 0.f)
+		{
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -371,6 +368,8 @@ HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	if (m_fDisolveTime >= 0.8f && iCurrAnimIndex != m_Animation[STATEANIM::BLINK].first)
 	{
+		m_bDisolve = false;
+		m_fDisolveTime = 0.f;
 		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)];
 		_vector vPlayerPos = XMLoadFloat4(&m_vTargetPos);
 		_vector vPlayerLook = m_pTarget->Get_Component<CTransform>()->Get_State(STATE::LOOK);
@@ -449,6 +448,40 @@ HRESULT CGoblin::Behavior_ShuffleExitCheck(_float fTimeDelta)
 void CGoblin::Behavior_ShuffleExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SHUFFLE);
+}
+
+void CGoblin::Behavior_FearEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::FEAR);
+
+	_uint iRand = m_pGameInstance->Real_Random_Int(0, 1);
+	switch (iRand)
+	{
+	case  0:
+		pairAnimInfo = m_Animation[STATEANIM::FEAR_L];
+		break;
+	case  1:
+		pairAnimInfo = m_Animation[STATEANIM::FEAR_R];
+		break;
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+}
+
+HRESULT CGoblin::Behavior_FearExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CGoblin::Behavior_FearExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::FEAR);
 }
 
 void CGoblin::Behavior_HitEnter()
@@ -929,6 +962,31 @@ void CGoblin::Add_FSM()
 		m_States.emplace(FSMSTATE::SHUFFLE, CState_Shuffle::Create(&Desc));
 	}
 #pragma endregion
+	{
+		CState_Fear::STATE_FEAR_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_FearEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_FearExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_FearExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::FEAR, CState_Fear::Create(&Desc));
+	}
+
+#pragma region Hit
+	{
+		CState_Hit::STATE_HIT_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_HitEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_HitExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_HitExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::HIT, CState_Hit::Create(&Desc));
+	}
+
+#pragma endregion
+
 #pragma region Behavior_Combat_Focus
 	{
 		CState_Dead::STATE_DEAD_DESC Desc{};
@@ -952,20 +1010,5 @@ void CGoblin::Add_FSM()
 		m_States.emplace(FSMSTATE::DEAD, CState_Dead::Create(&Desc));
 	}
 #pragma endregion
-
-#pragma region Hit
-	{
-		CState_Hit::STATE_HIT_DESC Desc{};
-		Desc.pOwner = this;
-		Desc.funcEnterEvent = [this]() { Behavior_HitEnter(); };
-		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_HitExitCheck(fTimedelta); };
-		Desc.funcExitEvent = [this]() { Behavior_HitExit(); };
-		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::HIT, CState_Hit::Create(&Desc));
-	}
-
-#pragma endregion
-
 
 }

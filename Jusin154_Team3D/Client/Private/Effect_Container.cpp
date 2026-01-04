@@ -665,6 +665,7 @@ _int CEffect_Container::CollisionCheck()
 			case PXOBJECT::MONSTER:
 			case PXOBJECT::GOBLIN_WARRIOR:
 			case PXOBJECT::GOBLIN_MAGICIAN:
+			case PXOBJECT::GOBLIN_ASSASSIN:
 			case PXOBJECT::TROLL:
 			case PXOBJECT::RANROK:
 			case PXOBJECT::WALL:
@@ -696,7 +697,7 @@ _int CEffect_Container::CollisionCheck()
 	return -1;
 
 }
-ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPos, _float fRadius , _bool isTerrainCollision )
+ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius , _bool isTerrainCollision )
 {
 	_vector vStartPos = StartPos;
 	_vector vEndPos = EndPos;
@@ -755,6 +756,12 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 				}
 				break;
 				case PXOBJECT::GOBLIN_MAGICIAN:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::GOBLIN_ASSASSIN:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
@@ -826,7 +833,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 	return tagCollInfo;
 }
 
-ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision)
+ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision)
 {
 	_vector vStartPos = StartPos;
 	_vector vEndPos = EndPos;
@@ -939,7 +946,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 	return tagCollInfo;
 }
 
-ON_COLLISION_INFO CEffect_Container::MonsterRayCast(_vector StartPos, _vector _vDir, _float _fLength, _uint iMaxHitCapacity)
+ON_COLLISION_INFO CEffect_Container::MonsterRayCast(_fvector StartPos, _fvector _vDir, _float _fLength, _uint iMaxHitCapacity)
 {
 	_vector vStartPos = StartPos;
 	_vector vDir = _vDir;

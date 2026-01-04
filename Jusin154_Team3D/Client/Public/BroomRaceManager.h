@@ -13,7 +13,7 @@ public:
 		class CPlayer* pRacer = nullptr;
 		class CBroomRacerAI* pAI = nullptr;
 		_uint       curRing = 0;
-		_vector      prevPos = XMVectorZero();
+		_float4      prevPos;
 	};
 
 	enum class RACE_STATE

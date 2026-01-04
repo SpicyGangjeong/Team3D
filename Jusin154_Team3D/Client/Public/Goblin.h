@@ -28,6 +28,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	virtual HRESULT Render_OutLine() override;
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -74,12 +75,11 @@ private:
 	virtual void Add_FSM();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 5.f,2.f,15.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 10.f,2.f,15.f };
 
 	_bool	m_bStep = { true };
 	_float	m_fTpTime = {};
 	_float	m_fAirTime = {};
-	_vector m_vOriginPos = {};
 	_float	m_fLength = {};
 	_float	m_fMoveTime = {};
 	_bool	m_bFirstMove = {};
@@ -108,7 +108,6 @@ private:
 	HRESULT Behavior_CombatExitCheck(_float fTimeDelta);
 	void	Behavior_CombatExit();
 
-
 	void	Behavior_SwingEnter();
 	HRESULT Behavior_SwingExitCheck(_float fTimeDelta);
 	void	Behavior_SwingExit();
@@ -124,6 +123,10 @@ private:
 	void	Behavior_ShuffleEnter();
 	HRESULT Behavior_ShuffleExitCheck(_float fTimeDelta);
 	void	Behavior_ShuffleExit();
+
+	void	Behavior_FearEnter();
+	HRESULT Behavior_FearExitCheck(_float fTimeDelta);
+	void	Behavior_FearExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);

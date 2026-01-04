@@ -17,7 +17,6 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render() override;
-	virtual _vector Get_WorldPostion() override;
 
 
 private:
@@ -29,25 +28,29 @@ private:
 private:
 	_float4 ComputeUV(_tchar Alphabat);
 	void Set_ImageSizePosition();
-
+	void ActiveOff();
 public:
-	void NpcInfo(_wstring Name);
+	void NpcInfo(void* pArg);
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_vector m_vFontPosition{};
-	_vector m_vFontPosition1{};
+	class CUnit* m_pUnit = { nullptr };
+
+	_float4 m_vFontPosition{};
+	_float4 m_vFontPosition1{};
 
 	_float m_fAlpha{};
 
 	_wstring	m_NpcName;
 
-	_vector m_vPosition{};
+	_float4 m_vPosition{};
 	_float4 m_vUV{};
 	_float4 m_vNine_Slice{};
 	_float4 m_vImagePosi1{};
@@ -58,7 +61,9 @@ private:
 	_float2 m_fViewPort{};
 
 	_float m_fFontSize{};
+	_bool	m_bActive{};
 
+	NPCINTERACTIONINFO m_pInfo{};
 public:
 	static CNPCInteraction* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

@@ -27,11 +27,9 @@ void CInstancedProp::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	//pair<_bool, _ubyte> pairShadowResult = m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius());
-	//if (0 == ((_ubyte)SHADOW::SHADOW_FAR & pairShadowResult.second)) {
-	//	pairShadowResult.first = true;
-	//	Set_Shadow(pairShadowResult);
-	//}
+
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
 }
 
 HRESULT CInstancedProp::Render()
@@ -66,7 +64,10 @@ HRESULT CInstancedProp::Render_Shadow(SHADOW eType)
 	}
 	for (_uint i = 0; i < m_iNumMesh; i++)
 	{
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pVIBufferInstanceCom->Bind_Matrial(m_pShaderCom, i)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Begin(3)))
 			return E_FAIL;
 
 		m_pVIBufferInstanceCom->Render(i);
@@ -88,9 +89,6 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	m_iNumMesh = m_pVIBufferInstanceCom->Get_NumMesh();
-
 	return S_OK;
 }
 
@@ -106,8 +104,16 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pVIBufferInstanceCom))))
 		return E_FAIL;
 
+	m_iNumMesh = m_pVIBufferInstanceCom->Get_NumMesh();
+
+	if(pDesc->bEnableRigidbody)
+	{
+		if (FAILED(ReadyForPhysX()))
+			return E_FAIL;
+	}
+
 	/* Laod Instance Data */
-	if(FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str())))
+	if(FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str(), pDesc)))
 		return E_FAIL;
 
 	m_isShake = pDesc->isShake;
@@ -142,7 +148,16 @@ HRESULT CInstancedProp::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CInstancedProp::Load_InstancedProp(const _char* pFilePath)
+HRESULT CInstancedProp::ReadyForPhysX()
+{
+	if (FAILED(m_pVIBufferInstanceCom->Ready_PhysXMeshes(NEXT_LEVEL))) {
+		return E_FAIL;
+	}
+	
+	return S_OK;
+}
+
+HRESULT CInstancedProp::Load_InstancedProp(const _char* pFilePath, INSTANCE_PROP_DESC* pDesc)
 {
 	ifstream FileIn(pFilePath, ios::binary);
 
@@ -154,19 +169,52 @@ HRESULT CInstancedProp::Load_InstancedProp(const _char* pFilePath)
 
 	vector<_float4x4> WorldMatrices = {};
 
-	_uint iNumWorldMatrix = 0;
+	m_iNumInstacne = 0;
 
-	FileIn.read(reinterpret_cast<char*>(&iNumWorldMatrix), sizeof(_uint));
-	WorldMatrices.reserve(iNumWorldMatrix);
+	FileIn.read(reinterpret_cast<char*>(&m_iNumInstacne), sizeof(_uint));
+	WorldMatrices.reserve(m_iNumInstacne);
+	m_RigidBody.reserve(m_iNumInstacne);
 
 	_float4x4 WorldMatrix = {};
 
-	for (_uint i = 0; i < iNumWorldMatrix; ++i)
+#pragma region FOR RIGIDBODY
+	CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
+
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+
+	vector<_wstring> RigidBodyTags;
+
+
+	for (_uint i = 0; i < m_iNumMesh; ++i)
+	{
+		RigidBodyTags.push_back(CMyTools::ToWstring(m_pVIBufferInstanceCom->Get_MeshName(i)) + to_wstring(i));
+	}
+#pragma endregion
+
+	for (_uint i = 0; i < m_iNumInstacne; ++i)
 	{
 		FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
 
 		WorldMatrices.push_back(WorldMatrix);
+
+		if(pDesc->bEnableRigidbody)
+		{
+			for (_uint i = 0; i < m_iNumMesh; ++i)
+			{
+				CRigidBody_Static* pRigidBody = { nullptr };
+				CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+				Desc.pMeshName = RigidBodyTags[i].c_str();
+				Desc.pWorldMatrix = &WorldMatrix;
+				if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, RigidBodyTags[i], (CComponent**)&pRigidBody, &Desc))) {
+					return E_FAIL;
+				}
+
+				m_RigidBody.push_back(pRigidBody);
+			}
+			
+		}
 	}
+
 	FileIn.close();
 
 	if (FAILED(m_pVIBufferInstanceCom->Load_WorldData(WorldMatrices)))
@@ -207,6 +255,11 @@ CGameObject* CInstancedProp::Clone(void* pArg, CGameObject* pOwner)
 void CInstancedProp::Free()
 {
 	__super::Free();
+
+	for (auto& pRigidBody : m_RigidBody)
+	{
+		SAFE_RELEASE(pRigidBody);
+	}
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferInstanceCom);

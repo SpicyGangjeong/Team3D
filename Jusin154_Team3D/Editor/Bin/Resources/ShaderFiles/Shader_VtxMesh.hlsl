@@ -737,7 +737,7 @@ PS_OUT PS_LAKE(PS_IN In)
     
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f);
     float3 vNoise = (g_NoiseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord + g_fTime * 0.1f).rgb - 0.5f) * 0.3f;
-    float4 vCaustics = g_CausticsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f + vNoise.g);
+    float4 vCaustics = g_CausticsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 10.f + vNoise.g);
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, vUV + vNoise.g);
     float3 vNormalLarge = DecodeNormalFromRG(g_NormalLargeTexture, AnisoTropy_BLUR_Sampler, vUVLarge + vNoise.r);
@@ -1051,17 +1051,16 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
     pass ShadowPass
     {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_Less, 0);
+        SetRasterizerState(RS_Shadow);
+        SetDepthStencilState(DSS_ShadowWrite, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
-        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
  
@@ -1071,7 +1070,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_SKYBOX();
     }
 
@@ -1081,7 +1080,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -1093,7 +1092,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_EFFECT();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EFFECT();
     }
     pass EffectPass_Blend // 5
@@ -1102,7 +1101,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_EFFECT();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EFFECT();
     }
     pass EffectPass_AlphaBlend_Cull // 6
@@ -1111,7 +1110,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_EFFECT();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EFFECT();
     }
     pass EffectPass_Blend_Cull // 7
@@ -1120,7 +1119,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_EFFECT();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EFFECT();
     }
     pass CAPTUREDMODELPASS // 8
@@ -1129,7 +1128,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_CAPTUREDMODEL();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_CAPTUREDMODEL();
     }
     pass BlurPass // 9
@@ -1138,7 +1137,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_BLUR();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_BLUR();
     }
     pass UVMovePass
@@ -1147,7 +1146,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_EFFECT();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_EFFECT_UVMOVE();
     }
 
@@ -1157,7 +1156,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_SELECT();
     }
 
@@ -1167,7 +1166,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_GLASS();
     }
 
@@ -1177,7 +1176,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -1187,7 +1186,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default_OutLine_SRead, 2);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
 
@@ -1197,7 +1196,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLOOM();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_BLOOM();
     }
 
@@ -1207,7 +1206,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_LAKE();
     }
 
@@ -1217,7 +1216,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_LAND();
     }
 
@@ -1227,7 +1226,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_NONMRO();
     }
 
@@ -1237,7 +1236,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_SPECTOR_WEAPON_MAIN();
     }
 
@@ -1247,7 +1246,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_GLASS_CUBE();
     }
 
@@ -1257,7 +1256,7 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_LEVIOSO();
     }
 
@@ -1267,7 +1266,16 @@ technique11 MeshTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_DECAL();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN_DECAL();
+    }
+
+    pass WIREFRAMEPass // 23
+    {
+        SetRasterizerState(RS_Nocull_Wireframe);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 }

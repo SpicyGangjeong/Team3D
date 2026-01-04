@@ -51,7 +51,7 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Z_Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
 	{
 		return E_FAIL;
 	}
@@ -68,9 +68,9 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	/*if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
 		return E_FAIL;
-	}*/
+	}
 
 	//if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
 	//	return E_FAIL;
@@ -147,9 +147,9 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 {
 	CTerrain::TERRAIN_DESC Desc = {};
 
-	/* Hogsmeade */
-	Desc.isEdit = false;
-	Desc.iAlphaSizeX = 2048;
+	///* Hogsmeade */
+	Desc.isEdit = true;
+	Desc.iAlphaSizeX = 2048; 
 	Desc.iAlphaSizeY = 2048;
 	Desc.vPosition = _float3(-194, 18.5f, -153.f);
 	Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
@@ -159,7 +159,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	/* Hogwart */
-	Desc.isEdit = false;
+	/*Desc.isEdit = false;
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2560;
 	Desc.strAlphaMapTag = "Hogwart_AlphaMap.bin";
@@ -167,7 +167,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	Desc.vPosition = _float3(-451.f, 18.5f, -791.f);
 	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	/* North_Hogwart */
 	//Desc.isEdit = false;
@@ -189,31 +189,31 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 
 	CMapElement_Lake::MAPOBJECT_LAKE_DESC Lake_Desc = {};
 
-	//vector<_wstring>		ModelPrototypeTags;
-	//vector<_wstring>		ShallowModelPrototypeTags;
-	//ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
-	//ShallowModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_LakeSurFace"));
-	//Lake_Desc.bEdit = false;
-	//Lake_Desc.iMaxLodLevel = 0;
-	//Lake_Desc.iRenderType = 4;
-	//Lake_Desc.vPosition = _float3(-144.f, -61.9f, -115.f);
-	//Lake_Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	//Lake_Desc.vScale = _float3(1.f, 1.f, 1.f);
-	//Lake_Desc.fTimeSpeed = _float(0.02f);
-	//Lake_Desc.fRefractionStrength = _float();
-	//Lake_Desc.fRefractionPow = _float();
-	//Lake_Desc.fUVValue1 = _float();
-	//Lake_Desc.fUVValue2 = _float();
-	//Lake_Desc.fUVValue3 = _float();
-	//Lake_Desc.vUVSpeed = _float2();
-	//Lake_Desc.vLargeUVSpeed = _float2();
-	//Lake_Desc.vSubUVSpeed3 = _float2();
-	//Lake_Desc.vRefractionColor = _float4();
-	//Lake_Desc.vSurfaceColor = _float4();
-	//Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
-	//Lake_Desc.ShallowModelPrototypeTags = ShallowModelPrototypeTags;
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Lake_Desc)))
-	//	return E_FAIL;
+	vector<_wstring>		ModelPrototypeTags;
+	vector<_wstring>		ShallowModelPrototypeTags;
+	ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
+	ShallowModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_LakeSurFace"));
+	Lake_Desc.bEdit = false;
+	Lake_Desc.iMaxLodLevel = 0;
+	Lake_Desc.iRenderType = 4;
+	Lake_Desc.vPosition = _float3(-89.2f, -61.6f, -657.8f);
+	Lake_Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Lake_Desc.vScale = _float3(1.3f, 1.f, 1.3f);
+	Lake_Desc.fTimeSpeed = _float(0.02f);
+	Lake_Desc.fRefractionStrength = 0.08f;
+	Lake_Desc.fRefractionPow = 1.5f;
+	Lake_Desc.fUVValue1 = 10.f;
+	Lake_Desc.fUVValue2 = 20.f;
+	Lake_Desc.fUVValue3 = 20.f;
+	Lake_Desc.vUVSpeed = _float2(0.1f, 0.f);
+	Lake_Desc.vLargeUVSpeed = _float2(0.3f, 0.1f);
+	Lake_Desc.vSubUVSpeed3 = _float2(10.f, 0.f);
+	Lake_Desc.vRefractionColor = _float4(0.35f, 0.35f, 0.35f, 1.f);
+	Lake_Desc.vSurfaceColor = _float4(0.25f, 0.f, 1.f, 1.f);
+	Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
+	Lake_Desc.ShallowModelPrototypeTags = ShallowModelPrototypeTags;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Lake_Desc)))
+		return E_FAIL;
 
 
 	return S_OK;
@@ -427,27 +427,27 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
 
-	///* LightPost */
-	//LightDesc.bEditMode = false;
-	//LightDesc.isShake = false;
-	//LightDesc.iGlassMeshIndex = 0;
-	//LightDesc.vRadius = _float2(0.f, 0.f);
-	//LightDesc.vSpeed = _float2(0.f, 0.f);
-	//LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
-	//LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
-	//	return E_FAIL;
+	/* LightPost */
+	LightDesc.bEditMode = false;
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 0;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
+		return E_FAIL;
 
-	///* LightPost_Floating */
-	//LightDesc.bEditMode = false;
-	//LightDesc.isShake = false;
-	//LightDesc.iGlassMeshIndex = 1;
-	//LightDesc.vRadius = _float2(0.f, 0.f);
-	//LightDesc.vSpeed = _float2(0.f, 0.f);
-	//LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
-	//LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
-	//	return E_FAIL;
+	/* LightPost_Floating */
+	LightDesc.bEditMode = false;
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 1;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

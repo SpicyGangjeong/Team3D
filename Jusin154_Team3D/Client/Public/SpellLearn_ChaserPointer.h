@@ -50,7 +50,7 @@ private:
 
 	_int	m_iLineIndex{};
 	_int	m_iCurrentLine{};
-	vector<_vector> m_MoveLine;
+	vector<_float4> m_MoveLine;
 
 public:
 	static CSpellLearn_ChaserPointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

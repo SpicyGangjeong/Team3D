@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Effect_Container.h"
 #include "EffectPool.h"
+#include "TrailObject.h"
+#include "EditEffect.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -303,9 +305,14 @@ void CRanrok::Behavior_FireBreathEnter()
 		m_bLookAt = true; 
 			},0.95f);
 
+
 		Add_Event(m_Animation[STATEANIM::FIREBREATH_A].first,
 			[this]() {
-				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this);
+
+				_float fBreathTime = 1.f;
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this , &fBreathTime);
+
 			}, 0.1f);
 
 	}
@@ -313,6 +320,10 @@ void CRanrok::Behavior_FireBreathEnter()
 	{
 		pairAnimInfo = m_Animation[STATEANIM::FIREBREATH_G];
 		m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBREATH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::FIREBREATH)];
+
+		_float fBreathTime = 1.f;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this, &fBreathTime);
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -368,7 +379,11 @@ void CRanrok::Behavior_FireSweepEnter()
 
 		Add_Event(m_Animation[STATEANIM::FIRESWEEP_A].first,
 			[this]() {
-				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this);
+
+				_float fBreathTime = 3.f;
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this, &fBreathTime);
+
 			}, 0.08f);
 	}
 	else if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
@@ -378,7 +393,10 @@ void CRanrok::Behavior_FireSweepEnter()
 
 		Add_Event(m_Animation[STATEANIM::FIRESWEEP_G].first,
 			[this]() {
-				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this);
+
+				_float fBreathTime = 3.f;
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_BREATH, this, &fBreathTime);
 			}, 0.2f);
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -622,9 +640,20 @@ void CRanrok::Behavior_PulseEnter()
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-	/*Add_Event(pairAnimInfo.first,
-		[this]() {	CameraShake(10.f, 2.f, 5.f, 1.2f); },
-		0.39f);*/
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_CHARGE, this);
+			m_pLeftSmoke->Set_Visible(false);
+			m_pRightSmoke->Set_Visible(false);
+			m_pBottomSmoke->Set_Visible(false);
+		}, 0.f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PURSE, this);
+		},0.39f);
 }
 
 HRESULT CRanrok::Behavior_PulseExitCheck(_float fTimeDelta)
@@ -636,6 +665,10 @@ HRESULT CRanrok::Behavior_PulseExitCheck(_float fTimeDelta)
 	if (fRatio>=0.95f)
 	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+
+		m_pLeftSmoke->Set_Visible(true);
+		m_pRightSmoke->Set_Visible(true);
+		m_pBottomSmoke->Set_Visible(true);
 		return E_FAIL;
 	}
 	return S_OK;
@@ -666,6 +699,9 @@ void CRanrok::Behavior_TuckedEnter()
 		[this]() {
 			m_bVisible = false;
 			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_POINT, this, nullptr , &m_pRanrok_Point);
+
+			m_pLeftEye_Trail->Set_Visible(false);
+			m_pRightEye_Trail->Set_Visible(false);
 		}, 0.1f);
 }
 
@@ -694,9 +730,14 @@ HRESULT CRanrok::Behavior_TuckedExitCheck(_float fTimeDelta)
 void CRanrok::Behavior_TuckedExit()
 {
 	/* 이펙트를 서서히 사라지게 하기위해 도착 이후에 나오는 이펙트를 아래로 떨굼 */
-	m_pRanrok_Point->Setting_Pos(XMVectorSet(0.f, -500.f, 0.f, 1.f));
-	SAFE_RELEASE(m_pRanrok_Point);
+	if (m_bTucked == true)
+	{
+		m_pRanrok_Point->Setting_Pos(XMVectorSet(0.f, -500.f, 0.f, 1.f));
+		SAFE_RELEASE(m_pRanrok_Point);
+	}
 
+	m_pLeftEye_Trail->Set_Visible(true);
+	m_pRightEye_Trail->Set_Visible(true);
 
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;

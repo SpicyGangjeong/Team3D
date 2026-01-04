@@ -28,8 +28,9 @@ public:
 
 	_bool	Picking(_fmatrix WorldMatrix, _float3* pOut);
 	void	Culling(_fmatrix WorldMatrix);
-	void	FitY(_fmatrix WorldMatrix, _float fY);
-
+	void	FitY(_fmatrix WorldMatrix, _float fY, _float3 vPickingPos, _uint iRange);
+	void	Add_NeighborY(VTXNORTEX* pVertices, _uint iX, _uint iZ, _float fY, _uint iRange);
+	void	Add_Y(VTXNORTEX* pVertices, _uint iIndex, _float fY);
 	HRESULT Load_HeightMap(const _char* pFilePath);
 
 #ifdef EDITOR_PROJECT

@@ -454,8 +454,6 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 			pPair.second();
 		}
 	}
-	
-
 }
 
 ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision)
@@ -512,6 +510,12 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 				}
 				break;
 				case PXOBJECT::TROLL:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::RANROK:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;

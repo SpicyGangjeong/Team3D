@@ -86,7 +86,6 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 void CBroomRaceManager::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
-	m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 }
 
 HRESULT CBroomRaceManager::Render()
@@ -158,10 +157,6 @@ void CBroomRaceManager::Free()
 
 void CBroomRaceManager::Describe_Entity()
 {
-	if (GUI::Button("Add Race Ring"))
-	{
-		
-	}
 	if (GUI::Button("Race Start"))
 	{
 		m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
@@ -274,6 +269,8 @@ void CBroomRaceManager::Check_RingPassed()
 
 	for (auto& racer : m_Racers)
 	{
+		if (racer.curRing >= (_uint)m_pRaceRings.size())
+			continue;
 		CRaceRing* pRing = m_pRaceRings[racer.curRing];
 
 		_vector ringPos = pRing->Get_WorldPostion();
@@ -282,10 +279,9 @@ void CBroomRaceManager::Check_RingPassed()
 			pRing->Get_Component<CTransform>()->Get_State(STATE::RIGHT);
 		ringFwd = XMVector3Normalize(ringFwd);
 
-
 		_vector currPos = racer.pAI ? racer.pAI->Get_WorldPostion() : racer.pRacer->Get_WorldPostion();
 
-		_vector prevPos = racer.prevPos;
+		_vector prevPos = XMLoadFloat4(&racer.prevPos);
 
 		_float Prev = XMVectorGetX(XMVector3Dot(prevPos - ringPos, ringFwd));
 		_float Curr = XMVectorGetX(XMVector3Dot(currPos - ringPos, ringFwd));
@@ -311,28 +307,37 @@ void CBroomRaceManager::Check_RingPassed()
 
 			if (dist <= PASS_RADIUS)
 			{
-				if (racer.pRacer) {
-					pRing->Set_Target(false);
-				}
+				racer.curRing++;
 
-				racer.curRing = (racer.curRing + 1) % m_pRaceRings.size();
+				if (racer.curRing >= m_pRaceRings.size())
+				{
+					racer.curRing = (_uint)m_pRaceRings.size();
 
-				if (racer.pRacer) {
-					m_pRaceRings[racer.curRing]->Set_Target(true);
+					if (racer.pAI) {
+						racer.pAI->Get_Broom()->Set_Hover(true);
+						racer.pAI->Get_Broom()->Set_Move(false);
+					}
+					else if (racer.pRacer) {
+						m_iLastRing++;
+						racer.pRacer->Get_Broom()->Set_Hover(true); 
+						racer.pRacer->Get_Broom()->Set_Move(false);
+					}
+
+					XMStoreFloat4(&racer.prevPos, currPos);
+					continue;
 				}
 
 				racer.pAI ? SetTargetRing(racer.pAI) : SetTargetRing(racer.pRacer);
 			}
 		}
 
-		racer.prevPos = currPos;
+		XMStoreFloat4(&racer.prevPos, currPos);
 	}
 }
 
 void CBroomRaceManager::Finish()
 {
 }
-
 
 void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 {
@@ -345,11 +350,6 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 				if (racer.pAI)
 				{
 					racer.pAI->Set_RaceRing(m_pRaceRings[racer.curRing]);
-					if (racer.curRing == m_pRaceRings.size())
-					{
-						racer.pAI->Get_Broom()->Set_Hover(true);
-						racer.pAI->Get_Broom()->Set_Move(false);
-					}
 				}
 			}
 		}
@@ -358,17 +358,11 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 			if (racer.pRacer == pRacer)
 			{
 				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
-				if (racer.curRing == m_pRaceRings.size())
-				{
-					racer.pRacer->Get_Broom()->Set_Hover(true);
-					racer.pRacer->Get_Broom()->Set_Move(false);
-
-				}
 				m_pInfoInstance->Event_CallBack(TEXT("CurrentRing"));
 				m_iLastRing++;
+
 			}
 		}
-
 	}
 }
 
@@ -437,6 +431,7 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
 			return E_FAIL;
 	}
+
 
 	return S_OK;
 }

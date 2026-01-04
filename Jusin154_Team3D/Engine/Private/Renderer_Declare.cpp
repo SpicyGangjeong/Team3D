@@ -195,17 +195,17 @@ HRESULT CRenderer::Initialize()
 		}
 		/* Target_Shadow_Near */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)m_vNearShadowResoltion.x, (_uint)m_vNearShadowResoltion.y,
-			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			DXGI_FORMAT_R16_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
 		/* Target_Shadow_Middle */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Middle"), (_uint)m_vMiddleShadowResoltion.x, (_uint)m_vMiddleShadowResoltion.y,
-			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			DXGI_FORMAT_R16_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
 		/* Target_PreShadow */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_PreShadow"), (_uint)m_vPreShadowResoltion.x, (_uint)m_vPreShadowResoltion.y,
-			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			DXGI_FORMAT_R16_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
 
@@ -635,6 +635,7 @@ void CRenderer::Describe_Entitiy()
 	if (GUI::CollapsingHeader("RENDERER")) {
 		if (GUI::CollapsingHeader("Variable")) {
 			GUI::DragFloat("SpecularMaximum", &m_fLightSpecularMaximum, 0.01f, 0.0f, 2.f, "%.3f");
+			GUI::DragFloat("fMinShadowBrightness", &m_fMinShadowBrightness, 0.01f, 0.0f, 1.f, "%.3f");
 		}
 		if (GUI::CollapsingHeader("PostProcessing_Bloom"))
 		{
