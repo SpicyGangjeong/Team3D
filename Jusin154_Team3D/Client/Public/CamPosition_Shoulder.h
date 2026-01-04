@@ -7,6 +7,9 @@ NS_BEGIN(Client)
 
 class CCamPosition_Shoulder final : public CCamPosition
 {
+	enum class CAMERARIG_ROOT {
+
+	};
 public:
 	typedef struct tagCameraShoulder_Desc : public CCamPosition::CAMERAPOSITION_DESC
 	{

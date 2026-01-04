@@ -69,23 +69,41 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 			}
 		}
 	}
-	if (true == m_bMovable) {
-		m_vAccRotDegrees.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
-		m_vAccRotDegrees.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
-		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccRotDegrees);
-	}
-	{
-		_vector vLookTargetPos = Calc_LookTargetPos();
-		m_pLookTransform->Set_State(STATE::POSITION, vLookTargetPos);
-		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos));
-
-		_float focalRatioLerpAlpha = fTimeDelta * m_fFocalRatioLerpSpeed;
-		if (focalRatioLerpAlpha > 1.f)
-		{
-			focalRatioLerpAlpha = 1.f;
+	if (false == m_bPlayAnim) {
+		m_pBinded_Camera->Sync_Follow(false);
+		if (true == m_bMovable) {
+			m_vAccRotDegrees.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
+			m_vAccRotDegrees.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
+			CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccRotDegrees);
 		}
+		{
+			_vector vLookTargetPos = Calc_LookTargetPos();
+			m_pLookTransform->Set_State(STATE::POSITION, vLookTargetPos);
+			m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos));
 
-		m_vFocalRatio.x = CMyTools::Lerp_f1D(m_vFocalRatio.x, m_fFocalRatioTargetValue, focalRatioLerpAlpha);
+			_float focalRatioLerpAlpha = fTimeDelta * m_fFocalRatioLerpSpeed;
+			if (focalRatioLerpAlpha > 1.f)
+			{
+				focalRatioLerpAlpha = 1.f;
+			}
+
+			m_vFocalRatio.x = CMyTools::Lerp_f1D(m_vFocalRatio.x, m_fFocalRatioTargetValue, focalRatioLerpAlpha);
+		}
+	}
+	else {
+		_bool bFinish = m_pModelCom->Play_Animation(fTimeDelta, nullptr);
+		if (bFinish) {
+			m_pBinded_Camera->Sync_Follow(false);
+			m_pModelCom->Set_AnimationIndex(UINT_MAX);
+			m_bPlayAnim = false;
+		}
+		_matrix OwnerMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
+		_matrix LookMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("lookat_target"));
+		_matrix CamMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("skt_cam"));
+		m_pLookTransform->Set_State(STATE::POSITION, (LookMatrix * OwnerMatrix).r[3]);
+		m_pFollowTransform->Set_WorldMatrix((CamMatrix * OwnerMatrix));
+		//m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(m_pLookTransform->Get_State(STATE::POSITION)));
+		m_pBinded_Camera->Sync_Follow(true);
 	}
 }
 
@@ -124,7 +142,7 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
-	if (m_pGameInstance->Key_Up(DIK_P)) {
+	if (false == m_bPlayAnim && m_pGameInstance->Key_Up(DIK_P)) {
 		m_bRightShoulderActive = !m_bRightShoulderActive;
 
 		m_vShoulderLerpDegree.x = m_fFollowTargetIncludedAngleDegree;
@@ -138,7 +156,7 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 		m_vShoulderLerpTimer.x = 0.f;
 		m_bShoulderLerp = true;
 	}
-	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {
+	if (false == m_bPlayAnim && m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {
 		m_pBinded_Camera->ZoomIn(fTimeDelta);
 		m_bZoomIn = true;
 	}
@@ -335,6 +353,15 @@ HRESULT CCamPosition_Shoulder::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
+	m_pModelCom->Get_BoneMatrixPtr("ctrl_1");
+	m_pModelCom->Get_BoneMatrixPtr("ctrl_2");
+	m_pModelCom->Get_BoneMatrixPtr("ctl_shake");
+	m_pModelCom->Get_BoneMatrixPtr("skt_cam");
+	m_pModelCom->Get_BoneMatrixPtr("root");
+	m_pModelCom->Get_BoneMatrixPtr("lookat");
+	m_pModelCom->Get_BoneMatrixPtr("lookat_target");
+
+
 	return S_OK;
 }
 HRESULT CCamPosition_Shoulder::Ready_SubParts()
@@ -423,6 +450,19 @@ void CCamPosition_Shoulder::Describe_Entity()
 		GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
 		GUI::SliderFloat("m_vFocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
 		GUI::SliderFloat("m_fCameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
+
+		if (GUI::TreeNode("AnimList")) {
+			for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
+			{
+				if (GUI::Button(m_pModelCom->Get_AnimList(i)))
+				{
+					m_bPlayAnim = true;
+					m_pModelCom->Set_AnimationIndex(i, true);
+				}
+			}
+
+			GUI::TreePop();
+		}
 	}
 	GUI::End();
 }
