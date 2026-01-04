@@ -276,6 +276,9 @@ void CRigidBody_Dynamic::Set_Transform(PSX::PxTransform pxTransform, _bool bTele
 	m_pRigidBody->setGlobalPose(pxTransform, true);
 
 	if (true == bTeleport) {
+		if (IsKinematic()) {
+			return;
+		}
 		m_pRigidBody->setLinearVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
 		m_pRigidBody->setAngularVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
 		m_pRigidBody->clearForce();
@@ -394,6 +397,11 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 
 
 	return S_OK;
+}
+
+_bool CRigidBody_Dynamic::IsKinematic()
+{
+	return m_pRigidBody->getRigidBodyFlags().isSet(PSX::PxRigidBodyFlag::eKINEMATIC);
 }
 
 //void CRigidBody_Dynamic::Move(PSX::PxTransform& pxTransform, _bool bTeleport)

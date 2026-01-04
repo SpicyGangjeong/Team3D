@@ -841,6 +841,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Hit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
+    <ClInclude Include="..\Public\RandomNpc.h">
+      <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
+	</ClInclude>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1748,6 +1751,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrol_Impact">
       <UniqueIdentifier>{15ea8015-5b0a-4678-bf02-55b042ef4de4}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\RandomNpc">
+      <UniqueIdentifier>{88b62177-01fc-424d-a444-4fb5fd4b2db5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2537,6 +2543,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Hit.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\RandomNpc.cpp">
+      <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -230,4 +230,6 @@ void CMotion_Trail::Free()
 void CMotion_Trail::Describe_Entity()
 {
 }
-#endif // DEBUG
+#endif // _DEBUG
+
+

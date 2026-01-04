@@ -188,6 +188,7 @@ void CMapObject_Collision::ConvertToPhysX()
 			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
 			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 			Desc.pMeshName = wstrName.c_str();
+			Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 			if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
 				assert(false);
 			}

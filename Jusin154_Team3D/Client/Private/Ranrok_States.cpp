@@ -627,6 +627,7 @@ void CRanrok::Behavior_SwipeEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::SWIPE);
+
 	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_GROUND))
 	{
 		if (m_fCross > 0.f)
@@ -639,6 +640,9 @@ void CRanrok::Behavior_SwipeEnter()
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 	}
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_bMotionTrail = true; },
+		0.3f);
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -660,6 +664,7 @@ HRESULT CRanrok::Behavior_SwipeExitCheck(_float fTimeDelta)
 void CRanrok::Behavior_SwipeExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SWIPE);
+	m_bMotionTrail = false;
 }
 // FireBurst 란록은 평상시에 맞지않는데 특정 구체를 파괴해서 란록한테 피해를 입히면 버스트상태가 해제되고 이제 마법에 맞는다. 그리고 특정시간이 지나면 이 파이어버스트 상태가 되면서 다시 맞지않는다.
 void CRanrok::Behavior_SkillEnter()
@@ -847,7 +852,7 @@ HRESULT CRanrok::Behavior_TuckedExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-	if (m_fDisolveTime >= 0.1f) {
+	if (m_fDisolveTime >= 0.25f) {
 		MoveTo(fTimeDelta);
 	}
 
@@ -929,6 +934,7 @@ void CRanrok::Behavior_HitEnter()
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 
 	m_bLookAt = false;
+
 	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
 	{
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD]; // 스몰

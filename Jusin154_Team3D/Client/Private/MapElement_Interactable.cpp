@@ -387,6 +387,12 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 					m_bHit = true;
 				}
 				break;
+				case PXOBJECT::GOBLIN_ASSASSIN:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
 				case PXOBJECT::TROLL:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);

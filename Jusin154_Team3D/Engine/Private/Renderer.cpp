@@ -667,8 +667,11 @@ void CRenderer::Render_NonLight()
 	m_eType = RENDER::NONLIGHT;
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::NONLIGHT)])
 	{
-		if (nullptr != pRenderObject)
-			pRenderObject->Render();
+		if (nullptr != pRenderObject){
+			if (FAILED(pRenderObject->Render())) {
+				assert(false);
+			}
+		}
 
 		SAFE_RELEASE(pRenderObject);
 	}
