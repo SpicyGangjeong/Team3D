@@ -5,6 +5,8 @@
 #include "InfoInstance.h"
 #include "Player.h"
 #include "NPCInteraction.h"
+#include "CallBack_NonPlayable_Behavior.h"
+#include "CallBack_NonPlayable_HitReport.h"
 
 CRandomNpc::CRandomNpc(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -37,9 +39,12 @@ HRESULT CRandomNpc::Initialize(void* pArg)
 
 	_vector vPos = XMLoadFloat4(&pDesc->vPos);
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	m_pCharacter_Controller->Set_Position(vPos);
 	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
 
 	m_pModelCom->Set_AnimationIndex(0, true);
+	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	m_bNpc = true;
 	return S_OK;
 }
@@ -62,13 +67,19 @@ void CRandomNpc::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+	{ // 세트
+		m_pCallBack_HitReport->BeginFrame();
+		m_pCharacter_Controller->Move(fTimeDelta);
+		m_pCallBack_HitReport->Set_CurrentSlop();
+	}
 
 	/*m_pNPCInteraction->Set_Visible(0 < m_iEntered);*/
-	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 }
 
 void CRandomNpc::Late_Update(_float fTimeDelta)
 {
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
@@ -262,7 +273,27 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
+	{ // CCT
+		CCharacter_Controller::Character_Controller_DESC Desc{};
 
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
+		Desc.pTransform = m_pTransformCom;
+		Desc.eBodyType = ACTOR::CAPSULE;
+		Desc.fContactOffset = 0.0001f;
+		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
+		Desc.bAutoStepping = { false };
+		Desc.fStepOffset = { 0.02f };
+		Desc.fRadius = 0.2f;
+		Desc.fHeight = 0.3f;
+		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();
+		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_NonPlayable_Behavior::Create();
+		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
+			return E_FAIL;
+		}
+		m_pCharacter_Controller->SetGravity(true);
+	}
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
@@ -309,12 +340,21 @@ void CRandomNpc::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pNpcStat);
 	SAFE_RELEASE(m_pRigidBody);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;
 	}
+	if (nullptr != m_pCallBack_Behavior) {
+		m_pCallBack_Behavior->Finalize();
+	}
+	if (nullptr != m_pCallBack_HitReport) {
+		m_pCallBack_HitReport->Finalize();
+	}
+	Safe_Delete(m_pCallBack_Behavior);
+	Safe_Delete(m_pCallBack_HitReport);
 }
 #ifdef _DEBUG
 
