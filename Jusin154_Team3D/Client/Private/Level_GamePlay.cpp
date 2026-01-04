@@ -758,7 +758,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 	if (true == isLoad_NPC)
 	{
-		for (_uint i = 0; i < 6; i++)
+		for (_uint i = 0; i < 7; i++)
 		{
 			{
 				CRandomNpc::NPCDESC NPCDesc{};

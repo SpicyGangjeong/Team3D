@@ -2048,6 +2048,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_PhineasBlack_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/PhineasBlack/PhineasBlack.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Student_Model"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/M_Student/M_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 			return E_FAIL;

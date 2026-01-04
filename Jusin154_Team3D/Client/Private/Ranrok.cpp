@@ -279,10 +279,10 @@ HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 _vector CRanrok::Get_LockOnPos()
 {
 	_vector Offset = XMVectorZero();
-	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
-	{
-		Offset = XMVectorSetY(Offset, 10.f);
-	}
+	//if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
+	//{
+	//	Offset = XMVectorSetY(Offset, 10.f);
+	//}
 	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
 		return m_pCharacter_Controller->Get_Position() + Offset;
 	}
