@@ -113,11 +113,27 @@ private:
 	_float m_fHeadAimWeight = {};
 	_float m_fPrevHpRatio = {};
 	_int   m_iBreathRand = {};
+	_bool  m_bMotionTrail = {};
 
-	_float2 m_vCaptureTimer = { 0.f, 0.3f };
+	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 	_float					 m_fTuckedSpeed = { 90.f };
+
+
+	class CEffectParts* m_pLeftSmoke = { nullptr };
+	class CEffectParts* m_pRightSmoke = { nullptr };
+	class CEffectParts* m_pBottomSmoke = { nullptr };
+
+	class CEffectParts* m_pRightPt = { nullptr };
+	class CEffectParts* m_pLeftPt = { nullptr };
+
+	class CTrailObject* m_pRightEye_Trail = { nullptr };
+	class CTrailObject* m_pLeftEye_Trail = { nullptr };
+
+
+	const _float4x4* m_pLeftEye_BoneMat = { nullptr };
+	const _float4x4* m_pRightEye_BoneMat = { nullptr };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

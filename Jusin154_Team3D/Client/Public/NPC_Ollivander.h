@@ -25,6 +25,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
+	virtual _wstring Get_Name() override;
+
 protected:
 	CInfoInstance*							m_pInfoInstance = { nullptr };
 	CRigidBody_Dynamic*						m_pRigidBody = { nullptr };

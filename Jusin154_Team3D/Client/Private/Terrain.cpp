@@ -39,6 +39,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
 		Desc.pMeshName = pDesc->strRigidBody_MeshName.c_str();
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 		/* Com_RigidBody */
 		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->strRigidBody_ComponentTag,
 			reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {

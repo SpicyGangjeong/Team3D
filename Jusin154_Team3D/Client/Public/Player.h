@@ -50,9 +50,13 @@ private:
 	class CMapElement_Interactable* m_pGrapInteractive = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
+	CGameObject* m_pCurrentNpcInteraction = { nullptr };
+
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
 	_bool m_bCameraShake = { false };
+
+	_bool m_bNpcInteraction = { false };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };

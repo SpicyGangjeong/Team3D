@@ -92,6 +92,14 @@ void CGoblin_Assassin::Update(_float fTimeDelta)
 
 	m_pFSM->Update_State(fTimeDelta);
 
+	m_vCaptureTimer.x += fTimeDelta;
+	if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
+		m_vCaptureTimer.x = 0.f;
+		if (FAILED(m_pModelCom->Capture_BoneBuffer(m_pMotionTrailCom, *m_pTransformCom->Get_WorldMatrixPtr()))) {
+			assert(false);
+		}
+	}
+
 	m_pModelCom->Play_Animation(fTimeDelta * m_fEasing, m_pTransformCom);
 
 	__super::Update(fTimeDelta);
@@ -222,6 +230,10 @@ HRESULT CGoblin_Assassin::Render()
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 
+	if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -325,6 +337,30 @@ HRESULT CGoblin_Assassin::Render_Shadow(SHADOW eType)
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CGoblin_Assassin::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
+{
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	for (_uint i = 0; i < iNumMeshes; i++) {
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix", m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		m_pContext->VSSetShaderResources(26, 1, &pSRV);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -494,6 +530,16 @@ HRESULT CGoblin_Assassin::Ready_Components()
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN_ASSASSIN"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
+
+
+	{
+		CMotion_Trail::MOTIONTRAIL_RENDERFUNC funcDesc{};
+		funcDesc.funcRenderCall = [this](ID3D11ShaderResourceView* pSRV) { Render_MotionTrail(pSRV); };
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), (CComponent**)&m_pMotionTrailCom, &funcDesc))) {
+			return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -640,7 +686,7 @@ void CGoblin_Assassin::Free()
 	if (nullptr != m_pCallBack_HitReport) {
 		m_pCallBack_HitReport->Finalize();
 	}
-
+	SAFE_RELEASE(m_pMotionTrailCom);
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pSmoke);

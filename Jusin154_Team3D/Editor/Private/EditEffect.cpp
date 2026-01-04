@@ -457,7 +457,7 @@ void CEditEffect::Describe_Entity()
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", 
 		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" ,"BLUR_CULLING_NO_EMISSIVE" ,
-		"BLOOM_CULLING" , "DEFAULT_NONPOS" , "NONWB_NONPOS",  "DECAL", "DECAL_WB" , "DECAL_BLUR", "BLEND_CULLING"};
+		"BLOOM_CULLING" , "DEFAULT_NONPOS" , "NONWB_NONPOS",  "DECAL", "DECAL_WB" , "DECAL_BLUR", "BLEND_CULLING" , "DECAL_BLEND"};
 
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -521,6 +521,10 @@ void CEditEffect::Describe_Entity()
 	}
 
 	GUI::ColorEdit4("MixColor", (_float*)&m_EffectInfo.vColor);
+
+
+	GUI::Checkbox("NonSoftEffect", &m_EffectInfo.isNonSoftEffect);
+	
 
 	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 

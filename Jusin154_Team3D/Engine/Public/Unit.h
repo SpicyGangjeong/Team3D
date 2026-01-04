@@ -51,6 +51,9 @@ public:
 
 	virtual void Reset_Sprint() {};
 	virtual void Reset_Walk() {};
+
+	virtual _bool Get_Npc() { return m_bNpc; }
+	virtual _wstring Get_Name();
 #pragma endregion
 
 protected:
@@ -62,7 +65,9 @@ protected:
 	_float			m_fRimLightPower = { 3.2f };
 	_float			m_fRimLightStrength = { 3.04f };
 	_float3			m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
+	_float			m_fMBIntensity = 1.f;
 
+	_bool			m_bNpc = { false };
 	_bool			m_bAI = {};
 
 	map<_string, _float> m_KeyFrames;

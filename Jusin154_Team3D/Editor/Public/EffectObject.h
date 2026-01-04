@@ -140,7 +140,7 @@ public:
 		_bool       isBlurDissolve = {};
 		_bool       isNomalMap = {};
 		_bool       isNoDissolveSmoothStep = {};
-		_bool       isPadding3 = {};
+		_bool       isNonSoftEffect = {};
 		
 		_float2     vDissolveSmoothRange = {0.1f , 0.1f};
 		_float2     vPadding0 = {};

@@ -57,7 +57,9 @@ public:
 	virtual void Free() override;
 #ifdef _DEBUG
 	void Describe_Entity() override;
-#endif // DEBUG
+#endif // _DEBUG
+
+
 };
 
 NS_END

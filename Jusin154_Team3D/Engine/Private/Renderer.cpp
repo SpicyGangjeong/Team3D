@@ -617,7 +617,7 @@ void CRenderer::Render_Effect()
 	COMPUTE_TIMEDELTA("Timer_Render_Effect");
 	EVENTSCOPE_("Render_Effect");
 
-	if (FAILED(m_pGameInstance->Begin_MRT_NO_DepthStencil(TEXT("MRT_WB")))) {
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_WB")))) {
 		return;
 	}
 

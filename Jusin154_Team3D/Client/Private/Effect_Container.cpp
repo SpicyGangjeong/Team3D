@@ -665,6 +665,7 @@ _int CEffect_Container::CollisionCheck()
 			case PXOBJECT::MONSTER:
 			case PXOBJECT::GOBLIN_WARRIOR:
 			case PXOBJECT::GOBLIN_MAGICIAN:
+			case PXOBJECT::GOBLIN_ASSASSIN:
 			case PXOBJECT::TROLL:
 			case PXOBJECT::RANROK:
 			case PXOBJECT::WALL:

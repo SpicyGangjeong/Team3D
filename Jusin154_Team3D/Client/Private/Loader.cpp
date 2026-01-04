@@ -41,6 +41,7 @@
 #include "NPC_EleazarFig.h"
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
+#include "RandomNpc.h"
 
 #ifdef _DEBUG
 #include "Camera_Model.h"
@@ -212,6 +213,8 @@
 #include "Ranrok_Point.h"
 #include "Ranrok_Charge.h"
 #include "Ranrok_Pulse.h"
+#include "Ranrok_Hit.h"
+#include "Ranrok_Impact.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -412,9 +415,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef Bin
-	isLoad_Background = true;
-	isLoad_Hogwart = true;
-	isLoad_UI_SEQUANTIAL = true;
+	isLoad_Background = false;
+	isLoad_Hogwart = false;
+	isLoad_UI_SEQUANTIAL = false;
 #endif // Bin
 #endif // _DEBUG
 
@@ -1936,6 +1939,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC RanrokDesc{};
+		{
+			RanrokDesc.eType = ACTOR::BOX;
+			RanrokDesc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			RanrokDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			RanrokDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			RanrokDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			RanrokDesc.fContactOffset = { 0.05f };
+			RanrokDesc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
+			RanrokDesc.fDensity = 1.f;
+			RanrokDesc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			RanrokDesc.eLockFlag = {};
+			RanrokDesc.vAutoDamping = { 1.f, 1.f };
+			RanrokDesc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			RanrokDesc.vLocalTranslation = { 0.f, 5.f, 0.f };
+		}
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
@@ -1945,7 +1965,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
 			return E_FAIL;
 		}
-
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, RanrokDesc)))) {
+			return E_FAIL;
+		}
 		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
@@ -2008,8 +2030,43 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ChiyoKogawa_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/ChiyoKogawa/ChiyoKogawa.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_MatildaWeasely_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MatildaWeasely/MatildaWeasely.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SatyavatiShah_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/SatyavatiShah/SatyavatiShah.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ghost_Peeves_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_PhineasBlack_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/PhineasBlack/PhineasBlack.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Student_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/M_Student/M_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_F_Student_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/F_Student/F_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Elf_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Elf.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 			return E_FAIL;
 		}
 	}
@@ -2299,6 +2356,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Charge>(g_iStaticLevel, CRanrok_Charge::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Hit>(g_iStaticLevel, CRanrok_Hit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Impact>(g_iStaticLevel, CRanrok_Impact::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
@@ -2861,12 +2927,21 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 #pragma region MAP_INSTANCE
+
+	_string strMaterailPath = "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml";
+
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_OakTree_MedA.bin",
-			"../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OakTree_MedA.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A"),
@@ -2924,22 +2999,43 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_Door1a.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Door1a.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_Door2b.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Door2b.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_OakTree_TallA.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OakTree_TallA.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_Shrub_B*/
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Shrub_B"),
@@ -2954,28 +3050,56 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_Dogwood_B*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Dogwood_B"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_Dogwood_B.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_Dogwood_B.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Dogwood_B"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_ScotsPine_LargeA_Master.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_ScotsPine_LargeA_Master.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightPost */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightPost"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_LightPost.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_LightPost.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightPost"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
 
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_Light_Post_Floating.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Light_Post_Floating.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
 #pragma endregion
 
 	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
@@ -3149,6 +3273,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_GameObject_RandomNpc */
+	if (FAILED(m_pGameInstance->Add_Prototype<CRandomNpc>(g_iStaticLevel, CRandomNpc::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 #ifdef _DEBUG
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Model>(g_iStaticLevel, CCamera_Model::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -3270,6 +3399,17 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.iMaximumCapture = 4;
 		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
+			return E_FAIL;
+		}
+	}
+
+	{
+		CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
+		CMotion_Trail::MODELCAPTURE_DESC Desc{};
+		Desc.fMaxCaptureLifeTime = 2.f;
+		Desc.iMaximumCapture = 4;
+		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
 			return E_FAIL;
 		}
 	}
@@ -3597,6 +3737,30 @@ void CLoader::Ready_MapModels(vector<future<vector<FOLDER_LOAD*>*>>& jobMapModel
 {
 
 	
+}
+
+HRESULT CLoader::Ready_RigidBody_Static(CVIBuffer_Model_Instance* pModel_Instance)
+{
+	_uint iNumMesh = pModel_Instance->Get_NumMesh();
+	for (_uint i = 0; i < iNumMesh; ++i)
+	{
+		CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{}; // 
+		{
+			Desc.eType = ACTOR::TRIANGLEMESH;
+			Desc.ePxRigidBodyFlags = {};
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+			Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+			Desc.fContactOffset = 0.001f;
+		}
+		CRigidBody_Static* pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, CMyTools::ToWstring(pModel_Instance->Get_MeshName(i) + to_string(i)), pRigid))) {
+			return E_FAIL;
+		}
+	}
+
+
+	return S_OK;
 }
 
 CLoader* CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
