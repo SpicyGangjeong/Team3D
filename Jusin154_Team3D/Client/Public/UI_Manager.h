@@ -60,6 +60,7 @@ private:
 	CGameObject* m_pDamage_Font = { nullptr };
 	CGameObject* m_pDialogue_Font = { nullptr };
 	CGameObject* m_pInteraction_Key = { nullptr };
+	CGameObject* m_pNPCInteraction = { nullptr };
 	CGameObject* m_pBroom_TargetGate = { nullptr };
 	_bool			m_bCanvas_Change = { false };
 

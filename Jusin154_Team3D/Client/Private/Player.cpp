@@ -111,7 +111,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_bAI = false;
 
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
-	m_fRayDistance = 60.f;
+	m_fRayDistance = 5.f;
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
 	return S_OK;
@@ -287,8 +287,11 @@ void CPlayer::Update_CameraShake(_float fTimeDelta)
 		}
 	}
 }
+
 HRESULT CPlayer::Update_RaycastElements()
 {
+	CGameObject* pFoundNPC = nullptr;
+
 	if (E_FAIL == m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER)) {
 		m_iRayHitCount = 0;
 		return E_FAIL;
@@ -298,28 +301,81 @@ HRESULT CPlayer::Update_RaycastElements()
 	vector<PSX::PxRaycastHit> m_vRayHits = {};
 	m_vRayHits.resize(12);
 	_bool bHit = m_pGameInstance->RayCast(vCameraPos, vCameraDir, m_fRayDistance, m_vRayHits.data(), (_uint)m_vRayHits.size(), m_iRayHitCount);
-	if (true == bHit) {
+	if (true == bHit)
+	{
+		NPCINTERACTIONINFO Info{};
+
 		CMyTools::SortHitsByDistance(m_vRayHits);
-		for (_uint i = 0; i < m_iRayHitCount; ++i) {
-			if (nullptr != m_vRayHits[i].actor->userData) {
-				PHYSX_USERDATA* pData = (PHYSX_USERDATA*)m_vRayHits[i].actor->userData;
-				switch (pData->eKind)
-				{
-				case PHYSX_KIND::BODY_STATIC:
-					break;
-				case PHYSX_KIND::BODY_DYNAMIC:
-					pData->pBody->OnRayCollision(this, i, m_vRayHits[i].distance, _float3(m_vRayHits[i].position.x, m_vRayHits[i].position.y, m_vRayHits[i].position.z));
-					break;
-				case PHYSX_KIND::CCTActor:
-					break;
-				default:
-					break;
-				}
+		for (_uint i = 0; i < m_iRayHitCount; ++i)
+		{
+			if (nullptr == m_vRayHits[i].actor->userData)
+			{
+				continue;
 			}
+			PHYSX_USERDATA* pData = (PHYSX_USERDATA*)m_vRayHits[i].actor->userData;
+
+			if (pData->eKind != PHYSX_KIND::BODY_DYNAMIC)
+			{
+				continue;
+			}
+
+			pData->pBody->OnRayCollision(this, i, m_vRayHits[i].distance, _float3(m_vRayHits[i].position.x, m_vRayHits[i].position.y, m_vRayHits[i].position.z));
+
+			CUnit* Npc = dynamic_cast<CUnit*>(pData->pOwner);
+
+			if (!Npc)
+			{
+				continue;
+			}
+
+			if (!Npc->Get_Npc())
+			{
+				continue;
+			}
+
+			pFoundNPC = Npc;
+			break;
+		}
+
+		if (pFoundNPC)
+		{
+			if (m_pCurrentNpcInteraction != pFoundNPC)
+			{
+				m_pCurrentNpcInteraction = pFoundNPC;
+
+				Info.pOwner = pFoundNPC;
+				Info.pNPCName = static_cast<CUnit*>(pFoundNPC)->Get_Name();
+				_float4 Pos{};
+				XMStoreFloat4(&Pos, static_cast<CUnit*>(pFoundNPC)->Get_WorldPostion());
+				Info.pNPCPosition = Pos;
+				m_bNpcInteraction = true;
+				m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOn"), &Info);
+			}
+		}
+
+		else
+		{
+			if (m_pCurrentNpcInteraction)
+			{
+				m_bNpcInteraction = false;
+				m_pCurrentNpcInteraction = nullptr;
+				m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
+			}
+		}
+	}
+
+	else
+	{
+		if (m_pCurrentNpcInteraction)
+		{
+			m_bNpcInteraction = false;
+			m_pCurrentNpcInteraction = nullptr;
+			m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
 		}
 	}
 	return S_OK;
 }
+
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
@@ -345,13 +401,11 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 		if (FAILED(Bind_ShaderParameters(i))) {
 			return E_FAIL;
 		}
-
-		if (i == ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH)){
-#ifdef 기무리
+		if (i == ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH)) {
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW_LEGACY)))) {
 				return E_FAIL;
 			}
-#endif // 기무리
+
 		}
 		else {
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
@@ -370,10 +424,10 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
-	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) || 
+	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) ||
 		m_bShield ||
-		iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first||
-		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first || 
+		iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first ||
+		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first ||
 		iCurrAnim == m_Animation[STATEANIM::ANCIENT_THROW].first)
 		return;
 
@@ -391,8 +445,8 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	else {
 		m_fHitDegree = -1.f;
 	}
-	
-	if(m_eHitType !=ENUM_CLASS(HIT_TYPE::HIT_NONE))
+
+	if (m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_NONE))
 		m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
@@ -635,12 +689,12 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 
 		for (_uint i = 0; i < MeshBoneCount; ++i)
 		{
-			XMStoreFloat4x4(&SkinMatrices[i] ,XMMatrixIdentity());
+			XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
 		}
 
 		_uint temp = 0;
 		vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
-		vector<_int> boneIndices = pMesh->Get_BoneIndices(); 
+		vector<_int> boneIndices = pMesh->Get_BoneIndices();
 
 		for (_uint i = 0; i < MeshBoneCount; ++i)
 		{
@@ -669,8 +723,8 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 			return E_FAIL;
 		}
 	}
-		break;
-#endif // 기무리
+	break;
+#endif // _DEBUG
 
 	default:
 		break;

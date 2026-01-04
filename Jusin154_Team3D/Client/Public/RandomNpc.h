@@ -26,13 +26,15 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
+	
+	virtual _wstring Get_Name() override;
 protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	CUnit* m_pPlayerAllyUnit = { nullptr };
 	CRandomNpc* m_pNPC_Ollivander = { nullptr };
 
-	class CNPCInteraction* m_pNPCInteraction = { nullptr };
+	/*class CNPCInteraction* m_pNPCInteraction = { nullptr };*/
 
 	CNPCStat* m_pNpcStat = { nullptr };
 	_int									m_iEntered = { 0 };
