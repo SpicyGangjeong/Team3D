@@ -119,6 +119,8 @@ HRESULT CCamera_Model::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
+	m_pModelCom->Get_BoneMatrixPtr("lookat");
+	m_pModelCom->Get_BoneMatrixPtr("lookat_target");
 	
 
 	return S_OK;

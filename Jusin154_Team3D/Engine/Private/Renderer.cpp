@@ -224,7 +224,10 @@ void CRenderer::Render_Shadow()
 	if (FAILED(m_pGameInstance->Bind_CascadeSplitRatio(m_pShader, "g_fCascadeSplitRatioFar", false))) {
 		assert(false);
 	}
-	if (FAILED(m_pGameInstance->Bind_CascadeBias(m_pShader, "g_vShadowBias"))) {
+	if (FAILED(m_pShader->Bind_RawValue("g_fMinShadowBrightness", &m_fMinShadowBrightness, sizeof(_float)))) {
+		assert(false);
+	}
+	if (FAILED(m_pGameInstance->Bind_CascadeValues(m_pShader))) {
 		assert(false);
 	}
 
