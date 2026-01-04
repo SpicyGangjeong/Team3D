@@ -1065,6 +1065,10 @@ PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody,
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel);
 }
+PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel, const _float4x4* pWorldMatrix)
+{
+	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel, pWorldMatrix);
+}
 PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1)
 {
 	return m_pPhysX_Manager->Create_PxJoint(eType, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);

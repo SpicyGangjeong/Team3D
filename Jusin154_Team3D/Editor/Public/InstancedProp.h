@@ -17,6 +17,7 @@ public:
 	typedef struct tagInstancedPropDesc
 	{
 		_bool		bEditMode{};
+		_bool		isAddCollider{};
 		_bool		isShake;
 		_float2		vRadius;
 		_float2		vSpeed;

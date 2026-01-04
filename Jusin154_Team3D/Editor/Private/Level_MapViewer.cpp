@@ -68,9 +68,9 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	/*if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
 		return E_FAIL;
-	}*/
+	}
 
 	//if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
 	//	return E_FAIL;
@@ -148,7 +148,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	CTerrain::TERRAIN_DESC Desc = {};
 
 	///* Hogsmeade */
-	Desc.isEdit = false;
+	Desc.isEdit = true;
 	Desc.iAlphaSizeX = 2048; 
 	Desc.iAlphaSizeY = 2048;
 	Desc.vPosition = _float3(-194, 18.5f, -153.f);
@@ -427,27 +427,27 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
 
-	///* LightPost */
-	//LightDesc.bEditMode = false;
-	//LightDesc.isShake = false;
-	//LightDesc.iGlassMeshIndex = 0;
-	//LightDesc.vRadius = _float2(0.f, 0.f);
-	//LightDesc.vSpeed = _float2(0.f, 0.f);
-	//LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
-	//LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
-	//	return E_FAIL;
+	/* LightPost */
+	LightDesc.bEditMode = false;
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 0;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
+		return E_FAIL;
 
-	///* LightPost_Floating */
-	//LightDesc.bEditMode = false;
-	//LightDesc.isShake = false;
-	//LightDesc.iGlassMeshIndex = 1;
-	//LightDesc.vRadius = _float2(0.f, 0.f);
-	//LightDesc.vSpeed = _float2(0.f, 0.f);
-	//LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
-	//LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
-	//	return E_FAIL;
+	/* LightPost_Floating */
+	LightDesc.bEditMode = false;
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 1;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
