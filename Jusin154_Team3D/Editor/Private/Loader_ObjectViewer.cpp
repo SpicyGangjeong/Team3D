@@ -116,12 +116,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Professor_EleazarFig_Model")
 	));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin",XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Ghost_Peeves_Model")
-	));
-
-
 #pragma endregion
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -211,6 +205,46 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Playable_Model")
 	));
 
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MatildaWeasely/MatildaWeasely.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_MatildaWeasely_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/SatyavatiShah/SatyavatiShah.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_SatyavatiShah_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/PhineasBlack/PhineasBlack.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_PhineasBlack_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/ChiyoKogawa/ChiyoKogawa.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_ChiyoKogawa_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Ghost_Peeves_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/M_Student/M_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_Student_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/F_Student/F_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_F_Student_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Elf.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Elf_Model")
+	));
+	
+
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Rct.fbx", XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_Student_Cmbt_Model")
@@ -256,10 +290,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	TEXT("Prototype_Component_Student_Cmbt_Model")
 	//));
 
-	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_AvadaKedavra.fbx", XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_Student_Cmbt_Model")
-	//));
+	/*futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_AvadaKedavra.fbx", XMMatrixIdentity(),
+		TEXT("Prototype_Component_Student_Cmbt_Model")
+	));*/
 
 	for (auto& job : futures) {
 		pair<_wstring, CModel*>* pResult = job.get();

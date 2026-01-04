@@ -128,7 +128,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
-	if (m_fTargetDistance >= 7.f)
+	if (m_fTargetDistance >= 6.f)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -178,6 +178,8 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 
 	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++)
 	{
+		if (i == ENUM_CLASS(GOBLIN_SKILL::THROW))
+			continue;
 		if (m_fSkillCoolTime[i] == 0.f)
 		{
 			m_pFSM->Change_State(FSMSTATE::COMBAT);

@@ -836,6 +836,9 @@
     <ClInclude Include="..\Public\Camera_Model.h">
       <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RandomNpc.h">
+      <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1737,6 +1740,9 @@
     <Filter Include="02.GameObjects\Cameras\Camera_Model">
       <UniqueIdentifier>{40504926-63cc-4132-ade2-5a789e1a82a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\RandomNpc">
+      <UniqueIdentifier>{88b62177-01fc-424d-a444-4fb5fd4b2db5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2519,6 +2525,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Model.cpp">
       <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RandomNpc.cpp">
+      <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

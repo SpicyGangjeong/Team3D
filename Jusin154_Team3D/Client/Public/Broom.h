@@ -39,6 +39,8 @@ public:
 	void Set_AISpeed(_float speedMul, _float accelMul);
 	void Set_Move(_bool bMove) { m_bMove = bMove; }	
 	_bool Get_Move() { return m_bMove; }
+	void Add_TurboBoost(_float fAmount) { m_fTurboBoost += fAmount; }
+	_float Get_TurboBoost() { return m_fTurboBoost; }
 	HRESULT         Ready_Child();
 
 private:
@@ -64,6 +66,8 @@ private:
 	_float m_fDecel = 1.f;
 	_float m_fTurnDecel = 0.3f;
 	_float m_fVerticalSpeed = 0.f;
+	_float m_fTurboBoost = {5.f};
+	_float m_fTurboBoostChargeDelay = {};
 
 	_float m_fFlyAccel = 1.f;
 	_float m_fFlyDecel = 1.f;
@@ -96,7 +100,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 	void Update_CameraCoordinateSystem();
-	void PlayerInput();
+	void PlayerInput(_float fTimeDelta);
 
 public:
 	static CBroom* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -269,7 +269,7 @@ HRESULT CBroomRacerAI::Ready_Components()
 		m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
 		break;
 	case 2:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_Ghost_Peeves_Model");
+		m_strModelPrototypeTag = TEXT("Prototype_Component_ChiyoKogawa_Model");
 		break;
 	default:
 		break;

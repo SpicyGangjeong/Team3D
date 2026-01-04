@@ -28,6 +28,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_OutLine();
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	HRESULT Render_MotionTrail(ID3D11ShaderResourceView* pSRV);
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -74,7 +75,7 @@ private:
 	virtual void Add_FSM();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::END)] = { 8.f,15.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::END)] = { 10.f,15.f };
 
 	_bool	m_bStep = { true };
 	_float	m_fTpTime = {};
@@ -95,7 +96,7 @@ private:
 	_float	m_fMoveDecisionLimit = 1.2f;
 
 	_float4 m_vDashDir = {};
-
+	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

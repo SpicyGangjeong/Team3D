@@ -1,0 +1,276 @@
+<Material>
+
+	<MI_HUM_F_Hair_ProHair02_Matilda	ShaderIndex = "5" OutLineWrite="5">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_ProHair02_Matilda_DAO_MSK" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_DefaultGrey_D" Extension=".png"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="T_HUM_F_Hair_ProHair02_Matilda_THV_MSK" Extension=".dds"/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_HUM_F_Hair_ProHair02_Matilda>
+
+
+	<MI_Professor_MatildaWeasley_Master	ShaderIndex = "8" OutLineWrite="8">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Professor_MatildaWeasley_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_Professor_MatildaWeasley_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="T_Professor_MatildaWeasley_MRO" Extension=".dds"/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_Professor_MatildaWeasley_Master>
+
+	<MI_HUM_N_Acc_Glasses_Glass01	ShaderIndex = "9" OutLineWrite="9">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_M_Acc_Glasses01_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="T_HUM_M_Acc_Glasses01_SRO" Extension=".dds"/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_HUM_M_Acc_Glasses01_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_HUM_N_Acc_Glasses_Glass01>
+
+
+
+	<MI_HUM_N_Heads_EyeOcclusion	ShaderIndex = "3" OutLineWrite="3">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Eye_Sclera_D" Extension=".png"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="BaseFlattenNormalMap" Extension=".png"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_HUM_N_Heads_EyeOcclusion>
+
+	<MI_Old_F_MatildaWeasleyHead	ShaderIndex = "6" OutLineWrite="16">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Old_F_Head_MWeasley_WithHands_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_Old_F_Head_MWeasley_WithHands_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="T_Old_F_Head_MWeasley_WithHands_SRXO" Extension=".dds"/>
+	</MI_Old_F_MatildaWeasleyHead>
+
+	<MI_HUM_N_Heads_Teeth	ShaderIndex = "1" OutLineWrite="1">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_Head_Teeth_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_HUM_Head_Teeth_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="T_HUM_F_Hair_ProHair02_Matilda_THV_MSK" Extension=".dds"/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="T_HUM_Head_Teeth_SRXO" Extension=".dds"/>
+	</MI_HUM_N_Heads_Teeth>
+	
+	
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "5" OutLineWrite="5">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_ProHair02_Matilda_DAO_MSK" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_DefaultGrey_D" Extension=".png"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="T_HUM_F_Hair_ProHair02_Matilda_THV_MSK" Extension=".dds"/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_HUM_N_Heads_Eyelash>
+
+	<MI_HUM_N_Heads_Eye	ShaderIndex = "2" OutLineWrite="2">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Eye_Iris_D" Extension=".png"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="BaseFlattenNormalMap" Extension=".png"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_HUM_N_Heads_Eye>
+	<MI_ClothSim	ShaderIndex = "8" OutLineWrite="22">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Professor_MatildaWeasley_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_Professor_MatildaWeasley_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="T_Professor_MatildaWeasley_MRO" Extension=".dds"/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_ClothSim>
+
+</Material>

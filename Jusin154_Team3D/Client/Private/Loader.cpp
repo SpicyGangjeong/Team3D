@@ -41,6 +41,7 @@
 #include "NPC_EleazarFig.h"
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
+#include "RandomNpc.h"
 
 #ifdef _DEBUG
 #include "Camera_Model.h"
@@ -1936,6 +1937,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC RanrokDesc{};
+		{
+			RanrokDesc.eType = ACTOR::BOX;
+			RanrokDesc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			RanrokDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			RanrokDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			RanrokDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			RanrokDesc.fContactOffset = { 0.05f };
+			RanrokDesc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
+			RanrokDesc.fDensity = 1.f;
+			RanrokDesc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			RanrokDesc.eLockFlag = {};
+			RanrokDesc.vAutoDamping = { 1.f, 1.f };
+			RanrokDesc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			RanrokDesc.vLocalTranslation = { 0.f, 5.f, 0.f };
+		}
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
@@ -1945,7 +1963,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
 			return E_FAIL;
 		}
-
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, RanrokDesc)))) {
+			return E_FAIL;
+		}
 		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
@@ -2008,8 +2028,38 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ChiyoKogawa_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/ChiyoKogawa/ChiyoKogawa.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_MatildaWeasely_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MatildaWeasely/MatildaWeasely.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SatyavatiShah_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/SatyavatiShah/SatyavatiShah.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ghost_Peeves_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Student_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/M_Student/M_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_F_Student_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/F_Student/F_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Elf_Model"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Elf.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 			return E_FAIL;
 		}
 	}
@@ -3207,6 +3257,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_GameObject_RandomNpc */
+	if (FAILED(m_pGameInstance->Add_Prototype<CRandomNpc>(g_iStaticLevel, CRandomNpc::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 #ifdef _DEBUG
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Model>(g_iStaticLevel, CCamera_Model::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -3328,6 +3383,17 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.iMaximumCapture = 4;
 		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
+			return E_FAIL;
+		}
+	}
+
+	{
+		CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
+		CMotion_Trail::MODELCAPTURE_DESC Desc{};
+		Desc.fMaxCaptureLifeTime = 2.f;
+		Desc.iMaximumCapture = 4;
+		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
 			return E_FAIL;
 		}
 	}
