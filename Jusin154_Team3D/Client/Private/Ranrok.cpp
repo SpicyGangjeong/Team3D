@@ -394,6 +394,9 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
 			0.75f);
@@ -407,6 +410,9 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
 			0.75f);
@@ -421,6 +427,9 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
 		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
 			0.75f);

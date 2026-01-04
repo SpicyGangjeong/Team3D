@@ -841,10 +841,10 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Hit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\RandomNpc.h">
       <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
 	</ClInclude>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
