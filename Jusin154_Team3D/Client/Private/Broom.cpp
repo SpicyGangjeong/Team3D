@@ -81,8 +81,9 @@ void CBroom::Update(_float fTimeDelta)
 
 	Update_CameraCoordinateSystem();
 
-	if(!m_pParentUnit->IsAI())
-		PlayerInput();
+	if (!m_pParentUnit->IsAI()) {
+		PlayerInput(fTimeDelta);
+	}
 	else {
 		m_fAITime += fTimeDelta;
 
@@ -132,8 +133,6 @@ void CBroom::Update(_float fTimeDelta)
 		m_pWindEffect->Get_Effect_Info()->fBlurIntensity = m_fSpeed / 30.f;
 
 	}
-
-
 
 }
 
@@ -278,8 +277,10 @@ void CBroom::Update_CameraCoordinateSystem()
 }
 
 
-void CBroom::PlayerInput()
+void CBroom::PlayerInput(_float fTimeDelta)
 {
+	if (!m_bRide)
+		return;
 	m_Input = {};
 
 	m_Input.Z = m_pGameInstance->Key_Pressing(DIK_W) ? 1.f : 0.f;
@@ -295,7 +296,33 @@ void CBroom::PlayerInput()
 		m_bHoverToggle = !m_bHoverToggle;
 	}
 
-	m_Input.bTurbo = m_pGameInstance->Mouse_Pressing(DIM_LBUTTON);
+	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+	{
+		if (m_fTurboBoost != 0.f) {
+			m_fTurboBoost -= fTimeDelta;
+			if (m_fTurboBoost <= 0.f) {
+				m_fTurboBoost = 0.f;
+			}
+			m_Input.bTurbo = true;
+		}
+		else {
+			m_Input.bTurbo = false;
+		}
+		m_fTurboBoostChargeDelay = 0.f;
+	}
+	else {
+		m_fTurboBoostChargeDelay += fTimeDelta;
+		if (m_fTurboBoostChargeDelay >= 1.f)
+		{
+			m_fTurboBoost += fTimeDelta;
+			if (m_fTurboBoost >= 5.f)
+			{
+				m_fTurboBoost = 5.f;
+			}
+		}
+		m_Input.bTurbo = false;
+	}
+
 	m_bTurbo = m_Input.bTurbo;
 }
 

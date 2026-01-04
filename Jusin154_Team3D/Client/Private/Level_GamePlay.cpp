@@ -32,6 +32,7 @@
 #include "NPC_EleazarFig.h"
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
+#include "RandomNpc.h"
 #pragma endregion
 
 
@@ -714,21 +715,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	}
 
 	_bool isLoad_NPC = { true };
+	_bool isLoad_RandomNPC = { true };
 #ifdef _DEBUG
 #ifdef gimch
-
+	isLoad_RandomNPC = true;
 #endif // gimch
 #ifdef 진우
-
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 기무리
 	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 나
-
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef Bin
 	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // Bin
 #endif // _DEBUG
 
@@ -751,6 +755,25 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			}
 		}
 	}
+
+	if (true == isLoad_NPC)
+	{
+		for (_uint i = 0; i < 6; i++)
+		{
+			{
+				CRandomNpc::NPCDESC NPCDesc{};
+				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
+				_float Z = m_pGameInstance->Real_Random_Float(20.f, 29.f);
+				NPCDesc.vPos = _float4(X, -0.4f, Z, 1.f);
+				NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+				NPCDesc.iIndex = i;
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRandomNpc>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
+					return E_FAIL;
+				}
+			}
+		}
+	}
+
 	return S_OK;
 }
 
@@ -797,7 +820,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // 
 #ifdef Bin
-
+	isLoad_Monster = true;
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {
