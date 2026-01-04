@@ -11,6 +11,7 @@
 #include "Dialogue_Font.h"
 #include "SpellLearn_Canvas.h"
 #include "Interaction_Key.h"
+#include "NPCInteraction.h"
 #include "Broom_TargetGate.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -345,6 +346,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Interaction_Key"), m_pInteraction_Key);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CNPCInteraction**>(&m_pNPCInteraction)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("NPCInteraction"), m_pNPCInteraction);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Canvas**>(&m_pSpellLearn_Canvas)))) {
 		return E_FAIL;

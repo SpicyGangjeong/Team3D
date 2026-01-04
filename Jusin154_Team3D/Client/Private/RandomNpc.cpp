@@ -40,6 +40,7 @@ HRESULT CRandomNpc::Initialize(void* pArg)
 	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
 
 	m_pModelCom->Set_AnimationIndex(0, true);
+	m_bNpc = true;
 	return S_OK;
 }
 
@@ -62,7 +63,7 @@ void CRandomNpc::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
-	m_pNPCInteraction->Set_Visible(0 < m_iEntered);
+	/*m_pNPCInteraction->Set_Visible(0 < m_iEntered);*/
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 }
 
@@ -159,6 +160,11 @@ void CRandomNpc::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float
 	if (fDistance < m_fEncounterDistance) {
 		m_iEntered = 4;
 	}
+}
+
+_wstring CRandomNpc::Get_Name()
+{
+	return m_pNpcStat->Get_Stat().pNpc_Name;
 }
 
 HRESULT CRandomNpc::Bind_ShaderResources()
@@ -266,11 +272,11 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		}
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
+	//	return E_FAIL;
+	//}
 
-	m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
+	//m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
 
 	return S_OK;
 }

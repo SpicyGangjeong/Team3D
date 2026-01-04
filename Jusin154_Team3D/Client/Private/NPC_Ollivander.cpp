@@ -36,7 +36,7 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
-	m_pNPCInteraction->Set_Visible(0 < m_iEntered);
+//	m_pNPCInteraction->Set_Visible(0 < m_iEntered);
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 }
 
@@ -135,6 +135,11 @@ void CNPC_Ollivander::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _
 	}
 }
 
+_wstring CNPC_Ollivander::Get_Name()
+{
+	return m_pNpcStat->Get_Stat().pNpc_Name;
+}
+
 HRESULT CNPC_Ollivander::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
@@ -182,6 +187,8 @@ HRESULT CNPC_Ollivander::Initialize(void* pArg)
 	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
 
 	m_pModelCom->Set_AnimationIndex(0, true);
+
+	m_bNpc = true;
 	return S_OK;
 }
 
@@ -221,11 +228,11 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
+	//	return E_FAIL;
+	//}
 
-	m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
+	//m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
 
 	return S_OK;
 }

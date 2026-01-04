@@ -65,6 +65,13 @@ namespace Client
 		class CMapElement_Chest* pChest = { nullptr };
 	}LOCKON_INFO;
 
+	typedef struct tegNPCInteractionInfo
+	{
+		CGameObject*	pOwner = { nullptr };
+		_wstring		pNPCName;
+		_float4			pNPCPosition{};
+	}NPCINTERACTIONINFO;
+
 	typedef struct tagUnitInfo
 	{
 		_wstring		pUnit_Name;
