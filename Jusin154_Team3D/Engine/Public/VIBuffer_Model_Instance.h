@@ -27,6 +27,9 @@ private:
 
 public:
 	_uint Get_NumMesh() const { return m_iNumMeshes; }
+	const _char* Get_MeshName(_uint iMeshIndex);
+	HRESULT Ready_PhysXMeshes(_uint iLevel);
+	
 
 public:
 	virtual HRESULT Initialize_Prototype(const _char* pModelFilePath, const _char* pMatrialPath);
@@ -46,6 +49,8 @@ private:
 	_uint										m_iCurrentNumInstance = {};
 	_uint										m_iMaxNumInstance = {};
 
+	_uint										m_iNumPhysXMeshes = {};
+
 	_float										m_fTimeAcc = {};
 	class CComputeShader*						m_pComputeShader = { nullptr };
 
@@ -60,6 +65,7 @@ private:
 
 	vector<vector<string>>						m_MeshMaterialPathes = {};
 
+	vector<PSX::PxTriangleMesh*>				m_TriMeshes = {};
 private:
 	HRESULT			Reay_Instance_Buffer();
 	HRESULT			Load_InstanceData(ifstream& in);

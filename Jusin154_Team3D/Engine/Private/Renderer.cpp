@@ -588,10 +588,6 @@ void CRenderer::Render_Fog()
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
 	m_pShader->Bind_RawValue("g_fDepthPackExponent", m_pGameInstance->Get_DepthPackExponentPtr(), sizeof(_float));
 
-	//if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
-	//    assert(false);
-	//}
-
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 		return;
 	}
