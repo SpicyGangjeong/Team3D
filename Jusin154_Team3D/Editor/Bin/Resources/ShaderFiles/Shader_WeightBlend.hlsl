@@ -62,7 +62,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
 
     //fClamp = clamp(vMixedDiffuse.a, 1e-4, 5e4);
-    
+     
     //Out.vBackBuffer = vector(vMixedDiffuse.rgb / fClamp, fRevealage);
     
     

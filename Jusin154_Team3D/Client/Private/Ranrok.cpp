@@ -11,6 +11,7 @@
 #include "TrailObject.h"
 #include "MapElement_Interactable.h"
 
+
 #pragma region STATE
 #include "State_Idle.h"
 #include "State_Move.h"
@@ -163,6 +164,28 @@ void CRanrok::Update(_float fTimeDelta)
 
 
 	Update_Disolve(fTimeDelta,0.8f);
+
+
+#pragma region TRAIL_UPDATE
+
+	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
+
+	_matrix LeftEyeMatrix = {};
+	_matrix RightEyeMatrix = {};
+
+	LeftEyeMatrix = XMLoadFloat4x4(m_pLeftEye_BoneMat);
+	RightEyeMatrix = XMLoadFloat4x4(m_pRightEye_BoneMat);
+
+
+	for (int i = 0; i < 3; ++i) {
+		LeftEyeMatrix.r[i] = XMVector3Normalize(LeftEyeMatrix.r[i]);
+		RightEyeMatrix.r[i] = XMVector3Normalize(RightEyeMatrix.r[i]);
+	}
+
+	m_pLeftEye_Trail->Trail_Update(LeftEyeMatrix * WorldMat, fTimeDelta);
+	m_pRightEye_Trail->Trail_Update(RightEyeMatrix * WorldMat, fTimeDelta);
+
+#pragma endregion
 
 }
 
@@ -342,6 +365,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
 			break;
 		}
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_HIT, this, &CollisionDesc->vWorldPos);
 	}
 	else
 	{
@@ -369,6 +394,9 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
 			0.75f);
@@ -382,6 +410,9 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
 			0.75f);
@@ -396,6 +427,9 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
 		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
 			0.75f);
@@ -489,6 +523,78 @@ HRESULT CRanrok::Ready_Components()
 
 HRESULT CRanrok::Ready_Parts()
 {
+#pragma region EFFECT
+	/* EFFECT */
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("LeftSmoke", g_iStaticLevel, &m_pLeftSmoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pLeftSmoke->Load("../Bin/Resources/Data/Effect/Ranrok/RanrokSmoke/Smoke", static_cast<LEVEL>(g_iStaticLevel));
+	m_pLeftSmoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("wrist_left_target"));
+
+	if (FAILED(Add_PartObject<CEffectParts>("RightSmoke", g_iStaticLevel, &m_pRightSmoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pRightSmoke->Load("../Bin/Resources/Data/Effect/Ranrok/RanrokSmoke/Smoke", static_cast<LEVEL>(g_iStaticLevel));
+	m_pRightSmoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("wrist_right_target"));
+
+	if (FAILED(Add_PartObject<CEffectParts>("BottomSmoke", g_iStaticLevel, &m_pBottomSmoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pBottomSmoke->Load("../Bin/Resources/Data/Effect/Ranrok/RanrokSmoke/Smoke_Bottom", static_cast<LEVEL>(g_iStaticLevel));
+	m_pBottomSmoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("hip"));
+
+	if (FAILED(Add_PartObject<CEffectParts>("LeftParticle", g_iStaticLevel, &m_pLeftPt, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pLeftPt->Load("../Bin/Resources/Data/Effect/Ranrok/RanrokSide/Side_PT", static_cast<LEVEL>(g_iStaticLevel));
+	m_pLeftPt->FollowParents(m_pModelCom->Get_BoneMatrixPtr("indexmiddlewing_04_right"));
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("RightParticle", g_iStaticLevel, &m_pRightPt, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pRightPt->Load("../Bin/Resources/Data/Effect/Ranrok/RanrokSide/Side_PT", static_cast<LEVEL>(g_iStaticLevel));
+	m_pRightPt->FollowParents(m_pModelCom->Get_BoneMatrixPtr("indexmiddlewing_04_left"));
+
+
+
+
+	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeftEye_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pLeftEye_Trail->Load_Trail("../Bin/Resources/Data/Effect/Ranrok/RanrokSide/Eye_Trail", static_cast<LEVEL>(g_iStaticLevel));
+	m_pLeftEye_Trail->Set_Visible(true);
+
+	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRightEye_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pRightEye_Trail->Load_Trail("../Bin/Resources/Data/Effect/Ranrok/RanrokSide/Eye_Trail", static_cast<LEVEL>(g_iStaticLevel));
+	m_pRightEye_Trail->Set_Visible(true);
+
+	m_pLeftEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_left");
+	m_pRightEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_right");
+
+#pragma endregion
+
 	return S_OK;
 }
 
@@ -586,11 +692,14 @@ HRESULT CRanrok::Render_Nonblend()
 		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
+
+#ifndef 진우
 	if (m_bMotionTrail) {
 		if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
 			return E_FAIL;
 		}
 	}
+#endif
 	return S_OK;
 }
 
@@ -837,6 +946,14 @@ void CRanrok::Free()
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pEffectPool);
 	SAFE_RELEASE(m_pRanrok_Point);
+	SAFE_RELEASE(m_pRightSmoke);
+	SAFE_RELEASE(m_pLeftSmoke);
+	SAFE_RELEASE(m_pBottomSmoke);
+	SAFE_RELEASE(m_pLeftEye_Trail);
+	SAFE_RELEASE(m_pRightEye_Trail);
+	SAFE_RELEASE(m_pRightPt);
+	SAFE_RELEASE(m_pLeftPt);
+
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }

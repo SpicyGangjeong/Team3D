@@ -190,6 +190,8 @@ call Update_Resources.bat
     <ClInclude Include="..\public\Dialogue_Font.h" />
     <ClInclude Include="..\public\NPCInteraction.h" />
     <ClInclude Include="..\public\PointLight.h" />
+    <ClInclude Include="..\Public\Ranrok_Hit.h" />
+    <ClInclude Include="..\Public\Ranrok_Impact.h" />
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
@@ -464,6 +466,8 @@ call Update_Resources.bat
     <ClCompile Include="..\private\Dialogue_Font.cpp" />
     <ClCompile Include="..\private\NPCInteraction.cpp" />
     <ClCompile Include="..\private\PointLight.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Hit.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Impact.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
