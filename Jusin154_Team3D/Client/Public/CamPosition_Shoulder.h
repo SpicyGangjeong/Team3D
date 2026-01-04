@@ -36,6 +36,8 @@ private:
 	HRESULT Ready_SubParts();
 	_vector Calc_LookTargetPos();
 	_vector Calc_FollowTargetPos(_fvector vLookTargetWorldPos);
+	_vector Calc_AnimFollowTargetPos(_fvector vGreedPos);
+	_vector Calc_BestPosition(_fvector vCastingPosition, _gvector vCastingDirection, _float fGreedDistance);
 	_vector Calc_DampingParentPos();
 
 #pragma region Base

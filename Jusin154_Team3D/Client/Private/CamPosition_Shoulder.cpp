@@ -102,7 +102,7 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 		_matrix CamMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("skt_cam"));
 		m_pLookTransform->Set_State(STATE::POSITION, (LookMatrix * OwnerMatrix).r[3]);
 		m_pFollowTransform->Set_WorldMatrix((CamMatrix * OwnerMatrix));
-		//m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(m_pLookTransform->Get_State(STATE::POSITION)));
+		m_pFollowTransform->Set_State(STATE::POSITION, Calc_AnimFollowTargetPos(m_pFollowTransform->Get_State(STATE::POSITION)));
 		m_pBinded_Camera->Sync_Follow(true);
 	}
 }
@@ -230,24 +230,45 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_fvector vLookTargetWorldPos
 	_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
 	_vector vDir = vHeadPos - vLookTargetWorldPos;
 	_float fLengthSQ = XMVectorGetX(XMVector3LengthSq(vDir));
-
-	if (fLengthSQ < FLT_EPSILON)
-	{
+	
+	if (fLengthSQ < FLT_EPSILON) {
 		vDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
-		vDir = XMVector3Rotate(vDir, fRotQ);
 	}
-	else
+
+	vDir = XMVector3Normalize(vDir);
+	vDir = XMVector3Rotate(vDir, fRotQ);
+
+	return Calc_BestPosition(vLookTargetWorldPos, vDir, fBestFollowTargetDistance);
+}
+_vector CCamPosition_Shoulder::Calc_AnimFollowTargetPos(_fvector vGreedPos)
+{
+	_vector vDestPos = Calc_DampingParentPos();
+	_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
+	_vector vDir = vGreedPos - vHeadPos;
+	_float fLength = XMVectorGetX(XMVector3Length(vDir));
+	_vector vDiff = vDir;
+	if (fLength < FLT_EPSILON5) {
+		vDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+	}
+
+	vDir = XMVector3Normalize(vDir);
+
+	return Calc_BestPosition(vHeadPos, vDir, fLength);
+}
+_vector CCamPosition_Shoulder::Calc_BestPosition(_fvector vCastingPosition, _gvector vCastingDirection, _float fGreedDistance)
+{
+	_float fZeroSafeDistance = fGreedDistance;
+	if (fZeroSafeDistance < FLT_EPSILON3)
 	{
-		vDir = XMVector3Normalize(vDir);
-		vDir = XMVector3Rotate(vDir, fRotQ);
+		fZeroSafeDistance = FLT_EPSILON3;
 	}
 
 	m_BufferHit = {};
-	_bool bHit = m_pGameInstance->SphereCast( 0.25f, vLookTargetWorldPos, vDir, fBestFollowTargetDistance,
-					PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eSTATIC/*|PSX::PxQueryFlag::eDYNAMIC*/, m_BufferHit);
+	_bool bHit = m_pGameInstance->SphereCast(0.25f, vCastingPosition, vCastingDirection, fZeroSafeDistance,
+		PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eSTATIC/*|PSX::PxQueryFlag::eDYNAMIC*/, m_BufferHit);
 
 	if (false == bHit) {
-		return vLookTargetWorldPos + vDir * fBestFollowTargetDistance;
+		return vCastingPosition + vCastingDirection * fZeroSafeDistance;
 	}
 
 	vector<PSX::PxSweepHit> sweepHits;
@@ -271,7 +292,7 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_fvector vLookTargetWorldPos
 	_float fCameraSurfaceOffset = 0.05f;
 	_float fCameraMinDistance = 0.20f;
 	_float fDistance = { };
-	_float fFinalTargetDistance = fBestFollowTargetDistance;
+	_float fFinalTargetDistance = fZeroSafeDistance;
 	for (auto& hit : sweepHits)
 	{
 		fDistance = hit.distance - fCameraSurfaceOffset;
@@ -284,23 +305,18 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_fvector vLookTargetWorldPos
 		}
 	}
 
-	_float fSafeDistance = fBestFollowTargetDistance;
-	if (fSafeDistance < FLT_EPSILON3)
-	{
-		fSafeDistance = FLT_EPSILON3;
-	}
-
-	_float fBestFocalRatio = m_vFocalRatio.y * fFinalTargetDistance / fSafeDistance;
+	_float fBestFocalRatio = m_vFocalRatio.y * fFinalTargetDistance / fZeroSafeDistance;
 
 	if (fBestFocalRatio < m_fFocalRatioMin) {
 		fBestFocalRatio = m_fFocalRatioMin;
-	} else if (fBestFocalRatio > m_vFocalRatio.y) {
+	}
+	else if (fBestFocalRatio > m_vFocalRatio.y) {
 		fBestFocalRatio = m_vFocalRatio.y;
 	}
 
 	m_fFocalRatioTargetValue = fBestFocalRatio;
 
-	return vLookTargetWorldPos + vDir * fFinalTargetDistance;
+	return vCastingPosition + vCastingDirection * fFinalTargetDistance;
 }
 _vector CCamPosition_Shoulder::Calc_DampingParentPos()
 {
