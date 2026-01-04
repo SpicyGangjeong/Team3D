@@ -345,10 +345,13 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 		if (FAILED(Bind_ShaderParameters(i))) {
 			return E_FAIL;
 		}
+
 		if (i == ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH)){
+#ifdef 기무리
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW_LEGACY)))) {
 				return E_FAIL;
 			}
+#endif // 기무리
 		}
 		else {
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
@@ -543,6 +546,8 @@ HRESULT CPlayer::Ready_Parts()
 
 	//m_pModelCom->Play_Animation()
 	//XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("broomSocket"));
+#ifdef 기무리
+
 	{
 		CPlayerRobe::PlayerRobe_DESC Desc{};
 		Desc.pModel = m_pModelCom;
@@ -552,6 +557,8 @@ HRESULT CPlayer::Ready_Parts()
 			assert(false);
 		}
 	}
+
+#endif // 기무리
 
 
 	return S_OK;
@@ -619,6 +626,8 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		fMixerFactor = 0.658333f;
 		iColorMixerMethod = 1;
 		break;
+#ifdef 기무리
+
 	case PLAYER_MESH_ORDER::ROBE_CLOTH:
 	{
 		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
@@ -661,6 +670,7 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		}
 	}
 		break;
+#endif // 기무리
 
 	default:
 		break;

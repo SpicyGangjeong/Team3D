@@ -231,7 +231,11 @@ struct PS_OUT_FLT4_DOUBLE
 struct PS_OUT_BLUR_X
 {
     float4 vBlurX : SV_TARGET0;
-    float4 vBlurWeight : SV_TARGET1;
+};
+struct PS_OUT_BLUR_X_ENV
+{
+    float4 vBlurX : SV_TARGET0;
+    float   fBlurWeight : SV_TARGET1;
 };
 struct PS_OUT_SSAO_AMBIENT_OCCLUSION
 {
@@ -956,13 +960,12 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     }
     
     Out.vBlurX = vColor;
-    Out.vBlurWeight = 0.f;
     
     return Out;
 }
-PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
+PS_OUT_BLUR_X_ENV PS_MAIN_BLUR_X_ENV(PS_IN In)
 {
-    PS_OUT_BLUR_X Out;
+    PS_OUT_BLUR_X_ENV Out;
     
     float4 vDepthDesc = float4(0.f, 0.f, 0.f, 1.f);
     float3 vColor = float3(0.f, 0.f, 0.f);
@@ -979,7 +982,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     if (false == AlmostEqual3(vCenter.a, fTerrain))
     { // 터레인셀이 아니면 스킵
         Out.vBlurX = vOriginal;
-        Out.vBlurWeight = 0.0f;
+        Out.fBlurWeight = 0.f;
         return Out;
     }
     
@@ -994,7 +997,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     if (fBlurAmount <= FLT_EPSILON3)  {
         // 최소치 이내면 블러 안함
         Out.vBlurX = vOriginal;
-        Out.vBlurWeight = 0.0f;
+        Out.fBlurWeight = 0.f;
         return Out;
     }
     
@@ -1024,7 +1027,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     if (fAcc <= FLT_EPSILON3)
     { // 블러 실패하면 원본값 씀
         Out.vBlurX = vOriginal;
-        Out.vBlurWeight = 0.0f;
+        Out.fBlurWeight = 0.f;
         return Out;
     }
     else
@@ -1046,7 +1049,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     float3 vFinalColor = lerp(vOriginal.rgb, vBlurAdjusted, fBlendAmount);
     
     Out.vBlurX = float4(vColor, fOriginalAlpha);
-    Out.vBlurWeight = fAcc;
+    Out.fBlurWeight = fAcc;
     
     return Out;
 }
@@ -1157,7 +1160,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     }
     
     Out.vBlurX = vColor;
-    Out.vBlurWeight = 0.f;
     
     return Out;
 }

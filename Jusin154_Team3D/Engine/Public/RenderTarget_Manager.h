@@ -29,6 +29,8 @@ public:
 	// 랜더 타겟의 크기를 dest로 다시 맞춤
 	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
+	void	Flush_All_SRVs(_uint iStartSlot = 0, _uint numSlots = D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
+	void	Flush_All_CSUAVs(_uint iStartSlot = 0, _uint numSlots = D3D11_PS_CS_UAV_REGISTER_COUNT);
 
 #ifdef _DEBUG
 public:
