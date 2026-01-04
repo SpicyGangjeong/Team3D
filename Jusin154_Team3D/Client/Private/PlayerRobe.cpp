@@ -29,7 +29,7 @@ void CPlayerRobe::Update(_float fTimeDelta)
 		XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr());
 
 	m_pRobeMainAnchor->Move_Kinematic(SocketMatrixFixed, false);
-	m_pRobeMainAnchor->Get_Actor()->wakeUp();
+	//m_pRobeMainAnchor->Get_Actor()->wakeUp();
 
 	Update_LegsPosition();
 	Update_RobeSocketPosition();
@@ -235,112 +235,6 @@ HRESULT CPlayerRobe::Render_BonePhysX()
 }
 #endif // _DEBUG
 
-HRESULT CPlayerRobe::Update_RobeJoints()
-{
-	for (_uint i = ENUM_CLASS(PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_START); i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
-		m_JointDescriptions[i].InitFromJoint(*m_pDynamicJoints[i]);
-		switch (PLAYER_JOINT_ORDER(i))
-		{
-			/* From Origin */
-		case PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_START:
-		case PLAYER_JOINT_ORDER::ORIGIN_TO_TUP_START:
-		case PLAYER_JOINT_ORDER::ORIGIN_TO_LUP_START:
-			m_JointDescriptions[i].iMotionTwist = 0;
-			m_JointDescriptions[i].iMotionSwing1 = 0;
-			m_JointDescriptions[i].iMotionSwing2 = 0;
-			m_JointDescriptions[i].fLinearLimit = 0.f;
-			m_JointDescriptions[i].fTwistAbsDeg = 0.f;
-			m_JointDescriptions[i].fSwingDeg = 5.f;
-			break;
-		case PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_END:
-		case PLAYER_JOINT_ORDER::ORIGIN_TO_TUP_END:
-		case PLAYER_JOINT_ORDER::ORIGIN_TO_LUP_END:
-			m_JointDescriptions[i].iMotionTwist = 0;
-			m_JointDescriptions[i].iMotionSwing1 = 0;
-			m_JointDescriptions[i].iMotionSwing2 = 0;
-			m_JointDescriptions[i].fLinearLimit = 0.f;
-			m_JointDescriptions[i].fTwistAbsDeg = 0.f;
-			m_JointDescriptions[i].fSwingDeg = 5.f;
-			break;
-
-
-			/* From_Middle */
-		case PLAYER_JOINT_ORDER::RUP_TO_RMIDDLE_START:
-		case PLAYER_JOINT_ORDER::TUP_TO_TMIDDLE_START:
-		case PLAYER_JOINT_ORDER::LUP_TO_LMIDDLE_START:
-			m_JointDescriptions[i].iMotionTwist = 0;
-			m_JointDescriptions[i].iMotionSwing1 = 0;
-			m_JointDescriptions[i].iMotionSwing2 = 0;
-			m_JointDescriptions[i].fLinearLimit = 0.f;
-			m_JointDescriptions[i].fTwistAbsDeg = 0.f;
-			m_JointDescriptions[i].fSwingDeg = 10.f;
-			break;
-
-		case PLAYER_JOINT_ORDER::RUP_TO_RMIDDLE_END:
-		case PLAYER_JOINT_ORDER::TUP_TO_TMIDDLE_END:
-		case PLAYER_JOINT_ORDER::LUP_TO_LMIDDLE_END:
-			m_JointDescriptions[i].iMotionTwist = 1;
-			m_JointDescriptions[i].iMotionSwing1 = 1;
-			m_JointDescriptions[i].iMotionSwing2 = 1;
-			m_JointDescriptions[i].fLinearLimit = 0.f;
-			m_JointDescriptions[i].fSwingDeg = 0.f;
-			m_JointDescriptions[i].fTwistAbsDeg = 0.f;
-
-			m_JointDescriptions[i].bEnableSlerpDrive = true;
-			m_JointDescriptions[i].fLinearStiffness = 10.f;
-			m_JointDescriptions[i].fSlerpDamping = 3.f;
-			m_JointDescriptions[i].fSlerpForceLimit = 40.f;
-			m_JointDescriptions[i].bSlerpAccel = true;
-			break;
-
-
-			/* From_Lower */
-		case PLAYER_JOINT_ORDER::RMIDDLE_TO_RR_START:
-		case PLAYER_JOINT_ORDER::RMIDDLE_TO_R_START:
-			m_JointDescriptions[i].iMotionTwist = 1;
-			m_JointDescriptions[i].iMotionSwing1 = 1;
-			m_JointDescriptions[i].iMotionSwing2 = 1;
-			m_JointDescriptions[i].fLinearLimit = 0.f;
-			m_JointDescriptions[i].fTwistAbsDeg = 15.f;
-			m_JointDescriptions[i].fSwingDeg = 15.f;
-			break;
-
-		case PLAYER_JOINT_ORDER::RMIDDLE_TO_R_END:
-		case PLAYER_JOINT_ORDER::RMIDDLE_TO_RR_END:
-			break;
-		case PLAYER_JOINT_ORDER::TMIDDLE_TO_TR_START:
-		case PLAYER_JOINT_ORDER::TMIDDLE_TO_TL_START:
-			m_JointDescriptions[i].iMotionTwist = 1;
-			m_JointDescriptions[i].iMotionSwing1 = 1;
-			m_JointDescriptions[i].iMotionSwing2 = 1;
-			m_JointDescriptions[i].fLinearLimit = 0.f;
-			m_JointDescriptions[i].fTwistAbsDeg = 15.f;
-			m_JointDescriptions[i].fSwingDeg = 15.f;
-			break;
-
-		case PLAYER_JOINT_ORDER::TMIDDLE_TO_TR_END:
-		case PLAYER_JOINT_ORDER::TMIDDLE_TO_TL_END:
-			break;
-		case PLAYER_JOINT_ORDER::LMIDDLE_TO_L_START:
-		case PLAYER_JOINT_ORDER::LMIDDLE_TO_LL_START:
-			m_JointDescriptions[i].iMotionTwist = 1;
-			m_JointDescriptions[i].iMotionSwing1 = 1;
-			m_JointDescriptions[i].iMotionSwing2 = 1;
-			m_JointDescriptions[i].fLinearLimit = 0.f;
-			m_JointDescriptions[i].fTwistAbsDeg = 15.f;
-			m_JointDescriptions[i].fSwingDeg = 15.f;
-			break;
-
-		case PLAYER_JOINT_ORDER::LMIDDLE_TO_L_END:
-		case PLAYER_JOINT_ORDER::LMIDDLE_TO_LL_END:
-			break;
-		default:
-			break;
-		}
-		m_JointDescriptions[i].ApplyToJoint(*m_pDynamicJoints[i]);
-	}
-	return S_OK;
-}
 HRESULT CPlayerRobe::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
@@ -672,7 +566,6 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 		JointDesc.ApplyToJoint(*m_pDynamicJoints[i]);
 		m_JointDescriptions[i] = JointDesc;
 	}
-	//Update_RobeJoints();
 
 #ifdef _DEBUG
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.05f, 22, false, false));

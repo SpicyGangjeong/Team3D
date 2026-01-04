@@ -75,7 +75,7 @@ private:
 	virtual void Add_FSM();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 5.f,2.f,15.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 10.f,2.f,15.f };
 
 	_bool	m_bStep = { true };
 	_float	m_fTpTime = {};

@@ -32,6 +32,7 @@
 #include "NPC_EleazarFig.h"
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
+#include "RandomNpc.h"
 #pragma endregion
 
 
@@ -326,9 +327,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -449,7 +450,8 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* InstanceProp Oak_Tree*/
 	Desc.isShake = true;
-	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.bEnableRigidbody = true;
+	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
@@ -459,6 +461,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* BearBerry */
 	Desc.isShake = true;
+	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.6f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
@@ -469,6 +472,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* SM_HM_OwlPost_Window_A */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -476,6 +480,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	///* WA_Rectangle_Double_A */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -483,6 +488,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	///* WC_Retangle_Double_A */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -490,6 +496,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	///* WA_Square_Double_C */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -497,6 +504,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* Quid_Window_A */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -504,6 +512,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* Ollivanders_Box_Window */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -511,6 +520,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* WC_L_DoubleS_A */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -518,6 +528,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* WC_Round_Double_A */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -525,6 +536,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* SM_HM_Door1a */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -532,6 +544,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* SM_HM_Door2b */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
@@ -539,6 +552,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* OakTree_TallA */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.016f);
 	Desc.vSpeed = _float2(0.01f, 0.1f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA";
@@ -548,6 +562,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* Shrub_B */
 	Desc.isShake = true;
+	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.04f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Shrub_B";
@@ -557,6 +572,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* BogMyrtle_A */
 	Desc.isShake = true;
+	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.04f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A";
@@ -566,6 +582,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* Dogwood_B */
 	Desc.isShake = true;
+	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Dogwood_B";
@@ -575,6 +592,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* ScotsPine_LargeA */
 	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA";
@@ -587,6 +605,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* LightPost */
 	LightDesc.isShake = false;
+	LightDesc.bEnableRigidbody = true;
 	LightDesc.iGlassMeshIndex = 0;
 	LightDesc.vRadius = _float2(0.f, 0.f);
 	LightDesc.vSpeed = _float2(0.f, 0.f);
@@ -597,6 +616,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 	/* LightPost_Floating */
 	LightDesc.isShake = false;
+	LightDesc.bEnableRigidbody = true;
 	LightDesc.iGlassMeshIndex = 1;
 	LightDesc.vRadius = _float2(0.f, 0.f);
 	LightDesc.vSpeed = _float2(0.f, 0.f);
@@ -695,21 +715,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	}
 
 	_bool isLoad_NPC = { true };
+	_bool isLoad_RandomNPC = { true };
 #ifdef _DEBUG
 #ifdef gimch
-
+	isLoad_RandomNPC = true;
 #endif // gimch
 #ifdef 진우
-
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 기무리
 	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 나
-
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef Bin
 	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // Bin
 #endif // _DEBUG
 
@@ -732,6 +755,25 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			}
 		}
 	}
+
+	if (true == isLoad_NPC)
+	{
+		for (_uint i = 0; i < 6; i++)
+		{
+			{
+				CRandomNpc::NPCDESC NPCDesc{};
+				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
+				_float Z = m_pGameInstance->Real_Random_Float(20.f, 29.f);
+				NPCDesc.vPos = _float4(X, -0.4f, Z, 1.f);
+				NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+				NPCDesc.iIndex = i;
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRandomNpc>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
+					return E_FAIL;
+				}
+			}
+		}
+	}
+
 	return S_OK;
 }
 
@@ -778,7 +820,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // 
 #ifdef Bin
-
+	isLoad_Monster = true;
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {

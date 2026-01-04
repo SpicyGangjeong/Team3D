@@ -113,8 +113,9 @@ private:
 	_float m_fHeadAimWeight = {};
 	_float m_fPrevHpRatio = {};
 	_int   m_iBreathRand = {};
+	_bool  m_bMotionTrail = {};
 
-	_float2 m_vCaptureTimer = { 0.f, 0.3f };
+	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 	_float					 m_fTuckedSpeed = { 90.f };

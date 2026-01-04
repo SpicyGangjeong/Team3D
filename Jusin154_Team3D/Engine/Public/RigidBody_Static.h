@@ -16,7 +16,8 @@ public:
 
 	typedef struct tagRigidBody_STATIC_Desc : public CRigidBody::RIGIDBODY_DESC
 	{
-		const _tchar* pMeshName = { nullptr };
+		const _tchar*		pMeshName = { nullptr };
+		const _float4x4*	pWorldMatrix = { nullptr };
 	}RIGIDBODY_STATIC_DESC;
 
 private:

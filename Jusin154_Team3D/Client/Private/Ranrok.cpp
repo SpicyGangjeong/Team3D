@@ -108,13 +108,16 @@ void CRanrok::Update(_float fTimeDelta)
 
 	m_pFSM->Update_State(fTimeDelta);
 
-	m_vCaptureTimer.x += fTimeDelta;
-	if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
-		m_vCaptureTimer.x = 0.f;
-		if (FAILED(m_pModelCom->Capture_BoneBuffer(m_pMotionTrailCom, *m_pTransformCom->Get_WorldMatrixPtr()))) {
-			assert(false);
+	if (m_bMotionTrail) {
+		m_vCaptureTimer.x += fTimeDelta;
+		if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
+			m_vCaptureTimer.x = 0.f;
+			if (FAILED(m_pModelCom->Capture_BoneBuffer(m_pMotionTrailCom, *m_pTransformCom->Get_WorldMatrixPtr()))) {
+				assert(false);
+			}
 		}
 	}
+
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
@@ -234,7 +237,7 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 			return E_FAIL;
 
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
@@ -275,13 +278,18 @@ HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 
 _vector CRanrok::Get_LockOnPos()
 {
+	_vector Offset = XMVectorZero();
+	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
+	{
+		Offset = XMVectorSetY(Offset, 10.f);
+	}
 	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
-		return m_pCharacter_Controller->Get_Position();
+		return m_pCharacter_Controller->Get_Position() + Offset;
 	}
 	else if (nullptr != m_pRigidBody) {
-		return m_pRigidBody->Get_Position();
+		return m_pRigidBody->Get_Position() + Offset;
 	}
-	return Get_WorldPostion();
+	return Get_WorldPostion() + Offset;
 }
 
 void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
@@ -296,7 +304,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
-	//m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
 
 	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
@@ -348,37 +356,58 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 
-	/*m_DamageInfo.fDamage = damagePair.first;
-	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);*/
+	m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
 		return;
 	}
 
 	_float curr = Get_HpRatio();
-
+	pair<_uint, _bool> pairAnimInfo = {};
 	if (m_fPrevHpRatio > 0.85f && curr <= 0.85f)
 	{
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_fPrevHpRatio = curr;
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_bDisolve = true; },
+			0.75f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.95f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
 	else if (m_fPrevHpRatio > 0.7f && curr <= 0.7f)
 	{
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_fPrevHpRatio = curr;
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_bDisolve = true; },
+			0.75f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.95f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
 	else if (m_fPrevHpRatio > 0.5f && curr <= 0.5f)
 	{
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
 		m_fPrevHpRatio = curr;
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_bDisolve = true; },
+			0.75f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.95f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
 	m_fPrevHpRatio = curr;
 
-	if (IsHitStateDisabled() && IsHitSpellDisabled()) {
+	if (!IsHitStateDisabled() || IsHitSpellDisabled()) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
 	}
 }
@@ -437,7 +466,7 @@ HRESULT CRanrok::Ready_Components()
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK);
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
@@ -527,9 +556,9 @@ HRESULT CRanrok::Render_Nonblend()
 		}
 	}
 
-	if (m_bDrawOutLine) {
+	/*if (m_bDrawOutLine) {
 		Render_OutLine();
-	}
+	}*/
 
 #ifdef _DEBUG
 	if (true == m_pCharacter_Controller->IsActive()) {
@@ -557,8 +586,10 @@ HRESULT CRanrok::Render_Nonblend()
 		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
-	if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
-		return E_FAIL;
+	if (m_bMotionTrail) {
+		if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+			return E_FAIL;
+		}
 	}
 	return S_OK;
 }

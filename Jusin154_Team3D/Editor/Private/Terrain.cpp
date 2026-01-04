@@ -64,6 +64,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
 		Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 		/* Com_RigidBody */
 		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
 			reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
@@ -305,36 +306,35 @@ void CTerrain::Describe_Entity()
 	GUI::Begin("Terrain");
 
 #pragma region ALPHA_MAP
-	GUI::InputInt("Color", &m_iColorIndex);
-	m_iColorIndex = max(0, min(4, m_iColorIndex));
+	//GUI::InputInt("Color", &m_iColorIndex);
+	//m_iColorIndex = max(0, min(4, m_iColorIndex));
 
 	GUI::InputInt("Rnage", (_int*)(&m_iMaskRange));
-	GUI::DragFloat("Value", &m_fMaskValue, 0.01f, -1.0f, 1.f);
-	if (GUI::Button("Save", ImVec2(100.f, 30.f)))
-	{
-		m_pAlphaMap->Save_ToFile("Hogwart_AlphaMap.bin");
-	}
-	if (GUI::Button("Load", ImVec2(100.f, 30.f)))
-	{
-		m_pAlphaMap->Load_ToFile("Hogwart_AlphaMap.bin");
-	}	
+	//GUI::DragFloat("Value", &m_fMaskValue, 0.01f, -1.0f, 1.f);
+	//if (GUI::Button("Save", ImVec2(100.f, 30.f)))
+	//{
+	//	m_pAlphaMap->Save_ToFile("Hogwart_AlphaMap.bin");
+	//}
+	//if (GUI::Button("Load", ImVec2(100.f, 30.f)))
+	//{
+	//	m_pAlphaMap->Load_ToFile("Hogwart_AlphaMap.bin");
+	//}	
 
-	m_iMaskRange = max(1, m_iMaskRange);
-	GUI::DragFloat("Up", &m_fUpValue, 0.01f, -1.0f, 1.f);
+	m_iMaskRange = max(0, m_iMaskRange);
+	GUI::InputFloat("Up Value", &m_fUpValue, 0.001f, 0.1f);
 
 	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 	{
 		if (m_pGameInstance->isPicking(&m_vPickingPosition))
 		{
-			//if (m_pGameInstance->Key_Pressing(DIK_PERIOD))
-			//	m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue, m_vPickingPosition, m_iMaskRange);
-			//if (m_pGameInstance->Key_Pressing(DIK_COMMA))
-			//	m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue * -1.f, m_vPickingPosition, m_iMaskRange);
+			if (m_pGameInstance->Key_Pressing(DIK_PERIOD))
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue, m_vPickingPosition, m_iMaskRange);
+			if (m_pGameInstance->Key_Pressing(DIK_COMMA))
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue * -1.f, m_vPickingPosition, m_iMaskRange);
 
-
-			XMStoreFloat3(&m_vPickingPosition, XMVector3TransformCoord(XMLoadFloat3(&m_vPickingPosition), m_pTransformCom->Get_WorldMatrixInv()));
-			if(m_pGameInstance->Key_Pressing(DIK_M))
-				m_pAlphaMap->Update(m_vPickingPosition, m_iColorIndex, m_fMaskValue, m_iMaskRange);
+			//XMStoreFloat3(&m_vPickingPosition, XMVector3TransformCoord(XMLoadFloat3(&m_vPickingPosition), m_pTransformCom->Get_WorldMatrixInv()));
+			//if(m_pGameInstance->Key_Pressing(DIK_M))
+			//	m_pAlphaMap->Update(m_vPickingPosition, m_iColorIndex, m_fMaskValue, m_iMaskRange);
 
 		}
 	}
@@ -343,9 +343,9 @@ void CTerrain::Describe_Entity()
 #pragma region HEIGHT MAP
 	HRESULT hr = {};
 	if(GUI::Button("Save HeightMap"))
-		hr = m_pVIBufferCom->Save_HeightMap("Hogwart_HeightMap.bin");
+		hr = m_pVIBufferCom->Save_HeightMap("Hogsmeade_HeightMap.bin");
 	if(GUI::Button("Load HeightMap"))
-		hr = m_pVIBufferCom->Load_HeightMap("Hogwart_HeightMap.bin");
+		hr = m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin");
 #pragma endregion
 
 	_float4 vPos = {};

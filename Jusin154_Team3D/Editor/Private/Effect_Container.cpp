@@ -454,8 +454,6 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 			pPair.second();
 		}
 	}
-	
-
 }
 
 ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision)

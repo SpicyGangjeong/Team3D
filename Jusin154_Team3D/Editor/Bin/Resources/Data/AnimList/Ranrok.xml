@@ -62,7 +62,7 @@
 	<!-- HIT -->
 	<Anim state="HIT_BWD" index="22" loop="false"/>
 	<!-- Air Small -->
-	<Anim state="HIT_BWD2" index="37" loop="false"/>
+	<Anim state="HIT_BWD2" index="13" loop="false"/>
 	<!-- Air Large -->
 	<Anim state="HIT_BWD3" index="35" loop="false"/>
 	<!-- Ground Large -->
