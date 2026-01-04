@@ -65,8 +65,6 @@ HRESULT CRenderTarget_Manager::Begin_MRT(const _wstring& strMultiRenderTargetKey
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
-
     if (nullptr != pDSV) {
         m_pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
     }
@@ -97,8 +95,6 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NonClear(const _wstring& strMultiRender
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
-
     if (nullptr != pDSV) {
         m_pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
     }
@@ -126,8 +122,6 @@ HRESULT CRenderTarget_Manager::Begin_MRT_Include_BackBuffer(const _wstring& strM
 
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
-
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
 
     if (nullptr != pDSV) {
         m_pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
@@ -167,8 +161,6 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NO_DepthStencil(const _wstring& strMRTT
 
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
-
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
 
     for (auto& pRenderTarget : *pMRTList)
     {
@@ -303,7 +295,6 @@ HRESULT CRenderTarget_Manager::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer
     { // Bind RTVs
         _uint iNumRenderTargets = { 1 };
         ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { pOutput->Get_RTV(), };
-        m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
         m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, nullptr);
     }
 
@@ -400,7 +391,6 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
     { // Bind RTVs
         _uint iNumRenderTargets = { 1 };
         ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { pOutput->Get_RTV(), };
-        m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
         m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, nullptr);
     }
 
@@ -529,9 +519,9 @@ HRESULT CRenderTarget_Manager::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CS
 
 HRESULT CRenderTarget_Manager::End_MRT()
 {
-    ID3D11RenderTargetView* pRenderTargets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { m_pBackBufferRTV };
-
-    m_pContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, pRenderTargets, m_pOriginalDSV);
+    // 1개만 채워넣어도 나머지 언급되지 않은 7개 타겟들은 전부 null로 채워지는 기본동작을 함
+    // https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-omsetrendertargets
+    m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pOriginalDSV); 
 
     SAFE_RELEASE(m_pBackBufferRTV);
     SAFE_RELEASE(m_pOriginalDSV);

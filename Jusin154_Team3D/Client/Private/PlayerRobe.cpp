@@ -15,7 +15,7 @@ void CPlayerRobe::Priority_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
 #ifdef 기무리
-	Update_RobeJoints();
+	//Update_RobeJoints();
 #endif // 기무리
 
 	Describe_Entity();
@@ -193,6 +193,48 @@ HRESULT CPlayerRobe::Render_Legs()
 
 	return S_OK;
 }
+HRESULT CPlayerRobe::Render_BonePhysX()
+{
+	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f);
+	_fmatrix OwnerMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
+	_cmatrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+	ID3D11DepthStencilState* pPrevDSS = nullptr;
+	UINT iPrevStencilRef = 0;
+	m_pContext->OMGetDepthStencilState(&pPrevDSS, &iPrevStencilRef);
+
+	for (_uint iBoneIndex = 0; iBoneIndex < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++iBoneIndex)
+	{
+		_matrix WorldMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr(PLAYER_JOINT_BONE_NAMES[iBoneIndex])) * OwnerMatrix;
+
+		m_pSubShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
+			[this]() {
+				m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+			});
+	}
+	_matrix MainAnchorMatrix = /*XMMatrixRotationZ(XM_PIDIV2) * */XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix;
+	m_pSubShape->Draw(MainAnchorMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
+		[this]() {
+			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+		});
+	m_pRobeMainAnchor->Render([this]() {
+		m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+		});
+	Render_Legs();
+	_vector vRouteColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x0000ff, 1.f);
+	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
+		m_pRobeJointAnchor[i]->Render([this]() {
+			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+			});
+	}
+	m_pContext->OMSetDepthStencilState(pPrevDSS, iPrevStencilRef);
+	if (pPrevDSS != nullptr) {
+		pPrevDSS->Release();
+	}
+	return S_OK;
+}
+#endif // _DEBUG
+
 HRESULT CPlayerRobe::Update_RobeJoints()
 {
 	for (_uint i = ENUM_CLASS(PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_START); i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
@@ -299,48 +341,6 @@ HRESULT CPlayerRobe::Update_RobeJoints()
 	}
 	return S_OK;
 }
-HRESULT CPlayerRobe::Render_BonePhysX()
-{
-	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f);
-	_fmatrix OwnerMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
-	_cmatrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
-	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-	ID3D11DepthStencilState* pPrevDSS = nullptr;
-	UINT iPrevStencilRef = 0;
-	m_pContext->OMGetDepthStencilState(&pPrevDSS, &iPrevStencilRef);
-
-	for (_uint iBoneIndex = 0; iBoneIndex < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++iBoneIndex)
-	{
-		_matrix WorldMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr(PLAYER_JOINT_BONE_NAMES[iBoneIndex])) * OwnerMatrix;
-
-		m_pSubShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-			[this]() {
-				m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-			});
-	}
-	_matrix MainAnchorMatrix = /*XMMatrixRotationZ(XM_PIDIV2) * */XMLoadFloat4x4(m_pSocketMatrix) * OwnerMatrix;
-	m_pSubShape->Draw(MainAnchorMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true,
-		[this]() {
-			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-		});
-	m_pRobeMainAnchor->Render([this]() {
-		m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-		});
-	Render_Legs();
-	_vector vRouteColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x0000ff, 1.f);
-	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
-		m_pRobeJointAnchor[i]->Render([this]() {
-			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-			});
-	}
-	m_pContext->OMSetDepthStencilState(pPrevDSS, iPrevStencilRef);
-	if (pPrevDSS != nullptr) {
-		pPrevDSS->Release();
-	}
-	return S_OK;
-}
-#endif // _DEBUG
-
 HRESULT CPlayerRobe::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
@@ -672,7 +672,7 @@ HRESULT CPlayerRobe::Initialize(void* pArg)
 		JointDesc.ApplyToJoint(*m_pDynamicJoints[i]);
 		m_JointDescriptions[i] = JointDesc;
 	}
-	Update_RobeJoints();
+	//Update_RobeJoints();
 
 #ifdef _DEBUG
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.05f, 22, false, false));

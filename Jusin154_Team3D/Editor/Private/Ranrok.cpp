@@ -243,6 +243,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_bFireBurst)
 		return;
 
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
@@ -277,32 +278,47 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
 			break;
+		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
+			break;
 		}
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_HIT, this, &CollisionDesc->vWorldPos);
+		m_fHp -= 1.f;
 	}
 	else
 	{
 		//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
 
 		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
-
-		if (pProps != nullptr)
-		{
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
-		}
 	}
 
 
-	/*m_DamageInfo.fDamage = damagePair.first;
-	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
-	if (0 == damagePair.second) {
-		m_pFSM->Change_State(FSMSTATE::DEAD);
-		return;
-	}
-	if (damagePair.second <= Get_Hp().y / 2.f && m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
+	if (Get_HpRatio() == 0.85f)
 	{
-		m_pFSM->Change_State(FSMSTATE::LAND);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
+
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
 		return;
-	}*/
+	}
+	else if (Get_HpRatio() == 0.7f) {
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
+
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		return;
+	}
+	else  if (Get_HpRatio() == 0.5f)
+	{
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
+
+		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		return;
+	}
+
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
@@ -447,6 +463,7 @@ HRESULT CRanrok::Render_Nonblend()
 		Render_OutLine();
 	}
 
+#ifndef  진우
 #ifdef _DEBUG
 	if (true == m_pCharacter_Controller->IsActive()) {
 		if (FAILED(m_pCharacter_Controller->Render())) {
@@ -459,6 +476,9 @@ HRESULT CRanrok::Render_Nonblend()
 		}
 	}
 #endif
+#endif // ! 진우
+
+
 
 	if (0.f < m_fDeadRatio) {
 		_bool bDisolve = false;

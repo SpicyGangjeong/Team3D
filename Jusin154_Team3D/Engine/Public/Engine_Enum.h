@@ -14,7 +14,7 @@ enum class STAT { NAME, CURRENTHP, MAXHP, TARGETHP, MELEE, MAGIC, DEFENSE, SPEED
 enum class SHADOW : _ubyte { 
 		SHADOW_NEAR		= 1 << 0
 	,	SHADOW_MIDDLE	= 1 << 1
-	,	SHADOW_FAR		= 1 << 2
+	,	SHADOW_FAR		= 1 << 2 // Far는 현재 미사용
 	,	SHADOW_PRE		= 1 << 3
 ////////////////
 	,	END = 3 // 케스케이드 셰도우 한정

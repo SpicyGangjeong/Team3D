@@ -808,7 +808,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Fear.h">
       <Filter>04.Mechanic\State\Focus\Fear</Filter>
-          </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Ride_Bbooster_Slot.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
     </ClInclude>
@@ -832,6 +832,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ride_Panel.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Model.h">
+      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1706,7 +1709,7 @@
     </Filter>
     <Filter Include="04.Mechanic\State\Focus\Fear">
       <UniqueIdentifier>{99712e38-b76a-4c04-8ba3-16ddaac72679}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel">
       <UniqueIdentifier>{5bf233fa-6f9c-40d5-85c6-adbc7fcf7d28}</UniqueIdentifier>
     </Filter>
@@ -1730,6 +1733,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info">
       <UniqueIdentifier>{7876ff7e-f456-49ce-8fd6-766116613ff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\Camera_Model">
+      <UniqueIdentifier>{40504926-63cc-4132-ade2-5a789e1a82a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2486,7 +2492,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Fear.cpp">
       <Filter>04.Mechanic\State\Focus\Fear</Filter>
-         </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Ride_Bbooster_Slot.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
     </ClCompile>
@@ -2510,6 +2516,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ride_Panel.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Model.cpp">
+      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

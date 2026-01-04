@@ -742,6 +742,12 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge">
       <UniqueIdentifier>{c9d234fd-d9dc-4740-9e9e-32b986335ee7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Nomal_Hit">
+      <UniqueIdentifier>{a0da7e6b-8745-402e-9451-6430e1466915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Big_Hit">
+      <UniqueIdentifier>{d5746edc-1d52-42a0-8af3-3badc74ff45b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar">
       <UniqueIdentifier>{d26ffa70-5843-4e91-8a54-907abcc35a77}</UniqueIdentifier>
     </Filter>
@@ -1508,6 +1514,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Charge.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Hit.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Nomal_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Impact.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Big_Hit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2281,6 +2293,12 @@
     <ClCompile Include="..\Private\Ranrok_Charge.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Impact.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Big_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Hit.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Nomal_Hit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
@@ -2295,9 +2313,6 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxNorTex.hlsl">
-      <Filter>99.Define\SHADER</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPointParticle.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPosTex.hlsl">
