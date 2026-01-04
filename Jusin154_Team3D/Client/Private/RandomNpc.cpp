@@ -220,18 +220,24 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		}
 		break;
 	case 3:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_PhineasBlack_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHINEASBLACK"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 4:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_M_Student_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("M_STUDENT"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		break;
-	case 4:
+	case 5:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_F_Student_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("F_STUDENT"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		break;
-	case 5:
+	case 6:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_Elf_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("ELF"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;

@@ -62,6 +62,7 @@ protected:
 	_float			m_fRimLightPower = { 3.2f };
 	_float			m_fRimLightStrength = { 3.04f };
 	_float3			m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
+	_float			m_fMBIntensity = 1.f;
 
 	_bool			m_bAI = {};
 
