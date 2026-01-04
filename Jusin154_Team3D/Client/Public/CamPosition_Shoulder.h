@@ -82,6 +82,8 @@ private:
 	_bool m_bMovable = { true };
 
 	const _float4*			m_pParentPos = { nullptr };
+	const _float4x4*		m_pFollowAnimMatrix = { nullptr };
+	const _float4x4*		m_pLookAtAnimMatrix = { nullptr };
 	CTransform*				m_pLookTransform = { nullptr };
 	CTransform*				m_pFollowTransform = { nullptr };
 	CCamPosition_Target*	m_pTarget_LookPart = { nullptr };

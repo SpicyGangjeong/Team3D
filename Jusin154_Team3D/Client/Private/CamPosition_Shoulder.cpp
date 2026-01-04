@@ -95,15 +95,16 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 		if (bFinish) {
 			m_pBinded_Camera->Sync_Follow(false);
 			m_pModelCom->Set_AnimationIndex(UINT_MAX);
+			m_pBinded_Camera->EnableTransition(0.45f);
 			m_bPlayAnim = false;
 		}
 		_matrix OwnerMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
-		_matrix LookMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("lookat_target"));
-		_matrix CamMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("skt_cam"));
+		_matrix LookMatrix = XMLoadFloat4x4(m_pLookAtAnimMatrix);
+		_matrix CamMatrix = XMLoadFloat4x4(m_pFollowAnimMatrix);
 		m_pLookTransform->Set_State(STATE::POSITION, (LookMatrix * OwnerMatrix).r[3]);
-		m_pFollowTransform->Set_WorldMatrix((CamMatrix * OwnerMatrix));
+		m_pFollowTransform->Set_WorldMatrix(CamMatrix * OwnerMatrix);
 		m_pFollowTransform->Set_State(STATE::POSITION, Calc_AnimFollowTargetPos(m_pFollowTransform->Get_State(STATE::POSITION)));
-		m_pBinded_Camera->Sync_Follow(true);
+		m_pBinded_Camera->Sync_Follow(true); 
 	}
 }
 
@@ -372,10 +373,10 @@ HRESULT CCamPosition_Shoulder::Ready_Components(void* pArg)
 	m_pModelCom->Get_BoneMatrixPtr("ctrl_1");
 	m_pModelCom->Get_BoneMatrixPtr("ctrl_2");
 	m_pModelCom->Get_BoneMatrixPtr("ctl_shake");
-	m_pModelCom->Get_BoneMatrixPtr("skt_cam");
+	m_pFollowAnimMatrix = m_pModelCom->Get_BoneMatrixPtr("skt_cam");
 	m_pModelCom->Get_BoneMatrixPtr("root");
 	m_pModelCom->Get_BoneMatrixPtr("lookat");
-	m_pModelCom->Get_BoneMatrixPtr("lookat_target");
+	m_pLookAtAnimMatrix = m_pModelCom->Get_BoneMatrixPtr("lookat_target");
 
 
 	return S_OK;
