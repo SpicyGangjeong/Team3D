@@ -46,6 +46,7 @@ private:
 	_float2		m_vAccRotDegrees = { 0.f, 0.f };
 	_float2		m_vAccRealDegrees = { 0.f, 0.f };
 	_float3		m_vShoulderLocalPos = { 1.f, 2.f, 2.f };
+	_bool		m_bPlayAnim = { false };
 #pragma endregion
 #pragma region Lerp
 	_bool m_bStartGame = { true };
@@ -81,6 +82,7 @@ private:
 	CCamPosition_Target*	m_pTarget_LookPart = { nullptr };
 	CCamPosition_Target*	m_pTarget_FollowPart = { nullptr };
 	class CCamera_Gaze*		m_pBinded_Camera = { nullptr };
+	class CModel*			m_pModelCom = { nullptr };
 
 public:
 	static CCamPosition_Shoulder* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

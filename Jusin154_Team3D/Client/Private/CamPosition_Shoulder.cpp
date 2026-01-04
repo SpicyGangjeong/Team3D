@@ -329,6 +329,12 @@ HRESULT CCamPosition_Shoulder::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(&DescTransfrom))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Camera_Model"),
+		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 HRESULT CCamPosition_Shoulder::Ready_SubParts()
@@ -400,6 +406,7 @@ void CCamPosition_Shoulder::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pModelCom);
 	SAFE_RELEASE(m_pTarget_LookPart);
 	SAFE_RELEASE(m_pTarget_FollowPart);
 }
