@@ -248,11 +248,11 @@ void CRenderer::Render_Shadow()
 		m_pContext->RSSetViewports(1, &ViewPortDesc);
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_NEAR)]) {
-			//if (nullptr != pRenderObject) {
-			//	if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR))) {
-			//		assert(false);
-			//	}
-			//}
+			if (nullptr != pRenderObject) {
+				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR))) {
+					assert(false);
+				}
+			}
 
 			SAFE_RELEASE(pRenderObject);
 		}
@@ -282,11 +282,11 @@ void CRenderer::Render_Shadow()
 		m_pContext->RSSetViewports(1, &ViewPortDesc);
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_MIDDLE)]) {
-			//if (nullptr != pRenderObject) {
-			//	if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE))) {
-			//		assert(false);
-			//	}
-			//}
+			if (nullptr != pRenderObject) {
+				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE))) {
+					assert(false);
+				}
+			}
 
 			SAFE_RELEASE(pRenderObject);
 		}
@@ -572,37 +572,23 @@ void CRenderer::Render_Fog()
 		return;
 	}
 
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::PRINT_BACKBUFFER));
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::FOG));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
 
-
-	{ // BackBuffer 
-		ID3D11Texture2D* pBackBuffer = nullptr;
-		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
-		m_pGameInstance->Copy_RenderTargetFrom(TEXT("Target_Fog"), pBackBuffer);
-		SAFE_RELEASE(pBackBuffer);
-	}
-
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
 	m_pShader->Bind_RawValue("g_fDepthPackExponent", m_pGameInstance->Get_DepthPackExponentPtr(), sizeof(_float));
 
-	//if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
-	//	assert(false);
-	//}
+	if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
+		assert(false);
+	}
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 		return;
 	}
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_OriginalTexture"))) {
-		return;
-	}
 
-	if (FAILED(m_pShader->Bind_SRV("g_VolumeTexture", m_pGameInstance->Get_VolumeSRV())))
-		return;
-
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::FOG));
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::PRINT_BACKBUFFER));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();

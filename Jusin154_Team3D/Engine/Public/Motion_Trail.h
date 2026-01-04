@@ -27,7 +27,7 @@ public:
 private:
 	CMotion_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMotion_Trail(const CMotion_Trail& rhs);
-	   virtual ~CMotion_Trail() = default;
+	virtual ~CMotion_Trail() = default;
 
 public:
 	HRESULT Update_Capture(_float fDeltaTime); // 카피리소스 씀. 절대로 dispatch 전에 호출할 것
@@ -55,8 +55,9 @@ public:
 	static CMotion_Trail* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELCAPTURE_DESC* pDesc);
 	virtual CMotion_Trail* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
-
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // DEBUG
 };
 
 NS_END

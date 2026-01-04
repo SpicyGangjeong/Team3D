@@ -73,11 +73,11 @@ private:
 	HRESULT Bind_ShaderResources() { return S_OK; }
 
 	HRESULT Update_LegsPosition();
+	HRESULT Update_RobeJoints();
 	HRESULT Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld);
 #ifdef _DEBUG
 	HRESULT Render_BonePhysX();
 	HRESULT Render_Legs();
-	HRESULT Update_RobeJoints();
 #endif // _DEBUG
 public:
 	static CPlayerRobe* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

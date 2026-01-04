@@ -57,6 +57,11 @@ void CMonster::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
+float  CMonster::Get_HpRatio()
+{
+	return m_fHp / m_fMaxHp;
+}
+
 HRESULT CMonster::Render_OutLine()
 {
 	m_bDrawOutLine = false;

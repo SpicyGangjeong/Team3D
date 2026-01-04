@@ -19,6 +19,8 @@ class ENGINE_DLL CShader final : public CComponent
 			ID3DX11EffectShaderResourceVariable* pSRV;
 			ID3DX11EffectSamplerVariable*        pSampler;
 		};
+		ID3D11ShaderResourceView*				pBeforeBindedSRV = nullptr;
+		vector<ID3D11ShaderResourceView*>		beforeBindedSRVs;
 	}SHADERVARIABLE;
 
 private:

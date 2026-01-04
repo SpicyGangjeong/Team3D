@@ -45,7 +45,6 @@ HRESULT CMapElement_Door::Initialize(void* pArg)
 
 void CMapElement_Door::Priority_Update(_float fTimeDelta)
 {
-	GUI::Text("m_vKinematicTimer %.3f", m_vKinematicTimer.x);
 	if (m_vKinematicTimer.x != 0) {
 		m_vKinematicTimer.x += fTimeDelta;
 		if (m_vKinematicTimer.y < m_vKinematicTimer.x) {
@@ -60,8 +59,7 @@ void CMapElement_Door::Priority_Update(_float fTimeDelta)
 void CMapElement_Door::ActingIdle()
 {
 	_float fCurrentDegree = XMConvertToDegrees(m_pJoint->getAngle());
-	GUI::Text("%.2f", fCurrentDegree);
-	GUI::Text("%.2f", m_pJoint->getVelocity());
+
 	if (fabsf(fCurrentDegree) >= 2.f) { // 각도가 벌어져 있는데
 		if (false == m_bDrive) { // 드라이브 중이 아니면 드라이브시킴
 			m_bDrive = true;
@@ -70,15 +68,17 @@ void CMapElement_Door::ActingIdle()
 		}
 		if (true == m_bDrive) { // 드라이브 중이면
 			if (fCurrentDegree > 0.f) {
-
+				m_pJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
+				m_pJoint->setDriveVelocity(-fabsf(fCurrentDegree) * 0.2f);
 			}
 			else {
-				m_pJoint->setDriveVelocity(40.f);
+				m_pJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
+				m_pJoint->setDriveVelocity(fabsf(fCurrentDegree) * 0.2f);
 			}
 		}
 	}
 	else { // 각도가 안벌어져 있음
-		if (true == m_bDrive && fCurrentDegree < 0.3f) { // 드라이브 중지 트리거
+		if (true == m_bDrive && fabsf(fCurrentDegree) < 0.3f) { // 드라이브 중지 트리거
 			m_pJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eDRIVE_ENABLED, false);
 		}
 	}
@@ -132,6 +132,7 @@ HRESULT CMapElement_Door::Render()
 void CMapElement_Door::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	if (0.f != m_vKinematicTimer.x) {
+		m_vKinematicTimer.x = FLT_EPSILON3;
 		return;
 	}
 	
@@ -179,19 +180,20 @@ HRESULT CMapElement_Door::Ready_Components(void* pArg)
 		m_pRigidBody->Move_Kinematic(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_QuarternionVector(), true);
 	}
 	PSX::PxTransform doorWorldPose = m_pActor->getGlobalPose();
-	PSX::PxVec3 hingePivotWorld = PSX::PxVec3(39.64f, 5.12f, 71.f);
+	PSX::PxVec3 hingePivotWorld = PSX::PxVec3(39.7f, 5.12f, 71.12f);
 	PSX::PxVec3 hingeAxisWorld = doorWorldPose.q.rotate(PSX::PxVec3(0.f, 1.f, 0.f)).getNormalized();
 	PSX::PxTransform jointWorldPose;
 	jointWorldPose.p = hingePivotWorld;
 	jointWorldPose.q = CMyTools::Calc_RevJointPosFromWorldHingeAxis(hingeAxisWorld);
 	PSX::PxTransform localFrameDoor = doorWorldPose.transformInv(jointWorldPose);
 	
+	m_pActor->setSolverIterationCounts(8, 1);
 	m_pJoint = (PSX::PxRevoluteJoint*)m_pGameInstance->Create_PxJoint(PHYSX_JOINT::REVOLUTE, nullptr, jointWorldPose, m_pActor, localFrameDoor);
 
 	m_pJoint->setLimit(PSX::PxJointAngularLimitPair(-XMConvertToRadians(100.f), XMConvertToRadians(100.f)));
 	m_pJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eLIMIT_ENABLED, true);
 
-	m_pJoint->setDriveForceLimit(120.f);
+	m_pJoint->setDriveForceLimit(10.f);
 
 	m_pJoint->setConstraintFlag(PSX::PxConstraintFlag::eVISUALIZATION, true);
 	m_pActor->setLinearVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
@@ -269,6 +271,10 @@ void CMapElement_Door::Describe_Entity()
 	GUI::Begin("PhysX");
 	if (GUI::CollapsingHeader("Door")) {
 		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
+		GUI::Text("m_vKinematicTimer %.3f", m_vKinematicTimer.x);
+		_float fCurrentDegree = XMConvertToDegrees(m_pJoint->getAngle());
+		GUI::Text("%.2f", fCurrentDegree);
+		GUI::Text("%.2f", m_pJoint->getVelocity());
 		if (GUI::CollapsingHeader("DOOR")) {
 			{
 				GUI::Text("Velo : %.2f", m_pJoint->getVelocity());

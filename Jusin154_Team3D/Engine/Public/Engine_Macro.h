@@ -105,7 +105,7 @@
 #endif
 
 #define FX_DEFERRED			TEXT("FX_DEFERRED")
-#define FX_BLUR		TEXT("FX_BLUR")
+#define FX_BLUR				TEXT("FX_BLUR")
 #define FX_WEIGHTBELND		TEXT("FX_WEIGHTBELND")
 #define FX_DISTORTION       TEXT("FX_DISTORTION")
 
@@ -134,17 +134,17 @@
 #define         MRO_PARAMETER				2.f/ 27.f
 #define         SRO_PARAMETER				15.f/ 27.f
 
-constexpr unsigned int g_iNearShadowWidth		= 8192;
+constexpr unsigned int g_iNearShadowWidth		= 4096;
 constexpr unsigned int g_iNearShadowHeight		= 4096;
 
-constexpr unsigned int g_iMiddleShadowWidth		= 4096;
-constexpr unsigned int g_iMiddleShadowHeight	= 2304;
+constexpr unsigned int g_iMiddleShadowWidth		= 2048;
+constexpr unsigned int g_iMiddleShadowHeight	= 2048;
 
-constexpr unsigned int g_iFarShadowWidth		= 6144;
-constexpr unsigned int g_iFarShadowHeight		= 3072;
+constexpr unsigned int g_iFarShadowWidth		= 1024;
+constexpr unsigned int g_iFarShadowHeight		= 1024;
 
-constexpr unsigned int g_iPreShadowWidth		= 16384;
-constexpr unsigned int g_iPreShadowHeight		= 9216;
+constexpr unsigned int g_iPreShadowWidth		= 8192;
+constexpr unsigned int g_iPreShadowHeight		= 8192;
 
 
 
