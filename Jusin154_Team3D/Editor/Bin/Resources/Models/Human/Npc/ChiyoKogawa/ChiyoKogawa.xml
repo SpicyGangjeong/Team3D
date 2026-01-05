@@ -30,7 +30,7 @@
 	</MI_Professor_ChiyoKogawa_Updated>
 
 
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "5" OutLineWrite="5">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "23" OutLineWrite="5">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_PROHair01_Asuka_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -187,7 +187,7 @@
 	</MI_HUM_N_Heads_Eye>
 
 
-	<MI_Professor_ChiyoKogawaHair	ShaderIndex = "5" OutLineWrite="5">
+	<MI_Professor_ChiyoKogawaHair	ShaderIndex = "23" OutLineWrite="5">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_PROHair01_Asuka_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
