@@ -552,15 +552,13 @@ void CModel::Update_RootBone(_float Amount)
 			_float4 axis;
 			XMStoreFloat4(&axis, axisWorld);
 
-			/*_float yaw = 0.f;
-			{
-				_vector up = m_pTransform->Get_State(STATE::UP);
-				yaw = axis.y * angle;
-			}
-			m_pTransform->TurnAngle(axis, yaw);*/
 			swap(axis.z, axis.y);
-			if (m_bRootBone) {
-				m_pTransform->TurnAngle(axis, angle);
+
+			_float yaw = axis.y * angle;
+
+			if (m_bRootBone)
+			{
+				m_pTransform->TurnAngle_Y(yaw);
 			}
 
 		}
