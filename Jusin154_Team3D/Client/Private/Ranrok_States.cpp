@@ -637,7 +637,7 @@ void CRanrok::Behavior_SwipeEnter()
 		else {
 			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_R];
 		}
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.5f);
 
 	}
 	Add_Event(pairAnimInfo.first,
@@ -695,7 +695,7 @@ void CRanrok::Behavior_RushEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::RUSH);
 	pairAnimInfo = m_Animation[STATEANIM::RUSH_LOOP];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,2.f);
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::RUSH)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::RUSH)];
 	m_bLookAt = false;
 }
