@@ -200,7 +200,7 @@
 		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
 		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
 		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="T_HouseElf_M_Upp_PillowCase03_MRO" Extension=".dds"/>
 		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
 		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
 		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
@@ -211,7 +211,7 @@
 		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
 		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="T_HouseElf_M_Upp_PillowCase03_MRO" Extension=".dds"/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HouseElf_M_Upp_Toga01>
 
 </Material>

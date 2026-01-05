@@ -44,6 +44,8 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	m_bAI = true;
 
+	m_iIndex = static_cast<RacerDesc*>(pArg)->iIndex;
+
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
@@ -88,7 +90,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	m_pBroom->Set_Ride(true);
 
-	m_pBroomRaceManager = static_cast<CBroomRaceManager*>(pArg);
+	m_pBroomRaceManager = static_cast<RacerDesc*>(pArg)->pRacerManager;
 
 	CBroomRaceManager::RacerInfo Info;
 
@@ -311,7 +313,7 @@ HRESULT CBroomRacerAI::Ready_Components()
 
 HRESULT CBroomRacerAI::Ready_Parts()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this, &m_pBroom))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, &m_iIndex, this, &m_pBroom))) {
 		return E_FAIL;
 	}
 

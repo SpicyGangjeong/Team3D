@@ -155,14 +155,6 @@ void CPlayer::Update(_float fTimeDelta)
 	CheckMouseInput();
 
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
-
-	//_vector vRot = XMLoadFloat3(&m_pTransformCom->Get_Rotation());
-
-	//vRot = XMVectorSet(XMVectorGetX(vRot), XMVectorGetY(vRot), 0.f, 0.f);
-
-	//m_pTransformCom->Rotation(XMConvertToRadians(vRot.m128_f32[0]), XMConvertToRadians(vRot.m128_f32[1]), XMConvertToRadians(vRot.m128_f32[2]));
-
-
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -194,16 +186,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	{
 		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
 	}
-	//_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
-
-	//_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-	//_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
-	//_vector up = XMVector3Normalize(XMVector3Cross(look, right));
-
-	//m_pTransformCom->Set_State(STATE::RIGHT, right);
-	//m_pTransformCom->Set_State(STATE::UP, up);
-	//m_pTransformCom->Set_State(STATE::LOOK, look);
 }
 
 

@@ -560,6 +560,7 @@ void CModel::Update_RootBone(_float Amount)
 			{
 				m_pTransform->TurnAngle_Y(yaw);
 			}
+			
 
 		}
 		XMStoreFloat4(&m_vPrevRootRot, qCur);
