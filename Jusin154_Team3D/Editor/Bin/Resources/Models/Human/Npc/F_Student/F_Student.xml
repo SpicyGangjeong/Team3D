@@ -88,7 +88,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HUM_N_Heads_Eye>
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "5" OutLineWrite="5">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "23" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_StuHair14_SideBun_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -177,7 +177,7 @@
 		<aiTextureType_ANISOTROPY              Index="26" Filename="T_Young_F_Arms_Ivory_SRXO" Extension=".dds"/>
 	</MI_HUM_F_Body_Arms01>
 
-	<MI_HUM_F_Hair_STUHair14_SideBun	ShaderIndex = "5" OutLineWrite="5">
+	<MI_HUM_F_Hair_STUHair14_SideBun	ShaderIndex = "23" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_StuHair14_SideBun_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>

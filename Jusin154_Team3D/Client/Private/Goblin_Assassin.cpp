@@ -342,25 +342,35 @@ HRESULT CGoblin_Assassin::Render_Shadow(SHADOW eType)
 
 HRESULT CGoblin_Assassin::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 {
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	for (_uint i = 0; i < iNumMeshes; i++) {
-		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix", m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()))) {
+	ID3D11RasterizerState* pPrevRS = nullptr;
+	m_pContext->RSGetState(&pPrevRS);
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
 			return E_FAIL;
-		}
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom)))
 			return E_FAIL;
-		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom)))
 			return E_FAIL;
-		}
+
+		m_pContext->RSSetState(m_pRS_Wireframe);
 
 		m_pContext->VSSetShaderResources(26, 1, &pSRV);
 
-		if (FAILED(m_pModelCom->Render(i))) {
+		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
-		}
 	}
+
+	m_pContext->RSSetState(pPrevRS);
+	if (pPrevRS) SAFE_RELEASE(pPrevRS);
+
 	return S_OK;
 }
 
@@ -540,6 +550,17 @@ HRESULT CGoblin_Assassin::Ready_Components()
 		}
 	}
 
+	D3D11_RASTERIZER_DESC rsDesc{};
+	rsDesc.FillMode = D3D11_FILL_WIREFRAME;
+	rsDesc.CullMode = D3D11_CULL_NONE;          
+	rsDesc.DepthClipEnable = TRUE;
+
+	HRESULT hr = m_pDevice->CreateRasterizerState(&rsDesc, &m_pRS_Wireframe);
+	if (FAILED(hr))
+		return E_FAIL;
+
+
+
 	return S_OK;
 }
 
@@ -693,8 +714,10 @@ void CGoblin_Assassin::Free()
 	SAFE_RELEASE(m_pGoblin_Particle);
 	SAFE_RELEASE(m_pGoblin_Particle2);
 	SAFE_RELEASE(m_pEffectPool);
+	SAFE_RELEASE(m_pRS_Wireframe);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
+	
 }
 #ifdef _DEBUG
 

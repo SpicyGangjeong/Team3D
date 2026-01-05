@@ -1,5 +1,5 @@
 <Material>
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "5" OutLineWrite="5">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "23" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_Shah_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -207,7 +207,7 @@
 		<aiTextureType_ANISOTROPY              Index="26" Filename="T_Young_F_Arms_Pro_SatyavatiShah_SRXO" Extension=".dds"/>
 	</MI_OLD_F_Body_SatyavatiShahArms>
 
-	<MI_HUM_F_Hair_TWNHair01_Eliza	ShaderIndex = "5" OutLineWrite="5">
+	<MI_HUM_F_Hair_TWNHair01_Eliza	ShaderIndex = "23" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_Shah_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>

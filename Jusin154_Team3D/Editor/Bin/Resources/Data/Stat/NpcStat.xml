@@ -6,7 +6,7 @@
 	<ELF ID="4" Name="도비" TAG="1" SizeX="256"/>
 	<PEEVES ID="5" Name="피브스" TAG="1" SizeX="256"/>
 	<PHINEASBLACK ID="6" Name="피니어스 블랙" TAG="1" SizeX="256"/>
-	<F_STUDENT ID="7" Name="여학생" TAG="1" SizeX="256"/>
-	<M_STUDENT ID="8" Name="남학생" TAG="1" SizeX="256"/>
+	<F_STUDENT ID="7" Name="아우렐리아 로즈" TAG="1" SizeX="256"/>
+	<M_STUDENT ID="8" Name="테오도어 그레이브스" TAG="1" SizeX="256"/>
 </StatInfo>
  
