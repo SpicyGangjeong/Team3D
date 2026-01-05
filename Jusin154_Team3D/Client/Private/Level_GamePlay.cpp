@@ -103,9 +103,11 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
@@ -339,7 +341,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef 기무리
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = true;

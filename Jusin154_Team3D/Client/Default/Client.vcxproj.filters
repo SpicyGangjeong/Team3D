@@ -836,9 +836,15 @@
     <ClInclude Include="..\Public\Camera_Model.h">
       <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Impact.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrol_Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Hit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\RandomNpc.h">
       <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
-    </ClInclude>
+	</ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1740,6 +1746,12 @@
     <Filter Include="02.GameObjects\Cameras\Camera_Model">
       <UniqueIdentifier>{40504926-63cc-4132-ade2-5a789e1a82a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit">
+      <UniqueIdentifier>{b537dfd4-fcad-401f-a49a-8fdafeb91ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrol_Impact">
+      <UniqueIdentifier>{15ea8015-5b0a-4678-bf02-55b042ef4de4}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\NPC\Ally\RandomNpc">
       <UniqueIdentifier>{88b62177-01fc-424d-a444-4fb5fd4b2db5}</UniqueIdentifier>
     </Filter>
@@ -2526,6 +2538,12 @@
     <ClCompile Include="..\Private\Camera_Model.cpp">
       <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Impact.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrol_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Hit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\RandomNpc.cpp">
       <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
     </ClCompile>

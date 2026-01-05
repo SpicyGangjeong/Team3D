@@ -102,7 +102,8 @@ HRESULT CLevel_EffectViewer::Initialize()
 	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
 
-	m_pGameInstance->Setting_Volumetirc(0.15f, 0.025f, 0.902f, 2.0f, 0.f);
+
+	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
 
 	return S_OK;
 }

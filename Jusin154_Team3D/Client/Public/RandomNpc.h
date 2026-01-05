@@ -2,7 +2,6 @@
 
 #include "Client_Define.h"
 #include "Unit.h"
-#include "NPC_Ollivander.h"
 
 NS_BEGIN(Client)
 
@@ -26,13 +25,18 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
+	
+	virtual _wstring Get_Name() override;
 protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
+	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+	class CCallBack_NonPlayable_Behavior* m_pCallBack_Behavior = { nullptr };
+	class CCallBack_NonPlayable_HitReport* m_pCallBack_HitReport = { nullptr };
 	CUnit* m_pPlayerAllyUnit = { nullptr };
 	CRandomNpc* m_pNPC_Ollivander = { nullptr };
 
-	class CNPCInteraction* m_pNPCInteraction = { nullptr };
+	/*class CNPCInteraction* m_pNPCInteraction = { nullptr };*/
 
 	CNPCStat* m_pNpcStat = { nullptr };
 	_int									m_iEntered = { 0 };

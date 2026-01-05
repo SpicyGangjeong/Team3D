@@ -35,6 +35,9 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 		else {
 			m_pTransformCom->LookAt(m_pLookTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION));
 		}
+		if (m_bSyncFollow) {
+			m_pTransformCom->Set_WorldMatrix(m_pFollowTarget->Get_Component<CTransform>()->Get_XMWorldMatrix());
+		}
 	}
 	else {
 
@@ -96,6 +99,11 @@ void CCamera_Gaze::Enable_LookLerp()
 	_vector vLookTargetPos = m_pLookTarget->Get_WorldPostion();
 	XMStoreFloat3(&m_vLookPos_Src, vLookTargetPos);
 	XMStoreFloat3(&m_vLookPos_Dest, vLookTargetPos);
+}
+
+void CCamera_Gaze::Sync_Follow(_bool bSync)
+{
+	m_bSyncFollow = bSync;
 }
 
 void CCamera_Gaze::Toggle_Priority()

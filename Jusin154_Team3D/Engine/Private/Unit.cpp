@@ -108,6 +108,11 @@ _bool CUnit::IsCurrentKeyFrame(_string FrameName)
 	return false;
 }
 
+_wstring CUnit::Get_Name()
+{
+    return _wstring();
+}
+
 HRESULT CUnit::Ready_Components(void *pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
