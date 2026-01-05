@@ -296,6 +296,10 @@ HRESULT CGoblin_Spector::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+	_float Intensity = 0.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

@@ -336,6 +336,24 @@ void CTransform::TurnAngle(_float4 vAxis, _float fAngle)
 	Set_State(STATE::LOOK, vLook);
 }
 
+void CTransform::TurnAngle_Y(_float fAngle)
+{
+	_vector vRight = Get_State(STATE::RIGHT);
+	_vector vUp = Get_State(STATE::UP);
+	_vector vLook = Get_State(STATE::LOOK);
+
+	_matrix TurnMatrix = XMMatrixRotationY(fAngle);
+
+	vRight = XMVector3TransformNormal(vRight, TurnMatrix);
+	vUp = XMVector3TransformNormal(vUp, TurnMatrix);
+	vLook = XMVector3TransformNormal(vLook, TurnMatrix);
+
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+	Set_State(STATE::LOOK, vLook);
+}
+
+
 
 void CTransform::Rotation(_fvector vAxis, _float fRadian)
 {

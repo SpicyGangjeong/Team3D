@@ -73,7 +73,9 @@ void CRandomNpc::Update(_float fTimeDelta)
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 
-	/*m_pNPCInteraction->Set_Visible(0 < m_iEntered);*/
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
+
+	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 void CRandomNpc::Late_Update(_float fTimeDelta)
@@ -107,6 +109,9 @@ HRESULT CRandomNpc::Render()
 		}
 
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(Bind_ShaderParameters(i))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
@@ -204,6 +209,48 @@ HRESULT CRandomNpc::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CRandomNpc::Bind_ShaderParameters(_uint iMeshOrder)
+{
+	_bool bUseColorMixer = false;
+
+	_uint iColorParam = { UINT_MAX };
+	_float fMixerFactor = { FLT_MAX };
+	_uint iColorMixerMethod = { 0 };
+
+	switch (m_pModelCom->Get_UsingPass(iMeshOrder,m_pShaderCom))
+	{
+	case 23:
+		if (m_strModelPrototypeTag == TEXT("Prototype_Component_F_Student_Model"))
+		{
+			bUseColorMixer = true;
+			iColorParam = 0x2E2E2E;
+			fMixerFactor = 0.00f;
+			iColorMixerMethod = 1;
+		}
+		else {
+			bUseColorMixer = true;
+			iColorParam = 0x2E2E2E;
+			fMixerFactor = 0.9f;
+			iColorMixerMethod = 1;
+		}
+		break;
+	}
+	if (true == bUseColorMixer) {
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iPackedBlendColor", &iColorParam, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fMixerFactor", &fMixerFactor, sizeof(_float)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMixerMethod", &iColorMixerMethod, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
 HRESULT CRandomNpc::Ready_Components(void* pArg)
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -260,6 +307,36 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 		break;
+	case 7:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_BaiHowin_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("BAIHOWIN"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 8:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_GeorgeOsric_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("GEORGEOSRIC"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 9:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_DinahHecat_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("DINAHHECAT"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 10:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_MudiwaOnai_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MUDIWAONAI"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 11:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Kitchen_Female_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("KITCHENFEMALE"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
 	}
 
 	/* Com_Model */
@@ -302,12 +379,6 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 	}
-
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pNPCInteraction))) {
-	//	return E_FAIL;
-	//}
-
-	//m_pNPCInteraction->NpcInfo(m_pNpcStat->Get_Stat().pNpc_Name);
 
 	return S_OK;
 }

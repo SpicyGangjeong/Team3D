@@ -11,6 +11,7 @@ void CRenderer::Render()
 	Render_Shadow();
 	Render_NonBlend();
 	Render_Decal();
+	Render_EffectNonBlend();
 	Render_SSAO();
 	Render_SSAO_BLUR();
 	Render_LightAcc();
@@ -359,6 +360,34 @@ void CRenderer::Render_Decal()
 	}
 
 	m_pGameInstance->Clear_RenderTarget(TEXT("Target_NormalCopy"));
+}
+
+void CRenderer::Render_EffectNonBlend()
+{
+	COMPUTE_TIMEDELTA("Timer_Render_EffectNonBlend");
+	EVENTSCOPE_("Render_EffectNonBlend");
+	m_eType = RENDER::EFFECT_NONBLEND;
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_GameObjects")))) {
+		return;
+	}
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT_NONBLEND)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render())) {
+				assert(false);
+			}
+		}
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::EFFECT_NONBLEND)].clear();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+	COMPUTE_TIMEDELTA("Timer_Render_EffectNonBlend");
 }
 
 void CRenderer::Render_LightAcc()

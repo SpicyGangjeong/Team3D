@@ -91,6 +91,7 @@ HRESULT CCamera_Model::Render()
 		}
 	}
 	else if (RENDER::NONLIGHT == eType) {
+#ifdef _DEBUG
 		m_Batch->Begin();
 
 		_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
@@ -102,16 +103,16 @@ HRESULT CCamera_Model::Render()
 		static _float fLength = 1.f;
 		GUI::DragFloat("Length", &fLength, 0.1f, 0.1f, 10.f, "%.1f");
 		m_Batch->DrawLine(
-			VertexPositionColor(vPosition,						DirectX::Colors::GhostWhite),
-			VertexPositionColor(vPosition + vRight * fLength,	DirectX::Colors::Green)
+			VertexPositionColor(vPosition, DirectX::Colors::GhostWhite),
+			VertexPositionColor(vPosition + vRight * fLength, DirectX::Colors::Green)
 		);
 		m_Batch->DrawLine(
-			VertexPositionColor(vPosition,						DirectX::Colors::GhostWhite),
-			VertexPositionColor(vPosition + vUp * fLength,		DirectX::Colors::Red)
+			VertexPositionColor(vPosition, DirectX::Colors::GhostWhite),
+			VertexPositionColor(vPosition + vUp * fLength, DirectX::Colors::Red)
 		);
 		m_Batch->DrawLine(
-			VertexPositionColor(vPosition,						DirectX::Colors::GhostWhite),
-			VertexPositionColor(vPosition + vLook * fLength,	DirectX::Colors::Blue)
+			VertexPositionColor(vPosition, DirectX::Colors::GhostWhite),
+			VertexPositionColor(vPosition + vLook * fLength, DirectX::Colors::Blue)
 		);
 		_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0000, 1.f);
 		_matrix WorldMatrix;
@@ -132,6 +133,9 @@ HRESULT CCamera_Model::Render()
 		m_pSubShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
 
 		m_Batch->End();
+#endif // _DEBUG
+
+
 	}
 
 	return S_OK;

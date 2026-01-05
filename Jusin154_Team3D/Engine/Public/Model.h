@@ -133,6 +133,7 @@ public:
 #pragma region Material
 	HRESULT					Bind_Material(_uint iMeshIndex, class CShader* pShader);
 	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader);
+	_int					Get_UsingPass(_uint iMeshIndex, CShader* pShader);
 #pragma endregion
 
 	void					ComputeAnimation(_uint AnimIndex, _uint MeshIndex);

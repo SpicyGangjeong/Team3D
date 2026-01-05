@@ -112,6 +112,20 @@ HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader)
 	return hr;
 }
 
+_int CModel::Get_UsingPass(_uint iMeshIndex, CShader* pShader)
+{
+	if (iMeshIndex >= m_iNumMeshes) {
+		return E_FAIL;
+	}
+
+	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
+
+	if (iMaterialIndex >= m_iNumMaterials) {
+		return E_FAIL;
+	}
+	return m_Materials[iMaterialIndex]->Get_UsingPass();
+}
+
 HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _char* pConstantName)
 {
 	if (iMeshIndex >= m_iNumMeshes) {
@@ -539,9 +553,15 @@ void CModel::Update_RootBone(_float Amount)
 			XMStoreFloat4(&axis, axisWorld);
 
 			swap(axis.z, axis.y);
-			if (m_bRootBone) {
-				m_pTransform->TurnAngle(axis, angle);
+
+			_float yaw = axis.y * angle;
+
+			if (m_bRootBone)
+			{
+				m_pTransform->TurnAngle_Y(yaw);
 			}
+			
+
 		}
 		XMStoreFloat4(&m_vPrevRootRot, qCur);
 
