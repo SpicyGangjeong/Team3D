@@ -71,12 +71,20 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, -75.f, -15.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(3.f, -75.f, -15.f, 1.f));
 
+#if 진우
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -11.f, 195.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(0.f, -11.f, 195.f, 1.f));
+
+	m_vCCTPos = _float3(0.f, -10.f, 195.f);
+	m_pCharacter_Controller->SetGravity(false);
+#endif
+
 	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
 
 	return S_OK;
 }
 
-void CRanrok::Priority_Update(_float fTimeDelta)
+void CRanrok::Priority_Update(_float fTimeDelta)      
 {
 	__super::Priority_Update(fTimeDelta);
 }
@@ -311,7 +319,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		}
 
 		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_HIT, this, &CollisionDesc->vWorldPos);
-		m_fHp -= 5.f;
+		//m_fHp -= 5.f;
 	}
 	else
 	{
@@ -887,23 +895,14 @@ void CRanrok::Describe_Entity()
 			GUI::TreePop();
 		}
 
-	}
-
-#ifdef gimch
-
-	if (m_pGameInstance->Key_Down(DIK_L))
+	}     
+	if (GUI::DragFloat3("Change CCT Pos" , (_float*)& m_vCCTPos))
 	{
-		_float3 vPos;
-		if (m_pGameInstance->isPicking(&vPos))
-		{
-			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&vPos), 1.f));
-		}
+		_vector vPos = XMLoadFloat3(&m_vCCTPos);
+
+		vPos = XMVectorSetW(vPos , 1.f);
+		m_pCharacter_Controller->Set_Position(vPos);
 	}
-
-#endif // 
-
-	m_pTransformCom->Describe_Entity();
-
 
 }
 

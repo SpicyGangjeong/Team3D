@@ -748,15 +748,18 @@ void CRanrok::Behavior_LandEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::LAND);
+#ifndef 진우
 	m_pCharacter_Controller->SetGravity(true);
+#endif
 	m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
 
 	pairAnimInfo = m_Animation[STATEANIM::LAND];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-	/*Add_Event(pairAnimInfo.first,
-		[this]() {	CameraShake(30.f, 5.f, 10.f, 1.2f); },
-		0.53f);*/
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_LAND, this); 
+		}, 0.53f);
 }
 
 HRESULT CRanrok::Behavior_LandExitCheck(_float fTimeDelta)

@@ -126,7 +126,7 @@ private:
 	_float m_fRushTime = {};
 	_float m_fTuckedSpeed = { 75.f};
 
-
+	_float3 m_vCCTPos = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

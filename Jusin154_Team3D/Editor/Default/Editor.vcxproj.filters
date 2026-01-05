@@ -751,6 +751,9 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\State_Effect">
       <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land">
+      <UniqueIdentifier>{ea60b62d-1df5-41d7-aa0f-74ec9f454443}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1520,6 +1523,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Impact.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Big_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Land.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2298,6 +2304,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Hit.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Nomal_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Land.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
