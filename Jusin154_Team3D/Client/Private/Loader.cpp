@@ -215,6 +215,9 @@
 #include "Ranrok_Pulse.h"
 #include "Ranrok_Hit.h"
 #include "Ranrok_Impact.h"
+#include "Ranrok_Land.h"
+#include "Ranrok_GroundPulse.h"
+#include "Ranrok_Rush_Bottom.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -2401,6 +2404,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Land>(g_iStaticLevel, CRanrok_Land::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_GroundPulse>(g_iStaticLevel, CRanrok_GroundPulse::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Rush_Bottom>(g_iStaticLevel, CRanrok_Rush_Bottom::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {

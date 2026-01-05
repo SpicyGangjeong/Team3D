@@ -841,10 +841,19 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Hit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\RandomNpc.h">
       <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
-	</ClInclude>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Land.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_GroundPulse.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1751,9 +1760,18 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrol_Impact">
       <UniqueIdentifier>{15ea8015-5b0a-4678-bf02-55b042ef4de4}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\RandomNpc">
       <UniqueIdentifier>{88b62177-01fc-424d-a444-4fb5fd4b2db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Land">
+      <UniqueIdentifier>{9cf44fef-f3be-409e-b530-6aef90db5c0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse">
+      <UniqueIdentifier>{c756e70b-1ba2-4a25-a177-b50bbc1a332a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush">
+      <UniqueIdentifier>{eb8e52f5-0283-4acf-8fbb-0e734b7580e9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2543,9 +2561,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Hit.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\RandomNpc.cpp">
       <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Land.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Land</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_GroundPulse.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

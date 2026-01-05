@@ -43,10 +43,6 @@ void CTrailObject::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-
-
-
-
 	/* 디스토션 타임*/
 	if (m_TrailInfo.vDistortionTime.y != 0)
 	{

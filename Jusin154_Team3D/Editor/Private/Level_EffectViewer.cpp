@@ -83,6 +83,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
+ //    	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Plane>(NEXT_LEVEL, NEXT_LEVEL, TEXT("Layer_Plane")))) //플레이어보다 먼저 생성해야함!
+	//{
+	//	return E_FAIL;     
+	//}
+
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 	//	return E_FAIL;	
 
@@ -99,6 +104,7 @@ HRESULT CLevel_EffectViewer::Initialize()
 	//ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
 	//m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
 	//m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+
 	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
 

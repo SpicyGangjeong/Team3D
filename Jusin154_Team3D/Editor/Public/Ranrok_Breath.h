@@ -10,6 +10,12 @@ NS_BEGIN(Editor)
 
 class CRanrok_Breath final : public CEffect_Container
 {
+public:
+	typedef struct tagBreathInfo
+	{
+		_float fTime;
+		_int   iPase;
+	}BREATH_INFO;
 private:
 	CRanrok_Breath(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CRanrok_Breath(const CRanrok_Breath& rhs);
@@ -39,6 +45,7 @@ private:
 	class CEditEffect*				  m_pBreath_Black = { nullptr };
 	class CEditEffect*				  m_pBreathSlog = { nullptr };
 	class CEditEffect*				  m_pMouthFire = { nullptr };
+	class CEditEffect*				  m_pLand_Decal = { nullptr };
 
 	_float3							  m_vLook = {};
 	_float							  m_fLinearSpeed = 0.8f;
