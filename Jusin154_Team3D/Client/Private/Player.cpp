@@ -222,10 +222,8 @@ HRESULT CPlayer::Render()
 				return E_FAIL;
 			}
 			if (FAILED(m_pShaderCom->Bind_Matrices(
-				"g_OffsetMatrix",
-				m_pModelCom->Get_OffsetMatrix(i).data(),
-				(_int)m_pModelCom->Get_OffsetMatrix(i).size()
-			)))
+				"g_OffsetMatrix", m_pModelCom->Get_OffsetMatrix(i).data(),
+				(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
 			{
 				return E_FAIL;
 			}
