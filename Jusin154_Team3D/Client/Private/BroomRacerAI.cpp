@@ -350,35 +350,22 @@ HRESULT CBroomRacerAI::Bind_ShaderParameters(_uint iMeshOrder)
 	_float fMixerFactor = { FLT_MAX };
 	_uint iColorMixerMethod = { 0 };
 
-	switch (MESH_ORDER(iMeshOrder))
+	switch (m_pModelCom->Get_UsingPass(iMeshOrder, m_pShaderCom))
 	{
-	case MESH_ORDER::HAIR_MAIN:
-	case MESH_ORDER::HEAD_EYELASH:
-	case MESH_ORDER::HAIR_SUB:
-		bUseColorMixer = true;
-		iColorParam = 0x2E2E2E;
-		fMixerFactor = 0.9f;
-		iColorMixerMethod = 1;
-		break;
-	case MESH_ORDER::LOWER:
-		bUseColorMixer = true;
-		iColorParam = 0x292557;
-		fMixerFactor = 0.5f;
-		iColorMixerMethod = 1;
-		break;
-	case MESH_ORDER::SHOES:
-		bUseColorMixer = true;
-		iColorParam = 0x614242;
-		fMixerFactor = 0.5f;
-		iColorMixerMethod = 1;
-		break;
-	case MESH_ORDER::UPPER:
-		bUseColorMixer = true;
-		iColorParam = 0xBFAC29;
-		fMixerFactor = 0.658333f;
-		iColorMixerMethod = 1;
-		break;
-	default:
+	case 23:
+		if (m_strModelPrototypeTag == TEXT("Prototype_Component_F_Student_Model"))
+		{
+			bUseColorMixer = true;
+			iColorParam = 0x2E2E2E;
+			fMixerFactor = 0.00f;
+			iColorMixerMethod = 1;
+		}
+		else {
+			bUseColorMixer = true;
+			iColorParam = 0x2E2E2E;
+			fMixerFactor = 0.9f;
+			iColorMixerMethod = 1;
+		}
 		break;
 	}
 	if (true == bUseColorMixer) {
