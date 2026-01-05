@@ -1,6 +1,6 @@
 <Material>
 
-	<MI_HUM_M_Hair_ChunkHair03_Barnum	ShaderIndex = "5" OutLineWrite="5">
+	<MI_HUM_M_Hair_ChunkHair03_Barnum	ShaderIndex = "23" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_M_Hair_ChunkHair03_Barnum_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -155,7 +155,7 @@
 
 
 	
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "5" OutLineWrite="5">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "23" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_M_Hair_ChunkHair03_Barnum_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
