@@ -310,8 +310,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		}
 
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
-		m_fHp -= 1.f;
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_HIT, this, &CollisionDesc->vWorldPos);
+		m_fHp -= 5.f;
 	}
 	else
 	{
@@ -320,28 +320,54 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
 	}
 
+	pair<_uint, _bool> pairAnimInfo = {};
 
 	if (Get_HpRatio() == 0.85f)
 	{
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() {},
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
 	else if (Get_HpRatio() == 0.7f) {
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() { },
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
 	else  if (Get_HpRatio() == 0.5f)
 	{
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
-
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() {},
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
+
 
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
