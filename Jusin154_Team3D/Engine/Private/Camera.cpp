@@ -132,6 +132,13 @@ HRESULT CCamera::Ready_Components(void* pArg)
     return S_OK;
 }
 
+void CCamera::EnableTransition(_float fTransitionTime)
+{
+    m_bIsCurrentTransition = true;
+    m_vTransitionTime.x = 0.f;
+    m_vTransitionTime.y = fTransitionTime;
+}
+
 _bool CCamera::IsImportantThan(CCamera* pOther) const
 {
     return m_iPriority > pOther->m_iPriority;
