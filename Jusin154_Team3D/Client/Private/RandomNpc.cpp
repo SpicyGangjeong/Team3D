@@ -307,6 +307,36 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 		break;
+	case 7:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_BaiHowin_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("BAIHOWIN"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 8:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_GeorgeOsric_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("GEORGEOSRIC"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 9:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_DinahHecat_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("DINAHHECAT"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 10:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_MudiwaOnai_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MUDIWAONAI"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
+	case 11:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Kitchen_Female_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("KITCHENFEMALE"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		break;
 	}
 
 	/* Com_Model */

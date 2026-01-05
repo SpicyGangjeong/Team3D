@@ -76,6 +76,9 @@ private:
 	_float m_fTurboDecel = 0.6f;
 
 	_bool m_bMove = { true };
+
+
+	_int m_iIndex = {};
 	
 #pragma region AI
 	_float m_fAISpeedMul = 1.f;

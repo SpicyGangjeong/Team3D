@@ -641,15 +641,18 @@ void CTroll::Behavior_HitEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	pair<_uint, _bool> pairAnimInfo;
 
 	m_bLookAt = false;
 	if (iCurrAnimIndex == m_Animation[STATEANIM::SLAM].first)
 	{
-		pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
-		Add_Event(pairAnimInfo.first,
-			[this]() {CameraShake(10.f, 2.f, 3.f, 0.3f); },
-			0.1f);
+		if (fRatio >= 0.75f) {
+			pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
+			Add_Event(pairAnimInfo.first,
+				[this]() {CameraShake(10.f, 2.f, 3.f, 0.3f); },
+				0.1f);
+		}
 	}
 	else {
 		_int RandIndex = m_pGameInstance->Real_Random_Int(0, 2);
