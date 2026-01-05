@@ -251,7 +251,7 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
     
     //BoneMatrix = TempBoneMatrix;
     
-    matrix BoneMatrix =
+    BoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
             mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],
