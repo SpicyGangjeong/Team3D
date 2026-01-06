@@ -184,6 +184,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\RandomNpc.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_Charge.h" />
+    <ClInclude Include="..\Public\Ranrok_DeadImpact.h" />
+    <ClInclude Include="..\Public\Ranrok_DeadSplash.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\CamPosition_AI.h" />
     <ClInclude Include="..\public\Dialogue.h" />
@@ -200,6 +202,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Player_ENUM.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h" />
+    <ClInclude Include="..\Public\Ranrok_Swipe.h" />
     <ClInclude Include="..\Public\ReparoObject.h" />
     <ClInclude Include="..\Public\Ride_BoosterBar.h" />
     <ClInclude Include="..\Public\Ride_Booster_Slot.h" />
@@ -466,6 +469,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\RandomNpc.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
     <ClCompile Include="..\Private\Ranrok_Charge.cpp" />
+    <ClCompile Include="..\Private\Ranrok_DeadImpact.cpp" />
+    <ClCompile Include="..\Private\Ranrok_DeadSplash.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\CamPosition_AI.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
@@ -481,6 +486,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Swipe.cpp" />
     <ClCompile Include="..\Private\ReparoObject.cpp" />
     <ClCompile Include="..\Private\Ride_BoosterBar.cpp" />
     <ClCompile Include="..\Private\Ride_Booster_Slot.cpp" />

@@ -868,12 +868,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			}
 		}
 
-		//CPlayer::PLAYERDESC playerDesc = {};
-		//playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
-		//playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-		//	return E_FAIL;
-		//}
+		CPlayer::PLAYERDESC playerDesc = {};
+		playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
+		playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,&playerDesc))) {
+			return E_FAIL;
+		}
 	}
 
 

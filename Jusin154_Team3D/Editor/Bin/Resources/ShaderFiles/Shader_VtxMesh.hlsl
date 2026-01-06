@@ -444,7 +444,7 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
         (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
         fSurfaceParam, // 서페이스 파라미터
-        1.f);
+        (2.f / 255.f));
     
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;

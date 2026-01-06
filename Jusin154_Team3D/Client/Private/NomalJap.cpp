@@ -303,7 +303,12 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	dynamic_cast<CPlayer*>(m_pOwner->Get_Owner())->Start_CameraShake(0.2f, 1.f);
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pOwner->Get_Owner());
+	if (pPlayer != nullptr)
+	{
+		pPlayer->Start_CameraShake(0.2f, 1.f);
+	}
+
 }
 
 void CNomalJap::Free()

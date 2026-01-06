@@ -219,6 +219,9 @@
 #include "Ranrok_Land.h"
 #include "Ranrok_GroundPulse.h"
 #include "Ranrok_Rush_Bottom.h"
+#include "Ranrok_Swipe.h"
+#include "Ranrok_DeadSplash.h"
+#include "Ranrok_DeadImpact.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -2601,6 +2604,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Rush_Bottom>(g_iStaticLevel, CRanrok_Rush_Bottom::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Swipe>(g_iStaticLevel, CRanrok_Swipe::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_DeadSplash>(g_iStaticLevel, CRanrok_DeadSplash::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_DeadImpact>(g_iStaticLevel, CRanrok_DeadImpact::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

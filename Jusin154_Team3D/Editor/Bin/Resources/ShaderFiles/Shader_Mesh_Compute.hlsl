@@ -29,7 +29,7 @@ cbuffer AnimCB : register(b0)
     float HeadAimWeight;
 
     int SkipCount;
-    int _pad0;
+    int IsSkip;
     int _pad1;
     int _pad2;
 

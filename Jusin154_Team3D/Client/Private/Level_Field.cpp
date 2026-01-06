@@ -170,11 +170,12 @@ HRESULT CLevel_Field::Ready_Lights()
 	_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
 	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 	
-#ifdef gimch
+#if gimch || 진우
 	vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
 	vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
 	vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 #endif // gimch
+
 
 	
 
@@ -187,6 +188,7 @@ HRESULT CLevel_Field::Ready_Lights()
 HRESULT CLevel_Field::Ready_Volumetric()
 {
 	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+
 
 	return S_OK;
 }
