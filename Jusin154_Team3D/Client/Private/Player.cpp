@@ -525,6 +525,8 @@ HRESULT CPlayer::Ready_Components()
 	}
 
 	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
+	SAFE_ADDREF(m_pStat);
+	
 	m_Components.push_back(m_pStat);
 	SAFE_ADDREF(m_pStat);
 

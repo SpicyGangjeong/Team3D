@@ -564,6 +564,12 @@ void CRanrok::Behavior_SwipeEnter()
 
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_SWIPE , this);
+		}, 0.3f);
+
 }
 
 HRESULT CRanrok::Behavior_SwipeExitCheck(_float fTimeDelta)
@@ -888,12 +894,90 @@ void CRanrok::Behavior_DeadEnter()
 	m_bLookAt = false;
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::DEAD);
+	m_fDeadRatio = 0.f;
+
+	pairAnimInfo = m_Animation[STATEANIM::DEAD];
+	m_pBottomSmoke->Set_Visible(false);
+	m_pLeftSmoke->Set_Visible(false);
+	m_pRightSmoke->Set_Visible(false);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() { 
+
+			_vector vPos = m_pCharacter_Controller->Get_Position();
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &vPosFloat4);
+
+		}, 0.f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("pinky_06_right")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_vector vPos = BoneMat.r[3];
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_SPLASH, this, &vPosFloat4);
+
+		}, 0.2f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("elbow_left")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_vector vPos = BoneMat.r[3];
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_SPLASH, this, &vPosFloat4);
+
+		}, 0.34f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("chest_Main")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_vector vPos = BoneMat.r[3];
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_SPLASH, this, &vPosFloat4);
+
+		}, 0.44f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("chest_Main")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_vector vPos = BoneMat.r[3];
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_SPLASH, this, &vPosFloat4);
+
+		}, 0.6f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_IMPACT, this);
+
+		}, 0.8f);
+
+
+#ifndef 진우
 	PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 	PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
 	m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
 	m_pRigidBody->SetActive(false);
 	m_pCharacter_Controller->SetActive(false);
-
+#endif
 
 	pairAnimInfo = m_Animation[STATEANIM::DEAD];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -901,15 +985,36 @@ void CRanrok::Behavior_DeadEnter()
 
 HRESULT CRanrok::Behavior_DeadExitCheck(_float fTimeDelta)
 {
+
+
+#ifdef 진우
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		m_pFSM->Disable_State(FSMSTATE::DEAD);
+		return S_OK;
+	}
+#endif
+
 	if (FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
 		return E_PENDING;
 	}
+
+
 	return S_OK;
 }
 
 void CRanrok::Behavior_DeadExit()
 {
+
+#ifndef 진우
 	m_bDead = true;
+#else
+
+	m_pFSM->Disable_State(FSMSTATE::DEAD);
+
+#endif
+
 }
 
 
@@ -1129,7 +1234,9 @@ void CRanrok::Add_FSM()
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
 			m_fDeadRatio = fDeadRatio;
 			if (m_fDeadRatio > 1.f) {
+#ifndef 진우
 				m_bDead = true;
+#endif
 			}
 			};
 		Desc.vDeadTimer.x = FLT_EPSILON5;
