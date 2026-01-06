@@ -522,6 +522,7 @@ void CPipeLine::Free()
 	__super::Free();
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
+	SAFE_RELEASE(m_pPrevDSS);
 	SAFE_RELEASE(m_pDSS_OutLineWrite);
 	SAFE_RELEASE(m_pGameInstance);
 	for (auto& pairSRV : m_mapGlobalSRV) {

@@ -290,8 +290,8 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		}
 		break;
 	case 4:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_M_Student_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("M_STUDENT"), (CComponent**)&m_pNpcStat))) {
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Kitchen_Female_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("KITCHENFEMALE"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		break;
@@ -328,12 +328,6 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	case 10:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_MudiwaOnai_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MUDIWAONAI"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;
-	case 11:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_Kitchen_Female_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("KITCHENFEMALE"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		break;

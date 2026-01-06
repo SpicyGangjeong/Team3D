@@ -45,6 +45,8 @@ private:
 	void Add_Canvas(_wstring Name, class CGameObject* pCanvas);
 	CGameObject* Find_Canvas(const _wstring& Name);
 
+	void NpcInteract(_bool bInteract);
+
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
@@ -75,6 +77,10 @@ private:
 
 	_bool m_bCgangede = { false };
 	_bool m_bSpellLearn = { false };
+
+	_bool	m_bNPCInteract = { false };
+
+	_bool	m_bAlphaZero = { false };
 
 public:
 	static CUI_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

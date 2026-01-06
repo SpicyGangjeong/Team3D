@@ -865,6 +865,8 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_fvector StartPos, _fvec
 		{
 			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
+			tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_PROJECTILE);
+			tagCollInfo.fDamage = 10.f;
 
 			switch (pUserData->eKind)
 			{

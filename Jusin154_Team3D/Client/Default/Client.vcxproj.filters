@@ -809,11 +809,11 @@
     <ClInclude Include="..\Public\State_Fear.h">
       <Filter>04.Mechanic\State\Focus\Fear</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Ride_Bbooster_Slot.h">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    <ClInclude Include="..\Public\Ride_Booster_Slot.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Ride_BboosterBar.h">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    <ClInclude Include="..\Public\Ride_BoosterBar.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ride_HpBar.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
@@ -862,6 +862,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\Human_Duelist.h">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1740,12 +1743,6 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel">
       <UniqueIdentifier>{5bf233fa-6f9c-40d5-85c6-adbc7fcf7d28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot">
-      <UniqueIdentifier>{9c357e12-18b3-461e-b74c-76f85280796f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar">
-      <UniqueIdentifier>{8b69e309-b90b-47f6-8f2d-3dd778b468fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar">
       <UniqueIdentifier>{d3ad8db7-ff00-498d-ba50-aa4c38a56d4a}</UniqueIdentifier>
     </Filter>
@@ -1773,6 +1770,9 @@
     <Filter Include="02.GameObjects\NPC\Ally\RandomNpc">
       <UniqueIdentifier>{88b62177-01fc-424d-a444-4fb5fd4b2db5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Human_Duelist">
+      <UniqueIdentifier>{9bd903be-dc05-4dd6-9abc-d676be0b7f7e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Land">
       <UniqueIdentifier>{9cf44fef-f3be-409e-b530-6aef90db5c0c}</UniqueIdentifier>
     </Filter>
@@ -1781,6 +1781,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush">
       <UniqueIdentifier>{eb8e52f5-0283-4acf-8fbb-0e734b7580e9}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
+      <UniqueIdentifier>{9c357e12-18b3-461e-b74c-76f85280796f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar">
+      <UniqueIdentifier>{8b69e309-b90b-47f6-8f2d-3dd778b468fe}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact">
       <UniqueIdentifier>{a7aeb7ef-a180-49ba-81f6-c8a47dcb941d}</UniqueIdentifier>
@@ -2547,11 +2553,11 @@
     <ClCompile Include="..\Private\State_Fear.cpp">
       <Filter>04.Mechanic\State\Focus\Fear</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Ride_Bbooster_Slot.cpp">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    <ClCompile Include="..\Private\Ride_Booster_Slot.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Ride_BboosterBar.cpp">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    <ClCompile Include="..\Private\Ride_BoosterBar.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ride_HpBar.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
@@ -2582,6 +2588,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\RandomNpc.cpp">
       <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Human_Duelist.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Human_Duelist_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp">
+      <Filter>02.GameObjects\Player\Robe</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush</Filter>

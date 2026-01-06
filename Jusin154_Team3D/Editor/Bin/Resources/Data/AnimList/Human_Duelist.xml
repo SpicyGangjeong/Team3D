@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animations owner="Human_Duelist">
+
+	<!-- IDLE -->
+	<Anim state="IDLE" index="243" loop="true"/>
+	
+	<!-- SKILL / ATTACK -->
+	<Anim state="SKILL" index="240" loop="false"/>
+	<Anim state="LIGHT_ATTACK" index="32" loop="false"/>
+	<Anim state="LIGHT_ATTACK2" index="35" loop="false"/>
+	<Anim state="LIGHT_ATTACK3" index="37" loop="false"/>
+	<Anim state="LIGHT_ATTACK4" index="39" loop="false"/>
+	
+	<!-- SPELL -->
+	<Anim state="SPELL" index="34" loop="false"/>
+
+	<!-- HIT / FLINCH -->
+	<Anim state="HIT_L" index="1213" loop="false"/>
+	<Anim state="HIT_R" index="1214" loop="false"/>
+	<Anim state="HIT_FWD" index="1215" loop="false"/>
+
+	<Anim state="FLINCH_BWD" index="1073" loop="false"/>
+	<Anim state="FLINCH_FWD" index="1074" loop="false"/>
+	<Anim state="FLINCH_LEFT" index="1075" loop="false"/>
+	<Anim state="FLINCH_RIGHT" index="1076" loop="false"/>
+
+	<!-- KNOCKDOWN -->
+	<Anim state="KNOCKDOWN_BWD" index="1084" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD" index="1086" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD_SPLT" index="1088" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD_SPLT" index="1087" loop="false"/>
+
+	<!-- GETUP -->
+	<Anim state="GETUP_BWD" index="1092" loop="false"/>
+	<Anim state="GETUP_FWD" index="1097" loop="false"/>
+
+</Animations>

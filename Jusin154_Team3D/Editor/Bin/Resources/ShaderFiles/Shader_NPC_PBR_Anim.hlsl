@@ -200,13 +200,13 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
     float sumW = max(dot(w, 1.0f), 1e-6f);
     w /= sumW;
 
-    //uint4 idx = In.vBlendIndex;
-   
-    //matrix BoneMatrix = (matrix) 0;
-    //matrix TempBoneMatrix = (matrix) 0;
+    uint4 idx = In.vBlendIndex;
     
-    //uint MinIdx = 30;
-    //uint MaxIdx = 41;
+    matrix BoneMatrix = (matrix) 0;
+    matrix TempBoneMatrix = (matrix) 0;
+    
+    int MinIdx = 30;
+    int MaxIdx = 45;
     
     //if (idx.x >= MinIdx && idx.x <= MaxIdx)
     //{
@@ -251,7 +251,7 @@ VS_OUT VS_MAIN_LEGACY(VS_IN In)
     
     //BoneMatrix = TempBoneMatrix;
     
-    matrix BoneMatrix =
+    BoneMatrix =
         mul(g_OffsetMatrix[In.vBlendIndex.x],
             mul(g_BoneBuffer[In.vBlendIndex.x].LocalCombined, w.x))
       + mul(g_OffsetMatrix[In.vBlendIndex.y],

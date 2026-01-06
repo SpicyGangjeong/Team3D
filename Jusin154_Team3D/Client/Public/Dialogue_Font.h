@@ -42,12 +42,21 @@ public:
 	void Add_Text(void* pArg);
 
 private:
+	void NpcInfo(void* pArg);
+	void NpcInteract(_bool bInteract);
+
+private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
 	class CDialogue* m_pDialogue = { nullptr };
 
 	vector<class CDialogue*> m_DialoguInfo;
 	deque<class CDialogue*> m_pCurrentDialogue;
+
+	_bool	m_bNpcInteract = { false };
+	_bool	m_bCurrentInteract = { false };
+	_wstring	m_pNpcName;
+	_int		m_iTextID{};
 
 public:
 	static CDialogue_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

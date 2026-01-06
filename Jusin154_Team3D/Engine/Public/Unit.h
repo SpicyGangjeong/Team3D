@@ -54,6 +54,8 @@ public:
 
 	virtual _bool Get_Npc() { return m_bNpc; }
 	virtual _wstring Get_Name();
+	virtual _wstring Get_NpcName();
+	virtual _int Get_TextID();
 #pragma endregion
 
 protected:

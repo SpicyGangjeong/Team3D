@@ -126,21 +126,37 @@ void CTroll_Rock::RockHit()
 				tagCollInfo.pObject = pUserData->pOwner;
 				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
 				tagCollInfo.fDamage = 10.f;
-				switch (PXOBJECT(pUserData->iSubKind))
+				switch (pUserData->eKind)
 				{
-				case Engine::PXOBJECT::PLAYER:
-				{
-					if (false == m_bVisible) {
-						break;
+				case PHYSX_KIND::BODY_DYNAMIC:
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case PXOBJECT::SKILL_PROTEGO:
+					{
+						if (false == m_bVisible) {
+							break;
+						}
+						m_bVisible = false;
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}
-					m_bVisible = false;
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					break;
+					}
+					break;
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case Engine::PXOBJECT::PLAYER:
+					{
+						if (false == m_bVisible) {
+							break;
+						}
+						m_bVisible = false;
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					}
+					break;
+					}
 				}
-				break;
-				case Engine::PXOBJECT::ALLY_HITBOX:
-					break;
-				default:
-					break;
 				}
 			}
 		}

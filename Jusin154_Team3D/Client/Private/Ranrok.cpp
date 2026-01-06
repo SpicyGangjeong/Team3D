@@ -663,6 +663,9 @@ HRESULT CRanrok::Render_Nonblend()
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->End_OutLine_Write();
+		}
 	}
 
 	/*if (m_bDrawOutLine) {

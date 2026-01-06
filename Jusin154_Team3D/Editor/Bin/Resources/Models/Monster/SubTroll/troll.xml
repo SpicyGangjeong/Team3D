@@ -173,7 +173,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
     </MI_Troll_ArmoredTroll_Leather>
-	<MI_ClothSim	ShaderIndex = "11" OutLineWrite="19">
+	<MI_ClothSim	ShaderIndex = "3" OutLineWrite="19">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Leather_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="T_Cav_Spid_ThickWeb_N" Extension=".dds"/>

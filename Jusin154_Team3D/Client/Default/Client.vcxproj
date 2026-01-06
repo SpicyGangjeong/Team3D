@@ -179,6 +179,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Goblin_Assassin.h" />
     <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
     <ClInclude Include="..\Public\Goblin_Sword.h" />
+    <ClInclude Include="..\Public\Human_Duelist.h" />
     <ClInclude Include="..\public\InstancedProp_Light.h" />
     <ClInclude Include="..\Public\RandomNpc.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
@@ -203,8 +204,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h" />
     <ClInclude Include="..\Public\Ranrok_Swipe.h" />
     <ClInclude Include="..\Public\ReparoObject.h" />
-    <ClInclude Include="..\Public\Ride_BboosterBar.h" />
-    <ClInclude Include="..\Public\Ride_Bbooster_Slot.h" />
+    <ClInclude Include="..\Public\Ride_BoosterBar.h" />
+    <ClInclude Include="..\Public\Ride_Booster_Slot.h" />
     <ClInclude Include="..\Public\Ride_HpBar.h" />
     <ClInclude Include="..\Public\Ride_HpSlot.h" />
     <ClInclude Include="..\Public\Ride_Info.h" />
@@ -461,7 +462,10 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />
     <ClCompile Include="..\Private\Goblin_Sword.cpp" />
+    <ClCompile Include="..\Private\Human_Duelist.cpp" />
+    <ClCompile Include="..\Private\Human_Duelist_States.cpp" />
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
+    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
     <ClCompile Include="..\Private\RandomNpc.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
     <ClCompile Include="..\Private\Ranrok_Charge.cpp" />
@@ -484,8 +488,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />
     <ClCompile Include="..\Private\Ranrok_Swipe.cpp" />
     <ClCompile Include="..\Private\ReparoObject.cpp" />
-    <ClCompile Include="..\Private\Ride_BboosterBar.cpp" />
-    <ClCompile Include="..\Private\Ride_Bbooster_Slot.cpp" />
+    <ClCompile Include="..\Private\Ride_BoosterBar.cpp" />
+    <ClCompile Include="..\Private\Ride_Booster_Slot.cpp" />
     <ClCompile Include="..\Private\Ride_HpBar.cpp" />
     <ClCompile Include="..\Private\Ride_HpSlot.cpp" />
     <ClCompile Include="..\Private\Ride_Info.cpp" />

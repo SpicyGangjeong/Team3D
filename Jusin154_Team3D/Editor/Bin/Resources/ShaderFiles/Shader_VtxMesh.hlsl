@@ -127,6 +127,11 @@ float g_fSoftMaskEdge;
 
 float g_fUVTiling;
 
+Texture2D g_DiffuseTextures[4];
+Texture2D g_NormalTextures[4];
+Texture2D g_SurfaceParamsTextures[4];
+Texture2D g_MaskTexture;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -538,19 +543,7 @@ PS_OUT_BLUR PS_MAIN_SKYBOX(PS_IN In)
     PS_OUT_BLUR Out;
     
     float4 vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
-    //if (0.f == g_fFogPow)
-    //{
-    //    Out.vDiffuse = vColor;
-    //    return Out;
-    //}
-    
-    //vector vFinalColor;
-    //float fRatio;
-    
-    //fRatio = pow(1.f - saturate(exp(-1.f * g_fFar * g_fFogDensity)), g_fFogPow);
-    //vFinalColor = lerp(vColor, g_vFogColor, fRatio);
-    //vFinalColor.a = 1.f;
+  
     
     Out.vDiffuse = vColor;
     
@@ -777,16 +770,38 @@ PS_OUT PS_LAND(PS_IN In)
 {
     PS_OUT Out = (PS_OUT)0;
 
-    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 10.f);
-    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 10.f);
+    vector vMask = g_MaskTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    vector vMtrlDiffuse_0 = g_DiffuseTextures[0].Sample(DefaultSampler, In.vTexcoord * 10.f);
+    vector vMtrlDiffuse_1 = g_DiffuseTextures[1].Sample(DefaultSampler, In.vTexcoord * 10.f);
+    vector vMtrlDiffuse_2 = g_DiffuseTextures[2].Sample(DefaultSampler, In.vTexcoord * 10.f);
+    vector vMtrlDiffuse_3 = g_DiffuseTextures[3].Sample(DefaultSampler, In.vTexcoord * 10.f);
+    
+    vector vMtrlDiffuse = float4(float3(vMtrlDiffuse_0.xyz * vMask.r +
+                                vMtrlDiffuse_1.xyz * vMask.g +
+                                vMtrlDiffuse_2.xyz * vMask.b +
+                                vMtrlDiffuse_3.xyz * vMask.a), 1.f);
   
-    if (vMtrlDiffuse.a < 0.2f)
-    {
-        discard;
-    }
+    vector vSurface_0 = g_SurfaceParamsTextures[0].Sample(DefaultSampler, In.vTexcoord * 10.f);
+    vector vSurface_1 = g_SurfaceParamsTextures[1].Sample(DefaultSampler, In.vTexcoord * 10.f);
+    vector vSurface_2 = g_SurfaceParamsTextures[2].Sample(DefaultSampler, In.vTexcoord * 10.f);
+    vector vSurface_3 = g_SurfaceParamsTextures[3].Sample(DefaultSampler, In.vTexcoord * 10.f);
+    
+    vector vSurface = (vSurface_0 * vMask.r +
+                        vSurface_1 * vMask.g +
+                        vSurface_2 * vMask.b +
+                        vSurface_3 * vMask.a);
 
-
-    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3 vNormalDecoded_0 = DecodeNormalFromRG(g_NormalTextures[0], DefaultSampler, In.vTexcoord * 10.f);
+    float3 vNormalDecoded_1 = DecodeNormalFromRG(g_NormalTextures[1], DefaultSampler, In.vTexcoord * 10.f);
+    float3 vNormalDecoded_2 = DecodeNormalFromRG(g_NormalTextures[2], DefaultSampler, In.vTexcoord * 10.f);
+    float3 vNormalDecoded_3 = DecodeNormalFromRG(g_NormalTextures[3], DefaultSampler, In.vTexcoord * 10.f);
+    
+    float3 vNormalDecoded = normalize(vNormalDecoded_0.xyz * vMask.r +
+                                        vNormalDecoded_1.xyz * vMask.g +
+                                        vNormalDecoded_1.xyz * vMask.b +
+                                        vNormalDecoded_1.xyz * vMask.a);
+    
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));

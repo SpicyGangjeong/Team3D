@@ -54,6 +54,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 #if 진우
 	m_isDebugMode = true; // 디버그 무적 모드
 #endif
+#if 나
+	m_isDebugMode = true; // 디버그 무적 모드
+#endif
 
 #endif // _DEBUG
 
@@ -154,6 +157,14 @@ void CPlayer::Update(_float fTimeDelta)
 
 	CheckMouseInput();
 
+	if (m_pGameInstance->Key_Down(DIK_F))
+	{
+		if (m_bNpcInteraction == true)
+		{
+			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bNpcInteraction);
+		}
+	}
+
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
@@ -186,6 +197,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	{
 		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
 	}
+
+	Player_PixRot();
 }
 
 
@@ -330,9 +343,11 @@ HRESULT CPlayer::Update_RaycastElements()
 
 				Info.pOwner = pFoundNPC;
 				Info.pNPCName = static_cast<CUnit*>(pFoundNPC)->Get_Name();
+				Info.pName = static_cast<CUnit*>(pFoundNPC)->Get_NpcName();
 				_float4 Pos{};
 				XMStoreFloat4(&Pos, static_cast<CUnit*>(pFoundNPC)->Get_WorldPostion());
-				Info.pNPCPosition = Pos;
+				Info.fNPCPosition = Pos;
+				Info.iTextID = static_cast<CUnit*>(pFoundNPC)->Get_TextID();
 				m_bNpcInteraction = true;
 				m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOn"), &Info);
 			}
@@ -512,7 +527,6 @@ HRESULT CPlayer::Ready_Components()
 	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
 	m_Components.push_back(m_pStat);
 	SAFE_ADDREF(m_pStat);
-	SAFE_ADDREF(m_pStat);
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
@@ -587,15 +601,15 @@ HRESULT CPlayer::Ready_Parts()
 	//XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("broomSocket"));
 #ifdef 기무리
 
-	{
-		CPlayerRobe::PlayerRobe_DESC Desc{};
-		Desc.pModel = m_pModelCom;
-		Desc.pParentTransform = m_pTransformCom;
-		Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
-		if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
-			assert(false);
-		}
-	}
+	//{
+	//	CPlayerRobe::PlayerRobe_DESC Desc{};
+	//	Desc.pModel = m_pModelCom;
+	//	Desc.pParentTransform = m_pTransformCom;
+	//	Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
+	//	if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
+	//		assert(false);
+	//	}
+	//}
 
 #endif // 기무리
 
@@ -665,51 +679,51 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		fMixerFactor = 0.658333f;
 		iColorMixerMethod = 1;
 		break;
-#ifdef 기무리
-
-	case PLAYER_MESH_ORDER::ROBE_CLOTH:
-	{
-		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
-		_uint MeshBoneCount = pMesh->Get_NumBone();
-
-		for (_uint i = 0; i < MeshBoneCount; ++i)
-		{
-			XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
-		}
-
-		_uint temp = 0;
-		vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
-		vector<_int> boneIndices = pMesh->Get_BoneIndices();
-
-		for (_uint i = 0; i < MeshBoneCount; ++i)
-		{
-			_uint global = boneIndices[i];
-			if (global == 38)
-				continue;
-			if (globalMask[global] == 1)
-			{
-				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
-			}
-		}
-
-		GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
-
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
-			return E_FAIL;
-		}
-
-
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_BoneMatrices",
-			SkinMatrices.data(),
-			(_int)SkinMatrices.size()
-		)))
-		{
-			return E_FAIL;
-		}
-	}
-	break;
-#endif // _DEBUG
+//#ifdef 기무리
+//
+//	case PLAYER_MESH_ORDER::ROBE_CLOTH:
+//	{
+//		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
+//		_uint MeshBoneCount = pMesh->Get_NumBone();
+//
+//		for (_uint i = 0; i < MeshBoneCount; ++i)
+//		{
+//			XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
+//		}
+//
+//		_uint temp = 0;
+//		vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
+//		vector<_int> boneIndices = pMesh->Get_BoneIndices();
+//
+//		for (_uint i = 0; i < MeshBoneCount; ++i)
+//		{
+//			_uint global = boneIndices[i];
+//			if (global == 38)
+//				continue;
+//			if (globalMask[global] == 1)
+//			{
+//				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
+//			}
+//		}
+//
+//		GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
+//
+//		if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
+//			return E_FAIL;
+//		}
+//
+//
+//		if (FAILED(m_pShaderCom->Bind_Matrices(
+//			"g_BoneMatrices",
+//			SkinMatrices.data(),
+//			(_int)SkinMatrices.size()
+//		)))
+//		{
+//			return E_FAIL;
+//		}
+//	}
+//	break;
+//#endif // _DEBUG
 
 	default:
 		break;
@@ -774,6 +788,31 @@ void CPlayer::SetGravity()
 	}
 	else { // 벽에 닿는중일 땐 항상 중력 off
 		m_pCharacter_Controller->SetGravity(false);
+	}
+}
+
+void CPlayer::Player_PixRot()
+{
+	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
+	if (iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first ||
+		iCurrAnim == m_Animation[STATEANIM::BROOM_DISMOUNT].first)
+	{
+		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+		vLook = XMVectorSetY(vLook, 0.f);
+
+		if (XMVector3LengthSq(vLook).m128_f32[0] < 1e-6f)
+			vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+		vLook = XMVector3Normalize(vLook);
+
+		_vector vRight = XMVector3Normalize(XMVector3Cross(vUp, vLook));
+		vLook = XMVector3Cross(vRight, vUp);
+
+		m_pTransformCom->Set_State(STATE::RIGHT, vRight);
+		m_pTransformCom->Set_State(STATE::UP, vUp);
+		m_pTransformCom->Set_State(STATE::LOOK, vLook);
 	}
 }
 
@@ -988,6 +1027,17 @@ void CPlayer::Describe_Entity()
 		_float degree = XMConvertToDegrees(vDir);
 
 		GUI::Text("Angle %.2f", degree);
+
+		_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
+		_vector vUp = m_pTransformCom->Get_State(STATE::UP);
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+
+		auto dotRU = XMVectorGetX(XMVector3Dot(vRight, vUp));
+		auto dotUL = XMVectorGetX(XMVector3Dot(vUp, vLook));
+		auto dotLR = XMVectorGetX(XMVector3Dot(vLook, vRight));
+
+		GUI::Text("dot RU %.4f | UL %.4f | LR %.4f\n", dotRU, dotUL, dotLR);
+
 
 		m_pLightCom->Describe_Entity();
 	}

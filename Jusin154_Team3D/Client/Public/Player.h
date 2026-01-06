@@ -103,6 +103,7 @@ private:
 	void SetGravity();
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
 	void Play_SpellHitAnim();
+	void Player_PixRot();
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
@@ -165,7 +166,7 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	array<_float4x4, 256> SkinMatrices;
+	array<_float4x4, 256> SkinMatrices = {};
 	_bool			m_bOpenDoor = { false };
 
 	/* 무적 불 변수*/

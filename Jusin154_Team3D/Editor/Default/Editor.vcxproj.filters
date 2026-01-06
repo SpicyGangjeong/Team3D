@@ -637,12 +637,6 @@
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG">
       <UniqueIdentifier>{8ada79e8-727c-40c3-95dc-ce34b8924e69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot">
-      <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar">
-      <UniqueIdentifier>{12d83369-3413-478f-920e-c3c0ddeabfe8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot">
       <UniqueIdentifier>{353f9458-6fe9-4159-a1c6-1f3a85cffda9}</UniqueIdentifier>
     </Filter>
@@ -759,6 +753,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse">
       <UniqueIdentifier>{614e67ae-6df9-4826-adbe-6be96f54041d}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
+      <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar">
+      <UniqueIdentifier>{12d83369-3413-478f-920e-c3c0ddeabfe8}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Swipe">
       <UniqueIdentifier>{1893fa7b-b08f-4362-a212-7751614d4922}</UniqueIdentifier>
@@ -1515,11 +1515,11 @@
     <ClInclude Include="..\public\Ride_HpBar.h">
       <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Ride_Bbooster_Slot.h">
-      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    <ClInclude Include="..\public\Ride_Booster_Slot.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Ride_BboosterBar.h">
-      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    <ClInclude Include="..\public\Ride_BoosterBar.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Ride_HpSlot.h">
       <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
@@ -2311,11 +2311,11 @@
     <ClCompile Include="..\private\Ride_HpBar.cpp">
       <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Ride_Bbooster_Slot.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    <ClCompile Include="..\private\Ride_Booster_Slot.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Ride_BboosterBar.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    <ClCompile Include="..\private\Ride_BoosterBar.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Ride_HpSlot.cpp">
       <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
