@@ -32,6 +32,7 @@ class CRanrok final : public CMonster
 		END
 	};
 
+public:
 	enum class RANROK_PHASE
 	{
 		PHASE_AIR,
@@ -101,6 +102,20 @@ private:
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 
+	class CEditEffect* m_pLeftSmoke = { nullptr };
+	class CEditEffect* m_pRightSmoke = { nullptr };
+	class CEditEffect* m_pBottomSmoke = { nullptr };
+
+	class CEditEffect* m_pRightPt = { nullptr };
+	class CEditEffect* m_pLeftPt= { nullptr };
+
+	class CTrailObject* m_pRightEye_Trail = { nullptr };
+	class CTrailObject* m_pLeftEye_Trail = { nullptr };
+
+
+	const _float4x4* m_pLeftEye_BoneMat = { nullptr };
+	const _float4x4* m_pRightEye_BoneMat = { nullptr };
+
 	vector<vector<_float4>> m_Points;
 	_int m_iCurrentPoint = 0;
 	_int m_iCurrentFlow = 0;
@@ -112,7 +127,7 @@ private:
 	_float m_fRushTime = {};
 	_float m_fTuckedSpeed = { 75.f};
 
-
+	_float3 m_vCCTPos = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

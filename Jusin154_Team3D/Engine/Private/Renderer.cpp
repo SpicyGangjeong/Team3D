@@ -11,6 +11,7 @@ void CRenderer::Render()
 	Render_Shadow();
 	Render_NonBlend();
 	Render_Decal();
+	Render_EffectNonBlend();
 	Render_SSAO();
 	Render_SSAO_BLUR();
 	Render_LightAcc();
@@ -224,7 +225,10 @@ void CRenderer::Render_Shadow()
 	if (FAILED(m_pGameInstance->Bind_CascadeSplitRatio(m_pShader, "g_fCascadeSplitRatioFar", false))) {
 		assert(false);
 	}
-	if (FAILED(m_pGameInstance->Bind_CascadeBias(m_pShader, "g_vShadowBias"))) {
+	if (FAILED(m_pShader->Bind_RawValue("g_fMinShadowBrightness", &m_fMinShadowBrightness, sizeof(_float)))) {
+		assert(false);
+	}
+	if (FAILED(m_pGameInstance->Bind_CascadeValues(m_pShader))) {
 		assert(false);
 	}
 
@@ -356,6 +360,34 @@ void CRenderer::Render_Decal()
 	}
 
 	m_pGameInstance->Clear_RenderTarget(TEXT("Target_NormalCopy"));
+}
+
+void CRenderer::Render_EffectNonBlend()
+{
+	COMPUTE_TIMEDELTA("Timer_Render_EffectNonBlend");
+	EVENTSCOPE_("Render_EffectNonBlend");
+	m_eType = RENDER::EFFECT_NONBLEND;
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_GameObjects")))) {
+		return;
+	}
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT_NONBLEND)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render())) {
+				assert(false);
+			}
+		}
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::EFFECT_NONBLEND)].clear();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+	COMPUTE_TIMEDELTA("Timer_Render_EffectNonBlend");
 }
 
 void CRenderer::Render_LightAcc()
@@ -588,6 +620,10 @@ void CRenderer::Render_Fog()
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
 	m_pShader->Bind_RawValue("g_fDepthPackExponent", m_pGameInstance->Get_DepthPackExponentPtr(), sizeof(_float));
 
+	//if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
+	//    assert(false);
+	//}
+
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 		return;
 	}
@@ -610,7 +646,7 @@ void CRenderer::Render_Effect()
 	COMPUTE_TIMEDELTA("Timer_Render_Effect");
 	EVENTSCOPE_("Render_Effect");
 
-	if (FAILED(m_pGameInstance->Begin_MRT_NO_DepthStencil(TEXT("MRT_WB")))) {
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_WB")))) {
 		return;
 	}
 

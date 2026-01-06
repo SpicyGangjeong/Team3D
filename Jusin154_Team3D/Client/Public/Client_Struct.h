@@ -55,8 +55,9 @@ namespace Client
 
 	typedef struct NpcDialogue
 	{
+		_wstring					pNpcName;
 		_int						iNpcID{};
-		vector<CURRENTDIALOGUEINFO>	Info;
+		unordered_map<_int, CURRENTDIALOGUEINFO> Info;
 	}NPCDIALOGUEINFO;
 
 	typedef struct tagLockOnInfo {
@@ -64,6 +65,15 @@ namespace Client
 		class CMapElement_Interactable* pInteractive = { nullptr };
 		class CMapElement_Chest* pChest = { nullptr };
 	}LOCKON_INFO;
+
+	typedef struct tegNPCInteractionInfo
+	{
+		CGameObject*	pOwner = { nullptr };
+		_wstring		pNPCName;
+		_wstring		pName;
+		_float4			fNPCPosition{};
+		_int			iTextID{};
+	}NPCINTERACTIONINFO;
 
 	typedef struct tagUnitInfo
 	{
@@ -258,7 +268,7 @@ namespace Client
 		_bool       isBlurDissolve = {};
 		_bool       isNomalMap = {};
 		_bool       isNoDissolveSmoothStep = {};
-		_bool       isPadding3 = {};
+		_bool       isNonSoftEffect = {};
 
 		_float2     vDissolveSmoothRange = { 0.1f , 0.1f };
 		_float2     vPadding0 = {};

@@ -665,6 +665,7 @@ _int CEffect_Container::CollisionCheck()
 			case PXOBJECT::MONSTER:
 			case PXOBJECT::GOBLIN_WARRIOR:
 			case PXOBJECT::GOBLIN_MAGICIAN:
+			case PXOBJECT::GOBLIN_ASSASSIN:
 			case PXOBJECT::TROLL:
 			case PXOBJECT::RANROK:
 			case PXOBJECT::WALL:
@@ -864,6 +865,8 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_fvector StartPos, _fvec
 		{
 			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
+			tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_PROJECTILE);
+			tagCollInfo.fDamage = 10.f;
 
 			switch (pUserData->eKind)
 			{

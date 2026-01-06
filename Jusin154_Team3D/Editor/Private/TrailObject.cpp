@@ -43,10 +43,6 @@ void CTrailObject::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-
-
-
-
 	/* 디스토션 타임*/
 	if (m_TrailInfo.vDistortionTime.y != 0)
 	{
@@ -405,9 +401,6 @@ HRESULT CTrailObject::Render()
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_TrailInfo.eShaderPass))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
-		return E_FAIL;
-
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
 
@@ -523,7 +516,7 @@ void CTrailObject::Describe_Entity()
 
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW_NEAR", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" , "UI_OVERLAY"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" };
+	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" , "TRAIL_WB"};
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY" };
 
 	_int iCurrentBloomType = static_cast<_int>(m_TrailInfo.eBloomType);
@@ -765,6 +758,15 @@ HRESULT CTrailObject::Bind_ShaderResources()
 
 	if (FAILED(m_pTrailCom->Bind_Resources()))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;

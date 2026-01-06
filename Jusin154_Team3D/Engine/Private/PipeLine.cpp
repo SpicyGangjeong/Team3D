@@ -143,9 +143,15 @@ HRESULT CPipeLine::Bind_CascadeSplitRatio(class CShader* pShader, const _char* p
 	return S_OK;
 }
 
-HRESULT CPipeLine::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+HRESULT CPipeLine::Bind_CascadeValues(CShader* pShader)
 {
-	return pShader->Bind_RawValue(pConstantName, &m_vShadowBias, sizeof(_float4));
+	HRESULT hr = {};
+	hr = pShader->Bind_RawValue("g_vShadowRadiusTexel", &m_vShadowRadius, sizeof(_float4));
+	if (FAILED(hr)) {
+		return hr;
+	}
+	hr = pShader->Bind_RawValue("g_vShadowBias", &m_vShadowBias, sizeof(_float4));
+	return hr;
 }
 
 HRESULT CPipeLine::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
@@ -516,6 +522,7 @@ void CPipeLine::Free()
 	__super::Free();
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
+	SAFE_RELEASE(m_pPrevDSS);
 	SAFE_RELEASE(m_pDSS_OutLineWrite);
 	SAFE_RELEASE(m_pGameInstance);
 	for (auto& pairSRV : m_mapGlobalSRV) {
@@ -530,28 +537,32 @@ void CPipeLine::Describe_Entity()
 {
 	GUI::Begin("SYSTEM");
 	if (GUI::CollapsingHeader("PipeLine")) {
+		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 		_bool bModified = { false };
 		_float fNear = m_fShadowNearBoxRatio;
 		_float fFar = m_fShadowFarBoxRatio;
 		_float fSafe_RadiusMultiplier = m_fSafe_RadiusMultiplier;
 		_float fSafe_RadiusMargin = m_fSafe_RadiusMargin;
 		_float4 vShadowBias = m_vShadowBias;
+		_float4 vShadowRadius = m_vShadowRadius;
 		_float3	vShadowBoxMarginMin = m_vShadowBoxMarginMin;
 		_float3	vShadowBoxMarginMax = m_vShadowBoxMarginMax;
-		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.01f, 0.01f, 0.999f, "%.2f")) {
+		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.001f, 0.001f, 0.999f, "%.3f")) {
 			bModified = true;
 		}
-		if (GUI::DragFloat("m_fShadowFarBoxRatio", &fFar, 0.01f, 0.01f, 0.999f, "%.2f")) {
+		if (GUI::DragFloat("m_fShadowFarBoxRatio", &fFar, 0.001f, 0.001f, 0.999f, "%.3f")) {
 			bModified = true;
 		}
-		if (GUI::DragFloat("m_fSafe_RadiusMultiplier", &fSafe_RadiusMultiplier, 0.01f, 1.f, 3.f, "%.2f")) {
+		if (GUI::DragFloat("m_fSafe_RadiusMultiplier", &fSafe_RadiusMultiplier, 0.01f, 1.f, 3.f, "%.3f")) {
 			bModified = true;
 		}
-		if (GUI::DragFloat("m_fSafe_RadiusMargin", &fSafe_RadiusMargin, 1.f, 10.f, 40.f, "%.2f")) {
+		if (GUI::DragFloat("m_fSafe_RadiusMargin", &fSafe_RadiusMargin, 1.f, 10.f, 40.f, "%.3f")) {
 			bModified = true;
 		}
-		GUI::PushItemWidth(150.f);
 		if (GUI::DragFloat4("ShadowBiasNMFS", (_float*)&vShadowBias, 0.0001f, 0.0001f, 1.f, "%.4f")) {
+			bModified = true;
+		}
+		if (GUI::DragFloat4("ShadowSampleRadius", (_float*)&vShadowRadius, 0.0001f, 1.f, 3.f, "%.4f")) {
 			bModified = true;
 		}
 		if (GUI::SliderFloat3("fShadowBoxMarginMin", (_float*)&vShadowBoxMarginMin, -100.F, 100.f, "%.1f")) {
@@ -560,11 +571,11 @@ void CPipeLine::Describe_Entity()
 		if (GUI::SliderFloat3("fShadowBoxMarginMax", (_float*)&vShadowBoxMarginMax, -100.F, 100.f, "%.1f")) {
 			bModified = true;
 		}
-		GUI::PushItemWidth(80.f);
 		if (true == bModified) {
 			m_fShadowNearBoxRatio = fNear;
 			m_fShadowFarBoxRatio = fFar;
 			m_vShadowBias = vShadowBias;
+			m_vShadowRadius = vShadowRadius;
 			m_fSafe_RadiusMultiplier = fSafe_RadiusMultiplier;
 			m_fSafe_RadiusMargin = fSafe_RadiusMargin;
 			m_vShadowBoxMarginMin = vShadowBoxMarginMin;

@@ -354,9 +354,6 @@ HRESULT CTrailObject::Render()
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_TrailInfo.eShaderPass))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
-		return E_FAIL;
-
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
 
@@ -380,8 +377,6 @@ HRESULT CTrailObject::Render_Blur()
 
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLUR))))
 		return E_FAIL;
-
-
 
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
@@ -472,6 +467,15 @@ HRESULT CTrailObject::Bind_ShaderResources()
 
 	if (FAILED(m_pTrailCom->Bind_Resources()))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;

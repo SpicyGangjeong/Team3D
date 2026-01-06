@@ -4,8 +4,8 @@
 #include "Ride_Info_Key.h"
 #include "Ride_Info.h"
 #include "Ride_InfoBG.h"
-#include "Ride_Bbooster_Slot.h"
-#include "Ride_BboosterBar.h"
+#include "Ride_Booster_Slot.h"
+#include "Ride_BoosterBar.h"
 #include "Ride_HpBar.h"
 #include "Ride_HpSlot.h"
 
@@ -186,17 +186,17 @@ HRESULT CRide_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Ride_Info"), m_pRide_Info);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Bbooster_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_Bbooster_Slot**>(&m_pRide_Bbooster_Slot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Booster_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_Booster_Slot**>(&m_pRide_Booster_Slot))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Ride_Bbooster_Slot"), m_pRide_Bbooster_Slot);
+	Add_Element(TEXT("Ride_Bbooster_Slot"), m_pRide_Booster_Slot);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_BboosterBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_BboosterBar**>(&m_pRide_BboosterBar))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_BoosterBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_BoosterBar**>(&m_pRide_BoosterBar))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Ride_BboosterBar"), m_pRide_BboosterBar);
+	Add_Element(TEXT("Ride_BboosterBar"), m_pRide_BoosterBar);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_HpBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_HpBar**>(&m_pRide_HpBar))))
 	{

@@ -23,6 +23,7 @@
 
 #pragma region ACTOR
 #include "Player.h"
+#include "Human_Duelist.h"
 #include "Troll.h"
 #include "Goblin.h"
 #include "Goblin_Mage.h"
@@ -32,6 +33,7 @@
 #include "NPC_EleazarFig.h"
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
+#include "RandomNpc.h"
 #pragma endregion
 
 
@@ -102,9 +104,11 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
@@ -326,9 +330,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -337,8 +341,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = true;
@@ -714,21 +718,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	}
 
 	_bool isLoad_NPC = { true };
+	_bool isLoad_RandomNPC = { true };
 #ifdef _DEBUG
 #ifdef gimch
-
+	isLoad_RandomNPC = true;
 #endif // gimch
 #ifdef 진우
-
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
-
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef Bin
 	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // Bin
 #endif // _DEBUG
 
@@ -751,6 +758,34 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			}
 		}
 	}
+
+	if (true == isLoad_NPC)
+	{
+		for (_uint i = 0; i < 11; i++)
+		{
+			{
+				CRandomNpc::NPCDESC NPCDesc{};
+				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
+				_float Z = m_pGameInstance->Real_Random_Float(20.f, 29.f);
+				NPCDesc.vPos = _float4(X, 1.f, Z, 1.f);
+				NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+				NPCDesc.iIndex = i;
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRandomNpc>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
+					return E_FAIL;
+				}
+			}
+		}
+
+		//CPlayer::PLAYERDESC playerDesc = {};
+		//playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
+		//playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		//	return E_FAIL;
+		//}
+	}
+
+
+
 	return S_OK;
 }
 
@@ -797,7 +832,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // 
 #ifdef Bin
-
+	isLoad_Monster = true;
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {
@@ -830,6 +865,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
+
+
 
 	}
 #if 진우

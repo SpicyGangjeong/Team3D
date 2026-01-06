@@ -204,23 +204,41 @@ void CGoblin_Dagger::Dagger_Hit()
 				
 				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
-				switch (PXOBJECT(pUserData->iSubKind))
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_PROJECTILE);
+				tagCollInfo.fDamage = 10.f;
+				
+				switch (pUserData->eKind)
 				{
-				case Engine::PXOBJECT::PLAYER:
-				{
-					if (false == m_bVisible) {
-						break;
+				case PHYSX_KIND::BODY_DYNAMIC:
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case PXOBJECT::SKILL_PROTEGO:
+					{
+						if (false == m_bVisible) {
+							break;
+						}
+						m_bVisible = false;
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}
-					m_bVisible = false;
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(10.f);
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					break;
+					}
+					break;
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case Engine::PXOBJECT::PLAYER:
+					{
+						if (false == m_bVisible) {
+							break;
+						}
+						m_bVisible = false;
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					}
+					break;
+
+					}
 				}
-				break;
-				case Engine::PXOBJECT::ALLY_HITBOX:
-					break;
-				default:
-					break;
 				}
 				
 				

@@ -76,15 +76,6 @@
     <Filter Include="02.GameObjects\Layer_Effect">
       <UniqueIdentifier>{32909f25-6113-4bd6-81a8-9415d993b221}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect">
-      <UniqueIdentifier>{a9a30c22-af8f-421a-8901-edfb8146f59d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\00.EffectObject">
-      <UniqueIdentifier>{8a5ffca8-725a-42ee-a3eb-3c79df09dec9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect">
-      <UniqueIdentifier>{ba468252-bba3-46e4-bf61-e726a59060ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor">
       <UniqueIdentifier>{5b31b993-b137-42d2-b737-000aeb27a675}</UniqueIdentifier>
     </Filter>
@@ -247,12 +238,6 @@
     <Filter Include="02.GameObjects\Monster\Goblin">
       <UniqueIdentifier>{26e2dcaa-d94a-4c3d-ba39-2916f2a27bac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\03.TrailObject">
-      <UniqueIdentifier>{f5cd19e8-186b-418f-b7fa-af73046a80d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\04.Effect_Container">
-      <UniqueIdentifier>{a193f87a-e222-4dd8-9766-cb32bb368ccb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Broom">
       <UniqueIdentifier>{a9862861-6eaa-4e04-b7f6-217a32db7db4}</UniqueIdentifier>
     </Filter>
@@ -388,9 +373,6 @@
     <Filter Include="02.GameObjects\Env\03.MapElement\Light">
       <UniqueIdentifier>{99652c97-4011-4d1f-84fb-7e6aa9f6ec1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect">
-      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
       <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
     </Filter>
@@ -420,42 +402,6 @@
     </Filter>
     <Filter Include="50.UI\UI_Manager">
       <UniqueIdentifier>{fe7d5909-159c-4130-ae5e-e08e648b193c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect">
-      <UniqueIdentifier>{44155272-ee23-4fbf-ae47-e89f62f34975}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic">
-      <UniqueIdentifier>{db7324ea-732a-4cac-948e-f99f0544027c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap">
-      <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide">
-      <UniqueIdentifier>{3fb9a340-293c-413e-ae32-e5986222f711}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard">
-      <UniqueIdentifier>{c81350c7-0edb-4e51-babf-09bf627414f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide">
-      <UniqueIdentifier>{51b32cc0-bf57-444f-9a21-0ff756a94291}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo">
-      <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide">
-      <UniqueIdentifier>{09f9fe15-1685-4aac-b3a1-ee98c3e76e3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\08.Protego">
-      <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio">
-      <UniqueIdentifier>{03dca491-c8d3-4204-b450-b6089287aa3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso">
-      <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide">
-      <UniqueIdentifier>{c70a2ce4-8664-45e0-b594-4f416829dab8}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\Loding_Canvas">
       <UniqueIdentifier>{ebad2fd8-622f-4c17-9ba3-b0c4bd366c05}</UniqueIdentifier>
@@ -505,18 +451,6 @@
     <Filter Include="02.GameObjects\Monster\Troll\Weapon">
       <UniqueIdentifier>{5d93fa49-8e72-4182-a4ad-c4aef00000b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke">
-      <UniqueIdentifier>{0df28480-a5ca-4895-b8f4-2bac1a7454ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit">
-      <UniqueIdentifier>{7363a82f-1bdf-4107-b824-a5326a7d2075}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego">
-      <UniqueIdentifier>{4556b8c9-e689-435e-8775-48d0c45a942f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing">
-      <UniqueIdentifier>{3a12f2c2-0472-41b7-99ce-2c2f17f26e92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Monster\Goblin\Item">
       <UniqueIdentifier>{0fdb9c5b-7edd-4915-8fce-a8e78c9e1e9a}</UniqueIdentifier>
     </Filter>
@@ -531,9 +465,6 @@
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar">
       <UniqueIdentifier>{49575102-9b08-494e-bf3f-bdc98774913e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\State_Effect">
-      <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection">
       <UniqueIdentifier>{81c6b163-6c8b-47ac-a4b6-e86088ce709f}</UniqueIdentifier>
@@ -601,9 +532,6 @@
     <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
       <UniqueIdentifier>{54a92f0d-26f1-49bf-a13b-ab11995968c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\Blink">
-      <UniqueIdentifier>{3b207257-c396-473b-9906-df04b28fb0cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer">
       <UniqueIdentifier>{ea002e2c-481e-4f1f-a16f-4e47e3a48d37}</UniqueIdentifier>
     </Filter>
@@ -628,12 +556,6 @@
     <Filter Include="02.GameObjects\Dummys\DummyDecal">
       <UniqueIdentifier>{ebd7a1c2-4914-4956-ad9c-a0fc2e857f56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok">
-      <UniqueIdentifier>{8ac1faba-2669-44f3-9de3-75850d0b0fb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\FireBall">
-      <UniqueIdentifier>{4070f5a1-7f80-42da-afa0-f7f0500376f9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Env\08.LightSpawner">
       <UniqueIdentifier>{48e893e6-2374-44a3-b091-814ad89451c4}</UniqueIdentifier>
     </Filter>
@@ -642,12 +564,6 @@
     </Filter>
     <Filter Include="50.UI\Dialogue">
       <UniqueIdentifier>{3b9768b5-8c85-4465-b0ad-2d14722d88ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath">
-      <UniqueIdentifier>{fbf574e7-159e-43c3-914d-6a200383a45c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point">
-      <UniqueIdentifier>{837e0b65-8ea3-41c5-8176-defa6e0cf3a4}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel">
       <UniqueIdentifier>{dd61e764-b7d3-444e-b366-8d5ae8178eea}</UniqueIdentifier>
@@ -669,9 +585,6 @@
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record">
       <UniqueIdentifier>{cfd0b003-cc18-48cf-a881-94e137b5dadc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse">
-      <UniqueIdentifier>{935b6ab0-e01b-4b4b-80d0-649a507d21c8}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy">
       <UniqueIdentifier>{cbb99946-a4d6-4ad8-842c-e67ca5de3f3a}</UniqueIdentifier>
@@ -724,12 +637,6 @@
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG">
       <UniqueIdentifier>{8ada79e8-727c-40c3-95dc-ce34b8924e69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot">
-      <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar">
-      <UniqueIdentifier>{12d83369-3413-478f-920e-c3c0ddeabfe8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot">
       <UniqueIdentifier>{353f9458-6fe9-4159-a1c6-1f3a85cffda9}</UniqueIdentifier>
     </Filter>
@@ -739,17 +646,119 @@
     <Filter Include="02.GameObjects\RaceRing">
       <UniqueIdentifier>{189b5f72-c985-4bf8-a33e-4257f6d74d25}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge">
-      <UniqueIdentifier>{c9d234fd-d9dc-4740-9e9e-32b986335ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Nomal_Hit">
-      <UniqueIdentifier>{a0da7e6b-8745-402e-9451-6430e1466915}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Big_Hit">
-      <UniqueIdentifier>{d5746edc-1d52-42a0-8af3-3badc74ff45b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar">
       <UniqueIdentifier>{d26ffa70-5843-4e91-8a54-907abcc35a77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect">
+      <UniqueIdentifier>{a9a30c22-af8f-421a-8901-edfb8146f59d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\00.EffectObject">
+      <UniqueIdentifier>{8a5ffca8-725a-42ee-a3eb-3c79df09dec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\02.EditEffect">
+      <UniqueIdentifier>{ba468252-bba3-46e4-bf61-e726a59060ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\02.EditEffect\01.TestEffect">
+      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\03.TrailObject">
+      <UniqueIdentifier>{f5cd19e8-186b-418f-b7fa-af73046a80d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\04.Effect_Container">
+      <UniqueIdentifier>{a193f87a-e222-4dd8-9766-cb32bb368ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect">
+      <UniqueIdentifier>{44155272-ee23-4fbf-ae47-e89f62f34975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Nomal_Smoke">
+      <UniqueIdentifier>{0df28480-a5ca-4895-b8f4-2bac1a7454ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush_Hit">
+      <UniqueIdentifier>{7363a82f-1bdf-4107-b824-a5326a7d2075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Goblin_Protego">
+      <UniqueIdentifier>{4556b8c9-e689-435e-8775-48d0c45a942f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\TrollSwing">
+      <UniqueIdentifier>{3a12f2c2-0472-41b7-99ce-2c2f17f26e92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok">
+      <UniqueIdentifier>{8ac1faba-2669-44f3-9de3-75850d0b0fb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\FireBall">
+      <UniqueIdentifier>{4070f5a1-7f80-42da-afa0-f7f0500376f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Breath">
+      <UniqueIdentifier>{fbf574e7-159e-43c3-914d-6a200383a45c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Point">
+      <UniqueIdentifier>{837e0b65-8ea3-41c5-8176-defa6e0cf3a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Pulse">
+      <UniqueIdentifier>{935b6ab0-e01b-4b4b-80d0-649a507d21c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Charge">
+      <UniqueIdentifier>{c9d234fd-d9dc-4740-9e9e-32b986335ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Nomal_Hit">
+      <UniqueIdentifier>{a0da7e6b-8745-402e-9451-6430e1466915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Big_Hit">
+      <UniqueIdentifier>{d5746edc-1d52-42a0-8af3-3badc74ff45b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic">
+      <UniqueIdentifier>{db7324ea-732a-4cac-948e-f99f0544027c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\05.NomalJap">
+      <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\05.NomalJap\NomalJapSide">
+      <UniqueIdentifier>{3fb9a340-293c-413e-ae32-e5986222f711}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\06.Bombard">
+      <UniqueIdentifier>{c81350c7-0edb-4e51-babf-09bf627414f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\06.Bombard\BombardSide">
+      <UniqueIdentifier>{51b32cc0-bf57-444f-9a21-0ff756a94291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\07.Decendo">
+      <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\07.Decendo\DecendoSide">
+      <UniqueIdentifier>{09f9fe15-1685-4aac-b3a1-ee98c3e76e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego">
+      <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\09.Revelio">
+      <UniqueIdentifier>{03dca491-c8d3-4204-b450-b6089287aa3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\10.Levioso">
+      <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\10.Levioso\LeviosoSide">
+      <UniqueIdentifier>{c70a2ce4-8664-45e0-b594-4f416829dab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\Blink">
+      <UniqueIdentifier>{3b207257-c396-473b-9906-df04b28fb0cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\State_Effect">
+      <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land">
+      <UniqueIdentifier>{ea60b62d-1df5-41d7-aa0f-74ec9f454443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Rush">
+      <UniqueIdentifier>{7210d8cd-a5b8-48bd-a45e-52992dfe3557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse">
+      <UniqueIdentifier>{614e67ae-6df9-4826-adbe-6be96f54041d}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
+      <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar">
+      <UniqueIdentifier>{12d83369-3413-478f-920e-c3c0ddeabfe8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -826,13 +835,13 @@
       <Filter>01.Level\40.EffectViewer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EffectObject.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\00.EffectObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestEffect.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EditEffect.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\02.EditEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Editor.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
@@ -1012,13 +1021,13 @@
       <Filter>80.State\State_Combat</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TrailObject.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\03.TrailObject</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\03.TrailObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Container.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\04.Effect_Container</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\04.Effect_Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NomalJap.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\05.NomalJap</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Broom.h">
       <Filter>02.GameObjects\Broom</Filter>
@@ -1051,7 +1060,7 @@
       <Filter>02.GameObjects\Wand</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Bombard.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\06.Bombard</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>80.State</Filter>
@@ -1063,7 +1072,7 @@
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Decendo.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\07.Decendo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Debug.h">
       <Filter>02.GameObjects\Camera\Debug</Filter>
@@ -1108,7 +1117,7 @@
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Protego.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\08.Protego</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MissionBanner_Border.h">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
@@ -1123,10 +1132,10 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Revelio.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\09.Revelio</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Levioso.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\10.Levioso</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Spell_List.h">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
@@ -1180,16 +1189,16 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NomalJapSide.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\05.NomalJap\NomalJapSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BombardSide.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\06.Bombard\BombardSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\DecendoSide.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\07.Decendo\DecendoSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\LeviosoSide.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\10.Levioso\LeviosoSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\InfoInstance.h">
       <Filter>04.InfoInstance</Filter>
@@ -1210,7 +1219,7 @@
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TrollSwing.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\TrollSwing</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loding_Canvas.h">
       <Filter>50.UI\Loding_Canvas</Filter>
@@ -1270,13 +1279,13 @@
       <Filter>80.State\Troll_State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Nomal_Smoke.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Rush_Hit.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush_Hit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Protego.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Goblin_Protego</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Enemy_Panel.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel</Filter>
@@ -1312,7 +1321,7 @@
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\StunEffect.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\State_Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Enemy_Detection.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
@@ -1393,7 +1402,7 @@
       <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Blink.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\Blink</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\Blink</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok.h">
       <Filter>02.GameObjects\Monster\Ranrok</Filter>
@@ -1438,7 +1447,7 @@
       <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_FireBall.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\FireBall</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\FireBall</Filter>
     </ClInclude>
     <ClInclude Include="..\public\LightSpawner.h">
       <Filter>02.GameObjects\Env\08.LightSpawner</Filter>
@@ -1450,10 +1459,10 @@
       <Filter>50.UI\Dialogue</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Breath.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Breath</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Point.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Point</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Broom_Panel.h">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel</Filter>
@@ -1477,7 +1486,7 @@
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Pulse.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Pulse</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Broom_Trophy.h">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
@@ -1497,11 +1506,11 @@
     <ClInclude Include="..\public\Ride_HpBar.h">
       <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Ride_Bbooster_Slot.h">
-      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    <ClInclude Include="..\public\Ride_Booster_Slot.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Ride_BboosterBar.h">
-      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    <ClInclude Include="..\public\Ride_BoosterBar.h">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Ride_HpSlot.h">
       <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
@@ -1513,13 +1522,22 @@
       <Filter>02.GameObjects\RaceRing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Charge.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Charge</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Hit.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Nomal_Hit</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Nomal_Hit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Impact.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Big_Hit</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Big_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Land.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_GroundPulse.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1577,13 +1595,13 @@
       <Filter>01.Level\40.EffectViewer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EffectObject.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\00.EffectObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestEffect.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EditEffect.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\02.EditEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Editor.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
@@ -1775,13 +1793,13 @@
       <Filter>80.State\State_Combat</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TrailObject.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\03.TrailObject</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\03.TrailObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Container.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\04.Effect_Container</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\04.Effect_Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NomalJap.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\05.NomalJap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Broom.cpp">
       <Filter>02.GameObjects\Broom</Filter>
@@ -1820,13 +1838,13 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Bombard.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\06.Bombard</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AlphaMap.cpp">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Decendo.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\07.Decendo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
@@ -1877,7 +1895,7 @@
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Protego.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\08.Protego</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MissionBanner_Border.cpp">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
@@ -1892,10 +1910,10 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Revelio.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\09.Revelio</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Levioso.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\10.Levioso</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Spell_List.cpp">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
@@ -1949,16 +1967,16 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NomalJapSide.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\05.NomalJap\NomalJapSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BombardSide.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\06.Bombard\BombardSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\DecendoSide.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\07.Decendo\DecendoSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\LeviosoSide.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\10.Levioso\LeviosoSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\InfoInstance.cpp">
       <Filter>04.InfoInstance</Filter>
@@ -1979,7 +1997,7 @@
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TrollSwing.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\TrollSwing</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Loding_Canvas.cpp">
       <Filter>50.UI\Loding_Canvas</Filter>
@@ -2051,13 +2069,13 @@
       <Filter>80.State\Troll_State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Rush_Hit.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush_Hit</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Protego.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Goblin_Protego</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Dagger.cpp">
       <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
@@ -2084,7 +2102,7 @@
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\StunEffect.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\State_Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Enemy_Detection.cpp">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
@@ -2165,7 +2183,7 @@
       <Filter>50.UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Blink.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\Blink</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\Blink</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok.cpp">
       <Filter>02.GameObjects\Monster\Ranrok</Filter>
@@ -2213,7 +2231,7 @@
       <Filter>02.GameObjects\Dummys\DummyDecal</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\FireBall</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\FireBall</Filter>
     </ClCompile>
     <ClCompile Include="..\private\LightSpawner.cpp">
       <Filter>02.GameObjects\Env\08.LightSpawner</Filter>
@@ -2225,13 +2243,13 @@
       <Filter>50.UI\Dialogue</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Breath.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Breath</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Breath</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Loader_ObjectViewer.cpp">
       <Filter>01.Level\00.Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Point.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Point</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Point</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Broom_Panel.cpp">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel</Filter>
@@ -2255,7 +2273,7 @@
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Pulse</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Pulse</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Broom_Trophy.cpp">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
@@ -2275,11 +2293,11 @@
     <ClCompile Include="..\private\Ride_HpBar.cpp">
       <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Ride_Bbooster_Slot.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Bbooster_Slot</Filter>
+    <ClCompile Include="..\private\Ride_Booster_Slot.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Ride_BboosterBar.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BboosterBar</Filter>
+    <ClCompile Include="..\private\Ride_BoosterBar.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Ride_HpSlot.cpp">
       <Filter>50.UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
@@ -2291,13 +2309,22 @@
       <Filter>02.GameObjects\RaceRing</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Charge.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Charge</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Charge</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Impact.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Big_Hit</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Big_Hit</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Hit.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Ranrok\Nomal_Hit</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Nomal_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Land.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_GroundPulse.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

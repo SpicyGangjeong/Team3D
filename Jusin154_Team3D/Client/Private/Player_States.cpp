@@ -74,17 +74,14 @@ HRESULT CPlayer::InputAction()
 			|| m_pGameInstance->Key_Down(DIK_Z)
 			|| m_pGameInstance->Key_Down(DIK_G)
 			|| m_pGameInstance->Key_Down(DIK_B)
-			//|| m_pGameInstance->Key_Down(DIK_T)
-			//|| m_pGameInstance->Key_Down(DIK_TAB)
-			//|| m_pGameInstance->Key_Down(DIK_ESCAPE)
+			|| m_pGameInstance->Key_Down(DIK_F)
 			)
 		{
-			//if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
-			//if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
+
 			if (m_pGameInstance->Key_Down(DIK_X)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_X));
 			if (m_pGameInstance->Key_Down(DIK_G)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_G));
 			if (m_pGameInstance->Key_Down(DIK_Z)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_Z));
-			//if (m_pGameInstance->Key_Down(DIK_ESCAPE)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_ESPACE));
+			if (m_pGameInstance->Key_Down(DIK_F)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_F));
 			return S_OK;
 		}
 	}
@@ -1573,6 +1570,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 void CPlayer::Behavior_SpellExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SPELL);
+	m_pInfoInstance->Set_SearchLockOnFlag(true);
 	m_pModelCom->Set_BlendDuration(0.3f);
 	Reset_Event();
 	m_bLookAt = false;
@@ -1599,6 +1597,8 @@ void CPlayer::Behavior_AncientSpellEnter()
 			m_pEffectPool->Use_Skill(SKILL_TYPE::LIGHTNING_SIDE, Get_PartObject<CWand>());
 		},
 		0.18f);
+
+	Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(17);
 }
 
 HRESULT CPlayer::Behavior_AncientSpellExitCheck()
@@ -2233,11 +2233,7 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 
 			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_pModelCom->Set_AnimationIndex(
-					pairAnimInfo.first,
-					pairAnimInfo.second,
-					1.f, false, 1.f, true, true
-				);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, true);
 			}
 		}
 		else {
@@ -2246,11 +2242,7 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 
 			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_pModelCom->Set_AnimationIndex(
-					pairAnimInfo.first,
-					pairAnimInfo.second,
-					1.f, false, 1.f, true, true
-				);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, true);
 			}
 		}
 
@@ -2683,20 +2675,24 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+		m_pInfoInstance->Set_SearchLockOnFlag(false);
 		pairAnimInfo = m_Animation[STATEANIM::AVADA_KEDAVRA];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false,1.f,false);
 		if (m_LockOnInfo.pUnit)
 			m_pTransformCom->LookAt(m_LockOnInfo.pUnit->Get_WorldPostion());
 
 		Add_Event(pairAnimInfo.first,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::AVADAKEDAVRA, this); },
-			0.45f);
+			0.3f);
 
 		Add_Event(pairAnimInfo.first,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::AVADAKEDAVRA_SIDE, Get_PartObject<CWand>()); },
 			0.f);
 		Info.pText = TEXT("아바다 케다브라!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
+
+		Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
+
 		break;
 	case ENUM_CLASS(SKILL_TYPE::REPARO):
 	{
@@ -3100,10 +3096,19 @@ void CPlayer::Add_FSM()
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 			if (!m_bOnce) {
-				m_pBroomTransform->Set_WorldMatrix(m_pTransformCom->Get_XMWorldMatrix());
-				m_pBroomTransform->Set_State(STATE::POSITION, m_pTransformCom->Get_State(STATE::POSITION) + XMVectorSet(0.f,2.f,0.f,0.f));
+				m_pBroomTransform->Set_State(
+					STATE::POSITION,
+					m_pTransformCom->Get_State(STATE::POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f)
+				);
+
+				m_pBroomTransform->Set_State(STATE::LOOK, m_pTransformCom->Get_State(STATE::LOOK));
+				m_pBroomTransform->Set_State(STATE::UP, m_pTransformCom->Get_State(STATE::UP));
+				m_pBroomTransform->Set_State(STATE::RIGHT, m_pTransformCom->Get_State(STATE::RIGHT));
+
 				_float3 vScale = { 0.3f,0.3f,0.3f };
+				_float3 vPlayerScale = { 1.f,1.f,1.f };
 				m_pBroomTransform->Set_Scale(vScale);
+				m_pTransformCom->Set_Scale(vPlayerScale);
 				m_bOnce = true;
 				m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
 			}
@@ -3114,6 +3119,8 @@ void CPlayer::Add_FSM()
 			{
 				m_pBroomTransform->Set_Scale(m_BroomScale);
 			}
+			_float3 vPlayerScale = { 1.f,1.f,1.f };
+			m_pTransformCom->Set_Scale(vPlayerScale);
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;

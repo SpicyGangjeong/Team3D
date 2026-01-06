@@ -452,12 +452,12 @@ void CEditEffect::Describe_Entity()
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW_NEAR", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM", "DISTORTION", "BULR_MESH" , "UI", "OCCLUSION" , "SHADOW_MIDDLE" , "PRESHADOW" , "UI_OVERLAY"};
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW_NEAR", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM", "DISTORTION", "BULR_MESH", "UI", "OCCLUSION" , "SHADOW_MIDDLE" , "PRESHADOW" , "UI_OVERLAY", "EFFECT_NONBLEND" };
 
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", 
 		"BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX" , "DISTORTION" ,"NONPOS" , "NONPOS_BLUR" , "BULR_MESH" , "BLUR_CULLING" ,"BLUR_CULLING_NO_EMISSIVE" ,
-		"BLOOM_CULLING" , "DEFAULT_NONPOS" , "NONWB_NONPOS",  "DECAL", "DECAL_WB" , "DECAL_BLUR", "BLEND_CULLING"};
+		"BLOOM_CULLING" , "DEFAULT_NONPOS" , "NONWB_NONPOS",  "DECAL", "DECAL_WB" , "DECAL_BLUR", "BLEND_CULLING" , "DECAL_BLEND"};
 
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -521,6 +521,10 @@ void CEditEffect::Describe_Entity()
 	}
 
 	GUI::ColorEdit4("MixColor", (_float*)&m_EffectInfo.vColor);
+
+
+	GUI::Checkbox("NonSoftEffect", &m_EffectInfo.isNonSoftEffect);
+	
 
 	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 

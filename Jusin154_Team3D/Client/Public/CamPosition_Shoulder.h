@@ -7,6 +7,9 @@ NS_BEGIN(Client)
 
 class CCamPosition_Shoulder final : public CCamPosition
 {
+	enum class CAMERARIG_ROOT {
+
+	};
 public:
 	typedef struct tagCameraShoulder_Desc : public CCamPosition::CAMERAPOSITION_DESC
 	{
@@ -25,7 +28,7 @@ public:
 	virtual _vector Get_WorldPostion() override;
 	_vector			Get_ShoulderGlobalPos();
 	void			Set_CameraShake(_float fXShock, _float fYShock);
-	
+	void			Set_CameraAnim(_uint iIndex);
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -33,6 +36,8 @@ private:
 	HRESULT Ready_SubParts();
 	_vector Calc_LookTargetPos();
 	_vector Calc_FollowTargetPos(_fvector vLookTargetWorldPos);
+	_vector Calc_AnimFollowTargetPos(_fvector vGreedPos);
+	_vector Calc_BestPosition(_fvector vCastingPosition, _gvector vCastingDirection, _float fGreedDistance);
 	_vector Calc_DampingParentPos();
 
 #pragma region Base
@@ -46,6 +51,7 @@ private:
 	_float2		m_vAccRotDegrees = { 0.f, 0.f };
 	_float2		m_vAccRealDegrees = { 0.f, 0.f };
 	_float3		m_vShoulderLocalPos = { 1.f, 2.f, 2.f };
+	_bool		m_bPlayAnim = { false };
 #pragma endregion
 #pragma region Lerp
 	_bool m_bStartGame = { true };
@@ -76,11 +82,14 @@ private:
 	_bool m_bMovable = { true };
 
 	const _float4*			m_pParentPos = { nullptr };
+	const _float4x4*		m_pFollowAnimMatrix = { nullptr };
+	const _float4x4*		m_pLookAtAnimMatrix = { nullptr };
 	CTransform*				m_pLookTransform = { nullptr };
 	CTransform*				m_pFollowTransform = { nullptr };
 	CCamPosition_Target*	m_pTarget_LookPart = { nullptr };
 	CCamPosition_Target*	m_pTarget_FollowPart = { nullptr };
 	class CCamera_Gaze*		m_pBinded_Camera = { nullptr };
+	class CModel*			m_pModelCom = { nullptr };
 
 public:
 	static CCamPosition_Shoulder* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

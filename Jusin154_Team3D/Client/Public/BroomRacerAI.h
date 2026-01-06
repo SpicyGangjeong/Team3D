@@ -7,6 +7,12 @@ NS_BEGIN(Client)
 
 class CBroomRacerAI final : public CUnit
 {
+public:
+	struct RacerDesc
+	{
+		class CBroomRaceManager* pRacerManager = {nullptr};
+		_int iIndex = { 0 };
+	};
 	enum MESH_ORDER {
 		HEAD_EYE_OCC,
 		HEAD_FACE,
@@ -101,7 +107,8 @@ private:
 	_float			m_LaneOffsetX = 0.f; 
 	_float			m_LaneOffsetY = 0.f; 
 	_float			m_TurnGain = 1.f;
-	_float			m_HeightGain =1.f;
+	_float			m_HeightGain = 1.f;
+	_int			m_iIndex = {};
 
 	void	Behavior_Broom_Ride_MoveEnter();
 	HRESULT Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta);

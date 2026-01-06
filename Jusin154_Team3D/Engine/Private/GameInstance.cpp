@@ -783,9 +783,9 @@ HRESULT CGameInstance::Bind_CascadeSplitRatio(CShader* pShader, const _char* pCo
 	return m_pPipeLine->Bind_CascadeSplitRatio(pShader, pConstantName, bNear);
 }
 
-HRESULT CGameInstance::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+HRESULT CGameInstance::Bind_CascadeValues(CShader* pShader)
 {
-	return m_pPipeLine->Bind_CascadeBias(pShader, pConstantName);
+	return m_pPipeLine->Bind_CascadeValues(pShader);
 }
 
 HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
@@ -1076,6 +1076,10 @@ PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor
 PSX::PxD6Joint* CGameInstance::Create_BasicPxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
 {
 	return m_pPhysX_Manager->Create_BasicPxD6Joint(pActor0, pActor1, pxJointWorldPos);
+}
+PSX::PxFixedJoint* CGameInstance::Create_BasicPxFixedJoint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	return m_pPhysX_Manager->Create_BasicPxFixedJoint(pActor0, pActor0, pxJointWorldPos);
 }
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {

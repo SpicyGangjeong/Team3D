@@ -6,6 +6,7 @@
 #include "Wand.h"
 #include "Player.h"
 #include "InfoInstance.h"
+#include "Ranrok.h"
 
 CRanrok_Breath::CRanrok_Breath(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -46,11 +47,13 @@ HRESULT CRanrok_Breath::Initialize(void* pArg)
 	m_pBreath_Black = Get_PartObject<CEditEffect>("Breath_Black");
 	m_pBreathSlog = Get_PartObject<CEditEffect>("BreathSlog");
 	m_pMouthFire = Get_PartObject<CEditEffect>("MouthFire");
+	m_pLand_Decal = Get_PartObject<CEditEffect>("Land_Decal");
 
 	SAFE_ADDREF(m_pBreath);
 	SAFE_ADDREF(m_pBreath_Black);
 	SAFE_ADDREF(m_pBreathSlog);
 	SAFE_ADDREF(m_pMouthFire);
+	SAFE_ADDREF(m_pLand_Decal);
 
 	m_fDuration = 5.f;
 
@@ -128,9 +131,9 @@ HRESULT CRanrok_Breath::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	/* 브레스 시간 제어 */
 
-	_float fBreathTime = *static_cast<_float*>(pArg);
+	BREATH_INFO BreathDesc = *static_cast<BREATH_INFO*>(pArg);
 
-	Set_BreathTime(fBreathTime);
+	Set_BreathTime(BreathDesc.fTime);
 
 	/* 초기 객체 비지블*/
 
@@ -178,6 +181,35 @@ HRESULT CRanrok_Breath::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	 m_isParticleEnd = false;
 	 m_isStartRayCast = false;
+
+
+
+	 /* 바닥 페이즈 일때*/
+	 
+	 if (static_cast<CRanrok::RANROK_PHASE>(BreathDesc.iPase) == CRanrok::RANROK_PHASE::PHASE_GROUND)
+	 {
+		 m_pLand_Decal->Set_Visible(true);
+
+		 _vector vOwnerPos = m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position();
+		 CUnit* pPlayer = m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first;
+
+		 if (pPlayer == nullptr)
+			 return E_FAIL;
+
+		 _vector vPlayer_FootPos = pPlayer->Get_Component<CCharacter_Controller>()->Get_FootPosition();
+
+		 XMStoreFloat4(&m_vTargetPos, vPlayer_FootPos);
+
+		 _vector vCompute_Pos = XMVectorSetY(vOwnerPos, XMVectorGetY(vPlayer_FootPos));
+
+		 m_pLand_Decal->Get_Component<CTransform>()->Set_State(STATE::POSITION, vCompute_Pos);
+
+		 m_pLand_Decal->Get_Component<CInstance_Model>()->Set_Loop(true);
+	 }
+
+
+
+
 	return S_OK;
 }
 
@@ -270,6 +302,7 @@ void CRanrok_Breath::Set_BreathTime(_float fTime)
 
 		m_pBreathSlog->Set_Visible(false);
 
+		m_pLand_Decal->Get_Component<CInstance_Model>()->Set_Loop(false);
 		});
 
 	m_Events.emplace(fTime + 0.5f, [&]() {
@@ -302,7 +335,7 @@ void CRanrok_Breath::Free()
 	SAFE_RELEASE(m_pBreath_Black);
 	SAFE_RELEASE(m_pBreathSlog);
 	SAFE_RELEASE(m_pMouthFire);
-	
+	SAFE_RELEASE(m_pLand_Decal);
 	//SAFE_RELEASE(m_pFireBall_Tail);
 }
 #ifdef _DEBUG

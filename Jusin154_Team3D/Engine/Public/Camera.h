@@ -40,6 +40,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT	Ready_Components(void* pArg)override;
+	virtual void EnableTransition(_float fTransitionTime);
+
 	_bool IsActive() const { return m_bActive; }
 	_bool IsImportantThan(CCamera* pOther) const;
 	const _float* Get_CurrentFar();

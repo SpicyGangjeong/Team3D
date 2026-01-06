@@ -53,7 +53,7 @@ HRESULT CQuest_Panel::Initialize(void* pArg)
 	ElementAllVisible(true);
 	Set_Status();
 	Add_Function(TEXT("Click"), [this](void* p) {this->Slot_Hover(*reinterpret_cast<_int*>(p)); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestPanelClose"), [this](void* p) {this->Slot_Hover(*reinterpret_cast<_int*>(p)); });
+	//static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestPanelClose"), [this](void* p) {this->Slot_Hover(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 
 }
@@ -170,49 +170,49 @@ HRESULT CQuest_Panel::Ready_Components(void* pArg)
 
 HRESULT CQuest_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Slot**>(&m_pQuest_Slot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Slot>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Slot**>(&m_pQuest_Slot))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Quest_Slot"), m_pQuest_Slot);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Info>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Info**>(&m_pQuest_Info))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Info>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Info**>(&m_pQuest_Info))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Quest_Info"), m_pQuest_Info);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Info_Header>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Info_Header**>(&m_pQuest_Info_Header))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Info_Header>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Info_Header**>(&m_pQuest_Info_Header))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Quest_Info_Header"), m_pQuest_Info_Header);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Info_Line>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Info_Line**>(&m_pQuest_Info_Line))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Info_Line>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Info_Line**>(&m_pQuest_Info_Line))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Quest_Info_Line"), m_pQuest_Info_Line);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Entry_Line>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Entry_Line**>(&m_pQuest_Entry_Line))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Entry_Line>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Entry_Line**>(&m_pQuest_Entry_Line))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Quest_Entry_Line"), m_pQuest_Entry_Line);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status1))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status1))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Quest_Status1"), m_pQuest_Status1);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status2))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status2))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Quest_Status2"), m_pQuest_Status2);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status3))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Status>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Status**>(&m_pQuest_Status3))))
 	{
 		return E_FAIL;
 	}

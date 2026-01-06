@@ -108,6 +108,21 @@ _bool CUnit::IsCurrentKeyFrame(_string FrameName)
 	return false;
 }
 
+_wstring CUnit::Get_Name()
+{
+    return _wstring();
+}
+
+_wstring CUnit::Get_NpcName()
+{
+    return _wstring();
+}
+
+_int CUnit::Get_TextID()
+{
+    return _int();
+}
+
 HRESULT CUnit::Ready_Components(void *pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
@@ -124,32 +139,35 @@ HRESULT CUnit::Ready_Components(void *pArg)
 
 void CUnit::Play_Event()
 {
-	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
-	{
-		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
-		_uint curAnim = m_pModelCom->Get_AnimIndex();
+    for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
+    {
+        _float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+        _uint curAnim = m_pModelCom->Get_AnimIndex();
 
-		if (curAnim == iter->AnimIndex)
-		{
-			if (!iter->bExecuted && ratio >= iter->fRatio)
-			{
-				iter->Callback();
-				iter->bExecuted = true;
+        _float prevRatio = iter->PrevRatio;
 
-				if (!iter->bKeep)
-				{
-					iter = m_PendingEvents.erase(iter);
-					continue;
-				}
-			}
-		}
-		else
-		{
-			iter->bExecuted = false;
-		}
+        if (curAnim == iter->AnimIndex)
+        {
+            if (prevRatio <= iter->fRatio && ratio >= iter->fRatio)
+            {
+                iter->Callback();
 
-		++iter;
-	}
+                if (!iter->bKeep)
+                {
+                    iter = m_PendingEvents.erase(iter);
+                    continue;
+                }
+            }
+
+            iter->PrevRatio = ratio;
+        }
+        else
+        {
+            iter->PrevRatio = 0.f;
+        }
+
+        ++iter;
+    }
 }
 
 void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,_bool bKeep)

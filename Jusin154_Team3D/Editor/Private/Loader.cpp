@@ -139,8 +139,8 @@
 #include "Ride_Info_Key.h"
 #include "Ride_Info.h"
 #include "Ride_InfoBG.h"
-#include "Ride_Bbooster_Slot.h"
-#include "Ride_BboosterBar.h"
+#include "Ride_Booster_Slot.h"
+#include "Ride_BoosterBar.h"
 #include "Ride_HpBar.h"
 #include "Ride_HpSlot.h"
 
@@ -221,6 +221,9 @@
 #include "Ranrok_Charge.h"
 #include "Ranrok_Hit.h"
 #include "Ranrok_Impact.h"
+#include "Ranrok_Land.h"
+#include "Ranrok_Rush_Bottom.h"
+#include "Ranrok_GroundPulse.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1238,11 +1241,11 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Bbooster_Slot>(g_iStaticLevel, CRide_Bbooster_Slot::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Booster_Slot>(g_iStaticLevel, CRide_Booster_Slot::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CRide_BboosterBar>(g_iStaticLevel, CRide_BboosterBar::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_BoosterBar>(g_iStaticLevel, CRide_BoosterBar::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -1963,6 +1966,18 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Land>(NEXT_LEVEL, CRanrok_Land::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Rush_Bottom>(NEXT_LEVEL, CRanrok_Rush_Bottom::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_GroundPulse>(NEXT_LEVEL, CRanrok_GroundPulse::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	
 	/* For.Prototype_GameObject_Wand */
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
