@@ -22,6 +22,7 @@ public:
 	void Update_LerpTimer(_float fTimeDelta);
 	void Enable_FollowLerp();
 	void Enable_LookLerp();
+	void Sync_Follow(_bool bSink);
 	void Toggle_Priority();
 	void Toggle_AIPriority();
 	virtual void Late_Update(_float fTimeDelta) override;
@@ -32,7 +33,7 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT Bind_ShaderResources() override;
-
+	_bool	m_bSyncFollow = { false };
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 

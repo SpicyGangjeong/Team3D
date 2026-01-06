@@ -14,6 +14,7 @@ float g_fShadowFar_MIDDDLE;
 float g_fShadowFar_FAR;
 float g_fCascadeSplitRatioNear;
 float g_fCascadeSplitRatioFar;
+float g_fMinShadowBrightness;
 float2 g_vNearShadowResolution;
 float2 g_vMiddleShadowResolution;
 float2 g_vFarShadowResolution;
@@ -21,6 +22,7 @@ float2 g_vPreShadowResolution;
 float2 g_vResolution;
 float2 g_vSrcResolution;
 float4 g_vShadowBias;
+float4 g_vShadowRadiusTexel;
 
 uint g_iBloomEmbossingPass;
 float g_fBloomThreshold;
@@ -62,9 +64,9 @@ Texture2D g_DiffuseTexture;
 Texture2D g_ShadeTexture;
 Texture2D g_DepthTexture;
 Texture2D g_SpecularTexture;
-Texture2D g_ShadowNearTexture;
-Texture2D g_ShadowMiddleTexture;
-Texture2D g_PreShadowTexture;
+Texture2D<float> g_ShadowNearTexture;
+Texture2D<float> g_ShadowMiddleTexture;
+Texture2D<float> g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
 
@@ -725,7 +727,6 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 
     float fViewZ = vDepthDesc.y * g_fFar;
     
-    
     float4 vPosition, vPreShadowPosition;
     
     /* (로컬위치 * 월드 * 뷰 * 투영 / w) -> (로컬위치 * 월드)   */
@@ -755,9 +756,9 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
         vPreShadowPosition = mul(vPreShadowPosition, g_PreShadowLightProjMatrix);
     }
     /* 광원의 NDC에서 샘플링 */
-    float fVisibility_Dynamic_Near = ShadowVisibility_hwPCF(g_ShadowNearTexture, vNearShadowPos, g_vNearShadowResolution, g_vShadowBias.x);
-    float fVisibility_Dynamic_Middle = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos, g_vMiddleShadowResolution, g_vShadowBias.y);
-    float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, g_vPreShadowResolution, g_vShadowBias.w);
+    float fVisibility_Dynamic_Near      = ShadowVisibility_hwPCF(g_ShadowNearTexture,   vNearShadowPos,     g_vNearShadowResolution,    g_vShadowBias.x, g_vShadowRadiusTexel.x);
+    float fVisibility_Dynamic_Middle    = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos,   g_vMiddleShadowResolution,  g_vShadowBias.y, g_vShadowRadiusTexel.y);
+    float fVisibility_Static            = ShadowVisibility_hwPCF(g_PreShadowTexture,    vPreShadowPosition, g_vPreShadowResolution,     g_vShadowBias.w, g_vShadowRadiusTexel.w);
     
 ////////////////////////////
     // 케스케이드
@@ -770,7 +771,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     float fCascadeBlend_NearToMiddle = smoothstep(g_fCascadeSplitRatioNear - fShadowCascadeBlendWidthRatio,
         g_fCascadeSplitRatioNear + fShadowCascadeBlendWidthRatio, fDepthRatio);
     //float fCascadeBlend_MiddleToFar = smoothstep(g_fCascadeSplitRatioFar - fShadowCascadeBlendWidthRatio,
-    //    g_fCascadeSplitRatioFar + fShadowCascadeBlendWidthRatio, fDepthRatio);
+        //g_fCascadeSplitRatioFar + fShadowCascadeBlendWidthRatio, fDepthRatio);
 
     // Near -> Middle
     float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_NearToMiddle);
@@ -795,8 +796,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     //float fVisibilityCombined = min(fVisibilityDynamic, fVisibility_Static);
 
     // 최소 밝기
-    float fMinShadowBrightness = 0.25f;
-    float fShadowMultiplier = lerp(fMinShadowBrightness, 1.0f, saturate(fVisibilityCombined));
+    float fShadowMultiplier = lerp(g_fMinShadowBrightness, 1.0f, saturate(fVisibilityCombined));
 
     Out.vBackBuffer.rgb *= fShadowMultiplier;
     Out.vEnvironment = Out.vBackBuffer;

@@ -75,6 +75,9 @@ private:
 	/* TunningParam  */
 	// Variable
 	_float m_fLightSpecularMaximum = { 2.f };
+	_float m_fNearShadowBias = { 0.05f };
+	_float m_fFarShadowBias = { 1.f };
+	_float m_fMinShadowBrightness = { 0.47f };
 
 	// MotionBlur 
 	_float	m_fMBBlurRadius = { 28.f };

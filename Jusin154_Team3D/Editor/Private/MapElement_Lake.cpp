@@ -98,7 +98,7 @@ HRESULT CMapElement_Lake::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::LAKE)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::WATER)))) {
 		return E_FAIL;
 	}
 
