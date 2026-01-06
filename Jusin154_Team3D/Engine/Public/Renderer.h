@@ -119,6 +119,7 @@ private:
 	void Render_Shadow();
 	void Render_NonBlend();
 	void Render_Decal();
+	void Render_EffectNonBlend();
 	void Render_Blur(); 
 	void Combine_Blur();
 	void Render_SSAO();

@@ -29,6 +29,10 @@ HRESULT CBroom::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	if (pArg) {
+		m_iIndex = *static_cast<_int*>(pArg);
+	}
+
 
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
@@ -224,8 +228,26 @@ HRESULT CBroom::Ready_Components()
 
 	__super::Ready_Components(&Desc);
 
+	switch (m_iIndex)
+	{
+	case 0:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Broom_Model");
+		break;
+	case 1:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_SK_MoonTrimmerBroom_Model");
+		break;
+	case 2:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_DarkWizardBroom_Model");
+		break;
+	case 3:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_WildFireBroom_Model");
+		break;
+	default:
+		break;
+	}
+
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Broom_Model"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
 	}

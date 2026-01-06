@@ -2230,11 +2230,7 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 
 			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_pModelCom->Set_AnimationIndex(
-					pairAnimInfo.first,
-					pairAnimInfo.second,
-					1.f, false, 1.f, true, true
-				);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, true);
 			}
 		}
 		else {
@@ -2243,11 +2239,7 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 
 			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_pModelCom->Set_AnimationIndex(
-					pairAnimInfo.first,
-					pairAnimInfo.second,
-					1.f, false, 1.f, true, true
-				);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, true);
 			}
 		}
 
@@ -2494,6 +2486,16 @@ HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_Broom_DismountExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BROOM_DISMOUNT);
+	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
+	_vector up = XMVector3Normalize(XMVector3Cross(look, right));
+
+	m_pTransformCom->Set_State(STATE::RIGHT, right);
+	m_pTransformCom->Set_State(STATE::UP, up);
+	m_pTransformCom->Set_State(STATE::LOOK, look);
 	Reset_Event();
 }
 
@@ -2687,7 +2689,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 
 		Add_Event(pairAnimInfo.first,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::AVADAKEDAVRA, this); },
-			0.45f);
+			0.3f);
 
 		Add_Event(pairAnimInfo.first,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::AVADAKEDAVRA_SIDE, Get_PartObject<CWand>()); },
@@ -3097,10 +3099,19 @@ void CPlayer::Add_FSM()
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 			if (!m_bOnce) {
-				m_pBroomTransform->Set_WorldMatrix(m_pTransformCom->Get_XMWorldMatrix());
-				m_pBroomTransform->Set_State(STATE::POSITION, m_pTransformCom->Get_State(STATE::POSITION) + XMVectorSet(0.f,2.f,0.f,0.f));
+				m_pBroomTransform->Set_State(
+					STATE::POSITION,
+					m_pTransformCom->Get_State(STATE::POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f)
+				);
+
+				m_pBroomTransform->Set_State(STATE::LOOK, m_pTransformCom->Get_State(STATE::LOOK));
+				m_pBroomTransform->Set_State(STATE::UP, m_pTransformCom->Get_State(STATE::UP));
+				m_pBroomTransform->Set_State(STATE::RIGHT, m_pTransformCom->Get_State(STATE::RIGHT));
+
 				_float3 vScale = { 0.3f,0.3f,0.3f };
+				_float3 vPlayerScale = { 1.f,1.f,1.f };
 				m_pBroomTransform->Set_Scale(vScale);
+				m_pTransformCom->Set_Scale(vPlayerScale);
 				m_bOnce = true;
 				m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
 			}
@@ -3111,6 +3122,8 @@ void CPlayer::Add_FSM()
 			{
 				m_pBroomTransform->Set_Scale(m_BroomScale);
 			}
+			_float3 vPlayerScale = { 1.f,1.f,1.f };
+			m_pBroomTransform->Set_Scale(vPlayerScale);
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;

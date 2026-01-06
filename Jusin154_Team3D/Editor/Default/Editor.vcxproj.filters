@@ -745,6 +745,15 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\State_Effect">
       <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land">
+      <UniqueIdentifier>{ea60b62d-1df5-41d7-aa0f-74ec9f454443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Rush">
+      <UniqueIdentifier>{7210d8cd-a5b8-48bd-a45e-52992dfe3557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse">
+      <UniqueIdentifier>{614e67ae-6df9-4826-adbe-6be96f54041d}</UniqueIdentifier>
+          </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
       <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
     </Filter>
@@ -1520,6 +1529,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Impact.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Big_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Land.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_GroundPulse.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2298,6 +2316,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Hit.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Nomal_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Land.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Land</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_GroundPulse.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

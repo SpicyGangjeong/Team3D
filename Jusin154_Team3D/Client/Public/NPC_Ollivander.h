@@ -52,6 +52,7 @@ protected:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources() override;
+	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
 
 public:
 	static CNPC_Ollivander* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

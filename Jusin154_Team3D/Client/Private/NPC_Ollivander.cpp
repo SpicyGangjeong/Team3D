@@ -80,6 +80,9 @@ HRESULT CNPC_Ollivander::Render()
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
+		if (FAILED(Bind_ShaderParameters(i))) {
+			return E_FAIL;
+		}
 		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
@@ -181,6 +184,41 @@ HRESULT CNPC_Ollivander::Bind_ShaderResources()
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT CNPC_Ollivander::Bind_ShaderParameters(_uint iMeshOrder)
+{
+	_bool bUseColorMixer = false;
+
+	_uint iColorParam = { UINT_MAX };
+	_float fMixerFactor = { FLT_MAX };
+	_uint iColorMixerMethod = { 0 };
+
+	switch (m_pModelCom->Get_UsingPass(iMeshOrder, m_pShaderCom))
+	{
+	case 23:
+		{	
+		bUseColorMixer = true;
+			iColorParam = 0x2E2E2E;
+			fMixerFactor = 0.9f;
+			iColorMixerMethod = 1;
+		}
+		break;
+	}
+	if (true == bUseColorMixer) {
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iPackedBlendColor", &iColorParam, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fMixerFactor", &fMixerFactor, sizeof(_float)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMixerMethod", &iColorMixerMethod, sizeof(_uint)))) {
+			return E_FAIL;
+		}
 	}
 	return S_OK;
 }

@@ -15,11 +15,11 @@ public:
 
 	struct PendingEvent
 	{
-		_float fRatio = 0.f;
-		_uint AnimIndex = 0;
-		function<void()> Callback;
-		_bool bKeep = { false };
-		_bool bExecuted = { false };
+		_float               fRatio = 0.f;
+		_uint                AnimIndex = 0;
+		function<void()>     Callback;
+		_bool                bKeep = { false };
+		_float               PrevRatio = {};
 	};
 protected:
 	CUnit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

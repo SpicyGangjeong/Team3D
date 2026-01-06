@@ -71,12 +71,20 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, -75.f, -15.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(3.f, -75.f, -15.f, 1.f));
 
+#if 진우
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -11.f, 195.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(0.f, -11.f, 195.f, 1.f));
+
+	m_vCCTPos = _float3(0.f, -10.f, 195.f);
+	m_pCharacter_Controller->SetGravity(false);
+#endif
+
 	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
 
 	return S_OK;
 }
 
-void CRanrok::Priority_Update(_float fTimeDelta)
+void CRanrok::Priority_Update(_float fTimeDelta)      
 {
 	__super::Priority_Update(fTimeDelta);
 }
@@ -310,8 +318,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		}
 
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
-		m_fHp -= 1.f;
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_HIT, this, &CollisionDesc->vWorldPos);
+		//m_fHp -= 5.f;
 	}
 	else
 	{
@@ -320,28 +328,54 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
 	}
 
+	pair<_uint, _bool> pairAnimInfo = {};
 
 	if (Get_HpRatio() == 0.85f)
 	{
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() {},
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
 	else if (Get_HpRatio() == 0.7f) {
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() { },
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
 	else  if (Get_HpRatio() == 0.5f)
 	{
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this);
-
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
 		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() {},
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
+
 
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
@@ -861,23 +895,14 @@ void CRanrok::Describe_Entity()
 			GUI::TreePop();
 		}
 
-	}
-
-#ifdef gimch
-
-	if (m_pGameInstance->Key_Down(DIK_L))
+	}     
+	if (GUI::DragFloat3("Change CCT Pos" , (_float*)& m_vCCTPos))
 	{
-		_float3 vPos;
-		if (m_pGameInstance->isPicking(&vPos))
-		{
-			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&vPos), 1.f));
-		}
+		_vector vPos = XMLoadFloat3(&m_vCCTPos);
+
+		vPos = XMVectorSetW(vPos , 1.f);
+		m_pCharacter_Controller->Set_Position(vPos);
 	}
-
-#endif // 
-
-	m_pTransformCom->Describe_Entity();
-
 
 }
 

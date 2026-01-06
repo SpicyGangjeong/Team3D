@@ -87,7 +87,7 @@
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HUM_M_Body_PeevesArms>
 
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "0" OutLineWrite="0">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "23" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Ghost_Peeves_Hair_D" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>

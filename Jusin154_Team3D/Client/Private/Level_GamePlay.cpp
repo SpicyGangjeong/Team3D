@@ -340,7 +340,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
-	isReady_Hogsmeade = true;
+	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
@@ -726,8 +726,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -760,13 +760,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 	if (true == isLoad_NPC)
 	{
-		for (_uint i = 0; i < 7; i++)
+		for (_uint i = 0; i < 12; i++)
 		{
 			{
 				CRandomNpc::NPCDESC NPCDesc{};
 				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
 				_float Z = m_pGameInstance->Real_Random_Float(20.f, 29.f);
-				NPCDesc.vPos = _float4(X, -0.4f, Z, 1.f);
+				NPCDesc.vPos = _float4(X, 1.f, Z, 1.f);
 				NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
 				NPCDesc.iIndex = i;
 				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRandomNpc>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {

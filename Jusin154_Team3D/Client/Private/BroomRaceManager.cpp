@@ -166,10 +166,12 @@ void CBroomRaceManager::Describe_Entity()
 		{
 			MSG_BOX("Failed Load RaceRing");
 		}
-
-		for (_uint i = 0; i < 3; i++)
+		CBroomRacerAI::RacerDesc Desc = {};
+		for (_uint i = 1; i < 4; i++)
 		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, LAYER_RACERAI, this)))
+			Desc.pRacerManager = this;
+			Desc.iIndex = i;
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, LAYER_RACERAI, &Desc)))
 				return;
 		}
 		m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Set_RaceInfo();

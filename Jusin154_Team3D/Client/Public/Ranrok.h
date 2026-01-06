@@ -31,7 +31,7 @@ class CRanrok final : public CMonster
 		BODY,
 		END
 	};
-
+public:
 	enum class RANROK_PHASE
 	{
 		PHASE_AIR,

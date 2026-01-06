@@ -72,6 +72,7 @@ public:
 
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void TurnAngle(_float4 vAxis, _float fAngle);
+	void TurnAngle_Y(_float fAngle);
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation(_float fRadianX, _float fRadianY, _float fRadianZ);
 	void Rotation(_float3& vRadian);
