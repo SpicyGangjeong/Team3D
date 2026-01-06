@@ -54,8 +54,6 @@ private:
 	class CEffectParts* m_pGoblin_Particle = { nullptr };
 	class CEffectParts* m_pGoblin_Particle2 = { nullptr };
 	class CGoblin_Assassin_Spector* m_pGoblinSpector = { nullptr };
-
-	ID3D11RasterizerState* m_pRS_Wireframe = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

@@ -75,7 +75,7 @@ void CMapElement_Chest::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	/*if(CHEST_STATE::OPENED != m_eCurState)
 	{
-		_vector vPlayerPos = m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_WorldPostion();
+		_vector vPlayerPos = m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_PLAYER)->Get_Object<CHuman_Duelist>()->Get_WorldPostion();
 
 		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPos - m_pTransformCom->Get_State(STATE::POSITION)));
 
@@ -161,12 +161,12 @@ HRESULT CMapElement_Chest::Render()
 	}
 
 #ifdef _DEBUG
-	if (FAILED(m_pRigidBody->Render())) {
+	/*if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
-	}
+	}*/
 #endif // _DEBUG
 
-	if (FAILED(m_pLid->Render(m_iShaderPass_Index)))
+ 	if (FAILED(m_pLid->Render(m_iShaderPass_Index)))
 		return E_FAIL;
 
 	return S_OK;

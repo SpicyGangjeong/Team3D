@@ -100,6 +100,9 @@ void CMapElement_Door::Late_Update(_float fTimeDelta)
 
 HRESULT CMapElement_Door::Render()
 {
+	if (m_bDead == true) {
+		return S_OK;
+	}
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 

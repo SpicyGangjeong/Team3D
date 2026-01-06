@@ -197,6 +197,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	{
 		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
 	}
+
+	Player_PixRot();
 }
 
 
@@ -525,7 +527,6 @@ HRESULT CPlayer::Ready_Components()
 	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
 	m_Components.push_back(m_pStat);
 	SAFE_ADDREF(m_pStat);
-	SAFE_ADDREF(m_pStat);
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
@@ -790,6 +791,31 @@ void CPlayer::SetGravity()
 	}
 }
 
+void CPlayer::Player_PixRot()
+{
+	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
+	if (iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first ||
+		iCurrAnim == m_Animation[STATEANIM::BROOM_DISMOUNT].first)
+	{
+		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+		vLook = XMVectorSetY(vLook, 0.f);
+
+		if (XMVector3LengthSq(vLook).m128_f32[0] < 1e-6f)
+			vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+		vLook = XMVector3Normalize(vLook);
+
+		_vector vRight = XMVector3Normalize(XMVector3Cross(vUp, vLook));
+		vLook = XMVector3Cross(vRight, vUp);
+
+		m_pTransformCom->Set_State(STATE::RIGHT, vRight);
+		m_pTransformCom->Set_State(STATE::UP, vUp);
+		m_pTransformCom->Set_State(STATE::LOOK, vLook);
+	}
+}
+
 void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
@@ -1001,6 +1027,17 @@ void CPlayer::Describe_Entity()
 		_float degree = XMConvertToDegrees(vDir);
 
 		GUI::Text("Angle %.2f", degree);
+
+		_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
+		_vector vUp = m_pTransformCom->Get_State(STATE::UP);
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+
+		auto dotRU = XMVectorGetX(XMVector3Dot(vRight, vUp));
+		auto dotUL = XMVectorGetX(XMVector3Dot(vUp, vLook));
+		auto dotLR = XMVectorGetX(XMVector3Dot(vLook, vRight));
+
+		GUI::Text("dot RU %.4f | UL %.4f | LR %.4f\n", dotRU, dotUL, dotLR);
+
 
 		m_pLightCom->Describe_Entity();
 	}
