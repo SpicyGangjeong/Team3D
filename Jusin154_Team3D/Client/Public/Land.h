@@ -15,9 +15,10 @@ class CLand final : public CGameObject
 public:
 	typedef struct tagLandDesc
 	{
-		_float3 vPosition;
-		_float3 vScale;
-		_wstring strModelComTag;
+		_float3		vPosition;
+		_float3		vScale;
+		_wstring	strAlphaMapTag;
+		_wstring	strModelComTag;
 	}LAND_DESC;
 private:
 	CLand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,10 +33,16 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 
 private:
+	_float				m_fRaduis = {};
+	_float				m_fUsingSurfaceParams = {};
+
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 
-	_float				m_fRaduis = {};
+	CTexture*			m_pDiffuseTextureCom = { nullptr };
+	CTexture*			m_pNormalTextureCom = { nullptr };
+	CTexture*			m_pMROTextureCom = { nullptr };
+	CTexture*			m_pMaskTextureCom = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

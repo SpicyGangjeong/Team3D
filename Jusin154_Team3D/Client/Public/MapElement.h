@@ -14,6 +14,7 @@ class CMapElement abstract : public CGameObject
 {
 public:
 	typedef struct tagMapElement_Desc {
+		_bool					bVisible = {};
 		_uint					iRenderType{};
 		CTransform*				pParentTransform = { nullptr };
 		_float3					vScale;

@@ -15,10 +15,12 @@ private:
 
 public:
 	void	Update(_float3& vPosition, _uint iColorIndex, _float fValue, _uint iRange);
+	void	Update_Land(_float2 vUV, _uint iColorIndex, _float fValue, _uint iRange);
 	ID3D11ShaderResourceView* Get_SRV() { return m_pSRV; }
 
 	void Save_ToFile(const _char* pFilePath);
 	void Load_ToFile(const _char* pFilePath);
+	void Save_DDS(const _char* pFilePath);
 private:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };

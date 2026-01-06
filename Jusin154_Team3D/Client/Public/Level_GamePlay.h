@@ -27,6 +27,7 @@ private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Volumetric();
 	HRESULT Ready_Background();
+	HRESULT Ready_Land();
 	HRESULT Ready_Layer_Hogsmeade();
 	HRESULT Ready_Layer_Hogwart();
 	HRESULT Ready_IntstanceProp();
