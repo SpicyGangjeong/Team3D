@@ -28,6 +28,7 @@ StructuredBuffer<uint> g_BoneRemap : register(t6);
 StructuredBuffer<int> g_SkipBone : register(t7);
 
 
+
 RWStructuredBuffer<float4x4> g_LocalMatrixOut : register(u0);
 
 cbuffer AnimCB : register(b0)
@@ -48,7 +49,7 @@ cbuffer AnimCB : register(b0)
     float HeadAimWeight;
 
     int SkipCount;
-    int _pad0;
+    int IsSkip;
     int _pad1;
     int _pad2;
 
@@ -366,7 +367,7 @@ void CS_LOCAL(uint3 DTid : SV_DispatchThreadID)
     if (bone >= BoneCount)
         return;
     
-    if (SkipCount != 0)
+    if (SkipCount != 0 && IsSkip)
     {
         for (int i = 0; i < SkipCount; i++)
         {
