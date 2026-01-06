@@ -24,6 +24,7 @@ HRESULT CMapElement_Static::Initialize(void* pArg)
 {
 	MAPELEMENT_DESC* pDesc = static_cast<MAPELEMENT_DESC*>(pArg);
 
+	m_bVisible = pDesc->bVisible;
 	m_iMaxLodLevel = pDesc->iMaxLodLevel;
 
 	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
@@ -68,7 +69,7 @@ void CMapElement_Static::Late_Update(_float fTimeDelta)
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
 
 		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (m_fRadius * m_fRadius + 40000.f)));*/
-
+	if(m_bVisible)
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	//}
 }

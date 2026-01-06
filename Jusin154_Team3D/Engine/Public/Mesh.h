@@ -25,6 +25,8 @@ public:
 	HRESULT Copy_BoneMatrices(vector<_float4x4>& pDestination);
 	vector<_int> Get_BoneIndices() { return m_BoneIndices; }
 #ifdef EDITOR_PROJECT
+public:
+	_bool PickingMesh(_float3* pPosition, _float2* pUV, _fmatrix WorldMatrix);
 private:
 	virtual HRESULT Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix);
@@ -70,6 +72,9 @@ private:
 	vector<_uint>   m_Indices;
 	vector<_float3> m_Vertices;
 	//
+#ifdef EDITOR_PROJECT
+	_float2*		m_VertexTexcoords = {};
+#endif
 
 private:
 	_uint						m_iNumBuffer = {};

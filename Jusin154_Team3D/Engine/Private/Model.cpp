@@ -1445,6 +1445,13 @@ _int CModel::SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& out
 
 	return currentIndex;
 }
+_bool CModel::PickingMesh(_float3* pPosition, _float2* pUV, _uint iMeshIndex, _fmatrix WorldMatrix)
+{
+	if (iMeshIndex >= m_iNumMeshes)
+		return false;
+
+	return m_Meshes[iMeshIndex]->PickingMesh(pPosition, pUV, WorldMatrix);
+}
 HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	_uint			iFlag = {};
