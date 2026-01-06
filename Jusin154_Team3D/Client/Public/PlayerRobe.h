@@ -59,9 +59,12 @@ private:
 	CRigidBody_Dynamic* m_pLower0Bound = { nullptr };
 	CRigidBody_Dynamic* m_pLower1Bound = { nullptr };
 	CRigidBody_Dynamic* m_pRobeMainAnchor = { nullptr };
-	CRigidBody_Dynamic* m_pRobeJointRoute[ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END)] = { nullptr };
+
+	CRigidBody_Dynamic* m_pRobeVerticalJointRoute[ENUM_CLASS(PLAYER_ROUTE_VERTICAL_ORDER::END)] = { nullptr };
+	CRigidBody_Dynamic* m_pRobeFixedJointRoute[ENUM_CLASS(PLAYER_ROUTE_HORIZONTAL_ORDER::END)] = { nullptr };
 	CRigidBody_Dynamic* m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
-	PSX::PxJoint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
+	PSX::PxD6Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
+	PSX::PxFixedJoint*	m_pFixedJoints[ENUM_CLASS(PLAYER_JOINT_HORIZONTAL_ORDER::END)] = { nullptr };
 	D6JOINTDESC			m_JointDescriptions[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { };
 	
 	vector<_float4x4>	m_PrevRobeBoneMatrices = { };

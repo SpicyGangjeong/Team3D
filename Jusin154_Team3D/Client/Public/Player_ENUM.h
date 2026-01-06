@@ -71,6 +71,40 @@ enum class PLAYER_JOINT_BONE_ORDER {
 	,	END
 };
 
+enum class PLAYER_JOINT_HORIZONTAL_ORDER {
+
+#pragma region UP_HORIZONTAL
+	UP_R_RS_START
+	, UP_R_RS_END
+	, UP_RS_T_START
+	, UP_RS_T_END
+	, UP_T_LS_START
+	, UP_T_LS_END
+	, UP_LS_L_START
+	, UP_LS_L_END
+#pragma endregion
+#pragma region MIDDLE_HORIZONTAL
+	, MIDDLE_R_RS_START
+	, MIDDLE_R_RS_END
+	, MIDDLE_RS_T_START
+	, MIDDLE_RS_T_END
+	, MIDDLE_T_LS_START
+	, MIDDLE_T_LS_END
+	, MIDDLE_LS_L_START
+	, MIDDLE_LS_L_END
+#pragma endregion
+#pragma region DOWN_HORIZONTAL
+	, DOWN_R_RS_START
+	, DOWN_R_RS_END
+	, DOWN_RS_T_START
+	, DOWN_RS_T_END
+	, DOWN_T_LS_START
+	, DOWN_T_LS_END
+	, DOWN_LS_L_START
+	, DOWN_LS_L_END
+#pragma endregion
+	, END
+};
 enum class PLAYER_JOINT_ORDER {
 #pragma region ORIGIN_TO_UP
 	ORIGIN_TO_RUP_START
@@ -123,40 +157,15 @@ enum class PLAYER_JOINT_ORDER {
 	, LSIDE_TO_L_START
 	, LSIDE_TO_L_END
 #pragma endregion
-#pragma region UP_HORIZONTAL
-	, UP_R_RS_START
-	, UP_R_RS_END
-	, UP_RS_T_START
-	, UP_RS_T_END
-	, UP_T_LS_START
-	, UP_T_LS_END
-	, UP_LS_L_START
-	, UP_LS_L_END
-#pragma endregion
-#pragma region MIDDLE_HORIZONTAL
-	, MIDDLE_R_RS_START
-	, MIDDLE_R_RS_END
-	, MIDDLE_RS_T_START
-	, MIDDLE_RS_T_END
-	, MIDDLE_T_LS_START
-	, MIDDLE_T_LS_END
-	, MIDDLE_LS_L_START
-	, MIDDLE_LS_L_END
-#pragma endregion
-#pragma region DOWN_HORIZONTAL
-	, DOWN_R_RS_START
-	, DOWN_R_RS_END
-	, DOWN_RS_T_START
-	, DOWN_RS_T_END
-	, DOWN_T_LS_START
-	, DOWN_T_LS_END
-	, DOWN_LS_L_START
-	, DOWN_LS_L_END
-#pragma endregion
 	, END
 };
 
-enum class PLAYER_JOINT_ROUTE_ORDER {
+enum class PLAYER_ROUTE_HORIZONTAL_ORDER {
+	da,
+	END
+};
+
+enum class PLAYER_ROUTE_VERTICAL_ORDER {
 	ORIGIN_TO_RUP
 	, ORIGIN_TO_TUP
 	, ORIGIN_TO_LUP

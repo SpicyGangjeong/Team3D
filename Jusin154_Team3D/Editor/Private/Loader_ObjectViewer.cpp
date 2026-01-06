@@ -110,10 +110,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 	//	return E_FAIL;
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
-		TEXT("Prototype_Component_troll_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_troll_Model")
+	//));
 
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_TrollIntro.bin", XMMatrixIdentity(),
@@ -126,10 +126,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//));
 
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_ConjuredDragon_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_ConjuredDragon_Model")
+	//));
 
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
@@ -184,7 +184,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 #pragma endregion
-	
+
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerA.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
@@ -244,25 +244,25 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 #pragma region NPC
 
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Npc_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Npc_Model")
+	//));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Professor_EleazarFig_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Professor_EleazarFig_Model")
+	//));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_GerboldOlivander_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_GerboldOlivander_Model")
+	//));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_VictorRookWood_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_VictorRookWood_Model")
+	//));
 
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_TrollIntro.fbx", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
@@ -326,36 +326,37 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_OpenDoor.fbx", XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_Student_Cmbt_Model")
 	//));
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Elf.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Elf_Model")
-	));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Kitchen_Female/Kitchen_Female.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Kitchen_Female_Model")
-	));
-	
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/BaiHowin/BaiHowin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_BaiHowin_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Elf.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Elf_Model")
+	//));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GeorgeOsric/GeorgeOsric.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_GeorgeOsric_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Kitchen_Female/Kitchen_Female.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Kitchen_Female_Model")
+	//));
+	//
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/BaiHowin/BaiHowin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_BaiHowin_Model")
+	//));
+
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GeorgeOsric/GeorgeOsric.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_GeorgeOsric_Model")
+	//));
 
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/DinahHecat/DinahHecat.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_DinahHecat_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/DinahHecat/DinahHecat.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_DinahHecat_Model")
+	//));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MudiwaOnai/MudiwaOnai.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_MudiwaOnai_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MudiwaOnai/MudiwaOnai.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_MudiwaOnai_Model")
+	//));
 
 
 	//futures.emplace_back(Deferred_ModelLoad(
