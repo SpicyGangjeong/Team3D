@@ -15,10 +15,12 @@ class CLand final : public CGameObject
 public:
 	typedef struct tagLandDesc
 	{
-		_bool	bEdit;
-		_float3 vPosition;
-		_float3 vScale;
-		_wstring strModelComTag;
+		_bool		bEdit;
+		_bool		isLoadAlphaMap = { false };
+		_float3		vPosition;
+		_float3		vScale;
+		_wstring	strModelComTag;
+		_string		strAlphaMapTag;
 	}LAND_DESC;
 private:
 	CLand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -45,16 +47,27 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 
+	CTexture*			m_pDiffuseTextureCom = { nullptr };
+	CTexture*			m_pNormalTextureCom = { nullptr };
+	CTexture*			m_pMROTextureCom = { nullptr };
+	class CAlphaMap*	m_pAlphaMap = { nullptr };
+
 	_float4				m_vPosition = {};
 	_float3				m_vScale = {};
 	_float3				m_vRotation = {};
 
+	_uint				m_iMaskRange = { 1 };
+	_int				m_iColorIndex = { 0 };
+	_float				m_fMaskValue = { 0.1f };
 
+
+	_float2				m_vPickingUV = {};
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Bind_ShaderResources() override;
+	HRESULT Ready_AlphaMap();
 
 public:
 	static CLand* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

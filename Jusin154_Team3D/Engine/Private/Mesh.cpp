@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "Model.h"
 #include "Shader.h"
+#include "GameInstance.h"
 CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer{ pDevice, pContext }
 {
@@ -10,6 +11,9 @@ CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CMesh::CMesh(const CMesh& rhs)
 	: CVIBuffer(rhs)
+#ifdef EDITOR_PROJECT
+	,m_VertexTexcoords(rhs.m_VertexTexcoords)
+#endif
 {
 
 }
@@ -277,6 +281,9 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 	m_pVertexPositions = new _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
+	m_VertexTexcoords = new _float2[m_iNumVertices];
+	ZeroMemory(m_VertexTexcoords, sizeof(_float2) * m_iNumVertices);
+
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &SaveMesh->Vertices[i].Pos, sizeof(_float3));
@@ -297,6 +304,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 			XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), PreTransformMatrix)));
 
 		pVertices[i].vTexcoord = SaveMesh->Vertices[i].UV;
+		memcpy(&m_VertexTexcoords[i], &pVertices[i].vTexcoord, sizeof(_float2));
 	}
 
 	D3D11_SUBRESOURCE_DATA	InitialVBData{};
@@ -532,7 +540,48 @@ PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, 
 
 	return pTriangleMesh;
 }
+
 #ifdef EDITOR_PROJECT
+_bool CMesh::PickingMesh(_float3* pPosition, _float2* pUV, _fmatrix WorldMatrix)
+{
+	_vector vCamPosition = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
+
+	_vector vPickingPosition = XMVectorSetW(XMLoadFloat3(pPosition), 1.f);
+
+	_vector vDir = XMVector3Normalize(vPickingPosition - vCamPosition);
+	_float2 vUV = _float2(0.f, 0.f);
+	_float fU ={};
+	_float fV ={};
+	_float fT = {};
+	for (_uint i = 0; i < m_iNumIndices / 3; ++i)
+	{
+		_uint iIndices[3] = { 
+			m_pIndices[i * 3 + 0] ,
+			m_pIndices[i * 3 + 1] ,
+			m_pIndices[i * 3 + 2] 
+		};
+
+		if (true == CMyTools::IntersectTri(
+			vCamPosition,
+			vDir,
+			XMVector3TransformCoord(XMLoadFloat3(&m_pVertexPositions[iIndices[0]]), WorldMatrix),
+			XMVector3TransformCoord(XMLoadFloat3(&m_pVertexPositions[iIndices[1]]), WorldMatrix),
+			XMVector3TransformCoord(XMLoadFloat3(&m_pVertexPositions[iIndices[2]]), WorldMatrix),
+			fT,
+			fU,
+			fV
+		))
+		{
+			_float fW = 1.0f - fU - fV;
+			pUV->x = fW * m_VertexTexcoords[iIndices[0]].x + fU * m_VertexTexcoords[iIndices[1]].x + fV * m_VertexTexcoords[iIndices[2]].x;
+			pUV->y = fW * m_VertexTexcoords[iIndices[0]].y + fU * m_VertexTexcoords[iIndices[1]].y + fV * m_VertexTexcoords[iIndices[2]].y;
+			return true;
+		}
+	}
+
+
+	return false;
+}
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
@@ -563,6 +612,9 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix Pr
 	m_pVertexPositions = new _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
+	m_VertexTexcoords = new _float2[m_iNumVertices];
+	ZeroMemory(m_VertexTexcoords, sizeof(_float2) * m_iNumVertices);
+
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
@@ -575,6 +627,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix Pr
 		memcpy(&pVertices[i].vBinormal, &pAIMesh->mBitangents[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vBinormal, XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), PreTransformMatrix)));
 		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
+		memcpy(&m_VertexTexcoords[i], &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
 	}
 
 	D3D11_SUBRESOURCE_DATA	InitialVBData{};
@@ -750,6 +803,11 @@ CMesh* CMesh::Clone(void* pArg, class CGameObject* pOwner)
 void CMesh::Free()
 {
 	__super::Free();
+
+#ifdef EDITOR_PROJECT
+	if (false == m_bCloned)
+		Safe_Delete_Array(m_VertexTexcoords);
+#endif
 
 	SAFE_RELEASE(m_pBoneRemapBuffer);
 	SAFE_RELEASE(m_pBoneRemapSRV);

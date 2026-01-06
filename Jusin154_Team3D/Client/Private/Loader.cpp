@@ -1027,7 +1027,126 @@ HRESULT CLoader::Loading_For_GamePlay()
 		
 		}
 	}
+	/* LAND_MODEL */
+	{
+		/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_South_Hogwart_Land_LOD1"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
 
+		/* For.Prototype_Component_North_Hogwart_Land_LOD1 */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart_Land_LOD1"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_North_Hogwart2_Land_LOD1 */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_West_Hogwart_Land_LOD1 */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_West_Hogwart_Land_LOD1"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_East_Hogwart_Land_LOD1 */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		// -----------------
+		/* For.Prototype_Component_Land_HN_BA */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BA"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BALOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Land_HN_BD */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BD"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BDLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Land_HN_BE */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BE"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BELOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Land_HN_BF */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BF"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BFLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Land_HN_BG */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BG"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BGLOD/SM_LandscapeStreamingProxy_1_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Land_HN_BH */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BH"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BHLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+	
+		/* For.Prototype_Component_Land_HN_BI */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BI"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BILOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Land_HN_BJ */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BJ"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BJLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Land_TU_BB */
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_TU_BB"),
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/TU_BBLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+			return E_FAIL;
+
+
+		///* For.Prototype_Component_Land_HN_BA */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BA"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BALOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		//	return E_FAIL;
+
+		///* For.Prototype_Component_Land_HN_BD */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BD"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BDLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		//	return E_FAIL;
+
+		///* For.Prototype_Component_Land_HN_BG */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BG"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BGLOD/SM_LandscapeStreamingProxy_1_LOD1.bin"))))
+		//	return E_FAIL;
+
+		///* For.Prototype_Component_Land_HN_BH */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BH"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BHLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		//	return E_FAIL;
+
+
+		///* For.Prototype_Component_Land_HN_BE */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BE"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BELOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		//	return E_FAIL;
+
+		///* For.Prototype_Component_Land_HN_BF */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BF"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BFLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		//	return E_FAIL;
+
+		///* For.Prototype_Component_Land_HN_BI */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BI"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BILOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		//	return E_FAIL;
+
+		///* For.Prototype_Component_Land_HN_BJ */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BJ"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BJLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		//	return E_FAIL;
+
+		///* For.Prototype_Component_Land_TU_BB */
+		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_TU_BB"),
+		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/TU_BBLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		//	return E_FAIL;
+	}
 #pragma endregion
 #pragma region UI
 
@@ -1447,6 +1566,77 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* HogwartAlphaMap */
 	if(FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Hogwart_AlphaMap"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Hogwart_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	/* Land_HN_AU_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_AU_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_AU_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_AV_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_AV_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_AV_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_AY_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_AY_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_AY_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_AZ_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_AZ_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_AZ_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BA_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BA_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BA_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BC_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BC_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BC_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BD_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BD_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BD_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BE_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BE_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BE_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BF_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BF_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BF_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BG_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BG_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BG_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BH_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BH_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BH_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BI_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BI_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BI_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_HN_BJ_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_HN_BJ_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_HN_BJ_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Land_TU_BB_AlphaMap */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Land_TU_BB_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/Terrain/Land_TU_BB_AlphaMap.dds"), 0)))) {
 		return E_FAIL;
 	}
 
@@ -3150,30 +3340,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma endregion
 
-	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_South_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_North_Hogwart_Land_LOD1 */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_North_Hogwart2_Land_LOD1 */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_West_Hogwart_Land_LOD1 */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_West_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_East_Hogwart_Land_LOD1 */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		return E_FAIL;
+	
 
 	/* For.Prototype_Component_Hogwart_Lake */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Hogwart_Lake"),

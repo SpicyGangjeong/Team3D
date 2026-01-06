@@ -115,10 +115,10 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTa
 
 	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
 	{
-		CMapPartObject::MAPOBJECT_DESC Desc = {};
+		CMapElement::MAPELEMENT_DESC Desc = {};
 
 		MAPOBJECT_TYPE eType = {};
-
+		Desc.bVisible = true;
 		Object->QueryUnsignedAttribute("Type", (_uint*)(&eType));
 		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
 
@@ -148,6 +148,11 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTa
 
 		if (MAPOBJECT_TYPE::ELEMENT_STATIC == eType)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc);
+		else if (MAPOBJECT_TYPE::ELEMENT_COLLIDER == eType)
+		{
+			Desc.bVisible = false;
+			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc);
+		}
 		/*else if (MAPOBJECT_TYPE::ELEMENT_INTERACT == eType)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);*/
 	}
