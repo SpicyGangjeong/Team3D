@@ -397,48 +397,48 @@ HRESULT CHuman_Duelist::Bind_ShaderParameters(_uint iMeshOrder)
 		break;
 #ifdef 기무리
 
-	case PLAYER_MESH_ORDER::ROBE_CLOTH:
-	{
-		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
-		_uint MeshBoneCount = pMesh->Get_NumBone();
+	//case PLAYER_MESH_ORDER::ROBE_CLOTH:
+	//{
+	//	CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
+	//	_uint MeshBoneCount = pMesh->Get_NumBone();
 
-		for (_uint i = 0; i < MeshBoneCount; ++i)
-		{
-			XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
-		}
+	//	for (_uint i = 0; i < MeshBoneCount; ++i)
+	//	{
+	//		XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
+	//	}
 
-		_uint temp = 0;
-		vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
-		vector<_int> boneIndices = pMesh->Get_BoneIndices();
+	//	_uint temp = 0;
+	//	vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
+	//	vector<_int> boneIndices = pMesh->Get_BoneIndices();
 
-		for (_uint i = 0; i < MeshBoneCount; ++i)
-		{
-			_uint global = boneIndices[i];
-			if (global == 38)
-				continue;
-			if (globalMask[global] == 1)
-			{
-				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
-			}
-		}
+	//	for (_uint i = 0; i < MeshBoneCount; ++i)
+	//	{
+	//		_uint global = boneIndices[i];
+	//		if (global == 38)
+	//			continue;
+	//		if (globalMask[global] == 1)
+	//		{
+	//			SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
+	//		}
+	//	}
 
-		GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
+	//	GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
 
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
-			return E_FAIL;
-		}
+	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
+	//		return E_FAIL;
+	//	}
 
 
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_BoneMatrices",
-			SkinMatrices.data(),
-			(_int)SkinMatrices.size()
-		)))
-		{
-			return E_FAIL;
-		}
-	}
-	break;
+	//	if (FAILED(m_pShaderCom->Bind_Matrices(
+	//		"g_BoneMatrices",
+	//		SkinMatrices.data(),
+	//		(_int)SkinMatrices.size()
+	//	)))
+	//	{
+	//		return E_FAIL;
+	//	}
+	//}
+	//break;
 #endif // _DEBUG
 
 	default:

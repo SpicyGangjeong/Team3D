@@ -857,6 +857,9 @@
     <ClInclude Include="..\Public\Human_Duelist.h">
       <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_CutScene.h">
+      <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1772,12 +1775,15 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush">
       <UniqueIdentifier>{eb8e52f5-0283-4acf-8fbb-0e734b7580e9}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
       <UniqueIdentifier>{9c357e12-18b3-461e-b74c-76f85280796f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar">
       <UniqueIdentifier>{8b69e309-b90b-47f6-8f2d-3dd778b468fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_CutScene">
+      <UniqueIdentifier>{b50fed80-37dd-4adb-afd4-ba153cef8a92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2588,6 +2594,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_GroundPulse.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_CutScene.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

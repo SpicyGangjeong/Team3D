@@ -209,6 +209,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ride_InfoBG.h" />
     <ClInclude Include="..\Public\Ride_Info_Key.h" />
     <ClInclude Include="..\Public\Ride_Panel.h" />
+    <ClInclude Include="..\Public\State_CutScene.h" />
     <ClInclude Include="..\Public\State_Dash.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_Fear.h" />
@@ -490,6 +491,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ride_InfoBG.cpp" />
     <ClCompile Include="..\Private\Ride_Info_Key.cpp" />
     <ClCompile Include="..\Private\Ride_Panel.cpp" />
+    <ClCompile Include="..\Private\State_CutScene.cpp" />
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\State_Fear.cpp" />

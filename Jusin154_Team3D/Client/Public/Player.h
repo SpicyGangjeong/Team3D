@@ -185,6 +185,10 @@ private:
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
 
+	void	Behavior_CutSceneEnter();
+	HRESULT Behavior_CutSceneExitCheck(_float fTimeDelta);
+	void	Behavior_CutSceneExit();
+
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
 	void	Behavior_MoveExit();
