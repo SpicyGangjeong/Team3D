@@ -26,6 +26,9 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
 	virtual _wstring Get_Name() override;
+	virtual _wstring Get_NpcName() override;
+	void Set_TextID(_int ID) { m_iNpc_DialogueTextID = ID; }
+	virtual _int Get_TextID() override;
 
 protected:
 	CInfoInstance*							m_pInfoInstance = { nullptr };
@@ -34,6 +37,8 @@ protected:
 	CNPC_Ollivander*						m_pNPC_Ollivander = { nullptr };
 
 	class CNPCInteraction*					m_pNPCInteraction = { nullptr };
+	_int									m_iNpc_DialogueTextID{};
+
 
 	CNPCStat*								m_pNpcStat = { nullptr };
 	_int									m_iEntered = { 0 };

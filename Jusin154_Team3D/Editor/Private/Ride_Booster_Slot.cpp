@@ -1,22 +1,22 @@
 ﻿#include "pch.h"
-#include "Ride_Bbooster_Slot.h"
+#include "Ride_Booster_Slot.h"
 #include "GameInstance.h"
 
-CRide_Bbooster_Slot::CRide_Bbooster_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CRide_Booster_Slot::CRide_Booster_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CElementObject(pDevice, pContext)
 {
 }
 
-CRide_Bbooster_Slot::CRide_Bbooster_Slot(const CRide_Bbooster_Slot& rhs)
+CRide_Booster_Slot::CRide_Booster_Slot(const CRide_Booster_Slot& rhs)
     :CElementObject(rhs)
 {
 }
 
-HRESULT CRide_Bbooster_Slot::Initialize_Prototype()
+HRESULT CRide_Booster_Slot::Initialize_Prototype()
 {
     return S_OK;
 }
-HRESULT CRide_Bbooster_Slot::Initialize(void* pArg)
+HRESULT CRide_Booster_Slot::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
@@ -44,7 +44,7 @@ HRESULT CRide_Bbooster_Slot::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CRide_Bbooster_Slot::Priority_Update(_float fTimeDelta)
+void CRide_Booster_Slot::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -52,7 +52,7 @@ void CRide_Bbooster_Slot::Priority_Update(_float fTimeDelta)
 	}
 	__super::Priority_Update(fTimeDelta);
 }
-void CRide_Bbooster_Slot::Update(_float fTimeDelta)
+void CRide_Booster_Slot::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -88,7 +88,7 @@ void CRide_Bbooster_Slot::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 }
 
-void CRide_Bbooster_Slot::Late_Update(_float fTimeDelta)
+void CRide_Booster_Slot::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -100,7 +100,7 @@ void CRide_Bbooster_Slot::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CRide_Bbooster_Slot::Render()
+HRESULT CRide_Booster_Slot::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
@@ -118,12 +118,12 @@ HRESULT CRide_Bbooster_Slot::Render()
 	return S_OK;
 }
 
-_vector CRide_Bbooster_Slot::Get_WorldPostion()
+_vector CRide_Booster_Slot::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CRide_Bbooster_Slot::Bind_ShaderResources()
+HRESULT CRide_Booster_Slot::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -180,21 +180,21 @@ HRESULT CRide_Bbooster_Slot::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CRide_Bbooster_Slot::Ready_Components(void* pArg)
+HRESULT CRide_Booster_Slot::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_BroomHUDIcon"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_BroomHUDIcon"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -205,33 +205,33 @@ HRESULT CRide_Bbooster_Slot::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CRide_Bbooster_Slot* CRide_Bbooster_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CRide_Booster_Slot* CRide_Booster_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CRide_Bbooster_Slot* pInstance = new CRide_Bbooster_Slot(pDevice, pContext);
+	CRide_Booster_Slot* pInstance = new CRide_Booster_Slot(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CRide_Bbooster_Slot");
+		MSG_BOX("Failed to Created : CRide_Booster_Slot");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CRide_Bbooster_Slot::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CRide_Booster_Slot::Clone(void* pArg, CGameObject* pOwner)
 {
-	CRide_Bbooster_Slot* pInstance = new CRide_Bbooster_Slot(*this);
+	CRide_Booster_Slot* pInstance = new CRide_Booster_Slot(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CRide_Bbooster_Slot");
+		MSG_BOX("Failed to Cloned : CRide_Booster_Slot");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CRide_Bbooster_Slot::Free()
+void CRide_Booster_Slot::Free()
 {
 	__super::Free();
 
@@ -242,8 +242,6 @@ void CRide_Bbooster_Slot::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-#ifdef _DEBUG
-void CRide_Bbooster_Slot::Describe_Entity()
+void CRide_Booster_Slot::Describe_Entity()
 {
 }
-#endif // _DEBUG

@@ -142,43 +142,43 @@ HRESULT CBroom_Panel::Ready_Components(void* pArg)
 
 HRESULT CBroom_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Flag>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Flag**>(&m_pBroom_Flag))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Flag>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Flag**>(&m_pBroom_Flag))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Broom_Flag"), m_pBroom_Flag);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Circle>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Circle**>(&m_pBroom_Circle))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Circle>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Circle**>(&m_pBroom_Circle))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Broom_Circle"), m_pBroom_Circle);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Scoreboard>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Scoreboard**>(&m_pBroom_Scoreboard))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Scoreboard>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Scoreboard**>(&m_pBroom_Scoreboard))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Broom_Scoreboard"), m_pBroom_Scoreboard);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Finish>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Finish**>(&m_pBroom_Finish))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Finish>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Finish**>(&m_pBroom_Finish))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Broom_Fiish"), m_pBroom_Finish);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Record>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Record**>(&m_pBroom_Record))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Record>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Record**>(&m_pBroom_Record))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Broom_Record"), m_pBroom_Record);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Exit>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Exit**>(&m_pBroom_Exit))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Exit>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Exit**>(&m_pBroom_Exit))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Broom_Exit"), m_pBroom_Exit);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Trophy>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Trophy**>(&m_pBroom_Trophy))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Trophy>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_Trophy**>(&m_pBroom_Trophy))))
 	{
 		return E_FAIL;
 	}

@@ -25,14 +25,14 @@ public:
     HRESULT Load_SpellInfo(const _char* pFilePath);
 
 public:
-    const NPCDIALOGUEINFO& Get_Info(_uint DialogueID) const;
+    const NPCDIALOGUEINFO& Get_Info(_wstring NpcName) const;
 
 private:
     CInfoInstance*              m_pInfoInstance = { nullptr };
 
     _int                        m_iDialogue_Count{};
-    vector<NPCDIALOGUEINFO>     m_DialogueInfo;
-
+    map<_wstring, NPCDIALOGUEINFO>     m_DialogueInfo;
+    NPCDIALOGUEINFO             Dummy{};
 private:
     HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 

@@ -12,6 +12,7 @@
 #include "NPCStat.h"
 #include "Player.h"
 #include "Dialogue_Font.h"
+#include "Dialogue_Data.h"
 
 IMPLEMENT_SINGLETON(CInfoInstance)
 
@@ -35,6 +36,7 @@ void CInfoInstance::Change_Level()
 	m_pMapInfo->Change_Level();
 	m_pSkillInfo->Change_Level();
 	m_pInteractiveInfo->Change_Level();
+	UI_Event.clear();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()
@@ -329,9 +331,14 @@ _int CInfoInstance::Get_SpellLearnIndex()
 	return m_pSpellLearn_Data->Get_Index();
 }
 
-void CInfoInstance::Set_Font(void* pArg)
+//void CInfoInstance::Set_Font(void* pArg)
+//{
+//	m_pDialogue_Font->Add_Text(pArg);
+//}
+
+const NPCDIALOGUEINFO& CInfoInstance::Get_Dialogue(_wstring NpcName) const
 {
-	m_pDialogue_Font->Add_Text(pArg);
+	return m_pDialogue_Data->Get_Info(NpcName);
 }
 
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
@@ -363,6 +370,16 @@ void CInfoInstance::Set_Broom_Timer(_float fTimer)
 _float CInfoInstance::Get_Broom_Timer()
 {
 	return m_fBroom_Timer;
+}
+
+void CInfoInstance::Set_Broom_Booster_Timer(_float fTimer)
+{
+	m_fBroom_Booster = fTimer;
+}
+
+_float CInfoInstance::Get_Broom_Booster_Timer()
+{
+	return m_fBroom_Booster;
 }
 
 #pragma endregion
@@ -421,6 +438,10 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	}
 	m_pDialogue_Font = CDialogue_Font::Create(pDevice, pContext);
 	if (nullptr == m_pDialogue_Font) {
+		return E_FAIL;
+	}
+	m_pDialogue_Data = CDialogue_Data::Create(pDevice, pContext);
+	if (nullptr == m_pDialogue_Data) {
 		return E_FAIL;
 	}
 
@@ -497,6 +518,7 @@ void CInfoInstance::Release_Information()
 
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pDialogue_Data);
 	SAFE_RELEASE(m_pDialogue_Font);
 	SAFE_RELEASE(m_pSpellLearn_Data);
 	SAFE_RELEASE(m_pMapInfo);

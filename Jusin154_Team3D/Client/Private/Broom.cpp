@@ -49,7 +49,7 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f,-100.f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -100.f, 0.f, 1.f));
 
 	m_pParentUnit = dynamic_cast<CUnit*>(m_pOwner);
 
@@ -83,6 +83,7 @@ void CBroom::Update(_float fTimeDelta)
 
 	if (!m_pParentUnit->IsAI()) {
 		PlayerInput(fTimeDelta);
+		m_pInfoInstance->Set_Broom_Booster_Timer(m_fTurboBoost);
 	}
 	else {
 		m_fAITime += fTimeDelta;
@@ -98,9 +99,9 @@ void CBroom::Update(_float fTimeDelta)
 		m_bHoverToggle = true;
 		m_fSpeed = 0.f;
 
-		if(m_pWindEffect != nullptr)
+		if (m_pWindEffect != nullptr)
 		{
-			if(m_pWindEffect->Get_Visible() == true) // 전 프레임에 트루였다면
+			if (m_pWindEffect->Get_Visible() == true) // 전 프레임에 트루였다면
 			{
 				m_pWindEffect->Set_Visible(false);
 				m_pWindEffect->Get_Effect_Info()->fSoftMask = 1.f;
@@ -158,7 +159,7 @@ void CBroom::Late_Update(_float fTimeDelta)
 
 HRESULT CBroom::Render()
 {
-	if (!m_pModelCom){
+	if (!m_pModelCom) {
 		return S_OK;
 	}
 
@@ -304,6 +305,7 @@ void CBroom::PlayerInput(_float fTimeDelta)
 				m_fTurboBoost = 0.f;
 			}
 			m_Input.bTurbo = true;
+			m_pInfoInstance->Event_CallBack(TEXT("BroomBooster"), &m_Input.bTurbo);
 		}
 		else {
 			m_Input.bTurbo = false;
@@ -321,6 +323,7 @@ void CBroom::PlayerInput(_float fTimeDelta)
 			}
 		}
 		m_Input.bTurbo = false;
+		m_pInfoInstance->Event_CallBack(TEXT("BroomBooster"), &m_Input.bTurbo);
 	}
 
 	m_bTurbo = m_Input.bTurbo;

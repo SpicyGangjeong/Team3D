@@ -1,22 +1,16 @@
 ﻿#pragma once
 
-#include "Client_Define.h"
+#include "Editor_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Engine)
-class CTexture;
-class CShader;
-class CVIBuffer_Rect;
-NS_END
+NS_BEGIN(Editor)
 
-NS_BEGIN(Client)
-
-class CRide_Bbooster_Slot final : public CElementObject
+class CRide_Booster_Slot final : public CElementObject
 {
 private:
-	CRide_Bbooster_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CRide_Bbooster_Slot(const CRide_Bbooster_Slot& rhs);
-	virtual ~CRide_Bbooster_Slot() = default;
+	CRide_Booster_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRide_Booster_Slot(const CRide_Booster_Slot& rhs);
+	virtual ~CRide_Booster_Slot() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -41,12 +35,10 @@ private:
 
 	_float4 m_fImagePosi{};
 public:
-	static CRide_Bbooster_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRide_Booster_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
-#ifdef _DEBUG
 	void Describe_Entity() override;
-#endif // _DEBUG
 };
 
 NS_END

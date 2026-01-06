@@ -86,7 +86,7 @@ HRESULT CSpell_Canvas::Ready_Components(void* pArg)
 
 HRESULT CSpell_Canvas::Ready_Panel(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CSpell_Panel**>(&m_pSpell_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CSpell_Panel**>(&m_pSpell_Panel))))
 	{
 		return E_FAIL;
 	}

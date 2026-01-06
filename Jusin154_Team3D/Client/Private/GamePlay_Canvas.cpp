@@ -111,43 +111,43 @@ HRESULT CGamePlay_Canvas::Ready_Components(void* pArg)
 
 HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoading_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoading_Panel**>(&m_pLoading_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoading_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CLoading_Panel**>(&m_pLoading_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("LoadingPanel"), m_pLoading_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMiniMap_Panel**>(&m_pMinimap_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMiniMap_Panel**>(&m_pMinimap_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("MinimapPanel"), m_pMinimap_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Panel**>(&m_pMission_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Panel**>(&m_pMission_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("MissionPanel"), m_pMission_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CAction_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CAction_Panel**>(&m_pAction_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CAction_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CAction_Panel**>(&m_pAction_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("ActionPanel"), m_pAction_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Panel**>(&m_pEnemy_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Panel**>(&m_pEnemy_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Enemy_Panel"), m_pEnemy_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CBroom_Panel**>(&m_pBroom_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CBroom_Panel**>(&m_pBroom_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Broom_Panel"), m_pBroom_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CRide_Panel**>(&m_pRide_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CRide_Panel**>(&m_pRide_Panel))))
 	{
 		return E_FAIL;
 	}

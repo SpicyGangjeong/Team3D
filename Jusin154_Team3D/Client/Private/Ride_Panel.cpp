@@ -4,10 +4,11 @@
 #include "Ride_Info_Key.h"
 #include "Ride_Info.h"
 #include "Ride_InfoBG.h"
-#include "Ride_Bbooster_Slot.h"
-#include "Ride_BboosterBar.h"
+#include "Ride_Booster_Slot.h"
+#include "Ride_BoosterBar.h"
 #include "Ride_HpBar.h"
 #include "Ride_HpSlot.h"
+#include "InfoInstance.h"
 
 CRide_Panel::CRide_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -15,7 +16,9 @@ CRide_Panel::CRide_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CRide_Panel::CRide_Panel(const CRide_Panel& rhs)
-	:CPanelObject(rhs)
+	:CPanelObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
+
 {
 }
 
@@ -57,7 +60,19 @@ HRESULT CRide_Panel::Initialize(void* pArg)
 	m_vLerp_Position = _float4(1750.f, m_fY, 0.f, 1.f);
 	static_cast<CUIObject*>(m_pRide_Info)->Visible(false);
 	static_cast<CUIObject*>(m_pRide_InfoBG)->Visible(false);
+	m_pInfoInstance->Add_Event(TEXT("BroomBooster"), [this](void* p) {this->Booster(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
+}
+
+void CRide_Panel::Booster(_bool bBooster)
+{
+	m_bBooster = bBooster;
+	static_cast<CRide_BoosterBar*>(m_pRide_BoosterBar)->Booster(m_bBooster);
+}
+
+void CRide_Panel::Set_Gauge()
+{
+	static_cast<CRide_BoosterBar*>(m_pRide_BoosterBar)->Set_Gauge(m_pInfoInstance->Get_Broom_Booster_Timer());
 }
 
 void CRide_Panel::Priority_Update(_float fTimeDelta)
@@ -124,6 +139,8 @@ void CRide_Panel::Update(_float fTimeDelta)
 		static_cast<CUIObject*>(m_pRide_InfoBG)->Set_Hover(true);
 	}
 
+	Set_Gauge();
+
 	__super::Update(fTimeDelta);
 }
 
@@ -168,43 +185,43 @@ HRESULT CRide_Panel::Ready_Components(void* pArg)
 
 HRESULT CRide_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_InfoBG>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_InfoBG**>(&m_pRide_InfoBG))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_InfoBG>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CRide_InfoBG**>(&m_pRide_InfoBG))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Ride_InfoBG"), m_pRide_InfoBG);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Info_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_Info_Key**>(&m_pRide_Info_Key))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Info_Key>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CRide_Info_Key**>(&m_pRide_Info_Key))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Ride_Info_Key"), m_pRide_Info_Key);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Info>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_Info**>(&m_pRide_Info))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Info>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CRide_Info**>(&m_pRide_Info))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Ride_Info"), m_pRide_Info);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Bbooster_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_Bbooster_Slot**>(&m_pRide_Bbooster_Slot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Booster_Slot>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CRide_Booster_Slot**>(&m_pRide_Booster_Slot))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Ride_Bbooster_Slot"), m_pRide_Bbooster_Slot);
+	Add_Element(TEXT("Ride_Bbooster_Slot"), m_pRide_Booster_Slot);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_BboosterBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_BboosterBar**>(&m_pRide_BboosterBar))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_BoosterBar>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CRide_BoosterBar**>(&m_pRide_BoosterBar))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Ride_BboosterBar"), m_pRide_BboosterBar);
+	Add_Element(TEXT("Ride_BboosterBar"), m_pRide_BoosterBar);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_HpBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_HpBar**>(&m_pRide_HpBar))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_HpBar>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CRide_HpBar**>(&m_pRide_HpBar))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Ride_HpBar"), m_pRide_HpBar);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_HpSlot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CRide_HpSlot**>(&m_pRide_HpSlot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_HpSlot>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CRide_HpSlot**>(&m_pRide_HpSlot))))
 	{
 		return E_FAIL;
 	}

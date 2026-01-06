@@ -55,8 +55,9 @@ namespace Client
 
 	typedef struct NpcDialogue
 	{
+		_wstring					pNpcName;
 		_int						iNpcID{};
-		vector<CURRENTDIALOGUEINFO>	Info;
+		unordered_map<_int, CURRENTDIALOGUEINFO> Info;
 	}NPCDIALOGUEINFO;
 
 	typedef struct tagLockOnInfo {
@@ -69,7 +70,9 @@ namespace Client
 	{
 		CGameObject*	pOwner = { nullptr };
 		_wstring		pNPCName;
-		_float4			pNPCPosition{};
+		_wstring		pName;
+		_float4			fNPCPosition{};
+		_int			iTextID{};
 	}NPCINTERACTIONINFO;
 
 	typedef struct tagUnitInfo

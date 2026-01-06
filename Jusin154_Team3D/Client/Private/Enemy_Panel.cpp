@@ -137,19 +137,19 @@ HRESULT CEnemy_Panel::Ready_Components(void* pArg)
 
 HRESULT CEnemy_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_HpBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_HpBar**>(&m_pEnemy_HpBar))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_HpBar>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_HpBar**>(&m_pEnemy_HpBar))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Enemy_HpBar"), m_pEnemy_HpBar);
 	
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Info>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Info**>(&m_pEnemy_Info))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Info>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Info**>(&m_pEnemy_Info))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Enemy_Info"), m_pEnemy_Info);
 	
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBoss_HpBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CBoss_HpBar**>(&m_pBoss_HpBar))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBoss_HpBar>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CBoss_HpBar**>(&m_pBoss_HpBar))))
 	{
 		return E_FAIL;
 	}

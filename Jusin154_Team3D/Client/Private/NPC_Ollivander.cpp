@@ -140,6 +140,16 @@ _wstring CNPC_Ollivander::Get_Name()
 	return m_pNpcStat->Get_Stat().pNpc_Name;
 }
 
+_wstring CNPC_Ollivander::Get_NpcName()
+{
+	return m_pNpcStat->Get_Stat().pName;
+}
+
+_int CNPC_Ollivander::Get_TextID()
+{
+	return m_iNpc_DialogueTextID; 
+}
+
 HRESULT CNPC_Ollivander::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
@@ -187,6 +197,8 @@ HRESULT CNPC_Ollivander::Initialize(void* pArg)
 	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
 
 	m_pModelCom->Set_AnimationIndex(0, true);
+
+	//m_pInfoInstance->Add_Event(TEXT("NPCDialogue"), [this](void* p) {this->Get_TextID(*reinterpret_cast<_int*>(p)); });
 
 	m_bNpc = true;
 	return S_OK;

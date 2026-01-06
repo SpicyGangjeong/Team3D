@@ -303,37 +303,37 @@ HRESULT CSpellLearn_Panel::Ready_Components(void* pArg)
 
 HRESULT CSpellLearn_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Name>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Name**>(&m_pSpellLearn_Name))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Name>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Name**>(&m_pSpellLearn_Name))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("SpellLearn_Name"), m_pSpellLearn_Name);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn**>(&m_pSpellLearn))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn**>(&m_pSpellLearn))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("SpellLearn"), m_pSpellLearn);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_MovePointer>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_MovePointer**>(&m_pSpellLearn_MovePointer))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_MovePointer>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_MovePointer**>(&m_pSpellLearn_MovePointer))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("SpellLearn_MovePointer"), m_pSpellLearn_MovePointer);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_ChaserPointer>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_ChaserPointer**>(&m_pSpellLearn_ChaserPointer))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_ChaserPointer>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_ChaserPointer**>(&m_pSpellLearn_ChaserPointer))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("SPellLeam_ChaserPointer"), m_pSpellLearn_ChaserPointer);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Slot**>(&m_pSpellLearn_Slot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Slot>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Slot**>(&m_pSpellLearn_Slot))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("SpellLearn_Slot"), m_pSpellLearn_Slot);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Overlay**>(&m_pSpellLearn_Overlay))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Overlay>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Overlay**>(&m_pSpellLearn_Overlay))))
 	{
 		return E_FAIL;
 	}
@@ -341,7 +341,7 @@ HRESULT CSpellLearn_Panel::Ready_Element(void* pArg)
 
 	for (_int i = 0; i < 3; ++i)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Booster>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Booster**>(&m_pSpellLearn_Booster))))
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Booster>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Booster**>(&m_pSpellLearn_Booster))))
 		{
 			return E_FAIL;
 		}

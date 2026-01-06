@@ -1,16 +1,22 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Engine)
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
+NS_END
 
-class CRide_BboosterBar final : public CElementObject
+NS_BEGIN(Client)
+
+class CRide_BoosterBar final : public CElementObject
 {
 private:
-	CRide_BboosterBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CRide_BboosterBar(const CRide_BboosterBar& rhs);
-	virtual ~CRide_BboosterBar() = default;
+	CRide_BoosterBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRide_BoosterBar(const CRide_BoosterBar& rhs);
+	virtual ~CRide_BoosterBar() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -28,6 +34,10 @@ private:
 private:
 	void Active(_float fTimeDelta);
 	void NonActive(_float fTimeDelta);
+
+public:
+	void Set_Gauge(_float fTime);
+	void Booster(_bool bBooster);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -48,11 +58,15 @@ private:
 
 	_int				m_iClick{};
 
+	_bool				m_bBooster = { false };
+
 public:
-	static CRide_BboosterBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRide_BoosterBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

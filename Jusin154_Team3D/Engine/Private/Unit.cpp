@@ -113,6 +113,16 @@ _wstring CUnit::Get_Name()
     return _wstring();
 }
 
+_wstring CUnit::Get_NpcName()
+{
+    return _wstring();
+}
+
+_int CUnit::Get_TextID()
+{
+    return _int();
+}
+
 HRESULT CUnit::Ready_Components(void *pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {

@@ -1,23 +1,24 @@
 ﻿#include "pch.h"
-#include "Ride_BboosterBar.h"
+#include "Ride_BoosterBar.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
-CRide_BboosterBar::CRide_BboosterBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CRide_BoosterBar::CRide_BoosterBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CRide_BboosterBar::CRide_BboosterBar(const CRide_BboosterBar& rhs)
+CRide_BoosterBar::CRide_BoosterBar(const CRide_BoosterBar& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CRide_BboosterBar::Initialize_Prototype()
+HRESULT CRide_BoosterBar::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CRide_BboosterBar::Initialize(void* pArg)
+HRESULT CRide_BoosterBar::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
@@ -41,8 +42,8 @@ HRESULT CRide_BboosterBar::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 10.f;
 	m_vNine_Slice = _float4(27.f, 125.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
-	m_fMaxGauge = 100.f;
-	m_fCurrentGauge = m_fMaxGauge;
+	m_fMaxGauge = 5.f;
+	m_fCurrentGauge = 5.f;
 	m_fTargetGauge = m_fMaxGauge;
 	m_fMoveSpeed = 5.f;
 	m_fGaugeBGSize = _float2(144.f, 24.f);
@@ -52,17 +53,27 @@ HRESULT CRide_BboosterBar::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CRide_BboosterBar::Active(_float fTimeDelta)
+void CRide_BoosterBar::Active(_float fTimeDelta)
 {
 	m_fCurrentGauge = CMyTools::Lerp_f1D(m_fCurrentGauge, m_fTargetGauge, fTimeDelta * m_fMoveSpeed);
 }
 
-void CRide_BboosterBar::NonActive(_float fTimeDelta)
+void CRide_BoosterBar::NonActive(_float fTimeDelta)
 {
 	m_fCurrentGauge = CMyTools::Lerp_f1D(m_fTargetGauge, m_fCurrentGauge, fTimeDelta * m_fMoveSpeed);
 }
 
-void CRide_BboosterBar::Priority_Update(_float fTimeDelta)
+void CRide_BoosterBar::Set_Gauge(_float fTime)
+{
+	m_fTargetGauge = fTime;
+}
+
+void CRide_BoosterBar::Booster(_bool bBooster)
+{
+	m_bBooster = bBooster;
+}
+
+void CRide_BoosterBar::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -71,7 +82,7 @@ void CRide_BboosterBar::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CRide_BboosterBar::Update(_float fTimeDelta)
+void CRide_BoosterBar::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -113,9 +124,8 @@ void CRide_BboosterBar::Update(_float fTimeDelta)
 
 	m_fGaugeBar = m_fCurrentGauge / m_fMaxGauge;
 
-	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+	if (m_bBooster == true)
 	{
-		m_fTargetGauge -= fTimeDelta * m_fTimeMult;
 		m_iClick = 1;
 	}
 	else
@@ -130,7 +140,7 @@ void CRide_BboosterBar::Update(_float fTimeDelta)
 
 	if (m_iClick == 0)
 	{
-		m_fTargetGauge += fTimeDelta * m_fTimeMult;
+		//m_fTargetGauge += fTimeDelta;
 	}
 
 	if (m_iClick == 1)
@@ -150,7 +160,7 @@ void CRide_BboosterBar::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 }
 
-void CRide_BboosterBar::Late_Update(_float fTimeDelta)
+void CRide_BoosterBar::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -162,7 +172,7 @@ void CRide_BboosterBar::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CRide_BboosterBar::Render()
+HRESULT CRide_BoosterBar::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
@@ -180,12 +190,12 @@ HRESULT CRide_BboosterBar::Render()
 	return S_OK;
 }
 
-_vector CRide_BboosterBar::Get_WorldPostion()
+_vector CRide_BoosterBar::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CRide_BboosterBar::Bind_ShaderResources()
+HRESULT CRide_BoosterBar::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -270,21 +280,21 @@ HRESULT CRide_BboosterBar::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CRide_BboosterBar::Ready_Components(void* pArg)
+HRESULT CRide_BoosterBar::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_GlowBar"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_GlowBar"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -295,33 +305,33 @@ HRESULT CRide_BboosterBar::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CRide_BboosterBar* CRide_BboosterBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CRide_BoosterBar* CRide_BoosterBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CRide_BboosterBar* pInstance = new CRide_BboosterBar(pDevice, pContext);
+	CRide_BoosterBar* pInstance = new CRide_BoosterBar(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CRide_BboosterBar");
+		MSG_BOX("Failed to Created : CRide_BoosterBar");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CRide_BboosterBar::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CRide_BoosterBar::Clone(void* pArg, CGameObject* pOwner)
 {
-	CRide_BboosterBar* pInstance = new CRide_BboosterBar(*this);
+	CRide_BoosterBar* pInstance = new CRide_BoosterBar(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CRide_BboosterBar");
+		MSG_BOX("Failed to Cloned : CRide_BoosterBar");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CRide_BboosterBar::Free()
+void CRide_BoosterBar::Free()
 {
 	__super::Free();
 
@@ -332,6 +342,8 @@ void CRide_BboosterBar::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CRide_BboosterBar::Describe_Entity()
+#ifdef _DEBUG
+void CRide_BoosterBar::Describe_Entity()
 {
 }
+#endif // _DEBUG
