@@ -1570,6 +1570,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 void CPlayer::Behavior_SpellExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SPELL);
+	m_pInfoInstance->Set_SearchLockOnFlag(true);
 	m_pModelCom->Set_BlendDuration(0.3f);
 	Reset_Event();
 	m_bLookAt = false;
@@ -1596,6 +1597,8 @@ void CPlayer::Behavior_AncientSpellEnter()
 			m_pEffectPool->Use_Skill(SKILL_TYPE::LIGHTNING_SIDE, Get_PartObject<CWand>());
 		},
 		0.18f);
+
+	Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(17);
 }
 
 HRESULT CPlayer::Behavior_AncientSpellExitCheck()
@@ -2486,16 +2489,6 @@ HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_Broom_DismountExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BROOM_DISMOUNT);
-	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
-
-	_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-	_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
-	_vector up = XMVector3Normalize(XMVector3Cross(look, right));
-
-	m_pTransformCom->Set_State(STATE::RIGHT, right);
-	m_pTransformCom->Set_State(STATE::UP, up);
-	m_pTransformCom->Set_State(STATE::LOOK, look);
 	Reset_Event();
 }
 
@@ -2682,8 +2675,9 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+		m_pInfoInstance->Set_SearchLockOnFlag(false);
 		pairAnimInfo = m_Animation[STATEANIM::AVADA_KEDAVRA];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false,1.f,false);
 		if (m_LockOnInfo.pUnit)
 			m_pTransformCom->LookAt(m_LockOnInfo.pUnit->Get_WorldPostion());
 
@@ -2696,6 +2690,9 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 			0.f);
 		Info.pText = TEXT("아바다 케다브라!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
+
+		Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
+
 		break;
 	case ENUM_CLASS(SKILL_TYPE::REPARO):
 	{
@@ -3123,7 +3120,7 @@ void CPlayer::Add_FSM()
 				m_pBroomTransform->Set_Scale(m_BroomScale);
 			}
 			_float3 vPlayerScale = { 1.f,1.f,1.f };
-			m_pBroomTransform->Set_Scale(vPlayerScale);
+			m_pTransformCom->Set_Scale(vPlayerScale);
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;

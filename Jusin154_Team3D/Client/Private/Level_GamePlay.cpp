@@ -23,6 +23,7 @@
 
 #pragma region ACTOR
 #include "Player.h"
+#include "Human_Duelist.h"
 #include "Troll.h"
 #include "Goblin.h"
 #include "Goblin_Mage.h"
@@ -760,7 +761,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 	if (true == isLoad_NPC)
 	{
-		for (_uint i = 0; i < 12; i++)
+		for (_uint i = 0; i < 11; i++)
 		{
 			{
 				CRandomNpc::NPCDESC NPCDesc{};
@@ -774,7 +775,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 				}
 			}
 		}
+
+		//CPlayer::PLAYERDESC playerDesc = {};
+		//playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
+		//playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		//	return E_FAIL;
+		//}
 	}
+
+
 
 	return S_OK;
 }
@@ -855,6 +865,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
+
+
 
 	}
 #if 진우

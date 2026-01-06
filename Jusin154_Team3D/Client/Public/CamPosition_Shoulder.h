@@ -28,7 +28,7 @@ public:
 	virtual _vector Get_WorldPostion() override;
 	_vector			Get_ShoulderGlobalPos();
 	void			Set_CameraShake(_float fXShock, _float fYShock);
-	
+	void			Set_CameraAnim(_uint iIndex);
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

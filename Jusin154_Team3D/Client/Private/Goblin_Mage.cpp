@@ -77,6 +77,9 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 			if (pSender == this)
 				return;
 
+			if (isDead())
+				return;
+
 			m_pFSM->Change_State(FSMSTATE::FEAR);
 		});
 
