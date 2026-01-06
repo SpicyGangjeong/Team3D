@@ -147,13 +147,6 @@ HRESULT CLevel_Field::Ready_Lights()
 		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
-#if 진우
-	Desc.vDiffuse = _float4(0.607f, 0.658f, 0.698f, 0.f);
-	Desc.vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
-	Desc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
-
-#endif
-
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc, nullptr, &pLight))) {
 		return E_FAIL;
@@ -163,15 +156,13 @@ HRESULT CLevel_Field::Ready_Lights()
 	_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
 	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 	
-#ifdef gimch
+#if gimch || 진우
 	vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
 	vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
 	vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 #endif // gimch
 
-	vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
-	vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
-	vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+
 	
 
 	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
