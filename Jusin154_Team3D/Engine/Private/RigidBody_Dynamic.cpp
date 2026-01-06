@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "RigidBody_Dynamic.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 
 CRigidBody_Dynamic::CRigidBody_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext):
     CRigidBody(pDevice, pContext)
@@ -25,6 +26,8 @@ HRESULT CRigidBody_Dynamic::Render()
 }
 HRESULT CRigidBody_Dynamic::Render(function<void()> custumState)
 {
+	if (m_pOwner->isDead())
+		return S_OK;
 	PSX::PxTransform pxTranform = m_pRigidBody->getGlobalPose();
 	_matrix WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z)
 		* XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));

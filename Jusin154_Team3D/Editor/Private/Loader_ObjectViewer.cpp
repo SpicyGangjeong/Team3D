@@ -375,7 +375,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//));
 
 	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_AvadaKedavra.fbx", XMMatrixIdentity(),
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_OpenDoor.fbx", XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_Student_Cmbt_Model")
 	//));
 #pragma endregion

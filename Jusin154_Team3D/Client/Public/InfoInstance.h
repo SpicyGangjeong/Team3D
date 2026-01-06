@@ -46,6 +46,7 @@ public:
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
 	void Get_LockOnInfo(LOCKON_INFO& Info);
+	void Set_SearchLockOnFlag(_bool bLockOn);
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 	class CMonster* Get_TargetMonster();
 #pragma endregion
@@ -123,6 +124,7 @@ private:
 
 	_float						m_fBroom_Timer{};
 	_float						m_fBroom_Booster{};
+	_bool						m_bSearchLockOnTarget = { true };
 
 	_float						m_fDamage{};
 	UI_STATE					m_eUI_State = { UI_STATE::END };

@@ -854,6 +854,9 @@
     <ClInclude Include="..\Public\Ranrok_GroundPulse.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Human_Duelist.h">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1758,6 +1761,9 @@
     <Filter Include="02.GameObjects\NPC\Ally\RandomNpc">
       <UniqueIdentifier>{88b62177-01fc-424d-a444-4fb5fd4b2db5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Human_Duelist">
+      <UniqueIdentifier>{9bd903be-dc05-4dd6-9abc-d676be0b7f7e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Land">
       <UniqueIdentifier>{9cf44fef-f3be-409e-b530-6aef90db5c0c}</UniqueIdentifier>
     </Filter>
@@ -2564,6 +2570,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\RandomNpc.cpp">
       <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Human_Duelist.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Human_Duelist_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp">
       <Filter>02.GameObjects\Player\Robe</Filter>
