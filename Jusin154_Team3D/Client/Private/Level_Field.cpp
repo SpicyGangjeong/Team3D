@@ -147,6 +147,13 @@ HRESULT CLevel_Field::Ready_Lights()
 		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
+#if 진우
+	Desc.vDiffuse = _float4(0.607f, 0.658f, 0.698f, 0.f);
+	Desc.vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
+	Desc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+
+#endif
+
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc, nullptr, &pLight))) {
 		return E_FAIL;
@@ -162,6 +169,9 @@ HRESULT CLevel_Field::Ready_Lights()
 	vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 #endif // gimch
 
+	vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
+	vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
+	vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 	
 
 	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
@@ -173,6 +183,7 @@ HRESULT CLevel_Field::Ready_Lights()
 HRESULT CLevel_Field::Ready_Volumetric()
 {
 	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+
 
 	return S_OK;
 }

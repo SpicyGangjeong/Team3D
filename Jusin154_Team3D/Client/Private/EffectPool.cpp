@@ -52,6 +52,9 @@
 #include "Ranrok_Land.h"
 #include "Ranrok_GroundPulse.h"
 #include "Ranrok_Rush_Bottom.h"
+#include "Ranrok_Swipe.h"
+#include "Ranrok_DeadSplash.h"
+#include "Ranrok_DeadImpact.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -668,6 +671,33 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 
 	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_SWIPE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Swipe* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Swipe>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_DEAD_SPLASH, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_DeadSplash* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_DeadSplash>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_DEAD_IMPACT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_DeadImpact* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_DeadImpact>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 	
 	return S_OK;
 }
@@ -685,6 +715,7 @@ HRESULT CEffectPool::Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPr
 		m_EffectList[ENUM_CLASS(eType)].push_back(pEffect_Container);
 
 	}
+
 
 	return S_OK;
 }

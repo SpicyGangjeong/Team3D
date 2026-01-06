@@ -854,6 +854,15 @@
     <ClInclude Include="..\Public\Ranrok_GroundPulse.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_DeadSplash.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Swipe.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1773,6 +1782,15 @@
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush">
       <UniqueIdentifier>{eb8e52f5-0283-4acf-8fbb-0e734b7580e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact">
+      <UniqueIdentifier>{a7aeb7ef-a180-49ba-81f6-c8a47dcb941d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe">
+      <UniqueIdentifier>{7a994c53-e406-485e-82c2-6a116b6b23e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash">
+      <UniqueIdentifier>{e1fcb75d-6e7a-4adb-9835-6913ac6f44b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2573,6 +2591,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_GroundPulse.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_DeadSplash.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_DeadImpact.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Swipe.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
