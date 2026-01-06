@@ -85,6 +85,17 @@ void CLevel_Field::Update(_float fTimeDelta)
 			return;
 		}
 	}
+
+	//m_bLevel = true;
+
+	//if (m_bLevel != m_bCurrentLevel)
+	//{
+	//	m_bCurrentLevel = m_bLevel;
+	//	UI_STATE eState = UI_STATE::LEVELCHANGE;
+	//	m_pInfoInstance->Event_CallBack(TEXT("Canvas_Change"), &eState);
+	//}
+
+
 }
 
 HRESULT CLevel_Field::Render()

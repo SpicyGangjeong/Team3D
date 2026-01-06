@@ -119,6 +119,13 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if(FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
 
+	m_bLevel = true;
+	if (m_bCurrentLevel != m_bLevel)
+	{
+		m_bCurrentLevel = m_bLevel;
+		m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
+	}
+
 	return S_OK;
 }
 
@@ -130,6 +137,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+
 	if (m_pGameInstance->Key_Pressing(DIK_0)) {
 		if (m_pGameInstance->Key_Up(DIK_1))
 		{
@@ -141,6 +149,10 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
 		m_pInfoInstance->Change_Level();
+
+		UI_STATE eState = UI_STATE::LEVELCHANGE;
+		m_pInfoInstance->Event_CallBack(TEXT("Canvas_Change"),&eState);
+
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::FIELD)))) {
 			return;
 		}

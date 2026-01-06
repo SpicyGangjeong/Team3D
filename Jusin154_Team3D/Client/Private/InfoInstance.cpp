@@ -36,7 +36,6 @@ void CInfoInstance::Change_Level()
 	m_pMapInfo->Change_Level();
 	m_pSkillInfo->Change_Level();
 	m_pInteractiveInfo->Change_Level();
-	UI_Event.clear();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()
@@ -344,9 +343,9 @@ _int CInfoInstance::Get_SpellLearnIndex()
 //	m_pDialogue_Font->Add_Text(pArg);
 //}
 
-const NPCDIALOGUEINFO& CInfoInstance::Get_Dialogue(_wstring NpcName) const
+const CURRENTDIALOGUEINFO& CInfoInstance::Get_Dialogue(_wstring NpcName, _int iTextID) const
 {
-	return m_pDialogue_Data->Get_Info(NpcName);
+	return m_pDialogue_Data->Get_Info(NpcName, iTextID);
 }
 
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)

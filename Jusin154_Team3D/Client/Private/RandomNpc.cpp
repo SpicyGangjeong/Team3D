@@ -57,7 +57,7 @@ void CRandomNpc::Priority_Update(_float fTimeDelta)
 		m_iEntered = 0;
 	}
 	__super::Priority_Update(fTimeDelta);
-}
+} 
 
 void CRandomNpc::Update(_float fTimeDelta)
 {
@@ -76,6 +76,21 @@ void CRandomNpc::Update(_float fTimeDelta)
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+
+	_vector vCurrentPos = Get_WorldPostion();
+	pair<CUnit*, CTransform*> pairTarget = m_pInfoInstance->Get_NearestPlayerAlly(vCurrentPos);
+	if (nullptr != pairTarget.first) {
+		Set_Target(*pairTarget.first, *pairTarget.second);
+	}
+	if (nullptr != m_pTarget && m_pTarget->isDead()) {
+		SAFE_RELEASE(m_pTarget);
+		m_fTargetDistance = { FLT_MAX };
+	}
+
+	if (m_fTargetDistance <= 5.f)
+	{
+		_int a = 10;
+	}
 }
 
 void CRandomNpc::Late_Update(_float fTimeDelta)
@@ -85,6 +100,7 @@ void CRandomNpc::Late_Update(_float fTimeDelta)
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
+
 
 	__super::Late_Update(fTimeDelta);
 }
@@ -182,6 +198,25 @@ _wstring CRandomNpc::Get_Name()
 {
 	return m_pNpcStat->Get_Stat().pNpc_Name;
 }
+
+_wstring CRandomNpc::Get_NpcName()
+{
+	return m_pNpcStat->Get_Stat().pName;
+}
+
+void CRandomNpc::Set_Target(CUnit& pTarget, CTransform& pTransform)
+{
+	SAFE_RELEASE(m_pTarget);
+	m_pTarget = &pTarget;
+	SAFE_ADDREF(m_pTarget);
+
+	_vector vTargetPos = pTransform.Get_State(STATE::POSITION);
+	_vector vToTargetDir = vTargetPos - Get_WorldPostion();
+	XMStoreFloat4(&m_vTargetPos, vTargetPos);
+	XMStoreFloat3(&m_vToTargetDir, XMVector3Normalize(vToTargetDir));
+	m_fTargetDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
+}
+
 
 HRESULT CRandomNpc::Bind_ShaderResources()
 {
@@ -408,6 +443,7 @@ void CRandomNpc::Free()
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pNpcStat);
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pTarget);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

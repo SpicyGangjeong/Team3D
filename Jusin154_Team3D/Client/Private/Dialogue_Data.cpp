@@ -44,9 +44,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
             DialogueInfo line{};
             pLine->QueryIntAttribute("ID", &line.iLineID);
 
-            int type = 0;
-            pLine->QueryIntAttribute("Type", &type);
-            line.bType = (type == 1);
+            pLine->QueryIntAttribute("Type", &line.iTextType);
 
             const char* text = pLine->Attribute("Text");
             if (text) line.pText = CMyTools::ToWstring(text);
@@ -81,7 +79,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
 	return S_OK;
 }
 
-const NPCDIALOGUEINFO& CDialogue_Data::Get_Info(_wstring NpcName) const
+const CURRENTDIALOGUEINFO& CDialogue_Data::Get_Info(_wstring NpcName, _int iTextID) const
 {
     auto iter = m_DialogueInfo.find(NpcName);
     if (iter == m_DialogueInfo.end())
@@ -89,7 +87,13 @@ const NPCDIALOGUEINFO& CDialogue_Data::Get_Info(_wstring NpcName) const
         return Dummy;
     }
 
-    return iter->second;
+    auto Text = iter->second.Info.find(iTextID);
+    if (iter == m_DialogueInfo.end())
+    {
+        return Dummy;
+    }
+
+    return Text->second;
 }
 
 CDialogue_Data* CDialogue_Data::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

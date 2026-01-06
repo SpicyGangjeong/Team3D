@@ -88,7 +88,7 @@ public:
 #pragma endregion
 #pragma region Dialogue_Font
 	//void Set_Font(void* pArg);
-	const NPCDIALOGUEINFO& Get_Dialogue(_wstring NpcName) const;
+	const CURRENTDIALOGUEINFO& Get_Dialogue(_wstring NpcName, _int iTextID) const;
 #pragma endregion
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
