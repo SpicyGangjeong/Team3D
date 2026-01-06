@@ -110,18 +110,18 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 	//	return E_FAIL;
 
-	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_troll_Model")
-	//));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_troll_Model")
+	));
 
 	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_TrollIntro.bin", XMMatrixIdentity(),
+	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_TrollIntro.fbx", XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_trsoll_Model")
 	//));
 
 	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_Anim.bin", XMMatrixIdentity(),
+	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_Anim.fbx", XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_trsoll_Model")
 	//));
 
