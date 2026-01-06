@@ -24,10 +24,21 @@
 void CHuman_Duelist::Behavior_IdleEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
+	pair<_uint, _bool> pairAnimInfo;
+	pairAnimInfo = m_Animation[STATEANIM::IDLE];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CHuman_Duelist::Behavior_IdleExitCheck(_float fTimeDelta)
 {
+	for (_uint i = 0; i < ENUM_CLASS(SKILL::END); i++)
+	{
+		if (m_fSkillCoolTime[i] == 0.f) {
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -43,6 +54,26 @@ void CHuman_Duelist::Behavior_CombatEnter()
 
 HRESULT CHuman_Duelist::Behavior_CombatExitCheck()
 {
+	if (m_fSkillCoolTime[ENUM_CLASS(SKILL::LEVIOSO)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::SPELL);
+		return E_FAIL;
+	}
+	else if (m_fSkillCoolTime[ENUM_CLASS(SKILL::PROTEGO)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::SHIELD);
+		return E_FAIL;
+	}
+	else if (m_fSkillCoolTime[ENUM_CLASS(SKILL::LIGHT_ATTACK)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
+		return E_FAIL;
+	}
+	else {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -53,11 +84,44 @@ void CHuman_Duelist::Behavior_CombatExit()
 
 void CHuman_Duelist::Behavior_LightAttackEnter()
 {
+	pair<_uint, _bool> pairAnimInfo;
 	m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
+	_int iRand = m_pGameInstance->Real_Random_Int(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+		break;
+	case 1:
+		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK2];
+		break;
+	case 2:
+		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK3];
+		break;
+	case 3:
+		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK4];
+		break;
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iIndex);  },
+		0.2f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  },
+		0.0f);
+
+	m_fSkillCoolTime[ENUM_CLASS(SKILL::LIGHT_ATTACK)] = m_fMaxSkillCoolTime[ENUM_CLASS(SKILL::LIGHT_ATTACK)];
 }
 
 HRESULT CHuman_Duelist::Behavior_LightAttackExitCheck(_float fTimeDelta)
 {
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -69,10 +133,28 @@ void CHuman_Duelist::Behavior_LightAttackExit()
 void CHuman_Duelist::Behavior_SpellEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::SPELL);
+	pair<_uint, _bool> pairAnimInfo;
+	pairAnimInfo = m_Animation[STATEANIM::SPELL];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
+		0.2f);
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
+		0.f);
+
+	m_fSkillCoolTime[ENUM_CLASS(SKILL::LEVIOSO)] = m_fMaxSkillCoolTime[ENUM_CLASS(SKILL::LEVIOSO)];
 }
 
 HRESULT CHuman_Duelist::Behavior_SpellExitCheck()
 {
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -84,10 +166,26 @@ void CHuman_Duelist::Behavior_SpellExit()
 void CHuman_Duelist::Behavior_ShieldEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::SHIELD);
+
+	pair<_uint, _bool> pairAnimInfo;
+	pairAnimInfo = m_Animation[STATEANIM::SKILL];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
+		0.1f);
+
+	m_fSkillCoolTime[ENUM_CLASS(SKILL::PROTEGO)] = m_fMaxSkillCoolTime[ENUM_CLASS(SKILL::PROTEGO)];
 }
 
 HRESULT CHuman_Duelist::Behavior_ShieldExitCheck()
 {
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -110,7 +208,6 @@ void CHuman_Duelist::Behavior_HitExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::HIT);
 }
-
 
 void CHuman_Duelist::Add_FSM()
 {

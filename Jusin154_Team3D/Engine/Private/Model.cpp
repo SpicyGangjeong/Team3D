@@ -1578,19 +1578,19 @@ void CModel::Initialize_BoneMasks()
 	BuildMask(m_iBoneIndex[ENUM_CLASS(BLEND_BONE::NECK)], m_BoneMask[ENUM_CLASS(BLEND_BONE::NECK)]);
 	BuildMask(m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)], m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)]);
 
-	if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)] != -1)
-	{
-		for (_uint i = 0; i < (_uint)m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)].size(); i++)
-		{
-			if (m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)][i] == 1)
-			{
-				if (i == m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)])
-					continue;
-				m_iSkipBoneCount++;
-				m_SkipBoneindex.push_back(i);
-			}
-		}
-	}
+	//if (m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)] != -1)
+	//{
+	//	for (_uint i = 0; i < (_uint)m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)].size(); i++)
+	//	{
+	//		if (m_BoneMask[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)][i] == 1)
+	//		{
+	//			if (i == m_iBoneIndex[ENUM_CLASS(BLEND_BONE::HIPS_CLOTH)])
+	//				continue;
+	//			m_iSkipBoneCount++;
+	//			m_SkipBoneindex.push_back(i);
+	//		}
+	//	}
+	//}
 
 	for (_uint i = 0; i < m_Bones.size(); i++)
 	{
@@ -1600,6 +1600,19 @@ void CModel::Initialize_BoneMasks()
 		m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_R)][i] =
 			m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_R)][i] | m_BoneMask[ENUM_CLASS(BLEND_BONE::NECK)][i];
 	}
+
+
+		for (_uint i = 0; i < (_uint)m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L)].size(); i++)
+		{
+			if (m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L)][i] == 1)
+			{
+				//if (i == m_iBoneIndex[ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L)])
+				//	continue;
+				m_iSkipBoneCount++;
+				m_SkipBoneindex.push_back(i);
+			}
+		}
+	
 }
 
 HRESULT CModel::Create_ComputeShader()
@@ -1997,7 +2010,7 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->HeadAimWeight = m_fHeadAimWeight;
 
 		pDesc->SkipCount = m_iSkipBoneCount;
-		pDesc->padding0 = 0;
+		pDesc->IsSkip = m_IsSkip;
 		pDesc->padding1 = 0;
 		pDesc->padding2 = 0;
 
