@@ -101,13 +101,13 @@ HRESULT CLoading_Panel::Ready_Components(void* pArg)
 
 HRESULT CLoading_Panel::Ready_Element(void* pArg)
 {
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget**>(&m_pLoadingWidget))))
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget**>(&m_pLoadingWidget))))
 	//{
 	//	return E_FAIL;
 	//}
 	//Add_Element(TEXT("LoadingWidget"), m_pLoadingWidget);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget_Flame>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget_Flame**>(&m_pLoadingWidget_Flame))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget_Flame>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget_Flame**>(&m_pLoadingWidget_Flame))))
 	{
 		return E_FAIL;
 	}

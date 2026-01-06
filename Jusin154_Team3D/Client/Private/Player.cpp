@@ -54,6 +54,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 #if 진우
 	m_isDebugMode = true; // 디버그 무적 모드
 #endif
+#if 나
+	m_isDebugMode = true; // 디버그 무적 모드
+#endif
 
 #endif // _DEBUG
 
@@ -153,6 +156,14 @@ void CPlayer::Update(_float fTimeDelta)
 	}
 
 	CheckMouseInput();
+
+	if (m_pGameInstance->Key_Down(DIK_F))
+	{
+		if (m_bNpcInteraction == true)
+		{
+			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bNpcInteraction);
+		}
+	}
 
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
@@ -330,9 +341,11 @@ HRESULT CPlayer::Update_RaycastElements()
 
 				Info.pOwner = pFoundNPC;
 				Info.pNPCName = static_cast<CUnit*>(pFoundNPC)->Get_Name();
+				Info.pName = static_cast<CUnit*>(pFoundNPC)->Get_NpcName();
 				_float4 Pos{};
 				XMStoreFloat4(&Pos, static_cast<CUnit*>(pFoundNPC)->Get_WorldPostion());
-				Info.pNPCPosition = Pos;
+				Info.fNPCPosition = Pos;
+				Info.iTextID = static_cast<CUnit*>(pFoundNPC)->Get_TextID();
 				m_bNpcInteraction = true;
 				m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOn"), &Info);
 			}

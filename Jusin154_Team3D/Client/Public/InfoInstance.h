@@ -86,7 +86,8 @@ public:
 	_int Get_SpellLearnIndex();
 #pragma endregion
 #pragma region Dialogue_Font
-	void Set_Font(void* pArg);
+	//void Set_Font(void* pArg);
+	const NPCDIALOGUEINFO& Get_Dialogue(_wstring NpcName) const;
 #pragma endregion
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
@@ -96,6 +97,8 @@ public:
 #pragma region BroomManager
 	void   Set_Broom_Timer(_float fTimer);
 	_float Get_Broom_Timer();
+	void   Set_Broom_Booster_Timer(_float fTimer);
+	_float Get_Broom_Booster_Timer();
 #pragma endregion
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
@@ -111,6 +114,7 @@ private:
 	class CDamage_Font*			m_pDamage_Font =  { nullptr };
 	class CSpellLearn_Data*		m_pSpellLearn_Data =  { nullptr };
 	class CDialogue_Font*		m_pDialogue_Font = { nullptr };
+	class CDialogue_Data*		m_pDialogue_Data = { nullptr };
 
 	_vector						m_pPlayerPos{};
 
@@ -118,6 +122,7 @@ private:
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 
 	_float						m_fBroom_Timer{};
+	_float						m_fBroom_Booster{};
 
 	_float						m_fDamage{};
 	UI_STATE					m_eUI_State = { UI_STATE::END };
