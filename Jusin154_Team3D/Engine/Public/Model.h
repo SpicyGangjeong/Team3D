@@ -162,6 +162,7 @@ public:
 	_bool SaveAssimpModel(const _char* filename);
 	_int SaveNodeRecursive(const aiNode* pAINode, vector<SaveNode>& outNodes, _int parentIndex);
 	//
+	_bool PickingMesh(_float3* pPosition, _float2* pUV, _uint iMeshIndex, _fmatrix WorldMatrix);
 #endif // EDITOR_PROJECT
 
 

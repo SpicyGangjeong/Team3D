@@ -64,9 +64,6 @@ void CAvadakedavra::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-
-
-
 }
 
 void CAvadakedavra::Late_Update(_float fTimeDelta)
@@ -90,7 +87,6 @@ void CAvadakedavra::Late_Update(_float fTimeDelta)
 
 		OnCollision(this, &CollisionInfo);
 	}
-
 }
 
 HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)

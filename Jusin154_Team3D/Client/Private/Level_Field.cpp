@@ -11,6 +11,9 @@
 #include "Terrain.h"
 #include "SkyBox.h"
 #include "Ranrok.h"
+#include "UI_Manager.h"
+
+
 CLevel_Field::CLevel_Field(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {

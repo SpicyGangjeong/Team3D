@@ -68,9 +68,9 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+	//	return E_FAIL;
+	//}
 
 	//if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
 	//	return E_FAIL;
@@ -92,7 +92,8 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+	//m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+	m_pGameInstance->Setting_Volumetirc(0.f, 0.003f, 0.56f, 1.f, 0.031f);
 
 	return S_OK;
 }
@@ -148,7 +149,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	CTerrain::TERRAIN_DESC Desc = {};
 
 	///* Hogsmeade */
-	Desc.isEdit = true;
+	Desc.isEdit = false;
 	Desc.iAlphaSizeX = 2048; 
 	Desc.iAlphaSizeY = 2048;
 	Desc.vPosition = _float3(-194, 18.5f, -153.f);
@@ -159,7 +160,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	/* Hogwart */
-	/*Desc.isEdit = false;
+	Desc.isEdit = false;
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2560;
 	Desc.strAlphaMapTag = "Hogwart_AlphaMap.bin";
@@ -167,7 +168,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	Desc.vPosition = _float3(-451.f, 18.5f, -791.f);
 	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	/* North_Hogwart */
 	//Desc.isEdit = false;
@@ -215,7 +216,6 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Lake_Desc)))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
@@ -225,46 +225,143 @@ HRESULT CLevel_MapViewer::Ready_Layer_Land(const _wstring& strLayerTag)
 
 	/* South_Hogwart_Land */
 	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
 	Land_Desc.vPosition = _float3(290.5f, 59.5f, -347.f);
 	Land_Desc.vScale = _float3(1.f, 1.25f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_South_Hogwart_Land_LOD1";
+	Land_Desc.strAlphaMapTag = "Land_HN_BC_AlphaMap.bin";
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
 		return E_FAIL;
 
 	/* North_Hogwart_Land */
 	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
 	Land_Desc.vPosition = _float3(-370.f, -37.5f, -21.4f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart_Land_LOD1";
-
+	Land_Desc.strAlphaMapTag = "Land_HN_AV_AlphaMap.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
 		return E_FAIL;
 
 	/* North_Hogwart2_Land */
 	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
 	Land_Desc.vPosition = _float3(-378.f, -17.5f, 285.6f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart2_Land_LOD1";
-
+	Land_Desc.strAlphaMapTag = "Land_HN_AU_AlphaMap.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
 		return E_FAIL;
 
 	/* West_Hogwart_Land */
 	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
 	Land_Desc.vPosition = _float3(-653.f, 20.f, -327.4f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_West_Hogwart_Land_LOD1";
-
+	Land_Desc.strAlphaMapTag = "Land_HN_AZ_AlphaMap.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
 		return E_FAIL;
 
 	/* East_Hogsmeade_Land */
 	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
 	Land_Desc.vPosition = _float3(436.f, 55.f, 60.3f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_East_Hogsmeade_Land_LOD1";
+	Land_Desc.strAlphaMapTag = "Land_HN_AY_AlphaMap.bin";
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
+		return E_FAIL;
+
+	/* HN_BA */
+	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(-606.f, 70.f, -647.7f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BA";
+	Land_Desc.strAlphaMapTag = "Land_HN_BA_AlphaMap.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Land_Desc)))
+		return E_FAIL;
+
+	/* HN_BD */
+	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(201.4f, -22.9f, -650.1f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BD";
+	Land_Desc.strAlphaMapTag = "Land_HN_BD_AlphaMap.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
+		return E_FAIL;
+
+	/* HN_BG */
+	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(-377.8f, 5.f, -1038.49f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BG";
+	Land_Desc.strAlphaMapTag = "Land_HN_BG_AlphaMap.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
+		return E_FAIL;
+
+	/* HN_BH */
+	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(80.1f, -63.f, -908.3f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BH";
+	Land_Desc.strAlphaMapTag = "Land_HN_BH_AlphaMap.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
+		return E_FAIL;
+
+	/* HN_BE */
+	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(431.2f, 100.1f, -658.3f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BE";
+	Land_Desc.strAlphaMapTag = "Land_HN_BE_AlphaMap.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
+		return E_FAIL;
+
+	/* HN_BF */
+	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(-688.9f, 170.7f, -1066.f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BF";
+	Land_Desc.strAlphaMapTag = "Land_HN_BF_AlphaMap.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
+		return E_FAIL;
+
+	/* HN_BI */
+	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(82.7f, -61.f, -1141.6f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BI";
+	Land_Desc.strAlphaMapTag = "Land_HN_BI_AlphaMap.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
+		return E_FAIL;
+
+	/* HN_BJ */
+	Land_Desc.bEdit = false;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(367.1f, 44.8f, -1016.f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BJ";
+	Land_Desc.strAlphaMapTag = "Land_HN_BJ_AlphaMap.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
+		return E_FAIL;
+
+	/* TU_BB */
+	Land_Desc.bEdit = true;
+	Land_Desc.isLoadAlphaMap = true;
+	Land_Desc.vPosition = _float3(-829.5f, 58.3f, 112.9f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_Land_TU_BB";
+	Land_Desc.strAlphaMapTag = "Land_TU_BB_AlphaMap.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Land_Desc)))
 		return E_FAIL;
 

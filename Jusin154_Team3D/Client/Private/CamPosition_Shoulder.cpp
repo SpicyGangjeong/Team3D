@@ -332,6 +332,11 @@ void CCamPosition_Shoulder::Set_CameraShake(_float fXShock, _float fYShock)
 	m_vAccRealDegrees.x = fXShock;
 	m_vAccRealDegrees.y = fYShock;
 }
+void CCamPosition_Shoulder::Set_CameraAnim(_uint iIndex)
+{
+	m_bPlayAnim = true;
+	m_pModelCom->Set_AnimationIndex(iIndex,false);
+}
 _vector CCamPosition_Shoulder::Get_ShoulderGlobalPos()
 {
 	// Right/Left 숄더를 로컬 X 부호로 결정

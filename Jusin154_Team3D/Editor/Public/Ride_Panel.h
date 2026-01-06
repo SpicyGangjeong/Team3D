@@ -32,8 +32,8 @@ private:
 	CGameObject* m_pRide_Info_Key = { nullptr };
 	CGameObject* m_pRide_InfoBG = { nullptr };
 	CGameObject* m_pRide_Info = { nullptr };
-	CGameObject* m_pRide_Bbooster_Slot = { nullptr };
-	CGameObject* m_pRide_BboosterBar = { nullptr };
+	CGameObject* m_pRide_Booster_Slot = { nullptr };
+	CGameObject* m_pRide_BoosterBar = { nullptr };
 	CGameObject* m_pRide_HpBar = { nullptr };
 	CGameObject* m_pRide_HpSlot = { nullptr };
 public:

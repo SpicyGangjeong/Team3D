@@ -30,16 +30,24 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-private:
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+public:
+	void Booster(_bool bBooster);
+	void Set_Gauge();
 
-	CGameObject* m_pRide_Info_Key = { nullptr };
-	CGameObject* m_pRide_InfoBG = { nullptr };
-	CGameObject* m_pRide_Info = { nullptr };
-	CGameObject* m_pRide_Bbooster_Slot = { nullptr };
-	CGameObject* m_pRide_BboosterBar = { nullptr };
-	CGameObject* m_pRide_HpBar = { nullptr };
-	CGameObject* m_pRide_HpSlot = { nullptr };
+private:
+	CInfoInstance*		m_pInfoInstance = { nullptr };
+	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
+	CGameObject*		m_pRide_Info_Key = { nullptr };
+	CGameObject*		m_pRide_InfoBG = { nullptr };
+	CGameObject*		m_pRide_Info = { nullptr };
+	CGameObject*		m_pRide_Booster_Slot = { nullptr };
+	CGameObject*		m_pRide_BoosterBar = { nullptr };
+	CGameObject*		m_pRide_HpBar = { nullptr };
+	CGameObject*		m_pRide_HpSlot = { nullptr };
+
+	_bool				m_bBooster = { false };
+	_float				m_fBoosterTimer{};
+
 public:
 	static CRide_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

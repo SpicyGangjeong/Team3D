@@ -139,8 +139,8 @@
 #include "Ride_Info_Key.h"
 #include "Ride_Info.h"
 #include "Ride_InfoBG.h"
-#include "Ride_Bbooster_Slot.h"
-#include "Ride_BboosterBar.h"
+#include "Ride_Booster_Slot.h"
+#include "Ride_BoosterBar.h"
 #include "Ride_HpBar.h"
 #include "Ride_HpSlot.h"
 
@@ -1241,11 +1241,11 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Bbooster_Slot>(g_iStaticLevel, CRide_Bbooster_Slot::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Booster_Slot>(g_iStaticLevel, CRide_Booster_Slot::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CRide_BboosterBar>(g_iStaticLevel, CRide_BboosterBar::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_BoosterBar>(g_iStaticLevel, CRide_BoosterBar::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -1740,7 +1740,7 @@ HRESULT CLoader::Loading_For_Effect()
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Models/Lake/SkyCube.dds"), 0)))) {
 		return E_FAIL;
 	}
-
+	
 #pragma region DUNGEON_MAP
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
@@ -2687,15 +2687,23 @@ HRESULT CLoader::Loading_For_MapViewer()
 			TEXT("../Bin/Resources/Models/Lake/T_Caustics_D.dds"), 0)))) {
 		return E_FAIL;
 	}
+
 	/* For.Prototype_Component_T_Water_N */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("T_Water_N"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
 			TEXT("../Bin/Resources/Models/Lake/T_Water_N.dds"), 0)))) {
 		return E_FAIL;
 	}
+
 	/* Lake_Cube_D */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Lake_Cube_D"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Models/Lake/SkyCube.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	/* Lake_Cube_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Sky_Cube"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Sky/T_Sky_Stars.dds"), 0)))) {
 		return E_FAIL;
 	}
 
@@ -2748,6 +2756,54 @@ HRESULT CLoader::Loading_For_MapViewer()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Land_HN_BA */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BA"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BALOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Land_HN_BD */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BD"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BDLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Land_HN_BG */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BG"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BGLOD/SM_LandscapeStreamingProxy_1_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Land_HN_BH */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BH"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BHLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+
+	/* For.Prototype_Component_Land_HN_BE */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BE"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BELOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+		
+	/* For.Prototype_Component_Land_HN_BF */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BF"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BFLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Land_HN_BI */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BI"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BILOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Land_HN_BJ */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BJ"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BJLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Land_TU_BB */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_TU_BB"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/TU_BBLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	
 
 	/* For.Prototype_Component_Hogwart_Lake */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogwart_Lake"),
@@ -2967,7 +3023,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 #pragma endregion
 
-_bool bLoadHogsmeade = true;
+_bool bLoadHogsmeade = false;
 	if (bLoadHogsmeade)
 	{
 #pragma region HOGSMEADE_OBJECT
@@ -3053,7 +3109,7 @@ _bool bLoadHogsmeade = true;
 	}
 
 #pragma region HOGWART
-_bool bHogwartLoad = { false };
+_bool bHogwartLoad = { true };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
@@ -3357,7 +3413,7 @@ vector<future<void>> jobFutures;
 _uint iLoadCount = 44;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { true };
+_bool isLoad_Map = { false };
 if(isLoad_Map)
 {
 	{ /* Terrain */

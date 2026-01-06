@@ -10,6 +10,7 @@ CLand::CLand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CLand::CLand(const CLand& rhs)
 	: CGameObject(rhs)
+	, m_fUsingSurfaceParams(rhs.m_fUsingSurfaceParams)
 {
 }
 
@@ -33,8 +34,8 @@ HRESULT CLand::Render()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom)))
-		return E_FAIL;
+	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom)))
+	//	return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::LAND)))) {
 		return E_FAIL;
@@ -71,6 +72,8 @@ HRESULT CLand::Render_Shadow(SHADOW eType)
 
 HRESULT CLand::Initialize_Prototype()
 {
+	m_fUsingSurfaceParams = MRO_PARAMETER;
+
 	return S_OK;
 }
 
@@ -108,6 +111,26 @@ HRESULT CLand::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Diffuse"), reinterpret_cast<CComponent**>(&m_pDiffuseTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Normal"), reinterpret_cast<CComponent**>(&m_pNormalTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_MRO"), reinterpret_cast<CComponent**>(&m_pMROTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, pDesc->strAlphaMapTag, reinterpret_cast<CComponent**>(&m_pMaskTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -128,6 +151,22 @@ HRESULT CLand::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pDiffuseTextureCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTextures", 0, m_pDiffuseTextureCom->Get_Size()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pNormalTextureCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTextures", 0, m_pNormalTextureCom->Get_Size()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pMROTextureCom->Bind_ShaderResources(m_pShaderCom, "g_SurfaceParamsTextures", 0, m_pMROTextureCom->Get_Size()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_SRV("g_MaskTexture", m_pMaskTextureCom->Get_SRV(0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -160,6 +199,11 @@ CGameObject* CLand::Clone(void* pArg, CGameObject* pOwner)
 void CLand::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pDiffuseTextureCom);
+	SAFE_RELEASE(m_pNormalTextureCom);
+	SAFE_RELEASE(m_pMROTextureCom);
+	SAFE_RELEASE(m_pMaskTextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);

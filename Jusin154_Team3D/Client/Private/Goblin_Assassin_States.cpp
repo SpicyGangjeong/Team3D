@@ -241,8 +241,30 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::SLASH);
 
+	_float fDisAmount = {1.f};
+
+	if (m_fTargetDistance <= 4.f)
+	{
+		fDisAmount = 1.f;
+	}
+	else if (m_fTargetDistance <= 7.f)
+	{
+		fDisAmount = 1.5f;
+	}
+	else if (m_fTargetDistance <= 10.f)
+	{
+		fDisAmount = 2.f;
+	}
+	else if (m_fTargetDistance <= 13.f)
+	{
+		fDisAmount = 2.5f;
+	}
+	else if (m_fTargetDistance <= 16.f)
+	{
+		fDisAmount = 3.f;
+	}
 	pairAnimInfo = m_Animation[STATEANIM::SLASH];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.5f,false,1.3f);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, fDisAmount,false,1.3f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -304,23 +326,20 @@ void CGoblin_Assassin::Behavior_DashEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.f,false);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::DASH)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::DASH)];
 
-	_float2 Dir8[5] =
+	_float2 Dir8[8] =
 	{
 		{  0,  1 }, {  1,  1 }, {  1,  0 },
-	    { -1,  0 }, { -1,  1 },
+	    { -1,  0 }, { -1,  1 }, {  0, -1 },
+		{  1, -1 }, { -1, -1 }
 	};
 
-	_int iIndex = m_pGameInstance->Real_Random_Int(0, 4);
+	_int iIndex = m_pGameInstance->Real_Random_Int(0, 7);
 	_float2 dir = Dir8[iIndex];
 
 	_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
 	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
 
-	_vector vDash =
-		XMVector3Normalize(
-			vRight * dir.x +
-			vLook * dir.y
-		);
+	_vector vDash = XMVector3Normalize(vRight * dir.x + vLook * dir.y);
 
 	XMStoreFloat4(&m_vDashDir, vDash);
 }

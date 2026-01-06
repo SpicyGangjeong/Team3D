@@ -117,8 +117,14 @@ HRESULT CTroll::Behavior_IdleBreakExitCheck()
 	if (m_fTargetDistance >= 6.f)
 	{
 		if (m_pModelCom->IsFinishedAnim()) {
-			m_pFSM->Change_State(FSMSTATE::MOVE);
-			return E_FAIL;
+			if (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::RUSH)] == 0.f) {
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
+				return E_FAIL;
+			}
+			else {
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
 		}
 	}
 	else {
@@ -143,7 +149,7 @@ void CTroll::Behavior_MoveEnter()
 
 	m_pFSM->Enable_State(FSMSTATE::JOG);
 	pairAnimInfo = m_Animation[STATEANIM::JOG_START];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.2f);
 
 }
 
@@ -161,13 +167,20 @@ HRESULT CTroll::Behavior_MoveExitCheck(_float fTimeDelta)
 		if (fRatio >= 0.9f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.2f);
 		}
 	}
 
-	if (m_fTargetDistance <= 18.f && m_fTargetDistance >= 14.f) {
-		m_pFSM->Change_State(FSMSTATE::COMBAT);
-		return E_FAIL;
+	if (m_fTargetDistance <= 6.f) {
+
+		for (_uint i = 0; i < ENUM_CLASS(TROLL_SKILL::END); i++)
+		{
+			if (m_fSkillCoolTime[i] == 0.f)
+			{
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
+				return E_FAIL;
+			}
+		}
 	}
 
 
@@ -179,7 +192,7 @@ HRESULT CTroll::Behavior_MoveExitCheck(_float fTimeDelta)
 		{
 			m_bLookAt = true;
 			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.2f);
 		}
 
 		return S_OK;
@@ -207,13 +220,13 @@ HRESULT CTroll::Behavior_MoveExitCheck(_float fTimeDelta)
 			_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 			if (fRatio >= 0.9f) {
 				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.2f);
 			}
 		}
 		else if (iCurrAnimIndex != m_Animation[STATEANIM::JOG_FWD].first)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::JOG_START];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.2f);
 		}
 
 		return S_OK;
@@ -520,7 +533,7 @@ void CTroll::Behavior_SlamEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
 		}, 0.3f);
 
-	Set_Easing(pairAnimInfo.first, 0.1f, 0.42f, 1.8f);
+	Set_Easing(pairAnimInfo.first, 0.2f, 0.42f, 1.5f);
 
 	Set_Easing(pairAnimInfo.first, 0.42f, 0.45f, 0.5f);
 
@@ -647,11 +660,12 @@ void CTroll::Behavior_HitEnter()
 	m_bLookAt = false;
 	if (iCurrAnimIndex == m_Animation[STATEANIM::SLAM].first)
 	{
-		if (fRatio >= 0.75f) {
+		if (fRatio <= 0.75f) {
 			pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
 			Add_Event(pairAnimInfo.first,
 				[this]() {CameraShake(10.f, 2.f, 3.f, 0.3f); },
 				0.1f);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 	}
 	else {
@@ -668,8 +682,9 @@ void CTroll::Behavior_HitEnter()
 			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD3];
 			break;
 		}
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 }
 
 HRESULT CTroll::Behavior_HitExitCheck()

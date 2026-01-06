@@ -223,8 +223,8 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
-    <ClInclude Include="..\public\Ride_BboosterBar.h" />
-    <ClInclude Include="..\public\Ride_Bbooster_Slot.h" />
+    <ClInclude Include="..\public\Ride_BoosterBar.h" />
+    <ClInclude Include="..\public\Ride_Booster_Slot.h" />
     <ClInclude Include="..\public\Ride_HpBar.h" />
     <ClInclude Include="..\public\Ride_HpSlot.h" />
     <ClInclude Include="..\public\Ride_Info.h" />
@@ -500,8 +500,8 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\Ranrok_States.cpp" />
-    <ClCompile Include="..\private\Ride_BboosterBar.cpp" />
-    <ClCompile Include="..\private\Ride_Bbooster_Slot.cpp" />
+    <ClCompile Include="..\private\Ride_BoosterBar.cpp" />
+    <ClCompile Include="..\private\Ride_Booster_Slot.cpp" />
     <ClCompile Include="..\private\Ride_HpBar.cpp" />
     <ClCompile Include="..\private\Ride_HpSlot.cpp" />
     <ClCompile Include="..\private\Ride_Info.cpp" />

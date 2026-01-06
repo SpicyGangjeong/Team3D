@@ -1,17 +1,16 @@
 ﻿<StatInfo>
-	<OLLIVENDER ID="0" Name="올리벤더" TAG="1" SizeX="256"/>
-	<SATYAVATI ID="1" Name="사티아바티" TAG="1" SizeX="256"/>
-	<MATILDAWEASELY ID="2" Name="마틸다 위즐리" TAG="1" SizeX="256"/>
-	<ELEAZARFIG ID="3" Name="엘리아자르 피그" TAG="1" SizeX="256"/>
-	<ELF ID="4" Name="도비" TAG="1" SizeX="256"/>
-	<PEEVES ID="5" Name="피브스" TAG="1" SizeX="256"/>
-	<PHINEASBLACK ID="6" Name="피니어스 블랙" TAG="1" SizeX="256"/>
-	<F_STUDENT ID="7" Name="아우렐리아 로즈" TAG="1" SizeX="256"/>
-	<M_STUDENT ID="8" Name="테오도어 그레이브스" TAG="1" SizeX="256"/>
-	<BAIHOWIN ID="9" Name="바이호윈" TAG="1" SizeX="256"/>
-	<GEORGEOSRIC ID="10" Name="조지오스릭" TAG="1" SizeX="256"/>
-	<DINAHHECAT ID="11" Name="디나 헤카트" TAG="1" SizeX="256"/>
-	<MUDIWAONAI ID="12" Name="무디아 오나이" TAG="1" SizeX="256"/>
-	<KITCHENFEMALE ID="13" Name="주방 도비" TAG="1" SizeX="256"/>
+	<OLLIVENDER ID="0" Name="올리벤더" NpcName="OLLIVENDER" TAG="1" SizeX="256"/>
+	<SATYAVATI ID="1" Name="사티아바티" NpcName="SATYAVATI" TAG="1" SizeX="256"/>
+	<MATILDAWEASELY ID="2" Name="마틸다 위즐리" NpcName="MATILDAWEASELY" TAG="1" SizeX="256"/>
+	<ELEAZARFIG ID="3" Name="엘리아자르 피그" NpcName="ELEAZARFIG" TAG="1" SizeX="256"/>
+	<ELF ID="4" Name="도비" NpcName="ELF" TAG="1" SizeX="256"/>
+	<PEEVES ID="5" Name="피브스" NpcName="PEEVES" TAG="1" SizeX="256"/>
+	<PHINEASBLACK ID="6" Name="피니어스 블랙" NpcName="PHINEASBLACK" TAG="1" SizeX="256"/>
+	<F_STUDENT ID="7" Name="아우렐리아 로즈" NpcName="F_STUDENT" TAG="1" SizeX="256"/>
+	<M_STUDENT ID="8" Name="테오도어 그레이브스" NpcName="M_STUDENT" TAG="1" SizeX="256"/>
+	<BAIHOWIN ID="9" Name="바이호윈" NpcName="BAIHOWIN" TAG="1" SizeX="256"/>
+	<GEORGEOSRIC ID="10" Name="조지오스릭" NpcName="GEORGEOSRIC" TAG="1" SizeX="256"/>
+	<DINAHHECAT ID="11" Name="디나 헤카트" NpcName="DINAHHECAT" TAG="1" SizeX="256"/>
+	<MUDIWAONAI ID="12" Name="무디아 오나이" NpcName="MUDIWAONAI" TAG="1" SizeX="256"/>
+	<KITCHENFEMALE ID="13" Name="주방 도비" NpcName="KITCHENFEMALE" TAG="1" SizeX="256"/>
 </StatInfo>
- 
