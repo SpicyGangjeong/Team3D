@@ -15,11 +15,11 @@ public:
 
 	struct PendingEvent
 	{
-		_float				fRatio = 0.f;
-		_uint				AnimIndex = 0;
-		function<void()>	Callback;
-		_bool				bKeep = { false };
-		_float				PrevRatio = {};
+		_float               fRatio = 0.f;
+		_uint                AnimIndex = 0;
+		function<void()>     Callback;
+		_bool                bKeep = { false };
+		_float               PrevRatio = {};
 	};
 protected:
 	CUnit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -54,6 +54,8 @@ public:
 
 	virtual _bool Get_Npc() { return m_bNpc; }
 	virtual _wstring Get_Name();
+	virtual _wstring Get_NpcName();
+	virtual _int Get_TextID();
 #pragma endregion
 
 protected:

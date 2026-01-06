@@ -6,6 +6,7 @@
 #include "Wand.h"
 #include "Player.h"
 #include "InfoInstance.h"
+#include "Ranrok.h"
 
 CRanrok_Breath::CRanrok_Breath(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -48,11 +49,13 @@ HRESULT CRanrok_Breath::Initialize(void* pArg)
 	m_pBreath_Black = Get_PartObject<CEffectParts>("Breath_Black");
 	m_pBreathSlog = Get_PartObject<CEffectParts>("BreathSlog");
 	m_pMouthFire = Get_PartObject<CEffectParts>("MouthFire");
+	m_pLand_Decal = Get_PartObject<CEffectParts>("Land_Decal");
 
 	SAFE_ADDREF(m_pBreath);
 	SAFE_ADDREF(m_pBreath_Black);
 	SAFE_ADDREF(m_pBreathSlog);
 	SAFE_ADDREF(m_pMouthFire);
+	SAFE_ADDREF(m_pLand_Decal);
 
 	m_fDuration = 5.f;
 
@@ -130,9 +133,9 @@ HRESULT CRanrok_Breath::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	/* 브레스 시간 제어 */
 
-	_float fBreathTime = *static_cast<_float*>(pArg);
+	BREATH_INFO BreathDesc = *static_cast<BREATH_INFO*>(pArg);
 
-	Set_BreathTime(fBreathTime);
+	Set_BreathTime(BreathDesc.fTime);
 
 	/* 초기 객체 비지블*/
 
@@ -146,7 +149,7 @@ HRESULT CRanrok_Breath::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	/* 초기 객체 위치 초기화*/
 
-	 _matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("jaw"));
+	_matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("tongue_01"));
 
 	for (int i = 0; i < 3; ++i) {
 		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);
@@ -180,6 +183,33 @@ HRESULT CRanrok_Breath::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_isParticleEnd = false;
 	m_isStartRayCast = false;
+
+
+
+	/* 바닥 페이즈 일때*/
+
+	if (static_cast<CRanrok::RANROK_PHASE>(BreathDesc.iPase) == CRanrok::RANROK_PHASE::PHASE_GROUND)
+	{
+		m_pLand_Decal->Set_Visible(true);
+
+		_vector vOwnerPos = m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position();
+		CUnit* pPlayer = m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first;
+
+		if (pPlayer == nullptr)
+			return E_FAIL;
+
+		_vector vPlayer_FootPos = pPlayer->Get_Component<CCharacter_Controller>()->Get_FootPosition();
+
+		XMStoreFloat4(&m_vTargetPos, vPlayer_FootPos);
+
+		_vector vCompute_Pos = XMVectorSetY(vOwnerPos, XMVectorGetY(vPlayer_FootPos));
+
+		m_pLand_Decal->Get_Component<CTransform>()->Set_State(STATE::POSITION, vCompute_Pos);
+
+		m_pLand_Decal->Get_Component<CInstance_Model>()->Set_Loop(true);
+
+	}
+
 	return S_OK;
 }
 
@@ -254,6 +284,7 @@ void CRanrok_Breath::OnCollision(CGameObject* pOther, void* pDesc)
 
 	pSplatterBottom0->Set_Visible(true);
 	pSplatterBottom0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + vDir * 3.f);
+	m_pLand_Decal->Get_Component<CInstance_Model>()->Set_Loop(false);
 
 	XMStoreFloat4(&m_vPreCollisionPos, vPos);
 }
@@ -304,7 +335,7 @@ void CRanrok_Breath::Free()
 	SAFE_RELEASE(m_pBreath_Black);
 	SAFE_RELEASE(m_pBreathSlog);
 	SAFE_RELEASE(m_pMouthFire);
-
+	SAFE_RELEASE(m_pLand_Decal);
 	//SAFE_RELEASE(m_pFireBall_Tail);
 }
 #ifdef _DEBUG

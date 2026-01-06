@@ -113,6 +113,16 @@ _wstring CUnit::Get_Name()
     return _wstring();
 }
 
+_wstring CUnit::Get_NpcName()
+{
+    return _wstring();
+}
+
+_int CUnit::Get_TextID()
+{
+    return _int();
+}
+
 HRESULT CUnit::Ready_Components(void *pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
@@ -129,16 +139,16 @@ HRESULT CUnit::Ready_Components(void *pArg)
 
 void CUnit::Play_Event()
 {
-	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
-	{
-		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
-		_uint curAnim = m_pModelCom->Get_AnimIndex();
+    for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
+    {
+        _float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+        _uint curAnim = m_pModelCom->Get_AnimIndex();
 
         _float prevRatio = iter->PrevRatio;
 
         if (curAnim == iter->AnimIndex)
         {
-            if (prevRatio < iter->fRatio && ratio >= iter->fRatio)
+            if (prevRatio <= iter->fRatio && ratio >= iter->fRatio)
             {
                 iter->Callback();
 
@@ -156,8 +166,8 @@ void CUnit::Play_Event()
             iter->PrevRatio = 0.f;
         }
 
-		++iter;
-	}
+        ++iter;
+    }
 }
 
 void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,_bool bKeep)

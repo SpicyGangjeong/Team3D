@@ -399,10 +399,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.75f);
+			0.15f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.95f);
+			0.5f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
@@ -415,10 +415,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.75f);
+			0.15f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.95f);
+			0.5f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
@@ -432,10 +432,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.75f);
+			0.15f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.95f);
+			0.5f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
@@ -659,6 +659,9 @@ HRESULT CRanrok::Render_Nonblend()
 		}
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
+		}
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->End_OutLine_Write();
 		}
 	}
 

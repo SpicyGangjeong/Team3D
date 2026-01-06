@@ -40,8 +40,12 @@ private:
 	const _float4x4* m_pSocketMatrix			= { nullptr };
 	const _float4x4* m_pLeftFootLocalMatrix		= { nullptr };
 	const _float4x4* m_pLeftLegLocalMatrix		= { nullptr };
+	const _float4x4* m_pLeftLegUpLocalMatrix	= { nullptr };
 	const _float4x4* m_pRightFootLocalMatrix	= { nullptr };
 	const _float4x4* m_pRightLegLocalMatrix		= { nullptr };
+	const _float4x4* m_pRightLegUpLocalMatrix	= { nullptr };
+	const _float4x4* m_pLower0BoundMatrix		= { nullptr };
+	const _float4x4* m_pLower1BoundMatrix		= { nullptr };
 	const _float4x4* m_RobeJointAnchorMatrices[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
 	vector<_float4x4> m_ReconstructedJointAnchorMatirces = { };
 	//_float4x4 m_ReconstructedJointAnchorMatirces[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { };
@@ -50,12 +54,17 @@ private:
 	_int				m_iBoneNum = -1;
 	CRigidBody_Dynamic* m_pRightLeg = { nullptr };
 	CRigidBody_Dynamic* m_pLeftLeg = { nullptr };
+	CRigidBody_Dynamic* m_pLeftThigh = { nullptr };
+	CRigidBody_Dynamic* m_pRightThigh = { nullptr };
 	CRigidBody_Dynamic* m_pLower0Bound = { nullptr };
 	CRigidBody_Dynamic* m_pLower1Bound = { nullptr };
 	CRigidBody_Dynamic* m_pRobeMainAnchor = { nullptr };
-	CRigidBody_Dynamic* m_pRobeJointRoute[ENUM_CLASS(PLAYER_JOINT_ROUTE_ORDER::END)] = { nullptr };
+
+	CRigidBody_Dynamic* m_pRobeVerticalJointRoute[ENUM_CLASS(PLAYER_ROUTE_VERTICAL_ORDER::END)] = { nullptr };
+	CRigidBody_Dynamic* m_pRobeFixedJointRoute[ENUM_CLASS(PLAYER_ROUTE_HORIZONTAL_ORDER::END)] = { nullptr };
 	CRigidBody_Dynamic* m_pRobeJointAnchor[ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END)] = { nullptr };
 	PSX::PxD6Joint*		m_pDynamicJoints[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { nullptr };
+	PSX::PxFixedJoint*	m_pFixedJoints[ENUM_CLASS(PLAYER_JOINT_HORIZONTAL_ORDER::END)] = { nullptr };
 	D6JOINTDESC			m_JointDescriptions[ENUM_CLASS(PLAYER_JOINT_ORDER::END)] = { };
 	
 	vector<_float4x4>	m_PrevRobeBoneMatrices = { };
@@ -65,6 +74,9 @@ private:
 	ID3D11DepthStencilState* m_pDepthStencilStateNone = { nullptr };
 	_float4x4 m_LeftLegMatrix = {};
 	_float4x4 m_RightLegMatrix = {};
+	_float4x4 m_LeftThighMatrix = {};
+	_float4x4 m_RightThighMatrix = {};
+	_bool	m_bRenderDebug = { true };
 #endif // _DEBUG
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -73,11 +85,11 @@ private:
 	HRESULT Bind_ShaderResources() { return S_OK; }
 
 	HRESULT Update_LegsPosition();
+	HRESULT Helper_RouteJointGenerater(PHYSX_JOINT eType, CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld);
 	HRESULT Update_RobeJoints();
-	HRESULT Helper_RouteJointGenerater(CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC& Desc_Body, ROUTE_DESC& Desc_Route, _matrix* xmAnchorMatricesWorld);
 #ifdef _DEBUG
 	HRESULT Render_BonePhysX();
-	HRESULT Render_Legs();
+	HRESULT Render_Legs(_fmatrix LowerMatrix);
 #endif // _DEBUG
 public:
 	static CPlayerRobe* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

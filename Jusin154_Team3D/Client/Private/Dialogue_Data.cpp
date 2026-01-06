@@ -11,7 +11,7 @@ CDialogue_Data::CDialogue_Data()
 
 HRESULT CDialogue_Data::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
-	Load_SpellInfo("../Bin/Resources/Data/UI/Dialogue/Dialogue.xml");
+	Load_SpellInfo("../Bin/Resources/Data/Dialogue/Dialogue.xml");
 
 	return S_OK;
 }
@@ -33,6 +33,9 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
     while (pDialogue)
     {
         NpcDialogue npc{};
+        const char* NpcName = pDialogue->Attribute("NpcName");
+        if (pDialogue) npc.pNpcName = CMyTools::ToWstring(NpcName);
+
         pDialogue->QueryIntAttribute("NpcID", &npc.iNpcID);
 
         tinyxml2::XMLElement* pLine = pDialogue->FirstChildElement("Line");
@@ -68,19 +71,25 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
                 pChoice = pChoice->NextSiblingElement("Choice");
             }
 
-            npc.Info.push_back(line);
+            npc.Info.emplace(line.iLineID, line);
             pLine = pLine->NextSiblingElement("Line");
         }
 
-        m_DialogueInfo.push_back(npc);
+        m_DialogueInfo.emplace(npc.pNpcName, npc);
         pDialogue = pDialogue->NextSiblingElement("Dialogue");
     }
 	return S_OK;
 }
 
-const NPCDIALOGUEINFO& CDialogue_Data::Get_Info(_uint DialogueID) const
+const NPCDIALOGUEINFO& CDialogue_Data::Get_Info(_wstring NpcName) const
 {
-	return m_DialogueInfo[DialogueID];
+    auto iter = m_DialogueInfo.find(NpcName);
+    if (iter == m_DialogueInfo.end())
+    {
+        return Dummy;
+    }
+
+    return iter->second;
 }
 
 CDialogue_Data* CDialogue_Data::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -74,6 +74,7 @@ private:
 	CGameObject* m_pMagic_Item		= { nullptr };
 
 	vector<CGameObject*> m_Magic_Meters;
+	//vector<CGameObject*> m_pSlot;
 
 public:
 	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -90,7 +90,7 @@ HRESULT CQuest_Canvas::Ready_Components(void* pArg)
 
 HRESULT CQuest_Canvas::Ready_Panel(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CQuest_Panel**>(&m_pQuest_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CQuest_Panel**>(&m_pQuest_Panel))))
 	{
 		return E_FAIL;
 	}

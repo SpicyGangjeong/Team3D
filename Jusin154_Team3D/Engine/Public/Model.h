@@ -204,7 +204,7 @@ private:
 
 	_float						m_fRatio = {};
 	_int						m_iCurrSecondAnimIndex = { -1 };
-	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1,-1,-1 };
+	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,	-1,-1,-1,-1 };
 	vector<vector<_uint>>		m_BoneMask;
 	vector<_bool>				m_CPUBoneMask;
 

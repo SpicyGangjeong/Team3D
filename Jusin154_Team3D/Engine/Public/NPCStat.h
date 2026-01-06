@@ -10,6 +10,7 @@ class ENGINE_DLL CNPCStat final : public CComponent
 	{
 		_int			iID{};
 		_wstring		pNpc_Name;
+		_wstring		pName;
 		_int			iNpcType{};
 		_float			fFontPos{};
 	}NPCINFO;

@@ -153,8 +153,8 @@
 #include "Ride_Info_Key.h"
 #include "Ride_Info.h"
 #include "Ride_InfoBG.h"
-#include "Ride_Bbooster_Slot.h"
-#include "Ride_BboosterBar.h"
+#include "Ride_Booster_Slot.h"
+#include "Ride_BoosterBar.h"
 #include "Ride_HpBar.h"
 #include "Ride_HpSlot.h"
 
@@ -215,6 +215,9 @@
 #include "Ranrok_Pulse.h"
 #include "Ranrok_Hit.h"
 #include "Ranrok_Impact.h"
+#include "Ranrok_Land.h"
+#include "Ranrok_GroundPulse.h"
+#include "Ranrok_Rush_Bottom.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -406,7 +409,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
+	isLoad_NPC = false;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -2401,6 +2404,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Land>(g_iStaticLevel, CRanrok_Land::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_GroundPulse>(g_iStaticLevel, CRanrok_GroundPulse::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Rush_Bottom>(g_iStaticLevel, CRanrok_Rush_Bottom::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
@@ -2862,12 +2874,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	/* For.Prototype_GameObject_SpellLearn_Ride_Bbooster_Slot*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Bbooster_Slot>(g_iStaticLevel, CRide_Bbooster_Slot::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Booster_Slot>(g_iStaticLevel, CRide_Booster_Slot::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
 	/* For.Prototype_GameObject_SpellLearn_Ride_BboosterBar*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CRide_BboosterBar>(g_iStaticLevel, CRide_BboosterBar::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CRide_BoosterBar>(g_iStaticLevel, CRide_BoosterBar::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
