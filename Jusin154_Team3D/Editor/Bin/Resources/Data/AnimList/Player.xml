@@ -165,4 +165,7 @@
 	<Anim state="SPELL_LEARNING_SUCCESS" index="1292" loop="false"/>
 	<Anim state="SPELL_LEARNING_WANDWAVE" index="1293" loop="false"/>
 
+	<!-- CUT SCENE -->
+	<Anim state="CUTSCENE_TROLLINTRO" index="1294" loop="false"/>
+
 </Animations>

@@ -7,6 +7,7 @@
 #include "CamPosition_Socket.h"
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
+#include "State_CutScene.h"
 #include "Wand.h"
 #include "Item_Potion.h"
 #include "Character_Controller.h"
@@ -75,6 +76,7 @@ HRESULT CPlayer::InputAction()
 			|| m_pGameInstance->Key_Down(DIK_G)
 			|| m_pGameInstance->Key_Down(DIK_B)
 			|| m_pGameInstance->Key_Down(DIK_F)
+			|| m_pGameInstance->Key_Down(DIK_SCROLL)
 			)
 		{
 
@@ -237,6 +239,9 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		else if (m_pGameInstance->Key_Down(DIK_Z)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
+		else if (m_pGameInstance->Key_Down(DIK_SCROLL)) {
+			m_pFSM->Change_State(FSMSTATE::CUTSCENE);
+		}
 		else if (m_pGameInstance->Key_Down(DIK_N)) {
 			m_pInfoInstance->Change_Canvas();
 		}
@@ -348,6 +353,38 @@ void CPlayer::Behavior_IdleExit()
 	m_pFSM->Disable_State(FSMSTATE::IDLE | FSMSTATE::IDLE_TURN);
 	Reset_Event();
 	m_pModelCom->IsSkip(false);
+}
+
+void CPlayer::Behavior_CutSceneEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+	m_pFSM->Enable_State(FSMSTATE::CUTSCENE);
+	m_bSprintToggle = false;
+	m_bWalkToggle = false;
+
+	pairAnimInfo = m_Animation[STATEANIM::CUTSCENE_TROLLINTRO];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+}
+
+HRESULT CPlayer::Behavior_CutSceneExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo;
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		pairAnimInfo = m_Animation[STATEANIM::IDLE];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_CutSceneExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::CUTSCENE);
+	Reset_Event();
 }
 
 void CPlayer::Behavior_MoveEnter()
@@ -2828,6 +2865,14 @@ void CPlayer::Add_FSM()
 		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
 	}
 	{
+		CState_CutScene::STATE_CUTSCENE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]()	{ Behavior_CutSceneEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_CutSceneExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]()	{ Behavior_CutSceneExit(); };
+		m_States.emplace(FSMSTATE::CUTSCENE, CState_CutScene::Create(&Desc));
+	}
+	{
 		CState_Move::STATE_MOVE_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
@@ -2843,7 +2888,7 @@ void CPlayer::Add_FSM()
 					}
 				}
 			}
-			};
+		};
 
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
@@ -2866,7 +2911,6 @@ void CPlayer::Add_FSM()
 		Desc.funcExitEvent = [this]() { Behavior_LandExit(); };
 		m_States.emplace(FSMSTATE::LAND, CState_Land::Create(&Desc));
 	}
-
 	{
 		CState_Fall::STATE_FALL_DESC Desc{};
 		Desc.pOwner = this;

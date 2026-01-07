@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿#pragma region HEADER
+#include "pch.h"
 #include "Loader.h"
 #include "GameInstance.h"
 
@@ -251,6 +252,7 @@
 #include "Dummy_Globe.h"
 
 
+#pragma endregion
 #pragma endregion
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -1042,6 +1042,13 @@ void CPlayer::Describe_Entity()
 
 
 		m_pLightCom->Describe_Entity();
+		for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
+		{
+			if (GUI::Button(m_pModelCom->Get_AnimList(i)))
+			{
+				m_pModelCom->Set_AnimationIndex(i);
+			}
+		}
 	}
 	GUI::End();
 }

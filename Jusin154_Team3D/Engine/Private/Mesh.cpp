@@ -306,7 +306,6 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 		XMStoreFloat3(&pVertices[i].vBinormal, 
 			XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), PreTransformMatrix)));
 
-
 		pVertices[i].vTexcoord = SaveMesh->Vertices[i].UV;
 #ifdef DEBUG
 		memcpy(&m_VertexTexcoords[i], &pVertices[i].vTexcoord, sizeof(_float2));
