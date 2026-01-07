@@ -160,7 +160,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 		return false;
 	}
 
-	if (m_iCurrSecondAnimIndex >= 0) {
+	if (m_bSecondAnim  == true) {
 		Play_Dual_Anim(fTimeDelta, pTransform);
 	}
 	else {
@@ -285,7 +285,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
-		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
+		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation);
+
+		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio* 5.f);
 
 		if (m_fRatio >= 1.f)
 		{
@@ -314,10 +316,10 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 
 
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
 		m_bIsSecondFinishedAnim = m_Animations[m_iCurrSecondAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation);
-		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
+		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio * 5.f);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 
 		if (m_bIsSecondFinishedAnim)
@@ -329,6 +331,8 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 	}
 
+	ComputeAnimation(m_iCurrentAnimIndex, m_iIndexAnimPlayableMesh);
+
 	if (m_bIsFinishedAnim)
 	{
 		if (m_bIsLoop)
@@ -336,9 +340,6 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			m_bLoopRestarted = true;
 			m_vPrevRootPos = { 0,0,0 };
 		}
-		//else {
-		//	XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-		//}
 	}
 
 	if (m_bRatio) {
@@ -349,11 +350,6 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		Update_RootBone(m_fAmount);
 	}
 
-	if (m_bIsFinishedAnim)
-	{
-		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
-		m_bInitialRootRotSaved = false;
-	}
 
 	if (m_bIsSecondFinishedAnim && !m_bIsSecondLoop)
 	{
@@ -374,10 +370,12 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			m_fSecondRatio = 0.f;
 			m_bSecondStopBlend = false;
 			m_iCurrSecondAnimIndex = -1;
+			m_bSecondAnim = false;
 		}
 	}
 
-	m_Bones[m_iRootBoneIndex]->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+	if (m_iRootBoneIndex >= 0)
+		m_Bones[m_iRootBoneIndex]->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 
 	for (_uint i = 0; i < m_Bones.size(); ++i)
 	{
@@ -455,10 +453,6 @@ void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLo
 {
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
-		if (m_iCurrSecondAnimIndex != -1)
-		{
-			m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
-		}
 
 		m_iCurrSecondAnimIndex = iIndex;
 		m_bIsSecondLoop = isLoop;
@@ -469,6 +463,8 @@ void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLo
 		m_bIsSecondFinishedAnim = false;
 
 		m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
+		m_bSecondAnim = true;
+		m_iMaskBlendIndex = BoneIndex;
 	}
 	else
 	{
@@ -476,6 +472,7 @@ void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLo
 			m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
 
 		m_iCurrSecondAnimIndex = -1;
+		m_bSecondAnim = false;
 		m_bIsSecondFinishedAnim = false;
 		m_fSecondBlendTime = 0.f;
 		m_fSecondRatio = 0.f;
@@ -1602,24 +1599,23 @@ void CModel::Initialize_BoneMasks()
 	}
 
 
-		for (_uint i = 0; i < (_uint)m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L)].size(); i++)
+		/*for (_uint i = 0; i < (_uint)m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L)].size(); i++)
 		{
 			if (m_BoneMask[ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L)][i] == 1)
 			{
-				//if (i == m_iBoneIndex[ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L)])
-				//	continue;
 				m_iSkipBoneCount++;
 				m_SkipBoneindex.push_back(i);
+				
 			}
-		}
-	
+		}	*/
+		
 }
 
 HRESULT CModel::Create_ComputeShader()
 {
 	_uint		CS_InputStrides[] = {
 	sizeof(_float4x4),
-	sizeof(int),         
+	sizeof(_int),         
 	sizeof(_uint)
 	};
 
@@ -1655,7 +1651,10 @@ HRESULT CModel::Create_ComputeShaderLocal()
 	sizeof(_int),          // 부모 인덱스
 	sizeof(_float4x4), // 로컬좌표
 	sizeof(_uint),
-	sizeof(_int)	//스킵본 인덱스
+	sizeof(_int),	//스킵본 인덱스
+	sizeof(KEYFRAME_DESC), // 두번째 애님 키프레임
+	sizeof(CHANNEL_DESC), // 두번째 애님 채널
+	sizeof(_uint) // 본 마스크
 	};
 
 	_uint		CS_OutputStrides[] = {
@@ -1665,7 +1664,7 @@ HRESULT CModel::Create_ComputeShaderLocal()
 	CComputeShader::CS_INFO CS_Desc = {};
 
 	CS_Desc.iNumElement = (_uint)m_Bones.size();
-	CS_Desc.iNumInputBuffer = 8;
+	CS_Desc.iNumInputBuffer = 10;
 	CS_Desc.iNumOutputBuffer = 1;
 
 	CS_Desc.iInputStructStride = CS_InputStrides;
@@ -1779,6 +1778,42 @@ HRESULT CModel::Create_SkipBoneVB()
 
 	return S_OK;
 }
+
+HRESULT CModel::Create_BoneMaskBuffers()
+{
+	_uint maskCount = (_uint)m_BoneMask.size();
+	_uint boneCount = (_uint)m_Bones.size();
+
+	m_pMaskBuffers.resize(maskCount);
+	m_pMaskSRVs.resize(maskCount);
+
+	for (_uint i = 0; i < maskCount; i++)
+	{
+		D3D11_BUFFER_DESC desc{};
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.ByteWidth = sizeof(_uint) * boneCount;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		desc.CPUAccessFlags = 0;
+		desc.StructureByteStride = sizeof(_uint);
+		desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+		D3D11_SUBRESOURCE_DATA init{};
+		init.pSysMem = m_BoneMask[i].data();
+
+		m_pDevice->CreateBuffer(&desc, &init, &m_pMaskBuffers[i]);
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+		srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+		srvDesc.Buffer.FirstElement = 0;
+		srvDesc.Buffer.NumElements = boneCount;
+
+		if (FAILED(m_pDevice->CreateShaderResourceView(m_pMaskBuffers[i], &srvDesc, &m_pMaskSRVs[i])))
+			return E_FAIL;
+	}
+	return S_OK;
+}
+
 
 HRESULT CModel::Create_BoneMatrixVB()
 {
@@ -1985,6 +2020,8 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 
 	if (m_iPreAnimIndex < 0 || m_iPreAnimIndex >= (_int)m_iNumAnimations)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
+	if (m_iCurrSecondAnimIndex < 0 || m_iCurrSecondAnimIndex >= (_int)m_iNumAnimations)
+		m_iCurrSecondAnimIndex = m_iCurrentAnimIndex;
 
 	D3D11_MAPPED_SUBRESOURCE ConstantSubResource = {};
 
@@ -2032,6 +2069,11 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->PreTransformMatrix = m_PreTransformMatrix;
 		pDesc->RootInitRot = m_vInitialRootRot;
 
+		pDesc->UseUpperBody = m_bSecondAnim;
+		pDesc->UpperBlend = 1.f;
+		pDesc->SecondAnimIndex = m_iCurrSecondAnimIndex;
+		pDesc->SecondAnimTime = m_Animations[m_iCurrSecondAnimIndex]->Get_CurrentTrackPosition();;
+
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
 
@@ -2050,7 +2092,10 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		m_pParentBuffer,
 		m_pBoneLocalBuffer,
 		m_Meshes[MeshIndex]->Get_BoneRemapBuffer(),
-		m_pSkipBoneBuffer
+		m_pSkipBoneBuffer,
+		m_Animations[m_iCurrSecondAnimIndex]->Get_KeyFrameBuffer(),
+		m_Animations[m_iCurrSecondAnimIndex]->Get_ChannelBuffer(),
+		m_pMaskBuffers[m_iMaskBlendIndex]
 	};
 
 	ID3D11ShaderResourceView* srvs[] =
@@ -2062,7 +2107,10 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		m_pParentSRV,
 		m_pBoneLocalSRV,
 		m_Meshes[MeshIndex]->Get_BoneRemapSRV(),
-		m_pSkipBoneSRV
+		m_pSkipBoneSRV,
+		m_Animations[m_iCurrSecondAnimIndex]->Get_KeyFrameSrv(),
+		m_Animations[m_iCurrSecondAnimIndex]->Get_ChannelSrv(),
+		m_pMaskSRVs[m_iMaskBlendIndex]
 	};
 
 	ID3D11UnorderedAccessView* uavs[] =
@@ -2075,7 +2123,7 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		0,
 		_float3((_float)iGroupCountX, 1.f, 1.f),
 		srvs,
-		8,
+		11,
 		uavs,
 		1,
 		m_pConstantBuffer
@@ -2085,9 +2133,9 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 	UINT counts[1] = { 0 };
 	m_pContext->CSSetUnorderedAccessViews(0, 1, nullUAV, counts);
 
-	ID3D11ShaderResourceView* nullSRV[8] = { nullptr };
+	ID3D11ShaderResourceView* nullSRV[11] = { nullptr };
 
-	m_pContext->CSSetShaderResources(0, 8, nullSRV);
+	m_pContext->CSSetShaderResources(0, 11, nullSRV);
 
 
 }
@@ -2588,15 +2636,18 @@ HRESULT CModel::Initialize(void* pArg)
 	if (m_eType == MODEL::ANIM || m_eType == MODEL::PBR_ANIM || m_eType == MODEL::ANIM_LOCAL)
 	{
 		m_CPUBoneMask.resize(m_Bones.size(), false);
-		Initialize_RootBone();
-		InItialize_BoneIndex();
-		Initialize_BoneMasks();
 
 		m_Parent.resize(m_Bones.size());
 		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)
 		{
 			m_Parent[i] = m_Bones[i]->Get_ParentBoneIndex();
 		}
+
+		Initialize_RootBone();
+		InItialize_BoneIndex();
+		Initialize_BoneMasks();
+
+
 
 		m_BoneLocal.resize(m_Bones.size());
 		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)
@@ -2611,6 +2662,7 @@ HRESULT CModel::Initialize(void* pArg)
 		Create_ParentVB();
 		Create_BoneLocalVB();
 		Create_SkipBoneVB();
+		Create_BoneMaskBuffers();
 		Create_ParentSrv();
 		Create_BoneLocalSrv();
 
@@ -2763,6 +2815,15 @@ void CModel::Free()
 	SAFE_RELEASE(m_pBoneMatrixUAV);
 	SAFE_RELEASE(m_pLocalMatrixSRV);
 	SAFE_RELEASE(m_pLocalMatrixUAV);
+	for (auto&Buffer : m_pMaskBuffers)
+	{
+		SAFE_RELEASE(Buffer);
+	}
+	for (auto& Srv : m_pMaskSRVs)
+	{
+		SAFE_RELEASE(Srv);
+	}
+
 	
 	for (auto& pAnimation : m_Animations) {
 		SAFE_RELEASE(pAnimation);

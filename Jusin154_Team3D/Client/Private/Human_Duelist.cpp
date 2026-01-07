@@ -5,6 +5,7 @@
 #include "CallBack_Playable_HitReport.h"
 #include "Character_Controller.h"
 #include "EffectPool.h"
+#include "Effect_Container.h"
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Layer.h"
@@ -61,7 +62,7 @@ HRESULT CHuman_Duelist::Initialize(void* pArg)
 
 	m_pInfoInstance->Regist_ActiveMonster(this);
 	{
-		PLAYERDESC* pDesc = static_cast<PLAYERDESC*>(pArg);
+		DUELISTDESC* pDesc = static_cast<DUELISTDESC*>(pArg);
 		_vector vPos = XMLoadFloat4(&pDesc->vPos);
 		_vector vRotQ = XMLoadFloat4(&pDesc->vRotQ);
 		m_pCharacter_Controller->Set_Position(vPos);
@@ -239,6 +240,25 @@ void CHuman_Duelist::OnCollision(CGameObject* pOther, void* pDesc)
 		m_fHitDegree = -1.f;
 	}
 
+	pair<_float, _float> damagePair = {};
+
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+	if (pEffect_Container != nullptr)
+	{
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			break;
+		}
+	}
+
 	if (m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_NONE))
 		m_pFSM->Change_State(FSMSTATE::HIT);
 }
@@ -295,7 +315,7 @@ HRESULT CHuman_Duelist::Ready_Components()
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::AI);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.001f;
@@ -311,12 +331,11 @@ HRESULT CHuman_Duelist::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
-		m_pCharacter_Controller->SetGravity(false);
 	}
 
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::AI);
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
