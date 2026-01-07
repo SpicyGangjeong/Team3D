@@ -165,7 +165,7 @@ void CPlayer::Update(_float fTimeDelta)
 		}
 	}
 
-	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -199,6 +199,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	}
 
 	Player_PixRot();
+
+	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 

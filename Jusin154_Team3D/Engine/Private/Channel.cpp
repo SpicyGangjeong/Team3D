@@ -120,7 +120,7 @@ void CChannel::Update_TransformationMatirx(
 	_float4& OutScale, _float4& OutRotation, _float4& OutTranslation,
 	_int RootBoneIndex)
 {
-	if (m_iBoneIndex == RootBoneIndex ||Bones[m_iBoneIndex]->IsCPUEvaluated())
+	if (m_iBoneIndex == RootBoneIndex || Bones[m_iBoneIndex]->IsCPUEvaluated())
 	{
 		if (0.f == fCurrentTrackPosition)
 			*pCurrentKeyFrameIndex = 0;
@@ -165,7 +165,7 @@ void CChannel::Update_TransformationMatirx(
 
 		}
 
-		if (m_iBoneIndex == RootBoneIndex)
+		if (m_iBoneIndex == RootBoneIndex && bIsSpine)
 		{
 			XMStoreFloat4(&OutScale, vScale);
 			XMStoreFloat4(&OutRotation, vRotation);
