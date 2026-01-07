@@ -3772,7 +3772,7 @@ HRESULT CLoader::Loading_For_Field()
 
 	/* For.Prototype_Component_DecalBox */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_DecalBox"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");

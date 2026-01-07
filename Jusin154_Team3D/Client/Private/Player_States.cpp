@@ -1068,6 +1068,7 @@ void CPlayer::Behavior_CombatEnter()
 				m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 				pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				SAFE_RELEASE(m_pGrapInteractive);
 				m_pGrapInteractive = m_LockOnInfo.pInteractive;
 				SAFE_ADDREF(m_pGrapInteractive);
 				m_pGrapInteractive->Set_KinematicFlag(true);
@@ -1123,6 +1124,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			if (nullptr != m_LockOnInfo.pInteractive) {
 				m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 				pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
+				SAFE_RELEASE(m_pGrapInteractive);
 				m_pGrapInteractive = m_LockOnInfo.pInteractive;
 				SAFE_ADDREF(m_pGrapInteractive);
 				m_pGrapInteractive->Set_KinematicFlag(true);
