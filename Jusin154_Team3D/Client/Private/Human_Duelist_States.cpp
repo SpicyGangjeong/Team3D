@@ -11,6 +11,7 @@
 
 #pragma region STATE
 #include "State_Idle.h"
+#include "State_IdleBreak.h"
 #include "State_Move.h"
 #include "State_Combat.h"
 #include "State_LightAttack.h"
@@ -45,6 +46,37 @@ HRESULT CHuman_Duelist::Behavior_IdleExitCheck(_float fTimeDelta)
 void CHuman_Duelist::Behavior_IdleExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLE);
+}
+
+void CHuman_Duelist::Behavior_IdleBreakEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::IDLE);
+	pair<_uint, _bool> pairAnimInfo;
+	_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+	if (iRand == 0) {
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
+	}
+	else if (iRand == 1) {
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
+	}
+
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CHuman_Duelist::Behavior_IdleBreakExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CHuman_Duelist::Behavior_IdleBreakExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
 }
 
 void CHuman_Duelist::Behavior_CombatEnter()
@@ -105,7 +137,7 @@ void CHuman_Duelist::Behavior_LightAttackEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iIndex);  },
+		[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::DUELIST_JAP, Get_PartObject<CWand>(), &iIndex);  },
 		0.2f);
 
 	Add_Event(pairAnimInfo.first,
@@ -139,7 +171,7 @@ void CHuman_Duelist::Behavior_SpellEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DUELIST_LEVIOSO, this); },
 		0.2f);
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
@@ -173,7 +205,7 @@ void CHuman_Duelist::Behavior_ShieldEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DUELIST_PROTEGO, this); },
 		0.1f);
 
 	m_fSkillCoolTime[ENUM_CLASS(SKILL::PROTEGO)] = m_fMaxSkillCoolTime[ENUM_CLASS(SKILL::PROTEGO)];
@@ -183,7 +215,7 @@ HRESULT CHuman_Duelist::Behavior_ShieldExitCheck()
 {
 	if (m_pModelCom->IsFinishedAnim())
 	{
-		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 		return E_FAIL;
 	}
 	return S_OK;
@@ -197,10 +229,23 @@ void CHuman_Duelist::Behavior_ShieldExit()
 void CHuman_Duelist::Behavior_HitEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::HIT);
+	pair<_uint, _bool> pairAnimInfo;
+
+	switch (m_eHitSpell)
+	{
+	case ENUM_CLASS(SKILL_TYPE::JAP):
+		break;
+	}
+
 }
 
 HRESULT CHuman_Duelist::Behavior_HitExitCheck()
 {
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -221,6 +266,17 @@ void CHuman_Duelist::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
+	}
+
+	{
+		CState_IdleBreak::STATE_IDLEBREAK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_IdleBreakEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleBreakExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_IdleBreakExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::IDLEBREAK, CState_IdleBreak::Create(&Desc));
 	}
 #pragma endregion
 #pragma region Behavior_Combat

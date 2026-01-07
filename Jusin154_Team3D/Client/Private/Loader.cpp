@@ -176,7 +176,9 @@
 #include "Bombard.h"
 #include "Decendo.h"
 #include "NomalJap.h"
+#include "Duelist_NormalJap.h"
 #include "Protego.h"
+#include "Duelist_Protego.h"
 #include "Revelio.h"
 #include "NomalJapSide.h"
 #include "DecendoSide.h"
@@ -190,6 +192,7 @@
 #include "Trail.h"
 #include "EffectPool.h"
 #include "Levioso.h"
+#include "Duelist_Levioso.h"
 #include "Lumos.h"
 #include "Accio.h"
 #include "Blink.h"
@@ -2333,11 +2336,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 			return E_FAIL;
-		
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
@@ -2454,8 +2452,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(g_iStaticLevel, CNomalJap::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_NormalJap>(g_iStaticLevel, CDuelist_NormalJap::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(g_iStaticLevel, CProtego::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_Protego>(g_iStaticLevel, CDuelist_Protego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -2468,6 +2473,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(g_iStaticLevel, CLevioso::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_Levioso>(g_iStaticLevel, CDuelist_Levioso::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

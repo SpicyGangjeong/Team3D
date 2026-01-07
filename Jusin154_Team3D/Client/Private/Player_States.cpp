@@ -224,8 +224,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
-			m_pModelCom->IsSkip(true);
-			//m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
 			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
@@ -352,7 +351,6 @@ void CPlayer::Behavior_IdleExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLE | FSMSTATE::IDLE_TURN);
 	Reset_Event();
-	m_pModelCom->IsSkip(false);
 }
 
 void CPlayer::Behavior_CutSceneEnter()
@@ -508,8 +506,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
-			m_pModelCom->IsSkip(true);
-			//m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
@@ -738,7 +735,6 @@ void CPlayer::Behavior_MoveExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::MOVE | FSMSTATE::SPRINT | FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::STOP);
 	Reset_Event();
-	m_pModelCom->IsSkip(false);
 }
 
 void CPlayer::Behavior_JumpEnter()
@@ -1471,15 +1467,21 @@ void CPlayer::Behavior_SpellEnter()
 					},
 					0.01f);
 			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, fAnimSpeed);
+			Add_SpellEvent(pairAnimInfo.first, fRatio);
+			if (m_eSpell != ENUM_CLASS(SKILL_TYPE::LUMOS) &&
+				m_eSpell != ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA))
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, fAnimSpeed);
 
 		}
 		else {
 			fRatio = 0.2f;
 			pairAnimInfo = m_Animation[STATEANIM::SPELL];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+			Add_SpellEvent(pairAnimInfo.first, fRatio);
+			if (m_eSpell != ENUM_CLASS(SKILL_TYPE::LUMOS) && 
+				m_eSpell !=ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA))
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		}
-		Add_SpellEvent(pairAnimInfo.first, fRatio);
+
 	}
 	else
 	{
@@ -2682,7 +2684,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 			0.f);
-		Info.pText = TEXT("레벨리오!");
+		Info.pText = TEXT("레비오소!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
 
@@ -2720,7 +2722,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 	case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
 		m_pInfoInstance->Set_SearchLockOnFlag(false);
 		pairAnimInfo = m_Animation[STATEANIM::AVADA_KEDAVRA];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false,1.f,false);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false,1.f,true);
 		if (m_LockOnInfo.pUnit)
 			m_pTransformCom->LookAt(m_LockOnInfo.pUnit->Get_WorldPostion());
 
@@ -2756,7 +2758,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 	case ENUM_CLASS(SKILL_TYPE::LUMOS):
 		if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
 		{
-			/*if (SUCCEEDED(InputMove()))
+			if (SUCCEEDED(InputMove()))
 			{
 				if (m_bSprintToggle) {
 					pairAnimInfo = m_Animation[STATEANIM::SPRINT];
@@ -2770,32 +2772,33 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 			}
 			else {
 				pairAnimInfo = m_Animation[STATEANIM::IDLE];
-			}*/
-			Add_Event(AnimIndex,
+			}
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			Add_Event(pairAnimInfo.first,
 				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
 				0.f);
 			Info.pText = TEXT("루모스!");
 			m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
-			//m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
 		}
 		else
 		{
-			//if (SUCCEEDED(InputMove()))
-			//{
-			//	if (m_bSprintToggle) {
-			//		pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-			//	}
-			//	else if (m_bWalkToggle) {
-			//		pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-			//	}
-			//	else {
-			//		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			//	}
-			//}
-			//else {
-			//	pairAnimInfo = m_Animation[STATEANIM::IDLE];
-			//}
-			//m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+			if (SUCCEEDED(InputMove()))
+			{
+				if (m_bSprintToggle) {
+					pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+				}
+				else if (m_bWalkToggle) {
+					pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+				}
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+				}
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::IDLE];
+			}
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
 		}
 		break;
 	default:

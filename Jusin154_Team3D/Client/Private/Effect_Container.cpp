@@ -742,6 +742,15 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 				}
 				break;
 				}
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::DUELIST_PROTEGO:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				}
 				break;
 			case PHYSX_KIND::CCTActor:
 			{
@@ -778,6 +787,13 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
 				}
+				break;
+				case PXOBJECT::AI:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
 				}
 			}
 			}
