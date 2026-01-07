@@ -703,6 +703,11 @@ void CGameInstance::Clear_Objects_With_Layers(_uint iLevelIndex)
 	m_pObject_Manager->Clear(iLevelIndex);
 }
 
+void CGameInstance::Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag)
+{
+	m_pObject_Manager->Clear_Layer(iLevelIndex, strLayerTag);
+}
+
 HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {	
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);

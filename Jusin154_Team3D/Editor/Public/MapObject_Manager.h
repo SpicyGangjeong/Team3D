@@ -86,8 +86,7 @@ private:
 	HRESULT		Save_Decal(const _char* pFileName);
 
 	HRESULT		Save_RaceRing(const _char* pFileName);
-
-
+	HRESULT     Load_DADA_INT();
 #pragma endregion
 
 	void		Update_PrototypeList();

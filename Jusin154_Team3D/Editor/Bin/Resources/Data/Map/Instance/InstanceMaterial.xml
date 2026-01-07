@@ -238,4 +238,18 @@
             <Surface>MRO</Surface>
         </Mesh>
    </SM_HM_Light_Post_Floating>
+   <SM_HW_LightFixture_Base_D mesh="2">
+        <Mesh>
+            <Material>T_HW_LightFixture_WallD_D</Material>
+            <Material>T_HW_LightFixture_WallD_N</Material>
+            <Material>T_HW_LightFixture_WallD_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_HW_LightFixture_WallD_glass_D</Material>
+            <Material>T_HW_LightFixture_WallD_glass_D</Material>
+            <Material>T_HW_LightFixture_WallD_glass_D</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SM_HW_LightFixture_Base_D>
 </Instance>

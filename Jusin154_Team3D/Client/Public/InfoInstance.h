@@ -59,6 +59,7 @@ public:
 	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_PointLights(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_DADA_INT();
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);
