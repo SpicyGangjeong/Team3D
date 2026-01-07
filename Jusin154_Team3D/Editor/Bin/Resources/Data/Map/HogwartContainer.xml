@@ -3154,4 +3154,947 @@
             <Rotation x="0" y="-63" z="0"/>
         </PartObject>
     </Container>
+    <Container Name="DADA_Classroom">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Wall_Small</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Wall_Small_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Wall_Small_Lod2</PrototypeTag>
+            <Position x="108.8" y="5.999999" z="-48.099998"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WallCombined</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WallCombined_Lod1</PrototypeTag>
+            <Position x="109.99995" y="4.8999977" z="-48.100029"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_WallCombined_3rdFloor</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_WallCombined_3rdFloor_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_WallCombined_3rdFloor_Lod2</PrototypeTag>
+            <Position x="109.69997" y="4.9000001" z="-47.999985"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Floor_DADAClassroom</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Floor_DADAClassroom_Lod1</PrototypeTag>
+            <Position x="0" y="7.4505806e-08" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Stairwell_GothicArch_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Stairwell_GothicArch_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Stairwell_GothicArch_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Stairwell_GothicArch_A_Lod3</PrototypeTag>
+            <Position x="8.7133017" y="10.907229" z="-11.877565"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_StairWell_Stairs</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_StairWell_Stairs_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_StairWell_Stairs_Lod2</PrototypeTag>
+            <Position x="17.302258" y="-3.49" z="-1.1408221"/>
+            <Scale x="0.99999917" y="1" z="0.99999917"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0.9000001"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod2</PrototypeTag>
+            <Position x="14.999999" y="0" z="0.89999652"/>
+            <Scale x="0.99999666" y="1" z="0.99999666"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod3</PrototypeTag>
+            <Position x="9.536744e-08" y="0.30000001" z="1.6000001"/>
+            <Scale x="0.99999917" y="1" z="0.99999917"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="8.2999973"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod2</PrototypeTag>
+            <Position x="15.000004" y="0" z="8.3000002"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod3</PrototypeTag>
+            <Position x="5.3644186e-07" y="0.30000001" z="9"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="4" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="15.75"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="5" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod2</PrototypeTag>
+            <Position x="15" y="0" z="15.75"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Lod3</PrototypeTag>
+            <Position x="0" y="0.30000001" z="16.500006"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_Lod2</PrototypeTag>
+            <Position x="9.5367447e-08" y="0.10000002" z="1.6000003"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="6" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="23.200001"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="7" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_RafterArch_Lod2</PrototypeTag>
+            <Position x="15.000004" y="0" z="23.200001"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowRound_Glass</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowRound_Glass_Lod1</PrototypeTag>
+            <Position x="-0.19999948" y="0.30000001" z="4.5999994"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowRound_Glass</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowRound_Glass_Lod1</PrototypeTag>
+            <Position x="-0.2" y="0.30000001" z="12"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="2" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowRound_Glass</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowRound_Glass_Lod1</PrototypeTag>
+            <Position x="-0.2" y="0.30000001" z="19.499998"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Glass</PrototypeTag>
+            <Position x="-0.28" y="0.30000001" z="4.6000004"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Glass</PrototypeTag>
+            <Position x="-0.28" y="0.30000001" z="12"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Glass</PrototypeTag>
+            <Position x="-0.28" y="0.30000001" z="19.500002"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_Lod2</PrototypeTag>
+            <Position x="0.10000054" y="0" z="9.0000038"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_Lod2</PrototypeTag>
+            <Position x="9.8347698e-07" y="0" z="16.500006"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="3.6000013"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="5.599998"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="7.5999985"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="4" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="15"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="5" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="13.000004"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="6" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="11"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="7" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="22.500002"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="8" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="20.500006"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="9" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="15" y="0" z="18.500002"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DuelingTable_Short</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DuelingTable_Short_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DuelingTable_Short_Lod2</PrototypeTag>
+            <Position x="7.2300749" y="0.0016738996" z="6.7015252"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="-0.099999897" y="8.1000004" z="1.6000003"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="-0.1" y="8.1000004" z="9.0000019"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="-0.1" y="8.1000004" z="16.499994"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="15.1" y="8.1000004" z="7.6000004"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="4" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="15.1" y="8.1000004" z="14.799999"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="5" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="15.1" y="8.1000004" z="22.499998"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="6" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="7.0614796" y="18.00466" z="7.596415"/>
+            <Scale x="0.99999821" y="0.99999678" z="0.99999821"/>
+            <Rotation x="180" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="7" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="7.1021581" y="18.007265" z="1.5758795"/>
+            <Scale x="0.99999821" y="0.99999678" z="0.99999821"/>
+            <Rotation x="180" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="8" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="7.0169744" y="17.904861" z="14.949495"/>
+            <Scale x="0.99999821" y="0.99999678" z="0.99999821"/>
+            <Rotation x="180" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="9" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="7.1904302" y="17.704914" z="9.1259499"/>
+            <Scale x="0.99999821" y="0.99999678" z="0.99999821"/>
+            <Rotation x="180" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="10" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="7.1252418" y="18.10664" z="22.478689"/>
+            <Scale x="0.99999821" y="0.99999678" z="0.99999821"/>
+            <Rotation x="180" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="11" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_CeilingSlant_Window_Lod1</PrototypeTag>
+            <Position x="7.1956339" y="18.103912" z="16.456924"/>
+            <Scale x="0.99999821" y="0.99999678" z="0.99999821"/>
+            <Rotation x="180" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Lod3</PrototypeTag>
+            <Position x="0.1999993" y="0.10000002" z="23.799976"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Lod3</PrototypeTag>
+            <Position x="0.1524151" y="0" z="29.833597"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Glass</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Glass_Lod1</PrototypeTag>
+            <Position x="3.1369185" y="0.096024275" z="30.0308"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Glass</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x9M_Glass_Lod1</PrototypeTag>
+            <Position x="-0.015701264" y="0.10139786" z="26.840454"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="10" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="0.096885495" y="1.1893706" z="23.86768"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="11" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="0.046534233" y="1.1" z="27.767748"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="12" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="0.21180364" y="1.1" z="29.82962"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="13" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="4.1766534" y="1.1" z="29.931202"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="14" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="2.1279893" y="-0.69170094" z="29.979763"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="15" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Class_WindowWall_6x12M_Moulding_2M_Lod1</PrototypeTag>
+            <Position x="-0.023398355" y="-0.49294207" z="25.882723"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Floor_DecorativeParquet</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Floor_DecorativeParquet_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Floor_DecorativeParquet_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Floor_DecorativeParquet_Lod3</PrototypeTag>
+            <Position x="6" y="0" z="-6.4999995"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Undercroft_Wall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Undercroft_Wall_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Undercroft_Wall_Lod2</PrototypeTag>
+            <Position x="14.068078" y="9.630126" z="31.891186"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_PillarCornice_GargoyleFish_Filler</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_PillarCornice_GargoyleFish_Filler_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_PillarCornice_GargoyleFish_Filler_Lod2</PrototypeTag>
+            <Position x="1.7576244" y="0.0032060049" z="18.422148"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_StairWell_Rail</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_StairWell_Rail_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_StairWell_Rail_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_StairWell_Rail_Lod3</PrototypeTag>
+            <Position x="17.15827" y="-2.1814771" z="-4.8199139"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Stairwell_Wall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Stairwell_Wall_Lod1</PrototypeTag>
+            <Position x="15.799999" y="0" z="-1.2"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Window_Duel</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Window_Duel_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Window_Duel_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Window_Duel_Lod3</PrototypeTag>
+            <Position x="1.8045926" y="-0.108947" z="-6.6633577"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Window_Duel_Glass</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Window_Duel_Glass_Lod1</PrototypeTag>
+            <Position x="1.5" y="-0.079996489" z="-6.6799998"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Doorway_DADA_Office</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Doorway_DADA_Office_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Doorway_DADA_Office_Lod2</PrototypeTag>
+            <Position x="9.3006201" y="3.1123033" z="25.157799"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="28" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Door_DADA_Door_Wood</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Door_DADA_Door_Wood_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Door_DADA_Door_Wood_Lod2</PrototypeTag>
+            <Position x="4.8936477" y="0.016188156" z="-1.1615894"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="76" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Doorway_DADA_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Doorway_DADA_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Doorway_DADA_A_Lod2</PrototypeTag>
+            <Position x="6.782949" y="0.034391772" z="0.047508739"/>
+            <Scale x="0.99999678" y="1" z="0.99999678"/>
+            <Rotation x="1" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_A</PrototypeTag>
+            <Position x="7.6661644" y="8.1537886" z="18.752113"/>
+            <Scale x="0.99999899" y="1" z="0.99999899"/>
+            <Rotation x="0" y="165" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_B</PrototypeTag>
+            <Position x="7.5064921" y="8.0014772" z="18.831306"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="171" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="7.3337913" y="7.6734757" z="16.356321"/>
+            <Scale x="1.0000007" y="1" z="1.0000007"/>
+            <Rotation x="0" y="179" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_D</PrototypeTag>
+            <Position x="7.2692842" y="7.9948153" z="17.755272"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_Q</PrototypeTag>
+            <Position x="7.2126784" y="7.7682457" z="16.957258"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_P</PrototypeTag>
+            <Position x="7.4806767" y="6.9789205" z="12.188643"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="7.2877374" y="7.5911527" z="15.833625"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="7.4009013" y="7.4478793" z="15.302264"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="7.2950945" y="7.4698844" z="14.611703"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="4" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="7.3799028" y="7.3557901" z="14.254415"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="5" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="7.3408008" y="7.2511268" z="13.724304"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="6" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="7.4174666" y="7.2003002" z="13.201429"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="7" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="7.4842596" y="7.065134" z="12.672197"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="8" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="9" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_C</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_E</PrototypeTag>
+            <Position x="6.7877545" y="7.5354538" z="17.743313"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_F</PrototypeTag>
+            <Position x="7.2810373" y="7.8923473" z="16.300337"/>
+            <Scale x="0.99999875" y="1" z="0.99999845"/>
+            <Rotation x="0" y="210" z="30"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_G</PrototypeTag>
+            <Position x="5.1973939" y="9.0997944" z="17.274658"/>
+            <Scale x="0.99999839" y="1" z="0.99999833"/>
+            <Rotation x="0" y="193" z="-30"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_F</PrototypeTag>
+            <Position x="7.3648844" y="7.9221458" z="16.53826"/>
+            <Scale x="0.9999997" y="0.99999762" z="0.99999768"/>
+            <Rotation x="180" y="-34" z="-22"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_G</PrototypeTag>
+            <Position x="9.2382545" y="8.9316702" z="17.64073"/>
+            <Scale x="0.99999976" y="0.99999654" z="0.99999642"/>
+            <Rotation x="180" y="0" z="31"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_O</PrototypeTag>
+            <Position x="6.5511017" y="5.4176564" z="11.519022"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_P</PrototypeTag>
+            <Position x="7.4155722" y="6.9724526" z="11.588658"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_N</PrototypeTag>
+            <Position x="7.2847724" y="6.9532437" z="11.612511"/>
+            <Scale x="1.0000005" y="1" z="1.0000004"/>
+            <Rotation x="-24" y="129" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_H</PrototypeTag>
+            <Position x="7.4347448" y="7.9696002" z="16.690622"/>
+            <Scale x="0.99999964" y="1" z="0.99999964"/>
+            <Rotation x="0" y="-10" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_H</PrototypeTag>
+            <Position x="7.3139043" y="8.025383" z="16.346638"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="188" z="8"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_O</PrototypeTag>
+            <Position x="8.1105547" y="5.3696189" z="11.144209"/>
+            <Scale x="0.99999714" y="1" z="0.99999714"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_N</PrototypeTag>
+            <Position x="7.6684122" y="6.9713893" z="11.29475"/>
+            <Scale x="0.99999803" y="0.99999988" z="0.99999774"/>
+            <Rotation x="-23" y="206" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_M</PrototypeTag>
+            <Position x="7.9251876" y="6.4484634" z="12.545142"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="57" y="15" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_DragonBones_M</PrototypeTag>
+            <Position x="6.828866" y="6.2875319" z="12.76052"/>
+            <Scale x="0.99999893" y="0.99999905" z="0.99999958"/>
+            <Rotation x="-119" y="170" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_WallA</PrototypeTag>
+            <Position x="6.3132405" y="0.051968478" z="0.027234962"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="-1" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_WallA_2M</PrototypeTag>
+            <Position x="12.306298" y="0.011560962" z="0.23204175"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_Window_6x12M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_Window_6x12M_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_Window_6x12M_Lod2</PrototypeTag>
+            <Position x="0.29607469" y="9.9302769" z="29.751144"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_Window_6x12M_Glass</PrototypeTag>
+            <Position x="3.3" y="9.9439135" z="30.232224"/>
+            <Scale x="0.99999762" y="1" z="0.99999762"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_Window_6x12M</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_Window_6x12M_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_Window_6x12M_Lod2</PrototypeTag>
+            <Position x="0.19834414" y="10.081822" z="23.859728"/>
+            <Scale x="0.9999994" y="1" z="0.9999994"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="2">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_Window_6x12M_Glass</PrototypeTag>
+            <Position x="-0.20392099" y="10.01195" z="26.803419"/>
+            <Scale x="0.9999994" y="1" z="0.9999994"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Wall_Small</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Wall_Small_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_Office_Wall_Small_Lod2</PrototypeTag>
+            <Position x="137.50018" y="3.0628409" z="42.445904"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="-45" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_OfficeStairs</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_OfficeStairs_Lod1</PrototypeTag>
+            <Position x="11.67319" y="-1.894877" z="26.522638"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="0" y="194" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_OfficeStairs_Rail</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_OfficeStairs_Rail_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_OfficeStairs_Rail_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_DADA_CharmsClass_OfficeStairs_Rail_Lod3</PrototypeTag>
+            <Position x="11.600263" y="-1.8" z="26.462627"/>
+            <Scale x="0.9999994" y="1" z="0.9999994"/>
+            <Rotation x="0" y="194" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_ChocolateFrog_Frame_C</PrototypeTag>
+            <Position x="5.0676947" y="5.200551" z="28.834074"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Storage_Draped_Cabinet_A</PrototypeTag>
+            <Position x="10.897501" y="0.0040018442" z="23.443079"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Cabinet</PrototypeTag>
+            <Position x="12.812377" y="0.082655542" z="22.956663"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="12" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_PictureFrame_Easel_A</PrototypeTag>
+            <Position x="14.900252" y="2.5031257" z="19.148617"/>
+            <Scale x="0.99999952" y="1" z="0.99999952"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Sign_OutOfOrder</PrototypeTag>
+            <Position x="11.868527" y="4.7986317" z="24.08144"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Sign_OutOfOrder</PrototypeTag>
+            <Position x="7.5189924" y="5.7132125" z="26.841471"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="46" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Puzzle_Lumos_Moth</PrototypeTag>
+            <Position x="12.80288" y="3.7916756" z="23.893085"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Puzzle_Lumos_Moth</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Sign_OutOfOrder</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_ChocolateFrog_Frame_C</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_ArmillarySphere_A</PrototypeTag>
+            <Position x="13.684993" y="0.0024827723" z="21.324947"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Dare_Chair_B</PrototypeTag>
+            <Position x="1.6954054" y="0.0075958958" z="21.943258"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Dare_Table_A_2</PrototypeTag>
+            <Position x="1.6040044" y="0.00545491" z="20.597204"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_DragonGlobe</PrototypeTag>
+            <Position x="13.858294" y="0.0076081902" z="19.307594"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Cabinet</PrototypeTag>
+            <Position x="1.401477" y="-0.0028519183" z="2.4518659"/>
+            <Scale x="0.99999952" y="1" z="0.99999952"/>
+            <Rotation x="0" y="89" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DAO_DriedPixie_A</PrototypeTag>
+            <Position x="12.950145" y="0.0060022958" z="21.109348"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="60" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_DisplayCase_Standing_B</PrototypeTag>
+            <Position x="13.833312" y="0.0036132338" z="6.3933163"/>
+            <Scale x="0.99999952" y="1" z="0.99999952"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Table_Mzoo</PrototypeTag>
+            <Position x="1.3308265" y="0.0039372467" z="6.6396952"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Storage_Draped_Cabinet_A</PrototypeTag>
+            <Position x="13.666366" y="0.0044615297" z="9.3940821"/>
+            <Scale x="0.99999982" y="1" z="0.99999982"/>
+            <Rotation x="0" y="303" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Lightfixture_DADAChandelier</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Lightfixture_DADAChandelier_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Lightfixture_DADAChandelier_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Lightfixture_DADAChandelier_Lod3</PrototypeTag>
+            <Position x="7.2251081" y="10.21778" z="8.3462925"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Lightfixture_DADAChandelier</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Lightfixture_DADAChandelier_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Lightfixture_DADAChandelier_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Lightfixture_DADAChandelier_Lod3</PrototypeTag>
+            <Position x="7.5769129" y="10.417768" z="23.411999"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Fireplace_A</PrototypeTag>
+            <Position x="0.26655325" y="0.0036859512" z="11.947472"/>
+            <Scale x="0.99999976" y="1" z="0.99999976"/>
+            <Rotation x="0" y="-90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_BlackBoard01</PrototypeTag>
+            <Position x="1.1133244" y="0.00413239" z="16.967691"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="120" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Door_RoomofLostWands</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Door_RoomofLostWands_Lod1</PrototypeTag>
+            <Position x="10.469616" y="3.1038647" z="24.54159"/>
+            <Scale x="1.0999999" y="1.05" z="1.0499998"/>
+            <Rotation x="0" y="209" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_L_EntranceDoor_A</PrototypeTag>
+            <Position x="5.0654407" y="0.0064634257" z="0.26721483"/>
+            <Scale x="1.5500009" y="1.3500004" z="1.0000002"/>
+            <Rotation x="0" y="213" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Door_GenericSingle_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Door_GenericSingle_C_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Door_GenericSingle_C_Lod2</PrototypeTag>
+            <Position x="2.3821993" y="-0.18413731" z="-0.21479157"/>
+            <Scale x="1.1999993" y="1.1499994" z="0.99999952"/>
+            <Rotation x="90" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Frame_Diagram_01</PrototypeTag>
+            <Position x="15.007052" y="3.0335231" z="4.397779"/>
+            <Scale x="0.99999988" y="1" z="0.99999988"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Frame_MapArgyllshire</PrototypeTag>
+            <Position x="15.005024" y="3.0994596" z="12.065235"/>
+            <Scale x="0.79999983" y="0.79999995" z="0.89999986"/>
+            <Rotation x="0" y="90" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Frame_Diagram_B1</PrototypeTag>
+            <Position x="1.4114323" y="0.0063099931" z="24.440022"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="-45" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Frame_Diagram_D2</PrototypeTag>
+            <Position x="3.9689648" y="8.0890751" z="29.833654"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
 </Land>

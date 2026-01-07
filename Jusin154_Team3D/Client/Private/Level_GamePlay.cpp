@@ -49,7 +49,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef _DEBUG
 	// 낮, 밤 설정
 #ifdef gimch
-	m_isDay = true;
+	m_isDay = false;
 #endif // gimch
 #ifdef Bin
 	m_isDay = true;
@@ -288,7 +288,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef gimch
 	isReady_Background = true;
 	isReady_Hogsmeade = false;
-	isReady_Hogwart = true;
+	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;

@@ -155,6 +155,10 @@ void CUI_Manager::Priority_Update(_float fTimeDelta)
 
 void CUI_Manager::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
+
 	if (m_pGameInstance->Key_Down(DIK_T))
 	{
 		if (m_eType == UI_STATE::GAMEPLAYER)
@@ -480,6 +484,12 @@ void CUI_Manager::Free()
 
 void CUI_Manager::Describe_Entity()
 {
+	GUI::Begin("실내맵 전환");
+
+	if (GUI::Button("Load_DADA_INT"))
+		m_pInfoInstance->Load_DADA_INT();
+
+	GUI::End();
 }
 
 #endif // _DEBUG

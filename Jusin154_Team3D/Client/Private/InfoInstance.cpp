@@ -162,7 +162,11 @@ HRESULT CInfoInstance::Load_WorldDecal(const _char* pFileName, const _wchar* pLa
 }
 HRESULT CInfoInstance::Load_PointLights(const _char* pFileName, const _wchar* pLayerTag)
 {
-	return m_pMapInfo->Load_PointLights(pFileName, pLayerTag);;
+	return m_pMapInfo->Load_PointLights(pFileName, pLayerTag);
+}
+HRESULT CInfoInstance::Load_DADA_INT()
+{
+	return m_pMapInfo->Load_DADA_INT();
 }
 #pragma endregion
 
