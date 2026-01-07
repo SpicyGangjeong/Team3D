@@ -108,7 +108,7 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
-	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+
 }
 
 void CHuman_Duelist::Late_Update(_float fTimeDelta)
@@ -127,6 +127,7 @@ void CHuman_Duelist::Late_Update(_float fTimeDelta)
 	if (true == m_bLookAt) {
 		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
+	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 
@@ -231,14 +232,15 @@ HRESULT CHuman_Duelist::Render_Shadow(SHADOW eType)
 void CHuman_Duelist::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
-		m_eHitType = CollisionDesc->eHitType;
-		m_pStat->Get_Damage(CollisionDesc->fDamage);
 	}
 	else {
 		m_fHitDegree = -1.f;
 	}
+
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
 
 	pair<_float, _float> damagePair = {};
 
@@ -259,9 +261,12 @@ void CHuman_Duelist::OnCollision(CGameObject* pOther, void* pDesc)
 		}
 	}
 
-	if (m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_NONE))
-		m_pFSM->Change_State(FSMSTATE::HIT);
+	m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+
+	m_pFSM->Change_State(FSMSTATE::HIT);
 }
+
 void CHuman_Duelist::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
@@ -494,7 +499,8 @@ void CHuman_Duelist::SetGravity()
 	eCollisionFlags;
 	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
 		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY)
+			&& m_eHitSpell != ENUM_CLASS(SKILL_TYPE::LEVIOSO)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
 		else { // 점프 중일 땐 off

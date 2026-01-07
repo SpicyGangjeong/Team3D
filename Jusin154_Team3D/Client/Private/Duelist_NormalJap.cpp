@@ -42,7 +42,7 @@ HRESULT CDuelist_NormalJap::Initialize(void* pArg)
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
-	m_iSkillType = ENUM_CLASS(SKILL_TYPE::JAP);
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::DUELIST_JAP);
 
 
 	m_wstrEffectName = L"Nomal_Jap";
@@ -182,8 +182,10 @@ HRESULT CDuelist_NormalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 		if (pPlayer == nullptr)
 			return E_FAIL;
 
+		_vector vPlayerPos = pPlayer->Get_Component<CCharacter_Controller>()->Get_Position();
+
 		if (nullptr != pPlayer) {
-			XMStoreFloat4(&m_vTargetPos, pPlayer->Get_LockOnPos());
+			XMStoreFloat4(&m_vTargetPos, vPlayerPos);
 
 			if (XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos))) >= 35.f) { //거리가 일정 이상이라면 그냥 정면으로 발사
 				XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);

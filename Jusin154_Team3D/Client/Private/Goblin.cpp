@@ -66,8 +66,8 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -14.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -14.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, -2.f, -16.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, -2.f, -16.f, 1.f));
 
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
