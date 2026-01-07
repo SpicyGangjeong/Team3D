@@ -326,8 +326,9 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
-
+#ifndef 진우
 	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
+#endif
 
 	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
@@ -382,7 +383,9 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 
 	m_DamageInfo.fDamage = damagePair.first;
+#ifndef 진우
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+#endif
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
 		return;
@@ -399,10 +402,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.15f);
+			0.25f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.5f);
+			0.55f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
@@ -415,10 +418,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.15f);
+			0.25f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.5f);
+			0.55f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
@@ -432,10 +435,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.15f);
+			0.25f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.5f);
+			0.55f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}

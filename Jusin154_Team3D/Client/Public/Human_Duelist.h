@@ -1,18 +1,26 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "Unit.h"
+#include "Monster.h"
 #include "Player_ENUM.h"
 
 NS_BEGIN(Client)
 
-class CHuman_Duelist final : public CUnit
+class CHuman_Duelist final : public CMonster
 {
 public:
-	typedef struct tagPlayerInitDesc {
+	typedef struct tagDuelistInitDesc {
 		_float4 vPos;
 		_float4 vRotQ;
-	}PLAYERDESC;
+	}DUELISTDESC;
+
+	enum class SKILL
+	{
+		LEVIOSO,
+		PROTEGO,
+		LIGHT_ATTACK,
+		END
+	};
 private:
 	CHuman_Duelist(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CHuman_Duelist(const CHuman_Duelist& Prototype);
@@ -30,17 +38,12 @@ public:
 	void Set_Shield(_bool bShield) { m_bShield = bShield; }
 	_matrix Get_WandPos();
 private:
-	CInfoInstance* m_pInfoInstance = { nullptr };
-
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	class	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
 	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
 	CLight* m_pLightCom = { nullptr };
 	LIGHT_DESC LightDesc = {};
-
-	CStat* m_pStat = { nullptr };
-
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -49,8 +52,6 @@ private:
 	HRESULT Bind_ShaderResources();
 	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
 	void SetGravity();
-	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
-
 
 public:
 	static CHuman_Duelist* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -67,15 +68,20 @@ private:
 
 	virtual void Add_FSM();
 
-	_bool			m_bLookAt = { false };
 	_bool			m_bSpellHit = {};
 	_bool			m_bShield = { false };
-	_float			m_fCross = 0.f;
-	_float			m_fabsDir = 0.f;
+
+
+	_float m_fSkillCoolTime[ENUM_CLASS(SKILL::END)] = {};
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(SKILL::END)] = { 10.f,10.f,5.f };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
+
+	void	Behavior_IdleBreakEnter();
+	HRESULT Behavior_IdleBreakExitCheck(_float fTimeDelta);
+	void	Behavior_IdleBreakExit();
 
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();

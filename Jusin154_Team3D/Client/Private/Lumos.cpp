@@ -51,12 +51,9 @@ void CLumos::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 
 
-	CWand* pWand = static_cast<CWand*>(m_pOwner);
 
-	if (pWand == nullptr)
-		return;
 
-	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+
 
 }
 
@@ -69,7 +66,7 @@ void CLumos::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	if (910!= m_pOwner->Get_Owner()->Get_Component<CModel>()->Get_SecondAnimIndex())
+	if (911!= m_pOwner->Get_Owner()->Get_Component<CModel>()->Get_SecondAnimIndex())
 	{
 		_int iIndex = m_pOwner->Get_Owner()->Get_Component<CModel>()->Get_SecondAnimIndex();
 		m_bVisible = false;
@@ -83,6 +80,12 @@ void CLumos::Late_Update(_float fTimeDelta)
 
 	__super::Late_Update(fTimeDelta);
 
+	CWand* pWand = static_cast<CWand*>(m_pOwner);
+
+	if (pWand == nullptr)
+		return;
+
+	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 }
 

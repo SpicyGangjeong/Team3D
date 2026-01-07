@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿#pragma region HEADER
+#include "pch.h"
 #include "Loader.h"
 #include "GameInstance.h"
 
@@ -224,6 +225,10 @@
 #include "Ranrok_Land.h"
 #include "Ranrok_Rush_Bottom.h"
 #include "Ranrok_GroundPulse.h"
+#include "Ranrok_Swipe.h"
+#include "Ranrok_DeadSplash.h"
+#include "Ranrok_DeadImpact.h"
+
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -247,6 +252,7 @@
 #include "Dummy_Globe.h"
 
 
+#pragma endregion
 #pragma endregion
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -1918,6 +1924,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CLightSpawner>(g_iStaticLevel, CLightSpawner::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Dagger>(g_iStaticLevel, CGoblin_Dagger::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1975,6 +1984,18 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_GroundPulse>(NEXT_LEVEL, CRanrok_GroundPulse::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Swipe>(NEXT_LEVEL, CRanrok_Swipe::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_DeadSplash>(NEXT_LEVEL, CRanrok_DeadSplash::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_DeadImpact>(NEXT_LEVEL, CRanrok_DeadImpact::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	

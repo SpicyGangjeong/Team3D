@@ -134,10 +134,6 @@ private:
 
 	virtual void Add_FSM();
 
-	void	Reset_LightCombo() { m_iLightCombo = 0; }
-	_uint	Next_LightCombo() { return ++m_iLightCombo; }
-	void	Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
-
 	function<void()> m_InputAction = nullptr;
 	_int			m_eUIState = { };
 	_uint			m_iLightCombo = { 0 };
@@ -166,7 +162,8 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	array<_float4x4, 256> SkinMatrices;
+	array<_float4x4, 256> SkinMatrices = {};
+	array<_int, 256> SecondMaskIndex = {};
 	_bool			m_bOpenDoor = { false };
 
 	/* 무적 불 변수*/
@@ -184,6 +181,10 @@ private:
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
+
+	void	Behavior_CutSceneEnter();
+	HRESULT Behavior_CutSceneExitCheck(_float fTimeDelta);
+	void	Behavior_CutSceneExit();
 
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);

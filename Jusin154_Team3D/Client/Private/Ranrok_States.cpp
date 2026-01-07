@@ -660,8 +660,12 @@ void CRanrok::Behavior_SwipeEnter()
 
 	}
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_bMotionTrail = true; },
+		[this]() {
+			m_bMotionTrail = true; 
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_SWIPE , this);
+		},
 		0.3f);
+
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -1030,20 +1034,95 @@ void CRanrok::Behavior_DeadEnter()
 	m_bLookAt = false;
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::DEAD);
-	PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
-	PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
-	m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
-	m_pRigidBody->SetActive(false);
-	m_pCharacter_Controller->SetActive(false);
+
 
 
 	pairAnimInfo = m_Animation[STATEANIM::DEAD];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+
+	m_pBottomSmoke->Set_Visible(false);
+	m_pLeftSmoke->Set_Visible(false);
+	m_pRightSmoke->Set_Visible(false);
+	m_pLeftPt->Set_Visible(false);
+	m_pRightPt->Set_Visible(false);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_vector vPos = m_pCharacter_Controller->Get_Position();
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &vPosFloat4);
+
+		}, 0.f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("pinky_06_right")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_vector vPos = BoneMat.r[3];
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_SPLASH, this, &vPosFloat4);
+
+		}, 0.2f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("elbow_left")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_vector vPos = BoneMat.r[3];
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_SPLASH, this, &vPosFloat4);
+
+		}, 0.34f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("chest_Main")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_vector vPos = BoneMat.r[3];
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_SPLASH, this, &vPosFloat4);
+
+		}, 0.44f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("chest_Main")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_vector vPos = BoneMat.r[3];
+			_float4 vPosFloat4 = {};
+			XMStoreFloat4(&vPosFloat4, vPos);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_SPLASH, this, &vPosFloat4);
+
+		}, 0.6f);
+
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_DEAD_IMPACT, this);
+
+		}, 0.8f);
+
 }
 
 HRESULT CRanrok::Behavior_DeadExitCheck(_float fTimeDelta)
 {
-	if (FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	m_fDeadRatio = CMyTools::Saturate((fRatio - 0.8f) / 0.2f);
+	if (FLT_EPSILON > fRatio) {
 		return E_PENDING;
 	}
 	return S_OK;
@@ -1285,8 +1364,15 @@ void CRanrok::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
-			m_fDeadRatio = fDeadRatio;
-			if (m_fDeadRatio > 1.f) {
+			// m_fDeadRatio = fDeadRatio;
+			if (m_fDeadRatio >= 1.f) {
+
+				PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
+				PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
+				m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+				m_pRigidBody->SetActive(false);
+				m_pCharacter_Controller->SetActive(false);
+
 				m_bDead = true;
 			}
 			};

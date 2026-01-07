@@ -5,6 +5,7 @@
 #include "CallBack_Playable_HitReport.h"
 #include "Character_Controller.h"
 #include "EffectPool.h"
+#include "Effect_Container.h"
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Layer.h"
@@ -12,13 +13,12 @@
 #include "Mesh.h"
 
 CHuman_Duelist::CHuman_Duelist(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CUnit(pDevice, pContext)
+	: CMonster(pDevice, pContext)
 {
 }
 
 CHuman_Duelist::CHuman_Duelist(const CHuman_Duelist& Prototype)
-	: CUnit(Prototype),
-	m_pInfoInstance(CInfoInstance::GetInstance())
+	: CMonster(Prototype)
 {
 }
 
@@ -60,10 +60,9 @@ HRESULT CHuman_Duelist::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	m_pInfoInstance->Regist_PlayerAlly(this);
-	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
+	m_pInfoInstance->Regist_ActiveMonster(this);
 	{
-		PLAYERDESC* pDesc = static_cast<PLAYERDESC*>(pArg);
+		DUELISTDESC* pDesc = static_cast<DUELISTDESC*>(pArg);
 		_vector vPos = XMLoadFloat4(&pDesc->vPos);
 		_vector vRotQ = XMLoadFloat4(&pDesc->vRotQ);
 		m_pCharacter_Controller->Set_Position(vPos);
@@ -71,7 +70,7 @@ HRESULT CHuman_Duelist::Initialize(void* pArg)
 		m_pTransformCom->Rotation(vRotQ);
 	}
 
-	m_bAI = false;
+	m_bAI = true;
 
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
@@ -106,6 +105,9 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 
+	for (_uint i = 0; i < ENUM_CLASS(SKILL::END); i++)
+		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
+
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
@@ -121,6 +123,10 @@ void CHuman_Duelist::Late_Update(_float fTimeDelta)
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
 	__super::Late_Update(fTimeDelta);
+
+	if (true == m_bLookAt) {
+		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
+	}
 }
 
 
@@ -224,8 +230,6 @@ HRESULT CHuman_Duelist::Render_Shadow(SHADOW eType)
 }
 void CHuman_Duelist::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
-
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
@@ -234,6 +238,25 @@ void CHuman_Duelist::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 	else {
 		m_fHitDegree = -1.f;
+	}
+
+	pair<_float, _float> damagePair = {};
+
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+	if (pEffect_Container != nullptr)
+	{
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			break;
+		}
 	}
 
 	if (m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_NONE))
@@ -252,7 +275,11 @@ HRESULT CHuman_Duelist::Ready_Components()
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	if (FAILED(__super::Ready_Components(&Desc))) {
+	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, &Desc))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Add_Component<CFSM>(g_iStaticLevel, &m_pFSM))) {
 		return E_FAIL;
 	}
 
@@ -280,14 +307,15 @@ HRESULT CHuman_Duelist::Ready_Components()
 		return E_FAIL;
 	}
 
-	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
-	m_Components.push_back(m_pStat);
-	SAFE_ADDREF(m_pStat);
+
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_M_STUDENT"), (CComponent**)&m_pStat))) {
+		return E_FAIL;
+	}
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::AI);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.001f;
@@ -303,12 +331,11 @@ HRESULT CHuman_Duelist::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
-		m_pCharacter_Controller->SetGravity(false);
 	}
 
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::AI);
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
@@ -397,48 +424,48 @@ HRESULT CHuman_Duelist::Bind_ShaderParameters(_uint iMeshOrder)
 		break;
 #ifdef 기무리
 
-	case PLAYER_MESH_ORDER::ROBE_CLOTH:
-	{
-		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
-		_uint MeshBoneCount = pMesh->Get_NumBone();
+	//case PLAYER_MESH_ORDER::ROBE_CLOTH:
+	//{
+	//	CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
+	//	_uint MeshBoneCount = pMesh->Get_NumBone();
 
-		for (_uint i = 0; i < MeshBoneCount; ++i)
-		{
-			XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
-		}
+	//	for (_uint i = 0; i < MeshBoneCount; ++i)
+	//	{
+	//		XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
+	//	}
 
-		_uint temp = 0;
-		vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
-		vector<_int> boneIndices = pMesh->Get_BoneIndices();
+	//	_uint temp = 0;
+	//	vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
+	//	vector<_int> boneIndices = pMesh->Get_BoneIndices();
 
-		for (_uint i = 0; i < MeshBoneCount; ++i)
-		{
-			_uint global = boneIndices[i];
-			if (global == 38)
-				continue;
-			if (globalMask[global] == 1)
-			{
-				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
-			}
-		}
+	//	for (_uint i = 0; i < MeshBoneCount; ++i)
+	//	{
+	//		_uint global = boneIndices[i];
+	//		if (global == 38)
+	//			continue;
+	//		if (globalMask[global] == 1)
+	//		{
+	//			SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
+	//		}
+	//	}
 
-		GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
+	//	GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
 
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
-			return E_FAIL;
-		}
+	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
+	//		return E_FAIL;
+	//	}
 
 
-		if (FAILED(m_pShaderCom->Bind_Matrices(
-			"g_BoneMatrices",
-			SkinMatrices.data(),
-			(_int)SkinMatrices.size()
-		)))
-		{
-			return E_FAIL;
-		}
-	}
-	break;
+	//	if (FAILED(m_pShaderCom->Bind_Matrices(
+	//		"g_BoneMatrices",
+	//		SkinMatrices.data(),
+	//		(_int)SkinMatrices.size()
+	//	)))
+	//	{
+	//		return E_FAIL;
+	//	}
+	//}
+	//break;
 #endif // _DEBUG
 
 	default:

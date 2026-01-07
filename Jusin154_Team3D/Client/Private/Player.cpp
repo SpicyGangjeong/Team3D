@@ -165,7 +165,7 @@ void CPlayer::Update(_float fTimeDelta)
 		}
 	}
 
-	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -199,6 +199,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	}
 
 	Player_PixRot();
+
+	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 
@@ -525,6 +527,8 @@ HRESULT CPlayer::Ready_Components()
 	}
 
 	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
+	SAFE_ADDREF(m_pStat);
+	
 	m_Components.push_back(m_pStat);
 	SAFE_ADDREF(m_pStat);
 
@@ -1040,6 +1044,13 @@ void CPlayer::Describe_Entity()
 
 
 		m_pLightCom->Describe_Entity();
+		for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
+		{
+			if (GUI::Button(m_pModelCom->Get_AnimList(i)))
+			{
+				m_pModelCom->Set_AnimationIndex(i);
+			}
+		}
 	}
 	GUI::End();
 }

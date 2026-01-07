@@ -854,8 +854,29 @@
     <ClInclude Include="..\Public\Ranrok_GroundPulse.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_DeadSplash.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Swipe.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\Human_Duelist.h">
       <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_NormalJap.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_Protego.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_Levioso.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_CutScene.h">
+      <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1772,12 +1793,33 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush">
       <UniqueIdentifier>{eb8e52f5-0283-4acf-8fbb-0e734b7580e9}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
       <UniqueIdentifier>{9c357e12-18b3-461e-b74c-76f85280796f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar">
       <UniqueIdentifier>{8b69e309-b90b-47f6-8f2d-3dd778b468fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact">
+      <UniqueIdentifier>{a7aeb7ef-a180-49ba-81f6-c8a47dcb941d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe">
+      <UniqueIdentifier>{7a994c53-e406-485e-82c2-6a116b6b23e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash">
+      <UniqueIdentifier>{e1fcb75d-6e7a-4adb-9835-6913ac6f44b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap">
+      <UniqueIdentifier>{09b5e5b3-c1fe-4399-b2d3-96d652255bb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Duelist_Protego">
+      <UniqueIdentifier>{b12b49e0-3bdc-403f-be34-3e97cada7270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso">
+      <UniqueIdentifier>{5351494b-8047-488a-ba2b-59a88dae4534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_CutScene">
+      <UniqueIdentifier>{b50fed80-37dd-4adb-afd4-ba153cef8a92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2588,6 +2630,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_GroundPulse.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_DeadSplash.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_DeadImpact.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Swipe.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_NormalJap.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_Protego.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_Levioso.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_CutScene.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

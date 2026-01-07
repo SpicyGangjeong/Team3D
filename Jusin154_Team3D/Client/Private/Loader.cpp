@@ -176,7 +176,9 @@
 #include "Bombard.h"
 #include "Decendo.h"
 #include "NomalJap.h"
+#include "Duelist_NormalJap.h"
 #include "Protego.h"
+#include "Duelist_Protego.h"
 #include "Revelio.h"
 #include "NomalJapSide.h"
 #include "DecendoSide.h"
@@ -190,6 +192,7 @@
 #include "Trail.h"
 #include "EffectPool.h"
 #include "Levioso.h"
+#include "Duelist_Levioso.h"
 #include "Lumos.h"
 #include "Accio.h"
 #include "Blink.h"
@@ -219,6 +222,9 @@
 #include "Ranrok_Land.h"
 #include "Ranrok_GroundPulse.h"
 #include "Ranrok_Rush_Bottom.h"
+#include "Ranrok_Swipe.h"
+#include "Ranrok_DeadSplash.h"
+#include "Ranrok_DeadImpact.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -410,7 +416,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -2201,7 +2207,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma region ACTOR
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
 		return E_FAIL;
 	}
 	if (true == isLoad_NPC) {
@@ -2330,11 +2336,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 			return E_FAIL;
-		
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
@@ -2451,8 +2452,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(g_iStaticLevel, CNomalJap::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_NormalJap>(g_iStaticLevel, CDuelist_NormalJap::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(g_iStaticLevel, CProtego::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_Protego>(g_iStaticLevel, CDuelist_Protego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -2465,6 +2473,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(g_iStaticLevel, CLevioso::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_Levioso>(g_iStaticLevel, CDuelist_Levioso::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -2601,6 +2613,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Rush_Bottom>(g_iStaticLevel, CRanrok_Rush_Bottom::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Swipe>(g_iStaticLevel, CRanrok_Swipe::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_DeadSplash>(g_iStaticLevel, CRanrok_DeadSplash::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_DeadImpact>(g_iStaticLevel, CRanrok_DeadImpact::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -3757,7 +3781,7 @@ HRESULT CLoader::Loading_For_Field()
 
 	/* For.Prototype_Component_DecalBox */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_DecalBox"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");

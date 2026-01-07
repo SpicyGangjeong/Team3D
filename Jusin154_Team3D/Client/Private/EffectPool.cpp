@@ -6,10 +6,13 @@
 #include "Effect_Container.h"
 #include "Bombard.h"
 #include "NomalJap.h"
+#include "Duelist_NormalJap.h"
 #include "Decendo.h"
 #include "Protego.h"
+#include "Duelist_Protego.h"
 #include "Revelio.h"
 #include "Levioso.h"
+#include "Duelist_Levioso.h"
 
 #include "BombardSide.h"
 #include "LeviosoSide.h"
@@ -52,6 +55,9 @@
 #include "Ranrok_Land.h"
 #include "Ranrok_GroundPulse.h"
 #include "Ranrok_Rush_Bottom.h"
+#include "Ranrok_Swipe.h"
+#include "Ranrok_DeadSplash.h"
+#include "Ranrok_DeadImpact.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -234,6 +240,14 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::DUELIST_JAP, 10, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+		CDuelist_NormalJap* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDuelist_NormalJap>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 
 	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
@@ -262,6 +276,15 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::DUELIST_PROTEGO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CDuelist_Protego* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDuelist_Protego>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CRevelio* pEffect = nullptr;
@@ -285,6 +308,15 @@ HRESULT CEffectPool::Ready_Effect()
 		CLevioso* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CLevioso>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::DUELIST_LEVIOSO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CDuelist_Levioso* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDuelist_Levioso>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;
@@ -668,6 +700,33 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 
 	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_SWIPE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Swipe* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Swipe>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_DEAD_SPLASH, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_DeadSplash* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_DeadSplash>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_DEAD_IMPACT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_DeadImpact* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_DeadImpact>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 	
 	return S_OK;
 }
@@ -685,6 +744,7 @@ HRESULT CEffectPool::Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPr
 		m_EffectList[ENUM_CLASS(eType)].push_back(pEffect_Container);
 
 	}
+
 
 	return S_OK;
 }

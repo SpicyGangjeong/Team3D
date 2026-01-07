@@ -79,7 +79,7 @@ void CRanrok_Breath::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	_matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("jaw"));
+	_matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("tongue_01"));
 
 	for (int i = 0; i < 3; ++i) {
 		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);

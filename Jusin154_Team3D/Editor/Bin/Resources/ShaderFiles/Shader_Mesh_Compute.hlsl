@@ -29,7 +29,7 @@ cbuffer AnimCB : register(b0)
     float HeadAimWeight;
 
     int SkipCount;
-    int _pad0;
+    int IsSkip;
     int _pad1;
     int _pad2;
 
@@ -38,6 +38,11 @@ cbuffer AnimCB : register(b0)
 
     row_major float4x4 PreTransformMatrix;
     float4 RootInitRot;
+    
+    int UseUpperBody;
+    float UpperBlend;
+    int SecondAnimIndex;
+    float SecondAnimTime;
 };
 
 [numthreads(256, 1, 1)]

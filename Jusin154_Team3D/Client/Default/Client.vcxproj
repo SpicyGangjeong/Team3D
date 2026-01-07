@@ -176,6 +176,9 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\Public\Camera_Model.h" />
+    <ClInclude Include="..\Public\Duelist_Levioso.h" />
+    <ClInclude Include="..\Public\Duelist_NormalJap.h" />
+    <ClInclude Include="..\Public\Duelist_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Assassin.h" />
     <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
     <ClInclude Include="..\Public\Goblin_Sword.h" />
@@ -184,6 +187,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\RandomNpc.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_Charge.h" />
+    <ClInclude Include="..\Public\Ranrok_DeadImpact.h" />
+    <ClInclude Include="..\Public\Ranrok_DeadSplash.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
     <ClInclude Include="..\Public\CamPosition_AI.h" />
     <ClInclude Include="..\public\Dialogue.h" />
@@ -200,6 +205,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Player_ENUM.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h" />
+    <ClInclude Include="..\Public\Ranrok_Swipe.h" />
     <ClInclude Include="..\Public\ReparoObject.h" />
     <ClInclude Include="..\Public\Ride_BoosterBar.h" />
     <ClInclude Include="..\Public\Ride_Booster_Slot.h" />
@@ -209,6 +215,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ride_InfoBG.h" />
     <ClInclude Include="..\Public\Ride_Info_Key.h" />
     <ClInclude Include="..\Public\Ride_Panel.h" />
+    <ClInclude Include="..\Public\State_CutScene.h" />
     <ClInclude Include="..\Public\State_Dash.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_Fear.h" />
@@ -455,6 +462,9 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\Private\Camera_Model.cpp" />
+    <ClCompile Include="..\Private\Duelist_Levioso.cpp" />
+    <ClCompile Include="..\Private\Duelist_NormalJap.cpp" />
+    <ClCompile Include="..\Private\Duelist_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />
@@ -466,6 +476,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\RandomNpc.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
     <ClCompile Include="..\Private\Ranrok_Charge.cpp" />
+    <ClCompile Include="..\Private\Ranrok_DeadImpact.cpp" />
+    <ClCompile Include="..\Private\Ranrok_DeadSplash.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\CamPosition_AI.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
@@ -481,6 +493,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Swipe.cpp" />
     <ClCompile Include="..\Private\ReparoObject.cpp" />
     <ClCompile Include="..\Private\Ride_BoosterBar.cpp" />
     <ClCompile Include="..\Private\Ride_Booster_Slot.cpp" />
@@ -490,6 +503,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ride_InfoBG.cpp" />
     <ClCompile Include="..\Private\Ride_Info_Key.cpp" />
     <ClCompile Include="..\Private\Ride_Panel.cpp" />
+    <ClCompile Include="..\Private\State_CutScene.cpp" />
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\State_Fear.cpp" />
