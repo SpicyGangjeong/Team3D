@@ -102,6 +102,11 @@ public:
 	void			Set_BlendDuration(_float Duration) { m_fBlendDuration = Duration; }
 
 	_float4			Get_RootBoneMomentum() { return m_RootBoneMomentum; }
+
+	void			Start_ChainAnimation();
+	void			Update_ChainAnimation();
+	void			Set_ChainAnimation(pair<_uint, _bool> chainAnim);
+	void			IsRootBone(_bool bRootBone) { m_bRootBone = bRootBone; }
 #pragma endregion
 #pragma region Mesh
 	const _char*		Get_MeshName(_uint iIndex);
@@ -258,6 +263,10 @@ private:
 	_bool						m_IsSkip = {false};
 	_bool						m_bSecondAnim = { false };
 	_int						m_iMaskBlendIndex = {};
+	vector<pair<_uint, _bool>>	m_ChainAnim = {};
+	_uint						m_iChainIndex = 0;
+	_bool						m_bPlayingChain = false;
+
 
 
 private:

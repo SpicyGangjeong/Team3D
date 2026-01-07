@@ -26,6 +26,7 @@
 #include "Goblin_BattleAxe.h"
 #include "BroomRaceManager.h"
 #include "ReparoObject.h"
+#include "ThestralCarriage.h"
 
 #pragma region ACTOR
 
@@ -428,9 +429,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef Bin
-	isLoad_Background = false;
-	isLoad_Hogwart = false;
-	isLoad_UI_SEQUANTIAL = false;
+	isLoad_Background = true;
+	isLoad_Hogwart = true;
+	isLoad_UI_SEQUANTIAL = true;
 #endif // Bin
 #endif // _DEBUG
 
@@ -2446,6 +2447,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerB.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ThestralCarriage_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/ThestralCarriage/ThestralCarriage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
+
 
 #pragma endregion
 
@@ -3642,6 +3647,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_ReparoObject */
 	if (FAILED(m_pGameInstance->Add_Prototype<CReparoObject>(g_iStaticLevel, CReparoObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_ThestralCarriage */
+	if (FAILED(m_pGameInstance->Add_Prototype<CThestralCarriage>(g_iStaticLevel, CThestralCarriage::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_BroomRaceManager */
