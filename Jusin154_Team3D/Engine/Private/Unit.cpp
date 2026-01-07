@@ -307,6 +307,9 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
 
         // LIGHT ATTACK
         { "LIGHT_ATTACK", LIGHT_ATTACK },
+        { "LIGHT_ATTACK2", LIGHT_ATTACK2 },
+        { "LIGHT_ATTACK3", LIGHT_ATTACK3 },
+        { "LIGHT_ATTACK4", LIGHT_ATTACK4 },
         { "LIGHT_ATTACK_180_R", LIGHT_ATTACK_180_R },
         { "LIGHT_ATTACK_90_L", LIGHT_ATTACK_90_L },
         { "LIGHT_ATTACK_90_R1", LIGHT_ATTACK_90_R1 },

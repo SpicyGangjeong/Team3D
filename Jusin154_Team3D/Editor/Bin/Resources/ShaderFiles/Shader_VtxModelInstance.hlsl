@@ -964,6 +964,9 @@ float2 ComputeDecal(float4 vPosition , float4x4 LocalMatrixInv)
     vDepthUV.y = vPosition.y / g_fWinSizeY;
     
     float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthUV);
+    
+    clip(0.5f - vDepthDesc.w); /* 지형과 메쉬에게서만 수행할 것 */
+    
     float3 vNormalDesc = g_NormalMapTexture.Sample(PointSampler, vDepthUV).xyz;
     vNormalDesc = normalize(vNormalDesc * 2.f - 1.f);
     

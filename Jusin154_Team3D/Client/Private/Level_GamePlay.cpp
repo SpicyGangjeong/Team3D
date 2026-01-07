@@ -325,18 +325,20 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #if 진우
 
 #else
-		if(isReady_Hogsmeade)
+	
+#endif
+
+		if (isReady_Hogsmeade)
 		{
 			if (FAILED(Ready_Layer_Hogsmeade()))
 				return E_FAIL;
 		}
 
-		if(isReady_Hogwart)
+		if (isReady_Hogwart)
 		{
 			if (FAILED(Ready_Layer_Hogwart()))
 				return E_FAIL;
 		}
-#endif
 		
 		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;
@@ -804,7 +806,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_RandomNPC = true;
 #endif // gimch
 #ifdef 진우
-	isLoad_RandomNPC = true;
+	isLoad_RandomNPC = false;
+	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
 	isLoad_NPC = true;
@@ -856,12 +859,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			}
 		}
 
-		//CPlayer::PLAYERDESC playerDesc = {};
-		//playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
-		//playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-		//	return E_FAIL;
-		//}
+		CPlayer::PLAYERDESC playerDesc = {};
+		playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
+		playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,&playerDesc))) {
+			return E_FAIL;
+		}
 	}
 
 
@@ -903,7 +906,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // gimch
 #ifdef 진우
-	isLoad_Monster = true;
+	isLoad_Monster = false;
 #endif // 
 #ifdef 기무리
 	isLoad_Monster = true;

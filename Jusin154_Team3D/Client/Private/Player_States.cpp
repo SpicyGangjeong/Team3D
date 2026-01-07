@@ -224,6 +224,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
+			m_pModelCom->IsSkip(true);
 			//m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
@@ -351,6 +352,7 @@ void CPlayer::Behavior_IdleExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLE | FSMSTATE::IDLE_TURN);
 	Reset_Event();
+	m_pModelCom->IsSkip(false);
 }
 
 void CPlayer::Behavior_CutSceneEnter()
@@ -506,6 +508,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
+			m_pModelCom->IsSkip(true);
 			//m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 
@@ -735,6 +738,7 @@ void CPlayer::Behavior_MoveExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::MOVE | FSMSTATE::SPRINT | FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::STOP);
 	Reset_Event();
+	m_pModelCom->IsSkip(false);
 }
 
 void CPlayer::Behavior_JumpEnter()

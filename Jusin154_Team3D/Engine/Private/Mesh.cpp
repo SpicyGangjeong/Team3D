@@ -280,10 +280,12 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 
 	m_pVertexPositions = new _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
-#ifdef _DEBUG
+#ifdef DEBUG
 	m_VertexTexcoords = new _float2[m_iNumVertices];
 	ZeroMemory(m_VertexTexcoords, sizeof(_float2) * m_iNumVertices);
-#endif // _DEBUG
+#endif // DEBUG
+
+
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
@@ -303,10 +305,11 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 		memcpy(&pVertices[i].vBinormal, &SaveMesh->Vertices[i].BiNoraml, sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vBinormal, 
 			XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), PreTransformMatrix)));
-#ifdef _DEBUG
+
 		pVertices[i].vTexcoord = SaveMesh->Vertices[i].UV;
+#ifdef DEBUG
 		memcpy(&m_VertexTexcoords[i], &pVertices[i].vTexcoord, sizeof(_float2));
-#endif // _DEBUG
+#endif
 
 	}
 
