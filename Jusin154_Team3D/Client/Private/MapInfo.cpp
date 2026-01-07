@@ -15,6 +15,7 @@
 #include "MapElement_Static.h"
 #include "WorldDecal.h"
 #include "PointLight.h"
+#include "InstancedProp_Light.h"
 #include "Layer.h"
 
 CMapInfo::CMapInfo()
@@ -160,66 +161,6 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTa
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_BuildingContainer(tinyxml2::XMLElement* Container, CMapContainer** ppContainerObject, const _wchar* pLayerTag)
-{
-	CBuildingContainer::MAP_CONTAINER_DESC  ContainerDesc = {};
-
-	auto* ContainerPosition = Container->FirstChildElement("Position");
-	ContainerPosition->QueryFloatAttribute("x", &ContainerDesc.vPosition.x);
-	ContainerPosition->QueryFloatAttribute("y", &ContainerDesc.vPosition.y);
-	ContainerPosition->QueryFloatAttribute("z", &ContainerDesc.vPosition.z);
-
-	auto* ContainerScale = Container->FirstChildElement("Scale");
-	ContainerScale->QueryFloatAttribute("x", &ContainerDesc.vScale.x);
-	ContainerScale->QueryFloatAttribute("y", &ContainerDesc.vScale.y);
-	ContainerScale->QueryFloatAttribute("z", &ContainerDesc.vScale.z);
-
-	auto* ContainerRotation = Container->FirstChildElement("Rotation");
-	ContainerRotation->QueryFloatAttribute("x", &ContainerDesc.vRotation.x);
-	ContainerRotation->QueryFloatAttribute("y", &ContainerDesc.vRotation.y);
-	ContainerRotation->QueryFloatAttribute("z", &ContainerDesc.vRotation.z);
-
-	auto* BoundingBox_Min = Container->FirstChildElement("BoundingBox_Min");
-	BoundingBox_Min->QueryFloatAttribute("x", &ContainerDesc.vContainerMin.x);
-	BoundingBox_Min->QueryFloatAttribute("y", &ContainerDesc.vContainerMin.y);
-	BoundingBox_Min->QueryFloatAttribute("z", &ContainerDesc.vContainerMin.z);
-
-	auto* BoundingBox_Max = Container->FirstChildElement("BoundingBox_Max");
-	BoundingBox_Max->QueryFloatAttribute("x", &ContainerDesc.vContainerMax.x);
-	BoundingBox_Max->QueryFloatAttribute("y", &ContainerDesc.vContainerMax.y);
-	BoundingBox_Max->QueryFloatAttribute("z", &ContainerDesc.vContainerMax.z);
-
-	m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(
-		g_iStaticLevel, ENUM_CLASS(LEVEL::GAMEPLAY), pLayerTag, &ContainerDesc, nullptr, reinterpret_cast<CBuildingContainer**>(ppContainerObject));
-
-	return S_OK;
-}
-
-HRESULT CMapInfo::Load_StreetContainer(tinyxml2::XMLElement* Container, CMapContainer** ppContainerObject, const _wchar* pLayerTag)
-{
-	CMapContainer::MAP_CONTAINER_DESC  ContainerDesc = {};
-
-	auto* ContainerPosition = Container->FirstChildElement("Position");
-	ContainerPosition->QueryFloatAttribute("x", &ContainerDesc.vPosition.x);
-	ContainerPosition->QueryFloatAttribute("y", &ContainerDesc.vPosition.y);
-	ContainerPosition->QueryFloatAttribute("z", &ContainerDesc.vPosition.z);
-
-	auto* ContainerScale = Container->FirstChildElement("Scale");
-	ContainerScale->QueryFloatAttribute("x", &ContainerDesc.vScale.x);
-	ContainerScale->QueryFloatAttribute("y", &ContainerDesc.vScale.y);
-	ContainerScale->QueryFloatAttribute("z", &ContainerDesc.vScale.z);
-
-	auto* ContainerRotation = Container->FirstChildElement("Rotation");
-	ContainerRotation->QueryFloatAttribute("x", &ContainerDesc.vRotation.x);
-	ContainerRotation->QueryFloatAttribute("y", &ContainerDesc.vRotation.y);
-	ContainerRotation->QueryFloatAttribute("z", &ContainerDesc.vRotation.z);
-
-	m_pGameInstance->Add_GameObject_ToLayer<CStreetContainer>(
-		g_iStaticLevel, ENUM_CLASS(LEVEL::GAMEPLAY), pLayerTag, &ContainerDesc, nullptr, reinterpret_cast<CStreetContainer**>(ppContainerObject));
-
-	return S_OK;
-}
-
 HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject, const _wchar* pLayerTag)
 {
 #pragma region ADD_PARTOBJECT
@@ -272,52 +213,7 @@ HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapCon
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_MapCollisionObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject, const _wchar* pLayerTag)
-{
-#pragma region ADD_COLLISION
-	for (auto* Collision = Container->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
-	{
-		_uint iLodLevel = {};
-		_uint iKeyIndex = {};
 
-		Collision->QueryUnsignedAttribute("Lod_Level", &iLodLevel);
-		Collision->QueryUnsignedAttribute("Key_Index", &iKeyIndex);
-
-#pragma region MAPOBJECT_LOD
-		CMapPartObject::MAPOBJECT_DESC Desc = {};
-		string strTag = {};
-		for (auto* PrototypeTag = Collision->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
-		{
-			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(PrototypeTag->GetText()));
-		}
-		Desc.iMaxLodLevel = iLodLevel;
-		Desc.pParentTransform = pContainerObject->Get_Component<CTransform>();
-
-		/* Position */
-		tinyxml2::XMLElement* Position = Collision->FirstChildElement("Position");
-		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
-		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
-		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
-
-		/* Scale */
-		tinyxml2::XMLElement* Scale = Collision->FirstChildElement("Scale");
-		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
-		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
-		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
-
-		/* Rotation */
-		tinyxml2::XMLElement* Rotation = Collision->FirstChildElement("Rotation");
-		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
-		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
-		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
-
-		pContainerObject->Add_Collision<CMapObject_Collision>(g_iStaticLevel, &Desc);
-#pragma endregion
-	}
-#pragma endregion
-
-	return S_OK;
-}
 
 HRESULT CMapInfo::Load_LightElements(const _char* pFileName, const _wchar* pLayerTag)
 {
@@ -869,6 +765,30 @@ HRESULT CMapInfo::Load_PointLights(const _char* pFilePath, const _wchar* pLayerT
 	return S_OK;
 }
 
+HRESULT CMapInfo::Load_DADA_INT()
+{
+	if (FAILED(Load_MapObjects("DATA_INT_Data", LAYER_DADA_INT)))
+		return E_FAIL;
+
+	if (FAILED(Load_PointLights("DATA_INT_PointLight_Data", LAYER_DADA_INT)))
+		return E_FAIL;
+
+	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
+
+	/* LightFixture_Base_D */
+	LightDesc.isShake = false;
+	LightDesc.bEnableRigidbody = false;
+	LightDesc.iGlassMeshIndex = 1;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/SM_HW_LightFixture_Base_D.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_DADA_INT, &LightDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CMapInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
 	m_pGameInstance = CGameInstance::GetInstance();
@@ -881,6 +801,112 @@ HRESULT CMapInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
 
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_BuildingContainer(tinyxml2::XMLElement* Container, CMapContainer** ppContainerObject, const _wchar* pLayerTag)
+{
+	CBuildingContainer::MAP_CONTAINER_DESC  ContainerDesc = {};
+
+	auto* ContainerPosition = Container->FirstChildElement("Position");
+	ContainerPosition->QueryFloatAttribute("x", &ContainerDesc.vPosition.x);
+	ContainerPosition->QueryFloatAttribute("y", &ContainerDesc.vPosition.y);
+	ContainerPosition->QueryFloatAttribute("z", &ContainerDesc.vPosition.z);
+
+	auto* ContainerScale = Container->FirstChildElement("Scale");
+	ContainerScale->QueryFloatAttribute("x", &ContainerDesc.vScale.x);
+	ContainerScale->QueryFloatAttribute("y", &ContainerDesc.vScale.y);
+	ContainerScale->QueryFloatAttribute("z", &ContainerDesc.vScale.z);
+
+	auto* ContainerRotation = Container->FirstChildElement("Rotation");
+	ContainerRotation->QueryFloatAttribute("x", &ContainerDesc.vRotation.x);
+	ContainerRotation->QueryFloatAttribute("y", &ContainerDesc.vRotation.y);
+	ContainerRotation->QueryFloatAttribute("z", &ContainerDesc.vRotation.z);
+
+	auto* BoundingBox_Min = Container->FirstChildElement("BoundingBox_Min");
+	BoundingBox_Min->QueryFloatAttribute("x", &ContainerDesc.vContainerMin.x);
+	BoundingBox_Min->QueryFloatAttribute("y", &ContainerDesc.vContainerMin.y);
+	BoundingBox_Min->QueryFloatAttribute("z", &ContainerDesc.vContainerMin.z);
+
+	auto* BoundingBox_Max = Container->FirstChildElement("BoundingBox_Max");
+	BoundingBox_Max->QueryFloatAttribute("x", &ContainerDesc.vContainerMax.x);
+	BoundingBox_Max->QueryFloatAttribute("y", &ContainerDesc.vContainerMax.y);
+	BoundingBox_Max->QueryFloatAttribute("z", &ContainerDesc.vContainerMax.z);
+
+	m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(
+		g_iStaticLevel, ENUM_CLASS(LEVEL::GAMEPLAY), pLayerTag, &ContainerDesc, nullptr, reinterpret_cast<CBuildingContainer**>(ppContainerObject));
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_StreetContainer(tinyxml2::XMLElement* Container, CMapContainer** ppContainerObject, const _wchar* pLayerTag)
+{
+	CMapContainer::MAP_CONTAINER_DESC  ContainerDesc = {};
+
+	auto* ContainerPosition = Container->FirstChildElement("Position");
+	ContainerPosition->QueryFloatAttribute("x", &ContainerDesc.vPosition.x);
+	ContainerPosition->QueryFloatAttribute("y", &ContainerDesc.vPosition.y);
+	ContainerPosition->QueryFloatAttribute("z", &ContainerDesc.vPosition.z);
+
+	auto* ContainerScale = Container->FirstChildElement("Scale");
+	ContainerScale->QueryFloatAttribute("x", &ContainerDesc.vScale.x);
+	ContainerScale->QueryFloatAttribute("y", &ContainerDesc.vScale.y);
+	ContainerScale->QueryFloatAttribute("z", &ContainerDesc.vScale.z);
+
+	auto* ContainerRotation = Container->FirstChildElement("Rotation");
+	ContainerRotation->QueryFloatAttribute("x", &ContainerDesc.vRotation.x);
+	ContainerRotation->QueryFloatAttribute("y", &ContainerDesc.vRotation.y);
+	ContainerRotation->QueryFloatAttribute("z", &ContainerDesc.vRotation.z);
+
+	m_pGameInstance->Add_GameObject_ToLayer<CStreetContainer>(
+		g_iStaticLevel, ENUM_CLASS(LEVEL::GAMEPLAY), pLayerTag, &ContainerDesc, nullptr, reinterpret_cast<CStreetContainer**>(ppContainerObject));
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_MapCollisionObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject, const _wchar* pLayerTag)
+{
+#pragma region ADD_COLLISION
+	for (auto* Collision = Container->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
+	{
+		_uint iLodLevel = {};
+		_uint iKeyIndex = {};
+
+		Collision->QueryUnsignedAttribute("Lod_Level", &iLodLevel);
+		Collision->QueryUnsignedAttribute("Key_Index", &iKeyIndex);
+
+#pragma region MAPOBJECT_LOD
+		CMapPartObject::MAPOBJECT_DESC Desc = {};
+		string strTag = {};
+		for (auto* PrototypeTag = Collision->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(PrototypeTag->GetText()));
+		}
+		Desc.iMaxLodLevel = iLodLevel;
+		Desc.pParentTransform = pContainerObject->Get_Component<CTransform>();
+
+		/* Position */
+		tinyxml2::XMLElement* Position = Collision->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		/* Scale */
+		tinyxml2::XMLElement* Scale = Collision->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		/* Rotation */
+		tinyxml2::XMLElement* Rotation = Collision->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		pContainerObject->Add_Collision<CMapObject_Collision>(g_iStaticLevel, &Desc);
+#pragma endregion
+	}
+#pragma endregion
 
 	return S_OK;
 }

@@ -400,12 +400,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	_bool isLoad_UI_SEQUANTIAL = { true };
 	_bool isLoad_NPC = { true };
 	_bool isLoad_Monster = { true };
+	_bool isLoad_DataClassroom = { true };
 
 #ifdef _DEBUG
 #ifdef gimch
 	isLoad_Background = false;
-	isLoad_Hogwart = true;
+	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
+	isLoad_NPC = true;
+	isLoad_DataClassroom = true;
 #endif // gimch
 #ifdef 진우
 	isLoad_Background = false;
@@ -1030,7 +1033,39 @@ HRESULT CLoader::Loading_For_GamePlay()
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_DADATower/StaticMesh/EXT",
 				".bin", false
 			));
-		
+		}
+
+		if (true == isLoad_DataClassroom)
+		{
+			/* DADA INT */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_DADATower/StaticMesh/INT",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/Doors",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/Doorway",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/Props",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/Props/SM_HW_DADA_DragonBones",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/PictureFrames",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/PictureFrames",
+				".bin", false
+			));
 		}
 	}
 	/* LAND_MODEL */
@@ -3260,6 +3295,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleC_Round_Double_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HW_LightFixture_Base_D.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a*/
 	{
 		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
@@ -3426,6 +3467,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_MapElement_Light */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Light>(g_iStaticLevel, CMapElement_Light::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_PointLight */
+	if (FAILED(m_pGameInstance->Add_Prototype<CPointLight>(NEXT_LEVEL, CPointLight::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapElement_Interactable */
@@ -3781,7 +3826,7 @@ HRESULT CLoader::Loading_For_Field()
 
 	/* For.Prototype_Component_DecalBox */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_DecalBox"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");

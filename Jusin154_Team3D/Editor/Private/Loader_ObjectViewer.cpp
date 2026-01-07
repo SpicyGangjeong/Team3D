@@ -333,6 +333,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_GeorgeOsric_Model")
 	));
 
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Garlick/Garlick.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Garlick_Model")
+	));
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/DinahHecat/DinahHecat.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
@@ -405,10 +409,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	TEXT("Prototype_Component_Playable_Model")
 	//));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_TrollIntro.fbx", XMMatrixIdentity(),
-		TEXT("Prototype_Component_Playable_Model")
-	));
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_TrollIntro.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Playable_Model")
+	//));
 
 #pragma endregion
 

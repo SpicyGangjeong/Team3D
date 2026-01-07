@@ -20,6 +20,7 @@ public:
 	void Clear(_uint iLevelIndex);
 	void Clear_DeadObj();
 	class CLayer* Get_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag);
+	void Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
 
 private:
 	class CGameInstance*				m_pGameInstance = { nullptr };

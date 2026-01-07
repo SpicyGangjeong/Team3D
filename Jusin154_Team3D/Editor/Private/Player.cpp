@@ -573,7 +573,7 @@ void CPlayer::Describe_Entity()
 
 #ifdef _DEBUG
 
-#if gimchi || 진우
+#if 진우
 	if(m_pGameInstance->Key_Down(DIK_K))
 	{
 		_float3 vPos;
@@ -584,6 +584,16 @@ void CPlayer::Describe_Entity()
 	}
 #endif
 
+#if gimch
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		_float3 vPos;
+		if (m_pGameInstance->isPicking(&vPos))
+		{
+			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&vPos), 1.f));
+		}
+	}
+#endif
 #endif // 
 
 
