@@ -537,6 +537,7 @@ void CPlayerRobe::Free()
 	for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_BONE_ORDER::END); ++i) {
 		SAFE_RELEASE(m_pRobeJointAnchor[i]);
 	}
+#ifdef _DEBUG
 	if (nullptr != m_pMainShape) {
 		m_pMainShape.release();
 		m_pMainShape = nullptr;
@@ -545,4 +546,6 @@ void CPlayerRobe::Free()
 		m_pSubShape.release();
 		m_pSubShape = nullptr;
 	}
+#endif // _DEBUG
+
 }
