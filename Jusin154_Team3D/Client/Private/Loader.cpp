@@ -2201,7 +2201,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma region ACTOR
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
 		return E_FAIL;
 	}
 	if (true == isLoad_NPC) {
