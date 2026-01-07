@@ -225,11 +225,9 @@ HRESULT CLevel_Field::Ready_Layer_SkyBox()
 
 HRESULT CLevel_Field::Ready_Background()
 {
-	_float4 vColor = _float4(0.2f, 0.246f, 0.253f, 1.f);
-	m_pGameInstance->Set_FogColor(vColor);
-	m_pGameInstance->Set_Fog(10.f, 8.f);
-
 	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+
+
 
 	CInfoInstance::GetInstance()->Load_MapObjects("Dungeon_Map_Data", LAYER_BACKGROUND);
 	CInfoInstance::GetInstance()->Load_WorldDecal("Duengon_Decal_Data", LAYER_BACKGROUND);

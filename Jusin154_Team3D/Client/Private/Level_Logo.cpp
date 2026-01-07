@@ -46,6 +46,9 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			return;
 		}
 	}
+ 
+
+
 }
 
 HRESULT CLevel_Logo::Render()

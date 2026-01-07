@@ -402,10 +402,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.15f);
+			0.25f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.5f);
+			0.55f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
@@ -418,10 +418,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.15f);
+			0.25f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.5f);
+			0.55f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}
@@ -435,10 +435,10 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_bDisolve = true; },
-			0.15f);
+			0.25f);
 		Add_Event(pairAnimInfo.first,
 			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.5f);
+			0.55f);
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		return;
 	}

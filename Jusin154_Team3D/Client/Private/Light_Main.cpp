@@ -98,12 +98,21 @@ HRESULT CLight_Main::Ready_Components(void* pArg)
 {
 	__super::Ready_Components(nullptr);
 
-	_matrix LIGHT_WorldMatrixDoNotModify = 
-		_matrix(0.819145918f, 0.f, -0.573572040f, 0.f,
+
+	if (NEXT_LEVEL == ENUM_CLASS(LEVEL::GAMEPLAY))
+	{
+		_matrix LIGHT_WorldMatrixDoNotModify =
+			_matrix(0.819145918f, 0.f, -0.573572040f, 0.f,
 				0.553958654f, 0.258784860f, 0.791134834f, 0.f
 				, 0.148416296f, -0.965690017f, 0.211960629f, 0.f
 				, 0.f, 0.f, 0.f, 1.f);
-	m_pTransformCom->Set_WorldMatrix(LIGHT_WorldMatrixDoNotModify);
+		m_pTransformCom->Set_WorldMatrix(LIGHT_WorldMatrixDoNotModify);
+	}
+	else if (NEXT_LEVEL == ENUM_CLASS(LEVEL::FIELD))
+	{
+		m_pTransformCom->Rotation(XMConvertToRadians(-4.f), XMConvertToRadians(271.f), 0.f);
+
+	}
 
 	LIGHT_DESC* pLightDescArg = static_cast<LIGHT_DESC*>(pArg);
 

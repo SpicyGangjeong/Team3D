@@ -111,6 +111,7 @@ HRESULT CLevel_EffectViewer::Initialize()
 
 	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
 
+
 	return S_OK;
 }
 
@@ -164,8 +165,12 @@ HRESULT CLevel_EffectViewer::Ready_Layer_Light()
 		return E_FAIL;
 	}
 
-	_float4 vDiffuse = _float4(0.607f, 0.658f, 0.698f, 0.f);
-	_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
+	//_float4 vDiffuse = _float4(0.607f, 0.658f, 0.698f, 0.f);
+	//_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
+	//_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+
+	_float4 vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
+	_float4 vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
 	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 
 	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
@@ -227,6 +232,8 @@ HRESULT CLevel_EffectViewer::Ready_Layer_BackGround(const _wstring& strLayerTag)
 	m_pGameInstance->Set_FogColor(vColor);
 	m_pGameInstance->Set_Fog(10.f, 5.f);
 	m_pInfoInstance->Load_MapObjects("Dungeon_Map_Data");
+
+	CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data");
 
 	return S_OK;
 }
