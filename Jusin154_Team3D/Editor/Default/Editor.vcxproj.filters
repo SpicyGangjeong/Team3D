@@ -753,7 +753,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse">
       <UniqueIdentifier>{614e67ae-6df9-4826-adbe-6be96f54041d}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
       <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
     </Filter>
@@ -768,6 +768,18 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\DeadImpact">
       <UniqueIdentifier>{7a345ef7-8e16-45df-9bc3-e8fc665f729f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop">
+      <UniqueIdentifier>{8bc9a6f2-aea3-4631-83b0-1c897cc9f98c}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="50.UI\Dialogue_Canvas">
+      <UniqueIdentifier>{a5413132-f824-4e59-b3bb-1e6ad539b274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Dialogue_Canvas\Dialogue_Panel">
+      <UniqueIdentifier>{54dbea26-acfa-49be-9a97-1e2408cbd9b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice">
+      <UniqueIdentifier>{0201d2a8-9187-468c-aa2f-491bd3ae6ae1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1556,6 +1568,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\DeadImpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Prop.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop</Filter>
+	</ClInclude>
+    <ClInclude Include="..\public\Dialogue_Panel.h">
+      <Filter>50.UI\Dialogue_Canvas\Dialogue_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue_Canvas.h">
+      <Filter>50.UI\Dialogue_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue_Choice.h">
+      <Filter>50.UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2352,6 +2376,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_DeadImpact.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\DeadImpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop</Filter>
+	</ClCompile>
+    <ClCompile Include="..\private\Dialogue_Panel.cpp">
+      <Filter>50.UI\Dialogue_Canvas\Dialogue_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue_Canvas.cpp">
+      <Filter>50.UI\Dialogue_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue_Choice.cpp">
+      <Filter>50.UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

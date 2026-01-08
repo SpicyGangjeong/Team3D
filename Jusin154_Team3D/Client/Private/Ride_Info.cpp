@@ -64,6 +64,7 @@ void CRide_Info::Set_Hover(_bool bVisible)
 	m_bHover = true;
 	m_fTime = 0.f;
 	m_fAlpha = 1.f;
+	m_bFadeOut = false;
 }
 
 void CRide_Info::Priority_Update(_float fTimeDelta)

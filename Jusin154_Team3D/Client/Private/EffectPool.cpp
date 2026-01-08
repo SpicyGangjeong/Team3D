@@ -58,6 +58,7 @@
 #include "Ranrok_Swipe.h"
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
+#include "Ranrok_Prop.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -99,8 +100,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 기무리
-	m_isActiveEffectCreate = false;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 나
 	m_isActiveEffectCreate = false;
@@ -727,6 +728,16 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 		return pEffect; }
 	))) return E_FAIL;
+	
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PROP, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Prop* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Prop>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	
 	return S_OK;
 }

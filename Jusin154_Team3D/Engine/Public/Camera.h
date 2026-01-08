@@ -42,6 +42,9 @@ public:
 	virtual HRESULT	Ready_Components(void* pArg)override;
 	virtual void EnableTransition(_float fTransitionTime);
 
+	void	Set_RotDegreeVerticalLock(_float2 vVerticalLock);
+	_float2 Get_RotDegreeVerticalLock();
+
 	_bool IsActive() const { return m_bActive; }
 	_bool IsImportantThan(CCamera* pOther) const;
 	const _float* Get_CurrentFar();
@@ -63,6 +66,7 @@ protected:
 	_float3			m_vFollowPos_Src = { 0.f, 0.f, 0.f };
 	_float3			m_vFollowPos_Dest = { 0.f, 0.f, 0.f };
 	_uint			m_iPriority = { UINT_MAX };
+	_float2			m_vAccRotDegree_VerticalLocks = { 87.f, 87.f };
 
 	_bool			m_bIsCurrentTransition = { false };
 	_bool			m_bEnable_TransitionLerp = { false };

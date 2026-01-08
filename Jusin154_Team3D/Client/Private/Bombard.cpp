@@ -44,7 +44,10 @@ HRESULT CBombard::Initialize(void* pArg)
 	m_wstrEffectName = L"Bombard";
 
 	m_pLight_Projectile = Get_PartObject<CEffectParts>("Bombard_Projectile");
+	m_pWand_Light_B = Get_PartObject<CEffectParts>("Wand_Light_B");
+
 	SAFE_ADDREF(m_pLight_Projectile);
+	SAFE_ADDREF(m_pWand_Light_B);
 
 	m_fDuration = 2.5f;
 
@@ -71,6 +74,13 @@ void CBombard::Update(_float fTimeDelta)
 
 	pPJTransform->Translation( XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
 
+
+	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
+
+	if (pWand == nullptr)
+		return;
+
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 }
 
@@ -110,13 +120,15 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 	CPartObject* pShootPt = Get_PartObject<CEffectParts>("Bombard_Shoot_Pt");
 	CPartObject* pCircle0 = Get_PartObject<CEffectParts>("Bombard_Circle0");
 
-
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	m_pLight_Projectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	pCircle0->Set_Visible(true);
 	pShootPt->Set_Visible(true);
+	m_pWand_Light_B->Set_Visible(true);
+
 
 	m_pLight_Projectile->Set_Visible(true);
 
@@ -212,7 +224,7 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	
 	m_pLight_Projectile->Set_Visible(false);
 
@@ -230,7 +242,7 @@ void CBombard::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pLight_Projectile);
-
+	SAFE_RELEASE(m_pWand_Light_B);
 }
 #ifdef _DEBUG
 void CBombard::Describe_Entity()

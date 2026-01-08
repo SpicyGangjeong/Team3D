@@ -8,6 +8,7 @@
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
 #include "Loding_Canvas.h"
+#include "Dialogue_Canvas.h"
 #include "tinyxml2.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -320,6 +321,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("SpellLearn_Canvas"), m_pSpellLearn_Canvas);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDialogue_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CDialogue_Canvas**>(&m_pDialogue_Canvas)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Dialogue_Canvas"), m_pDialogue_Canvas);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;

@@ -74,7 +74,9 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 		if (true == m_bMovable) {
 			m_vAccRotDegrees.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
 			m_vAccRotDegrees.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
-			CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccRotDegrees);
+			_float2 vAccRotDegree = m_pBinded_Camera->Get_RotDegreeVerticalLock();
+			CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccRotDegrees, vAccRotDegree.x, vAccRotDegree.y);
+			m_pBinded_Camera->Set_RotDegreeVerticalLock(vAccRotDegree);
 		}
 		{
 			_vector vLookTargetPos = Calc_LookTargetPos();
@@ -466,7 +468,6 @@ void CCamPosition_Shoulder::Describe_Entity()
 	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Cam_Shoulder")) {
 		m_pTransformCom->Describe_Entity();
-
 		GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
 		GUI::SliderFloat("m_fFollowTargetIncludedAngleDegree", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
 		GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
@@ -485,6 +486,7 @@ void CCamPosition_Shoulder::Describe_Entity()
 
 			GUI::TreePop();
 		}
+		m_pBinded_Camera->Describe_Entity();
 	}
 	GUI::End();
 }

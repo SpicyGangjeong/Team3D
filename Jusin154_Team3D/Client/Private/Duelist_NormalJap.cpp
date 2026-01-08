@@ -7,6 +7,7 @@
 #include "EffectParts.h"
 #include "TrailObject.h"
 #include "Human_Duelist.h"
+#include "Player.h"
 
 
 CDuelist_NormalJap::CDuelist_NormalJap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -112,13 +113,6 @@ void CDuelist_NormalJap::Update(_float fTimeDelta)
 	XMStoreFloat4(&m_vEndPos, m_pProjectile->Get_WorldPostion());
 
 	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
-
-	if (true == m_pGameInstance->SphereCast(0.25f, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
-		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
-	{
-		OnCollision(this);
-	}
-
 }
 
 
@@ -130,7 +124,9 @@ void CDuelist_NormalJap::Late_Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = m_pProjectile->Get_WorldPostion();
-		MonsterSweepTarget(vStartPos, vEndPos, 0.02f);
+		ON_COLLISION_INFO CollisionInfo = MonsterSweepTarget(vStartPos, vEndPos, 0.02f);
+
+		OnCollision(this, &CollisionInfo);
 	}
 	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 
@@ -279,36 +275,47 @@ CGameObject* CDuelist_NormalJap::Clone(void* pArg, CGameObject* pOwner)
 
 void CDuelist_NormalJap::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	int iIndex = CollisionCheck();
-
-	if (iIndex < 0) {
+	if (m_bHit == false)
 		return;
-	}
 
-	if (m_isCollisionEnter == true) {
-		return;
-	}
+	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
-	m_isCollisionEnter = true;
-
-	_vector vPos = XMVectorSet(m_Hitbuffer.touches[iIndex].position.x, m_Hitbuffer.touches[iIndex].position.y, m_Hitbuffer.touches[iIndex].position.z, 1.f);
-
+	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
 	for (auto& pPair : m_PartObjects)
 	{
-
 		pPair.second->Set_Visible(true);
 		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	}
+	
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pOther->Get_Owner());
+	if (pPlayer != nullptr)
+	{
+		pPlayer->Start_CameraShake(0.2f, 1.f);
+	}
 
-	Get_PartObject<CEffectParts>("JapPT0")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());
+	if (m_bHitShield) {
+		_vector vDir = m_pTransformCom->Get_State(STATE::LOOK);
+		vDir = XMVector3Normalize(vDir);
 
-	m_pProjectile_Side->Set_Visible(false);
-	m_pProjectile->Set_Visible(false);
-	Get_PartObject<CEffectParts>("Circle_Particle_Red")->Set_Visible(false);
+		_float fRandAngle = XMConvertToRadians(m_pGameInstance->Real_Random_Float(-180.f, 0.f));
 
-	Get_PartObject<CTrailObject>()->Set_Visible(false);
-	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		_matrix rotX = XMMatrixRotationX(fRandAngle);
+		_vector vRandDir = XMVector3TransformNormal(vDir, rotX);
+
+		XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(vRandDir));
+	}
+	else {
+		Get_PartObject<CEffectParts>("JapPT0")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());
+
+		m_pProjectile_Side->Set_Visible(false);
+		m_pProjectile->Set_Visible(false);
+		Get_PartObject<CEffectParts>("Circle_Particle_Red")->Set_Visible(false);
+
+		Get_PartObject<CTrailObject>()->Set_Visible(false);
+		Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	}
+	m_bHitShield = false;
 }
 
 void CDuelist_NormalJap::Free()

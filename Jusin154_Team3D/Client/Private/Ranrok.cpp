@@ -187,6 +187,18 @@ void CRanrok::Update(_float fTimeDelta)
 
 #pragma endregion
 
+
+#pragma region CREATE PROP
+	m_vCreatePropTime.x += fTimeDelta;
+
+	if (m_vCreatePropTime.x >= m_vCreatePropTime.y)
+	{
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this);
+		m_vCreatePropTime.x = 0.f;
+	}
+
+#pragma endregion
+
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -326,9 +338,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
-#ifndef 진우
 	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
-#endif
+
 
 	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
@@ -391,58 +402,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	_float curr = Get_HpRatio();
-	pair<_uint, _bool> pairAnimInfo = {};
-	if (m_fPrevHpRatio > 0.85f && curr <= 0.85f)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
-		m_fPrevHpRatio = curr;
-
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
-
-		Add_Event(pairAnimInfo.first,
-			[&]() {m_bDisolve = true; },
-			0.25f);
-		Add_Event(pairAnimInfo.first,
-			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.55f);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return;
-	}
-	else if (m_fPrevHpRatio > 0.7f && curr <= 0.7f)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
-		m_fPrevHpRatio = curr;
-
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
-
-		Add_Event(pairAnimInfo.first,
-			[&]() {m_bDisolve = true; },
-			0.25f);
-		Add_Event(pairAnimInfo.first,
-			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.55f);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return;
-	}
-	else if (m_fPrevHpRatio > 0.5f && curr <= 0.5f)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
-		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
-		m_fPrevHpRatio = curr;
-
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionDesc->vWorldPos);
-
-		Add_Event(pairAnimInfo.first,
-			[&]() {m_bDisolve = true; },
-			0.25f);
-		Add_Event(pairAnimInfo.first,
-			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.55f);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return;
-	}
-	m_fPrevHpRatio = curr;
+	Update_BehaviorByHPRatio(CollisionDesc);
 
 	if (!IsHitStateDisabled() || IsHitSpellDisabled()) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
@@ -992,6 +952,11 @@ void CRanrok::Describe_Entity()
 		if (GUI::Button("MovePos"))
 		{
 			m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
+		}
+
+		if (GUI::Button("Create Prop"))
+		{
+			m_vCreatePropTime.x = m_vCreatePropTime.y;
 		}
 
 		for (_uint i = 0; i < m_Points.size(); ++i)

@@ -103,11 +103,19 @@ void CCallBack_Ranrok_HitReport::onControllerHit(const PSX::PxControllersHit& hi
 	PSX::PxController* pOtherController = hit.other;		// 다른 컨트롤러
 	PSX::PxActor* pActor = pOtherController->getActor();
 
-	ON_COLLISION_INFO CollisionDesc = {};
+	
 
 	if (nullptr != pController && nullptr != pOtherController) {
 		PHYSX_USERDATA* pTargetActorData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 		PHYSX_USERDATA* pOwnerActorData = static_cast<PHYSX_USERDATA*>(pController->getActor()->userData);
+
+		ON_COLLISION_INFO CollisionDesc = {};
+
+		_vector vHitDir = pTargetActorData->pCharacter->Get_Owner()->Get_WorldPostion() - m_pController->Get_Owner()->Get_WorldPostion();
+		vHitDir = XMVector3Normalize(vHitDir);
+		XMStoreFloat4(&CollisionDesc.vHitDir, vHitDir);
+		CollisionDesc.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
+		CollisionDesc.fDamage = 30.f;
 		assert(nullptr != pTargetActorData); // missing user data
 
 		switch (pTargetActorData->eKind)
@@ -129,7 +137,6 @@ void CCallBack_Ranrok_HitReport::onControllerHit(const PSX::PxControllersHit& hi
 				if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
 					if (false == *m_pCollisionPlayer) {
 						*m_pCollisionPlayer = true;
-						pTargetActorData->pCharacter->Get_Owner()->Get_Component<CStat>()->Get_Damage(30.f);
 						pTargetActorData->pCharacter->Get_Owner()->OnCollision(pOwner);
 					}
 				}

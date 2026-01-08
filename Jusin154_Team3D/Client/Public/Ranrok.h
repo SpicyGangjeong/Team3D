@@ -68,6 +68,7 @@ private:
 	_uint iIndex = {};
 	DAMAGE_INFO m_DamageInfo;
 	_bool m_bCollisionPlayer = { false };
+	_float2 m_vCreatePropTime = { 0.f , 60.f };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -210,6 +211,9 @@ private:
 
 	virtual _bool IsHitStateDisabled() override;
 	virtual _bool IsHitSpellDisabled() override;
+
+	void Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo);
+
 };
 
 NS_END

@@ -80,6 +80,7 @@ protected:
 	ON_COLLISION_INFO	SweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision = false);
 	ON_COLLISION_INFO	MonsterSweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision = false);
 	ON_COLLISION_INFO	MonsterRayCast(_fvector StartPos, _fvector vDir, _float fLength, _uint iMaxHitCapacity);
+	_vector				Get_UnitPos(LOCKON_INFO Info);
 
 protected:
 	_float4							m_vStartPos = {};
@@ -103,6 +104,7 @@ protected:
 	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
 	_bool							m_bHasDamage = { false };
 	LOCKON_INFO						m_Info = {};
+	_bool							m_bHitShield = {false};
 private:
 	vector<EFFECT_SAVE_INFO>        m_EffectsInfo = {};
 	vector<TRAIL_SAVE_INFO>			m_TrailsInfo = {};

@@ -223,6 +223,8 @@ float g_fModelDistortIntensity;
 
 float g_fModelBlurIntensity;
 
+
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -290,11 +292,11 @@ struct PS_OUT_DELCAL
 };
 
 
+
 VS_BULR_MESH_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_BULR_MESH_OUT Out = (VS_BULR_MESH_OUT) 0;
 
-    
 
     matrix matW, matWV, matWVP;
     
@@ -302,6 +304,7 @@ VS_BULR_MESH_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
     
     row_major matrix PreTransformMatrix = g_ParticleValue[iGPUIndex].PreWorldMatrix;
     
+
     
     matW = mul(TransformMatrix, g_WorldMatrix);
     matWV = mul(matW, g_ViewMatrix);
@@ -1053,6 +1056,9 @@ PS_NOMAL_OUT PS_MAIN(PS_BLUR_MESH_IN In)
     vMtrlDiffuse += RimLight(PS_In);
     
     vSurface.b = 0.5f;
+    
+
+    
     
     Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     Out.vAlbedo = vMtrlDiffuse;

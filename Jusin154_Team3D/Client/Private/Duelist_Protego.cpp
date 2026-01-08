@@ -174,12 +174,28 @@ CGameObject* CDuelist_Protego::Clone(void* pArg, CGameObject* pOwner)
 
 void CDuelist_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (!m_bVisible)
+		return;
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-	if (!m_bVisible)
+
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	if (pEffect_Container != nullptr)
 	{
-		m_pOwner->OnCollision(pOther, pDesc);
-		return;
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_bVisible = false;
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_bVisible = false;
+			break;
+		}
 	}
 
 }

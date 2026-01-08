@@ -226,6 +226,7 @@
 #include "Ranrok_Swipe.h"
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
+#include "Ranrok_Prop.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -429,9 +430,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef Bin
-	isLoad_Background = true;
-	isLoad_Hogwart = true;
-	isLoad_UI_SEQUANTIAL = true;
+	isLoad_Background = false;
+	isLoad_Hogwart = false;
+	isLoad_UI_SEQUANTIAL = false;
 #endif // Bin
 #endif // _DEBUG
 
@@ -2175,6 +2176,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC RanrokDesc{};
 		{
 			RanrokDesc.eType = ACTOR::BOX;
@@ -2668,6 +2670,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Prop>(g_iStaticLevel, CRanrok_Prop::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;

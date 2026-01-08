@@ -83,7 +83,7 @@ void CAvadakedavra::Late_Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
+		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.02f);
 
 		OnCollision(this, &CollisionInfo);
 	}
@@ -117,7 +117,7 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 
 		if (nullptr != m_Info.pUnit) {
 
-			XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
+			XMStoreFloat4(&m_vTargetPos, Get_UnitPos(m_Info));
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}
