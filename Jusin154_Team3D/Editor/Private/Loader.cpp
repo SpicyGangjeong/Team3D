@@ -2549,7 +2549,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 	//}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
 
@@ -3130,7 +3130,7 @@ _bool bLoadHogsmeade = false;
 	}
 
 #pragma region HOGWART
-_bool bHogwartLoad = { false };
+_bool bHogwartLoad = { true };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
@@ -3427,6 +3427,8 @@ if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Sanctum_Dungeon\\Mes
 #pragma endregion
 
 #pragma region DATATOWER_INT
+_bool bLoad_DADATower_INT = { false };
+if (bLoad_DADATower_INT)
 {
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_DADATower\\StaticMesh\\INT",
 		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
