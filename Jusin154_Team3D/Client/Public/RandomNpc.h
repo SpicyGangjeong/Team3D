@@ -27,6 +27,9 @@ public:
 	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
 	
 	virtual _wstring Get_Name() override;
+	virtual _wstring Get_NpcName() override;
+
+	void Set_Target(CUnit& pTarget, CTransform& pTransform);
 protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
@@ -37,12 +40,24 @@ protected:
 	CRandomNpc* m_pNPC_Ollivander = { nullptr };
 
 	/*class CNPCInteraction* m_pNPCInteraction = { nullptr };*/
+	CUnit* m_pTarget = { nullptr };
+	_float4			m_vTargetPos = { };
+	_float3			m_vToTargetDir = { };
+	_float			m_fTargetDistance = { FLT_MAX };
+	_float			m_fDegree = {};
+	_float			m_fCross = {};
 
 	CNPCStat* m_pNpcStat = { nullptr };
 	_int									m_iEntered = { 0 };
 	_float2									m_vEnteringTimer = { 0.f, 1.f };
 	_float									m_fEncounterDistance = { 8.f };
 	_int									m_iIndex = {};
+
+
+	_bool									m_bInteract = { false };
+	_bool									m_bPreviousInteract = { false };
+	_float									m_fInteractTime{};
+
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

@@ -42,6 +42,7 @@ private:
 	CGameObject*	m_pEnemy_Panel = { nullptr };
 	CGameObject*	m_pBroom_Panel = { nullptr };
 	CGameObject*	m_pRide_Panel = { nullptr };
+	CGameObject*	m_pDialogue_Panel = { nullptr };
 
 	_bool			m_bRide = { false };
 

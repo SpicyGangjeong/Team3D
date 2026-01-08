@@ -176,6 +176,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\Public\Camera_Model.h" />
+    <ClInclude Include="..\Public\CutSceneInfo.h" />
     <ClInclude Include="..\Public\Duelist_Levioso.h" />
     <ClInclude Include="..\Public\Duelist_NormalJap.h" />
     <ClInclude Include="..\Public\Duelist_Protego.h" />
@@ -221,6 +222,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Fear.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
     <ClInclude Include="..\Public\State_Slash.h" />
+    <ClInclude Include="..\Public\TimeSocket.h" />
     <ClInclude Include="..\Public\ThestralCarriage.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
     <ClInclude Include="..\Public\Transformation.h" />
@@ -463,6 +465,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\Private\Camera_Model.cpp" />
+    <ClCompile Include="..\Private\CutSceneInfo.cpp" />
     <ClCompile Include="..\Private\Duelist_Levioso.cpp" />
     <ClCompile Include="..\Private\Duelist_NormalJap.cpp" />
     <ClCompile Include="..\Private\Duelist_Protego.cpp" />
@@ -510,6 +513,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Fear.cpp" />
     <ClCompile Include="..\Private\State_Slash.cpp" />
     <ClCompile Include="..\Private\ThestralCarriage.cpp" />
+    <ClCompile Include="..\Private\TimeSocket.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
     <ClCompile Include="..\Private\LightningSide.cpp" />

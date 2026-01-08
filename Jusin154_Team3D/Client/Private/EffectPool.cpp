@@ -99,8 +99,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 기무리
-	m_isActiveEffectCreate = false;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 나
 	m_isActiveEffectCreate = false;

@@ -187,6 +187,9 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Broom_Scoreboard.h" />
     <ClInclude Include="..\public\Broom_Trophy.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
+    <ClInclude Include="..\public\Dialogue_Canvas.h" />
+    <ClInclude Include="..\public\Dialogue_Choice.h" />
+    <ClInclude Include="..\public\Dialogue_Panel.h" />
     <ClInclude Include="..\public\DummyDecal.h" />
     <ClInclude Include="..\public\Dialogue.h" />
     <ClInclude Include="..\public\Enemy_Detection.h" />
@@ -466,6 +469,9 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Broom_Trophy.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
+    <ClCompile Include="..\private\Dialogue_Canvas.cpp" />
+    <ClCompile Include="..\private\Dialogue_Choice.cpp" />
+    <ClCompile Include="..\private\Dialogue_Panel.cpp" />
     <ClCompile Include="..\private\DummyDecal.cpp" />
     <ClCompile Include="..\Private\Enemy_Detection.cpp" />
     <ClCompile Include="..\Private\Goblin_BattleAxe.cpp" />

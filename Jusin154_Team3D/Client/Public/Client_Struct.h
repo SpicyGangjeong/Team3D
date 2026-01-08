@@ -1,8 +1,8 @@
 ﻿#pragma once
 NS_BEGIN(Engine)
-	class CModel;
-	class CRigidBody_Static;
-	class CUnit;
+class CModel;
+class CRigidBody_Static;
+class CUnit;
 NS_END
 
 namespace Client
@@ -39,7 +39,7 @@ namespace Client
 
 	typedef struct DialogueChoice
 	{
-		_int		eType = {false};
+		_int		eType = { false };
 		_wstring	pText;
 		_int		NextTypeID{};
 	}DIALOGUECHOICEINFO;
@@ -47,7 +47,7 @@ namespace Client
 	typedef struct DialogueInfo
 	{
 		_int						iLineID{};
-		_bool						bType = {false};
+		_int						iTextType{};
 		_wstring					pText;
 		_int						NextTextID{};
 		vector<DIALOGUECHOICEINFO>	ChoiceInfo;
@@ -57,7 +57,7 @@ namespace Client
 	{
 		_wstring					pNpcName;
 		_int						iNpcID{};
-		unordered_map<_int, CURRENTDIALOGUEINFO> Info;
+		map<_int, CURRENTDIALOGUEINFO> Info;
 	}NPCDIALOGUEINFO;
 
 	typedef struct tagLockOnInfo {
@@ -68,7 +68,7 @@ namespace Client
 
 	typedef struct tegNPCInteractionInfo
 	{
-		CGameObject*	pOwner = { nullptr };
+		CGameObject* pOwner = { nullptr };
 		_wstring		pNPCName;
 		_wstring		pName;
 		_float4			fNPCPosition{};
@@ -285,7 +285,7 @@ namespace Client
 		_float4     vPadding5 = {};
 		_float4     vPadding6 = {};
 	}EFFECT_INFO;
-	
+
 	typedef struct tagTrailInfo
 	{
 		EFFECT_TYPE eEffectType = { EFFECT_TYPE::TRAIL };

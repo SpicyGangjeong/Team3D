@@ -98,10 +98,10 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 #pragma endregion
 
 #pragma region HOGWART
-	/*if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
+	if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
 		return E_FAIL;
 	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
-		return E_FAIL;*/
+		return E_FAIL;
 #pragma endregion
 
 	
@@ -230,9 +230,9 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 
 	Update_Edit();
 
-	Update_LightSpawer();
+	//Update_LightSpawer();
 	//Update_Decal();
-	//Update_RaceRing();
+	Update_RaceRing();
 
 	Update_Unified();
 
