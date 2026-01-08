@@ -57,7 +57,7 @@ namespace Client
 	{
 		_wstring					pNpcName;
 		_int						iNpcID{};
-		unordered_map<_int, CURRENTDIALOGUEINFO> Info;
+		map<_int, CURRENTDIALOGUEINFO> Info;
 	}NPCDIALOGUEINFO;
 
 	typedef struct tagLockOnInfo {

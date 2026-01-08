@@ -16,7 +16,7 @@
 	<Dialogue NpcName="MATILDAWEASELY" NpcID="2">
 		<Line ID="0" Type="0" Text="마틸다 위즐리" NextText="1"> </Line>
 		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="2"> </Line>
-		<Line ID="2" Type="1" Text="뭐 필요한게 있나?" NextText="-1"> </Line>
+		<Line ID="2" Type="0" Text="뭐 필요한게 있나?" NextText="-1"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="ELEAZARFIG" NpcID="3">

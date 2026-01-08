@@ -25,6 +25,7 @@ HRESULT CDialogue_Font::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("Dialogue"), [this](void* p) {this->Add_Text(p); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteract"), [this](void* p) {this->NpcInteract(*reinterpret_cast<_bool*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("NPCInteractionOn"), [this](void* p) {this->NpcInfo(p); });
+	m_pInfoInstance->Add_Event(TEXT("NPCDialogue"), [this](void* p) {this->NpcDialogue(reinterpret_cast<CNPCStat*>(p)); });
 
 	for (_int i = 0; i < 5; ++i)
 	{
@@ -75,20 +76,21 @@ void CDialogue_Font::Update(_float fTimeDelta)
 			}
 		}
 
-		if (!m_pCurrentDialogue.empty())
+	}
+
+	if (!m_pCurrentDialogue.empty())
+	{
+		for (auto it = m_pCurrentDialogue.begin(); it != m_pCurrentDialogue.end();)
 		{
-			for (auto it = m_pCurrentDialogue.begin(); it != m_pCurrentDialogue.end();)
+			if ((*it)->Get_Hover() == false)
 			{
-				if ((*it)->Get_Hover() == false)
-				{
-					(*it)->Visible(false);
-					m_DialoguInfo.push_back((*it));
-					it = m_pCurrentDialogue.erase(it);
-				}
-				else
-				{
-					it++;
-				}
+				(*it)->Visible(false);
+				m_DialoguInfo.push_back((*it));
+				it = m_pCurrentDialogue.erase(it);
+			}
+			else
+			{
+				it++;
 			}
 		}
 	}
@@ -96,7 +98,7 @@ void CDialogue_Font::Update(_float fTimeDelta)
 
 void CDialogue_Font::Late_Update(_float fTimeDelta)
 {
-	if (!m_DialoguInfo.empty())
+	if (!m_pCurrentDialogue.empty())
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::UI_OVERLAY, this);
 	}
@@ -153,6 +155,7 @@ void CDialogue_Font::Add_Text(void* pArg)
 	Dialogue->SizeUpdate(pInfo.pName, pInfo.pText);
 	Dialogue->Visible(true);
 	Dialogue->Set_Time(pInfo.fTime);
+	Dialogue->Set_Hover(true);
 
 	m_pCurrentDialogue.push_front(Dialogue);
 }
@@ -161,6 +164,13 @@ void CDialogue_Font::Npc_Dialogue(DIALOGUEINFO Info)
 {
 	if (m_DialoguInfo.empty() == true)
 		return;
+	               
+	if (m_pCurrentDialogue.size() >= 5)
+	{
+		CDialogue* old = m_pCurrentDialogue.back();
+		m_pCurrentDialogue.pop_back();
+		m_DialoguInfo.push_back(old);
+	}
 
 	CDialogue* Dialogue = m_DialoguInfo.back();
 	m_DialoguInfo.pop_back();
@@ -173,6 +183,7 @@ void CDialogue_Font::Npc_Dialogue(DIALOGUEINFO Info)
 	Dialogue->SizeUpdate(Info.pName, Info.pText);
 	Dialogue->Visible(true);
 	Dialogue->Set_Time(Info.fTime);
+	Dialogue->Set_Hover(true);
 
 	m_pCurrentDialogue.push_front(Dialogue);
 }
@@ -199,10 +210,21 @@ void CDialogue_Font::NpcDialogue()
 	m_iNextID = Info.NextTextID;
 }
 
+void CDialogue_Font::NpcDialogue(CNPCStat* Stat)
+{
+	auto Info = m_pInfoInstance->Get_Dialogue(Stat->Get_Stat().pName, 0);
+	m_Info.pName = Stat->Get_Stat().pNpc_Name;
+	m_Info.pText = Info.pText;
+	m_Info.fTime = 3.f;
+	m_iType = Info.iTextType;
+	m_iNextID = Info.NextTextID;
+	Npc_Dialogue(m_Info);
+}
+
 void CDialogue_Font::CHoice()
 {
 	auto Info = m_pInfoInstance->Get_Dialogue(m_pNpcName, m_iTextID);
-//	Info.ChoiceInfo.size();
+	//	Info.ChoiceInfo.size();
 }
 
 void CDialogue_Font::Shop()
@@ -220,6 +242,7 @@ void CDialogue_Font::NextText()
 		m_pCurrentDialogue[0]->Set_Hover(false);
 		_bool Interact = false;
 		m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+		m_pCurrentDialogue[0]->Set_Hover(true);
 	}
 	else
 	{

@@ -88,7 +88,7 @@ const CURRENTDIALOGUEINFO& CDialogue_Data::Get_Info(_wstring NpcName, _int iText
     }
 
     auto Text = iter->second.Info.find(iTextID);
-    if (iter == m_DialogueInfo.end())
+    if (Text == iter->second.Info.end())
     {
         return Dummy;
     }

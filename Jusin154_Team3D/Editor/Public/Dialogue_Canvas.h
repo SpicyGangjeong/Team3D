@@ -9,12 +9,12 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CGamePlay_Canvas final : public CCanvasObject
+class CDialogue_Canvas final : public CCanvasObject
 {
 private:
-	CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CGamePlay_Canvas(const CGamePlay_Canvas& rhs);
-	virtual ~CGamePlay_Canvas() = default;
+	CDialogue_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CDialogue_Canvas(const CDialogue_Canvas& rhs);
+	virtual ~CDialogue_Canvas() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -35,19 +35,10 @@ public:
 
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	CGameObject*	m_pMission_Panel = { nullptr };
-	CGameObject*	m_pMinimap_Panel = { nullptr };
-	CGameObject*	m_pLoading_Panel = { nullptr };
-	CGameObject*	m_pAction_Panel = { nullptr };
-	CGameObject*	m_pEnemy_Panel = { nullptr };
-	CGameObject*	m_pBroom_Panel = { nullptr };
-	CGameObject*	m_pRide_Panel = { nullptr };
-	CGameObject*	m_pDialogue_Panel = { nullptr };
-
-	_bool			m_bRide = { false };
+	CGameObject* m_pDialogue_Panel = { nullptr };
 
 public:
-	static CGamePlay_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CDialogue_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

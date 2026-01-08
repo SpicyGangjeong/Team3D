@@ -8,6 +8,7 @@ NS_BEGIN(Engine)
 class CTexture;
 class CShader;
 class CVIBuffer_Rect;
+class CNPCStat;
 NS_END
 
 NS_BEGIN(Client)
@@ -46,6 +47,7 @@ private:
 	void NpcInteract(_bool bInteract);
 
 	void NpcDialogue();
+	void NpcDialogue(CNPCStat* Stat);
 
 	void CHoice();
 

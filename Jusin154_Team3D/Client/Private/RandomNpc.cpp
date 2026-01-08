@@ -57,7 +57,7 @@ void CRandomNpc::Priority_Update(_float fTimeDelta)
 		m_iEntered = 0;
 	}
 	__super::Priority_Update(fTimeDelta);
-} 
+}
 
 void CRandomNpc::Update(_float fTimeDelta)
 {
@@ -87,9 +87,26 @@ void CRandomNpc::Update(_float fTimeDelta)
 		m_fTargetDistance = { FLT_MAX };
 	}
 
-	if (m_fTargetDistance <= 5.f)
+	if (m_fTargetDistance <= 5.f && m_bInteract == false)
 	{
-		_int a = 10;
+		m_pInfoInstance->Event_CallBack(TEXT("NPCDialogue"), m_pNpcStat);
+		m_bInteract = true;
+	}
+
+	if (m_bInteract != m_bPreviousInteract)
+	{
+		m_bPreviousInteract = m_bInteract;
+		m_fInteractTime = 0.f;
+	}
+	else
+	{
+		m_fInteractTime += fTimeDelta;
+	}
+
+	if (m_fInteractTime >= 5.f)
+	{
+		m_bInteract = false;
+		m_fInteractTime = 0.f;
 	}
 }
 
@@ -252,7 +269,7 @@ HRESULT CRandomNpc::Bind_ShaderParameters(_uint iMeshOrder)
 	_float fMixerFactor = { FLT_MAX };
 	_uint iColorMixerMethod = { 0 };
 
-	switch (m_pModelCom->Get_UsingPass(iMeshOrder,m_pShaderCom))
+	switch (m_pModelCom->Get_UsingPass(iMeshOrder, m_pShaderCom))
 	{
 	case 23:
 		if (m_strModelPrototypeTag == TEXT("Prototype_Component_F_Student_Model"))
@@ -297,7 +314,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(&Desc))) {
 		return E_FAIL;
 	}
-
+	 
 	switch (m_iIndex)
 	{
 	case 0:
@@ -341,7 +358,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("ELF"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
-		break;
+		break;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 	case 7:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_BaiHowin_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("BAIHOWIN"), (CComponent**)&m_pNpcStat))) {

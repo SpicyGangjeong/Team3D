@@ -52,6 +52,12 @@ protected:
 	_float2									m_vEnteringTimer = { 0.f, 1.f };
 	_float									m_fEncounterDistance = { 8.f };
 	_int									m_iIndex = {};
+
+
+	_bool									m_bInteract = { false };
+	_bool									m_bPreviousInteract = { false };
+	_float									m_fInteractTime{};
+
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
