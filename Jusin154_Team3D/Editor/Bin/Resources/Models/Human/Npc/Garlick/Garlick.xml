@@ -234,7 +234,7 @@
 		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
 		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="T_Adult_M_Arms_JasperTrout_GeorgeOsric_SRXO" Extension=".dds"/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HUM_N_Heads_Eye>
 
 	<MI_HUM_F_Hat_GarlickHat01Flowers	ShaderIndex = "8" OutLineWrite="22">

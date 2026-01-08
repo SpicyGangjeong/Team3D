@@ -1634,6 +1634,9 @@ void CPlayer::Behavior_AncientSpellEnter()
 	m_pFSM->Enable_State(FSMSTATE::ANCIENT_SPELL);
 	pairAnimInfo = m_Animation[STATEANIM::ANCIENT_LIGHTNING];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	//m_pInfoInstance->Set_SearchLockOnFlag(false);
+	if (m_LockOnInfo.pUnit)
+		m_pTransformCom->LookAt(m_LockOnInfo.pUnit->Get_WorldPostion());
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -1656,15 +1659,6 @@ HRESULT CPlayer::Behavior_AncientSpellExitCheck()
 	pair<_uint, _bool> pairAnimInfo;
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
-
-	//if (iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first)
-	//{
-	//	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
-	//		m_pFSM->Change_State(FSMSTATE::MOVE);
-	//		return E_FAIL;
-	//	}
-	//}
-
 
 	if (m_pModelCom->IsFinishedAnim()) {
 		if (SUCCEEDED(InputMove()))
@@ -1705,10 +1699,10 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 	pair<_uint, _bool> pairAnimInfo;
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	_float fEventRatio = 0.2f;
 
 	if (m_bShield)
 	{
-		
 		pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
@@ -1734,42 +1728,35 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 				if (Degree <= 30.f)
 				{
 					pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.f,true, false, false);
 				}
 				else if (Degree <= 60.f)
 				{
 					pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
-					Add_Event(pairAnimInfo.first,
-						[this]() {m_bLookAt = true;
-						},
-						0.01f);
+					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, true, false, false);
 				}
 				else if (Degree <= 135.f)
 				{
 					if (Cross < 0.f)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::PARRY2];
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true,1.f,false);
+						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, true, false, false);
 					}
 					else {
 						pairAnimInfo = m_Animation[STATEANIM::PARRY3];
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, true, false, false);
+						fEventRatio = 0.3f;
 					}
-					Add_Event(pairAnimInfo.first,
-						[this]() {m_bLookAt = true;
-						},
-						0.11f);
 				}
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::PARRY_180];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, true,false, false);
 				}
 
 			}
 			else {
 				pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 
 				Add_Event(pairAnimInfo.first,
@@ -1779,7 +1766,7 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 
 				Add_Event(pairAnimInfo.first,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
-					0.2f);
+					fEventRatio);
 
 				Start_CameraShake(0.3f, 2.f);
 				//m_pGameInstance->SlowMotion(0.8f, 0.3f);
@@ -1838,15 +1825,23 @@ void CPlayer::Behavior_HitEnter()
 		switch (m_eHitSpell)
 		{
 		case ENUM_CLASS(SKILL_TYPE::JAP):
+		{
 			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			return;
+		}
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		{
 			pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			return;
+		}
 			break;
 		}
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return;
+
 	}
 
 	ProcessHitBehavior();
@@ -2589,7 +2584,14 @@ void CPlayer::Attach_Broom()
 	_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
 		m_OffsetPos.y, m_OffsetPos.z);
 
-	_matrix SocketWorld = BoneNoScale * Offset * BroomWorld;
+	_vector BS, BR, BT;
+	XMMatrixDecompose(&BS, &BR, &BT, BroomWorld);
+	_matrix BroomWorld_NoScale =
+		XMMatrixRotationQuaternion(BR) *
+		XMMatrixTranslationFromVector(BT);
+
+
+	_matrix SocketWorld = BoneNoScale * Offset * BroomWorld_NoScale;
 
 	_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
 
@@ -3239,8 +3241,8 @@ void CPlayer::Add_FSM()
 			{
 				m_pBroomTransform->Set_Scale(m_BroomScale);
 			}
-			_float3 vPlayerScale = { 1.f,1.f,1.f };
-			m_pTransformCom->Set_Scale(vPlayerScale);
+
+
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;

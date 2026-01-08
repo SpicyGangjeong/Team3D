@@ -260,7 +260,6 @@ void CHuman_Duelist::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
-			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
 			break;
 		}
 	}

@@ -164,12 +164,14 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, _float 
 		if (!preHasBone[boneIndex] || fRatio <= 0.f)
 		{
 			Bones[boneIndex]->Set_TransformationMatrix(curMat);
+			m_vBoneTransformationMatrix[i] = curMat;
 			continue;
 		}
 
 		if (fRatio >= 1.f)
 		{
 			Bones[boneIndex]->Set_TransformationMatrix(curMat);
+			m_vBoneTransformationMatrix[i] = curMat;
 			continue;
 		}
 

@@ -256,7 +256,7 @@ void CBroomRaceManager::Describe_Entity()
 				CTransform* pTransform =
 					racer.pAI->Get_Component<CTransform>();
 				_float fRand = m_pGameInstance->Real_Random_Float(-10.f, 10.f);
-				spawnPos.m128_f32[0] += fRand;
+				spawnPos.m128_f32[2] += fRand;
 
 				pTransform->Set_State(STATE::POSITION, spawnPos);
 				pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
@@ -265,9 +265,11 @@ void CBroomRaceManager::Describe_Entity()
 			}
 			else if (racer.pRacer)
 			{
-				CTransform* pTransform =
-					racer.pRacer->Get_Component<CTransform>();
-				pTransform->Set_State(STATE::POSITION, spawnPos);
+				CCharacter_Controller* pCharacter = racer.pRacer->Get_Component<CCharacter_Controller>();
+				pCharacter->Set_Position(spawnPos);
+				CTransform* pTransform = racer.pRacer->Get_Component<CTransform>();
+
+//				pTransform->Set_State(STATE::POSITION, spawnPos);
 				pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
 				racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::BROOM_RIDE);
 				racer.pRacer->Get_Broom()->Set_Move(false);
