@@ -739,8 +739,13 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
-					if (pUserData->pOwner->Get_Visible()) {
-						m_bHitShield = true;
+					m_bHitShield = true;
+					if (!pUserData->pOwner->Get_Visible()) {
+						if (pUserData->pOwner->Get_Owner() != nullptr)
+						{
+							m_bHitShield = false;
+							pUserData->pOwner->Get_Owner()->OnCollision(this, &tagCollInfo);
+						}
 					}
 				}
 				break;
@@ -751,8 +756,13 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
-					if (pUserData->pOwner->Get_Visible()) {
-						m_bHitShield = true;
+					m_bHitShield = true;
+					if (!pUserData->pOwner->Get_Visible()) {
+						if (pUserData->pOwner->Get_Owner() != nullptr)
+						{
+							m_bHitShield = false;
+							pUserData->pOwner->Get_Owner()->OnCollision(this, &tagCollInfo);
+						}
 					}
 				}
 				break;

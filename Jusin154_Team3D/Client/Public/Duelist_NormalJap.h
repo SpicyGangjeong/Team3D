@@ -34,10 +34,10 @@ private:
 	class  CInfoInstance* m_pInfoInstance = { nullptr };
 	_wstring						  m_wstrEffectName = {};
 
-	_float4							  m_vJapData[4] = { _float4(105.f , 330.f , 35.f , 20.f)
-													 , _float4(95.f , 100.f , 55.f , 200.f)
-													 , _float4(95.f , 0.f , 0.f , 0.f)
-													 , _float4(105.f , 250.f , 35.f , 60.f) };
+	_float4							  m_vJapData[4] = { _float4(50.f , 330.f , 35.f , 20.f)
+													 , _float4(40.f , 100.f , 55.f , 200.f)
+													 , _float4(40.f , 0.f , 0.f , 0.f)
+													 , _float4(50.f , 250.f , 35.f , 60.f) };
 
 	class CPartObject* m_pProjectile = {};
 	class CPartObject* m_pProjectile_Side = {};

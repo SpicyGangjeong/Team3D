@@ -211,6 +211,9 @@ private:
 
 	virtual _bool IsHitStateDisabled() override;
 	virtual _bool IsHitSpellDisabled() override;
+
+	void Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo);
+
 };
 
 NS_END

@@ -177,7 +177,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
-
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 #ifdef _DEBUG
 	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);

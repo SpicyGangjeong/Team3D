@@ -24,8 +24,10 @@
 	<!-- HIT / FLINCH -->
 	<Anim state="HIT_LEVIOSO" index="347" loop="true"/>
 	<Anim state="HIT_BWD" index="309" loop="false"/>
-	<Anim state="TUMBLE" index="367" loop="true"/>
+	<Anim state="TUMBLE" index="471" loop="false"/>
+	<Anim state="TUMBLE2" index="473" loop="false"/>
 	
+
 	<!-- DAZED -->
 	<Anim state="DAZED_START" index="484" loop="false"/>
 	<Anim state="DAZED_LOOP" index="483" loop="false"/>
@@ -33,7 +35,7 @@
 	<Anim state="DAZED_END2" index="482" loop="false"/>
 
 	<!-- KNOCKDOWN -->
-	<Anim state="KNOCKDOWN_BWD_SPLT" index="364" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD_SPLT" index="324" loop="false"/>
 	<Anim state="KNOCKDOWN_FWD_SPLT" index="323" loop="false"/>
 
 	<!-- GETUP -->

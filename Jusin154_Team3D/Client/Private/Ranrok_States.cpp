@@ -437,7 +437,7 @@ HRESULT CRanrok::Behavior_FireBreathExitCheck(_float fTimeDelta)
 void CRanrok::Behavior_FireBreathExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FIREBREATH);
-	//m_pModelCom->Set_HeadAimWeight(0.f);
+	m_pModelCom->Set_HeadAimWeight(0.f);
 	//m_pModelCom->Play_HeadBone(false);
 	m_fHeadAimWeight = 0.f;
 }
@@ -552,7 +552,7 @@ void CRanrok::Behavior_FireSweepExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FIRESWEEP);
 	m_pModelCom->Set_HeadAimWeight(0.f);
-	m_pModelCom->Play_HeadBone(false);
+	//m_pModelCom->Play_HeadBone(false);
 	m_fHeadAimWeight = 0.f;
 }
 
@@ -1153,6 +1153,63 @@ _bool CRanrok::IsHitSpellDisabled()
 		return true;
 	}
 	return false;
+}
+
+void CRanrok::Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo)
+{
+	_float curr = Get_HpRatio();
+	pair<_uint, _bool> pairAnimInfo = {};
+	if (m_fPrevHpRatio > 0.85f && curr <= 0.85f)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
+		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionInfo->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_bDisolve = true; },
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		return;
+	}
+	else if (m_fPrevHpRatio > 0.7f && curr <= 0.7f)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
+		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionInfo->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_bDisolve = true; },
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		return;
+	}
+	else if (m_fPrevHpRatio > 0.5f && curr <= 0.5f)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
+		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
+		m_fPrevHpRatio = curr;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionInfo->vWorldPos);
+
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_bDisolve = true; },
+			0.25f);
+		Add_Event(pairAnimInfo.first,
+			[&]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		return;
+	}
+	m_fPrevHpRatio = curr;
+
 }
 
 
