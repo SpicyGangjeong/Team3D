@@ -66,8 +66,8 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -4.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -4.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-48.f, 0.f, -4.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-48.f, 0.f, -4.f, 1.f));
 
 	m_pInfoInstance->Add_Event(TEXT("Goblin_Fear"),
 		[this](void* p)

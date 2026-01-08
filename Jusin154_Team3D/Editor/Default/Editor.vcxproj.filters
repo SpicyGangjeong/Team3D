@@ -753,7 +753,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse">
       <UniqueIdentifier>{614e67ae-6df9-4826-adbe-6be96f54041d}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
       <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
     </Filter>

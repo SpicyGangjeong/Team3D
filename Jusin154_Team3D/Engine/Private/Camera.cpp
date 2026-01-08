@@ -139,6 +139,16 @@ void CCamera::EnableTransition(_float fTransitionTime)
     m_vTransitionTime.y = fTransitionTime;
 }
 
+void CCamera::Set_RotDegreeVerticalLock(_float2 vVerticalLock)
+{
+    m_vAccRotDegree_VerticalLocks = vVerticalLock;
+}
+
+_float2 CCamera::Get_RotDegreeVerticalLock()
+{
+    return m_vAccRotDegree_VerticalLocks;
+}
+
 _bool CCamera::IsImportantThan(CCamera* pOther) const
 {
     return m_iPriority > pOther->m_iPriority;

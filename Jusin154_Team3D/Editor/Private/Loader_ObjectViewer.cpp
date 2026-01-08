@@ -216,8 +216,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	TEXT("Prototype_Component_GerboldOlivander_Model")
 	//));
 
-
-
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/Camera.bin", XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_Camera_Model")
