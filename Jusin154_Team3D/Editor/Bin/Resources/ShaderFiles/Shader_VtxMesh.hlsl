@@ -455,18 +455,102 @@ PS_OUT PS_MAIN(PS_IN In)
 
 PS_OUT PS_MAIN_SELECT(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     
-    vector vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
+    if (1 == g_vSRVFlag.x)
+    {
+        vMtrlDiffuse = BlendDiffuse(vMtrlDiffuse, g_DiffuseBlend, In.vTexcoord, 0.3f);
+      
+    }
+    if (2 == g_vSRVFlag.x)
+    {
+        vMtrlDiffuse = BlendDiffuse(vMtrlDiffuse, g_MossDiffuseTexture, In.vTexcoord, 0.3f);
+      
+    }
+    if (3 == g_vSRVFlag.x)
+    {
+        vMtrlDiffuse = float4(vMtrlDiffuse.xyz * 0.4f
+            + g_DiffuseBlend.Sample(DefaultSampler, In.vTexcoord).xyz * 0.4f
+            + g_MossDiffuseTexture.Sample(DefaultSampler, In.vTexcoord).xyz * 0.1f, 1.f);
+    }
+    if (5 == g_vSRVFlag.x)
+    {
+        float4 vMask = g_Maya_BaseTexture.Sample(DefaultSampler, In.vTexcoord);
+        float fTotalMask = vMask.r + vMask.g + vMask.b + vMask.a;
+        
+        float4 vDiffuseB = g_DiffuseBlend.Sample(DefaultSampler, In.vTexcoord);
+        float4 vDiffuseC = g_MossDiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vDiffuseD = g_ClearcoadTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vFinalColor = (vMtrlDiffuse * vMask.r +
+                                vDiffuseB * vMask.g +
+                                vDiffuseC * vMask.b +
+                                vDiffuseD * vMask.a) / fTotalMask;
+        vMtrlDiffuse = vFinalColor;
+        
+        float4 vSurfaceB = g_SROBlendTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vSurfaceC = g_MossSROTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vSurfaceD = g_SheenTexture.Sample(DefaultSampler, In.vTexcoord);
+        float4 vFinalSurface = (vSurface * vMask.r +
+                                vSurfaceB * vMask.g +
+                                vSurfaceC * vMask.b +
+                                vSurfaceD * vMask.a) / fTotalMask;
+        vSurface = vFinalSurface;
+    }
+    
+    if (1 == g_vSRVFlag.y)
+    {
+        vNormalDecoded = normalize(vNormalDecoded + DecodeNormalFromRG(g_NormalBlendTexture, DefaultSampler, In.vTexcoord));
+    }
+    else if (2 == g_vSRVFlag.y)
+    {
+        vNormalDecoded = normalize(vNormalDecoded + DecodeNormalFromRG(g_MossNormalTexture, DefaultSampler, In.vTexcoord));
+    }
+    else if (3 == g_vSRVFlag.y)
+    {
+        vNormalDecoded = normalize(vNormalDecoded + DecodeNormalFromRG(g_NormalBlendTexture, DefaultSampler, In.vTexcoord) + DecodeNormalFromRG(g_MossNormalTexture, DefaultSampler, In.vTexcoord));
+    }
+    
+    if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
+    {
+        float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse *= vTransmission;
+    }
+    if (g_iBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE] != 0)
+    {
+        float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse += vEmissive;
+    }
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+   
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
-    float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    Out.vAlbedo = float4(0.f, 0.5f, 0.5f, 1.f);
+    vMtrlDiffuse = vMtrlDiffuse * float4(0.5f, 1.f, 0.5f, 1.f);
+    
+    Out.vAlbedo = float4(vMtrlDiffuse.xyz, 1.f);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0.f;
+    }
+    
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
+    
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 

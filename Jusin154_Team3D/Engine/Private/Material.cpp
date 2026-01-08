@@ -2,6 +2,155 @@
 #include "Material.h"
 #include "GameInstance.h"
 #include "Shader.h"
+#ifdef EDITOR_PROJECT
+static EFileTypeId GetFileTypeId(const std::string& FileType)
+{
+	// 필요하면 thread-safe static 초기화 (C++11 이상에서 보장)[web:20]
+	static const std::unordered_map<std::string, EFileTypeId> table = {
+		{ "Diffuse Map",                EFileTypeId::Diffuse_Map },
+		{ "Diffuse Texture",            EFileTypeId::Diffuse_Texture },
+		{ "Diffuse A Map",              EFileTypeId::Diffuse_A_Map },
+		{ "Difuse_1",                   EFileTypeId::Difuse_1 },
+		{ "Base color",                 EFileTypeId::Base_color },
+		{ "DiffuseTexture",             EFileTypeId::DiffuseTexture },
+		{ "Distort texture",            EFileTypeId::Distort_texture },
+		{ "Diffuse",                    EFileTypeId::Diffuse },
+		{ "Lamp",                       EFileTypeId::Lamp },
+		{ "WindowDiffuse",              EFileTypeId::WindowDiffuse },
+		{ "Color Glass",                EFileTypeId::Color_Glass },
+		{ "Window_Surface_Diffuse",     EFileTypeId::Window_Surface_Diffuse },
+		{ "InteriorDiffuse",            EFileTypeId::InteriorDiffuse },
+		{ "Diffuse Moss",               EFileTypeId::Diffuse_Moss },
+		{ "Moss Diffuse",               EFileTypeId::Moss_Diffuse },
+		{ "Diffuse C",                  EFileTypeId::Diffuse_C },
+		{ "Diffuse D",                  EFileTypeId::Diffuse_D },
+		{ "Cavity D",                   EFileTypeId::Cavity_D },
+		{ "Diffuse A",                  EFileTypeId::Diffuse_A },
+		{ "Object Diffuse",             EFileTypeId::Object_Diffuse },
+		{ "Diffuse B",                  EFileTypeId::Diffuse_B },
+		{ "Lichen D",                   EFileTypeId::Lichen_D },
+		{ "Diffuse B Map",              EFileTypeId::Diffuse_B_Map },
+		{ "TopBlend_Albedo",            EFileTypeId::TopBlend_Albedo },
+		{ "Base colour",				EFileTypeId::Base_colour },
+
+		{ "Normal Map",                 EFileTypeId::Normal_Map },
+		{ "HRO Map",                    EFileTypeId::HRO_Map },
+		{ "Normal_1",                   EFileTypeId::Normal_1 },
+		{ "Object Normal",              EFileTypeId::Object_Normal },
+		{ "Normal A Map",               EFileTypeId::Normal_A_Map },
+		{ "Base Normal",                EFileTypeId::Base_Normal },
+		{ "Object_Normal",              EFileTypeId::Object_Normal_Underbar },
+		{ "NormalTexture",              EFileTypeId::NormalTexture },
+		{ "Normal",                     EFileTypeId::Normal },
+		{ "NormalMap",                  EFileTypeId::NormalMap },
+		{ "Window_Surface_Normal",      EFileTypeId::Window_Surface_Normal },   // Normal 용
+		{ "Cloth Detail Normal",        EFileTypeId::Cloth_Detail_Normal },
+		{ "Detail Normal",              EFileTypeId::Detail_Normal },
+		{ "TopBlend_Normal",            EFileTypeId::TopBlend_Normal },
+		{ "Moss Normal",                EFileTypeId::Moss_Normal },
+		{ "Cavity Detail N",            EFileTypeId::Cavity_Detail_N },
+		{ "Moss Normal Map",            EFileTypeId::Moss_Normal_Map },
+
+		{ "Normal Map A",               EFileTypeId::Normal_Map_A },
+		{ "Normal Map B",               EFileTypeId::Normal_Map_B },
+		{ "Lichen Detail N",            EFileTypeId::Lichen_Detail_N },
+		{ "Normal B Map",               EFileTypeId::Normal_B_Map },
+
+		{ "MRO",                        EFileTypeId::MRO },
+		{ "MRO Map",                    EFileTypeId::MRO_Map },
+		{ "WIndow_Surface_MRO",         EFileTypeId::WIndow_Surface_MRO },
+		{ "PackedTexture",              EFileTypeId::PackedTexture },
+		{ "MRO Map A",                  EFileTypeId::MRO_Map_A },
+		{ "MRO Map B",                  EFileTypeId::MRO_Map_B },
+		{ "MROH",                       EFileTypeId::MROH },
+		{ "MROA Mask",                  EFileTypeId::MROA_Mask },
+		{ "MROA Map",                   EFileTypeId::MROA_Map },
+		{ "MROA",                       EFileTypeId::MROA },
+		{ "MRS",                        EFileTypeId::MRS },
+
+		{ "SRO Map",                    EFileTypeId::SRO_Map },
+		{ "SRO",                        EFileTypeId::SRO },
+		{ "Moss SRO",                   EFileTypeId::Moss_SRO },
+		{ "SRO Map A",                  EFileTypeId::SRO_Map_A },
+		{ "SRO Map D",                  EFileTypeId::SRO_Map_D },
+		{ "SRO Map B",                  EFileTypeId::SRO_Map_B },
+		{ "TopBlend_SRO",               EFileTypeId::TopBlend_SRO },
+		{ "Detail SRO",                 EFileTypeId::Detail_SRO },
+		{ "SRO B Map",                  EFileTypeId::SRO_B_Map },
+		{ "SROH",                       EFileTypeId::SROH },
+		{ "SROA",                       EFileTypeId::SROA },
+		{ "SROA Map",                   EFileTypeId::SROA_Map },
+		{ "SROH A Map",                 EFileTypeId::SROH_A_Map },
+
+		{ "MROH/SROH Map A",            EFileTypeId::MROH_SROH_Map_A },
+		{ "Object MRO/SRO",             EFileTypeId::Object_MRO_SRO },
+		{ "MROH/SROH Map B",            EFileTypeId::MROH_SROH_Map_B },
+		{ "MRO/SRO Map A",              EFileTypeId::MRO_SRO_Map_A },
+		{ "MROH/SROH A",                EFileTypeId::MROH_SROH_A },
+		{ "MRO/SRO Map B",              EFileTypeId::MRO_SRO_Map_B },
+		{ "MRO/SRO B",                  EFileTypeId::MRO_SRO_B },
+		{ "MROH/SROH B",                EFileTypeId::MROH_SROH_B },
+		{ "Moss MRO/SRO Map",           EFileTypeId::Moss_MRO_SRO_Map },
+		{ "Roughness",					EFileTypeId::Roughness },
+
+		{ "RGBA_Mask",                  EFileTypeId::RGBA_Mask },
+		{ "exterior_Cube_Map",          EFileTypeId::exterior_Cube_Map },
+		{ "Interior_Cube_Map",          EFileTypeId::Interior_Cube_Map },
+
+		{ "InteriorEmissive",           EFileTypeId::InteriorEmissive },
+		{ "Emissive Map",               EFileTypeId::Emissive_Map },
+		{ "Lamp Emissive",              EFileTypeId::Lamp_Emissive },
+		{ "FakeExtDiffuse",             EFileTypeId::FakeExtDiffuse },
+		{ "Diffuse with alpha",         EFileTypeId::Diffuse_with_alpha },
+		{ "Emissive Texture",			EFileTypeId::Emissive_Texture },
+
+		{ "Wind Position Map",          EFileTypeId::Wind_Position_Map },
+		{ "Detail Diffuse",             EFileTypeId::Detail_Diffuse },
+		{ "Subsurface",                 EFileTypeId::Subsurface },
+		{ "Color Mask",                 EFileTypeId::Color_Mask },
+		{ "Mask Texture (packed)",      EFileTypeId::Mask_Texture_packed },
+
+		{ "Worn MRO",                   EFileTypeId::Worn_MRO },
+		{ "Worn Normal",                EFileTypeId::Worn_Normal },
+		{ "Detail MRO",                 EFileTypeId::Detail_MRO },
+		{ "SRA",                        EFileTypeId::SRA },
+
+		{ "Detail Diffuse A",           EFileTypeId::Detail_Diffuse_A },
+		{ "Cavity-Lichen D Mask",       EFileTypeId::Cavity_Lichen_D_Mask },
+		{ "Detail Diffuse B",           EFileTypeId::Detail_Diffuse_B },
+		{ "Detail Albedo",              EFileTypeId::Detail_Albedo },
+		{ "Top Layer Base Color",       EFileTypeId::Top_Layer_Base_Color },
+		{ "Detail Normal A",            EFileTypeId::Detail_Normal_A },
+		{ "Detail Normal B",            EFileTypeId::Detail_Normal_B },
+		{ "Vertex Blend Texture ",      EFileTypeId::Vertex_Blend_Texture },
+		{ "Water Color tex",            EFileTypeId::Water_Color_tex },
+		{ "emissiveMask",               EFileTypeId::emissiveMask },
+		{ "EmissiveAlphaMask",          EFileTypeId::EmissiveAlphaMask },
+		{ "Distortion Map",             EFileTypeId::Distortion_Map },
+		{ "Distortion Bottom",          EFileTypeId::Distortion_Bottom },
+		{ "Distortion Top",             EFileTypeId::Distortion_Top },
+		{ "Albedo",                     EFileTypeId::Albedo },
+		{ "Displacement",               EFileTypeId::Displacement },
+		{ "Material",                   EFileTypeId::Material },
+		{ "Distortion Pattern",         EFileTypeId::Distortion_Pattern },
+		{ "Ground Diffuse",             EFileTypeId::Ground_Diffuse },
+		{ "Ground MRO/SRO",             EFileTypeId::Ground_MRO_SRO },
+		{ "Corruption Mask",            EFileTypeId::Corruption_Mask },
+
+		{ "Rock_Texture",               EFileTypeId::Rock_Texture },
+		{ "Rock MRO",                   EFileTypeId::Rock_MRO },
+		{ "Base MRO/SRO",               EFileTypeId::Base_MRO_SRO },
+		{ "MRO/SRO",                    EFileTypeId::MRO_SRO },
+		{ "Rock Details",               EFileTypeId::Rock_Details },
+		{ "Rock baked Normals",         EFileTypeId::Rock_baked_Normals },
+	};
+
+	auto it = table.find(FileType);
+	if (it != table.end())
+		return it->second;
+	return EFileTypeId::Unknown;
+}
+#endif // EDITOR_PROJECT
 
 CMaterial::CMaterial(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -308,422 +457,278 @@ HRESULT CMaterial::Read_MaterialFile(const _char* pMaterialFilePath, const _char
 
 	return S_OK;
 }
+
 HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType, string& Use)
 {
 	ID3D11ShaderResourceView* pSRV = {};
 
 	aiTextureType eTexture = {};
 	
-	/* Find type */
-	if (!strcmp(FileType.c_str(), "Diffuse Map")){
+	EFileTypeId ID = GetFileTypeId(FileType);
+
+	const EFileTypeId id = GetFileTypeId(FileType);
+
+	switch (id)
+	{
+		// ---- Diffuse 기본 ----
+	case EFileTypeId::Diffuse_Map:
+	case EFileTypeId::Diffuse_Texture:
+	case EFileTypeId::Diffuse_A_Map:
+	case EFileTypeId::Difuse_1:
+	case EFileTypeId::Base_color:
+	case EFileTypeId::DiffuseTexture:
+	case EFileTypeId::Distort_texture:
+	case EFileTypeId::Diffuse:
+	case EFileTypeId::Lamp:
+	case EFileTypeId::WindowDiffuse:
+	case EFileTypeId::Color_Glass:
+	case EFileTypeId::Window_Surface_Diffuse:
+	case EFileTypeId::InteriorDiffuse:
+	case EFileTypeId::Diffuse_A:
+	case EFileTypeId::Object_Diffuse:
+	case EFileTypeId::Rock_Texture:
+	case EFileTypeId::Base_colour:
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse Texture")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse A Map")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Difuse_1")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Base color")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "DiffuseTexture")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Distort texture")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Lamp")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "WindowDiffuse")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Color Glass")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Window_Surface_Diffuse")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "InteriorDiffuse")){
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse Moss")) {
+		break;
+
+		// ---- Height / Cavity 계열 (SRV_Flag.x += 2) ----
+	case EFileTypeId::Diffuse_Moss:
+	case EFileTypeId::Moss_Diffuse:
+	case EFileTypeId::Diffuse_C:
+	case EFileTypeId::Cavity_D:
 		eTexture = aiTextureType::aiTextureType_HEIGHT;
 		m_vSRV_Flag.x += 2.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Moss Diffuse")) {
-		eTexture = aiTextureType::aiTextureType_HEIGHT;
-		m_vSRV_Flag.x += 2.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse C")) {
-		eTexture = aiTextureType::aiTextureType_HEIGHT;
-		m_vSRV_Flag.x += 2.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse D")) {
+		break;
+
+		// ---- Clearcoat (SRV_Flag.x += 4) ----
+	case EFileTypeId::Diffuse_D:
 		eTexture = aiTextureType::aiTextureType_CLEARCOAT;
 		m_vSRV_Flag.x += 4.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Cavity D")) {
-		eTexture = aiTextureType::aiTextureType_HEIGHT;
-		m_vSRV_Flag.x += 2.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse A")) {
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Object Diffuse")) {
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse B")) {
+		break;
+
+		// ---- BaseColor (SRV_Flag.x += 1) ----
+	case EFileTypeId::Diffuse_B:
+	case EFileTypeId::Lichen_D:
+	case EFileTypeId::Diffuse_B_Map:
+	case EFileTypeId::TopBlend_Albedo:
+	case EFileTypeId::Detail_Diffuse:
 		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
 		m_vSRV_Flag.x += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Lichen D")) {
-		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
-		m_vSRV_Flag.x += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse B Map")) {
-		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
-		m_vSRV_Flag.x += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "TopBlend_Albedo")) {
-		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
-		m_vSRV_Flag.x += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Normal Map")){
+		break;
+
+		// ---- Normal 기본 ----
+	case EFileTypeId::Normal_Map:
+	case EFileTypeId::Normal_1:
+	case EFileTypeId::Object_Normal:
+	case EFileTypeId::Normal_A_Map:
+	case EFileTypeId::Base_Normal:
+	case EFileTypeId::Object_Normal_Underbar:
+	case EFileTypeId::NormalTexture:
+	case EFileTypeId::Normal:
+	case EFileTypeId::NormalMap:
+	case EFileTypeId::Window_Surface_Normal:
+	case EFileTypeId::Normal_Map_A:
+	case EFileTypeId::Worn_Normal:
+	case EFileTypeId::Rock_baked_Normals:
 		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "HRO Map")){
+		break;
+
+		// ---- Detail / Opacity (SRV_Flag.y += 1) ----
+	case EFileTypeId::Cloth_Detail_Normal:
+	case EFileTypeId::Detail_Normal:
+	case EFileTypeId::TopBlend_Normal:
+	case EFileTypeId::Normal_Map_B:
+	case EFileTypeId::Lichen_Detail_N:
+	case EFileTypeId::Normal_B_Map:
+	case EFileTypeId::Rock_Details:
+		eTexture = aiTextureType::aiTextureType_OPACITY;
+		m_vSRV_Flag.y += 1.f;
+		break;
+
+		// ---- SHININESS (SRV_Flag.y += 2) ----
+	case EFileTypeId::Moss_Normal:
+	case EFileTypeId::Cavity_Detail_N:
+	case EFileTypeId::Moss_Normal_Map:
+		eTexture = aiTextureType::aiTextureType_SHININESS;
+		m_vSRV_Flag.y += 2.f;
+		break;
+
+		// ---- HRO ----
+	case EFileTypeId::HRO_Map:
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 		m_vPBR_Flag.y = PBR_HRO;
-	}
-	else if (!strcmp(FileType.c_str(), "Normal_1")){
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Object Normal")){
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Normal A Map")){
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Base Normal")){
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Object_Normal")){
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "NormalTexture")){
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Normal")) {
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Window_Surface_Normal")) {
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Cloth Detail Normal")){
-		eTexture = aiTextureType::aiTextureType_OPACITY;
-		m_vSRV_Flag.y += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Detail Normal")){
-		eTexture = aiTextureType::aiTextureType_OPACITY;
-		m_vSRV_Flag.y += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "TopBlend_Normal")){
-		eTexture = aiTextureType::aiTextureType_OPACITY;
-		m_vSRV_Flag.y += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Moss Normal")) {
-		eTexture = aiTextureType::aiTextureType_SHININESS;
-		m_vSRV_Flag.y += 2.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Cavity Detail N")) {
-		eTexture = aiTextureType::aiTextureType_SHININESS;
-		m_vSRV_Flag.y += 2.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Moss Normal Map")) {
-		eTexture = aiTextureType::aiTextureType_SHININESS;
-		m_vSRV_Flag.y += 2.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Window_Surface_Normal")) {
-		eTexture = aiTextureType::aiTextureType_SHININESS;
-		m_vSRV_Flag.y += 2.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Normal Map A")){
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Normal Map B")){
-		eTexture = aiTextureType::aiTextureType_OPACITY;
-		m_vSRV_Flag.y += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Lichen Detail N")){
-		eTexture = aiTextureType::aiTextureType_OPACITY;
-		m_vSRV_Flag.y += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "Normal B Map")){
-		eTexture = aiTextureType::aiTextureType_OPACITY;
-		m_vSRV_Flag.y += 1.f;
-	}
-	else if (!strcmp(FileType.c_str(), "MRO")){
+		break;
+
+		// ---- MRO 계열 (PBR_MRO / LIGHTMAP case 포함) ----
+	case EFileTypeId::MRO:
+	case EFileTypeId::MRO_Map:
+	case EFileTypeId::WIndow_Surface_MRO:
+	case EFileTypeId::PackedTexture:
+	case EFileTypeId::MRO_Map_A:
+	case EFileTypeId::Worn_MRO:
+	case EFileTypeId::Roughness:
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 		m_vPBR_Flag.x = PBR_MRO;
-	}
-	else if (!strcmp(FileType.c_str(), "MRO Map")){
-		eTexture = aiTextureType::aiTextureType_METALNESS;
-		m_vPBR_Flag.x = PBR_MRO;
-	}
-	else if (!strcmp(FileType.c_str(), "WIndow_Surface_MRO")){
-		eTexture = aiTextureType::aiTextureType_METALNESS;
-		m_vPBR_Flag.x = PBR_MRO;
-	}
-	else if (!strcmp(FileType.c_str(), "PackedTexture")){
-		eTexture = aiTextureType::aiTextureType_METALNESS;
-		m_vPBR_Flag.x = PBR_MRO;
-	}
-	else if (!strcmp(FileType.c_str(), "MRO Map A")) {
-		eTexture = aiTextureType::aiTextureType_METALNESS;
-		m_vPBR_Flag.x = PBR_MRO;
-	}
-	else if (!strcmp(FileType.c_str(), "MRO Map B")) {
+		break;
+
+	case EFileTypeId::MRO_Map_B:
+	case EFileTypeId::Detail_MRO:
 		eTexture = aiTextureType::aiTextureType_LIGHTMAP;
 		m_vPBR_Flag.y = PBR_MRO;
-	}
-	else if (!strcmp(FileType.c_str(), "MROH")){
+		break;
+
+	case EFileTypeId::MROH:
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 		m_vPBR_Flag.x = PBR_MROH;
-	}
-	else if (!strcmp(FileType.c_str(), "MROA Mask")){
+		break;
+
+	case EFileTypeId::MROA_Mask:
+	case EFileTypeId::MROA_Map:
+	case EFileTypeId::MROA:
+	case EFileTypeId::Rock_MRO:
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 		m_vPBR_Flag.x = PBR_MROA;
-	}
-	else if (!strcmp(FileType.c_str(), "MROA Map")){
-		eTexture = aiTextureType::aiTextureType_METALNESS;
-		m_vPBR_Flag.x = PBR_MROA;
-	}
-	else if (!strcmp(FileType.c_str(), "MROA")){
-		eTexture = aiTextureType::aiTextureType_METALNESS;
-		m_vPBR_Flag.x = PBR_MROA;
-	}
-	else if (!strcmp(FileType.c_str(), "MRS")){
+		break;
+
+	case EFileTypeId::MRS:
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 		m_vPBR_Flag.x = PBR_MRS;
-	}
-	else if (!strcmp(FileType.c_str(), "SRO Map")){
+		break;
+
+		// ---- SRO 계열 ----
+	case EFileTypeId::SRO_Map:
+	case EFileTypeId::SRO:
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 		m_vPBR_Flag.x = PBR_SRO;
-	}
-	else if (!strcmp(FileType.c_str(), "SRO")){
-		eTexture = aiTextureType::aiTextureType_SPECULAR;
-		m_vPBR_Flag.x = PBR_SRO;
-	}
-	else if (!strcmp(FileType.c_str(), "Moss SRO")){
+		break;
+
+	case EFileTypeId::Moss_SRO:
 		eTexture = aiTextureType::aiTextureType_NORMAL_CAMERA;
 		m_vPBR_Flag.x = PBR_SRO;
-	}
-	else if (!strcmp(FileType.c_str(), "SRO Map A")) {
+		break;
+
+	case EFileTypeId::SRO_Map_A:
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 		m_vPBR_Flag.x = PBR_SRO;
-	}
-	else if (!strcmp(FileType.c_str(), "SRO Map D")) {
+		break;
+
+	case EFileTypeId::SRO_Map_D:
 		eTexture = aiTextureType::aiTextureType_SHEEN;
 		m_vPBR_Flag.x = PBR_SRO;
-		}
-	else if (!strcmp(FileType.c_str(), "SRO Map B")) {
-		eTexture = Switch_PBR_B(Use);
-		m_vPBR_Flag.y = PBR_SRO;
-	}
-	else if (!strcmp(FileType.c_str(), "TopBlend_SRO")) {
-		eTexture = Switch_PBR_B(Use);
-		m_vPBR_Flag.y = PBR_SRO;
-	}
-	else if (!strcmp(FileType.c_str(), "Detail SRO")) {
-		eTexture = Switch_PBR_B(Use);
-		m_vPBR_Flag.y = PBR_SRO;
-	}
-	else if (!strcmp(FileType.c_str(), "SRO B Map")) {
-		eTexture = Switch_PBR_B(Use);
-		m_vPBR_Flag.y = PBR_SRO;
-	}
-	else if (!strcmp(FileType.c_str(), "SROH")) {
+		break;
+
+	case EFileTypeId::SROH:
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 		m_vPBR_Flag.x = PBR_SROH;
-	}
-	else if (!strcmp(FileType.c_str(), "SROA")){
+		break;
+
+	case EFileTypeId::SROA:
+	case EFileTypeId::SROA_Map:
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 		m_vPBR_Flag.x = PBR_SROA;
-	}
-	else if (!strcmp(FileType.c_str(), "SROA Map")){
-		eTexture = aiTextureType::aiTextureType_SPECULAR;
-		m_vPBR_Flag.x = PBR_SROA;
-	}
-	else if (!strcmp(FileType.c_str(), "SROH A Map")){
+		break;
+
+	case EFileTypeId::SROH_A_Map:
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 		m_vPBR_Flag.x = PBR_SROH;
-	}
-	else if (!strcmp(FileType.c_str(), "MROH/SROH Map A")) {
-		eTexture = Switch_PBR(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "Object MRO/SRO")) {
-		eTexture = Switch_PBR(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "MROH/SROH Map B")) {
+		break;
+
+	case EFileTypeId::SRO_Map_B:
+	case EFileTypeId::TopBlend_SRO:
+	case EFileTypeId::Detail_SRO:
+	case EFileTypeId::SRO_B_Map:
 		eTexture = Switch_PBR_B(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "MRO/SRO Map A")) {
+		m_vPBR_Flag.y = PBR_SRO;
+		break;
+
+		// ---- MRO/SRO 혼합 ----
+	case EFileTypeId::MROH_SROH_Map_A:
+	case EFileTypeId::Object_MRO_SRO:
+	case EFileTypeId::MRO_SRO_Map_A:
+	case EFileTypeId::MROH_SROH_A:
+	case EFileTypeId::Base_MRO_SRO:
+	case EFileTypeId::MRO_SRO:
 		eTexture = Switch_PBR(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "MROH/SROH A")) {
-		eTexture = Switch_PBR(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "MRO/SRO Map B")) {
+		break;
+
+	case EFileTypeId::MROH_SROH_Map_B:
+	case EFileTypeId::MRO_SRO_Map_B:
+	case EFileTypeId::MRO_SRO_B:
+	case EFileTypeId::MROH_SROH_B:
 		eTexture = Switch_PBR_B(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "MRO/SRO B")) {
-		eTexture = Switch_PBR_B(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "MROH/SROH B")) {
-		eTexture = Switch_PBR_B(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "Moss MRO/SRO Map")) {
+		break;
+
+	case EFileTypeId::Moss_MRO_SRO_Map:
 		eTexture = Switch_PBR_MOSS(Use);
-	}
-	else if (!strcmp(FileType.c_str(), "RGBA_Mask")) {
+		break;
+
+		// ---- RGBA / Mask / 기타 ----
+	case EFileTypeId::RGBA_Mask:
 		eTexture = aiTextureType::aiTextureType_MAYA_BASE;
 		m_vSRV_Flag.x = 5.f;
 		m_vSRV_Flag.y = 5.f;
-	}
-	else if (!strcmp(FileType.c_str(), "exterior_Cube_Map")) {
-		return S_OK;
-	}
-	else if (!strcmp(FileType.c_str(), "Interior_Cube_Map")) {
-		return S_OK;
-	}
-	else if (!strcmp(FileType.c_str(), "InteriorEmissive")) {
-		eTexture = aiTextureType::aiTextureType_EMISSIVE;
-	}
-	else if (!strcmp(FileType.c_str(), "Emissive Map")) {
-		eTexture = aiTextureType::aiTextureType_EMISSIVE;
-	}
-	else if (!strcmp(FileType.c_str(), "Lamp Emissive")) {
-		eTexture = aiTextureType::aiTextureType_EMISSIVE;
-	}
-	else if (!strcmp(FileType.c_str(), "FakeExtDiffuse")) {
-		eTexture = aiTextureType::aiTextureType_EMISSIVE;
-	}
-	else if (!strcmp(FileType.c_str(), "Diffuse with alpha")) {
-		eTexture = aiTextureType::aiTextureType_EMISSIVE;
-	}
-	else if (!strcmp(FileType.c_str(), "Wind Position Map")) {
+		break;
+
+	case EFileTypeId::Wind_Position_Map:
+	case EFileTypeId::Color_Mask:
 		eTexture = aiTextureType::aiTextureType_MAYA_BASE;
-	}
-	else if (!strcmp(FileType.c_str(), "Detail Diffuse")) {
-		eTexture = aiTextureType::aiTextureType_BASE_COLOR;
-	}
-	else if (!strcmp(FileType.c_str(), "Subsurface")) {
+		break;
+
+		// ---- Emissive ----
+	case EFileTypeId::InteriorEmissive:
+	case EFileTypeId::Emissive_Map:
+	case EFileTypeId::Lamp_Emissive:
+	case EFileTypeId::FakeExtDiffuse:
+	case EFileTypeId::Diffuse_with_alpha:
+	case EFileTypeId::Emissive_Texture:
+		eTexture = aiTextureType::aiTextureType_EMISSIVE;
+		break;
+
+		// ---- 바로 무시(S_OK 반환) 되던 타입들 ----
+	case EFileTypeId::exterior_Cube_Map:
+	case EFileTypeId::Interior_Cube_Map:
+	case EFileTypeId::Subsurface:
+	case EFileTypeId::Mask_Texture_packed:
+	case EFileTypeId::Detail_Diffuse_A:
+	case EFileTypeId::Cavity_Lichen_D_Mask:
+	case EFileTypeId::Detail_Diffuse_B:
+	case EFileTypeId::Detail_Albedo:
+	case EFileTypeId::Top_Layer_Base_Color:
+	case EFileTypeId::Detail_Normal_A:
+	case EFileTypeId::Detail_Normal_B:
+	case EFileTypeId::Vertex_Blend_Texture:
+	case EFileTypeId::Water_Color_tex:
+	case EFileTypeId::emissiveMask:
+	case EFileTypeId::EmissiveAlphaMask:
+	case EFileTypeId::Distortion_Map:
+	case EFileTypeId::Distortion_Bottom:
+	case EFileTypeId::Distortion_Top:
+	case EFileTypeId::Albedo:
+	case EFileTypeId::Displacement:
+	case EFileTypeId::Material:
+	case EFileTypeId::Distortion_Pattern:
+	case EFileTypeId::Ground_Diffuse:
+	case EFileTypeId::Ground_MRO_SRO:
+	case EFileTypeId::Corruption_Mask:
 		return S_OK;
-	}
-	else if (!strcmp(FileType.c_str(), "Color Mask")) {
-		eTexture = aiTextureType::aiTextureType_MAYA_BASE;
-	}
-	else if (!strcmp(FileType.c_str(), "Mask Texture (packed)")) {
-		return S_OK;
-	}
-	else if (!strcmp(FileType.c_str(), "Worn MRO")) {
-		eTexture = aiTextureType::aiTextureType_METALNESS;
-		m_vPBR_Flag.x = PBR_MRO;
-	}
-	else if (!strcmp(FileType.c_str(), "Worn Normal")) {
-		eTexture = aiTextureType::aiTextureType_NORMALS;
-	}
-	else if (!strcmp(FileType.c_str(), "Detail MRO")) {
-		eTexture = aiTextureType::aiTextureType_LIGHTMAP;
-		m_vPBR_Flag.y = PBR_MRO;
-	}
-	else if (!strcmp(FileType.c_str(), "SRA")) {
+
+	case EFileTypeId::SRA:
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 		m_vPBR_Flag.y = PBR_SRA;
-	}
-	else
-	{
-		if (!strcmp(FileType.c_str(), "Detail Diffuse A")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Cavity-Lichen D Mask"))
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Detail Diffuse B")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Detail Albedo")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Top Layer Base Color")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Detail Normal A")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Detail Normal B")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Vertex Blend Texture ")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Water Color tex")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "emissiveMask")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "EmissiveAlphaMask")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Distortion Map")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Distortion Bottom")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Distortion Top")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Albedo")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Displacement")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Material")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Distortion Pattern")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Ground Diffuse")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Ground MRO/SRO")) 
-				return S_OK;
-		else if (!strcmp(FileType.c_str(), "Corruption Mask"))
-			return S_OK;
-		else if (!strcmp(FileType.c_str(), "Rock_Texture")) {
-			eTexture = aiTextureType::aiTextureType_DIFFUSE;
-		}
-		else if (!strcmp(FileType.c_str(), "Rock MRO")) {
-			eTexture = aiTextureType::aiTextureType_METALNESS;
-			m_vPBR_Flag.x = PBR_MROA;
-		}
-		else if (!strcmp(FileType.c_str(), "Base MRO/SRO")) {
-			eTexture = Switch_PBR(Use);
-		}
-		else if (!strcmp(FileType.c_str(), "MRO/SRO")) {
-			eTexture = Switch_PBR(Use);
-		}
-		else if (!strcmp(FileType.c_str(), "Rock Details")) {
-			eTexture = aiTextureType::aiTextureType_OPACITY;
-			m_vSRV_Flag.y += 1.f;
-		}
-		else if (!strcmp(FileType.c_str(), "Rock baked Normals")) {
-			eTexture = aiTextureType::aiTextureType_NORMALS;
-		}
-		else
-		{
+		break;
+
+		// ---- Unknown ----
+	case EFileTypeId::Unknown:
+	default:
 #ifndef 기무리
-			MSG_BOX("Failed to Path Material Texture Type");
-#endif // !기무리
+		MSG_BOX("Failed to Path Material Texture Type");
+#endif
 #ifndef gimch
-			MSG_BOX("Failed to Path Material Texture Type");
-#endif // !기무리
-			return S_OK;
-		}
+		MSG_BOX("Failed to Path Material Texture Type");
+#endif
+		return S_OK;
 	}
+
 	_char TexturePath[MAX_PATH] = {};
 
 	strcpy_s(TexturePath, pTextureFolderPath);

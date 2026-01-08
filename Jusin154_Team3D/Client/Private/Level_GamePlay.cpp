@@ -20,6 +20,7 @@
 #include "RaceRing.h"
 #include "BroomRaceManager.h"
 #include "ReparoObject.h"
+#include "ThestralCarriage.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -49,7 +50,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef _DEBUG
 	// 낮, 밤 설정
 #ifdef gimch
-	m_isDay = true;
+	m_isDay = false;
 #endif // gimch
 #ifdef Bin
 	m_isDay = true;
@@ -288,12 +289,12 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef gimch
 	isReady_Background = true;
 	isReady_Hogsmeade = false;
-	isReady_Hogwart = true;
+	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -842,7 +843,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		}
 	}
 
-	if (true == isLoad_NPC)
+	if (true == isLoad_RandomNPC)
 	{
 		for (_uint i = 0; i < 11; i++)
 		{
@@ -858,15 +859,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 				}
 			}
 		}
-
-		CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-		DuelistDesc.vPos = _float4(-21.f, 0.f, -16.f, 1.f);
-		DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,&DuelistDesc))) {
-			return E_FAIL;
-		}
 	}
-
+	CHuman_Duelist::DUELISTDESC DuelistDesc = {};
+	DuelistDesc.vPos = _float4(-21.f, 0.f, -16.f, 1.f);
+	DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &DuelistDesc))) {
+		return E_FAIL;
+	}
 
 
 	return S_OK;
@@ -874,6 +873,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CThestralCarriage>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

@@ -51,6 +51,9 @@ HRESULT CRandomNpc::Initialize(void* pArg)
 
 void CRandomNpc::Priority_Update(_float fTimeDelta)
 {
+	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
+		return;
+	}
 	m_pTransformCom->RewindMomentum();
 	m_iEntered -= 1;
 	if (m_iEntered < 0) {
@@ -61,6 +64,9 @@ void CRandomNpc::Priority_Update(_float fTimeDelta)
 
 void CRandomNpc::Update(_float fTimeDelta)
 {
+	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
+		return;
+	}
 	m_pFSM->Update_State(fTimeDelta);
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 	__super::Update(fTimeDelta);
@@ -80,11 +86,13 @@ void CRandomNpc::Update(_float fTimeDelta)
 
 void CRandomNpc::Late_Update(_float fTimeDelta)
 {
+	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
+		return;
+	}
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
-	if (m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	}
+
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 

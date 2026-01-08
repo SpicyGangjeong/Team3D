@@ -20,29 +20,29 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
-	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void	Priority_Update(_float fTimeDelta) override;
+	virtual void	Update(_float fTimeDelta) override;
+	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
-	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
-	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
-	_bool Get_Aim() { return m_bAim; }
-	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
-	void Set_Shield(_bool bShield) { m_bShield = bShield; }
-	void Start_CameraShake(_float fTime, _float fIntense);
-	_int Get_UIState() { return m_eUIState; }
-	void	Set_RaceRing(class CRaceRing* pRaceRing);
-	class CBroom* Get_Broom() { return m_pBroom; }
-	void Set_RaceInfo();
-	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
-	_matrix Get_WandPos();
-	void Set_OpenDoor(_bool bOpen) { m_bOpenDoor = bOpen; }
-	void UpdateGrapInteractive(_float fTimeDelta);
-	void Update_CameraShake(_float fTimeDelta);
-	HRESULT Update_RaycastElements();
+	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
+	virtual void	OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	_bool			Get_Aim() { return m_bAim; }
+	void			Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
+	void			Set_Shield(_bool bShield) { m_bShield = bShield; }
+	void			Start_CameraShake(_float fTime, _float fIntense);
+	_int			Get_UIState() { return m_eUIState; }
+	void			Set_RaceRing(class CRaceRing* pRaceRing);
+	class CBroom*	Get_Broom() { return m_pBroom; }
+	void			Set_RaceInfo();
+	_bool			Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
+	_matrix			Get_WandPos();
+	void			Set_OpenDoor(_bool bOpen) { m_bOpenDoor = bOpen; }
+	void			UpdateGrapInteractive(_float fTimeDelta);
+	void			Update_CameraShake(_float fTimeDelta);
+	HRESULT			Update_RaycastElements();
 #ifdef _DEBUG
-	void Render_CameraCoordinateSystem();
+	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
@@ -90,7 +90,7 @@ private:
 
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };
-
+	class CThestralCarriage* m_pCarriage = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -165,6 +165,7 @@ private:
 	array<_float4x4, 256> SkinMatrices = {};
 	array<_int, 256> SecondMaskIndex = {};
 	_bool			m_bOpenDoor = { false };
+	_bool			m_bOpeningCutScene = { false };
 
 	/* 무적 불 변수*/
 #ifdef _DEBUG

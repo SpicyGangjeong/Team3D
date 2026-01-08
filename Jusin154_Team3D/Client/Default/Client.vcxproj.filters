@@ -878,6 +878,9 @@
     <ClInclude Include="..\Public\State_CutScene.h">
       <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ThestralCarriage.h">
+      <Filter>02.GameObjects\Item\ThestralCarriage</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\CutSceneInfo.h">
       <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
     </ClInclude>
@@ -1833,6 +1836,9 @@
     <Filter Include="04.Mechanic\TimeSocket">
       <UniqueIdentifier>{ca386d46-aca6-44a4-94cc-15610e1a878e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Item\ThestralCarriage">
+      <UniqueIdentifier>{d07bd195-0cdf-4a47-8c50-e3a88361352f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2663,6 +2669,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_CutScene.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThestralCarriage.cpp">
+      <Filter>02.GameObjects\Item\ThestralCarriage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CutSceneInfo.cpp">
       <Filter>03.InfoInstance\04.CutSceneInfo</Filter>

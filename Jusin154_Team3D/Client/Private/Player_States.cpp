@@ -16,6 +16,7 @@
 #include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
 #include "Broom.h"
+#include "ThestralCarriage.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -360,19 +361,22 @@ void CPlayer::Behavior_CutSceneEnter()
 	m_bSprintToggle = false;
 	m_bWalkToggle = false;
 
-	pairAnimInfo = m_Animation[STATEANIM::CUTSCENE_TROLLINTRO];
+	pairAnimInfo = m_Animation[STATEANIM::CUTSCENE_OPENINGINTRO2];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-
+	m_bOpeningCutScene = true;
 }
 
 HRESULT CPlayer::Behavior_CutSceneExitCheck(_float fTimeDelta)
 {
-	pair<_uint, _bool> pairAnimInfo;
-
-	if (m_pModelCom->IsFinishedAnim())
+	if (m_bOpeningCutScene)
 	{
-		pairAnimInfo = m_Animation[STATEANIM::IDLE];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		_vector Offset = XMVectorSet(1.820f, 0.44f, 0.f, 0.f);
+		m_pTransformCom->Set_WorldMatrix(m_pCarriage->Get_Component<CTransform>()->Get_XMWorldMatrix());
+		m_pCharacter_Controller->Set_Position(m_pCarriage->Get_WorldPostion() + Offset);
+	}
+
+	if (m_pCarriage->Get_Component<CModel>()->IsFinishedAnim())
+	{
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
@@ -382,6 +386,7 @@ HRESULT CPlayer::Behavior_CutSceneExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_CutSceneExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::CUTSCENE);
+	m_bOpeningCutScene = false;
 	Reset_Event();
 }
 
@@ -1824,6 +1829,21 @@ void CPlayer::Behavior_HitEnter()
 	m_pBroom->Set_Ride(false);
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 	pair<_uint, _bool> pairAnimInfo;
+
+	if (m_eHitSpell != ENUM_CLASS(SKILL_TYPE::END)) {
+		switch (m_eHitSpell)
+		{
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
+			break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+			break;
+		}
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		return;
+	}
 	switch (m_eHitType)
 	{
 	case ENUM_CLASS(HIT_TYPE::HIT_PROJECTILE):

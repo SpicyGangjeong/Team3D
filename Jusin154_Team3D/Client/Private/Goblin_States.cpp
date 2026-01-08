@@ -1002,6 +1002,7 @@ void CGoblin::Add_FSM()
 				m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
 				m_pRigidBody->SetActive(false);
 				m_pCharacter_Controller->SetActive(false);
+				m_pGoblinSpector->Set_Dead();
 				m_bDead = true;
 			}
 			};

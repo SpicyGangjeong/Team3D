@@ -150,6 +150,50 @@ _int CModel::Get_MeshInfluencedBoneNum(_uint iMeshIndex)
 	return m_Meshes[iMeshIndex]->Get_NumBone();
 }
 
+void CModel::Start_ChainAnimation()
+{
+	if (m_ChainAnim.empty())
+		return;
+
+	m_iChainIndex = 0;
+	m_bPlayingChain = true;
+
+	Set_AnimationIndex(
+		m_ChainAnim[0].first,
+		m_ChainAnim[0].second,
+		1.f,false,1.f,m_bRootBone
+	);
+}
+
+void CModel::Update_ChainAnimation()
+{
+	if (!m_bPlayingChain)
+		return;
+
+	if (!IsFinishedAnim())
+		return;
+
+	++m_iChainIndex;
+
+	if (m_iChainIndex >= m_ChainAnim.size())
+	{
+		m_bPlayingChain = false;
+		return;
+	}
+
+	Set_AnimationIndex(
+		m_ChainAnim[m_iChainIndex].first,
+		m_ChainAnim[m_iChainIndex].second,
+		1.f, false, 1.f, m_bRootBone
+	);
+}
+
+void CModel::Set_ChainAnimation(pair<_uint, _bool> chainAnim)
+{
+	m_ChainAnim.push_back(chainAnim);
+}
+
+
 _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
 	if (!m_bPlayAnim){

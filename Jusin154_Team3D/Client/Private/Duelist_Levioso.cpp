@@ -167,9 +167,11 @@ HRESULT CDuelist_Levioso::Pre_Setting(CGameObject* pObject, void* pArg)
 		if (pPlayer == nullptr)
 			return E_FAIL;
 
+		_vector vPlayerPos = pPlayer->Get_Component<CCharacter_Controller>()->Get_Position();
+
 		if (nullptr != pPlayer) {
 
-			XMStoreFloat4(&m_vTargetPos, pPlayer->Get_LockOnPos());
+			XMStoreFloat4(&m_vTargetPos, vPlayerPos);
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}

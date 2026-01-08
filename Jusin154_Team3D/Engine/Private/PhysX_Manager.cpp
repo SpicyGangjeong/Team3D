@@ -876,8 +876,13 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 		PSX::PxSceneDesc sceneDesc = { m_pPhysics->getTolerancesScale() };
 
 		sceneDesc.gravity = PSX::PxVec3(0.f, -GRAVITY, 0.f);
-
+#ifndef _DEBUG
 		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(4 /*cpu 코어 스레드 갯수에 따라 유동적으로 선택*/);
+#endif // _DEBUG
+#ifdef _DEBUG
+		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(2 /*cpu 코어 스레드 갯수에 따라 유동적으로 선택*/);
+#endif // _DEBUG
+		
 		if (nullptr == m_pDispatcher) {
 			assert(false);
 			return E_FAIL;

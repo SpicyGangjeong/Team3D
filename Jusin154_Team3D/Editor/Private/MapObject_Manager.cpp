@@ -16,6 +16,7 @@
 #include "LightSpawner.h"
 #include "DummyDecal.h"
 #include "RaceRing.h"
+#include "InstancedProp_Light.h"
 
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -65,10 +66,6 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 
 	m_iContainerObjectIndex = 99;
 
-	//if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
-	//	return E_FAIL;
-	
-
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
 	
 	/*if (FAILED(Load_WaterObject("Element_Water_Info")))
@@ -88,16 +85,26 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
 	//	return E_FAIL;
 
+#pragma region HOGSMEADE
+		//if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
+		//	return E_FAIL;
+#pragma endregion
+
 #pragma region DUNGEON
 	//if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
 	//	return E_FAIL;
 	//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
 	//m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
 #pragma endregion
+
+#pragma region HOGWART
 	if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
-		return E_FAIL;/*
+		return E_FAIL;
 	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
-		return E_FAIL;*/
+		return E_FAIL;
+#pragma endregion
+
+	
 
 
 #pragma region Light
@@ -132,6 +139,16 @@ void CMapObject_Manager::Priority_Update(_float fTimeDelta)
 void CMapObject_Manager::Update(_float fTimeDelta)
 {
 	GUI::Begin("Map Manager");
+
+	if (GUI::Button("Load_DADA_INT"))
+	{
+		Load_DADA_INT();
+	}
+	if (GUI::Button("Clear Layer"))
+	{
+		m_pGameInstance->Clear_Layer(NEXT_LEVEL, TEXT("Layer_DADA_INT"));
+	}
+
 	const char* ModeNames[4] =
 	{
 		"CONTAINER",
@@ -155,11 +172,13 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 		//}
 	
 	}
+	
+
 	if (GUI::Button("Load_Map"))
 	{
 		Load_MapData(m_szSaveFileName);
-	
 	}
+
 	
 	GUI::InputText("Containter Name", m_szSaveContainerName, MAX_PATH);
 
@@ -230,8 +249,6 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	{
 		pObject->Update(fTimeDelta);
 	}
-
-	
 
 }
 
@@ -1446,7 +1463,7 @@ HRESULT CMapObject_Manager::Load_ContainerToMapObject(const _char* pFileName, co
 		CMapObject_LOD* pMapObject = { nullptr };
 
 		pMapObject = m_pGameInstance->Clone_Prototype<CMapObject_LOD>(g_iStaticLevel, &Desc);
-		pMapObject->Set_KeyIndex(Get_KeyCount(CMyTools::ToWstring(strKey)));
+		pMapObject->Set_KeyIndex(iKeyIndex);
 
 		m_MapObjects.push_back(pMapObject);
 
@@ -1996,6 +2013,29 @@ HRESULT CMapObject_Manager::Save_RaceRing(const _char* pFileName)
 	return S_OK;
 }
 
+HRESULT CMapObject_Manager::Load_DADA_INT()
+{
+	if (FAILED(Load_MapData("DATA_INT_Data")))
+		return E_FAIL;
+
+	m_pInfoInstance->Load_PointLights("DATA_INT_PointLight_Data");
+
+	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
+
+	/* LightFixture_Base_D */
+	LightDesc.bEditMode = false;
+	LightDesc.isShake = false;
+	LightDesc.iGlassMeshIndex = 1;
+	LightDesc.vRadius = _float2(0.f, 0.f);
+	LightDesc.vSpeed = _float2(0.f, 0.f);
+	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D";
+	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/SM_HW_LightFixture_Base_D.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_DADA_INT"), &LightDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 void CMapObject_Manager::Update_PrototypeList()
 {
 	GUI::Begin("Model Prototype List");
@@ -2270,11 +2310,11 @@ void CMapObject_Manager::Update_LightSpawer()
 	GUI::Begin("Light Spawer");
 	if (GUI::Button("Save Lights"))
 	{
-		Save_PointLightObject("Duengon_PointLight_Data");
+		Save_PointLightObject("DATA_INT_PointLight_Data");
 	}
 	if (GUI::Button("Load Lights"))
 	{
-		m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+		m_pInfoInstance->Load_PointLights("DATA_INT_PointLight_Data");
 	}
 	if(GUI::Button("Add Light Spawer"))
 	{
