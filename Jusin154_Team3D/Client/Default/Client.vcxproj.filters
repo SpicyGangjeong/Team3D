@@ -862,7 +862,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Human_Duelist.h">
       <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
     </ClInclude>
@@ -877,6 +877,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_CutScene.h">
       <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ThestralCarriage.h">
+      <Filter>02.GameObjects\Item\ThestralCarriage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1821,6 +1824,9 @@
     <Filter Include="04.Mechanic\State\State_Combat\State_CutScene">
       <UniqueIdentifier>{b50fed80-37dd-4adb-afd4-ba153cef8a92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Item\ThestralCarriage">
+      <UniqueIdentifier>{d07bd195-0cdf-4a47-8c50-e3a88361352f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2651,6 +2657,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_CutScene.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThestralCarriage.cpp">
+      <Filter>02.GameObjects\Item\ThestralCarriage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

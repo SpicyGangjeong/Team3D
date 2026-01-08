@@ -50,7 +50,7 @@ void CHuman_Duelist::Behavior_IdleExit()
 
 void CHuman_Duelist::Behavior_IdleBreakEnter()
 {
-	m_pFSM->Enable_State(FSMSTATE::IDLE);
+	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
 	_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
 	if (iRand == 0) {
@@ -140,6 +140,10 @@ void CHuman_Duelist::Behavior_LightAttackEnter()
 		[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::DUELIST_JAP, Get_PartObject<CWand>(), &iIndex);  },
 		0.2f);
 
+	//Add_Event(pairAnimInfo.first,
+	//	[this]() { m_pGameInstance->SlowMotion(0.1f, 0.5f);  },
+	//	0.1f);
+
 	Add_Event(pairAnimInfo.first,
 		[this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  },
 		0.0f);
@@ -173,6 +177,11 @@ void CHuman_Duelist::Behavior_SpellEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DUELIST_LEVIOSO, this); },
 		0.2f);
+
+	/*Add_Event(pairAnimInfo.first,
+		[this]() { m_pGameInstance->SlowMotion(0.1f, 0.5f);   },
+		0.1f);*/
+
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 		0.f);
@@ -234,8 +243,14 @@ void CHuman_Duelist::Behavior_HitEnter()
 	switch (m_eHitSpell)
 	{
 	case ENUM_CLASS(SKILL_TYPE::JAP):
+		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
+		break;
+	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
 		break;
 	}
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 }
 

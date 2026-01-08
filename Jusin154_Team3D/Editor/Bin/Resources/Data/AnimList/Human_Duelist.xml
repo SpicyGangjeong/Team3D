@@ -20,7 +20,7 @@
 
 	<!-- HIT / FLINCH -->
 	<Anim state="HIT_LEVIOSO" index="347" loop="true"/>
-	<Anim state="HIT_R" index="1214" loop="false"/>
+	<Anim state="HIT_BWD" index="309" loop="false"/>
 	<Anim state="TUMBLE" index="367" loop="true"/>
 
 	<Anim state="FLINCH_BWD" index="1073" loop="false"/>

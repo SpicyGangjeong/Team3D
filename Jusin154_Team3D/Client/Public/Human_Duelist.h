@@ -44,6 +44,7 @@ private:
 	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
 	CLight* m_pLightCom = { nullptr };
 	LIGHT_DESC LightDesc = {};
+	DAMAGE_INFO m_DamageInfo;
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
