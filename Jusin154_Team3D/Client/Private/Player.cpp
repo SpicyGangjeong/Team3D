@@ -170,12 +170,13 @@ void CPlayer::Update(_float fTimeDelta)
 		}
 	}
 
-
+	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 #ifdef _DEBUG
@@ -204,8 +205,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	}
 
 	Player_PixRot();
-
-	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 
@@ -807,7 +806,7 @@ void CPlayer::SetGravity()
 	eCollisionFlags;
 	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
 		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP|FSMSTATE::CUTSCENE) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP|FSMSTATE::CUTSCENE) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY) && m_fAirTime == 0.f) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
 		else { // 점프 중일 땐 off

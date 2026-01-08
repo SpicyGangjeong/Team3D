@@ -141,6 +141,13 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
+
+#pragma region HIT_BEHAVIOR
+
+	void Hit_Accio(_float fTimeDelta);
+	void Hit_Levioso(_float fTimeDelta);
+
+#pragma endregion
 };
 
 NS_END

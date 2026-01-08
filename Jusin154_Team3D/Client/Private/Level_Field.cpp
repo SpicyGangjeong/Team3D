@@ -219,11 +219,13 @@ HRESULT CLevel_Field::Ready_Camera()
 
 	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
 
-#endif // _DEBUG
-
 	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
+
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
