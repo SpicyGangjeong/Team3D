@@ -36,7 +36,6 @@ void CInfoInstance::Change_Level()
 	m_pMapInfo->Change_Level();
 	m_pSkillInfo->Change_Level();
 	m_pInteractiveInfo->Change_Level();
-	UI_Event.clear();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()
@@ -162,7 +161,11 @@ HRESULT CInfoInstance::Load_WorldDecal(const _char* pFileName, const _wchar* pLa
 }
 HRESULT CInfoInstance::Load_PointLights(const _char* pFileName, const _wchar* pLayerTag)
 {
-	return m_pMapInfo->Load_PointLights(pFileName, pLayerTag);;
+	return m_pMapInfo->Load_PointLights(pFileName, pLayerTag);
+}
+HRESULT CInfoInstance::Load_DADA_INT()
+{
+	return m_pMapInfo->Load_DADA_INT();
 }
 #pragma endregion
 
@@ -344,9 +347,9 @@ _int CInfoInstance::Get_SpellLearnIndex()
 //	m_pDialogue_Font->Add_Text(pArg);
 //}
 
-const NPCDIALOGUEINFO& CInfoInstance::Get_Dialogue(_wstring NpcName) const
+const CURRENTDIALOGUEINFO& CInfoInstance::Get_Dialogue(_wstring NpcName, _int iTextID) const
 {
-	return m_pDialogue_Data->Get_Info(NpcName);
+	return m_pDialogue_Data->Get_Info(NpcName, iTextID);
 }
 
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)

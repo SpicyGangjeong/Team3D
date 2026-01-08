@@ -231,7 +231,7 @@ public:
 	}
 	// yaw 360도 자동 커트
 	// pitch 80도 클램프
-	inline static void AdjustAccumulateDegreePitchYawDegree(_float2& vAccumulateDegreePitchYaw, float fPitchLimitDegree = 80.f)
+	inline static void AdjustAccumulateDegreePitchYawDegree(_float2& vAccumulateDegreePitchYaw, float fPitchLimitLowerDegree = 60.f, float fPitchLimitUpperDegree = 60.f)
 	{
 		if (vAccumulateDegreePitchYaw.y > 360.f)
 		{
@@ -242,13 +242,13 @@ public:
 			vAccumulateDegreePitchYaw.y += 360.f;
 		}
 
-		if (vAccumulateDegreePitchYaw.x > fPitchLimitDegree)
+		if (vAccumulateDegreePitchYaw.x > fPitchLimitUpperDegree)
 		{
-			vAccumulateDegreePitchYaw.x = fPitchLimitDegree;
+			vAccumulateDegreePitchYaw.x = fPitchLimitUpperDegree;
 		}
-		else if (vAccumulateDegreePitchYaw.x < -fPitchLimitDegree)
+		else if (vAccumulateDegreePitchYaw.x < -fPitchLimitLowerDegree)
 		{
-			vAccumulateDegreePitchYaw.x = -fPitchLimitDegree;
+			vAccumulateDegreePitchYaw.x = -fPitchLimitLowerDegree;
 		}
 	}
 

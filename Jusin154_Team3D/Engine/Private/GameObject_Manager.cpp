@@ -119,6 +119,25 @@ CLayer* CGameObject_Manager::Get_Layer(_uint iLayerLevelIndex, const _wstring& s
 	return iter->second;
 }
 
+void CGameObject_Manager::Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag)
+{
+	if (iLevelIndex >= m_iNumLevels)
+		return;
+
+	auto iter = m_pLayers[iLevelIndex].find(strLayerTag);
+	if (iter == m_pLayers[iLevelIndex].end()) {
+		return;
+	}
+
+	if (FAILED(iter->second->Clear_Layer()))
+		return;
+
+	SAFE_RELEASE(iter->second);
+	m_pLayers[iLevelIndex].erase(iter);
+
+	return;
+}
+
 CLayer* CGameObject_Manager::Find_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag)
 {
 	if (iLayerLevelIndex >= m_iNumLevels)

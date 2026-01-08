@@ -34,6 +34,11 @@ public:
 
 		_float4x4 PreTransformMatrix;
 		_float4 RootInitRot;
+
+		_int     UseUpperBody;         
+		_float   UpperBlend;           
+		_int   SecondAnimIndex;
+		_float SecondAnimTime;
 	}ANIMSTATE_DESC;
 
 	typedef struct tagBoneInsertionDesc {
@@ -98,6 +103,10 @@ public:
 
 	_float4			Get_RootBoneMomentum() { return m_RootBoneMomentum; }
 
+	void			Start_ChainAnimation();
+	void			Update_ChainAnimation();
+	void			Set_ChainAnimation(pair<_uint, _bool> chainAnim);
+	void			IsRootBone(_bool bRootBone) { m_bRootBone = bRootBone; }
 #pragma endregion
 #pragma region Mesh
 	const _char*		Get_MeshName(_uint iIndex);
@@ -207,7 +216,7 @@ private:
 
 	_float						m_fRatio = {};
 	_int						m_iCurrSecondAnimIndex = { -1 };
-	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,	-1,-1,-1,-1 };
+	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1,-1,-1 };
 	vector<vector<_uint>>		m_BoneMask;
 	vector<_bool>				m_CPUBoneMask;
 
@@ -252,6 +261,12 @@ private:
 	_bool						m_bQueuedAnim = { false };
 	_float4						m_RootBoneMomentum = {};
 	_bool						m_IsSkip = {false};
+	_bool						m_bSecondAnim = { false };
+	_int						m_iMaskBlendIndex = {};
+	vector<pair<_uint, _bool>>	m_ChainAnim = {};
+	_uint						m_iChainIndex = 0;
+	_bool						m_bPlayingChain = false;
+
 
 
 private:
@@ -270,6 +285,7 @@ private:
 	HRESULT			Create_ParentVB();
 	HRESULT			Create_BoneLocalVB();
 	HRESULT			Create_SkipBoneVB();
+	HRESULT			Create_BoneMaskBuffers();
 	HRESULT			Create_Temp();
 	HRESULT			Create_BoneMatrixVB();
 	HRESULT			Create_Const();
@@ -295,7 +311,8 @@ private:
 	ID3D11Buffer* m_pBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pPrevBoneMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pBoneLocalBuffer = { nullptr };
-	ID3D11Buffer* m_pSkipBoneBuffer = { nullptr };
+	ID3D11Buffer* m_pSkipBoneBuffer = {  };
+	vector<ID3D11Buffer*> m_pMaskBuffers = {nullptr};
 	ID3D11Buffer* m_pLocalMatrixBuffer = { nullptr };
 	ID3D11Buffer* m_pInsertionCB = { nullptr };
 
@@ -305,6 +322,7 @@ private:
 	ID3D11ShaderResourceView* m_pPrevBoneMatrixSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pLocalMatrixSRV = { nullptr };
 	ID3D11ShaderResourceView* m_pSkipBoneSRV = { nullptr };
+	vector<ID3D11ShaderResourceView*> m_pMaskSRVs = {  };
 
 	ID3D11UnorderedAccessView* m_pBoneMatrixUAV = { nullptr };
 	ID3D11UnorderedAccessView* m_pLocalMatrixUAV = { nullptr };

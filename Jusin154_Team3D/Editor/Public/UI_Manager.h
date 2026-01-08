@@ -59,6 +59,7 @@ private:
 	CGameObject* m_pLoding_Canvas= { nullptr };
 	CGameObject* m_pQuest_Canves= { nullptr };
 	CGameObject* m_pSpellLearn_Canvas = { nullptr };
+	CGameObject* m_pDialogue_Canvas = { nullptr };
 	CGameObject* m_pMouse_Cursor = { nullptr };
 	CGameObject* m_pCamera_LockOn = { nullptr };
 	_bool			m_bCanvas_Change = { false };

@@ -527,6 +527,7 @@ PSX::PxHeightField* CPhysX_Manager::Find_HeightField(const _tchar* pFieldName, _
 
 void CPhysX_Manager::Update_Kinematic()
 {
+	list<PSX::PxActor*> ReleasedList = {};
 	for (_uint iLevel = 0; iLevel < m_iMaxLevel; ++iLevel) {
 		for (auto& pBody : m_pActiveBodys[iLevel]) {
 			PSX::PxRigidDynamic* pActor = pBody->is<PSX::PxRigidDynamic>();
@@ -536,6 +537,10 @@ void CPhysX_Manager::Update_Kinematic()
 
 			if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
 			{
+				if (nullptr == pBody->userData) {
+					ReleasedList.emplace_back(pBody);
+					continue;
+				}
 				PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)pBody->userData;
 				if (false == pUserData->bAutoOwnerTranslation) {
 					continue;
@@ -545,6 +550,10 @@ void CPhysX_Manager::Update_Kinematic()
 				pActor->setKinematicTarget(XMWorldToPx_NoScaleNoFlip(pTransform->Get_XMWorldMatrix()));
 			}
 		}
+	}
+	for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
+		Detach_Actor(*(*ReleasedActor), m_pGameInstance->Get_CurrentLevelID());
+		ReleasedActor = ReleasedList.erase(ReleasedActor);
 	}
 }
 
@@ -573,6 +582,7 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 }
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
+	list<PSX::PxActor*> ReleasedList = {};
 	PSX::PxU32 iNumActiveActor = {};
 	PSX::PxActor** ppActiveActors = m_pScene->getActiveActors(iNumActiveActor);
 
@@ -581,6 +591,7 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 		PSX::PxRigidDynamic* pActorDynamic = ppActiveActors[i]->is<PSX::PxRigidDynamic>();
 		if (nullptr != pActorDynamic) {
 			if (nullptr == ppActiveActors[i]->userData) {
+				ReleasedList.emplace_back(ppActiveActors[i]);
 				continue;
 			}
 			if (false == pUserData->bAutoOwnerTranslation) {
@@ -595,6 +606,10 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), XMLoadFloat4((_float4*)&pPxTransform.q), XMLoadFloat3((_float3*)&pPxTransform.p));
 			pTransform->Set_WorldMatrix(WorldMatrix);
 		}
+	}
+	for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
+		Detach_Actor(*(*ReleasedActor), m_pGameInstance->Get_CurrentLevelID());
+		ReleasedActor = ReleasedList.erase(ReleasedActor);
 	}
 }
 
@@ -861,8 +876,13 @@ HRESULT CPhysX_Manager::Initialize(_uint iLevel)
 		PSX::PxSceneDesc sceneDesc = { m_pPhysics->getTolerancesScale() };
 
 		sceneDesc.gravity = PSX::PxVec3(0.f, -GRAVITY, 0.f);
-
+#ifndef _DEBUG
 		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(4 /*cpu 코어 스레드 갯수에 따라 유동적으로 선택*/);
+#endif // _DEBUG
+#ifdef _DEBUG
+		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(2 /*cpu 코어 스레드 갯수에 따라 유동적으로 선택*/);
+#endif // _DEBUG
+		
 		if (nullptr == m_pDispatcher) {
 			assert(false);
 			return E_FAIL;

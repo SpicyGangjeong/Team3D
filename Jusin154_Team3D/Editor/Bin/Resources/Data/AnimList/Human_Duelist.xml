@@ -4,6 +4,10 @@
 	<!-- IDLE -->
 	<Anim state="IDLE" index="243" loop="true"/>
 	
+	<!-- IDLE_BREAK -->
+	<Anim state="IDLE_BREAK1" index="152" loop="false"/>
+	<Anim state="IDLE_BREAK2" index="153" loop="false"/>
+	
 	<!-- SKILL / ATTACK -->
 	<Anim state="SKILL" index="240" loop="false"/>
 	<Anim state="LIGHT_ATTACK" index="32" loop="false"/>
@@ -13,25 +17,27 @@
 	
 	<!-- SPELL -->
 	<Anim state="SPELL" index="34" loop="false"/>
+	
+	<!-- LAND -->
+	<Anim state="LAND" index="348" loop="false"/>
 
 	<!-- HIT / FLINCH -->
-	<Anim state="HIT_L" index="1213" loop="false"/>
-	<Anim state="HIT_R" index="1214" loop="false"/>
-	<Anim state="HIT_FWD" index="1215" loop="false"/>
-
-	<Anim state="FLINCH_BWD" index="1073" loop="false"/>
-	<Anim state="FLINCH_FWD" index="1074" loop="false"/>
-	<Anim state="FLINCH_LEFT" index="1075" loop="false"/>
-	<Anim state="FLINCH_RIGHT" index="1076" loop="false"/>
+	<Anim state="HIT_LEVIOSO" index="347" loop="true"/>
+	<Anim state="HIT_BWD" index="309" loop="false"/>
+	<Anim state="TUMBLE" index="367" loop="true"/>
+	
+	<!-- DAZED -->
+	<Anim state="DAZED_START" index="484" loop="false"/>
+	<Anim state="DAZED_LOOP" index="483" loop="false"/>
+	<Anim state="DAZED_END1" index="481" loop="false"/>
+	<Anim state="DAZED_END2" index="482" loop="false"/>
 
 	<!-- KNOCKDOWN -->
-	<Anim state="KNOCKDOWN_BWD" index="1084" loop="false"/>
-	<Anim state="KNOCKDOWN_FWD" index="1086" loop="false"/>
-	<Anim state="KNOCKDOWN_BWD_SPLT" index="1088" loop="false"/>
-	<Anim state="KNOCKDOWN_FWD_SPLT" index="1087" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD_SPLT" index="364" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD_SPLT" index="323" loop="false"/>
 
 	<!-- GETUP -->
-	<Anim state="GETUP_BWD" index="1092" loop="false"/>
-	<Anim state="GETUP_FWD" index="1097" loop="false"/>
+	<Anim state="GETUP_BWD" index="328" loop="false"/>
+	<Anim state="GETUP_FWD" index="296" loop="false"/>
 
 </Animations>

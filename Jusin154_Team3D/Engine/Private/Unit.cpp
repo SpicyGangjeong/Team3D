@@ -239,7 +239,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "IDLE_BREAK3", IDLE_BREAK3 }, { "IDLE_BREAK4", IDLE_BREAK4 },
         { "IDLE_BREAK5", IDLE_BREAK5 }, { "IDLE_BREAK6", IDLE_BREAK6 },
         { "IDLE_BREAK7", IDLE_BREAK7 },
-
+         
         { "IDLE_TURN_180_L", IDLE_TURN_180_L }, { "IDLE_TURN_180_R", IDLE_TURN_180_R },
         { "IDLE_TURN_45_L", IDLE_TURN_45_L },  { "IDLE_TURN_45_R", IDLE_TURN_45_R },
         { "IDLE_TURN_90_L", IDLE_TURN_90_L },  { "IDLE_TURN_90_R", IDLE_TURN_90_R },
@@ -299,6 +299,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         // COMBAT / SKILL
         { "COMBAT", COMBAT },
         { "SKILL", SKILL }, { "SKILL2", SKILL2 },
+        { "SHIELD_BLOCK", SHIELD_BLOCK },
 
         // SPELL
         { "SPELL", SPELL }, { "SPELL_180_R", SPELL_180_R },
@@ -405,6 +406,12 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "HIT_L", HIT_L }, { "HIT_R", HIT_R },
         { "HIT_FACE", HIT_FACE }, { "HIT_FACE_END", HIT_FACE_END },
         { "HIT_LEVIOSO", HIT_LEVIOSO }, { "INCARCEROUS", INCARCEROUS },
+        { "LEVIOSO_LAND",LEVIOSO_LAND },
+
+        // DAZED
+
+        { "DAZED_START", DAZED_START },{ "DAZED_LOOP", DAZED_LOOP },
+        { "DAZED_END1", DAZED_END1 }, { "DAZED_END2", DAZED_END2 },
 
         // KNOCKDOWN
         { "KNOCKDOWN", KNOCKDOWN },
@@ -501,6 +508,13 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "SPELL_LEARNING_START", SPELL_LEARNING_START },
         { "SPELL_LEARNING_SUCCESS", SPELL_LEARNING_SUCCESS },
         { "SPELL_LEARNING_WANDWAVE", SPELL_LEARNING_WANDWAVE },
+
+        // CUT SCENES TROLL
+        { "CUTSCENE_TROLLINTRO", CUTSCENE_TROLLINTRO },
+        // CUT SCENES OPENING
+        { "CUTSCENE_OPENINGINTRO1", CUTSCENE_OPENINGINTRO1 },
+        { "CUTSCENE_OPENINGINTRO2", CUTSCENE_OPENINGINTRO2 },
+        { "CUTSCENE_OPENINGINTRO3", CUTSCENE_OPENINGINTRO3 },
 
         // BROOM (B 세트)
         { "BROOM_MOUNT_B", BROOM_MOUNT_B },

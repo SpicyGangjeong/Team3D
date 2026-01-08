@@ -207,8 +207,10 @@ void CMapElement_Interactable::OnCollision(CGameObject* pOther, void* pDesc)
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -999.f, 0.f, 1.f));
 		m_pInfoInstance->Deregist_ActiveInteractive(this);
 	}
-	else
+	else{
+		m_pInfoInstance->Deregist_ActiveInteractive(this);
 		Set_Dead();
+	}
 }
 
 HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
@@ -492,11 +494,12 @@ void CMapElement_Interactable::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pEffectPool);
 	 
-	if (nullptr != m_pInfoInstance) {
-		CInfoInstance* pInfo = m_pInfoInstance;
-		m_pInfoInstance = nullptr;
-		pInfo->Deregist_ActiveInteractive(this);
+	if (!m_isPooled) {
+		if (nullptr != m_pInfoInstance) {
+			m_pInfoInstance = nullptr;
+		}
 	}
+	
 	for (auto& pModel : m_pModelComs){
 		SAFE_RELEASE(pModel);
 	}

@@ -178,6 +178,7 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	if (!m_bVisible)
 		return;
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);

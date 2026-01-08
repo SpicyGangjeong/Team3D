@@ -59,6 +59,7 @@ public:
 	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_PointLights(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_DADA_INT();
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);
@@ -88,7 +89,7 @@ public:
 #pragma endregion
 #pragma region Dialogue_Font
 	//void Set_Font(void* pArg);
-	const NPCDIALOGUEINFO& Get_Dialogue(_wstring NpcName) const;
+	const CURRENTDIALOGUEINFO& Get_Dialogue(_wstring NpcName, _int iTextID) const;
 #pragma endregion
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);

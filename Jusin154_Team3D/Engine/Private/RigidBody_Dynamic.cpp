@@ -476,10 +476,11 @@ CComponent* CRigidBody_Dynamic::Clone(void* pArg, CGameObject* pOwner)
 
 void CRigidBody_Dynamic::Free()
 {
-	__super::Free();
 	if (nullptr != m_pRigidBody) {
+		m_pRigidBody->userData = nullptr;
 		m_pRigidBody = nullptr;
 	}
+	__super::Free();
 }
 #ifdef _DEBUG
 

@@ -65,7 +65,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(110.f, 24.f, 135.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(126.464f, 24.f, 117.585f, 1.f));
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -254,7 +254,7 @@ HRESULT CTroll::Render_OutLine()
 	Compute_Depth();
 	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
 	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
-	m_fOutLineThickness = CMyTools::Lerp_f1D(2.5f, 3.f, fRatio);
+	m_fOutLineThickness = CMyTools::Lerp_f1D(0.024f, 0.5f, fRatio);
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
 		return E_FAIL;
 	}
@@ -703,6 +703,15 @@ void CTroll::Describe_Entity()
 		_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
 
 		GUI::Text(strSocket.c_str());
+
+		for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
+		{
+			if (GUI::Button(m_pModelCom->Get_AnimList(i)))
+			{
+				m_pModelCom->Set_AnimationIndex(i);
+			}
+		}
+
 
 
 		m_pTransformCom->Describe_Entity();

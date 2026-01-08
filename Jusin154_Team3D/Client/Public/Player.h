@@ -20,29 +20,29 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
-	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void	Priority_Update(_float fTimeDelta) override;
+	virtual void	Update(_float fTimeDelta) override;
+	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
-	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
-	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
-	_bool Get_Aim() { return m_bAim; }
-	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
-	void Set_Shield(_bool bShield) { m_bShield = bShield; }
-	void Start_CameraShake(_float fTime, _float fIntense);
-	_int Get_UIState() { return m_eUIState; }
-	void	Set_RaceRing(class CRaceRing* pRaceRing);
-	class CBroom* Get_Broom() { return m_pBroom; }
-	void Set_RaceInfo();
-	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
-	_matrix Get_WandPos();
-	void Set_OpenDoor(_bool bOpen) { m_bOpenDoor = bOpen; }
-	void UpdateGrapInteractive(_float fTimeDelta);
-	void Update_CameraShake(_float fTimeDelta);
-	HRESULT Update_RaycastElements();
+	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
+	virtual void	OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	_bool			Get_Aim() { return m_bAim; }
+	void			Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
+	void			Set_Shield(_bool bShield) { m_bShield = bShield; }
+	void			Start_CameraShake(_float fTime, _float fIntense);
+	_int			Get_UIState() { return m_eUIState; }
+	void			Set_RaceRing(class CRaceRing* pRaceRing);
+	class CBroom*	Get_Broom() { return m_pBroom; }
+	void			Set_RaceInfo();
+	_bool			Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
+	_matrix			Get_WandPos();
+	void			Set_OpenDoor(_bool bOpen) { m_bOpenDoor = bOpen; }
+	void			UpdateGrapInteractive(_float fTimeDelta);
+	void			Update_CameraShake(_float fTimeDelta);
+	HRESULT			Update_RaycastElements();
 #ifdef _DEBUG
-	void Render_CameraCoordinateSystem();
+	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
@@ -90,7 +90,7 @@ private:
 
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };
-
+	class CThestralCarriage* m_pCarriage = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -134,13 +134,8 @@ private:
 
 	virtual void Add_FSM();
 
-	void	Reset_LightCombo() { m_iLightCombo = 0; }
-	_uint	Next_LightCombo() { return ++m_iLightCombo; }
-	void	Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
-
 	function<void()> m_InputAction = nullptr;
 	_int			m_eUIState = { };
-	_uint			m_iLightCombo = { 0 };
 
 	_float3			m_OffsetPos = {};
 	_float			m_fAmount = { 1.f };
@@ -167,7 +162,10 @@ private:
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
 	array<_float4x4, 256> SkinMatrices = {};
+	array<_int, 256> SecondMaskIndex = {};
 	_bool			m_bOpenDoor = { false };
+	_bool			m_bOpeningCutScene = { false };
+	_float			m_fAirTime = {};
 
 	/* 무적 불 변수*/
 #ifdef _DEBUG
@@ -184,6 +182,10 @@ private:
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
+
+	void	Behavior_CutSceneEnter();
+	HRESULT Behavior_CutSceneExitCheck(_float fTimeDelta);
+	void	Behavior_CutSceneExit();
 
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
@@ -234,7 +236,7 @@ private:
 	void	Behavior_ShieldExit();
 
 	void	Behavior_HitEnter();
-	HRESULT Behavior_HitExitCheck();
+	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
 
 	void	Behavior_Broom_RideEnter();
@@ -264,7 +266,14 @@ private:
 	void Player_InterpTurn(_float fTimeDelta);
 	void Throwing_Interactive();
 	void Attach_Broom();
+	void ProcessHitBehavior();
 #pragma endregion
+
+#pragma region HITBEHAVIOR
+	void Hit_Levioso(_float fTimeDelta);
+
+#pragma endregion
+
 
 private:
 	class CEffectPool* m_pEffectPool = nullptr;

@@ -17,11 +17,11 @@ private:
 public:
 	void Update(_float fTimeDelta);
 	void Change_Level();
+
+public:
 	HRESULT Load_MapObjects(const _char* pFilePath, const _wchar* pLayerTag);
-	HRESULT Load_BuildingContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject, const _wchar* pLayerTag);
-	HRESULT Load_StreetContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject, const _wchar* pLayerTag);
 	HRESULT Load_MapRenderObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject, const _wchar* pLayerTag);
-	HRESULT Load_MapCollisionObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject, const _wchar* pLayerTag);
+
 	HRESULT Load_LightElements(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_InteractableElements(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_WaterElemet(const _char* pFileName);
@@ -29,6 +29,8 @@ public:
 	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_PointLights(const _char* pFilePath, const _wchar* pLayerTag);
+
+	HRESULT Load_DADA_INT();
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
@@ -38,6 +40,9 @@ private:
 
 private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
+	HRESULT Load_BuildingContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject, const _wchar* pLayerTag);
+	HRESULT Load_StreetContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject, const _wchar* pLayerTag);
+	HRESULT Load_MapCollisionObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject, const _wchar* pLayerTag);
 
 public:
 	static CMapInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);

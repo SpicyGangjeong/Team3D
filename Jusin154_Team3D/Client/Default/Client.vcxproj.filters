@@ -863,11 +863,31 @@
     <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Human_Duelist.h">
-      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
-    </ClInclude>
+	  <ClInclude Include="..\Public\Human_Duelist.h">
+		  <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+	  </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Prop.h">
-      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\Duelist_NormalJap.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_Protego.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_Levioso.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_CutScene.h">
+      <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ThestralCarriage.h">
+      <Filter>02.GameObjects\Item\ThestralCarriage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutSceneInfo.h">
+      <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TimeSocket.h">
+      <Filter>04.Mechanic\TimeSocket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -917,15 +937,6 @@
     </Filter>
     <Filter Include="02.GameObjects\NPC\Ally">
       <UniqueIdentifier>{a7d0a3fa-b3dc-40c6-b258-ffcde49b05c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic">
-      <UniqueIdentifier>{b5bef783-5315-4488-ac64-cb98d16a84a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\Item">
-      <UniqueIdentifier>{31681680-d5de-43c9-bc2d-2c91ca58a593}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State">
-      <UniqueIdentifier>{1bfec6dc-f008-4d18-87d6-be38824b1272}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\10.Field">
       <UniqueIdentifier>{2b209526-b728-4fba-a184-b9224d72903a}</UniqueIdentifier>
@@ -1004,30 +1015,6 @@
     </Filter>
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport">
       <UniqueIdentifier>{dc05dfc9-22e5-4a2a-b016-c55b215c0c68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus">
-      <UniqueIdentifier>{0834c76d-83d8-4ef5-9d19-7277686d28c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat">
-      <UniqueIdentifier>{017fc692-bac0-4635-843c-02fb59009f5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement">
-      <UniqueIdentifier>{349939a0-8b9a-4a1a-8f0a-ca5014cd4e18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Dodge">
-      <UniqueIdentifier>{5fa1e5a9-acd8-499d-90ee-9cf17441b3a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Jump">
-      <UniqueIdentifier>{41d2e34e-5280-4b3c-961e-064484f1449d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Land">
-      <UniqueIdentifier>{1034dd61-dd17-456a-990b-628c45f74b51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Idle">
-      <UniqueIdentifier>{2999d0c5-81e4-44d6-99b3-4801e6f84dd7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Move">
-      <UniqueIdentifier>{0a3f9629-27d1-411c-806e-b550af8f1ca1}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect">
       <UniqueIdentifier>{23fc95c4-0db3-4569-bd37-4d9bc32938ba}</UniqueIdentifier>
@@ -1152,12 +1139,6 @@
     <Filter Include="02.GameObjects\Effect\Effects\Lumos">
       <UniqueIdentifier>{6bc9fd95-31bc-40f3-83cc-15ebb756b04a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\Skill">
-      <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\Skill\Skill_Data">
-      <UniqueIdentifier>{2bc5b43e-0e24-49d4-95b0-549ad4428201}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement">
       <UniqueIdentifier>{f3f219aa-034f-4aa2-9f2e-d75d15bd1f4a}</UniqueIdentifier>
     </Filter>
@@ -1233,47 +1214,17 @@
     <Filter Include="02.GameObjects\UI\UI_Manager">
       <UniqueIdentifier>{9cc8fea6-837e-4f68-b116-134c9dc68a26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Hit">
-      <UniqueIdentifier>{5a7e32b1-6fa9-44e2-8d6e-b117c3454d5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Troll_Combat">
-      <UniqueIdentifier>{46e41554-f9a0-41c5-992c-f736ef1a333f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Throw">
-      <UniqueIdentifier>{039f471d-9623-4026-9493-5bb52c6a8cd3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Item\Troll_Rock">
       <UniqueIdentifier>{837ff377-2bcd-4a54-baf2-18b1be9d90a0}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Item\Goblin_Dagger">
       <UniqueIdentifier>{7d6fe51e-3d6d-4fed-9e5d-27e257672e01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Swing">
-      <UniqueIdentifier>{f109c973-c532-4549-9680-d0d6495b0fa8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Mouse_Cursor">
       <UniqueIdentifier>{b8c7e12b-da04-4d49-bc61-104649975d0b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Interactable">
       <UniqueIdentifier>{17eaf081-6fbf-4965-b04d-10749e6032c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Slam">
-      <UniqueIdentifier>{75479637-e795-4656-a4ef-3772d8a6d007}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing">
-      <UniqueIdentifier>{27d5a2b8-98db-4dbf-9916-0806cfa97c9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\IdleBreak">
-      <UniqueIdentifier>{a7f11f50-5740-4670-ad9e-d21640b2cca7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_LightAttack">
-      <UniqueIdentifier>{12ff4f09-ec6c-4b98-966a-0d84c9ad253c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Rush">
-      <UniqueIdentifier>{7bb8a04a-00a0-4864-9781-8069d84806ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Spell">
-      <UniqueIdentifier>{e68261eb-a581-4bf5-b48d-b47cc81f7406}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.GamePlay">
       <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
@@ -1304,9 +1255,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Screen\Logo\Logo_Text">
       <UniqueIdentifier>{c584798b-d7aa-4cb0-b6e8-c2aff73757ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Shuffle">
-      <UniqueIdentifier>{0ed6a11e-5d22-4b9f-a39c-f2319c27caf4}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage">
       <UniqueIdentifier>{5973b96c-42c3-4cda-9627-f741e12124cd}</UniqueIdentifier>
@@ -1380,23 +1328,11 @@
     <Filter Include="02.GameObjects\Effect\Effects\WandEnd">
       <UniqueIdentifier>{14ad0431-680b-4c8b-93d7-601aee5ce435}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Sustain">
-      <UniqueIdentifier>{22207d12-6fd2-4692-9329-b0ea0e19ca84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.InfoInstance\03.InteractiveInfo">
       <UniqueIdentifier>{1d1dc743-5cf2-4b8f-a80e-16b16437c7aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Dead">
-      <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Stun">
-      <UniqueIdentifier>{2e2a53dc-9ea6-427f-88b3-d8857193d432}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Attack">
       <UniqueIdentifier>{967d1741-2780-40b7-b55e-9fd58e931ef7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\Damage">
-      <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Mage">
       <UniqueIdentifier>{13977e62-6b05-41de-9919-20a06cd336e5}</UniqueIdentifier>
@@ -1415,15 +1351,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\State_Effect\Stun">
       <UniqueIdentifier>{c9370e36-317e-45e7-a8c7-98a623864824}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player">
-      <UniqueIdentifier>{48b905c1-b91e-44ca-a61b-86633826768b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Ride_Move">
-      <UniqueIdentifier>{d6be355f-c860-4323-9967-583265749698}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Dismount">
-      <UniqueIdentifier>{51b299f6-ebb0-4f58-9620-5e1dc24a2e60}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
@@ -1445,9 +1372,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Enemy_Detection">
       <UniqueIdentifier>{34a4beb9-ccb9-4847-ae45-af4e7dc25d94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Shield">
-      <UniqueIdentifier>{fd4a0869-2491-4fec-9df9-3aedbac96171}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\Shopper">
       <UniqueIdentifier>{02cb243a-f63e-4e55-9d55-b47e31a4c13e}</UniqueIdentifier>
@@ -1488,9 +1412,6 @@
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line">
       <UniqueIdentifier>{7c8b3162-a6d5-441f-84ae-cfb4bf779dfa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_TurboFly">
-      <UniqueIdentifier>{2326c134-a2bb-45f1-8452-2dd49bf42697}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\BroomRacerAI">
       <UniqueIdentifier>{6ffe4bf3-60e2-4dd3-beef-cc7cf7b50328}</UniqueIdentifier>
     </Filter>
@@ -1503,59 +1424,17 @@
     <Filter Include="02.GameObjects\BroomRaceManager">
       <UniqueIdentifier>{9e8bccb6-c491-4f3a-bdb8-5f03f13ad84d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\Quest">
-      <UniqueIdentifier>{fe64513c-fbb3-4577-b424-82d99c9075a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Interaction_Key">
       <UniqueIdentifier>{08163c4a-63c9-4cc2-97b4-97bb2f9467ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Status">
       <UniqueIdentifier>{bffcced5-6951-4db4-9df1-44b33b52ece7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\Quest\QuestInstance">
-      <UniqueIdentifier>{35a6cb6f-4bbb-47fb-8f7a-63615128dece}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot">
       <UniqueIdentifier>{6bbfb8f0-c71a-4769-b1e6-efd5d863ba7f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Stupefy">
       <UniqueIdentifier>{7672784a-86a8-4485-a4de-a979bd0c8f52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Hover">
-      <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Fly">
-      <UniqueIdentifier>{f24321bb-6750-4baa-b19a-bf5a3c2a8909}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_FireBreath">
-      <UniqueIdentifier>{cbb70230-b830-4554-a678-c571d5a87176}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_FireBall">
-      <UniqueIdentifier>{77fc199c-dd8f-4b36-8869-161a4998c189}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Pulse">
-      <UniqueIdentifier>{70ff75c1-3309-4db7-9f5c-51573046df9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Tucked">
-      <UniqueIdentifier>{5fa641cd-bc30-4ab6-a8d4-26a9785ef4ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_AncientSpell">
-      <UniqueIdentifier>{c69a2485-7f6e-4e22-81b4-1410fdae9d57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_FireSweep">
-      <UniqueIdentifier>{2c39ba68-2f23-4bc9-a277-b6e9295c11a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Ground">
-      <UniqueIdentifier>{9e2863cd-1a30-4a27-a076-5e1baff3dee8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Swipe">
-      <UniqueIdentifier>{2fd96fb0-dbc3-4486-afda-82b3b1b63060}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Slide">
-      <UniqueIdentifier>{ee880571-e18c-4206-80ea-448cadd04d9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Skill">
-      <UniqueIdentifier>{cef80506-72c7-4bb9-a691-760f0a576eb7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Static">
       <UniqueIdentifier>{c3b86f00-da19-47ad-a26e-7ff641e2c4d4}</UniqueIdentifier>
@@ -1584,14 +1463,8 @@
     <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name">
       <UniqueIdentifier>{7d84f56c-9d2f-483e-9ee1-2637d35ccb7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\Skill\SpellLearn_Data">
-      <UniqueIdentifier>{69f95207-1e94-42f2-9690-d3e34e4ff5a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Blink">
       <UniqueIdentifier>{262cc240-d062-406a-9d47-36702fe6b9f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Skill2">
-      <UniqueIdentifier>{785b1fd0-ef6f-43ab-96fc-e233cd93b29d}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Transformation">
       <UniqueIdentifier>{87b1db75-938f-462f-a288-fe9c8d6c689e}</UniqueIdentifier>
@@ -1626,9 +1499,6 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\NPC">
       <UniqueIdentifier>{b265ac30-97f5-4dac-bc6b-b11fba1c5ad8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Focus\State_Fall">
-      <UniqueIdentifier>{b85f80a2-d88e-4eb0-91af-da93b49bfa09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide">
       <UniqueIdentifier>{f9c3f711-4032-4455-9d70-b81c5320f8c8}</UniqueIdentifier>
     </Filter>
@@ -1640,9 +1510,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\NPCInteraction">
       <UniqueIdentifier>{09764279-bf54-48e4-853a-45b5a65c92a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\Dialogue">
-      <UniqueIdentifier>{11c35878-12b4-4c55-b872-004fed9a4fb2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Environment\99.Lights">
       <UniqueIdentifier>{74f21f9b-30bf-412e-ba4e-526958ab2a52}</UniqueIdentifier>
@@ -1665,9 +1532,6 @@
     <Filter Include="02.GameObjects\Cameras\CameraPosition\AI">
       <UniqueIdentifier>{a24f4687-f540-44e5-ae47-fe176c4c9042}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
-      <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point">
       <UniqueIdentifier>{a94e24d2-0f61-4263-b834-bfdf9f6c06ae}</UniqueIdentifier>
     </Filter>
@@ -1679,15 +1543,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Item\Goblin_Sword">
       <UniqueIdentifier>{db12252c-8c0d-40bc-9466-e76ec60e2509}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Slash">
-      <UniqueIdentifier>{0736f27e-2722-483b-88b6-30471ad70835}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\State_Blink">
-      <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Dash">
-      <UniqueIdentifier>{6d1f0862-40a4-4c0b-9921-87fe6af2008b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector">
       <UniqueIdentifier>{0c62f4f7-a0e6-4ff2-a4dd-25e3dd79709e}</UniqueIdentifier>
@@ -1739,9 +1594,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge">
       <UniqueIdentifier>{fd036f05-4c10-4322-b0c2-aac65e7011a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Fear">
-      <UniqueIdentifier>{99712e38-b76a-4c04-8ba3-16ddaac72679}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel">
       <UniqueIdentifier>{5bf233fa-6f9c-40d5-85c6-adbc7fcf7d28}</UniqueIdentifier>
@@ -1805,6 +1657,195 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop">
       <UniqueIdentifier>{95a34fdb-ac6d-4312-8d28-1931f95c4f4c}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap">
+      <UniqueIdentifier>{09b5e5b3-c1fe-4399-b2d3-96d652255bb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Duelist_Protego">
+      <UniqueIdentifier>{b12b49e0-3bdc-403f-be34-3e97cada7270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso">
+      <UniqueIdentifier>{5351494b-8047-488a-ba2b-59a88dae4534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\04.CutSceneInfo">
+      <UniqueIdentifier>{41ab19cd-5fd6-48e8-b920-cf6d034c5677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic">
+      <UniqueIdentifier>{b5bef783-5315-4488-ac64-cb98d16a84a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Item">
+      <UniqueIdentifier>{31681680-d5de-43c9-bc2d-2c91ca58a593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State">
+      <UniqueIdentifier>{1bfec6dc-f008-4d18-87d6-be38824b1272}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus">
+      <UniqueIdentifier>{0834c76d-83d8-4ef5-9d19-7277686d28c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Dodge">
+      <UniqueIdentifier>{5fa1e5a9-acd8-499d-90ee-9cf17441b3a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Jump">
+      <UniqueIdentifier>{41d2e34e-5280-4b3c-961e-064484f1449d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Land">
+      <UniqueIdentifier>{1034dd61-dd17-456a-990b-628c45f74b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Slide">
+      <UniqueIdentifier>{ee880571-e18c-4206-80ea-448cadd04d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\State_Fall">
+      <UniqueIdentifier>{b85f80a2-d88e-4eb0-91af-da93b49bfa09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Fear">
+      <UniqueIdentifier>{99712e38-b76a-4c04-8ba3-16ddaac72679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat">
+      <UniqueIdentifier>{017fc692-bac0-4635-843c-02fb59009f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Throw">
+      <UniqueIdentifier>{039f471d-9623-4026-9493-5bb52c6a8cd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Swing">
+      <UniqueIdentifier>{f109c973-c532-4549-9680-d0d6495b0fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Slam">
+      <UniqueIdentifier>{75479637-e795-4656-a4ef-3772d8a6d007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_LightAttack">
+      <UniqueIdentifier>{12ff4f09-ec6c-4b98-966a-0d84c9ad253c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Spell">
+      <UniqueIdentifier>{e68261eb-a581-4bf5-b48d-b47cc81f7406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Sustain">
+      <UniqueIdentifier>{22207d12-6fd2-4692-9329-b0ea0e19ca84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Dead">
+      <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Shield">
+      <UniqueIdentifier>{fd4a0869-2491-4fec-9df9-3aedbac96171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireBreath">
+      <UniqueIdentifier>{cbb70230-b830-4554-a678-c571d5a87176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireBall">
+      <UniqueIdentifier>{77fc199c-dd8f-4b36-8869-161a4998c189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Pulse">
+      <UniqueIdentifier>{70ff75c1-3309-4db7-9f5c-51573046df9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_AncientSpell">
+      <UniqueIdentifier>{c69a2485-7f6e-4e22-81b4-1410fdae9d57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireSweep">
+      <UniqueIdentifier>{2c39ba68-2f23-4bc9-a277-b6e9295c11a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Swipe">
+      <UniqueIdentifier>{2fd96fb0-dbc3-4486-afda-82b3b1b63060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Skill">
+      <UniqueIdentifier>{cef80506-72c7-4bb9-a691-760f0a576eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Skill2">
+      <UniqueIdentifier>{785b1fd0-ef6f-43ab-96fc-e233cd93b29d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Slash">
+      <UniqueIdentifier>{0736f27e-2722-483b-88b6-30471ad70835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_CutScene">
+      <UniqueIdentifier>{b50fed80-37dd-4adb-afd4-ba153cef8a92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement">
+      <UniqueIdentifier>{349939a0-8b9a-4a1a-8f0a-ca5014cd4e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Idle">
+      <UniqueIdentifier>{2999d0c5-81e4-44d6-99b3-4801e6f84dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Move">
+      <UniqueIdentifier>{0a3f9629-27d1-411c-806e-b550af8f1ca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\IdleBreak">
+      <UniqueIdentifier>{a7f11f50-5740-4670-ad9e-d21640b2cca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Shuffle">
+      <UniqueIdentifier>{0ed6a11e-5d22-4b9f-a39c-f2319c27caf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Tucked">
+      <UniqueIdentifier>{5fa641cd-bc30-4ab6-a8d4-26a9785ef4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Ground">
+      <UniqueIdentifier>{9e2863cd-1a30-4a27-a076-5e1baff3dee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\State_Blink">
+      <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Dash">
+      <UniqueIdentifier>{6d1f0862-40a4-4c0b-9921-87fe6af2008b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Hit">
+      <UniqueIdentifier>{5a7e32b1-6fa9-44e2-8d6e-b117c3454d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat">
+      <UniqueIdentifier>{46e41554-f9a0-41c5-992c-f736ef1a333f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing">
+      <UniqueIdentifier>{27d5a2b8-98db-4dbf-9916-0806cfa97c9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Rush">
+      <UniqueIdentifier>{7bb8a04a-00a0-4864-9781-8069d84806ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Stun">
+      <UniqueIdentifier>{2e2a53dc-9ea6-427f-88b3-d8857193d432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player">
+      <UniqueIdentifier>{48b905c1-b91e-44ca-a61b-86633826768b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Ride_Move">
+      <UniqueIdentifier>{d6be355f-c860-4323-9967-583265749698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Dismount">
+      <UniqueIdentifier>{51b299f6-ebb0-4f58-9620-5e1dc24a2e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_TurboFly">
+      <UniqueIdentifier>{2326c134-a2bb-45f1-8452-2dd49bf42697}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Hover">
+      <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Fly">
+      <UniqueIdentifier>{f24321bb-6750-4baa-b19a-bf5a3c2a8909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill">
+      <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill\Skill_Data">
+      <UniqueIdentifier>{2bc5b43e-0e24-49d4-95b0-549ad4428201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill\SpellLearn_Data">
+      <UniqueIdentifier>{69f95207-1e94-42f2-9690-d3e34e4ff5a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Damage">
+      <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Quest">
+      <UniqueIdentifier>{fe64513c-fbb3-4577-b424-82d99c9075a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Quest\QuestInstance">
+      <UniqueIdentifier>{35a6cb6f-4bbb-47fb-8f7a-63615128dece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Dialogue">
+      <UniqueIdentifier>{11c35878-12b4-4c55-b872-004fed9a4fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
+      <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\TimeSocket">
+      <UniqueIdentifier>{ca386d46-aca6-44a4-94cc-15610e1a878e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\ThestralCarriage">
+      <UniqueIdentifier>{d07bd195-0cdf-4a47-8c50-e3a88361352f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2627,6 +2668,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Prop.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\Duelist_NormalJap.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_Protego.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_Levioso.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_CutScene.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThestralCarriage.cpp">
+      <Filter>02.GameObjects\Item\ThestralCarriage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutSceneInfo.cpp">
+      <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TimeSocket.cpp">
+      <Filter>04.Mechanic\TimeSocket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -48,7 +48,7 @@ HRESULT CGamePlay_Canvas::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-	Visible(true);
+	Visible(false);
 	return S_OK;
 }
 
@@ -154,6 +154,8 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Ride_Panel"), m_pRide_Panel);
+
+
 
 	return S_OK;
 }

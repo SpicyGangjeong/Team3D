@@ -40,7 +40,7 @@ private:
 	_float		 m_fSizeAccTime = {};
 	_float       m_fAmountSize = {};
 	_float       m_fSpeed = {};
-	_int		 m_eHitSpell = { ENUM_CLASS(SKILL_TYPE::END) };
+
 public:
 	static CGoblin_Protego* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

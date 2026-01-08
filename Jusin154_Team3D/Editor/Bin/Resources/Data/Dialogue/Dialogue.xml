@@ -1,8 +1,8 @@
 ﻿<DialogueInfo>
 	<Dialogue NpcName="OLLIVENDER" NpcID="0">
-		<Line ID="0" Type="0" Text="반갑네 친구 나는 올리벤더 라고 하네" NextText="0001"> </Line>
-		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="0002"> </Line>
-		<Line ID="2" Type="1" Text="뭐 필요한게 있나?" NextText="-1" >
+		<Line ID="0" Type="0" Text="반갑네 친구 나는 올리벤더 라고 하네" NextText="1"> </Line>
+		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="2"> </Line>
+		<Line ID="2" Type="1" Text="뭐 필요한게 있나?" NextText="-1">
 			<Choice Type="1" Text="상점 이용하기" NextText="-1" />
 			<Choice Type="2" Text="퀘스트 확인하기" NextText="-1" />
 			<Choice Type="0" Text="다른일 하러가기" NextText="-1" />
@@ -10,19 +10,18 @@
 	</Dialogue>
 
 	<Dialogue NpcName="SATYAVATI" NpcID="1">
-		<Line ID="0" Type="0" Text="사티아비티" NextText="-1"> </Line>
+		<Line ID="0" Type="0" Text="사티아바티" NextText="-1"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="MATILDAWEASELY" NpcID="2">
-		<Line ID="0" Type="0" Text="마틸다 위즐리" NextText="0001"> </Line>
-		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="0002"> </Line>
-		<Line ID="2" Type="1" Text="뭐 필요한게 있나?" NextText="-1">
-		</Line>
+		<Line ID="0" Type="0" Text="마틸다 위즐리" NextText="1"> </Line>
+		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="2"> </Line>
+		<Line ID="2" Type="0" Text="뭐 필요한게 있나?" NextText="-1"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="ELEAZARFIG" NpcID="3">
-		<Line ID="0" Type="0" Text="엘리아자르 피그" NextText="0001"> </Line>
-		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="0002"> </Line>
+		<Line ID="0" Type="0" Text="엘리아자르 피그" NextText="1"> </Line>
+		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="2"> </Line>
 		<Line ID="2" Type="1" Text="뭐 필요한게 있나?" NextText="-1">
 			<Choice Type="1" Text="상점 이용하기" NextText="-1" />
 			<Choice Type="2" Text="퀘스트 확인하기" NextText="-1" />
@@ -31,13 +30,7 @@
 	</Dialogue>
 
 	<Dialogue NpcName="ELF" NpcID="4">
-		<Line ID="0" Type="0" Text="도비" NextText="0001"> </Line>
-		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextText="0002"> </Line>
-		<Line ID="2" Type="1" Text="뭐 필요한게 있나?" NextText="-1">
-			<Choice Type="1" Text="상점 이용하기" NextText="-1" />
-			<Choice Type="2" Text="퀘스트 확인하기" NextText="-1" />
-			<Choice Type="0" Text="다른일 하러가기" NextText="-1" />
-		</Line>
+		<Line ID="0" Type="0" Text="도비" NextText="-1"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="PEEVES" NpcID="5">
@@ -49,11 +42,30 @@
 	</Dialogue>
 
 	<Dialogue NpcName="F_STUDENT" NpcID="7">
-		<Line ID="0" Type="0" Text="여학생" NextText="-1"> </Line>
+		<Line ID="0" Type="0" Text="아우렐리아 로즈" NextText="-1"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="M_STUDENT" NpcID="8">
-		<Line ID="0" Type="0" Text="남학생" NextText="-1"> </Line>
+		<Line ID="0" Type="0" Text="테오도어 그레이브스" NextText="-1"> </Line>
 	</Dialogue>
 
+	<Dialogue NpcName="BAIHOWIN" NpcID="9">
+		<Line ID="0" Type="0" Text="바이호윈" NextText="-1"> </Line>
+	</Dialogue>
+
+	<Dialogue NpcName="GEORGEOSRIC" NpcID="10">
+		<Line ID="0" Type="0" Text="조지오스릭" NextText="-1"> </Line>
+	</Dialogue>
+
+	<Dialogue NpcName="DINAHHECAT" NpcID="11">
+		<Line ID="0" Type="0" Text="디나 헤카트" NextText="-1"> </Line>
+	</Dialogue>
+
+	<Dialogue NpcName="MUDIWAONAI" NpcID="12">
+		<Line ID="0" Type="0" Text="무디아 오나이" NextText="-1"> </Line>
+	</Dialogue>
+
+	<Dialogue NpcName="KITCHENFEMALE" NpcID="13">
+		<Line ID="0" Type="0" Text="주방 도비" NextText="-1"> </Line>
+	</Dialogue>
 </DialogueInfo>
