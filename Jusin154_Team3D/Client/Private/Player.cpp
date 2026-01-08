@@ -18,6 +18,8 @@
 #include "RaceRing.h"
 #include "Wand.h"
 #include "Mesh.h"
+#include "Effect_Container.h"
+#include "ThestralCarriage.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -84,6 +86,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
+
+	m_pCarriage = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Item"))->Get_Object<CThestralCarriage>();
+	SAFE_ADDREF(m_pCarriage);
 
 	m_pInfoInstance->Regist_PlayerAlly(this);
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
@@ -165,7 +170,7 @@ void CPlayer::Update(_float fTimeDelta)
 		}
 	}
 
-	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -199,6 +204,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	}
 
 	Player_PixRot();
+
+	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 
@@ -444,6 +451,21 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 	else {
 		m_fHitDegree = -1.f;
+	}
+
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+	if (pEffect_Container != nullptr)
+	{
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DUELIST_JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::DUELIST_LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			break;
+		}
 	}
 
 	if (m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_NONE))
@@ -756,6 +778,10 @@ void CPlayer::CheckMouseInput()
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false;
 	}
+	if (m_pGameInstance->Key_Up(DIK_U))
+	{
+		m_pFSM->Change_State(FSMSTATE::CUTSCENE);
+	}
 }
 
 void CPlayer::ReLockOnTarget()
@@ -781,7 +807,7 @@ void CPlayer::SetGravity()
 	eCollisionFlags;
 	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
 		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP|FSMSTATE::CUTSCENE) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
 		else { // 점프 중일 땐 off
@@ -893,6 +919,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pBroomTransform);
 	SAFE_RELEASE(m_pBroom);
 	SAFE_RELEASE(m_pRaceRing);
+	SAFE_RELEASE(m_pCarriage);
 }
 #ifdef _DEBUG
 
@@ -1042,6 +1069,13 @@ void CPlayer::Describe_Entity()
 
 
 		m_pLightCom->Describe_Entity();
+		for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
+		{
+			if (GUI::Button(m_pModelCom->Get_AnimList(i)))
+			{
+				m_pModelCom->Set_AnimationIndex(i);
+			}
+		}
 	}
 	GUI::End();
 }

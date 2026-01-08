@@ -6,10 +6,13 @@
 #include "Effect_Container.h"
 #include "Bombard.h"
 #include "NomalJap.h"
+#include "Duelist_NormalJap.h"
 #include "Decendo.h"
 #include "Protego.h"
+#include "Duelist_Protego.h"
 #include "Revelio.h"
 #include "Levioso.h"
+#include "Duelist_Levioso.h"
 
 #include "BombardSide.h"
 #include "LeviosoSide.h"
@@ -96,8 +99,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 기무리
-	m_isActiveEffectCreate = false;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 나
 	m_isActiveEffectCreate = false;
@@ -237,6 +240,14 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::DUELIST_JAP, 10, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+		CDuelist_NormalJap* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDuelist_NormalJap>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 
 	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
@@ -265,6 +276,15 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::DUELIST_PROTEGO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CDuelist_Protego* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDuelist_Protego>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CRevelio* pEffect = nullptr;
@@ -288,6 +308,15 @@ HRESULT CEffectPool::Ready_Effect()
 		CLevioso* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CLevioso>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::DUELIST_LEVIOSO, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CDuelist_Levioso* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDuelist_Levioso>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

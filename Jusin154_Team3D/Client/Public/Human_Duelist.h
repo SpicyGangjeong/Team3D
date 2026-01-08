@@ -9,10 +9,10 @@ NS_BEGIN(Client)
 class CHuman_Duelist final : public CMonster
 {
 public:
-	typedef struct tagPlayerInitDesc {
+	typedef struct tagDuelistInitDesc {
 		_float4 vPos;
 		_float4 vRotQ;
-	}PLAYERDESC;
+	}DUELISTDESC;
 
 	enum class SKILL
 	{
@@ -44,6 +44,7 @@ private:
 	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
 	CLight* m_pLightCom = { nullptr };
 	LIGHT_DESC LightDesc = {};
+	DAMAGE_INFO m_DamageInfo;
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -78,6 +79,10 @@ private:
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
+
+	void	Behavior_IdleBreakEnter();
+	HRESULT Behavior_IdleBreakExitCheck(_float fTimeDelta);
+	void	Behavior_IdleBreakExit();
 
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();

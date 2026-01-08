@@ -26,6 +26,7 @@
 #include "Goblin_BattleAxe.h"
 #include "BroomRaceManager.h"
 #include "ReparoObject.h"
+#include "ThestralCarriage.h"
 
 #pragma region ACTOR
 
@@ -176,7 +177,9 @@
 #include "Bombard.h"
 #include "Decendo.h"
 #include "NomalJap.h"
+#include "Duelist_NormalJap.h"
 #include "Protego.h"
+#include "Duelist_Protego.h"
 #include "Revelio.h"
 #include "NomalJapSide.h"
 #include "DecendoSide.h"
@@ -190,6 +193,7 @@
 #include "Trail.h"
 #include "EffectPool.h"
 #include "Levioso.h"
+#include "Duelist_Levioso.h"
 #include "Lumos.h"
 #include "Accio.h"
 #include "Blink.h"
@@ -397,12 +401,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	_bool isLoad_UI_SEQUANTIAL = { true };
 	_bool isLoad_NPC = { true };
 	_bool isLoad_Monster = { true };
+	_bool isLoad_DataClassroom = { true };
 
 #ifdef _DEBUG
 #ifdef gimch
 	isLoad_Background = false;
-	isLoad_Hogwart = true;
+	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
+	isLoad_NPC = true;
+	isLoad_DataClassroom = true;
 #endif // gimch
 #ifdef 진우
 	isLoad_Background = false;
@@ -413,7 +420,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -422,9 +429,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef Bin
-	isLoad_Background = false;
-	isLoad_Hogwart = false;
-	isLoad_UI_SEQUANTIAL = false;
+	isLoad_Background = true;
+	isLoad_Hogwart = true;
+	isLoad_UI_SEQUANTIAL = true;
 #endif // Bin
 #endif // _DEBUG
 
@@ -1027,7 +1034,39 @@ HRESULT CLoader::Loading_For_GamePlay()
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_DADATower/StaticMesh/EXT",
 				".bin", false
 			));
-		
+		}
+
+		if (true == isLoad_DataClassroom)
+		{
+			/* DADA INT */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_DADATower/StaticMesh/INT",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/Doors",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/Doorway",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/Props",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/Props/SM_HW_DADA_DragonBones",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/PictureFrames",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/Meshes/PictureFrames",
+				".bin", false
+			));
 		}
 	}
 	/* LAND_MODEL */
@@ -2204,7 +2243,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma region ACTOR
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
 		return E_FAIL;
 	}
 	if (true == isLoad_NPC) {
@@ -2333,11 +2372,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 			return E_FAIL;
-		
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
@@ -2413,6 +2447,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerB.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ThestralCarriage_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/ThestralCarriage/ThestralCarriage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
+
 
 #pragma endregion
 
@@ -2454,8 +2492,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(g_iStaticLevel, CNomalJap::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_NormalJap>(g_iStaticLevel, CDuelist_NormalJap::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(g_iStaticLevel, CProtego::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_Protego>(g_iStaticLevel, CDuelist_Protego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -2468,6 +2513,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(g_iStaticLevel, CLevioso::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_Levioso>(g_iStaticLevel, CDuelist_Levioso::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -3251,6 +3300,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleC_Round_Double_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HW_LightFixture_Base_D.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a*/
 	{
 		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
@@ -3417,6 +3472,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_MapElement_Light */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Light>(g_iStaticLevel, CMapElement_Light::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_PointLight */
+	if (FAILED(m_pGameInstance->Add_Prototype<CPointLight>(NEXT_LEVEL, CPointLight::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapElement_Interactable */
@@ -3588,6 +3647,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_ReparoObject */
 	if (FAILED(m_pGameInstance->Add_Prototype<CReparoObject>(g_iStaticLevel, CReparoObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_ThestralCarriage */
+	if (FAILED(m_pGameInstance->Add_Prototype<CThestralCarriage>(g_iStaticLevel, CThestralCarriage::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_BroomRaceManager */
@@ -3772,7 +3835,7 @@ HRESULT CLoader::Loading_For_Field()
 
 	/* For.Prototype_Component_DecalBox */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_DecalBox"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");

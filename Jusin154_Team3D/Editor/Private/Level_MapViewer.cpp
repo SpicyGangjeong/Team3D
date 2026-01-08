@@ -546,6 +546,17 @@ CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
 		return E_FAIL;
 
+	///* LightFixture_Base_D */
+	//LightDesc.bEditMode = false;
+	//LightDesc.isShake = false;
+	//LightDesc.iGlassMeshIndex = 1;
+	//LightDesc.vRadius = _float2(0.f, 0.f);
+	//LightDesc.vSpeed = _float2(0.f, 0.f);
+	//LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D";
+	//LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/SM_HW_LightFixture_Base_D.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
+	//	return E_FAIL;
+
 	return S_OK;
 }
 

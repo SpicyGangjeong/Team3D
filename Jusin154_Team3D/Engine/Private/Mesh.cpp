@@ -281,8 +281,12 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 	m_pVertexPositions = new _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
+#ifdef EDITOR_PROJECT
 	m_VertexTexcoords = new _float2[m_iNumVertices];
 	ZeroMemory(m_VertexTexcoords, sizeof(_float2) * m_iNumVertices);
+#endif // EDITOR_PROJECT
+
+
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
@@ -304,7 +308,9 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 			XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), PreTransformMatrix)));
 
 		pVertices[i].vTexcoord = SaveMesh->Vertices[i].UV;
+#ifdef EDITOR_PROJECT
 		memcpy(&m_VertexTexcoords[i], &pVertices[i].vTexcoord, sizeof(_float2));
+#endif // EDITOR_PROJECT
 	}
 
 	D3D11_SUBRESOURCE_DATA	InitialVBData{};

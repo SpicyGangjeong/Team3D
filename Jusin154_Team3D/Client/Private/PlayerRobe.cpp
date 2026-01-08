@@ -141,8 +141,8 @@ HRESULT CPlayerRobe::Update_LegsPosition()
 		}
 #endif // _DEBUG
 	}
-	m_pLower0Bound->Move_Kinematic(XMMatrixTranslationFromVector(XMVectorSet(0.f, -0.2f, 0.f, 0.f)) * XMLoadFloat4x4(m_pLower0BoundMatrix) * WorldMatrix, false);
-	m_pLower1Bound->Move_Kinematic(XMMatrixTranslationFromVector(XMVectorSet(0.f, -0.7f, 0.f, 0.f)) * XMLoadFloat4x4(m_pLower1BoundMatrix) * WorldMatrix, false);
+	//m_pLower0Bound->Move_Kinematic(XMMatrixTranslationFromVector(XMVectorSet(0.f, -0.2f, 0.f, 0.f)) * XMLoadFloat4x4(m_pLower0BoundMatrix) * WorldMatrix, false);
+	//m_pLower1Bound->Move_Kinematic(XMMatrixTranslationFromVector(XMVectorSet(0.f, -0.7f, 0.f, 0.f)) * XMLoadFloat4x4(m_pLower1BoundMatrix) * WorldMatrix, false);
 
 	return S_OK;
 }
@@ -223,120 +223,120 @@ HRESULT CPlayerRobe::Update_RobeJoints()
 {
 	for (_uint i = ENUM_CLASS(PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_START); i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
 		m_JointDescriptions[i].InitFromJoint(*m_pDynamicJoints[i]);
-		switch (PLAYER_JOINT_ORDER(i))
-		{
-			/* From Origin */
-			{
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_START:
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_TUP_START:
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_LUP_START:
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_RSIDEUP_START:
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_LSIDEUP_START:
-				m_JointDescriptions[i].iMotionTwist = 1;
-				m_JointDescriptions[i].iMotionSwing1 = 1;
-				m_JointDescriptions[i].iMotionSwing2 = 1;
-				m_JointDescriptions[i].fLinearLimit = 0.f;
-				m_JointDescriptions[i].fTwistAbsDeg = 0.f;
-				m_JointDescriptions[i].fSwingDeg = 40.f;
-				break;
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_END:
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_TUP_END:
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_LUP_END:
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_RSIDEUP_END:
-			case PLAYER_JOINT_ORDER::ORIGIN_TO_LSIDEUP_END:
-				m_JointDescriptions[i].iMotionTwist = 1;
-				m_JointDescriptions[i].iMotionSwing1 = 1;
-				m_JointDescriptions[i].iMotionSwing2 = 1;
-				m_JointDescriptions[i].fLinearLimit = 0.f;
-				m_JointDescriptions[i].fTwistAbsDeg = 0.f;
-				m_JointDescriptions[i].fSwingDeg = 40.f;
-				break;
-			}
-			/* From_Middle */
-			{
-			case PLAYER_JOINT_ORDER::RUP_TO_RMIDDLE_START:
-			case PLAYER_JOINT_ORDER::TUP_TO_TMIDDLE_START:
-			case PLAYER_JOINT_ORDER::LUP_TO_LMIDDLE_START:
-			case PLAYER_JOINT_ORDER::RSIDEUP_TO_RSIDE_START:
-			case PLAYER_JOINT_ORDER::LSIDEUP_TO_LSIDE_START:
-				m_JointDescriptions[i].iMotionTwist = 0;
-				m_JointDescriptions[i].iMotionSwing1 = 0;
-				m_JointDescriptions[i].iMotionSwing2 = 0;
-				m_JointDescriptions[i].fLinearLimit = 0.f;
-				m_JointDescriptions[i].fTwistAbsDeg = 0.f;
-				m_JointDescriptions[i].fSwingDeg = 10.f;
-				break;
+		//switch (PLAYER_JOINT_ORDER(i))
+		//{
+		//	/* From Origin */
+		//	{
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_START:
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_TUP_START:
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_LUP_START:
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_RSIDEUP_START:
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_LSIDEUP_START:
+		//		m_JointDescriptions[i].iMotionTwist = 1;
+		//		m_JointDescriptions[i].iMotionSwing1 = 1;
+		//		m_JointDescriptions[i].iMotionSwing2 = 1;
+		//		m_JointDescriptions[i].fLinearLimit = 0.f;
+		//		m_JointDescriptions[i].fTwistAbsDeg = 0.f;
+		//		m_JointDescriptions[i].fSwingDeg = 40.f;
+		//		break;
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_RUP_END:
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_TUP_END:
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_LUP_END:
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_RSIDEUP_END:
+		//	case PLAYER_JOINT_ORDER::ORIGIN_TO_LSIDEUP_END:
+		//		m_JointDescriptions[i].iMotionTwist = 1;
+		//		m_JointDescriptions[i].iMotionSwing1 = 1;
+		//		m_JointDescriptions[i].iMotionSwing2 = 1;
+		//		m_JointDescriptions[i].fLinearLimit = 0.f;
+		//		m_JointDescriptions[i].fTwistAbsDeg = 0.f;
+		//		m_JointDescriptions[i].fSwingDeg = 40.f;
+		//		break;
+		//	}
+		//	/* From_Middle */
+		//	{
+		//	case PLAYER_JOINT_ORDER::RUP_TO_RMIDDLE_START:
+		//	case PLAYER_JOINT_ORDER::TUP_TO_TMIDDLE_START:
+		//	case PLAYER_JOINT_ORDER::LUP_TO_LMIDDLE_START:
+		//	case PLAYER_JOINT_ORDER::RSIDEUP_TO_RSIDE_START:
+		//	case PLAYER_JOINT_ORDER::LSIDEUP_TO_LSIDE_START:
+		//		m_JointDescriptions[i].iMotionTwist = 0;
+		//		m_JointDescriptions[i].iMotionSwing1 = 0;
+		//		m_JointDescriptions[i].iMotionSwing2 = 0;
+		//		m_JointDescriptions[i].fLinearLimit = 0.f;
+		//		m_JointDescriptions[i].fTwistAbsDeg = 0.f;
+		//		m_JointDescriptions[i].fSwingDeg = 10.f;
+		//		break;
 
-			case PLAYER_JOINT_ORDER::RUP_TO_RMIDDLE_END:
-			case PLAYER_JOINT_ORDER::TUP_TO_TMIDDLE_END:
-			case PLAYER_JOINT_ORDER::LUP_TO_LMIDDLE_END:
-			case PLAYER_JOINT_ORDER::RSIDEUP_TO_RSIDE_END:
-			case PLAYER_JOINT_ORDER::LSIDEUP_TO_LSIDE_END:
-				m_JointDescriptions[i].iMotionTwist = 1;
-				m_JointDescriptions[i].iMotionSwing1 = 1;
-				m_JointDescriptions[i].iMotionSwing2 = 1;
-				m_JointDescriptions[i].fLinearLimit = 0.f;
-				m_JointDescriptions[i].fSwingDeg = 0.f;
-				m_JointDescriptions[i].fTwistAbsDeg = 0.f;
+		//	case PLAYER_JOINT_ORDER::RUP_TO_RMIDDLE_END:
+		//	case PLAYER_JOINT_ORDER::TUP_TO_TMIDDLE_END:
+		//	case PLAYER_JOINT_ORDER::LUP_TO_LMIDDLE_END:
+		//	case PLAYER_JOINT_ORDER::RSIDEUP_TO_RSIDE_END:
+		//	case PLAYER_JOINT_ORDER::LSIDEUP_TO_LSIDE_END:
+		//		m_JointDescriptions[i].iMotionTwist = 1;
+		//		m_JointDescriptions[i].iMotionSwing1 = 1;
+		//		m_JointDescriptions[i].iMotionSwing2 = 1;
+		//		m_JointDescriptions[i].fLinearLimit = 0.f;
+		//		m_JointDescriptions[i].fSwingDeg = 0.f;
+		//		m_JointDescriptions[i].fTwistAbsDeg = 0.f;
 
-				m_JointDescriptions[i].bEnableSlerpDrive = true;
-				m_JointDescriptions[i].fLinearStiffness = 10.f;
-				m_JointDescriptions[i].fSlerpDamping = 3.f;
-				m_JointDescriptions[i].fSlerpForceLimit = 40.f;
-				m_JointDescriptions[i].bSlerpAccel = true;
-				break;
-			}
-			/* From_Lower */
-			{
-			case PLAYER_JOINT_ORDER::RMIDDLE_TO_RR_START:
-			case PLAYER_JOINT_ORDER::RSIDE_TO_R_START:
-				m_JointDescriptions[i].iMotionTwist = 1;
-				m_JointDescriptions[i].iMotionSwing1 = 1;
-				m_JointDescriptions[i].iMotionSwing2 = 1;
-				m_JointDescriptions[i].fLinearLimit = 0.f;
-				m_JointDescriptions[i].fTwistAbsDeg = 15.f;
-				m_JointDescriptions[i].fSwingDeg = 15.f;
-				break;
+		//		m_JointDescriptions[i].bEnableSlerpDrive = true;
+		//		m_JointDescriptions[i].fLinearStiffness = 10.f;
+		//		m_JointDescriptions[i].fSlerpDamping = 3.f;
+		//		m_JointDescriptions[i].fSlerpForceLimit = 40.f;
+		//		m_JointDescriptions[i].bSlerpAccel = true;
+		//		break;
+		//	}
+		//	/* From_Lower */
+		//	{
+		//	case PLAYER_JOINT_ORDER::RMIDDLE_TO_RR_START:
+		//	case PLAYER_JOINT_ORDER::RSIDE_TO_R_START:
+		//		m_JointDescriptions[i].iMotionTwist = 1;
+		//		m_JointDescriptions[i].iMotionSwing1 = 1;
+		//		m_JointDescriptions[i].iMotionSwing2 = 1;
+		//		m_JointDescriptions[i].fLinearLimit = 0.f;
+		//		m_JointDescriptions[i].fTwistAbsDeg = 15.f;
+		//		m_JointDescriptions[i].fSwingDeg = 15.f;
+		//		break;
 
-			case PLAYER_JOINT_ORDER::RSIDE_TO_R_END:
-			case PLAYER_JOINT_ORDER::RMIDDLE_TO_RR_END:
-				break;
+		//	case PLAYER_JOINT_ORDER::RSIDE_TO_R_END:
+		//	case PLAYER_JOINT_ORDER::RMIDDLE_TO_RR_END:
+		//		break;
 
-			case PLAYER_JOINT_ORDER::TMIDDLE_TO_TR_START:
-			case PLAYER_JOINT_ORDER::TMIDDLE_TO_TL_START:
-				m_JointDescriptions[i].iMotionTwist = 1;
-				m_JointDescriptions[i].iMotionSwing1 = 1;
-				m_JointDescriptions[i].iMotionSwing2 = 1;
-				m_JointDescriptions[i].fLinearLimit = 0.f;
-				m_JointDescriptions[i].fTwistAbsDeg = 15.f;
-				m_JointDescriptions[i].fSwingDeg = 15.f;
-				break;
+		//	case PLAYER_JOINT_ORDER::TMIDDLE_TO_TR_START:
+		//	case PLAYER_JOINT_ORDER::TMIDDLE_TO_TL_START:
+		//		m_JointDescriptions[i].iMotionTwist = 1;
+		//		m_JointDescriptions[i].iMotionSwing1 = 1;
+		//		m_JointDescriptions[i].iMotionSwing2 = 1;
+		//		m_JointDescriptions[i].fLinearLimit = 0.f;
+		//		m_JointDescriptions[i].fTwistAbsDeg = 15.f;
+		//		m_JointDescriptions[i].fSwingDeg = 15.f;
+		//		break;
 
-			case PLAYER_JOINT_ORDER::TMIDDLE_TO_TR_END:
-			case PLAYER_JOINT_ORDER::TMIDDLE_TO_TL_END:
-				break;
+		//	case PLAYER_JOINT_ORDER::TMIDDLE_TO_TR_END:
+		//	case PLAYER_JOINT_ORDER::TMIDDLE_TO_TL_END:
+		//		break;
 
-			case PLAYER_JOINT_ORDER::LSIDE_TO_L_START:
-			case PLAYER_JOINT_ORDER::LMIDDLE_TO_LL_START:
-				m_JointDescriptions[i].iMotionTwist = 1;
-				m_JointDescriptions[i].iMotionSwing1 = 1;
-				m_JointDescriptions[i].iMotionSwing2 = 1;
-				m_JointDescriptions[i].fLinearLimit = 0.f;
-				m_JointDescriptions[i].fTwistAbsDeg = 15.f;
-				m_JointDescriptions[i].fSwingDeg = 15.f;
-				break;
+		//	case PLAYER_JOINT_ORDER::LSIDE_TO_L_START:
+		//	case PLAYER_JOINT_ORDER::LMIDDLE_TO_LL_START:
+		//		m_JointDescriptions[i].iMotionTwist = 1;
+		//		m_JointDescriptions[i].iMotionSwing1 = 1;
+		//		m_JointDescriptions[i].iMotionSwing2 = 1;
+		//		m_JointDescriptions[i].fLinearLimit = 0.f;
+		//		m_JointDescriptions[i].fTwistAbsDeg = 15.f;
+		//		m_JointDescriptions[i].fSwingDeg = 15.f;
+		//		break;
 
-			case PLAYER_JOINT_ORDER::LSIDE_TO_L_END:
-			case PLAYER_JOINT_ORDER::LMIDDLE_TO_LL_END:
-				break;
-			}
-		default:
-			break;
-		}
+		//	case PLAYER_JOINT_ORDER::LSIDE_TO_L_END:
+		//	case PLAYER_JOINT_ORDER::LMIDDLE_TO_LL_END:
+		//		break;
+		//	}
+		//default:
+		//	break;
+		//}
 
-		//m_JointDescriptions[i].iMotionTwist = 0;
-		//m_JointDescriptions[i].iMotionSwing1 = 0;
-		//m_JointDescriptions[i].iMotionSwing2 = 0;
+		m_JointDescriptions[i].iMotionTwist = 0;
+		m_JointDescriptions[i].iMotionSwing1 = 0;
+		m_JointDescriptions[i].iMotionSwing2 = 0;
 		m_JointDescriptions[i].ApplyToJoint(*m_pDynamicJoints[i]);
 	}
 	return S_OK;

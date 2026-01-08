@@ -1,0 +1,218 @@
+﻿#include "pch.h"
+#include "Duelist_Protego.h"
+
+#include "GameInstance.h"
+#include "EffectParts.h"
+#include "Player.h"
+
+
+CDuelist_Protego::CDuelist_Protego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CEffect_Container{ pDevice, pContext }
+{
+}
+
+CDuelist_Protego::CDuelist_Protego(const CDuelist_Protego& rhs)
+	: CEffect_Container(rhs)
+{
+}
+
+HRESULT CDuelist_Protego::Initialize_Prototype()
+{
+
+	return S_OK;
+
+}
+
+HRESULT CDuelist_Protego::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
+		return E_FAIL;
+
+	if (FAILED(Create_Effect()))
+		return E_FAIL;
+
+	m_pSphere = Get_PartObject<CEffectParts>("ProtegoSphere");
+	m_pSphereLay = Get_PartObject<CEffectParts>("ProtegoLay");
+
+	SAFE_ADDREF(m_pSphere);
+	SAFE_ADDREF(m_pSphereLay);
+
+	m_wstrEffectName = L"Protego";
+
+
+	m_fAmountSize = 0.1f;
+	m_fSpeed = 5.f;
+
+	m_fDuration = 3.f;
+
+	return S_OK;
+}
+
+void CDuelist_Protego::Priority_Update(_float fTimeDelta)
+{
+	__super::Priority_Update(fTimeDelta);
+}
+
+void CDuelist_Protego::Update(_float fTimeDelta)
+{
+	if (m_bVisible == false)
+		return;
+
+	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+
+	__super::Update(fTimeDelta);
+
+	Update_Event(fTimeDelta);
+
+	if (m_bVisible == false) {
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	}
+
+
+	/* 시작 사이즈 러프 */
+	if (m_fSizeAccTime > XM_PIDIV2)
+		return;
+
+	m_fSizeAccTime += fTimeDelta * m_fSpeed;
+
+	_float fSize = 1 + sinf(m_fSizeAccTime) * m_fAmountSize;
+	_float3 vSize = _float3(fSize, fSize, fSize);
+
+	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
+	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
+}
+
+void CDuelist_Protego::Late_Update(_float fTimeDelta)
+{
+	if (m_bVisible == false) {
+		return;
+	}
+	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
+	__super::Late_Update(fTimeDelta);
+
+}
+
+HRESULT CDuelist_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
+{
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
+		return E_FAIL;
+
+	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+
+	m_pSphere->Set_Visible(true);
+	m_pSphereLay->Set_Visible(true);
+
+
+
+	_float3 vSize = _float3(1.f, 1.f, 1.f);
+	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
+	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
+
+	m_fSizeAccTime = 0.f;
+
+	return S_OK;
+}
+
+HRESULT CDuelist_Protego::Ready_Components(void* pArg)
+{
+	if (FAILED(__super::Ready_Components(pArg))) {
+		return E_FAIL;
+	}
+
+
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::DUELIST_PROTEGO);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+	}
+
+	return S_OK;
+}
+
+HRESULT CDuelist_Protego::Ready_Child()
+{
+	return S_OK;
+}
+
+CDuelist_Protego* CDuelist_Protego::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CDuelist_Protego* pInstance = new CDuelist_Protego(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CDuelist_Protego");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+
+CGameObject* CDuelist_Protego::Clone(void* pArg, CGameObject* pOwner)
+{
+	CDuelist_Protego* pInstance = new CDuelist_Protego(*this);
+	pInstance->m_pOwner = pOwner;
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CDuelist_Protego");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CDuelist_Protego::OnCollision(CGameObject* pOther, void* pDesc)
+{
+
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	if (!m_bVisible)
+	{
+		m_pOwner->OnCollision(pOther, pDesc);
+		return;
+	}
+
+}
+
+void CDuelist_Protego::Free()
+{
+	__super::Free();
+
+	//if(m_pPhysHitBox != nullptr)
+	//	if (m_pPhysHitBox->Get_Depth() == false)
+	//		SAFE_RELEASE(m_pPhysHitBox);
+	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pSphere);
+	SAFE_RELEASE(m_pSphereLay);
+
+}
+#ifdef _DEBUG
+
+void CDuelist_Protego::Describe_Entity()
+{
+	GUI::Begin("PROTEGO");
+
+	GUI::DragFloat("fAmountSize", &m_fAmountSize);
+	GUI::DragFloat("fSpeed", &m_fSpeed);
+
+	GUI::End();
+}
+
+#endif // _DEBUG
+
+HRESULT CDuelist_Protego::Bind_ShaderResources()
+{
+	return S_OK;
+}
+
+
