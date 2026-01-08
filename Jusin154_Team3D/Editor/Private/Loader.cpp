@@ -3901,7 +3901,7 @@ if(isLoad_Map)
 #pragma region INSTANCE_MODEL
 	CVIBuffer_Model_Instance::INSTANCE_DESC InstanceDesc = {};
 
-	InstanceDesc.iNum = 20;
+	InstanceDesc.iNum = 200;
 
 	///* For.Prototype_Component_VIBuffer_Model_Instancel */
 	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel"),
@@ -4027,6 +4027,24 @@ if(isLoad_Map)
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D"),
 		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Models/InstanceProp/SM_HW_LightFixture_Base_D.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedCliff_A1_Lod1.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedRock_B.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedRock_D_B.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 
 #pragma endregion // INSTANCE_MODEL
