@@ -187,6 +187,18 @@ void CRanrok::Update(_float fTimeDelta)
 
 #pragma endregion
 
+
+#pragma region CREATE PROP
+	m_vCreatePropTime.x += fTimeDelta;
+
+	if (m_vCreatePropTime.x >= m_vCreatePropTime.y)
+	{
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this);
+		m_vCreatePropTime.x = 0.f;
+	}
+
+#pragma endregion
+
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -326,9 +338,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
-#ifndef 진우
 	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
-#endif
+
 
 	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
@@ -992,6 +1003,11 @@ void CRanrok::Describe_Entity()
 		if (GUI::Button("MovePos"))
 		{
 			m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
+		}
+
+		if (GUI::Button("Create Prop"))
+		{
+			m_vCreatePropTime.x = m_vCreatePropTime.y;
 		}
 
 		for (_uint i = 0; i < m_Points.size(); ++i)

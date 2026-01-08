@@ -48,9 +48,9 @@ HRESULT CBombardSide::Initialize(void* pArg)
 	SAFE_ADDREF(m_pWandTrail);
 	SAFE_ADDREF(m_pWandParticle);
 
-	m_fDuration = 2.f;
+	m_fDuration = 4.f;
 
-	m_Events.emplace(0.6f, [&](){
+	m_Events.emplace(0.9f, [&](){
 		m_isParticleEnd = true;
 		m_pWandParticle->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f , 1.f));
 

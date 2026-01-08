@@ -862,9 +862,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Human_Duelist.h">
       <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Prop.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1781,7 +1784,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush">
       <UniqueIdentifier>{eb8e52f5-0283-4acf-8fbb-0e734b7580e9}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
       <UniqueIdentifier>{9c357e12-18b3-461e-b74c-76f85280796f}</UniqueIdentifier>
     </Filter>
@@ -1796,6 +1799,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash">
       <UniqueIdentifier>{e1fcb75d-6e7a-4adb-9835-6913ac6f44b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Prop">
+      <UniqueIdentifier>{77cbc828-2eec-4c0e-8425-d9fdf8c4c797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop">
+      <UniqueIdentifier>{95a34fdb-ac6d-4312-8d28-1931f95c4f4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2615,6 +2624,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Swipe.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

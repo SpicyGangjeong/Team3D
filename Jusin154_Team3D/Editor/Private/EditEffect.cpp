@@ -532,8 +532,6 @@ void CEditEffect::Describe_Entity()
 
 	GUI::PopItemWidth();
 
-
-
 	if (m_EffectInfo.isBlur)
 	{
 		if (GUI::TreeNode("BLUR"))

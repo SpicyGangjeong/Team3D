@@ -201,6 +201,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
     <ClInclude Include="..\public\NPCInteraction.h" />
+    <ClInclude Include="..\Public\Ranrok_Prop.h" />
     <ClInclude Include="..\public\QuestInstance.h" />
     <ClInclude Include="..\public\Quest_Canvas.h" />
     <ClInclude Include="..\public\Quest_Data.h" />
@@ -480,6 +481,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
     <ClCompile Include="..\private\NPCInteraction.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
     <ClCompile Include="..\private\QuestInstance.cpp" />
     <ClCompile Include="..\private\Quest_Canvas.cpp" />
     <ClCompile Include="..\private\Quest_Data.cpp" />

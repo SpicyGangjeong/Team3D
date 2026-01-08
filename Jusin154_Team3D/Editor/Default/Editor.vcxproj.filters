@@ -753,7 +753,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\GroundPulse">
       <UniqueIdentifier>{614e67ae-6df9-4826-adbe-6be96f54041d}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
       <UniqueIdentifier>{906987cf-14ce-4676-8ca7-a68b6b2c29b6}</UniqueIdentifier>
     </Filter>
@@ -768,6 +768,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\DeadImpact">
       <UniqueIdentifier>{7a345ef7-8e16-45df-9bc3-e8fc665f729f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop">
+      <UniqueIdentifier>{8bc9a6f2-aea3-4631-83b0-1c897cc9f98c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1556,6 +1559,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\DeadImpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Prop.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2352,6 +2358,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_DeadImpact.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\DeadImpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
