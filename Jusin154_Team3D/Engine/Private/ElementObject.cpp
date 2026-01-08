@@ -43,28 +43,18 @@ void CElementObject::Update(_float fTimeDelta)
 	m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_Scale(m_vScale);
 
-	// 1. 최종 월드 좌표 계산 (부모 좌표 + 내 로컬 좌표)
-	_float fFinalX = m_fX + m_pOwner->Get_WorldPostion().m128_f32[0];
-	_float fFinalY = m_fY + m_pOwner->Get_WorldPostion().m128_f32[1];
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
+		m_fX + m_pOwner->Get_WorldPostion().m128_f32[0],
+		m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
+		m_fSortZ, 1.f));
 
-	// 2. Transform 업데이트
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(fFinalX, fFinalY, m_fSortZ, 1.f));
-
-	// 3. m_pRect 업데이트 (마우스 호버용)
-	// float 오차를 줄이기 위해 floor(내림) 또는 round(반올림)를 사용하는 것이 좋습니다.
-	_float fLeft = fFinalX - m_fSizeX * 0.5f;
-	_float fRight = fFinalX + m_fSizeX * 0.5f;
-	_float fTop = fFinalY - m_fSizeY * 0.5f;
-	_float fBottom = fFinalY + m_fSizeY * 0.5f;
-
-	m_pRect.left = (long)fLeft;
-	m_pRect.right = (long)fRight;
-
-	// 중요: 현재 좌표계가 Y축이 위로 갈수록 +인 수학 좌표계라면, 
-	// 실제 화면상 '위'에 해당하는 좌표값(fTop)이 숫자가 더 작아야 PtInRect가 작동합니다.
-	// 만약 살짝 어긋난다면 여기서 min, max로 안전하게 잡아줍니다.
-	m_pRect.top = (long)min(fTop, fBottom);
-	m_pRect.bottom = (long)max(fTop, fBottom);
+	m_pRect =
+	{
+		long((m_fX + m_pOwner->Get_WorldPostion().m128_f32[0]) - m_fSizeX * 0.5f),
+		long((m_fY + m_pOwner->Get_WorldPostion().m128_f32[1]) - m_fSizeY * 0.5f),
+		long((m_fX + m_pOwner->Get_WorldPostion().m128_f32[0]) + m_fSizeX * 0.5f),
+		long((m_fY + m_pOwner->Get_WorldPostion().m128_f32[1]) + m_fSizeY * 0.5f)
+	};
 
 	m_fCurrent_Position = _float4(m_fX, m_fY, 0.f, 1.f);
 	m_vLerp_Position = _float4(m_fLerpX, m_fLerpY, 0.f, 1.f);
