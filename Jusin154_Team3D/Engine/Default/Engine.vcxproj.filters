@@ -319,6 +319,9 @@
     <Filter Include="02.Element\01.GameObject\01.Font">
       <UniqueIdentifier>{7eab7292-025e-40d7-aa71-73e7a3c71ea7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.System\01.Timer\TimeSocket">
+      <UniqueIdentifier>{bd29f336-b363-41e9-91cc-d1f295015afc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -608,6 +611,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Motion_Trail.cpp">
       <Filter>02.Element\02.Component\06.Model\Motion_Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TimeSocket.cpp">
+      <Filter>00.System\01.Timer\TimeSocket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1264,6 +1270,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Motion_Trail.h">
       <Filter>02.Element\02.Component\06.Model\Motion_Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TimeSocket.h">
+      <Filter>00.System\01.Timer\TimeSocket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

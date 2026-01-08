@@ -1,14 +1,8 @@
 ﻿#pragma once
-#include "Client_Define.h"
 #include "GameInstance.h"
-
 
 NS_BEGIN(Engine)
 class CGameObject;
-NS_END
-
-
-NS_BEGIN(Client)
 
 typedef enum class typeTimeSocket_Param {
 	TARGET,
@@ -24,7 +18,7 @@ typedef enum class typeTimeSocket_Func {
 	END
 }TIMESOCKET_FUNC;
 
-class CTimeSocket final : public CBase
+class ENGINE_DLL CTimeSocket final : public CBase
 {
 private:
 	CTimeSocket();

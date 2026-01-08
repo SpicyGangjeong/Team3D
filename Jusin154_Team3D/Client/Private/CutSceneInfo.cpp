@@ -66,29 +66,9 @@ HRESULT CCutSceneInfo::DeActive_ActiveEvent(_string& strKey)
 	return S_OK;
 }
 
-void CCutSceneInfo::Load_Events(LEVEL eLevel)
+void CCutSceneInfo::Load_Events(pair<_string, TimeLine>& pairTimeLine)
 {
-	switch (eLevel)
-	{
-	case Client::LEVEL::STATIC:
-		break;
-	case Client::LEVEL::LOADING:
-		break;
-	case Client::LEVEL::LOGO:
-		break;
-	case Client::LEVEL::INTRO:
-		break;
-	case Client::LEVEL::GAMEPLAY:
-		break;
-	case Client::LEVEL::FIELD:
-		break;
-	case Client::LEVEL::RESTART:
-		break;
-	case Client::LEVEL::END:
-		break;
-	default:
-		break;
-	}
+	m_funcWaitEvents.emplace(pairTimeLine);
 }
 
 HRESULT CCutSceneInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)

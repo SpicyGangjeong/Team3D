@@ -10,12 +10,6 @@ NS_END
 
 NS_BEGIN(Client)
 
-struct TimeLine {
-	_float2						m_vTimer = {};
-	_uint						m_eTypeTimeLine = {};
-	list<class CTimeSocket*>	m_Sockets = {};
-};
-
 class CCutSceneInfo final : public CBase
 {
 private:
@@ -29,7 +23,7 @@ public:
 public:
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
-	void		Load_Events(LEVEL eLevel);
+	void		Load_Events(pair<_string, TimeLine>& pairTimeLine);
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
