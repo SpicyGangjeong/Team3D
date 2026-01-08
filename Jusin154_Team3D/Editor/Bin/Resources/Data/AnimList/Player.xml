@@ -56,6 +56,7 @@
 	<!-- SKILL / ATTACK -->
 	<Anim state="SKILL" index="594" loop="false"/>
 	<Anim state="SKILL2" index="992" loop="false"/>
+	<Anim state="SHIELD_BLOCK" index="986" loop="false"/>
 
 	<Anim state="LIGHT_ATTACK" index="414" loop="false"/>
 	<Anim state="LIGHT_ATTACK_180_R" index="810" loop="false"/>
@@ -108,6 +109,7 @@
 	<Anim state="HIT_R" index="1217" loop="false"/>
 	<Anim state="HIT_FWD" index="1218" loop="false"/>
 	<Anim state="HIT_LEVIOSO" index="1114" loop="true"/>
+	<Anim state="LEVIOSO_LAND" index="1115" loop="false"/>
 
 	<Anim state="FLINCH_BWD" index="1076" loop="false"/>
 	<Anim state="FLINCH_FWD" index="1077" loop="false"/>

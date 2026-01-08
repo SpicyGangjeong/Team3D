@@ -299,6 +299,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         // COMBAT / SKILL
         { "COMBAT", COMBAT },
         { "SKILL", SKILL }, { "SKILL2", SKILL2 },
+        { "SHIELD_BLOCK", SHIELD_BLOCK },
 
         // SPELL
         { "SPELL", SPELL }, { "SPELL_180_R", SPELL_180_R },
@@ -405,6 +406,12 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "HIT_L", HIT_L }, { "HIT_R", HIT_R },
         { "HIT_FACE", HIT_FACE }, { "HIT_FACE_END", HIT_FACE_END },
         { "HIT_LEVIOSO", HIT_LEVIOSO }, { "INCARCEROUS", INCARCEROUS },
+        { "LEVIOSO_LAND",LEVIOSO_LAND },
+
+        // DAZED
+
+        { "DAZED_START", DAZED_START },{ "DAZED_LOOP", DAZED_LOOP },
+        { "DAZED_END1", DAZED_END1 }, { "DAZED_END2", DAZED_END2 },
 
         // KNOCKDOWN
         { "KNOCKDOWN", KNOCKDOWN },

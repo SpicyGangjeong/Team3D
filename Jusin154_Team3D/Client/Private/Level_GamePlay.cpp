@@ -300,9 +300,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -828,8 +828,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_RandomNPC = true;
 #endif // 
 #ifdef Bin
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // Bin
 #endif // _DEBUG
 
@@ -877,13 +877,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 			return E_FAIL;
 		}
 	}
-	CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-	DuelistDesc.vPos = _float4(-21.f, 0.f, -16.f, 1.f);
-	DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &DuelistDesc))) {
-		return E_FAIL;
-	}
-
 
 	return S_OK;
 }
@@ -934,7 +927,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // 
 #ifdef Bin
-	isLoad_Monster = true;
+	isLoad_Monster = false;
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {

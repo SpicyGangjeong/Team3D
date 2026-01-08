@@ -136,7 +136,6 @@ private:
 
 	function<void()> m_InputAction = nullptr;
 	_int			m_eUIState = { };
-	_uint			m_iLightCombo = { 0 };
 
 	_float3			m_OffsetPos = {};
 	_float			m_fAmount = { 1.f };
@@ -166,6 +165,7 @@ private:
 	array<_int, 256> SecondMaskIndex = {};
 	_bool			m_bOpenDoor = { false };
 	_bool			m_bOpeningCutScene = { false };
+	_float			m_fAirTime = {};
 
 	/* 무적 불 변수*/
 #ifdef _DEBUG
@@ -236,7 +236,7 @@ private:
 	void	Behavior_ShieldExit();
 
 	void	Behavior_HitEnter();
-	HRESULT Behavior_HitExitCheck();
+	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
 
 	void	Behavior_Broom_RideEnter();
@@ -266,7 +266,14 @@ private:
 	void Player_InterpTurn(_float fTimeDelta);
 	void Throwing_Interactive();
 	void Attach_Broom();
+	void ProcessHitBehavior();
 #pragma endregion
+
+#pragma region HITBEHAVIOR
+	void Hit_Levioso(_float fTimeDelta);
+
+#pragma endregion
+
 
 private:
 	class CEffectPool* m_pEffectPool = nullptr;

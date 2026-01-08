@@ -36,7 +36,6 @@ private:
 	_float		 m_fSizeAccTime = {};
 	_float       m_fAmountSize = {};
 	_float       m_fSpeed = {};
-
 public:
 	static CDuelist_Protego* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

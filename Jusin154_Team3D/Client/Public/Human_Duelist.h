@@ -52,7 +52,6 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
-	void SetGravity();
 
 public:
 	static CHuman_Duelist* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -71,6 +70,7 @@ private:
 
 	_bool			m_bSpellHit = {};
 	_bool			m_bShield = { false };
+	_float			m_fAirTime = {};
 
 
 	_float m_fSkillCoolTime[ENUM_CLASS(SKILL::END)] = {};
@@ -101,8 +101,16 @@ private:
 	void	Behavior_ShieldExit();
 
 	void	Behavior_HitEnter();
-	HRESULT Behavior_HitExitCheck();
+	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
+
+#pragma region HIT_BEHAVIOR
+
+	void Hit_Levioso(_float fTimeDelta);
+
+	void HitState_Behavior(_float fTimeDelta);
+
+#pragma endregion
 
 #pragma endregion
 

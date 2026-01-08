@@ -649,52 +649,9 @@ HRESULT CGoblin_Assassin::Behavior_HitExitCheck(_float fTimeDelta)
 			0.17f);
 	}
 
-	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ACCIO))
-	{
-		if (!m_bPos)
-		{
-			m_pCharacter_Controller->SetGravity(false);
-			_vector vPlayerPos = pTransform->Get_State(STATE::POSITION);
-			vPlayerPos = XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + 2.5f);
-			_vector vMonsterPos = m_pCharacter_Controller->Get_Position();
+	Hit_Accio(fTimeDelta);
 
-			_vector vDir = XMVector3Normalize(vPlayerPos - vMonsterPos);
-			_float fLength = XMVectorGetX(XMVector3Length(vPlayerPos - vMonsterPos));
-
-			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
-
-			if (fLength >= 4.f)
-			{
-				m_pCharacter_Controller->Set_Position(
-					vMonsterPos + vDir * m_fSpeed * fTimeDelta
-				);
-			}
-			else {
-				m_bPos = true;
-				pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
-			}
-		}
-	}
-
-	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::LEVIOSO))
-	{
-		if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_LEVIOSO].first)
-		{
-			_vector vDir = m_pTransformCom->Get_State(STATE::UP);
-			vDir = XMVector4Normalize(vDir);
-			_vector vPos = m_pCharacter_Controller->Get_Position();
-			m_fAirTime += fTimeDelta;
-			_vector Force = vDir * fTimeDelta;
-			if (m_fAirTime < 1.3f) {
-				m_pCharacter_Controller->Set_Position(vPos + Force);
-			}
-			else {
-				m_pCharacter_Controller->Set_Position(vPos);
-			}
-			m_pCharacter_Controller->SetGravity(false);
-		}
-	}
+	Hit_Levioso(fTimeDelta);
 
 	HitState_Behavior(fTimeDelta);
 
@@ -789,6 +746,63 @@ HRESULT CGoblin_Assassin::Behavior_DeadExitCheck(_float fTimeDelta)
 void CGoblin_Assassin::Behavior_DeadExit()
 {
 	m_bDead = true;
+}
+
+void CGoblin_Assassin::Hit_Accio(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	CTransform* pTransform = m_pTarget->Get_Component<CTransform>();
+	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ACCIO))
+	{
+		if (!m_bPos)
+		{
+			m_pCharacter_Controller->SetGravity(false);
+			_vector vPlayerPos = pTransform->Get_State(STATE::POSITION);
+			vPlayerPos = XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + 2.5f);
+			_vector vMonsterPos = m_pCharacter_Controller->Get_Position();
+
+			_vector vDir = XMVector3Normalize(vPlayerPos - vMonsterPos);
+			_float fLength = XMVectorGetX(XMVector3Length(vPlayerPos - vMonsterPos));
+
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
+
+			if (fLength >= 4.f)
+			{
+				m_pCharacter_Controller->Set_Position(
+					vMonsterPos + vDir * m_fSpeed * fTimeDelta
+				);
+			}
+			else {
+				m_bPos = true;
+				pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			}
+		}
+	}
+
+}
+
+void CGoblin_Assassin::Hit_Levioso(_float fTimeDelta)
+{
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::LEVIOSO))
+	{
+		if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_LEVIOSO].first)
+		{
+			_vector vDir = m_pTransformCom->Get_State(STATE::UP);
+			vDir = XMVector4Normalize(vDir);
+			_vector vPos = m_pCharacter_Controller->Get_Position();
+			m_fAirTime += fTimeDelta;
+			_vector Force = vDir * fTimeDelta;
+			if (m_fAirTime < 1.3f) {
+				m_pCharacter_Controller->Set_Position(vPos + Force);
+			}
+			else {
+				m_pCharacter_Controller->Set_Position(vPos);
+			}
+			m_pCharacter_Controller->SetGravity(false);
+		}
+	}
 }
 
 void CGoblin_Assassin::HitState_Behavior(_float fTimeDelta)

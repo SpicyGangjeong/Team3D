@@ -190,7 +190,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_OpeningIntro.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/M_Student/M_Student_Rct2.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 	//	TEXT("Prototype_Component_ThestralCarriage_Model")
 	//));
 
