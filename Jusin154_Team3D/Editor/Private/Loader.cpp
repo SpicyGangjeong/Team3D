@@ -145,6 +145,10 @@
 #include "Ride_HpBar.h"
 #include "Ride_HpSlot.h"
 
+#include "Dialogue_Canvas.h"
+#include "Dialogue_Panel.h"
+#include "Dialogue_Choice.h"
+
 #include "NPCInteraction.h"
 
 #include "Dialogue.h"
@@ -1263,8 +1267,21 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue_Canvas>(g_iStaticLevel, CDialogue_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue_Panel>(g_iStaticLevel, CDialogue_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue_Choice>(g_iStaticLevel, CDialogue_Choice::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 		
-		if(FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
+	if(FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
 	{
 		
 		return E_FAIL;

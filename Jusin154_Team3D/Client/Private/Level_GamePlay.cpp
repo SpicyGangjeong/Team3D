@@ -116,9 +116,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
-	
-	if(FAILED(m_pInfoInstance->Late_Initialize()))
+
+	if (FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
+
+	m_bLevel = true;
+	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
 	return S_OK;
 }
@@ -131,6 +134,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+
 	if (m_pGameInstance->Key_Pressing(DIK_0)) {
 		if (m_pGameInstance->Key_Up(DIK_1))
 		{
@@ -142,6 +146,10 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
 		m_pInfoInstance->Change_Level();
+
+		UI_STATE eState = UI_STATE::LEVELCHANGE;
+		m_pInfoInstance->Event_CallBack(TEXT("Canvas_Change"), &eState);
+
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::FIELD)))) {
 			return;
 		}
@@ -220,7 +228,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 HRESULT CLevel_GamePlay::Ready_Volumetric()
 {
 	// Volumetric 설정
-	if(m_isDay)
+	if (m_isDay)
 	{
 		m_pGameInstance->Setting_Volumetirc(
 			1.251f,                         // 밀도
@@ -271,7 +279,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_BACKGROUND, &Terrain_Desc))) {
 		return E_FAIL;
 	}
-	 
+
 	/* 물 오브젝트 */
 	if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
 		return E_FAIL;
@@ -314,9 +322,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // _DEBUG
 
 
-	
+
 	/* Map Containters */
-	if(false == isReady_Background)
+	if (false == isReady_Background)
 	{
 		/* 테스트용 맵 */
 		CInfoInstance::GetInstance()->Load_MapObjects("Map1215", LAYER_HOGSMEADE);
@@ -341,10 +349,12 @@ HRESULT CLevel_GamePlay::Ready_Background()
 				return E_FAIL;
 		}
 		
+
+
 		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;
 	}
-	
+
 	return S_OK;
 }
 
@@ -823,7 +833,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 #endif // Bin
 #endif // _DEBUG
 
-	if(true == isLoad_NPC)
+	if (true == isLoad_NPC)
 	{
 		{
 			CNPC_Ollivander::NPCDESC NPCDesc{};
@@ -858,6 +868,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 					return E_FAIL;
 				}
 			}
+		}
+
+		CPlayer::PLAYERDESC playerDesc = {};
+		playerDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
+		playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &playerDesc))) {
+			return E_FAIL;
 		}
 	}
 	CHuman_Duelist::DUELISTDESC DuelistDesc = {};
@@ -964,7 +981,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Manager(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRaceManager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pBroomRaceManager))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRaceManager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_pBroomRaceManager))) {
 		return E_FAIL;
 	}
 

@@ -47,6 +47,8 @@ private:
 
 	void NpcInteract(_bool bInteract);
 
+	void Set_Fade();
+
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
@@ -79,6 +81,7 @@ private:
 	_bool m_bSpellLearn = { false };
 
 	_bool	m_bNPCInteract = { false };
+	_bool	m_bCurrentNPCInteract = { false };
 
 	_bool	m_bAlphaZero = { false };
 

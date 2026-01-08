@@ -59,6 +59,7 @@ HRESULT CUI_Manager::Initialize(void* pArg)
 	m_pInfoInstance->Set_UISTATE(m_eType);
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Canvas_Change(*reinterpret_cast<UI_STATE*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteract"), [this](void* p) {this->NpcInteract(*reinterpret_cast<_bool*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("UIManagerFadeIn"), [this](void* p) {this->Set_Fade(); });
 	return S_OK;
 }
 
@@ -77,8 +78,6 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
-		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(true);
-		static_cast<CGameObject*>(m_pDamage_Font)->Set_Visible(true);
 		break;
 
 	case UI_STATE::SPELL:
@@ -106,6 +105,19 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		break;
 
 	case UI_STATE::NPC_INTERACT:
+		m_pMouse_Cursor->Set_Visible(false);
+		m_pCamera_LockOn->Set_Visible(false);
+		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
+		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
+		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(false);
+		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
+		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
+		static_cast<CGameObject*>(m_pDamage_Font)->Set_Visible(false);
+		break;
+
+	case UI_STATE::LEVELCHANGE:
 		m_pMouse_Cursor->Set_Visible(false);
 		m_pCamera_LockOn->Set_Visible(false);
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
@@ -210,21 +222,26 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_eType == UI_STATE::GAMEPLAYER && m_bNPCInteract == true)
 	{
+		if (m_bCurrentNPCInteract != m_bNPCInteract)
+			m_bCurrentNPCInteract = m_bNPCInteract;
+
 		if (m_eType == UI_STATE::GAMEPLAYER)
 		{
 			Canvas_Change(UI_STATE::NPC_INTERACT);
 		}
+	}
 
-		else
+	if (m_bCurrentNPCInteract == true && m_bNPCInteract == false)
+	{
+		m_bCurrentNPCInteract = m_bNPCInteract;
+
+		if (m_bActive == false)
 		{
-			if (m_bActive == false)
+			m_bActive = true;
+			m_bAlphaZero = true;
+			if (m_eType == UI_STATE::NPC_INTERACT)
 			{
-				m_bActive = true;
-				m_bAlphaZero = true;
-				if (m_eType == UI_STATE::GAMEPLAYER)
-				{
-					m_eType = UI_STATE::NPC_INTERACT;
-				}
+				m_eType = UI_STATE::GAMEPLAYER;
 			}
 		}
 	}
@@ -404,7 +421,7 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	}
 	Add_Canvas(TEXT("NPCInteraction"), m_pNPCInteraction);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_TargetGate>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_TargetGate**>(&m_pBroom_TargetGate))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_TargetGate>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_TargetGate**>(&m_pBroom_TargetGate))))
 	{
 		return E_FAIL;
 	}
@@ -443,6 +460,14 @@ CGameObject* CUI_Manager::Find_Canvas(const _wstring& Name)
 void CUI_Manager::NpcInteract(_bool bInteract)
 {
 	m_bNPCInteract = bInteract;
+}
+
+void CUI_Manager::Set_Fade()
+{
+	m_fAlpha = 1.5f;
+	m_bActive = true;
+	m_bHover = true;
+	m_bCgangede = true;
 }
 
 CUI_Manager* CUI_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

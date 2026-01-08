@@ -181,7 +181,6 @@ void CDialogue::SizeUpdate(_wstring pName, _wstring pText)
 
 void CDialogue::Set_Time(_float fTime)
 {
-	m_bHover = true;
 	m_fTime = fTime;
 }
 

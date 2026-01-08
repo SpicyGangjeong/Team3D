@@ -61,6 +61,9 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_bLevel = true;
+	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
+
 	return S_OK;
 }
 
@@ -85,6 +88,16 @@ void CLevel_Field::Update(_float fTimeDelta)
 			return;
 		}
 	}
+
+
+	if (m_bLevel != m_bCurrentLevel)
+	{
+		m_bCurrentLevel = m_bLevel;
+		UI_STATE eState = UI_STATE::GAMEPLAYER;
+		m_pInfoInstance->Event_CallBack(TEXT("Canvas_Change"), &eState);
+	}
+
+
 }
 
 HRESULT CLevel_Field::Render()
@@ -158,7 +171,7 @@ HRESULT CLevel_Field::Ready_Lights()
 	_float4 vDiffuse = _float4(0.745f, 0.797f, 0.8f, 0.f);
 	_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
 	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
-	
+
 #if gimch || 진우
 	vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
 	vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
@@ -166,7 +179,7 @@ HRESULT CLevel_Field::Ready_Lights()
 #endif // gimch
 
 
-	
+
 
 	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
