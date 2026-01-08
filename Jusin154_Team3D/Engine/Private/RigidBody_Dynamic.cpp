@@ -24,6 +24,7 @@ HRESULT CRigidBody_Dynamic::Render()
 {
 	return Render(nullptr);
 }
+
 HRESULT CRigidBody_Dynamic::Render(function<void()> custumState)
 {
 	if (m_pOwner->isDead())

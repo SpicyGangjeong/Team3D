@@ -627,6 +627,15 @@ void CEffect_Editor::Describe_Entity()
 			Reset_EditEffect();
 		}
 
+		if (GUI::Button("All Visible Toggle"))
+		{
+			for (auto& pPart : m_PartObjects)
+			{
+				pPart.second->Set_Visible(!pPart.second->Get_Visible());
+			}
+		}
+
+
 		ImGui::EndPopup();
 
 	}
