@@ -34,6 +34,7 @@
 #include "Ranrok_Swipe.h"
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
+#include "Ranrok_Prop.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -113,8 +114,22 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 #ifdef  _DEBUG
 #if 진우
 
-
-	//(*m_EffectList[ENUM_CLASS(SKILL_TYPE::BLINK)].begin())->Describe_Entity();
+//	GUI::Begin("RANROK PROP");
+//
+//	_uint iIndex = 0;
+//	for (auto pEffect : m_EffectList[ENUM_CLASS(SKILL_TYPE::RANROK_PROP)])
+//	{
+//		_string strName = "Ranrok_Prop" + to_string(iIndex++);
+//
+//		if(GUI::TreeNode(strName.c_str()))
+//		{
+//			pEffect->Describe_Entity();
+//			GUI::TreePop();
+//		}
+//
+//	}
+//
+//GUI::End();
 
 	Describe_Entity();
 
@@ -444,6 +459,16 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 		return pEffect; }
 	))) return E_FAIL;
+
+	//if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PROP, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+	//	CRanrok_Prop* pEffect = nullptr;
+
+	//	pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Prop>(iPrototypeLevel, nullptr);
+
+	//	return pEffect; }
+	//))) return E_FAIL;
+	//
 
 	return S_OK;
 }

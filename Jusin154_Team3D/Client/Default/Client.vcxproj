@@ -204,6 +204,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
+    <ClInclude Include="..\Public\Ranrok_Prop.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h" />
     <ClInclude Include="..\Public\Ranrok_Swipe.h" />
@@ -495,6 +496,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ranrok_Land.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />
     <ClCompile Include="..\Private\Ranrok_Swipe.cpp" />

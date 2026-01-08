@@ -520,6 +520,11 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
 				}
+				case PXOBJECT::RANROK_PROP:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
 				break;
 				}
 			}

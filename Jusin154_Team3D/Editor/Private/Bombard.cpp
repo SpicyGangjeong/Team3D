@@ -39,7 +39,10 @@ HRESULT CBombard::Initialize(void* pArg)
 	m_wstrEffectName = L"Bombard";
 
 	m_pLight_Projectile = Get_PartObject<CEditEffect>("Bombard_Projectile");
+	m_pWand_Light_B = Get_PartObject<CEditEffect>("Wand_Light_B");
+
 	SAFE_ADDREF(m_pLight_Projectile);
+	SAFE_ADDREF(m_pWand_Light_B);
 
 	m_fDuration = 2.5f;
 
@@ -73,7 +76,12 @@ void CBombard::Update(_float fTimeDelta)
 		OnCollision();
 	}
 
+	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
 
+	if (pWand == nullptr)
+		return;
+
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 }
 
@@ -102,19 +110,20 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 	CPartObject* pShootPt = Get_PartObject<CEditEffect>("Bombard_Shoot_Pt");
 	CPartObject* pCircle0 = Get_PartObject<CEditEffect>("Bombard_Circle0");
 
+
 	m_vCameraLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 
 
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	m_pLight_Projectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
+	m_pWand_Light_B->Set_Visible(true);
 	pCircle0->Set_Visible(true);
 	pShootPt->Set_Visible(true);
 
 	m_pLight_Projectile->Set_Visible(true);
-
-	// 건드린 친구들 순서대로 다 가져옴 ( 정렬은 안되어있음 )
 
 
 	return S_OK;
@@ -192,7 +201,7 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	m_pLight_Projectile->Set_Visible(false);
 
@@ -210,7 +219,7 @@ void CBombard::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pLight_Projectile);
-
+	SAFE_RELEASE(m_pWand_Light_B);
 }
 #ifdef _DEBUG
 void CBombard::Describe_Entity()

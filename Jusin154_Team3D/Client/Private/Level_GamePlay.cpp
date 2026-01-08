@@ -56,7 +56,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_isDay = true;
 #endif // 
 #ifdef 진우
-	m_isDay = true;
+	m_isDay = false;
 #endif // 
 #ifdef 기무리
 	m_isDay = true;
@@ -918,7 +918,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // gimch
 #ifdef 진우
-	isLoad_Monster = false;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 기무리
 	isLoad_Monster = true;
