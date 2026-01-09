@@ -154,6 +154,7 @@ enum class PXOBJECT : _uint {
 	GOBLIN_NORMAL_MAGIC,
 	TROLL_GROUND_STRIKE,
 	GOBLIN_PROTEGO,
+	RANROK_PROP,
 	DUELIST_PROTEGO,
 #pragma endregion
 #pragma region ALLY_HITBOX

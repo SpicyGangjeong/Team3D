@@ -38,6 +38,10 @@ public:
 private:
 	_bool						m_bEditMode = {};
 	_bool						m_isShake = {};
+
+	_uint						m_iInstanceIndex = {};
+	_uint						m_iNumInstanceIndex = {};
+
 	CVIBuffer_Model_Instance*	m_pVIBufferInstanceCom = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
 

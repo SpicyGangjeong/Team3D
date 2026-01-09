@@ -171,6 +171,17 @@ void CRanrok::Update(_float fTimeDelta)
 	m_pRightEye_Trail->Trail_Update(RightEyeMatrix * WorldMat, fTimeDelta);
 
 #pragma endregion
+
+#pragma region CREATE PROP
+	m_vCreatePropTime.x += fTimeDelta;
+
+	if (m_vCreatePropTime.x >= m_vCreatePropTime.y)
+	{
+		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this);
+		m_vCreatePropTime.x = 0.f;
+	}
+
+#pragma endregion
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -844,6 +855,12 @@ void CRanrok::Describe_Entity()
 
 		Ready_Parts();
 	}
+
+	if (GUI::Button("Create Prop"))
+	{
+		m_vCreatePropTime.x = m_vCreatePropTime.y;
+	}
+
 
 	if (GUI::Button("MovePos"))
 	{

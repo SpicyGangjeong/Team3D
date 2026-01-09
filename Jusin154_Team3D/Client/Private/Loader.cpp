@@ -230,6 +230,7 @@
 #include "Ranrok_Swipe.h"
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
+#include "Ranrok_Prop.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -433,9 +434,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef Bin
-	isLoad_Background = true;
-	isLoad_Hogwart = true;
-	isLoad_UI_SEQUANTIAL = true;
+	isLoad_Background = false;
+	isLoad_Hogwart = false;
+	isLoad_UI_SEQUANTIAL = false;
 #endif // Bin
 #endif // _DEBUG
 
@@ -2179,6 +2180,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC RanrokDesc{};
 		{
 			RanrokDesc.eType = ACTOR::BOX;
@@ -2672,6 +2674,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Prop>(g_iStaticLevel, CRanrok_Prop::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(g_iStaticLevel, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -3396,6 +3401,45 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/InstanceProp/SM_ScotsPine_LargeA_Master.bin", strMaterailPath.c_str());
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedCliff_A1_Lod1.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedRock_B.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedRock_D_B.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B"),
 			pModel_Instance)))
 			return E_FAIL;
 

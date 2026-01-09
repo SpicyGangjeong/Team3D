@@ -94,6 +94,7 @@ void CProtego::Late_Update(_float fTimeDelta)
 	if (m_bVisible == false){
 		return;
 	}
+
 	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
 	__super::Late_Update(fTimeDelta);
 
@@ -134,6 +135,7 @@ HRESULT CProtego::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
+
 		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
@@ -176,6 +178,7 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	if (!m_bVisible)
 		return;
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);

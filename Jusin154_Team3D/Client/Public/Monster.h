@@ -68,6 +68,7 @@ protected:
 	void Set_Target(CUnit& pTarget, CTransform& pTransform);
 	virtual HRESULT Render_Disolve();
 	void Set_Easing(_uint iAnimIndex, _float fEasingStartRatio, _float fEasingEndRatio, _float fEasingTime);
+
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	void	Update_Disolve(_float fTimeDelta,_float fRatio);

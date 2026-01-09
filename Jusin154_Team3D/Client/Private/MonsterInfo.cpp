@@ -22,6 +22,7 @@ void CMonsterInfo::Change_Level()
 	for (CMonster* pMonster : m_ActiveMonsters) {
 		SAFE_RELEASE(pMonster);
 	} m_ActiveMonsters.clear();
+
 	for (CUnit* pPlayerAlly : m_PlayerAllies) {
 		SAFE_RELEASE(pPlayerAlly);
 	} m_PlayerAllies.clear();

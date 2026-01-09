@@ -34,10 +34,10 @@ private:
 	class  CInfoInstance* m_pInfoInstance = { nullptr };
 	_wstring						  m_wstrEffectName = {};
 
-	_float4							  m_vJapData[4] = { _float4(105.f , 330.f , 35.f , 20.f)
-													 , _float4(95.f , 100.f , 55.f , 200.f)
-													 , _float4(95.f , 0.f , 0.f , 0.f)
-													 , _float4(105.f , 250.f , 35.f , 60.f) };
+	_float4							  m_vJapData[4] = { _float4(50.f , 330.f , 35.f , 20.f)
+													 , _float4(40.f , 100.f , 55.f , 200.f)
+													 , _float4(40.f , 0.f , 0.f , 0.f)
+													 , _float4(50.f , 250.f , 35.f , 60.f) };
 
 	class CPartObject* m_pProjectile = {};
 	class CPartObject* m_pProjectile_Side = {};
@@ -54,7 +54,7 @@ private:
 	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
 	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
 	_float							  m_fAngularSpeed = {};
-	_float							  m_fLinearSpeed = 35.f;
+	_float							  m_fLinearSpeed = 10.f;
 	_float							  m_fTimeRate = {};
 
 	/*좌우 무빙 관련 변수들*/
