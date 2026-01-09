@@ -537,18 +537,17 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
-
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB_2.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
-	/*Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AZ.bin";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AZ.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 	
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AV.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 
 	/* StratifiedCliff_A1 */

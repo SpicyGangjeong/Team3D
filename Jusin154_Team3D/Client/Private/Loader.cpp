@@ -410,10 +410,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_Background = false;
+	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
+	isLoad_NPC = false;
 	isLoad_DataClassroom = true;
 #endif // gimch
 #ifdef 진우
