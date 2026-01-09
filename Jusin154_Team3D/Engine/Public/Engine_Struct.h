@@ -619,4 +619,8 @@ typedef struct tagPrevVPMatrices {
 	_float4x4 PrevProjMatrix;
 }PREVVPMATRICES;
 
+typedef struct tagBoolean {
+	_bool	b[16] = {};
+}_boolean;
+
 NS_END

@@ -115,15 +115,15 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 
 		m_pInfoInstance->Get_LockOnInfo(m_Info);
 
-		if (nullptr != m_Info.pUnit) {
+		if (nullptr != m_Info.pUnit || nullptr != m_Info.pEffect) {
 
-			XMStoreFloat4(&m_vTargetPos, Get_UnitPos(m_Info));
+			XMStoreFloat4(&m_vTargetPos, Get_LockOnPos(m_Info));
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}
 		else {
 			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
-			XMStoreFloat4(&m_vTargetPos, vWandPos + vDirection * m_fLinearSpeed * 0.5f);
+			XMStoreFloat4(&m_vTargetPos, vWandPos + vDirection * m_fLinearSpeed * 2.f);
 		}
 	}
 

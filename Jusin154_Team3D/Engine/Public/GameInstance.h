@@ -199,6 +199,7 @@ public:
 	HRESULT Release_Camera(_uint iLevel, const _wstring& wstrCameraKey);
 	HRESULT Add_Camera(_uint iLevel, class CCamera* pCamera, const _wstring& strCameraKey);
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
+	class CCamera* Get_Camera(_uint iLevel, const _wstring& strCameraKey);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
 	_vector Get_CameraLook();
 	_float	Get_CameraFov();

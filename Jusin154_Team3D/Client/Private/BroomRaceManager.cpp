@@ -473,7 +473,7 @@ void CBroomRaceManager::RaceReady()
 			CTransform* pTransform =
 				racer.pAI->Get_Component<CTransform>();
 			_float fRand = m_pGameInstance->Real_Random_Float(-10.f, 10.f);
-			spawnPos.m128_f32[0] += fRand;
+			spawnPos.m128_f32[2] += fRand;
 
 			pTransform->Set_State(STATE::POSITION, spawnPos);
 			pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
@@ -482,8 +482,10 @@ void CBroomRaceManager::RaceReady()
 		}
 		else if (racer.pRacer)
 		{
+			/*CTransform* pTransform =
+				racer.pRacer->Get_Component<CTransform>();*/
 			CTransform* pTransform =
-				racer.pRacer->Get_Component<CTransform>();
+				racer.pRacer->Get_Broom()->Get_Component<CTransform>();
 			CCharacter_Controller* pCharacter = racer.pRacer->Get_Component<CCharacter_Controller>();
 			pCharacter->Set_Position(spawnPos);
 			pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));

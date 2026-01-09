@@ -34,7 +34,7 @@ public:
 	virtual void Add_Function(wstring Name, function<void(void*)> Evnet) override;
 	virtual void Function_Callback(wstring Name, void* pArg = nullptr) override;
 
-	virtual _bool Start_Lerp(_float fTimeDelta) override;
+	virtual _bool Start_Lerp_Translation(_float fTimeDelta) override;
 	virtual void Reset_Pos(_float fTimeDelta)override;
 
 protected:

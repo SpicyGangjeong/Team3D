@@ -94,6 +94,15 @@ void CTransform::Set_WorldMatrix(PSX::PxTransform dstMatrix)
 		XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorZero(), XMLoadFloat4((_float4*)&dstMatrix.q), XMLoadFloat3((_float3*)&dstMatrix.p)));
 }
 
+void CTransform::Compress_WorldMatrix(_float3& vTrans, _float4& vRotQ)
+{
+	vTrans.x = m_WorldMatrix.m[3][0];
+	vTrans.y = m_WorldMatrix.m[3][1];
+	vTrans.z = m_WorldMatrix.m[3][2];
+
+	XMStoreFloat4(&vRotQ, Get_QuarternionVector());
+}
+
 HRESULT CTransform::Initialize_Prototype()
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
@@ -418,6 +427,42 @@ void CTransform::Rotation(_fvector vRPY)
 	Set_State(STATE::LOOK, vLook);
 }
 
+void CTransform::RotationQ(_fvector vRotQ)
+{
+	_float3 vScale = Get_Scale();
+	_vector vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+	_matrix RotationMatrix = XMMatrixRotationQuaternion(vRotQ);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+	Set_State(STATE::LOOK, vLook);
+}
+
+void CTransform::RotationQ(PSX::PxQuat vRotQ)
+{
+	_float3 vScale = Get_Scale();
+	_vector vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+	_matrix RotationMatrix = XMMatrixRotationQuaternion(XMVectorSet(vRotQ.x, vRotQ.y, vRotQ.z, vRotQ.w));
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+	Set_State(STATE::LOOK, vLook);
+}
+
 void CTransform::LookAt(_fvector vAt)
 {
 	_float3 vScale = Get_Scale();
@@ -555,6 +600,35 @@ void CTransform::Free()
 
 void CTransform::Describe_Entity()
 {
+#ifdef 기무리
+	if (GUI::TreeNode("NuriDebug")) {
+		{
+			_vector vScale, vRotQ, vTrans;
+			XMMatrixDecompose(&vScale, &vRotQ, &vTrans, XMLoadFloat4x4(&m_WorldMatrix));
+			_float4 scale, rotQ, trans;
+			XMStoreFloat4(&scale, vScale);
+			XMStoreFloat4(&rotQ, vRotQ);
+			XMStoreFloat4(&trans, vTrans);
+			if (GUI::SmallButton("Copy")) {
+				_char buf[512] = {};
+				sprintf_s(
+					buf, sizeof(buf),
+					"<Transform>\n"
+					"\t<RotQ X=\"%.3f\" Y=\"%.3f\" Z=\"%.3f\" W=\"%.3f\"/>\n"
+					"\t<Trans X=\"%.3f\" Y=\"%.3f\" Z=\"%.3f\"/>\n"
+					"</Transform>",
+					rotQ.x, rotQ.y, rotQ.z, rotQ.w,
+					trans.x, trans.y, trans.z
+				);
+				GUI::SetClipboardText(buf);
+			}
+			GUI::Text("vScale	: %.1f\t%.1f\t%.1f", scale.x, scale.y, scale.z);
+			GUI::Text("vRotQ	: %.2f\t%.2f\t%.2f\t%.2f", rotQ.x, rotQ.y, rotQ.z, rotQ.w);
+			GUI::Text("vTrans	: %.1f\t%.1f\t%.1f", trans.x, trans.y, trans.z);
+		}
+		GUI::TreePop();
+	}
+#endif // 기무리
 	if (GUI::TreeNode("Transform")) {
 		GUI::Text("----- Gizmo ----");
 		_float3 vMove = {};

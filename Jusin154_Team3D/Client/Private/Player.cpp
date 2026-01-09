@@ -14,6 +14,7 @@
 #include "Layer.h"
 #include "MapElement_Interactable.h"
 #include "Monster.h"
+#include "TimeSocket.h"
 #include "PlayerRobe.h"
 #include "RaceRing.h"
 #include "Wand.h"
@@ -104,6 +105,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	}
 
 #ifdef _DEBUG
+
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
 	m_BasicEffect->SetVertexColorEnabled(true);
 	m_BasicEffect->SetView(m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW));
@@ -473,6 +475,33 @@ void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
 
+void CPlayer::Trigger(CTimeSocket& Socket)
+{
+	SOCKETCONTENTS* pContents = &Socket.m_Contents;
+	switch (pContents->eTypeFunc)
+	{
+	case TIMESOCKET_FUNC::TRANSLATION:
+	{
+		_vector vNewPos = XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f);
+		m_pTransformCom->Set_State(STATE::POSITION, vNewPos);
+		m_pCharacter_Controller->Set_Position(vNewPos);
+		m_pTransformCom->RotationQ(pContents->pxTransform.q);
+		m_pTransformCom->RewindMomentum();
+	}
+		break;
+	case TIMESOCKET_FUNC::TRANSLATION_LERP:
+	{
+
+	} break;
+	case TIMESOCKET_FUNC::SET_ANIMSTATE:
+	{
+
+	} break;
+	default:
+		break;
+	}
+}
+
 void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 {
 	m_vCameraShakeTimer.x = 0.f;
@@ -793,6 +822,11 @@ void CPlayer::ReLockOnTarget()
 	if (nullptr != m_LockOnInfo.pInteractive) {
 		if (true == m_LockOnInfo.pInteractive->isDead()) {
 			m_LockOnInfo.pInteractive = nullptr;
+		}
+	}
+	if (nullptr != m_LockOnInfo.pEffect) {
+		if (false == m_LockOnInfo.pEffect->Get_Visible()) {
+			m_LockOnInfo.pEffect = nullptr;
 		}
 	}
 

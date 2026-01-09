@@ -58,6 +58,12 @@ HRESULT CCamera_Manager::Bind_Camera(_uint iLevel, const _wstring& wstrCameraKey
     return S_OK;
 }
 
+CCamera* CCamera_Manager::Get_Camera(_uint iLevel, const _wstring& strCameraKey)
+{
+    CCamera* pOut = Find_Camera(iLevel, strCameraKey); 
+    return pOut;
+}
+
 HRESULT CCamera_Manager::IsBinded_Camera(const _wstring& wstrCameraKey)
 {
     if (m_wstrCurrentCameraKey == wstrCameraKey) {
