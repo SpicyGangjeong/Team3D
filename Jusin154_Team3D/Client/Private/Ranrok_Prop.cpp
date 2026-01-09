@@ -289,6 +289,11 @@ void CRanrok_Prop::Free()
 
 	SAFE_RELEASE(m_pSphere);
 	SAFE_RELEASE(m_pSphereLay);
+
+	if (nullptr != m_pInfoInstance) {
+		CInfoInstance* pInfo = m_pInfoInstance;
+		pInfo->Deregist_ActiveEffect(this);
+	}
 	SAFE_RELEASE(m_pRing);
 	SAFE_RELEASE(m_pSphereHitLay);
 	SAFE_RELEASE(m_pInfoInstance);
