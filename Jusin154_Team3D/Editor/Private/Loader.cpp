@@ -197,6 +197,7 @@
 #include "Bombard.h"
 #include "Decendo.h"
 #include "Protego.h"
+#include "Protego_Hit.h"
 #include "EffectPool.h"
 #include "Revelio.h"
 #include "Levioso.h"
@@ -1920,6 +1921,10 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(ENUM_CLASS(LEVEL::EFFECT), CProtego::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CProtego_Hit>(ENUM_CLASS(LEVEL::EFFECT), CProtego_Hit::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	
 	if (FAILED(m_pGameInstance->Add_Prototype<CRevelio>(ENUM_CLASS(LEVEL::EFFECT), CRevelio::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 

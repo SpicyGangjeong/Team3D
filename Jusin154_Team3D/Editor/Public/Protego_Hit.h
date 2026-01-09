@@ -1,19 +1,19 @@
 ﻿#pragma once
 
-#include "Client_Define.h"
+#include "Editor_Define.h"
 #include "Effect_Container.h"
 
 NS_BEGIN(Engine)
 NS_END
 
-NS_BEGIN(Client)
+NS_BEGIN(Editor)
 
-class CGoblin_Protego final : public CEffect_Container
+class CProtego_Hit final : public CEffect_Container
 {
 private:
-	CGoblin_Protego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CGoblin_Protego(const CGoblin_Protego& rhs);
-	virtual ~CGoblin_Protego() = default;
+	CProtego_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CProtego_Hit(const CProtego_Hit& rhs);
+	virtual ~CProtego_Hit() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -33,15 +33,10 @@ private:
 private:
 	_wstring	 m_wstrEffectName = {};
 
-	class CEffectParts* m_pSphere = { nullptr };
-	class CEffectParts* m_pSphereLay = { nullptr };
-	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
-	_float		 m_fSizeAccTime = {};
-	_float       m_fAmountSize = {};
-	_float       m_fSpeed = {};
-
+	class CEditEffect* m_pHit_SphereLay = { nullptr };
+	class CEditEffect* m_pHit_Light = { nullptr };
 public:
-	static CGoblin_Protego* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CProtego_Hit* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 #ifdef _DEBUG

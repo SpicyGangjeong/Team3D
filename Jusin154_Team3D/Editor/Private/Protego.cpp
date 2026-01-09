@@ -45,7 +45,7 @@ HRESULT CProtego::Initialize(void* pArg)
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
-	m_fDuration = 3.f;
+	m_fDuration = 6.f;
 
 	return S_OK;
 }
