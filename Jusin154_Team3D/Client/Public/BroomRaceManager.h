@@ -61,6 +61,9 @@ private:
 	_float								m_fRedayTime{};
 	_bool								m_bRaceStart = { false };
 	_bool								m_bRaceReady = { false };
+	_float4								m_OriginPos = {};
+	_float								m_fDelay = {};
+	_bool								m_bRaceEnd = {};
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
