@@ -167,7 +167,7 @@ void CSpellLearn_ChaserPointer::Line(_float fTime)
 {
 	m_vLerp_Position = m_MoveLine[m_iCurrentLine];
 
-	if (Start_Lerp(fTime) == true)
+	if (Start_Lerp_Translation(fTime) == true)
 	{
 		if (m_iCurrentLine < m_iLineIndex - 1)
 		{

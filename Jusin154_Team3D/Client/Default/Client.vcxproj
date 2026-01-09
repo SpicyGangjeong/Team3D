@@ -175,6 +175,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
+    <ClInclude Include="..\Public\Camera_Cinematic.h" />
     <ClInclude Include="..\Public\Camera_Model.h" />
     <ClInclude Include="..\Public\CutSceneInfo.h" />
     <ClInclude Include="..\Public\Duelist_Levioso.h" />
@@ -463,6 +464,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
+    <ClCompile Include="..\Private\Camera_Cinematic.cpp" />
     <ClCompile Include="..\Private\Camera_Model.cpp" />
     <ClCompile Include="..\Private\CutSceneInfo.cpp" />
     <ClCompile Include="..\Private\Duelist_Levioso.cpp" />

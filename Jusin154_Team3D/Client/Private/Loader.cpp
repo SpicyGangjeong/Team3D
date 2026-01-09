@@ -10,6 +10,7 @@
 
 #include "Broom.h"
 #include "Camera_Gaze.h"
+#include "Camera_Cinematic.h"
 #include "CamPosition_Arm.h"
 #include "CamPosition_Shoulder.h"
 #include "CamPosition_Socket.h"
@@ -417,10 +418,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
+	isLoad_Background = false;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
+	isLoad_NPC = false;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -3587,6 +3588,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Camera_Gaze */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Gaze>(g_iStaticLevel, CCamera_Gaze::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Camera_Cinematic */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Cinematic>(g_iStaticLevel, CCamera_Cinematic::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_CamPosition_Player */

@@ -884,6 +884,9 @@
     <ClInclude Include="..\Public\CutSceneInfo.h">
       <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Camera_Cinematic.h">
+      <Filter>02.GameObjects\Cameras\Camera_Cinematic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1833,6 +1836,9 @@
     <Filter Include="02.GameObjects\Item\ThestralCarriage">
       <UniqueIdentifier>{d07bd195-0cdf-4a47-8c50-e3a88361352f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Cameras\Camera_Cinematic">
+      <UniqueIdentifier>{581e7b08-09ae-4e52-8e84-d6ac8cc94dc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2669,6 +2675,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CutSceneInfo.cpp">
       <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Cinematic.cpp">
+      <Filter>02.GameObjects\Cameras\Camera_Cinematic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

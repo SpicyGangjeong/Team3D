@@ -28,9 +28,6 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 	_float3 vCamPos = {};
 	_float3 vSetPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
-#ifdef _DEBUG
-	GUI::Text("Cam Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
-#endif // _DEBUG
 
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
@@ -198,7 +195,11 @@ void CCamera_Debug::Describe_Entity()
 			GUI::InputFloat3("Pos", (float*)&vPosition);
 		}
 	}
-
+	GUI::End();
+	GUI::Begin("CAMERA");
+	if (GUI::CollapsingHeader("DebugCamera")){
+		m_pTransformCom->Describe_Entity();
+	}
 	GUI::End();
 }
 

@@ -302,8 +302,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
@@ -811,8 +811,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -859,12 +859,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 				}
 			}
 		}
-	}
-	CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-	DuelistDesc.vPos = _float4(-21.f, 0.f, -16.f, 1.f);
-	DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &DuelistDesc))) {
-		return E_FAIL;
+		CHuman_Duelist::DUELISTDESC DuelistDesc = {};
+		DuelistDesc.vPos = _float4(-21.f, 0.f, -16.f, 1.f);
+		DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &DuelistDesc))) {
+			return E_FAIL;
+		}
 	}
 
 
@@ -911,7 +911,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = true;
+	isLoad_Monster = false;
 #endif // 
 #ifdef 나
 

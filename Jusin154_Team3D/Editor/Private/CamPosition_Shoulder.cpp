@@ -111,8 +111,8 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Up(DIK_P)) {
 		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio;
 		m_vShoulderStartRatio.x *= -1.f;
-		m_bLerp = true;
-		m_vLerpTimer.x = 0.f;
+		m_bLerpTranslation = true;
+		m_vLerpTranslationTimer.x = 0.f;
 	}
 }
 
@@ -121,12 +121,12 @@ void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
-	if (true == m_bLerp) {
-		m_vLerpTimer.x += fTimeDelta;
-		XMStoreFloat3(&m_vShoulderPosRatio, XMVectorLerp(XMLoadFloat3(&m_vShoulderStartRatio), XMLoadFloat3(&m_vShoulderOtherRatio), m_vLerpTimer.x / m_vLerpTimer.y));
-		if (m_vLerpTimer.x > m_vLerpTimer.y) {
-			m_bLerp = false;
-			m_vLerpTimer.x = 0.f;
+	if (true == m_bLerpTranslation) {
+		m_vLerpTranslationTimer.x += fTimeDelta;
+		XMStoreFloat3(&m_vShoulderPosRatio, XMVectorLerp(XMLoadFloat3(&m_vShoulderStartRatio), XMLoadFloat3(&m_vShoulderOtherRatio), m_vLerpTranslationTimer.x / m_vLerpTranslationTimer.y));
+		if (m_vLerpTranslationTimer.x > m_vLerpTranslationTimer.y) {
+			m_bLerpTranslation = false;
+			m_vLerpTranslationTimer.x = 0.f;
 
 			m_vShoulderPosRatio = m_vShoulderOtherRatio;
 		}

@@ -27,6 +27,7 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void	OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	virtual void	Trigger(class CTimeSocket& Socket)override;
 	_bool			Get_Aim() { return m_bAim; }
 	void			Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
 	void			Set_Shield(_bool bShield) { m_bShield = bShield; }

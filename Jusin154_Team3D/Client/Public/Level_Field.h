@@ -3,6 +3,10 @@
 #include "Client_Define.h"
 #include "Level.h"
 
+NS_BEGIN(Engine)
+class CCamera;
+NS_END
+
 NS_BEGIN(Client)
 
 class CLevel_Field final : public CLevel
@@ -35,10 +39,17 @@ private:
 	HRESULT Ready_Layer_Effect(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster();
 	HRESULT Reday_Layer_EffectPool();
+	HRESULT Ready_Layer_CutScene();
 
 public:
 	static pair<CLevel*, function<void()>> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg);
 	virtual void Free() override;
+
+	void Load_CutSceneXML(const string& path, CCamera* pCamera, class CMonster* pMonster);
+
+#ifdef _DEBUG
+	virtual void Describe_Entity();
+#endif // _DEBUG
 };
 
 NS_END

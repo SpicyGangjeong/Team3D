@@ -28,6 +28,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pMapInfo->Update(fTimeDelta);
 	m_pSkillInfo->Update(fTimeDelta);
 	m_pInteractiveInfo->Update(fTimeDelta);
+	m_pCutSceneInfo->Update(fTimeDelta);
 }	
 
 void CInfoInstance::Change_Level()
@@ -38,6 +39,7 @@ void CInfoInstance::Change_Level()
 	m_pSkillInfo->Change_Level();
 	m_pInteractiveInfo->Change_Level();
 	UI_Event.clear();
+	m_pCutSceneInfo->Change_Level();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()
@@ -405,7 +407,7 @@ HRESULT CInfoInstance::DeActive_ActiveEvent(_string& strKey)
 	return m_pCutSceneInfo->DeActive_ActiveEvent(strKey);
 }
 
-void CInfoInstance::Load_Events(pair<_string, TimeLine>& pairTimeLine)
+void CInfoInstance::Load_Events(pair<_string, TimeLine*>& pairTimeLine)
 {
 	m_pCutSceneInfo->Load_Events(pairTimeLine);
 }

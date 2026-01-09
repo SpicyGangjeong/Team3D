@@ -105,7 +105,7 @@ public:
 #pragma region CutScene
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
-	void		Load_Events(pair< _string, struct TimeLine>& pairTimeLine);
+	void		Load_Events(pair< _string, struct TimeLine*>& pairTimeLine);
 #pragma endregion
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };

@@ -97,7 +97,7 @@ void CSpellLearn_Slot::Update(_float fTimeDelta)
 
 	if (m_fSizeUp == true)
 	{
-		if (Start_Lerp(fTimeDelta * m_fTimeMult * m_fMoveSpeed) == true)
+		if (Start_Lerp_Translation(fTimeDelta * m_fTimeMult * m_fMoveSpeed) == true)
 		{
 			m_fSizeUp = false;
 		}
