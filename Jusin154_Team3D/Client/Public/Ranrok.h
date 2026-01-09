@@ -93,6 +93,8 @@ public:
 #ifdef _DEBUG
 	virtual void Describe_Entity() override;
 
+	_float4 m_vInitialRotQ = {};
+	_float3 m_vInitialTrans = {};
 #endif // _DEBUG
 
 private:

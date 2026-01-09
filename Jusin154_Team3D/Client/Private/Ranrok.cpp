@@ -79,6 +79,9 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 
 	m_pModelCom->Set_DisableRootMotionScale(true);
+#ifdef _DEBUG
+	m_pTransformCom->Compress_WorldMatrix(m_vInitialTrans, m_vInitialRotQ);
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -336,7 +339,9 @@ void CRanrok::Trigger(CTimeSocket& Socket)
 	}break;
 	case TIMESOCKET_FUNC::SET_FSMSTATE:
 	{
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		if (Socket.m_Contents.vFlags.b[0]) {
+			m_pFSM->Change_State(FSMSTATE::TUCKED);
+		}
 	}break;
 	default:
 		break;
@@ -990,7 +995,13 @@ void CRanrok::Describe_Entity()
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Ranrak")) {
 		__super::Describe_Entity();
-
+		if (GUI::SmallButton("ResetPos")) {
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vInitialTrans), 1.f));
+			m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
+			m_pTransformCom->RotationQ(XMLoadFloat4(&m_vInitialRotQ));
+			m_iCurrentFlow = 0;
+			m_iCurrentPoint = 0;
+		}
 		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 		GUI::Text(AnimList.c_str());
 

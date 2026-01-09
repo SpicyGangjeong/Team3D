@@ -41,8 +41,12 @@ private:
 
 	void Lerp_Translation(_float fTimeDelta);
 	void Start_Lerp_Translation(_float fTimeMaximum, PSX::PxTransform pxTransform);
-	void Start_Lerp_Translation(_float fTimeMaximum, _float3& vTrans, _float4& vRotQ);
+	void Start_Lerp_Translation(_float fTimeMaximum, _float3& vTrans);
 	void Clear_Lerp_Translation();
+	void Lerp_Rotation(_float fTimeDelta);
+	void Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform);
+	void Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ);
+	void Clear_Lerp_Rotation();
 
 
 	void Lerp_FovY(_float fTimeDelta);
@@ -56,6 +60,9 @@ private:
 
 	_bool	m_bLerpTranslation = { false };
 	_float2 m_vLerpTranslationTimer = {};
+
+	_bool	m_bLerpRotiation = { false };
+	_float2 m_vLerpRotiationTimer = {};
 
 	_float3 m_vLerpTranslationStart = {};
 	_float3 m_vLerpTranslationEnd = {};
