@@ -377,6 +377,9 @@ HRESULT CLoader::Loading_For_Logo()
 		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
 			FX_MESH,
 			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_VTXPOS,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
 	}
 
 	m_strMessage = TEXT("Texture Loading..");
