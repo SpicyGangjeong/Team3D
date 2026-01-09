@@ -10,11 +10,13 @@
 #include "Protego.h"
 #include "Revelio.h"
 #include "Levioso.h"
+#include "Protego_Hit.h"
 
 #include "BombardSide.h"
 #include "LeviosoSide.h"
 #include "DecendoSide.h"
 #include "NomalJapSide.h"
+
 
 #include "Troll_Rush_Hit.h"
 #include "Troll_Nomal_Smoke.h"
@@ -225,6 +227,16 @@ HRESULT CEffectPool::Ready_Effect()
 		CProtego* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CProtego>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO_HIT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CProtego_Hit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CProtego_Hit>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

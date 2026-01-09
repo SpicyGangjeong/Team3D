@@ -905,6 +905,15 @@
     <ClInclude Include="..\Public\Duelist_JapSide.h">
       <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Protego_Hit.h">
+      <Filter>02.GameObjects\Effect\Effects\Protego\ProtegoHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_ProtegoHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego\Goblin_ProtegoHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_ProtegoHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1878,6 +1887,15 @@
     <Filter Include="02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide">
       <UniqueIdentifier>{f2ddb6fa-89b6-4322-912e-61e0ce79278c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Protego\ProtegoHit">
+      <UniqueIdentifier>{c63abdad-13ae-43af-812a-25bcd5f7064b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Protego\Goblin_ProtegoHit">
+      <UniqueIdentifier>{696df72a-c0ad-483d-9fb3-b5e053696457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit">
+      <UniqueIdentifier>{75632dfe-2808-4ce3-abc1-8020563d3a6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2735,6 +2753,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Duelist_JapSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Protego_Hit.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Protego\ProtegoHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego\Goblin_ProtegoHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

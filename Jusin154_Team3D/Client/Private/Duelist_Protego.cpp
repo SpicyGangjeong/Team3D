@@ -4,7 +4,8 @@
 #include "GameInstance.h"
 #include "EffectParts.h"
 #include "Player.h"
-
+#include "EffectPool.h"
+#include "Layer.h"
 
 CDuelist_Protego::CDuelist_Protego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -18,6 +19,8 @@ CDuelist_Protego::CDuelist_Protego(const CDuelist_Protego& rhs)
 
 HRESULT CDuelist_Protego::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/NPCProtego")))
+		return E_FAIL;
 
 	return S_OK;
 
@@ -31,8 +34,6 @@ HRESULT CDuelist_Protego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
-		return E_FAIL;
 
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
@@ -49,7 +50,7 @@ HRESULT CDuelist_Protego::Initialize(void* pArg)
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
-	m_fDuration = 3.f;
+	m_fDuration = 6.f;
 
 	return S_OK;
 }
@@ -94,6 +95,7 @@ void CDuelist_Protego::Late_Update(_float fTimeDelta)
 	if (m_bVisible == false) {
 		return;
 	}
+
 	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
 	__super::Late_Update(fTimeDelta);
 
@@ -116,6 +118,8 @@ HRESULT CDuelist_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
 	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
 
+
+
 	m_fSizeAccTime = 0.f;
 
 	return S_OK;
@@ -134,6 +138,7 @@ HRESULT CDuelist_Protego::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
+
 		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
@@ -197,6 +202,9 @@ void CDuelist_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		}
 	}
+	
+	m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>()
+		->Use_Skill(SKILL_TYPE::DUELIST_PROTEGO_HIT, m_pOwner, &CollisionDesc->vWorldPos);
 
 }
 

@@ -191,6 +191,9 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Human_Duelist.h" />
     <ClInclude Include="..\public\InstancedProp_Light.h" />
     <ClInclude Include="..\Public\Duelist_JapSide.h" />
+    <ClInclude Include="..\Public\Duelist_ProtegoHit.h" />
+    <ClInclude Include="..\Public\Goblin_ProtegoHit.h" />
+    <ClInclude Include="..\Public\Protego_Hit.h" />
     <ClInclude Include="..\Public\RandomNpc.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_Charge.h" />
@@ -489,6 +492,9 @@ call Update_Resources.bat
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Duelist_JapSide.cpp" />
     <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
+    <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp" />
+    <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp" />
+    <ClCompile Include="..\Private\Protego_Hit.cpp" />
     <ClCompile Include="..\Private\RandomNpc.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
     <ClCompile Include="..\Private\Ranrok_Charge.cpp" />

@@ -193,6 +193,10 @@
 #include "TransformationSide.h"
 #include "AvadakedavraSide.h"
 
+#include "Protego_Hit.h"
+#include "Goblin_ProtegoHit.h"
+#include "Duelist_ProtegoHit.h"
+
 #include "TrailObject.h"
 #include "Instance_Model.h"
 #include "Trail.h"
@@ -2570,6 +2574,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_ProtegoHit>(g_iStaticLevel, CGoblin_ProtegoHit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_ProtegoHit>(g_iStaticLevel, CDuelist_ProtegoHit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+		
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Attack>(g_iStaticLevel, CGoblin_Attack::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2611,6 +2625,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLightning>(g_iStaticLevel, CLightning::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CProtego_Hit>(g_iStaticLevel, CProtego_Hit::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

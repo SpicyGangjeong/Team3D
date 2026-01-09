@@ -4,7 +4,8 @@
 #include "GameInstance.h"
 #include "EffectParts.h"
 #include "Player.h"
-
+#include "EffectPool.h"
+#include "Layer.h"
 
 CProtego::CProtego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -18,6 +19,8 @@ CProtego::CProtego(const CProtego& rhs)
 
 HRESULT CProtego::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
+		return E_FAIL;
 
 	return S_OK;
 
@@ -31,8 +34,6 @@ HRESULT CProtego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
-		return E_FAIL;
 
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
@@ -49,7 +50,7 @@ HRESULT CProtego::Initialize(void* pArg)
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
-	m_fDuration = 3.f;
+	m_fDuration = 6.f;
 
 	return S_OK;
 }
@@ -117,6 +118,8 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
 	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
 
+
+
 	m_fSizeAccTime = 0.f;
 
 	return S_OK;
@@ -183,22 +186,12 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);
 
-	CEffectParts* pProtego_HitPT = Get_PartObject<CEffectParts>("Protego_HitPT");
-	CEffectParts* pProtego_HitPT_Line = Get_PartObject<CEffectParts>("Protego_HitPT_Line");
-	CEffectParts* pProtegoHit = Get_PartObject<CEffectParts>("ProtegoHit");
-	CEffectParts* pProtegoHit_Lay = Get_PartObject<CEffectParts>("ProtegoHit_Lay");
-	
 
-	pProtego_HitPT->Set_Visible(true);
-	pProtego_HitPT_Line->Set_Visible(true);
-	pProtegoHit->Set_Visible(true);
-	pProtegoHit_Lay->Set_Visible(true);
+	m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>()
+		->Use_Skill(SKILL_TYPE::PROTEGO_HIT, m_pOwner, &CollisionDesc->vWorldPos);
 
-	pProtegoHit_Lay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	pProtego_HitPT_Line->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	pProtegoHit->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	pProtegoHit_Lay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
+	static_cast<CPlayer*>(m_pOwner)->Start_CameraShake(0.3f, 2.f);
 }
 
 void CProtego::Free()

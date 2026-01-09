@@ -1768,7 +1768,7 @@ HRESULT CPlayer::Behavior_ShieldExitCheck()
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
 					fEventRatio);
 
-				Start_CameraShake(0.3f, 2.f);
+
 				//m_pGameInstance->SlowMotion(0.8f, 0.3f);
 				m_bShield = false;
 				return S_OK;
