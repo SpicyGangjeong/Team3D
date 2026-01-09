@@ -902,6 +902,9 @@
     <ClInclude Include="..\Public\EffectInfo.h">
       <Filter>03.InfoInstance\05.EffectInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Duelist_JapSide.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2729,6 +2732,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectInfo.cpp">
       <Filter>03.InfoInstance\05.EffectInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_JapSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

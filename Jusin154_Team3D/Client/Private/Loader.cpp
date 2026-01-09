@@ -198,6 +198,7 @@
 #include "EffectPool.h"
 #include "Levioso.h"
 #include "Duelist_Levioso.h"
+#include "Duelist_JapSide.h"
 #include "Lumos.h"
 #include "Accio.h"
 #include "Blink.h"
@@ -2523,6 +2524,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_Levioso>(g_iStaticLevel, CDuelist_Levioso::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_JapSide>(g_iStaticLevel, CDuelist_JapSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
