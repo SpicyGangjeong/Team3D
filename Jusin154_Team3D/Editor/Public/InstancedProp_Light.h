@@ -59,6 +59,8 @@ private:
 	CTexture*					m_pMaskTextureCom = { nullptr };
 	CTexture*					m_pEmissiveTextureCom = { nullptr };
 #ifdef _DEBUG
+	_uint						m_iInstanceIndex = {};
+	_uint						m_iNumInstanceIndex = {};
 	_char						m_szFileName[MAX_PATH] = {};
 #endif // _DEBUG
 

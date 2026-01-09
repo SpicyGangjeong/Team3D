@@ -250,7 +250,7 @@ HRESULT CVIBuffer_Model_Instance::Load_InstanceData(ifstream& in)
 
 	VTX_INSTANCE_MODEL* pData = static_cast<VTX_INSTANCE_MODEL*>(SubResource.pData);
 
-	for (_uint i = 0; i < m_iNumInstance; ++i)
+	for (_uint i = 0; i < m_iNumInstance - 1; ++i)
 	{
 		in.read(reinterpret_cast<_char*>(&pData[i]), sizeof(VTX_INSTANCE_MODEL));
 	}

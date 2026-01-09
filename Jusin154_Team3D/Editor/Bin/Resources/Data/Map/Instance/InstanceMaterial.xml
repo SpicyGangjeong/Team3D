@@ -252,4 +252,34 @@
             <Surface>MRO</Surface>
         </Mesh>
    </SM_HW_LightFixture_Base_D>
+   <SM_OL_StratifiedCliff_A1_Lod1 mesh="2">
+        <Mesh>
+            <Material>T_OL_StratifiedCliff_A1_01_D</Material>
+            <Material>T_OL_StratifiedCliff_A1_01_N</Material>
+            <Material>T_OL_StratifiedCliff_A1_01_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_OL_StratifiedCliff_A1_02_D</Material>
+            <Material>T_OL_StratifiedCliff_A1_02_N</Material>
+            <Material>T_OL_StratifiedCliff_A1_02_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+   </SM_OL_StratifiedCliff_A1_Lod1>
+   <SM_OL_StratifiedRock_B mesh="1">
+        <Mesh>
+            <Material>T_OL_StratifiedRock_B1_D</Material>
+            <Material>T_OL_StratifiedRock_B1_N</Material>
+            <Material>T_OL_StratifiedRock_B1_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+   </SM_OL_StratifiedRock_B>
+   <SM_OL_StratifiedRock_D_B mesh="1">
+        <Mesh>
+            <Material>T_OL_StratifiedRock_D1_D</Material>
+            <Material>T_OL_StratifiedRock_D1_N</Material>
+            <Material>T_OL_StratifiedRock_D1_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+   </SM_OL_StratifiedRock_D_B>
 </Instance>
