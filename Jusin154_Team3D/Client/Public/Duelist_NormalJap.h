@@ -41,6 +41,7 @@ private:
 
 	class CPartObject* m_pProjectile = {};
 	class CPartObject* m_pProjectile_Side = {};
+	class CPartObject* m_pJapFire = { nullptr };
 
 	_float3 						  m_vRotateUp = {};
 	_float							  m_fAccMoveTime = {};

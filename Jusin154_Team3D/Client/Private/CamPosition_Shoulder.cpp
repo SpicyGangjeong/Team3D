@@ -165,7 +165,7 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	}
 	else if(m_bZoomIn)
 	{
-		m_pBinded_Camera->Set_Fov(XMConvertToRadians(60.f),fTimeDelta, m_bZoomIn);
+		m_pBinded_Camera->Set_FovSlope(XMConvertToRadians(60.f),fTimeDelta, m_bZoomIn);
 	}
 }
 
@@ -292,8 +292,20 @@ _vector CCamPosition_Shoulder::Calc_BestPosition(_fvector vCastingPosition, _gve
 	CMyTools::SortHitsByDistance(sweepHits);
 
 	// 벽면에서 팔로우 타겟을 살짝 띄우는 오프셋
-	_float fCameraSurfaceOffset = 0.05f;
-	_float fCameraMinDistance = 0.20f;
+	
+	static _float fCameraSurfaceOffset = 0.20f; // 높이면 카메라가 벽으로부터 좀 더 안정적으로 띄워지지만 벽에 바짝 붙은 플레이어를 감당불가
+	static _float fCameraMinDistance = 0.71f;  // 높이면 
+
+#ifdef _DEBUG
+	GUI::Begin("CAMERA");
+	if (GUI::TreeNode("MinSurfaceOffset")) {
+		GUI::DragFloat("fCameraMinDistance", &fCameraMinDistance, 0.01f, 0.01f, 1.f);
+		GUI::DragFloat("fCameraSurfaceOffset", &fCameraSurfaceOffset, 0.01f, 0.01f, 1.f);
+		GUI::TreePop();
+	}
+	GUI::End();
+#endif // _DEBUG
+
 	_float fDistance = { };
 	_float fFinalTargetDistance = fZeroSafeDistance;
 	for (auto& hit : sweepHits)

@@ -122,9 +122,9 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 	{ /* 대상 위치 지정 */
 
 		m_pInfoInstance->Get_LockOnInfo(m_Info);
-		if (nullptr != m_Info.pUnit) {
+		if (nullptr != m_Info.pUnit || nullptr != m_Info.pEffect) {
 
-			XMStoreFloat4(&m_vTargetPos, Get_UnitPos(m_Info));
+			XMStoreFloat4(&m_vTargetPos, Get_LockOnPos(m_Info));
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}

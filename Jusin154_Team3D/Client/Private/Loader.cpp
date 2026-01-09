@@ -10,6 +10,7 @@
 
 #include "Broom.h"
 #include "Camera_Gaze.h"
+#include "Camera_Cinematic.h"
 #include "CamPosition_Arm.h"
 #include "CamPosition_Shoulder.h"
 #include "CamPosition_Socket.h"
@@ -198,6 +199,7 @@
 #include "EffectPool.h"
 #include "Levioso.h"
 #include "Duelist_Levioso.h"
+#include "Duelist_JapSide.h"
 #include "Lumos.h"
 #include "Accio.h"
 #include "Blink.h"
@@ -410,10 +412,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_Background = false;
+	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
+	isLoad_NPC = false;
 	isLoad_DataClassroom = true;
 #endif // gimch
 #ifdef 진우
@@ -423,8 +425,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
-	isLoad_UI_SEQUANTIAL = false;
+	isLoad_Hogwart = true;
+	isLoad_UI_SEQUANTIAL = true;
 	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
@@ -2526,6 +2528,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_JapSide>(g_iStaticLevel, CDuelist_JapSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CLumos>(g_iStaticLevel, CLumos::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -3651,6 +3657,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Camera_Gaze */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Gaze>(g_iStaticLevel, CCamera_Gaze::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Camera_Cinematic */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Cinematic>(g_iStaticLevel, CCamera_Cinematic::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_CamPosition_Player */

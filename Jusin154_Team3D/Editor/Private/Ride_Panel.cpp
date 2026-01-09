@@ -111,7 +111,7 @@ void CRide_Panel::Update(_float fTimeDelta)
 
 	if (m_bHover == true)
 	{
-		Start_Lerp(fTimeDelta);
+		Start_Lerp_Translation(fTimeDelta);
 	}
 	else
 	{

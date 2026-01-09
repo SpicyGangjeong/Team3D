@@ -984,6 +984,10 @@ HRESULT CGameInstance::Add_Camera(_uint iLevel, CCamera* pCamera, const _wstring
 {
 	return m_pCamera_Manager->Add_Camera(iLevel, pCamera, strCameraKey);
 }
+CCamera* CGameInstance::Get_Camera(_uint iLevel, const _wstring& strCameraKey)
+{
+	return m_pCamera_Manager->Get_Camera(iLevel, strCameraKey);
+}
 HRESULT CGameInstance::Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority)
 {
 	return m_pCamera_Manager->Bind_Camera(iLevel, strCameraKey, bIgnorePriority);

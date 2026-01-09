@@ -175,6 +175,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
+    <ClInclude Include="..\Public\Camera_Cinematic.h" />
     <ClInclude Include="..\Public\Camera_Model.h" />
     <ClInclude Include="..\Public\CutSceneInfo.h" />
     <ClInclude Include="..\Public\Dialogue_Canvas.h" />
@@ -183,11 +184,13 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Duelist_Levioso.h" />
     <ClInclude Include="..\Public\Duelist_NormalJap.h" />
     <ClInclude Include="..\Public\Duelist_Protego.h" />
+    <ClInclude Include="..\Public\EffectInfo.h" />
     <ClInclude Include="..\Public\Goblin_Assassin.h" />
     <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
     <ClInclude Include="..\Public\Goblin_Sword.h" />
     <ClInclude Include="..\Public\Human_Duelist.h" />
     <ClInclude Include="..\public\InstancedProp_Light.h" />
+    <ClInclude Include="..\Public\Duelist_JapSide.h" />
     <ClInclude Include="..\Public\RandomNpc.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_Charge.h" />
@@ -226,7 +229,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Fear.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
     <ClInclude Include="..\Public\State_Slash.h" />
-    <ClInclude Include="..\Public\TimeSocket.h" />
     <ClInclude Include="..\Public\ThestralCarriage.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
     <ClInclude Include="..\Public\Transformation.h" />
@@ -468,6 +470,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
+    <ClCompile Include="..\Private\Camera_Cinematic.cpp" />
     <ClCompile Include="..\Private\Camera_Model.cpp" />
     <ClCompile Include="..\Private\CutSceneInfo.cpp" />
     <ClCompile Include="..\Private\Dialogue_Canvas.cpp" />
@@ -476,6 +479,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Duelist_Levioso.cpp" />
     <ClCompile Include="..\Private\Duelist_NormalJap.cpp" />
     <ClCompile Include="..\Private\Duelist_Protego.cpp" />
+    <ClCompile Include="..\Private\EffectInfo.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />
@@ -483,6 +487,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Human_Duelist.cpp" />
     <ClCompile Include="..\Private\Human_Duelist_States.cpp" />
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
+    <ClCompile Include="..\Private\Duelist_JapSide.cpp" />
     <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
     <ClCompile Include="..\Private\RandomNpc.cpp" />
     <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
@@ -521,7 +526,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Fear.cpp" />
     <ClCompile Include="..\Private\State_Slash.cpp" />
     <ClCompile Include="..\Private\ThestralCarriage.cpp" />
-    <ClCompile Include="..\Private\TimeSocket.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
     <ClCompile Include="..\Private\LightningSide.cpp" />

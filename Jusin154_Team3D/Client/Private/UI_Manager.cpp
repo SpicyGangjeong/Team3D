@@ -14,6 +14,8 @@
 #include "Interaction_Key.h"
 #include "NPCInteraction.h"
 #include "Broom_TargetGate.h"
+#include "Player.h"
+#include "Layer.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -302,6 +304,11 @@ void CUI_Manager::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_pGameInstance->Key_Down(DIK_J))
+	{
+		Change_Map();
+	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -485,6 +492,23 @@ void CUI_Manager::Set_Fade()
 	m_bCgangede = true;
 }
 
+void CUI_Manager::Change_Map()
+{
+	m_pInfoInstance->Load_DADA_INT();
+	m_pGameInstance->Setting_Volumetirc(
+		3.f,
+		0.01f,
+		0.11f,
+		1.0f,
+		0.f
+	);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
+	if (nullptr != pLayer) {
+		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
+		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
+	}
+}
+
 CUI_Manager* CUI_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CUI_Manager* pInstance = new CUI_Manager(pDevice, pContext);
@@ -527,7 +551,9 @@ void CUI_Manager::Describe_Entity()
 	GUI::Begin("실내맵 전환");
 
 	if (GUI::Button("Load_DADA_INT"))
-		m_pInfoInstance->Load_DADA_INT();
+	{
+		Change_Map();
+	}
 
 	GUI::End();
 }

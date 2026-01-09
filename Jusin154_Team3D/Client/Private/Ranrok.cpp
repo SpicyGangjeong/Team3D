@@ -10,6 +10,8 @@
 #include "Layer.h"
 #include "TrailObject.h"
 #include "MapElement_Interactable.h"
+#include "TimeSocket.h"
+#include "Layer.h"
 
 
 #pragma region STATE
@@ -68,25 +70,27 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	if (NEXT_LEVEL == ENUM_CLASS(LEVEL::FIELD))
-	{
-		m_pCharacter_Controller->Set_Position(XMVectorSet(75.550f, 33.734f, 164.013f, 1.f));
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(75.550f, 33.734f, 164.013f, 1.f));
-	}
-	else {
+	RANROKDESC* pDesc = static_cast<RANROKDESC*>(pArg);
 
-		m_pCharacter_Controller->Set_Position(XMVectorSet(-44.704f, 6.860f, 16.071f, 1.f));
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-44.704f, 6.860f, 16.071f, 1.f));
-	}
+	_vector vPos = XMLoadFloat4(&pDesc->vPos);
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	m_pCharacter_Controller->Set_Position(vPos);
+	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
+
 
 	m_pModelCom->Set_DisableRootMotionScale(true);
-
 
 	return S_OK;
 }
 
 void CRanrok::Priority_Update(_float fTimeDelta)
 {
+	if (m_bFireBurst) {
+		m_pInfoInstance->Deregist_ActiveMonster(this);
+	}
+	else {
+		m_pInfoInstance->Regist_ActiveMonster(this);
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
@@ -189,12 +193,38 @@ void CRanrok::Update(_float fTimeDelta)
 
 
 #pragma region CREATE PROP
-	m_vCreatePropTime.x += fTimeDelta;
+		m_vCreatePropTime.x += fTimeDelta;
 
-	if (m_vCreatePropTime.x >= m_vCreatePropTime.y)
+		if (m_vCreatePropTime.x >= m_vCreatePropTime.y)
+		{
+			CEffect_Container* pEffect = nullptr;
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this,nullptr,&pEffect);
+			m_vCreatePropTime.x = 0.f;
+
+			m_pRanrok_Props.push_back(pEffect);
+		}
+	
+
+	_bool bAllHidden = true;
+
+	for (auto& Props : m_pRanrok_Props)
 	{
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this);
-		m_vCreatePropTime.x = 0.f;
+		if (Props->Get_Visible()) 
+		{
+			bAllHidden = false;
+			break;
+		}
+	}
+	if (m_pRanrok_Props.size() == 0) {
+		bAllHidden = false;
+	}
+
+	if (bAllHidden)
+	{
+		m_bFireBurst = false;
+	}
+	else {
+		m_bFireBurst = true;
 	}
 
 #pragma endregion
@@ -287,6 +317,32 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 	return S_OK;
 }
 
+void CRanrok::Trigger(CTimeSocket& Socket)
+{
+	SOCKETCONTENTS* pContents = &Socket.m_Contents;
+	switch (pContents->eTypeFunc)
+	{
+	case TIMESOCKET_FUNC::TRANSLATION:
+	{
+
+	}break;
+	case TIMESOCKET_FUNC::TRANSLATION_LERP:
+	{
+
+	}break;
+	case TIMESOCKET_FUNC::SET_ANIMSTATE:
+	{
+		//m_pFSM->Set_State(FSMSTATE::CUTSCENE);
+	}break;
+	case TIMESOCKET_FUNC::SET_FSMSTATE:
+	{
+		//m_pModelCom->Set_AnimationIndex();
+	}break;
+	default:
+		break;
+	}
+}
+
 HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 {
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
@@ -333,7 +389,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED))
+	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED) || m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::HIT_BWD2].first)
 		return;
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -907,6 +963,10 @@ void CRanrok::Free()
 		m_pCallBack_HitReport->Finalize();
 	}
 
+	for (auto& Props : m_pRanrok_Props) {
+		SAFE_RELEASE(Props);
+	}
+	m_pRanrok_Props.clear();
 	SAFE_RELEASE(m_pMotionTrailCom);
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);

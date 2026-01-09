@@ -10,12 +10,6 @@ NS_END
 
 NS_BEGIN(Client)
 
-struct TimeLine {
-	_float2						m_vTimer = {};
-	_uint						m_eTypeTimeLine = {};
-	list<class CTimeSocket*>	m_Sockets = {};
-};
-
 class CCutSceneInfo final : public CBase
 {
 private:
@@ -29,7 +23,7 @@ public:
 public:
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
-	void		Load_Events(LEVEL eLevel);
+	void		Load_Events(pair<_string, TimeLine*>& pairTimeLine);
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
@@ -37,13 +31,16 @@ private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 
-	map<_string, TimeLine> m_funcActiveEvents = {};
-	map<_string, TimeLine> m_funcWaitEvents = {};
+	map<_string, TimeLine*> m_funcActiveEvents = {};
+	map<_string, TimeLine*> m_funcWaitEvents = {};
 
 private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
-	HRESULT Clear_ActiveEvents();	
-	HRESULT Clear_Events(map<_string, TimeLine>&Events);
+#ifdef _DEBUG
+public:
+#endif // _DEBUG
+	HRESULT Clear_ActiveEvents();
+	HRESULT Clear_Events(map<_string, TimeLine*>&Events);
 
 	HRESULT Clear_AllEvents();
 

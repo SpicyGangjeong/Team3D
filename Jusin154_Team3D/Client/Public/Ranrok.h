@@ -32,6 +32,11 @@ class CRanrok final : public CMonster
 		END
 	};
 public:
+	typedef struct tagRanrokInitDesc {
+		_float4 vPos;
+		_float4 vRotQ;
+	}RANROKDESC;
+
 	enum class RANROK_PHASE
 	{
 		PHASE_AIR,
@@ -50,6 +55,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_OutLine() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	virtual void Trigger(CTimeSocket& Socket)override;
 	HRESULT Render_MotionTrail(ID3D11ShaderResourceView* pSRV);
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
@@ -68,7 +74,7 @@ private:
 	_uint iIndex = {};
 	DAMAGE_INFO m_DamageInfo;
 	_bool m_bCollisionPlayer = { false };
-	_float2 m_vCreatePropTime = { 0.f , 60.f };
+	_float2 m_vCreatePropTime = { 0.f , 30.f };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -95,11 +101,10 @@ private:
 	_int m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_AIR);
 
 	_float m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,8.f,40.f,40.f,40.f};
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::END)] = { 40.f,40.f ,8.f,40.f,40.f,40.f };
 
 	_float m_fTuckedTime = {};
-	_bool m_bFireBurst = { false };
-	_bool m_bTucked = {false};
+	_bool m_bTucked = { false };
 	_bool m_bHoverDash = { false };
 
 	vector<vector<_float4>> m_Points;
@@ -115,10 +120,13 @@ private:
 	_float m_fPrevHpRatio = {};
 	_int   m_iBreathRand = {};
 	_bool  m_bMotionTrail = {};
+	_bool  m_bFireBurst = {true};
+	_int   m_iPropSize = {};
 
 	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
+	vector<class CEffect_Container*> m_pRanrok_Props;
 	_float					 m_fTuckedSpeed = { 90.f };
 
 

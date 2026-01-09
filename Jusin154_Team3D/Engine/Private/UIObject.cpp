@@ -370,7 +370,7 @@ void CUIObject::Lerp_PosY(_float PosY)
 	m_fLerpY = PosY;
 }
 
-_bool CUIObject::Start_Lerp(_float fTimeDelta)
+_bool CUIObject::Start_Lerp_Translation(_float fTimeDelta)
 {
 	return false;
 }

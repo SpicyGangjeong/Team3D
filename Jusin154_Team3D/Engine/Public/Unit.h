@@ -32,6 +32,7 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void Trigger(class CTimeSocket& Socket) {};
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 	_bool IsAI() { return m_bAI; }
 
