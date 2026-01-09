@@ -47,7 +47,7 @@ namespace Client
 	typedef struct DialogueInfo
 	{
 		_int						iLineID{};
-		_int						iTextType{};
+		_bool						bType{};
 		_wstring					pText;
 		_int						NextTextID{};
 		vector<DIALOGUECHOICEINFO>	ChoiceInfo;
@@ -64,6 +64,7 @@ namespace Client
 		CUnit* pUnit = { nullptr };
 		class CMapElement_Interactable* pInteractive = { nullptr };
 		class CMapElement_Chest* pChest = { nullptr };
+		class CEffect_Container* pEffect = { nullptr };
 	}LOCKON_INFO;
 
 	typedef struct tegNPCInteractionInfo
@@ -74,6 +75,12 @@ namespace Client
 		_float4			fNPCPosition{};
 		_int			iTextID{};
 	}NPCINTERACTIONINFO;
+
+	typedef struct Choice
+	{
+		_int iChoice{};
+		_int iType{};
+	}CHOICEINFO;
 
 	typedef struct tagUnitInfo
 	{

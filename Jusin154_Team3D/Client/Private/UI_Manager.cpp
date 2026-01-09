@@ -4,6 +4,7 @@
 #include "GamePlay_Canvas.h"
 #include "Spell_Canvas.h"
 #include "Quest_Canvas.h"
+#include "Dialogue_Canvas.h"
 #include "InfoInstance.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
@@ -13,6 +14,8 @@
 #include "Interaction_Key.h"
 #include "NPCInteraction.h"
 #include "Broom_TargetGate.h"
+#include "Player.h"
+#include "Layer.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -76,6 +79,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
 		break;
@@ -111,6 +115,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(true);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(false);
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
 		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
@@ -170,9 +175,9 @@ void CUI_Manager::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
 	if (m_pGameInstance->Key_Down(DIK_T))
 	{
+		m_fAlphaVelue = 1.f;
 		if (m_eType == UI_STATE::GAMEPLAYER)
 			Canvas_Change(UI_STATE::SPELL);
 		else if (m_eType == UI_STATE::SPELL)
@@ -183,6 +188,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Key_Down(DIK_TAB))
 		{
+			m_fAlphaVelue = 1.f;
 			if (m_bActive == false)
 			{
 				m_bActive = true;
@@ -204,6 +210,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Key_Down(DIK_ESCAPE))
 		{
+			m_fAlphaVelue = 1.f;
 			if (m_bActive == false)
 			{
 				m_bActive = true;
@@ -222,6 +229,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_eType == UI_STATE::GAMEPLAYER && m_bNPCInteract == true)
 	{
+		m_fAlphaVelue = 1.f;
 		if (m_bCurrentNPCInteract != m_bNPCInteract)
 			m_bCurrentNPCInteract = m_bNPCInteract;
 
@@ -233,6 +241,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_bCurrentNPCInteract == true && m_bNPCInteract == false)
 	{
+		m_fAlphaVelue = 1.f;
 		m_bCurrentNPCInteract = m_bNPCInteract;
 
 		if (m_bActive == false)
@@ -248,12 +257,12 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_bActive == true && m_bHover == false)
 	{
-		if (m_fAlpha <= 1.f)
+		if (m_fAlpha <= m_fAlphaVelue)
 		{
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
 		}
 
-		if (m_fAlpha > 1.f && m_bAlphaZero == true)
+		if (m_fAlpha > m_fAlphaVelue && m_bAlphaZero == true)
 		{
 			m_bAlphaZero = false;
 			m_fAlpha = 1.f;
@@ -293,6 +302,11 @@ void CUI_Manager::Update(_float fTimeDelta)
 		{
 			m_fAlpha -= fTimeDelta * m_fAlphaTime;
 		}
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_J))
+	{
+		Change_Map();
 	}
 
 	__super::Update(fTimeDelta);
@@ -391,6 +405,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	}
 	Add_Canvas(TEXT("SpellLearn_Canvas"), m_pSpellLearn_Canvas);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDialogue_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CDialogue_Canvas**>(&m_pDialogue_Canvas)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Dialogue_Canvas"), m_pDialogue_Canvas);
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;
 	}
@@ -460,14 +479,34 @@ CGameObject* CUI_Manager::Find_Canvas(const _wstring& Name)
 void CUI_Manager::NpcInteract(_bool bInteract)
 {
 	m_bNPCInteract = bInteract;
+	m_bHover = bInteract;
+	m_bActive = bInteract;
+	m_bAlphaZero = true;
 }
 
 void CUI_Manager::Set_Fade()
 {
-	m_fAlpha = 1.5f;
+	m_fAlphaVelue = 1.5f;
 	m_bActive = true;
 	m_bHover = true;
 	m_bCgangede = true;
+}
+
+void CUI_Manager::Change_Map()
+{
+	m_pInfoInstance->Load_DADA_INT();
+	m_pGameInstance->Setting_Volumetirc(
+		3.f,
+		0.01f,
+		0.11f,
+		1.0f,
+		0.f
+	);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
+	if (nullptr != pLayer) {
+		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
+		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
+	}
 }
 
 CUI_Manager* CUI_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -512,7 +551,9 @@ void CUI_Manager::Describe_Entity()
 	GUI::Begin("실내맵 전환");
 
 	if (GUI::Button("Load_DADA_INT"))
-		m_pInfoInstance->Load_DADA_INT();
+	{
+		Change_Map();
+	}
 
 	GUI::End();
 }

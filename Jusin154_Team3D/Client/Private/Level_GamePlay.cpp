@@ -296,7 +296,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = false;
+	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
@@ -708,9 +708,9 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 		return E_FAIL;
-	/*Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB_2.bin";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB_2.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;*/
+		return E_FAIL;
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AZ.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 		return E_FAIL;
@@ -891,7 +891,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	_bool isLoad_RandomNPC = { true };
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // gimch
 #ifdef 진우
 	isLoad_RandomNPC = false;
@@ -906,7 +907,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 #endif // 
 #ifdef Bin
 	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_RandomNPC = false;
 #endif // Bin
 #endif // _DEBUG
 
@@ -948,7 +949,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		}
 
 		CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-		DuelistDesc.vPos = _float4(-21.f, 0.f, -14.f, 1.f);
+		DuelistDesc.vPos = _float4(1007.032f, 1.085f, 1008.370f, 1.f);
 		DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &DuelistDesc))) {
 			return E_FAIL;
@@ -1008,21 +1009,21 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {
-		for (_uint i = 0; i < 1; ++i)
+		for (_uint i = 0; i < 0; ++i)
 		{
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 				return E_FAIL;
 			}
 		}
 
-		for (_uint i = 0; i < 1; ++i)
+		for (_uint i = 0; i < 0; ++i)
 		{
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 				return E_FAIL;
 			}
 		}
 
-		for (_uint i = 0; i < 1; ++i)
+		for (_uint i = 0; i < 0; ++i)
 		{
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Assassin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 				return E_FAIL;
@@ -1034,9 +1035,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 			return E_FAIL;
 		}
 
-		/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		CRanrok::RANROKDESC RanrokDesc = {};
+		RanrokDesc.vPos = _float4(-44.704f, 6.860f, 16.071f, 1.f);
+		RanrokDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&RanrokDesc))) {
 			return E_FAIL;
-		}*/
+		}
 
 
 

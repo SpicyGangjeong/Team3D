@@ -766,6 +766,12 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 					}
 				}
 				break;
+				case PXOBJECT::RANROK_PROP:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
 				}
 				break;
 			case PHYSX_KIND::CCTActor:
@@ -1057,9 +1063,15 @@ ON_COLLISION_INFO CEffect_Container::MonsterRayCast(_fvector StartPos, _fvector 
 	return tagCollInfo;
 }
 
-_vector CEffect_Container::Get_UnitPos(LOCKON_INFO Info)
+_vector CEffect_Container::Get_LockOnPos(LOCKON_INFO Info)
 {
-	return Info.pUnit->Get_Component<CCharacter_Controller>()->Get_Position();
+	if (Info.pEffect) {
+		return Info.pEffect->Get_WorldPostion();
+	}
+	if (Info.pUnit) {
+		return Info.pUnit->Get_Component<CCharacter_Controller>()->Get_Position();
+	}
+	return XMVectorZero();
 }
 
 

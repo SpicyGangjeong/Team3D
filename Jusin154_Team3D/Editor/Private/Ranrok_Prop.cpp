@@ -283,7 +283,6 @@ void CRanrok_Prop::Free()
 
 	SAFE_RELEASE(m_pSphere);
 	SAFE_RELEASE(m_pSphereLay);
-	SAFE_RELEASE(m_pInfoInstance);
 	SAFE_RELEASE(m_pRing);
 	SAFE_RELEASE(m_pSphereHitLay);
 

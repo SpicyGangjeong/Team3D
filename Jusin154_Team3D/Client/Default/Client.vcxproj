@@ -177,9 +177,13 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\Public\Camera_Model.h" />
     <ClInclude Include="..\Public\CutSceneInfo.h" />
+    <ClInclude Include="..\Public\Dialogue_Canvas.h" />
+    <ClInclude Include="..\Public\Dialogue_Choice.h" />
+    <ClInclude Include="..\Public\Dialogue_Panel.h" />
     <ClInclude Include="..\Public\Duelist_Levioso.h" />
     <ClInclude Include="..\Public\Duelist_NormalJap.h" />
     <ClInclude Include="..\Public\Duelist_Protego.h" />
+    <ClInclude Include="..\Public\EffectInfo.h" />
     <ClInclude Include="..\Public\Goblin_Assassin.h" />
     <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
     <ClInclude Include="..\Public\Goblin_Sword.h" />
@@ -467,9 +471,13 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\Private\Camera_Model.cpp" />
     <ClCompile Include="..\Private\CutSceneInfo.cpp" />
+    <ClCompile Include="..\Private\Dialogue_Canvas.cpp" />
+    <ClCompile Include="..\Private\Dialogue_Choice.cpp" />
+    <ClCompile Include="..\Private\Dialogue_Panel.cpp" />
     <ClCompile Include="..\Private\Duelist_Levioso.cpp" />
     <ClCompile Include="..\Private\Duelist_NormalJap.cpp" />
     <ClCompile Include="..\Private\Duelist_Protego.cpp" />
+    <ClCompile Include="..\Private\EffectInfo.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />

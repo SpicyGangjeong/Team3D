@@ -26,7 +26,6 @@ public:
 
 public:
     const CURRENTDIALOGUEINFO& Get_Info(_wstring NpcName, _int iTextID) const;
-
 private:
     CInfoInstance*              m_pInfoInstance = { nullptr };
 
