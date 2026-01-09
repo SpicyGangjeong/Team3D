@@ -162,7 +162,7 @@ void CPanelObject::Function_Callback(wstring Name, void* pArg)
 	}
 }
 
-_bool CPanelObject::Start_Lerp(_float fTimeDelta)
+_bool CPanelObject::Start_Lerp_Translation(_float fTimeDelta)
 {
 	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
 

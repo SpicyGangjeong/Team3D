@@ -90,7 +90,7 @@ void CLoadingWidget::Update(_float fTimeDelta)
 	}
 	if (m_bLerpOn == true)
 	{
-		Start_Lerp(m_fMoveSpeed);
+		Start_Lerp_Translation(m_fMoveSpeed);
 	}
 
 	if (m_bLerpOff == true)

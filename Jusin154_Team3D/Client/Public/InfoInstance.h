@@ -103,6 +103,11 @@ public:
 	void   Set_Broom_Booster_Timer(_float fTimer);
 	_float Get_Broom_Booster_Timer();
 #pragma endregion
+#pragma region CutScene
+	void		Active_Event(_string& strKey);
+	HRESULT		DeActive_ActiveEvent(_string& strKey);
+	void		Load_Events(pair< _string, struct TimeLine*>& pairTimeLine);
+#pragma endregion
 #pragma region Effect
 
 	HRESULT Regist_ActiveEffect(CEffect_Container* pEffect);
@@ -120,6 +125,7 @@ private:
 	class CMonsterInfo*			m_pMonsterInfo = { nullptr };
 	class CMapInfo*				m_pMapInfo = { nullptr };
 	class CEffectInfo*			m_pEffectInfo = { nullptr };
+	class CCutSceneInfo*		m_pCutSceneInfo = { nullptr };
 	class CSkill_Data*			m_pSkillInfo = { nullptr };
 	class CQuest_Data*			m_pQuestInfo= { nullptr };
 	class CInteractiveInfo*		m_pInteractiveInfo =  { nullptr };

@@ -156,7 +156,7 @@ public:
 
 	virtual void Lerp_PosX(_float PosX);
 	virtual void Lerp_PosY(_float PosY);
-	virtual _bool Start_Lerp(_float fTimeDelta);
+	virtual _bool Start_Lerp_Translation(_float fTimeDelta);
 	virtual _bool Start_Lerp_Speed(_float fTimeDelta, _float2 Mouse_Point);
 	virtual void Reset_Pos(_float fTimeDelta);
 	virtual void Start_Size_Lerp(_float fTimeDelta);

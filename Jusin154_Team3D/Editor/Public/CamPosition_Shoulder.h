@@ -46,8 +46,8 @@ private:
 	_float3 m_vShoulderStartRatio = { 1.f, 2.f, -1.f };
 	_float3 m_vShoulderOtherRatio = { 1.f, 2.f, -1.f };
 
-	_bool m_bLerp = { false };
-	_float2 m_vLerpTimer = { 0.f, 1.f };
+	_bool m_bLerpTranslation = { false };
+	_float2 m_vLerpTranslationTimer = { 0.f, 1.f };
 
 	_float2		m_vAccRotDegrees = { 0.f, 0.f };
 	_float2		m_vAccRealDegrees = { 0.f, 0.f };

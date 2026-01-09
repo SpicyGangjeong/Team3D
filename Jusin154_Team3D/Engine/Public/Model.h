@@ -214,7 +214,7 @@ private:
 	_matrix						m_DeltaAnimationMatrix = {};		// 루트본의 델타애니메이션
 	class CTransform*			m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
 
-	_float						m_fRatio = {};
+	_float						fRatio = {};
 	_int						m_iCurrSecondAnimIndex = { -1 };
 	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1,-1,-1 };
 	vector<vector<_uint>>		m_BoneMask;
@@ -247,6 +247,7 @@ private:
 	_bool						m_bIsSecondFinishedAnim = { false };
 	_bool						m_bIsSecondLoop = { false };
 	_bool						m_bRatio = { false };
+	_float						m_fRatio = { 0.f };
 	_bool						m_bRootBone = {};
 	_float4x4					m_RootMatrix = {};
 	_bool						m_bDisableRootMotionScale = {false};

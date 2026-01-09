@@ -7,6 +7,8 @@
 #include "EffectPool.h"
 #include "Light_Main.h"
 #include "Layer.h"
+#include "Camera_Cinematic.h"
+#include "TimeSocket.h"
 #include "Camera_Debug.h"
 #include "Terrain.h"
 #include "SkyBox.h"
@@ -60,6 +62,9 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
+	if (FAILED(Ready_Layer_CutScene())) {
+		return E_FAIL;
+	}
 
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
@@ -75,6 +80,11 @@ HRESULT CLevel_Field::Initialize()
 
 void CLevel_Field::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
+
+
 	if (m_pGameInstance->Key_Up(DIK_F1))
 	{
 		//m_pGameInstance->Set_LevelToChange();
@@ -222,9 +232,30 @@ HRESULT CLevel_Field::Ready_Camera()
 	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
-
 #endif // _DEBUG
 
+	{
+		CCamera_Cinematic::Camera_Cinematic_DESC            Camera_Desc{};
+		Camera_Desc.fSpeedPerSec = 5.f;
+		Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
+		Camera_Desc.fFovy = XMConvertToRadians(60.0f);
+		Camera_Desc.fNear = 0.1f;
+		Camera_Desc.fFar = 500.f;
+		Camera_Desc.pCameraKey = CAMERA_CINEMATIC;
+		Camera_Desc.iPriority = 65;
+		Camera_Desc.bEnableTransitionLerp = true;
+		Camera_Desc.bEnableLookLerp = true;
+		Camera_Desc.bEnableFollowLerp = true;
+		Camera_Desc.vTransitionTime.y = 1.f;
+		Camera_Desc.pFollowTarget = { nullptr };
+		Camera_Desc.pLookTarget = { nullptr };
+
+		CCamera_Cinematic* pCamera = { nullptr };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Cinematic>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_CINEMATIC);
+	}
 
 	return S_OK;
 }
@@ -309,6 +340,27 @@ HRESULT CLevel_Field::Reday_Layer_EffectPool()
 	return S_OK;
 }
 
+HRESULT CLevel_Field::Ready_Layer_CutScene()
+{
+	CMonster* pMonster = { nullptr };
+	CCamera* pCamera = { nullptr };
+	{
+		CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_MONSTER);
+		if (nullptr != pLayer) {
+			pMonster = pLayer->Get_Object<CRanrok>();
+		}
+	}
+	{
+		pCamera = m_pGameInstance->Get_Camera(NEXT_LEVEL, CAMERA_CINEMATIC);
+	}
+
+	if (nullptr == pMonster || nullptr == pCamera) {
+		return E_FAIL;
+	}
+	Load_CutSceneXML("../Bin/Resources/Data/CutScene/RanrokCutScene.xml", pCamera, pMonster);
+	return S_OK;
+}
+
 pair<CLevel*, function<void()>> CLevel_Field::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg)
 {
 	CLevel_Field* pInstance = new CLevel_Field(pDevice, pContext, eLevelID);
@@ -328,3 +380,271 @@ void CLevel_Field::Free()
 
 	SAFE_RELEASE(m_pInfoInstance);
 }
+
+static _bool IsTrueText(const char* text)
+{
+	if (!text){ return false; }
+	return (strcmp(text, "true") == 0) || (strcmp(text, "1") == 0);
+}
+
+static _bool TryReadFloatAttr(tinyxml2::XMLElement* element, const _char* attrName, _float& outValue)
+{
+	if (!element || !attrName) {
+		return false;
+	}
+
+	const _char* text = element->Attribute(attrName);
+	if (!text || text[0] == '\0'){
+		return false;
+	}
+
+	return (element->QueryFloatAttribute(attrName, &outValue) == tinyxml2::XML_SUCCESS);
+}
+
+static _bool  TryReadUIntAttr(tinyxml2::XMLElement* element, const _char* attrName, _uint& outValue)
+{
+	if (!element || !attrName) return false;
+
+	const _char* text = element->Attribute(attrName);
+	if (!text || text[0] == '\0') {
+		return false;
+	}
+
+	return (element->QueryUnsignedAttribute(attrName, &outValue) == tinyxml2::XML_SUCCESS);
+}
+
+static void ReadPxTransform(tinyxml2::XMLElement* transformNode, PSX::PxTransform& outTransform)
+{
+	outTransform.p = PSX::PxVec3(0.f, 0.f, 0.f);
+	outTransform.q = PSX::PxQuat(0.f, 0.f, 0.f, 1.f);
+
+	if (!transformNode) { return; }
+
+	tinyxml2::XMLElement* rotQNode = transformNode->FirstChildElement("RotQ");
+	tinyxml2::XMLElement* transNode = transformNode->FirstChildElement("Trans");
+	if (!rotQNode || !transNode) {
+		return;
+	}
+
+	TryReadFloatAttr(rotQNode, "X", outTransform.q.x);
+	TryReadFloatAttr(rotQNode, "Y", outTransform.q.y);
+	TryReadFloatAttr(rotQNode, "Z", outTransform.q.z);
+	TryReadFloatAttr(rotQNode, "W", outTransform.q.w);
+
+	TryReadFloatAttr(transNode, "X", outTransform.p.x);
+	TryReadFloatAttr(transNode, "Y", outTransform.p.y);
+	TryReadFloatAttr(transNode, "Z", outTransform.p.z);
+}
+
+static void ReadFlags16(tinyxml2::XMLElement* flagsNode, _boolean& outFlags)
+{
+	memset(&outFlags, 0, sizeof(_boolean));
+
+	if (!flagsNode) {
+		return;
+	}
+
+	for (tinyxml2::XMLElement* flagNode = flagsNode->FirstChildElement("Flag");
+		flagNode;
+		flagNode = flagNode->NextSiblingElement("Flag"))
+	{
+		int flagId = -1;
+		if (flagNode->QueryIntAttribute("id", &flagId) != tinyxml2::XML_SUCCESS) {
+			continue;
+		}
+
+		if (flagId < 0 || flagId >= 16) {
+			continue;
+		}
+
+		outFlags.b[flagId] = IsTrueText(flagNode->GetText());
+	}
+}
+
+static void ReadUInt4(tinyxml2::XMLElement* param10Node, _uint4& outValue)
+{
+	outValue = {};
+
+	if (!param10Node) { 
+		return; 
+	}
+	tinyxml2::XMLElement* uintNode = param10Node->FirstChildElement("uint");
+	if (!uintNode) return;
+
+	_uint temp = 0;
+	if (TryReadUIntAttr(uintNode, "X", temp)) outValue.x = temp;
+	if (TryReadUIntAttr(uintNode, "Y", temp)) outValue.y = temp;
+	if (TryReadUIntAttr(uintNode, "Z", temp)) outValue.z = temp;
+	if (TryReadUIntAttr(uintNode, "W", temp)) outValue.w = temp;
+}
+
+static void ReadFloat4(tinyxml2::XMLElement* param11Node, _float4& outValue)
+{
+	outValue = {};
+
+	if (!param11Node) {
+		return;
+	}
+	tinyxml2::XMLElement* floatNode = param11Node->FirstChildElement("float");
+	if (!floatNode) {
+		return;
+	}
+
+	TryReadFloatAttr(floatNode, "X", outValue.x);
+	TryReadFloatAttr(floatNode, "Y", outValue.y);
+	TryReadFloatAttr(floatNode, "Z", outValue.z);
+	TryReadFloatAttr(floatNode, "W", outValue.w);
+}
+
+void CLevel_Field::Load_CutSceneXML(const string& path, CCamera* pCamera, CMonster* pMonster)
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(path.c_str()) != tinyxml2::XML_SUCCESS){
+		return;
+	}
+
+	TimeLine* pTimeLine = new TimeLine();
+	tinyxml2::XMLElement* pContentsNode = doc.FirstChildElement("RanrokIntro");
+	if (!pContentsNode){
+		return;
+	}
+
+	pTimeLine->m_vTimer.y = 0.f;
+	pContentsNode->QueryFloatAttribute("fDuration", &pTimeLine->m_vTimer.y);
+
+	pTimeLine->m_Sockets.clear();
+
+	for (tinyxml2::XMLElement* pSocketNode = pContentsNode->FirstChildElement("Socket");
+		pSocketNode; pSocketNode = pSocketNode->NextSiblingElement("Socket"))
+	{
+		SOCKETCONTENTS SocketContents = {};
+
+		SocketContents .fRatio = 0.f;
+		_int fStartPosition = 0;
+		pSocketNode->QueryIntAttribute("fStartPosition", &fStartPosition);
+		SocketContents.fRatio = CMyTools::Saturate(fStartPosition / pTimeLine->m_vTimer.y);
+		// Info
+		tinyxml2::XMLElement* pInfoNode = pSocketNode->FirstChildElement("Info");
+		if (pInfoNode != nullptr)
+		{
+			const _char* pEventNameText = pInfoNode->Attribute("strEventName");
+			SocketContents.strEventName = pEventNameText ? pEventNameText : "";
+
+			SocketContents.eTypeParam = TIMESOCKET_PARAM::END;
+			if (const _char* pTypeText = pInfoNode->Attribute("eTypeParam"))
+			{
+				CTimeSocket::TryParse_TimeSocketParam(string_view(pTypeText), SocketContents.eTypeParam);
+			}
+
+			SocketContents.eTypeFunc = TIMESOCKET_FUNC::END;
+			if (const _char* pFuncText = pInfoNode->Attribute("eTypeFunc")) 
+			{
+				CTimeSocket::TryParse_TimeSocketFunc(string_view(pFuncText), SocketContents.eTypeFunc);
+			}
+
+			SocketContents.pEventTarget = nullptr;
+			SocketContents.funcEvent = nullptr;
+
+			if (const _char* pTargetText = pInfoNode->Attribute("pTarget"))
+			{
+				if (strcmp(pTargetText, "CAMERA_CINEMATIC") == 0)
+				{
+					CCamera* pEventTarget = pCamera;
+					SocketContents.pEventTarget = pEventTarget;
+					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
+				}
+				else if (strcmp(pTargetText, "CAMERA_SHOULDER") == 0)
+				{
+					CCamera* pEventTarget = m_pGameInstance->Get_Camera(NEXT_LEVEL, CAMERA_SHOULDER);
+					SocketContents.pEventTarget = pEventTarget;
+					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
+				}
+				else if (strcmp(pTargetText, "ACTOR_PLAYER") == 0)
+				{
+					CPlayer* pEventTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>();
+					SocketContents.pEventTarget = pEventTarget;
+					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
+				}
+			}
+		}
+
+		// -------- Param_0 ----------
+		tinyxml2::XMLElement* pParam0Node = pSocketNode->FirstChildElement("Param_0");
+		if (nullptr != pParam0Node)
+		{
+			switch (SocketContents.eTypeParam)
+			{
+			case TIMESOCKET_PARAM::TARGET:
+			{
+				tinyxml2::XMLElement* pOtherTargetNode = pParam0Node->FirstChildElement("OtherTarget");
+				if (!pOtherTargetNode) break;
+
+				const _char* pLayerNameText = pOtherTargetNode->Attribute("Layer");
+				const _char* pTypeIdText = pOtherTargetNode->Attribute("TypeID");
+
+				if (!pLayerNameText || !pTypeIdText) break;
+				if (pLayerNameText[0] == '\0' || pTypeIdText[0] == '\0') break;
+
+				SocketContents.wstrLayerName = CMyTools::ToWstring(pLayerNameText);
+				SocketContents.wstrKeyName = CMyTools::ToWstring(pTypeIdText);
+
+				if (string_view(pTypeIdText) == "Ranrok")
+				{
+					SocketContents.pOtherTarget =
+						m_pGameInstance->Get_Layer(NEXT_LEVEL, SocketContents.wstrLayerName)->Get_Object<CRanrok>();
+				}
+				else if (string_view(pTypeIdText) == "CAMERA_CINEMATIC")
+				{
+					SocketContents.pOtherTarget = pCamera;
+				}
+				else if (string_view(pTypeIdText) == "CAMERA_SHOULDER")
+				{
+					SocketContents.pOtherTarget = m_pGameInstance->Get_Camera(NEXT_LEVEL, CAMERA_SHOULDER);
+				}
+
+				break;
+			}
+
+			case TIMESOCKET_PARAM::TRANSFORM:
+			{
+				tinyxml2::XMLElement* pTransformNode = pParam0Node->FirstChildElement("Transform");
+				ReadPxTransform(pTransformNode, SocketContents.pxTransform);
+				break;
+			}
+			case TIMESOCKET_PARAM::END:
+			default:
+				break;
+			}
+		}
+
+		// -------- vFlags / Param_10 / Param_11 ----------
+		ReadFlags16(pSocketNode->FirstChildElement("vFlags"), SocketContents.vFlags);
+		ReadUInt4(pSocketNode->FirstChildElement("Param_10"), SocketContents.vParam_10);
+		ReadFloat4(pSocketNode->FirstChildElement("Param_11"), SocketContents.vParam_11);
+		CTimeSocket* pSocket = CTimeSocket::Create(&SocketContents);
+		if (!pSocket) {
+			continue;
+		}
+		pTimeLine->m_Sockets.push_back(pSocket);
+	}
+	pTimeLine->m_Sockets.sort([](CTimeSocket* a, CTimeSocket* b) {
+		return a->m_Contents.fRatio < b->m_Contents.fRatio;
+		});
+	pair<_string, TimeLine*> pairResult = { _string(pContentsNode->Name()), pTimeLine };
+	m_pInfoInstance->Load_Events(pairResult);
+}
+
+#ifdef _DEBUG
+void CLevel_Field::Describe_Entity()
+{
+	GUI::Begin("CutScene");
+	if (GUI::Button("ReadyCutScene")) {
+		Ready_Layer_CutScene();
+	}
+	if (GUI::Button("DeActiveCutScene")) {
+		_string strDeActiveEvent = "RanrokIntro";
+		m_pInfoInstance->DeActive_ActiveEvent(strDeActiveEvent);
+	}
+	GUI::End();
+}
+#endif // _DEBUG

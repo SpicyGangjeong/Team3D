@@ -19,7 +19,7 @@ HRESULT CNPCStat::Initialize_Prototype(tinyxml2::XMLNode* pChild)
 	pElement->QueryIntAttribute("ID", &m_NpcInfo.iID);
 	m_NpcInfo.pNpc_Name = CMyTools::ToWstring(pElement->Attribute("Name"));
 	m_NpcInfo.pName = CMyTools::ToWstring(pElement->Attribute("NpcName"));
-	pElement->QueryIntAttribute("TAG", &m_NpcInfo.iNpcType);
+	pElement->QueryIntAttribute("ZOOM_IN", &m_NpcInfo.iNpcType);
 	pElement->QueryFloatAttribute("SizeX", &m_NpcInfo.fFontPos);
 	return S_OK;
 }
