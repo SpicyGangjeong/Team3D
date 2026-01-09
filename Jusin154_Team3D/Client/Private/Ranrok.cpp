@@ -79,8 +79,10 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 
 	m_pModelCom->Set_DisableRootMotionScale(true);
-
+#ifdef _DEBUG
 	m_pTransformCom->Compress_WorldMatrix(m_vInitialTrans, m_vInitialRotQ);
+#endif // _DEBUG
+
 	return S_OK;
 }
 
