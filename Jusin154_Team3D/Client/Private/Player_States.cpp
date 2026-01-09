@@ -1754,7 +1754,6 @@ HRESULT CPlayer::Behavior_ShieldExitCheck(_float fTimeDelta)
 				pairAnimInfo = m_Animation[STATEANIM::PARRY_180];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, true, false, false);
 			}
-
 		}
 		else {
 			pairAnimInfo = m_Animation[STATEANIM::PARRY4];

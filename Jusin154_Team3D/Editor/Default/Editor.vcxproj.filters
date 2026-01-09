@@ -771,7 +771,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop">
       <UniqueIdentifier>{8bc9a6f2-aea3-4631-83b0-1c897cc9f98c}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="50.UI\Dialogue_Canvas">
       <UniqueIdentifier>{a5413132-f824-4e59-b3bb-1e6ad539b274}</UniqueIdentifier>
     </Filter>
@@ -780,6 +780,9 @@
     </Filter>
     <Filter Include="50.UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice">
       <UniqueIdentifier>{0201d2a8-9187-468c-aa2f-491bd3ae6ae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit">
+      <UniqueIdentifier>{b8e8e46c-ec9f-4a89-a970-c9de2ac3f521}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1571,7 +1574,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Prop.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\Dialogue_Panel.h">
       <Filter>50.UI\Dialogue_Canvas\Dialogue_Panel</Filter>
     </ClInclude>
@@ -1580,6 +1583,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Dialogue_Choice.h">
       <Filter>50.UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Protego_Hit.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2379,7 +2385,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Prop.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Ranrok\Prop</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Dialogue_Panel.cpp">
       <Filter>50.UI\Dialogue_Canvas\Dialogue_Panel</Filter>
     </ClCompile>
@@ -2388,6 +2394,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Dialogue_Choice.cpp">
       <Filter>50.UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Protego_Hit.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
