@@ -18,6 +18,14 @@ CCamera_Cinematic::CCamera_Cinematic(const CCamera_Cinematic& rhs)
 
 void CCamera_Cinematic::Priority_Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	if (m_pGameInstance->Key_Pressing(DIK_HOME)) {
+		if (m_pGameInstance->Key_Up(DIK_END)) {
+			_string strCutSceneName = "RanrokIntro";
+			m_pInfoInstance->Active_Event(strCutSceneName);
+		}
+	}
+#endif // _DEBUG
 	if (false == m_bActive) {
 		return;
 	}
