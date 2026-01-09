@@ -53,6 +53,7 @@ private:
 	void Start_Lerp_FovY(_float fTimeMaximum, _float2 vRange);
 	void Clear_Lerp_FovY();
 
+	virtual void Transition(_float fTimeDelta) override;
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CCamPosition_Target* m_pLookTargetPart = { nullptr };
