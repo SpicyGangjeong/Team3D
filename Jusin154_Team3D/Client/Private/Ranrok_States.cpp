@@ -438,7 +438,7 @@ void CRanrok::Behavior_FireBreathExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FIREBREATH);
 	m_pModelCom->Set_HeadAimWeight(0.f);
-	//m_pModelCom->Play_HeadBone(false);
+	m_pModelCom->Play_HeadBone(false);
 	m_fHeadAimWeight = 0.f;
 }
 
@@ -552,7 +552,7 @@ void CRanrok::Behavior_FireSweepExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FIRESWEEP);
 	m_pModelCom->Set_HeadAimWeight(0.f);
-	//m_pModelCom->Play_HeadBone(false);
+	m_pModelCom->Play_HeadBone(false);
 	m_fHeadAimWeight = 0.f;
 }
 

@@ -52,22 +52,26 @@
 	<Anim state="LAND" index="32" loop="false"/>
 
 	<!-- SKILL -->
-	<Anim state="SKILL" index="12" loop="false"/>
+	
 	<!-- FireBurst -->
-	<Anim state="RUSH_LOOP" index="91" loop="true"/>
+	<Anim state="SKILL" index="12" loop="false"/>
 	<!-- 앞으로 물면서 돌진 -->
-	<Anim state="FIREBURST_REEL" index="13" loop="false"/>
+	<Anim state="RUSH_LOOP" index="91" loop="true"/>
 	<!-- Air Reel -->
+	<Anim state="FIREBURST_REEL" index="13" loop="false"/>
+
 
 	<!-- HIT -->
-	<Anim state="HIT_BWD" index="22" loop="false"/>
+	
 	<!-- Air Small -->
-	<Anim state="HIT_BWD2" index="13" loop="false"/>
+	<Anim state="HIT_BWD" index="22" loop="false"/>
 	<!-- Air Large -->
-	<Anim state="HIT_BWD3" index="35" loop="false"/>
+	<Anim state="HIT_BWD2" index="37" loop="false"/>
 	<!-- Ground Large -->
-	<Anim state="HIT_BWD4" index="36" loop="false"/>
+	<Anim state="HIT_BWD3" index="35" loop="false"/>
 	<!-- Ground Small -->
+	<Anim state="HIT_BWD4" index="36" loop="false"/>
+
 
 	<!-- DEAD -->
 	<Anim state="DEAD" index="34" loop="false"/>
