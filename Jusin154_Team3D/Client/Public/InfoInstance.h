@@ -103,6 +103,14 @@ public:
 	void   Set_Broom_Booster_Timer(_float fTimer);
 	_float Get_Broom_Booster_Timer();
 #pragma endregion
+#pragma region Effect
+
+	HRESULT Regist_ActiveEffect(CEffect_Container* pEffect);
+
+	HRESULT Deregist_ActiveEffect(CEffect_Container* pEffect);
+
+#pragma endregion
+
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -111,6 +119,7 @@ private:
 	class CPlayerInfo*			m_pPlayerInfo = { nullptr };
 	class CMonsterInfo*			m_pMonsterInfo = { nullptr };
 	class CMapInfo*				m_pMapInfo = { nullptr };
+	class CEffectInfo*			m_pEffectInfo = { nullptr };
 	class CSkill_Data*			m_pSkillInfo = { nullptr };
 	class CQuest_Data*			m_pQuestInfo= { nullptr };
 	class CInteractiveInfo*		m_pInteractiveInfo =  { nullptr };

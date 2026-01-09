@@ -5,6 +5,7 @@
 #include "MonsterInfo.h"
 #include "PlayerInfo.h"
 #include "InteractiveInfo.h"
+#include "EffectInfo.h"
 #include "Skill_Data.h"
 #include "Quest_Data.h"
 #include "Damage_Font.h"
@@ -27,6 +28,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pMapInfo->Update(fTimeDelta);
 	m_pSkillInfo->Update(fTimeDelta);
 	m_pInteractiveInfo->Update(fTimeDelta);
+	m_pEffectInfo->Update(fTimeDelta);
 }	
 
 void CInfoInstance::Change_Level()
@@ -36,6 +38,7 @@ void CInfoInstance::Change_Level()
 	m_pMapInfo->Change_Level();
 	m_pSkillInfo->Change_Level();
 	m_pInteractiveInfo->Change_Level();
+	m_pEffectInfo->Change_Level();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()
@@ -111,6 +114,7 @@ void CInfoInstance::Get_LockOnInfo(LOCKON_INFO& Info)
 	}
 	Info.pUnit = m_pMonsterInfo->Get_LockOnUnit();
 	Info.pInteractive = m_pInteractiveInfo->Get_LockOnUnit();
+	Info.pEffect = m_pEffectInfo->Get_LockOnEffect();
 }
 
 void CInfoInstance::Set_SearchLockOnFlag(_bool bLockOn)
@@ -168,6 +172,23 @@ HRESULT CInfoInstance::Load_DADA_INT()
 	return m_pMapInfo->Load_DADA_INT();
 }
 #pragma endregion
+
+#pragma region EFFECT_INFO
+
+HRESULT CInfoInstance::Regist_ActiveEffect(CEffect_Container* pEffect)
+{
+	return m_pEffectInfo->Regist_ActiveEffect(pEffect);
+}
+
+HRESULT CInfoInstance::Deregist_ActiveEffect(CEffect_Container* pEffect)
+{
+	if (nullptr == s_pInstance || nullptr == m_pEffectInfo) {
+		return S_OK; // 게임 종료 된 상태
+	}
+	return m_pEffectInfo->Deregist_ActiveEffect(pEffect);
+}
+#pragma endregion
+
 
 #pragma region SPELL_INFO
 HRESULT CInfoInstance::Load_SpellInfo(const _char* pFilePath)
@@ -448,6 +469,10 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	if (nullptr == m_pInteractiveInfo) {
 		return E_FAIL;
 	}
+	m_pEffectInfo = CEffectInfo::Create(pDevice, pContext);
+	if (nullptr == m_pEffectInfo) {
+		return E_FAIL;
+	}
 	m_pSpellLearn_Data = CSpellLearn_Data::Create(pDevice, pContext);
 	if (nullptr == m_pSpellLearn_Data) {
 		return E_FAIL;
@@ -543,6 +568,7 @@ void CInfoInstance::Release_Information()
 	SAFE_RELEASE(m_pSkillInfo);
 	SAFE_RELEASE(m_pQuestInfo);
 	SAFE_RELEASE(m_pInteractiveInfo);
+	SAFE_RELEASE(m_pEffectInfo);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);
