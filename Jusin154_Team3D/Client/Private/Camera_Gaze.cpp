@@ -32,11 +32,11 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 			_vector vNewLook = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vLookPos_Src), XMLoadFloat3(&m_vLookPos_Dest), CMyTools::Saturate(m_vLookLerpTime.x / fTimeDenom)), 1.f);
 			m_pTransformCom->LookAt(vNewLook);
 		}
+		else if (m_bSyncFollow) {
+			m_pTransformCom->Set_WorldMatrix(m_pFollowTarget->Get_Component<CTransform>()->Get_XMWorldMatrix());
+		}
 		else {
 			m_pTransformCom->LookAt(m_pLookTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION));
-		}
-		if (m_bSyncFollow) {
-			m_pTransformCom->Set_WorldMatrix(m_pFollowTarget->Get_Component<CTransform>()->Get_XMWorldMatrix());
 		}
 	}
 	else {

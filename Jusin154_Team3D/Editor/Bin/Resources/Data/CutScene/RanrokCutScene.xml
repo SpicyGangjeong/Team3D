@@ -101,7 +101,7 @@
 			<float X="" Y="" Z="" W=""/>
 		</Param_11>
 	</Socket>
-	<!-- <Socket fStartPosition = "0" >
+	 <Socket fStartPosition = "0" >
 		<Info strEventName = "Transition" eTypeParam = "END" pTarget ="CAMERA_CINEMATIC" eTypeFunc="TRANSLATION_LERP"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
@@ -134,7 +134,7 @@
 		<Param_11>
 			<float X="" Y="" Z="" W=""/>
 		</Param_11>
-	</Socket> -->
+	</Socket> 
 	<Socket fStartPosition = "1" >
 		<Info strEventName = "ZOOM_IN_LERP" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ZOOM_LERP"/>
 		<Param_0>

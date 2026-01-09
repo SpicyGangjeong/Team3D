@@ -6,6 +6,7 @@
 NS_BEGIN(Engine)
 class CGameInstance;
 class CModel;
+class CShader;
 class CVIBuffer_Model_Instance;
 NS_END
 
@@ -43,6 +44,7 @@ private:
 	HRESULT Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent);
 	future<vector<FOLDER_LOAD*>*> Deferred_FolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag);
 	future<pair<_wstring, CModel*>*> Deferred_ModelLoad(MODEL eType, const _char* pDirectoryPath, _fmatrix PreTransform, const _tchar* pPrototypeTag);
+	future<pair<_wstring, CShader*>*> Deferred_ShaderLoad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _wstring& strPrototypeTag, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
 	void Ready_MapModels(vector<future<vector<FOLDER_LOAD*>*>>& jobMapModels);
 	HRESULT Ready_RigidBody_Static(CVIBuffer_Model_Instance* pModel_Instance);
 
