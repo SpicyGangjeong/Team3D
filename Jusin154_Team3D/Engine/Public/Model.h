@@ -247,6 +247,7 @@ private:
 	_bool						m_bIsSecondFinishedAnim = { false };
 	_bool						m_bIsSecondLoop = { false };
 	_bool						m_bRatio = { false };
+	_float						m_fRatio = { 0.f };
 	_bool						m_bRootBone = {};
 	_float4x4					m_RootMatrix = {};
 	_bool						m_bDisableRootMotionScale = {false};
