@@ -123,7 +123,7 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 		}
 		else {
 			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
-			XMStoreFloat4(&m_vTargetPos, vWandPos + vDirection * m_fLinearSpeed * 0.5f);
+			XMStoreFloat4(&m_vTargetPos, vWandPos + vDirection * m_fLinearSpeed * 2.f);
 		}
 	}
 
