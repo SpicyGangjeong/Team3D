@@ -322,7 +322,10 @@ HRESULT CLevel_Field::Ready_Layer_Effect(const _wstring& strLayerTag)
 
 HRESULT CLevel_Field::Ready_Layer_Monster()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+	CRanrok::RANROKDESC RanrokDesc = {};
+	RanrokDesc.vPos = _float4(75.550f, 33.734f, 164.013f, 1.f);
+	RanrokDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &RanrokDesc))) {
 		return E_FAIL;
 	}
 

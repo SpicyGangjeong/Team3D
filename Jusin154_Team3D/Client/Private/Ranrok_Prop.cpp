@@ -60,6 +60,8 @@ HRESULT CRanrok_Prop::Initialize(void* pArg)
 
 	m_fDuration = 10000.f;
 
+	m_pInfoInstance->Regist_ActiveEffect(this);
+
 	return S_OK;
 }
 
@@ -141,7 +143,7 @@ HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEffectParts* pAppear_PT = Get_PartObject<CEffectParts>("Appear_PT");
 	CEffectParts* pSpline = Get_PartObject<CEffectParts>("Spline");
 
-
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pSphere->Set_Visible(true);
 	m_pSphereLay->Set_Visible(true);
 	m_pRing->Set_Visible(true);
@@ -273,9 +275,8 @@ void CRanrok_Prop::OnCollision(CGameObject* pOther, void* pDesc)
 		pBroken_PT->Set_Visible(true);
 		pBroken_PT2->Set_Visible(true);
 
-		m_fDuration = 5.f;
+		m_fDuration = 2.f;
 		m_fAccTime = 0.f;
-
 	}
 
 
@@ -288,10 +289,14 @@ void CRanrok_Prop::Free()
 
 	SAFE_RELEASE(m_pSphere);
 	SAFE_RELEASE(m_pSphereLay);
-	SAFE_RELEASE(m_pInfoInstance);
+
+	if (nullptr != m_pInfoInstance) {
+		CInfoInstance* pInfo = m_pInfoInstance;
+		pInfo->Deregist_ActiveEffect(this);
+	}
 	SAFE_RELEASE(m_pRing);
 	SAFE_RELEASE(m_pSphereHitLay);
-
+	SAFE_RELEASE(m_pInfoInstance);
 	SAFE_RELEASE(m_pRigidBody);
 }
 #ifdef _DEBUG

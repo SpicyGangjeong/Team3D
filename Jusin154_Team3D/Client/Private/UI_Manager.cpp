@@ -304,7 +304,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_I))
+	if (m_pGameInstance->Key_Down(DIK_J))
 	{
 		Change_Map();
 	}

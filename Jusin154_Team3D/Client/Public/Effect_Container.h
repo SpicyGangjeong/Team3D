@@ -80,7 +80,7 @@ protected:
 	ON_COLLISION_INFO	SweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision = false);
 	ON_COLLISION_INFO	MonsterSweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision = false);
 	ON_COLLISION_INFO	MonsterRayCast(_fvector StartPos, _fvector vDir, _float fLength, _uint iMaxHitCapacity);
-	_vector				Get_UnitPos(LOCKON_INFO Info);
+	_vector				Get_LockOnPos(LOCKON_INFO Info);
 
 protected:
 	_float4							m_vStartPos = {};

@@ -823,6 +823,11 @@ void CPlayer::ReLockOnTarget()
 			m_LockOnInfo.pInteractive = nullptr;
 		}
 	}
+	if (nullptr != m_LockOnInfo.pEffect) {
+		if (false == m_LockOnInfo.pEffect->Get_Visible()) {
+			m_LockOnInfo.pEffect = nullptr;
+		}
+	}
 
 	//m_pLockOnMonster->Get_State
 }

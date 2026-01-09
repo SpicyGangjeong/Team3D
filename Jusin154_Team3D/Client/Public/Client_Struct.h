@@ -60,11 +60,12 @@ typedef struct tagSpellInfo
 		map<_int, CURRENTDIALOGUEINFO> Info;
 	}NPCDIALOGUEINFO;
 
-typedef struct tagLockOnInfo {
-	CUnit* pUnit = { nullptr };
-	class CMapElement_Interactable* pInteractive = { nullptr };
-	class CMapElement_Chest* pChest = { nullptr };
-}LOCKON_INFO;
+	typedef struct tagLockOnInfo {
+		CUnit* pUnit = { nullptr };
+		class CMapElement_Interactable* pInteractive = { nullptr };
+		class CMapElement_Chest* pChest = { nullptr };
+		class CEffect_Container* pEffect = { nullptr };
+	}LOCKON_INFO;
 
 	typedef struct tegNPCInteractionInfo
 	{

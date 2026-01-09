@@ -184,6 +184,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Duelist_Levioso.h" />
     <ClInclude Include="..\Public\Duelist_NormalJap.h" />
     <ClInclude Include="..\Public\Duelist_Protego.h" />
+    <ClInclude Include="..\Public\EffectInfo.h" />
     <ClInclude Include="..\Public\Goblin_Assassin.h" />
     <ClInclude Include="..\Public\Goblin_Assassin_Spector.h" />
     <ClInclude Include="..\Public\Goblin_Sword.h" />
@@ -477,6 +478,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Duelist_Levioso.cpp" />
     <ClCompile Include="..\Private\Duelist_NormalJap.cpp" />
     <ClCompile Include="..\Private\Duelist_Protego.cpp" />
+    <ClCompile Include="..\Private\EffectInfo.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp" />
     <ClCompile Include="..\Private\Goblin_Assassin_States.cpp" />
