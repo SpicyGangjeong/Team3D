@@ -3741,6 +3741,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Safe_Delete(pOut);
 		}
 	}
+
+/* 쉐이더 로딩 종료 이후 로딩*/
+
+
 	{ // MapModels
 		m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 		_uint iIndex = 0;
