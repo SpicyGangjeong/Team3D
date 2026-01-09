@@ -1872,6 +1872,9 @@
     <Filter Include="03.InfoInstance\05.EffectInfo">
       <UniqueIdentifier>{ee5c9922-7c5c-45a2-a53d-7df30172fbaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide">
+      <UniqueIdentifier>{f2ddb6fa-89b6-4322-912e-61e0ce79278c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
