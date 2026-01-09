@@ -124,12 +124,13 @@ private:
 	_bool  m_bMotionTrail = {};
 	_bool  m_bFireBurst = {true};
 	_int   m_iPropSize = {};
+	_int   m_iHoverDash = {  };
 
 	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 	vector<class CEffect_Container*> m_pRanrok_Props;
-	_float					 m_fTuckedSpeed = { 90.f };
+	_float					 m_fTuckedSpeed = { 80.f };
 
 
 	class CEffectParts* m_pLeftSmoke = { nullptr };

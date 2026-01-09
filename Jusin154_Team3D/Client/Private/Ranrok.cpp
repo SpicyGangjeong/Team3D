@@ -196,38 +196,42 @@ void CRanrok::Update(_float fTimeDelta)
 
 
 #pragma region CREATE PROP
+
+	if (!m_pFSM->IsEnable(FSMSTATE::IDLE | FSMSTATE::PULSE | FSMSTATE::TUCKED | FSMSTATE::DEAD))
+	{
 		m_vCreatePropTime.x += fTimeDelta;
 
 		if (m_vCreatePropTime.x >= m_vCreatePropTime.y)
 		{
 			CEffect_Container* pEffect = nullptr;
-			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this,nullptr,&pEffect);
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this, nullptr, &pEffect);
 			m_vCreatePropTime.x = 0.f;
 
 			m_pRanrok_Props.push_back(pEffect);
 		}
-	
 
-	_bool bAllHidden = true;
 
-	for (auto& Props : m_pRanrok_Props)
-	{
-		if (Props->Get_Visible()) 
+		_bool bAllHidden = true;
+
+		for (auto& Props : m_pRanrok_Props)
 		{
-			bAllHidden = false;
-			break;
+			if (Props->Get_Visible())
+			{
+				bAllHidden = false;
+				break;
+			}
 		}
-	}
-	if (m_pRanrok_Props.size() == 0) {
-		bAllHidden = false;
-	}
+		if (m_pRanrok_Props.size() == 0) {
+			bAllHidden = false;
+		}
 
-	if (bAllHidden)
-	{
-		m_bFireBurst = false;
-	}
-	else {
-		m_bFireBurst = true;
+		if (bAllHidden)
+		{
+			m_bFireBurst = false;
+		}
+		else {
+			m_bFireBurst = true;
+		}
 	}
 
 #pragma endregion

@@ -59,13 +59,11 @@ void CWand::Update(_float fTimeDelta)
 
 void CWand::Late_Update(_float fTimeDelta)
 {
-
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CWand::Render()
 {
-
 	_matrix socketMatrix = {};
 
 	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
