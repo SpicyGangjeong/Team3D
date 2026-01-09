@@ -332,11 +332,11 @@ void CRanrok::Trigger(CTimeSocket& Socket)
 	}break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
-		//m_pFSM->Set_State(FSMSTATE::CUTSCENE);
+		//m_pModelCom->Set_AnimationIndex();
 	}break;
 	case TIMESOCKET_FUNC::SET_FSMSTATE:
 	{
-		//m_pModelCom->Set_AnimationIndex();
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
 	}break;
 	default:
 		break;

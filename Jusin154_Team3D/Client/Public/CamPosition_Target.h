@@ -20,6 +20,9 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual _vector Get_WorldPostion() override;
+	virtual void Set_WorldPostion(_vector vPos);
+	virtual void Stalking_Target(CGameObject* pStalkingTarget);
+	virtual void Stop_Stalking();
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -27,6 +30,7 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources() override;
 
+	CGameObject* m_pStalkingTarget = { nullptr };
 public:
 	static CCamPosition_Target* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCamPosition_Target* Clone(void* pArg, class CGameObject* pOWner) override;

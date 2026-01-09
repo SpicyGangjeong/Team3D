@@ -4,6 +4,7 @@
 #include "Camera.h"
 
 NS_BEGIN(Client)
+class CCamPosition_Target;
 
 class CCamera_Cinematic final : public CCamera
 {
@@ -24,6 +25,7 @@ public:
 	virtual void Trigger(CTimeSocket& Socket)override;
 
 public:
+	virtual void Active_Camera(pair<_float4, _float3>& pairTransitionInfo)override;
 	void Update_LerpTimer(_float fTimeDelta);
 	void Set_Priority(_uint iPriority);
 	void Set_LookTarget(CGameObject* pTarget);
@@ -34,6 +36,7 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
+	virtual HRESULT Ready_SubPart();
 	HRESULT Bind_ShaderResources() override;
 
 	void Lerp_Translation(_float fTimeDelta);
@@ -48,6 +51,8 @@ private:
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
+	CCamPosition_Target* m_pLookTargetPart = { nullptr };
+	CCamPosition_Target* m_pFollowTargetPart = { nullptr };
 
 	_bool	m_bLerpTranslation = { false };
 	_float2 m_vLerpTranslationTimer = {};

@@ -32,11 +32,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 {
 	m_strMessage = TEXT("Texture Loading..");
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
-			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
-		return E_FAIL;
-	}
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
 		return E_FAIL;
@@ -425,15 +420,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 #pragma endregion
 
-	for (auto& job : futures) {
-		pair<_wstring, CModel*>* pResult = job.get();
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pResult->first, pResult->second))) {
-			assert(false);
-			return E_FAIL;
-		}
-		Safe_Delete(pResult);
-	}
-
 
 	m_strMessage = TEXT("Shader Loading..");
 
@@ -527,6 +513,14 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	for (auto& job : futures) {
+		pair<_wstring, CModel*>* pResult = job.get();
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pResult->first, pResult->second))) {
+			assert(false);
+			return E_FAIL;
+		}
+		Safe_Delete(pResult);
+	}
 	m_strMessage = TEXT("Loading Success!");
 
 	m_isFinished = true;

@@ -2,19 +2,12 @@
 #include "Camera_Cinematic.h"
 #include "InfoInstance.h"
 #include "TimeSocket.h"
+#include "CamPosition_Target.h"
 #include "Layer.h"
 
 
-CCamera_Cinematic::CCamera_Cinematic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CCamera(pDevice, pContext)
-{
-}
-
-CCamera_Cinematic::CCamera_Cinematic(const CCamera_Cinematic& rhs)
-	: CCamera(rhs),
-	m_pInfoInstance(CInfoInstance::GetInstance())
-{
-}
+CCamera_Cinematic::CCamera_Cinematic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CCamera(pDevice, pContext) {}
+CCamera_Cinematic::CCamera_Cinematic(const CCamera_Cinematic& rhs) : CCamera(rhs), m_pInfoInstance(CInfoInstance::GetInstance()) { }
 
 void CCamera_Cinematic::Priority_Update(_float fTimeDelta)
 {
@@ -28,6 +21,27 @@ void CCamera_Cinematic::Priority_Update(_float fTimeDelta)
 #endif // _DEBUG
 	if (false == m_bActive) {
 		return;
+	}
+	if (false == m_bIsCurrentTransition) {
+		if (m_bEnable_FollowLerp) {
+			_float fTimeDenom = max(m_vFollowLerpTime.y, FLT_EPSILON);
+			_vector vNewPos = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vFollowPos_Src), XMLoadFloat3(&m_vFollowPos_Dest), CMyTools::Saturate(m_vFollowLerpTime.x / fTimeDenom)), 1.f);
+			m_pTransformCom->Set_State(STATE::POSITION, vNewPos);
+		}
+		else {
+			m_pTransformCom->Set_State(STATE::POSITION, m_pFollowTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+		}
+		if (m_bEnable_LookLerp) {
+			_float fTimeDenom = max(m_vLookLerpTime.y, FLT_EPSILON);
+			_vector vNewLook = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vLookPos_Src), XMLoadFloat3(&m_vLookPos_Dest), CMyTools::Saturate(m_vLookLerpTime.x / fTimeDenom)), 1.f);
+			m_pTransformCom->LookAt(vNewLook);
+		}
+		else {
+			m_pTransformCom->LookAt(m_pLookTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+		}
+	}
+	else {
+
 	}
 	m_bActive = true;
 	__super::Bind_Matrices();
@@ -43,7 +57,6 @@ void CCamera_Cinematic::Update(_float fTimeDelta)
 	}
 	Transition(fTimeDelta);
 	Update_LerpTimer(fTimeDelta);
-
 }
 void CCamera_Cinematic::Late_Update(_float fTimeDelta)
 {
@@ -51,9 +64,20 @@ void CCamera_Cinematic::Late_Update(_float fTimeDelta)
 		return;
 	}
 }
-HRESULT CCamera_Cinematic::Render()
+HRESULT CCamera_Cinematic::Render() { return S_OK; }
+void CCamera_Cinematic::Active_Camera(pair<_float4, _float3>& pairTransitionInfo)
 {
-	return S_OK;
+	if (true == m_bEnable_TransitionLerp) {
+		_vector vNewPos = XMVectorSetW(XMLoadFloat3(&pairTransitionInfo.second), 1.f);
+		m_pTransformCom->Set_WorldMatrix(XMMatrixAffineTransformation(XMVectorSplatOne(), XMVectorZero(),
+			XMLoadFloat4(&pairTransitionInfo.first), vNewPos));
+		m_vTransitionTime.x = 0.f;
+		m_bIsCurrentTransition = true;
+
+		m_pFollowTargetPart->Set_WorldPostion(vNewPos);
+		m_pLookTargetPart->Set_WorldPostion(vNewPos + m_pTransformCom->Get_State(STATE::LOOK) * 10.f);
+	}
+	m_bActive = true;
 }
 
 void CCamera_Cinematic::Update_LerpTimer(_float fTimeDelta)
@@ -80,7 +104,6 @@ void CCamera_Cinematic::Update_LerpTimer(_float fTimeDelta)
 			XMStoreFloat3(&m_vFollowPos_Dest, m_pFollowTarget->Get_WorldPostion());
 		}
 	}
-
 }
 
 void CCamera_Cinematic::Set_Priority(_uint iPriority)
@@ -90,16 +113,12 @@ void CCamera_Cinematic::Set_Priority(_uint iPriority)
 
 void CCamera_Cinematic::Set_LookTarget(CGameObject* pTarget)
 {
-	SAFE_RELEASE(m_pLookTarget);
-	m_pLookTarget = pTarget;
-	SAFE_ADDREF(m_pLookTarget);
+	m_pLookTargetPart->Stalking_Target(pTarget);
 }
 
 void CCamera_Cinematic::Set_FollowTarget(CGameObject* pTarget)
 {
-	SAFE_RELEASE(m_pFollowTarget);
-	m_pFollowTarget = pTarget;
-	SAFE_ADDREF(m_pFollowTarget);
+	m_pFollowTargetPart->Stalking_Target(pTarget);
 }
 
 void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
@@ -111,10 +130,15 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 		m_pGameInstance->Bind_Camera(NEXT_LEVEL, pContents->wstrKeyName, true);
 		break;
 	case TIMESOCKET_FUNC::TRANSLATION:
+	{
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
 		m_pTransformCom->RotationQ(pContents->pxTransform.q);
+
+		_vector vNewPos = m_pTransformCom->Get_State(STATE::POSITION);
+		m_pFollowTargetPart->Set_WorldPostion(vNewPos);
+		m_pLookTargetPart->Set_WorldPostion(vNewPos + m_pTransformCom->Get_State(STATE::LOOK) * 10.f);
 		Clear_Lerp_Translation();
-		break;
+	} break;
 	case TIMESOCKET_FUNC::TRANSLATION_LERP:
 	{
 		Clear_Lerp_Translation();
@@ -165,6 +189,10 @@ HRESULT CCamera_Cinematic::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	if (FAILED(Ready_SubPart())) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
@@ -175,6 +203,23 @@ HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
 
 	return S_OK;
 }
+
+HRESULT CCamera_Cinematic::Ready_SubPart()
+{
+	{
+		CCamPosition_Target::CAMERAPOSITION_TARGET_DESC Desc{};
+		Desc.pParentTransform = m_pTransformCom;
+		m_pFollowTarget = m_pFollowTargetPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
+		m_pFollowTargetPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -10.4f, 1.f));
+		m_pLookTarget = m_pLookTargetPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
+		m_pLookTargetPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
+
+		SAFE_ADDREF(m_pFollowTargetPart);
+		SAFE_ADDREF(m_pLookTargetPart);
+	}
+	return S_OK;
+}
+
 HRESULT CCamera_Cinematic::Bind_ShaderResources()
 {
 	return S_OK;
@@ -265,6 +310,9 @@ CGameObject* CCamera_Cinematic::Clone(void* pArg, CGameObject* pOwner)
 void CCamera_Cinematic::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pLookTargetPart);
+	SAFE_RELEASE(m_pFollowTargetPart);
 }
 
 #ifdef _DEBUG
