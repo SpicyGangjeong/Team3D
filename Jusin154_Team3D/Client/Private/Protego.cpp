@@ -63,7 +63,11 @@ void CProtego::Priority_Update(_float fTimeDelta)
 void CProtego::Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
+	{
+		dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(false);
 		return;
+	}
+
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -185,7 +189,6 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);
-
 
 	m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>()
 		->Use_Skill(SKILL_TYPE::PROTEGO_HIT, m_pOwner, &CollisionDesc->vWorldPos);

@@ -430,13 +430,27 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	pair<_uint, _bool> pairAnimInfo;
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
+
 	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) ||
-		m_bShield ||
 		iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first ||
 		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first ||
 		iCurrAnim == m_Animation[STATEANIM::ANCIENT_THROW].first)
 		return;
+
+	if (m_bShield)
+	{
+		if (iCurrAnim != m_Animation[STATEANIM::SHIELD_BLOCK].first) {
+			Start_CameraShake(0.3f, 3.f);
+			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, true, false, false);
+			return;
+		}
+		else {
+			m_bShield = false;
+		}
+	}
 
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
@@ -855,7 +869,8 @@ void CPlayer::Player_PixRot()
 {
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
 	if (iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first ||
-		iCurrAnim == m_Animation[STATEANIM::BROOM_DISMOUNT].first)
+		iCurrAnim == m_Animation[STATEANIM::BROOM_DISMOUNT].first||
+		iCurrAnim == m_Animation[STATEANIM::IDLE].first)
 	{
 		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 

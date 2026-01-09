@@ -68,6 +68,40 @@
 		</Param_11>
 	</Socket>
 	<Socket fStartPosition = "0">
+		<Info strEventName = "Rotation" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ROTATION"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="-0.078" Y="0.221" Z="0.018" W="0.972"/>
+				<Trans X="10.088" Y="7.579" Z="26.052"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+	</Socket>
+	<Socket fStartPosition = "0">
 		<Info strEventName = "LOOK_RANROK" eTypeParam = "TARGET" pTarget = "CAMERA_CINEMATIC" eTypeFunc="LOOK_AT"/>
 		<Param_0>
 			<OtherTarget Layer = "Layer_Monster" TypeID = "Ranrok"/>
@@ -101,40 +135,6 @@
 			<float X="" Y="" Z="" W=""/>
 		</Param_11>
 	</Socket>
-	<!-- <Socket fStartPosition = "0" >
-		<Info strEventName = "Transition" eTypeParam = "END" pTarget ="CAMERA_CINEMATIC" eTypeFunc="TRANSLATION_LERP"/>
-		<Param_0>
-			<OtherTarget Layer = "" TypeID = ""/>
-			<Transform>
-				<RotQ X="" Y="" Z="" W=""/>
-				<Trans X="" Y="" Z=""/>
-			</Transform>
-		</Param_0>
-		<vFlags>
-			<Flag id ="0">true</Flag>
-			<Flag id ="1">false</Flag>
-			<Flag id ="2">false</Flag>
-			<Flag id ="3">false</Flag>
-			<Flag id ="4">false</Flag>
-			<Flag id ="5">false</Flag>
-			<Flag id ="6">false</Flag>
-			<Flag id ="7">false</Flag>
-			<Flag id ="8">false</Flag>
-			<Flag id ="9">false</Flag>
-			<Flag id ="10">false</Flag>
-			<Flag id ="11">false</Flag>
-			<Flag id ="12">false</Flag>
-			<Flag id ="13">false</Flag>
-			<Flag id ="14">false</Flag>
-			<Flag id ="15">false</Flag>
-		</vFlags>
-		<Param_10>
-			<uint X="" Y="" Z="" W=""/>
-		</Param_10>
-		<Param_11>
-			<float X="" Y="" Z="" W=""/>
-		</Param_11>
-	</Socket> -->
 	<Socket fStartPosition = "1" >
 		<Info strEventName = "ZOOM_IN_LERP" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ZOOM_LERP"/>
 		<Param_0>
@@ -170,40 +170,6 @@
 		</Param_11>
 	</Socket>
 	<Socket fStartPosition = "1.5" >
-		<Info strEventName = "ZOOM_OUT_TRANS_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TRANSLATION_LERP"/>
-		<Param_0>
-			<OtherTarget Layer = "" TypeID = ""/>
-			<Transform>
-				<RotQ X="-0.133" Y="0.200" Z="0.027" W="0.970"/>
-				<Trans X="61.119" Y="25.549" Z="130.570"/>
-			</Transform>
-		</Param_0>
-		<vFlags>
-			<Flag id ="0">false</Flag>
-			<Flag id ="1">false</Flag>
-			<Flag id ="2">false</Flag>
-			<Flag id ="3">false</Flag>
-			<Flag id ="4">false</Flag>
-			<Flag id ="5">false</Flag>
-			<Flag id ="6">false</Flag>
-			<Flag id ="7">false</Flag>
-			<Flag id ="8">false</Flag>
-			<Flag id ="9">false</Flag>
-			<Flag id ="10">false</Flag>
-			<Flag id ="11">false</Flag>
-			<Flag id ="12">false</Flag>
-			<Flag id ="13">false</Flag>
-			<Flag id ="14">false</Flag>
-			<Flag id ="15">false</Flag>
-		</vFlags>
-		<Param_10>
-			<uint X="" Y="" Z="" W=""/>
-		</Param_10>
-		<Param_11>
-			<float X="2" Y="0" Z="0" W=""/>
-		</Param_11>
-	</Socket>
-	<Socket fStartPosition = "1.5" >
 		<Info strEventName = "ZOOM_OUT_LERP" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ZOOM_LERP"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
@@ -235,6 +201,74 @@
 		</Param_10>
 		<Param_11>
 			<float X="20" Y="40" Z="2" W=""/>
+		</Param_11>
+	</Socket>
+	<Socket fStartPosition = "1.5" >
+		<Info strEventName = "ZOOM_OUT_TRANS_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TRANSLATION"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="-0.100" Y="0.205" Z="0.021" W="0.973"/>
+				<Trans X="65.920" Y="32.915" Z="149.397"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="2" Y="0" Z="0" W=""/>
+		</Param_11>
+	</Socket>
+	<Socket fStartPosition = "3.5" >
+		<Info strEventName = "Ranrok_TUCK_0" eTypeParam = "NOT_USE" pTarget = "ACTOR_RANROK" eTypeFunc="SET_FSMSTATE"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">true</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
 		</Param_11>
 	</Socket>
 	<Socket fStartPosition = "9" >
@@ -302,7 +336,7 @@
 			<uint X="" Y="" Z="" W=""/>
 		</Param_10>
 		<Param_11>
-			<float X="20" Y="60" Z="" W=""/>
+			<float X="60" Y="20" Z="" W=""/>
 		</Param_11>
 	</Socket>
 	<Socket fStartPosition = "9" >

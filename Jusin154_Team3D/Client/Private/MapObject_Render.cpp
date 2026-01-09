@@ -60,10 +60,8 @@ HRESULT CMapObject_Render::Initialize(void* pArg)
 	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
 	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
 
-
 	ReadyForPhysX();
 	ConvertToPhysX();
-
 	return S_OK;
 }
 
@@ -164,7 +162,7 @@ void CMapObject_Render::ReadyForPhysX()
 	{
 		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix), iLevel))) {
+		if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
 			assert(false);
 		}
 	}
@@ -172,7 +170,6 @@ void CMapObject_Render::ReadyForPhysX()
 
 void CMapObject_Render::ConvertToPhysX()
 {
-	XMStoreFloat4x4(&m_IdentityMatrix, XMMatrixIdentity());
 	if (true == m_bReadyToCreatePhysX) {
 		return;
 	}
@@ -184,7 +181,7 @@ void CMapObject_Render::ConvertToPhysX()
 		CModel* pModel = m_pModelComs[iIndexLOD];
 
 		_uint iNumMeshes = pModel->Get_NumMeshes();
-		
+
 		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
 		{
 			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
@@ -192,7 +189,7 @@ void CMapObject_Render::ConvertToPhysX()
 			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
 			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 			Desc.pMeshName = wstrName.c_str();
-			Desc.pWorldMatrix = &m_IdentityMatrix;
+			Desc.pWorldMatrix = &m_CombinedWorldMatrix;
 			if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
 				assert(false);
 			}

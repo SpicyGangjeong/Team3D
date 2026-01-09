@@ -79,6 +79,9 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 
 	m_pModelCom->Set_DisableRootMotionScale(true);
+#ifdef _DEBUG
+	m_pTransformCom->Compress_WorldMatrix(m_vInitialTrans, m_vInitialRotQ);
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -193,38 +196,42 @@ void CRanrok::Update(_float fTimeDelta)
 
 
 #pragma region CREATE PROP
+
+	if (!m_pFSM->IsEnable(FSMSTATE::IDLE | FSMSTATE::PULSE | FSMSTATE::TUCKED | FSMSTATE::DEAD))
+	{
 		m_vCreatePropTime.x += fTimeDelta;
 
 		if (m_vCreatePropTime.x >= m_vCreatePropTime.y)
 		{
 			CEffect_Container* pEffect = nullptr;
-			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this,nullptr,&pEffect);
+			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this, nullptr, &pEffect);
 			m_vCreatePropTime.x = 0.f;
 
 			m_pRanrok_Props.push_back(pEffect);
 		}
-	
 
-	_bool bAllHidden = true;
 
-	for (auto& Props : m_pRanrok_Props)
-	{
-		if (Props->Get_Visible()) 
+		_bool bAllHidden = true;
+
+		for (auto& Props : m_pRanrok_Props)
 		{
-			bAllHidden = false;
-			break;
+			if (Props->Get_Visible())
+			{
+				bAllHidden = false;
+				break;
+			}
 		}
-	}
-	if (m_pRanrok_Props.size() == 0) {
-		bAllHidden = false;
-	}
+		if (m_pRanrok_Props.size() == 0) {
+			bAllHidden = false;
+		}
 
-	if (bAllHidden)
-	{
-		m_bFireBurst = false;
-	}
-	else {
-		m_bFireBurst = true;
+		if (bAllHidden)
+		{
+			m_bFireBurst = false;
+		}
+		else {
+			m_bFireBurst = true;
+		}
 	}
 
 #pragma endregion
@@ -332,11 +339,13 @@ void CRanrok::Trigger(CTimeSocket& Socket)
 	}break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
-		//m_pFSM->Set_State(FSMSTATE::CUTSCENE);
+		//m_pModelCom->Set_AnimationIndex();
 	}break;
 	case TIMESOCKET_FUNC::SET_FSMSTATE:
 	{
-		//m_pModelCom->Set_AnimationIndex();
+		if (Socket.m_Contents.vFlags.b[0]) {
+			m_pFSM->Change_State(FSMSTATE::TUCKED);
+		}
 	}break;
 	default:
 		break;
@@ -389,7 +398,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED))
+	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED) || m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::HIT_BWD2].first)
 		return;
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -990,7 +999,13 @@ void CRanrok::Describe_Entity()
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Ranrak")) {
 		__super::Describe_Entity();
-
+		if (GUI::SmallButton("ResetPos")) {
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vInitialTrans), 1.f));
+			m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
+			m_pTransformCom->RotationQ(XMLoadFloat4(&m_vInitialRotQ));
+			m_iCurrentFlow = 0;
+			m_iCurrentPoint = 0;
+		}
 		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 		GUI::Text(AnimList.c_str());
 

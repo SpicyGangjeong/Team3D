@@ -531,21 +531,23 @@ void CLevel_Field::Load_CutSceneXML(const string& path, CCamera* pCamera, CMonst
 			SocketContents.strEventName = pEventNameText ? pEventNameText : "";
 
 			SocketContents.eTypeParam = TIMESOCKET_PARAM::END;
-			if (const _char* pTypeText = pInfoNode->Attribute("eTypeParam"))
+			const _char* pTypeText = pInfoNode->Attribute("eTypeParam");
+			if (nullptr != pTypeText)
 			{
 				CTimeSocket::TryParse_TimeSocketParam(string_view(pTypeText), SocketContents.eTypeParam);
 			}
 
 			SocketContents.eTypeFunc = TIMESOCKET_FUNC::END;
-			if (const _char* pFuncText = pInfoNode->Attribute("eTypeFunc")) 
+			const _char* pFuncText = pInfoNode->Attribute("eTypeFunc");
+			if (nullptr != pFuncText) 
 			{
 				CTimeSocket::TryParse_TimeSocketFunc(string_view(pFuncText), SocketContents.eTypeFunc);
 			}
 
 			SocketContents.pEventTarget = nullptr;
 			SocketContents.funcEvent = nullptr;
-
-			if (const _char* pTargetText = pInfoNode->Attribute("pTarget"))
+			const _char* pTargetText = pInfoNode->Attribute("pTarget");
+			if (nullptr != pTargetText)
 			{
 				if (strcmp(pTargetText, "CAMERA_CINEMATIC") == 0)
 				{
@@ -562,6 +564,12 @@ void CLevel_Field::Load_CutSceneXML(const string& path, CCamera* pCamera, CMonst
 				else if (strcmp(pTargetText, "ACTOR_PLAYER") == 0)
 				{
 					CPlayer* pEventTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>();
+					SocketContents.pEventTarget = pEventTarget;
+					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
+				}
+				else if (strcmp(pTargetText, "ACTOR_RANROK") == 0)
+				{
+					CMonster* pEventTarget = pMonster;
 					SocketContents.pEventTarget = pEventTarget;
 					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
 				}

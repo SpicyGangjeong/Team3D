@@ -138,7 +138,9 @@ void CBroomRacerAI::Update(_float fTimeDelta)
 
 void CBroomRacerAI::Late_Update(_float fTimeDelta)
 {
-
+	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
+		return;
+	}
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
