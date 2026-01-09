@@ -389,7 +389,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED))
+	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED) || m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::HIT_BWD2].first)
 		return;
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);

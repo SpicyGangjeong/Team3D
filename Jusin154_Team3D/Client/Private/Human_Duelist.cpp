@@ -87,6 +87,10 @@ void CHuman_Duelist::Priority_Update(_float fTimeDelta)
 
 void CHuman_Duelist::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Up(DIK_J))
+	{
+		m_pCharacter_Controller->Set_Position(XMVectorSet(1007.f, 6.f, 1016.f, 1.f));
+	}
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta *m_fEasing, m_pTransformCom);

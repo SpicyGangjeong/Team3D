@@ -74,7 +74,7 @@ private:
 	_uint iIndex = {};
 	DAMAGE_INFO m_DamageInfo;
 	_bool m_bCollisionPlayer = { false };
-	_float2 m_vCreatePropTime = { 0.f , 60.f };
+	_float2 m_vCreatePropTime = { 0.f , 30.f };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
