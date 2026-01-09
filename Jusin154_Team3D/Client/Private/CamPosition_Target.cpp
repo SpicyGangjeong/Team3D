@@ -108,6 +108,7 @@ CCamPosition_Target* CCamPosition_Target::Clone(void* pArg, class CGameObject* p
 void CCamPosition_Target::Free()
 {
 	__super::Free();
+	SAFE_RELEASE(m_pStalkingTarget);
 }
 #ifdef _DEBUG
 

@@ -424,7 +424,7 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.bEnableTransitionLerp = true;
 	CameraDesc.bEnableFollowLerp = false;
 	CameraDesc.bEnableLookLerp = false;
-	CameraDesc.vTransitionTime = { 0.f, 1.f };
+	CameraDesc.vTransitionTime = { 0.f, 3.f };
 	CameraDesc.vFollowLerpTime = { 0.f, TIMER_SHORT_LERP };
 	CameraDesc.vLookLerpTime = { 0.f, TIMER_SHORT_LERP };
 
