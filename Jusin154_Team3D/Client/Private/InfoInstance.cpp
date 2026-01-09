@@ -373,6 +373,11 @@ HRESULT CInfoInstance::ActiveAt_Interactive(_fvector vPosition)
 	return m_pInteractiveInfo->ActiveAt_Interactive(vPosition);
 }
 
+void CInfoInstance::NextLevel(CHOICEINFO Choice)
+{
+	m_pDialogue_Font->NextLevel(Choice);
+}
+
 void CInfoInstance::Set_Broom_Timer(_float fTimer)
 {
 	m_fBroom_Timer = fTimer;

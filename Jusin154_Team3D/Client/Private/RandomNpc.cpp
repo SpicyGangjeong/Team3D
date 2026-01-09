@@ -81,7 +81,7 @@ void CRandomNpc::Update(_float fTimeDelta)
 
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
-	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+	//m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 
 	_vector vCurrentPos = Get_WorldPostion();
 	pair<CUnit*, CTransform*> pairTarget = m_pInfoInstance->Get_NearestPlayerAlly(vCurrentPos);
@@ -93,7 +93,7 @@ void CRandomNpc::Update(_float fTimeDelta)
 		m_fTargetDistance = { FLT_MAX };
 	}
 
-	if (m_fTargetDistance <= 5.f && m_bInteract == false)
+	/*if (m_fTargetDistance <= 5.f && m_bInteract == false)
 	{
 		m_pInfoInstance->Event_CallBack(TEXT("NPCDialogue"), m_pNpcStat);
 		m_bInteract = true;
@@ -113,7 +113,7 @@ void CRandomNpc::Update(_float fTimeDelta)
 	{
 		m_bInteract = false;
 		m_fInteractTime = 0.f;
-	}
+	}*/
 }
 
 void CRandomNpc::Late_Update(_float fTimeDelta)

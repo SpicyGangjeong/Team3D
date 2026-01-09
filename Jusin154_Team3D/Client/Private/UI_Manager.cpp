@@ -4,6 +4,7 @@
 #include "GamePlay_Canvas.h"
 #include "Spell_Canvas.h"
 #include "Quest_Canvas.h"
+#include "Dialogue_Canvas.h"
 #include "InfoInstance.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
@@ -76,6 +77,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
 		break;
@@ -111,6 +113,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(true);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(false);
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
 		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
@@ -170,9 +173,9 @@ void CUI_Manager::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
 	if (m_pGameInstance->Key_Down(DIK_T))
 	{
+		m_fAlphaVelue = 1.f;
 		if (m_eType == UI_STATE::GAMEPLAYER)
 			Canvas_Change(UI_STATE::SPELL);
 		else if (m_eType == UI_STATE::SPELL)
@@ -183,6 +186,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Key_Down(DIK_TAB))
 		{
+			m_fAlphaVelue = 1.f;
 			if (m_bActive == false)
 			{
 				m_bActive = true;
@@ -204,6 +208,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Key_Down(DIK_ESCAPE))
 		{
+			m_fAlphaVelue = 1.f;
 			if (m_bActive == false)
 			{
 				m_bActive = true;
@@ -222,6 +227,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_eType == UI_STATE::GAMEPLAYER && m_bNPCInteract == true)
 	{
+		m_fAlphaVelue = 1.f;
 		if (m_bCurrentNPCInteract != m_bNPCInteract)
 			m_bCurrentNPCInteract = m_bNPCInteract;
 
@@ -233,6 +239,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_bCurrentNPCInteract == true && m_bNPCInteract == false)
 	{
+		m_fAlphaVelue = 1.f;
 		m_bCurrentNPCInteract = m_bNPCInteract;
 
 		if (m_bActive == false)
@@ -248,12 +255,12 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_bActive == true && m_bHover == false)
 	{
-		if (m_fAlpha <= 1.f)
+		if (m_fAlpha <= m_fAlphaVelue)
 		{
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
 		}
 
-		if (m_fAlpha > 1.f && m_bAlphaZero == true)
+		if (m_fAlpha > m_fAlphaVelue && m_bAlphaZero == true)
 		{
 			m_bAlphaZero = false;
 			m_fAlpha = 1.f;
@@ -391,6 +398,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	}
 	Add_Canvas(TEXT("SpellLearn_Canvas"), m_pSpellLearn_Canvas);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDialogue_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CDialogue_Canvas**>(&m_pDialogue_Canvas)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Dialogue_Canvas"), m_pDialogue_Canvas);
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;
 	}
@@ -460,11 +472,14 @@ CGameObject* CUI_Manager::Find_Canvas(const _wstring& Name)
 void CUI_Manager::NpcInteract(_bool bInteract)
 {
 	m_bNPCInteract = bInteract;
+	m_bHover = bInteract;
+	m_bActive = bInteract;
+	m_bAlphaZero = true;
 }
 
 void CUI_Manager::Set_Fade()
 {
-	m_fAlpha = 1.5f;
+	m_fAlphaVelue = 1.5f;
 	m_bActive = true;
 	m_bHover = true;
 	m_bCgangede = true;

@@ -42,6 +42,10 @@ private:
 public:
 	void Add_Text(void* pArg);
 	void Npc_Dialogue(DIALOGUEINFO Info);
+
+	void NextText();
+	void NextLevel(CHOICEINFO Choice);
+
 private:
 	void NpcInfo(void* pArg);
 	void NpcInteract(_bool bInteract);
@@ -49,11 +53,14 @@ private:
 	void NpcDialogue();
 	void NpcDialogue(CNPCStat* Stat);
 
+	void NpcNextText();
+
 	void CHoice();
 
 	void Shop();
 	void SpellLearn();
-	void NextText();
+
+	void ReSet();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
@@ -63,6 +70,7 @@ private:
 
 	vector<class CDialogue*> m_DialoguInfo;
 	deque<class CDialogue*> m_pCurrentDialogue;
+	vector<_int>  m_NextLevel;
 
 	_bool	m_bNpcInteract = { false };
 	_bool	m_bCurrentInteract = { false };
@@ -70,10 +78,13 @@ private:
 	_bool	m_bNextText = { false };
 	
 	_wstring	m_pNpcName;
+	_wstring	m_pName;
 	_int		m_iTextID{};
 	_int		m_iNextID{};
 	_int		m_iType{};
 
+	_bool		m_bChoiceText = {false};
+	_bool		m_bCurrentChoiceText = {false};
 
 public:
 	static CDialogue_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
