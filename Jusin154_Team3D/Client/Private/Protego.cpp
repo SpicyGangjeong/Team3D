@@ -182,6 +182,23 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);
+
+	CEffectParts* pProtego_HitPT = Get_PartObject<CEffectParts>("Protego_HitPT");
+	CEffectParts* pProtego_HitPT_Line = Get_PartObject<CEffectParts>("Protego_HitPT_Line");
+	CEffectParts* pProtegoHit = Get_PartObject<CEffectParts>("ProtegoHit");
+	CEffectParts* pProtegoHit_Lay = Get_PartObject<CEffectParts>("ProtegoHit_Lay");
+	
+
+	pProtego_HitPT->Set_Visible(true);
+	pProtego_HitPT_Line->Set_Visible(true);
+	pProtegoHit->Set_Visible(true);
+	pProtegoHit_Lay->Set_Visible(true);
+
+	pProtegoHit_Lay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	pProtego_HitPT_Line->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	pProtegoHit->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	pProtegoHit_Lay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+
 }
 
 void CProtego::Free()
