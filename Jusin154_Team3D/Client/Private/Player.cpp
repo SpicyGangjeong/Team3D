@@ -105,6 +105,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	}
 
 #ifdef _DEBUG
+
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
 	m_BasicEffect->SetVertexColorEnabled(true);
 	m_BasicEffect->SetView(m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW));

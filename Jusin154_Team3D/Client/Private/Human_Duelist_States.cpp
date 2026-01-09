@@ -147,7 +147,7 @@ void CHuman_Duelist::Behavior_LightAttackEnter()
 		fRatio);
 
 	Add_Event(pairAnimInfo.first,
-		[this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  },
+		[this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::DUELIST_JAPSIDE, Get_PartObject<CWand>());  },
 		0.0f);
 
 	m_fSkillCoolTime[ENUM_CLASS(SKILL::LIGHT_ATTACK)] = m_fMaxSkillCoolTime[ENUM_CLASS(SKILL::LIGHT_ATTACK)];
