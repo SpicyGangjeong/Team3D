@@ -1,20 +1,22 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
-#include "PanelObject.h"
+#include "Client_Define.h"
+#include "CanvasObject.h"
 
 NS_BEGIN(Engine)
-class CGameObject;
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CDialogue_Panel final : public CPanelObject
+class CDialogue_Canvas final : public CCanvasObject
 {
 private:
-	CDialogue_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CDialogue_Panel(const CDialogue_Panel& rhs);
-	virtual ~CDialogue_Panel() = default;
+	CDialogue_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CDialogue_Canvas(const CDialogue_Canvas& rhs);
+	virtual ~CDialogue_Canvas() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -26,23 +28,24 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Ready_Element(void* pArg) override;
+	virtual HRESULT	Ready_Panel(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	void Clear_Penel();
+
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-
-	CGameObject* m_pDialogue_Choice = { nullptr };
-	CGameObject* m_pDialogue_Choice1 = { nullptr };
+	CGameObject* m_pDialogue_Panel = { nullptr };
 
 public:
-	static CDialogue_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CDialogue_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END
