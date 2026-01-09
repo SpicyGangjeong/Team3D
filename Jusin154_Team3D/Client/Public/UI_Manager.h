@@ -41,6 +41,7 @@ public:
 
 	void Add_Manager_Event(_wstring Name, function<void(void*)> Event);
 	void Event_Callback(_wstring Name, void* pArg = nullptr);
+
 private:
 	void Add_Canvas(_wstring Name, class CGameObject* pCanvas);
 	CGameObject* Find_Canvas(const _wstring& Name);
@@ -48,7 +49,7 @@ private:
 	void NpcInteract(_bool bInteract);
 
 	void Set_Fade();
-
+	void Change_Map();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
