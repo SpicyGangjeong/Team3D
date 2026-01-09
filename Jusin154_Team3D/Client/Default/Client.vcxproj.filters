@@ -884,8 +884,8 @@
     <ClInclude Include="..\Public\CutSceneInfo.h">
       <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TimeSocket.h">
-      <Filter>04.Mechanic\TimeSocket</Filter>
+    <ClInclude Include="..\Public\Camera_Cinematic.h">
+      <Filter>02.GameObjects\Cameras\Camera_Cinematic</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Dialogue_Choice.h">
       <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
@@ -1854,11 +1854,11 @@
     <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
       <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\TimeSocket">
-      <UniqueIdentifier>{ca386d46-aca6-44a4-94cc-15610e1a878e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Item\ThestralCarriage">
       <UniqueIdentifier>{d07bd195-0cdf-4a47-8c50-e3a88361352f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\Camera_Cinematic">
+      <UniqueIdentifier>{581e7b08-09ae-4e52-8e84-d6ac8cc94dc9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Dialogue_Canvas">
       <UniqueIdentifier>{20f56d81-fd4b-4e24-a73e-792a4700c512}</UniqueIdentifier>
@@ -2715,8 +2715,8 @@
     <ClCompile Include="..\Private\CutSceneInfo.cpp">
       <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TimeSocket.cpp">
-      <Filter>04.Mechanic\TimeSocket</Filter>
+    <ClCompile Include="..\Private\Camera_Cinematic.cpp">
+      <Filter>02.GameObjects\Cameras\Camera_Cinematic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Dialogue_Canvas.cpp">
       <Filter>02.GameObjects\UI\Dialogue_Canvas</Filter>

@@ -10,6 +10,8 @@
 #include "Layer.h"
 #include "TrailObject.h"
 #include "MapElement_Interactable.h"
+#include "TimeSocket.h"
+#include "Layer.h"
 
 
 #pragma region STATE
@@ -313,6 +315,32 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 	}
 
 	return S_OK;
+}
+
+void CRanrok::Trigger(CTimeSocket& Socket)
+{
+	SOCKETCONTENTS* pContents = &Socket.m_Contents;
+	switch (pContents->eTypeFunc)
+	{
+	case TIMESOCKET_FUNC::TRANSLATION:
+	{
+
+	}break;
+	case TIMESOCKET_FUNC::TRANSLATION_LERP:
+	{
+
+	}break;
+	case TIMESOCKET_FUNC::SET_ANIMSTATE:
+	{
+		//m_pFSM->Set_State(FSMSTATE::CUTSCENE);
+	}break;
+	case TIMESOCKET_FUNC::SET_FSMSTATE:
+	{
+		//m_pModelCom->Set_AnimationIndex();
+	}break;
+	default:
+		break;
+	}
 }
 
 HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)

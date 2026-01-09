@@ -312,7 +312,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef 기무리
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
-	isReady_Hogwart = false;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = true;
@@ -947,7 +947,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 				}
 			}
 		}
-
 		CHuman_Duelist::DUELISTDESC DuelistDesc = {};
 		DuelistDesc.vPos = _float4(1003.f, 5.f, 1005.f, 1.f);
 		DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);

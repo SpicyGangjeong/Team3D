@@ -137,7 +137,7 @@ _float CElementObject::Get_Nine_Slice_Bottom()
 	return m_vNine_Slice.w;
 }
 
-_bool CElementObject::Start_Lerp(_float fTimeDelta)
+_bool CElementObject::Start_Lerp_Translation(_float fTimeDelta)
 {
 	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
 

@@ -55,6 +55,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_OutLine() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	virtual void Trigger(CTimeSocket& Socket)override;
 	HRESULT Render_MotionTrail(ID3D11ShaderResourceView* pSRV);
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;

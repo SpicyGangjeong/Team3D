@@ -128,10 +128,55 @@ void CCamera_Gaze::Toggle_AIPriority()
 	}
 }
 
+void CCamera_Gaze::Set_LookTarget(CGameObject* pTarget)
+{
+	SAFE_RELEASE(m_pLookTarget);
+	m_pLookTarget = pTarget;
+	SAFE_ADDREF(m_pLookTarget);
+}
+
+void CCamera_Gaze::Set_FollowTarget(CGameObject* pTarget)
+{
+	SAFE_RELEASE(m_pFollowTarget);
+	m_pFollowTarget = pTarget;
+	SAFE_ADDREF(m_pFollowTarget);
+}
 void CCamera_Gaze::Late_Update(_float fTimeDelta)
 {
 	if (false == m_bActive) {
 		return;
+	}
+}
+void CCamera_Gaze::Trigger(CTimeSocket& Socket)
+{
+	SOCKETCONTENTS* pContents = &Socket.m_Contents;
+	switch (pContents->eTypeFunc)
+	{
+	case TIMESOCKET_FUNC::TRANSLATION:
+
+		break;
+	case TIMESOCKET_FUNC::TRANSLATION_LERP:
+	{
+
+	} break;
+	case TIMESOCKET_FUNC::SET_PITCHLIMIT:
+	{
+		Set_RotDegreeVerticalLock({ pContents->vParam_11.x , pContents->vParam_11.y });
+	}break;
+	case TIMESOCKET_FUNC::ZOOM_IN:
+	{
+		Set_Fov(pContents->vParam_11.x);
+	}break;
+	case TIMESOCKET_FUNC::ZOOM_OUT:
+	{
+		Set_Fov(pContents->vParam_11.x);
+	}break;
+	case TIMESOCKET_FUNC::END_CINEMATIC:
+	{
+		m_pGameInstance->Bind_Camera(CURRENT_LEVEL, Socket.m_Contents.wstrKeyName, true);
+	}break;
+	default:
+		break;
 	}
 }
 HRESULT CCamera_Gaze::Render()

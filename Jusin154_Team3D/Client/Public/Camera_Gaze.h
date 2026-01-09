@@ -2,6 +2,7 @@
 
 #include "Client_Define.h"
 #include "Camera.h"
+#include "TimeSocket.h"
 
 NS_BEGIN(Client)
 
@@ -19,14 +20,17 @@ private:
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
+	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void Trigger(class CTimeSocket& Socket)override;
+	virtual HRESULT Render() override;
 	void Update_LerpTimer(_float fTimeDelta);
 	void Enable_FollowLerp();
 	void Enable_LookLerp();
-	void Sync_Follow(_bool bSink);
+	void Sync_Follow(_bool bSync);
 	void Toggle_Priority();
 	void Toggle_AIPriority();
-	virtual void Late_Update(_float fTimeDelta) override;
-	virtual HRESULT Render() override;
+	void Set_LookTarget(CGameObject* pTarget);
+	void Set_FollowTarget(CGameObject* pTarget);
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -36,7 +40,7 @@ private:
 	_bool	m_bSyncFollow = { false };
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
-
+	
 
 public:
 	static CCamera_Gaze* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

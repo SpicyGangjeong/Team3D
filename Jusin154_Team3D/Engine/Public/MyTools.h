@@ -155,6 +155,30 @@ public:
 
 		XMStoreFloat4x4(&matOut, (XMMatrixAffineTransformation(vTargetScale, XMVectorZero(), vTargetRotq, vTargetTrans)));
 	}
+	
+	inline static void MatrixLerp(
+			_In_ _float3* pTransOrigin, // Origin -> 0
+			_In_ _float3* pTransDest,
+			_In_ _float4* pRotQOrigin,
+			_In_ _float4* pRotQDest,
+			_Out_ _float4x4& matOut, _float fRatio) {
+		fRatio = Saturate(fRatio);
+
+		_vector vOriginRotQ = XMVectorSet(pRotQOrigin->x, pRotQOrigin->y, pRotQOrigin->z, pRotQOrigin->w);
+		_vector vOriginTrans = XMVectorSet(pTransOrigin->x, pTransOrigin->y, pTransOrigin->z, 0.f);
+
+		_vector vDestRotQ	= XMVectorSet(pRotQDest->x, pRotQDest->y, pRotQDest->z, pRotQDest->w);
+		_vector vDestTrans	= XMVectorSet(pTransDest->x, pTransDest->y, pTransDest->z, 0.f);
+
+		if (XMVectorGetX(XMVector4Dot(vOriginRotQ, vDestRotQ)) < 0.f){
+			vDestRotQ = XMVectorNegate(vDestRotQ);
+		}
+
+		_vector vLerpRotQ = XMQuaternionSlerp(vOriginRotQ, vDestRotQ, fRatio);
+		_vector vLerpTrans = XMVectorLerp(vOriginTrans, vDestTrans, fRatio);
+
+		XMStoreFloat4x4(&matOut, XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), vLerpRotQ, vLerpTrans));
+	}
 
 	// 비슷하면 1 직교하면 0 완전 반대방향일수록 -1
 	inline static _float DirectionCompare(_vector a, _vector b)
@@ -336,6 +360,31 @@ public:
 			return 0;
 
 		return (Alphabet - 'A');
+	}
+
+	template<typename ENUM, size_t N>
+	inline static _bool TryParseEnum( string_view text, const pair<string_view, ENUM>(&table)[N], ENUM& outValue)
+	{
+		for (size_t i = 0; i < N; ++i)
+		{
+			if (table[i].first == text)
+			{
+				outValue = table[i].second;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	template<typename ENUM, size_t N>
+	inline static string_view EnumToString( ENUM value, const pair<string_view, ENUM>(&table)[N], string_view fallback = "UNKNOWN")
+	{
+		for (size_t i = 0; i < N; ++i)
+		{
+			if (table[i].second == value)
+				return table[i].first;
+		}
+		return fallback;
 	}
 #ifdef _DEBUG
 

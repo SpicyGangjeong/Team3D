@@ -219,9 +219,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
 		m_fBlendTime += fTimeDelta;
-		m_fRatio = (m_fBlendTime / m_fBlendDuration);
-		if (m_fRatio > 1.f) {
-			m_fRatio = 1.f;
+		fRatio = (m_fBlendTime / m_fBlendDuration);
+		if (fRatio > 1.f) {
+			fRatio = 1.f;
 		}
 
 		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
@@ -229,9 +229,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale,m_OutRotation, m_OutTranslation,m_iRootBoneIndex);
 
-		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
+		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
 
-		if (m_fRatio >= 1.f)
+		if (fRatio >= 1.f)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 			m_fBlendTime = 0.f;
@@ -263,7 +263,7 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 
 	if (m_bRatio) {
-		Update_RootBone(m_fAmount * m_fRatio);
+		Update_RootBone(m_fAmount * fRatio);
 	}
 	else
 	{
@@ -290,9 +290,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 	if (m_bQueuedAnim)
 	{
-		if (m_fRatio >= 1.f)
+		if (fRatio >= 1.f)
 		{
-			m_fRatio = 1.f;
+			fRatio = 1.f;
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 			m_fBlendTime = 0.f;
 
@@ -315,8 +315,8 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
 		m_fBlendTime += fTimeDelta;
-		m_fRatio = (m_fBlendTime / m_fBlendDuration);
-		if (m_fRatio > 1.f) m_fRatio = 1.f;
+		fRatio = (m_fBlendTime / m_fBlendDuration);
+		if (fRatio > 1.f) fRatio = 1.f;
 
 		m_fSecondBlendTime += fTimeDelta;
 		m_fSecondRatio = (m_fSecondBlendTime / m_fSecondBlendDuration);
@@ -333,7 +333,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio* 5.f);
 
-		if (m_fRatio >= 1.f)
+		if (fRatio >= 1.f)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 			m_fBlendTime = 0.f;
@@ -387,7 +387,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	}
 
 	if (m_bRatio) {
-		Update_RootBone(m_fAmount * m_fRatio);
+		Update_RootBone(m_fAmount * fRatio);
 	}
 	else
 	{
@@ -441,7 +441,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 _bool CModel::IsBlending() const
 {
 	return m_iPreAnimIndex != m_iCurrentAnimIndex &&
-		m_fRatio < 1.f;
+		fRatio < 1.f;
 }
 
 
@@ -2082,7 +2082,7 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->CurrentAnimIndex = m_iCurrentAnimIndex;
 		pDesc->PrevAnimIndex = m_iPreAnimIndex;
 		pDesc->PrevTime = m_Animations[m_iPreAnimIndex]->Get_CurrentTrackPosition();
-		pDesc->BlendRatio = m_fRatio;
+		pDesc->BlendRatio = fRatio;
 
 		pDesc->RootBoneIndex = m_iRootBoneIndex;
 		pDesc->PlayHeadBone = m_bHeadBone;
