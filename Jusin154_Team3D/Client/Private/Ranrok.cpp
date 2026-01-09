@@ -200,6 +200,7 @@ void CRanrok::Update(_float fTimeDelta)
 			m_vCreatePropTime.x = 0.f;
 
 			m_pRanrok_Props.push_back(pEffect);
+			SAFE_ADDREF(pEffect);
 		}
 	
 
