@@ -23,6 +23,9 @@ public:
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
 
+	_bool	m_bLevel = { false };
+	_bool	m_bCurrentLevel = { false };
+
 private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);

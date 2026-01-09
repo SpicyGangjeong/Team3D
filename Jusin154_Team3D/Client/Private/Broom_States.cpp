@@ -449,7 +449,7 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.4f);
 				}
 				else {*/
-					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.2f);
+					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.3f);
 				//}
 			}
 			else if (vInput.x > 0.f)
@@ -459,7 +459,7 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.4f);
 				}
 				else {*/
-					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.2f);
+					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.3f);
 				//}
 			}
 

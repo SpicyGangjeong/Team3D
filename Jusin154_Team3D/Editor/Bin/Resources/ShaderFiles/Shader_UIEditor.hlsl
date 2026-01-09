@@ -2426,6 +2426,100 @@ PS_OUT PS_BoosterHpBar(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_DialogueChoice(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 0.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+
+    
+    if (g_iHover != 0)
+    {
+        float4 tex = g_Texture.Sample(ClampSampler, Finaluv);
+        Color = tex;
+        
+        float2 ImgaePos1 = g_fImageSipos1.xy;
+        float2 ImgaeSize1 = g_fImageSipos1.zw;
+        float2 ImgaePixel = Finaluv * g_fOrigin_Size;
+        float2 localUV = (ImgaePixel - ImgaePos1) / ImgaeSize1;
+        bool inside = all(localUV >= 0.0f && localUV <= 1.0f);
+        if (inside)
+        {
+            float4 tex2 = g_Texture1.Sample(ClampSampler, localUV);
+            Color = lerp(Color, tex2, tex2.a);
+        }
+    
+        float2 ImgaePos2 = g_fImageSipos2.xy;
+        float2 ImgaeSize2 = g_fImageSipos2.zw;
+        float2 ImgaePixe2 = Finaluv * g_fOrigin_Size;
+        float2 ReverseUV = (ImgaePixe2 - ImgaePos2) / ImgaeSize2;
+        bool inside2 = all(ReverseUV >= 0.0f && ReverseUV <= 1.0f);
+        if (inside2)
+        {
+            ReverseUV.y = 1.f - ReverseUV.y;
+            float4 tex2 = g_Texture1.Sample(ClampSampler, ReverseUV);
+            Color = lerp(Color, tex2, tex2.a);
+        }
+    }
+    
+    float2 ImgaePos3 = g_fImageSipos3.xy / g_fCurrent_Size;
+    float2 ImgaeSize3 = g_fImageSipos3.zw / g_fCurrent_Size;
+    float2 localUV2 = (In.vTexcoord - ImgaePos3) / ImgaeSize3;
+    bool inside3 = all(localUV2 >= 0.0f && localUV2 <= 1.0f);
+    if (inside3)
+    {
+        float4 tex2 = g_Texture2.Sample(ClampSampler, localUV2);
+        Color = lerp(Color, tex2, tex2.a);
+    }
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
 struct VS_IN3D
 {
     float3 vPosition : POSITION;
@@ -3204,6 +3298,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         
         PixelShader = compile ps_5_0 PS_BoosterHpBar();
+    }
+
+    pass DialogueChoice
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        
+        PixelShader = compile ps_5_0 PS_DialogueChoice();
     }
 
     pass Enemy_Detection

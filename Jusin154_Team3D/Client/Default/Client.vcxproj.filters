@@ -863,9 +863,11 @@
     <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Human_Duelist.h">
-      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
-    </ClInclude>
+	  <ClInclude Include="..\Public\Human_Duelist.h">
+		  <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+	  </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Prop.h">
+	</ClInclude>
     <ClInclude Include="..\Public\Duelist_NormalJap.h">
       <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap</Filter>
     </ClInclude>
@@ -886,6 +888,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Cinematic.h">
       <Filter>02.GameObjects\Cameras\Camera_Cinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Choice.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Panel.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Canvas.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1650,6 +1661,12 @@
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash">
       <UniqueIdentifier>{e1fcb75d-6e7a-4adb-9835-6913ac6f44b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Prop">
+      <UniqueIdentifier>{77cbc828-2eec-4c0e-8425-d9fdf8c4c797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop">
+      <UniqueIdentifier>{95a34fdb-ac6d-4312-8d28-1931f95c4f4c}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap">
       <UniqueIdentifier>{09b5e5b3-c1fe-4399-b2d3-96d652255bb5}</UniqueIdentifier>
     </Filter>
@@ -1838,6 +1855,15 @@
     </Filter>
     <Filter Include="02.GameObjects\Cameras\Camera_Cinematic">
       <UniqueIdentifier>{581e7b08-09ae-4e52-8e84-d6ac8cc94dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas">
+      <UniqueIdentifier>{20f56d81-fd4b-4e24-a73e-792a4700c512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel">
+      <UniqueIdentifier>{6be7a9ad-d735-40db-8183-91b762b6d412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice">
+      <UniqueIdentifier>{89dba592-166f-49b8-9894-07c20a3eaca9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2658,6 +2684,9 @@
     <ClCompile Include="..\Private\Ranrok_Swipe.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\Duelist_NormalJap.cpp">
       <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap</Filter>
     </ClCompile>
@@ -2678,6 +2707,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Cinematic.cpp">
       <Filter>02.GameObjects\Cameras\Camera_Cinematic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Canvas.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Choice.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Panel.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

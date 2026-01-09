@@ -32,7 +32,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
     tinyxml2::XMLElement* pDialogue = pDialogueInfo->FirstChildElement("Dialogue");
     while (pDialogue)
     {
-        NpcDialogue npc{};
+        NPCDIALOGUEINFO npc{};
         const char* NpcName = pDialogue->Attribute("NpcName");
         if (pDialogue) npc.pNpcName = CMyTools::ToWstring(NpcName);
 
@@ -41,7 +41,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
         tinyxml2::XMLElement* pLine = pDialogue->FirstChildElement("Line");
         while (pLine)
         {
-            DialogueInfo line{};
+            CURRENTDIALOGUEINFO line{};
             pLine->QueryIntAttribute("ID", &line.iLineID);
 
             int type = 0;
@@ -57,10 +57,9 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
             tinyxml2::XMLElement* pChoice = pLine->FirstChildElement("Choice");
             while (pChoice)
             {
-                DialogueChoice choice{};
-                int choiceType = 0;
-                pChoice->QueryIntAttribute("Type", &choiceType);
-                choice.eType = choiceType;
+                DIALOGUECHOICEINFO choice{};
+
+                pChoice->QueryIntAttribute("Type", &choice.eType);
 
                 const char* choiceText = pChoice->Attribute("Text");
                 if (choiceText) choice.pText = CMyTools::ToWstring(choiceText);
@@ -81,7 +80,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
 	return S_OK;
 }
 
-const NPCDIALOGUEINFO& CDialogue_Data::Get_Info(_wstring NpcName) const
+const CURRENTDIALOGUEINFO& CDialogue_Data::Get_Info(_wstring NpcName, _int iTextID) const
 {
     auto iter = m_DialogueInfo.find(NpcName);
     if (iter == m_DialogueInfo.end())
@@ -89,7 +88,13 @@ const NPCDIALOGUEINFO& CDialogue_Data::Get_Info(_wstring NpcName) const
         return Dummy;
     }
 
-    return iter->second;
+    auto Text = iter->second.Info.find(iTextID);
+    if (Text == iter->second.Info.end())
+    {
+        return Dummy;
+    }
+
+    return Text->second;
 }
 
 CDialogue_Data* CDialogue_Data::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

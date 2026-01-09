@@ -79,7 +79,6 @@ HRESULT CHuman_Duelist::Initialize(void* pArg)
 
 void CHuman_Duelist::Priority_Update(_float fTimeDelta)
 {
-	SetGravity();
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
@@ -90,7 +89,7 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta *m_fEasing, m_pTransformCom);
 
 	Play_Event();
 
@@ -127,7 +126,7 @@ void CHuman_Duelist::Late_Update(_float fTimeDelta)
 	if (true == m_bLookAt) {
 		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
-	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+	//m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 
@@ -257,6 +256,10 @@ void CHuman_Duelist::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::AIR_LEVIOSO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
 			break;
 		}
 	}
@@ -492,25 +495,6 @@ HRESULT CHuman_Duelist::Bind_ShaderParameters(_uint iMeshOrder)
 	return S_OK;
 }
 
-
-void CHuman_Duelist::SetGravity()
-{
-	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
-	eCollisionFlags;
-	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
-		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY)
-			&& m_eHitSpell != ENUM_CLASS(SKILL_TYPE::LEVIOSO)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
-			m_pCharacter_Controller->SetGravity(true);
-		}
-		else { // 점프 중일 땐 off
-			m_pCharacter_Controller->SetGravity(false);
-		}
-	}
-	else { // 벽에 닿는중일 땐 항상 중력 off
-		m_pCharacter_Controller->SetGravity(false);
-	}
-}
 
 _matrix CHuman_Duelist::Get_WandPos()
 {

@@ -23,6 +23,8 @@ void CInstancedProp::Update(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Mouse_Down(DIM_MBUTTON))
 		{
+			++m_iInstanceIndex;
+			++m_iNumInstanceIndex;
 			_float4x4 WorldMatrix = {};
 			XMStoreFloat4x4(&WorldMatrix, m_pTransformCom->Get_XMWorldMatrix());
 			m_WorldMatrices.push_back(WorldMatrix);
@@ -92,6 +94,8 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 	m_bEditMode = pDesc->bEditMode;
 	m_isShake = pDesc->isShake;
 	m_strPrototypeTag = pDesc->strPrototypeTag;
+
+	m_iInstanceIndex = 0;
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
@@ -331,10 +335,14 @@ void CInstancedProp::Describe_Entity()
 #endif // _DEBUG
 	_float3 vMove = {};
 
+	GUI::InputInt("Index", (_int*) (&m_iInstanceIndex));
+
+	m_iInstanceIndex = min(m_iInstanceIndex, m_iNumInstanceIndex);
+
 	GUI::Text("----- Transfrom ----");
-	GUI::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
-	GUI::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
-	GUI::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+	GUI::InputFloat("Right", &vMove.x, 0.1f, 5.f);
+	GUI::InputFloat("Up", &vMove.y, 0.1f, 5.f);
+	GUI::InputFloat("Look", &vMove.z, 0.1f, 5.f);
 
 	m_pTransformCom->Move_Right(vMove.x);
 	m_pTransformCom->Move_Up(vMove.y);
@@ -369,7 +377,9 @@ void CInstancedProp::Describe_Entity()
 	//m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
+
 	m_pVIBufferInstanceCom->Fix_Instance(m_pTransformCom->Get_XMWorldMatrix());
+
 	if (GUI::Button("Delete", ImVec2(150.f, 30.f)))
 	{
 		if(0 != m_WorldMatrices.size())

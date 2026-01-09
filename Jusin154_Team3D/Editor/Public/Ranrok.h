@@ -127,6 +127,8 @@ private:
 	_float m_fRushTime = {};
 	_float m_fTuckedSpeed = { 75.f};
 
+	_float2 m_vCreatePropTime = {0.f , 60.f};
+
 	_float3 m_vCCTPos = {};
 
 	void	Behavior_IdleEnter();

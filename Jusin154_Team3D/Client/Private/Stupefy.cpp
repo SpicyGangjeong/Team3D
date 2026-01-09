@@ -168,7 +168,7 @@ HRESULT CStupefy::Pre_Setting(CGameObject* pObject, void* pArg)
 		m_pInfoInstance->Get_LockOnInfo(m_Info);
 		if (nullptr != m_Info.pUnit) {
 
-			XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
+			XMStoreFloat4(&m_vTargetPos,Get_UnitPos(m_Info));
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}

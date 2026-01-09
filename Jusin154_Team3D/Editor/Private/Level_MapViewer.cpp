@@ -68,9 +68,9 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+		return E_FAIL;
+	}
 
 	//if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
 	//	return E_FAIL;
@@ -382,6 +382,11 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
+	Desc.isShake = false;
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
 	/* BearBerry */
 	Desc.bEditMode = false;
 	Desc.isShake = true;
@@ -499,6 +504,12 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BogMyrtle_A.bin";
+	
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.isShake = false;
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BogMyrtle_A_HN_BB.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
@@ -515,14 +526,87 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	/* ScotsPine_LargeA */
 	Desc.bEditMode = false;
 	Desc.isShake = false;
-	Desc.vRadius = _float2(0.015f, 0.02f);
-	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.f, 0.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
-CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB_2.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AZ.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+	
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AV.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+
+	/* StratifiedCliff_A1 */
+	Desc.bEditMode = false;
+	Desc.isShake = false;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.f, 0.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1";
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_BC.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AZ.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AV.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+
+	/* StratifiedRock_B */
+	Desc.bEditMode = false;
+	Desc.isShake = false;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_AZ.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_AW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* StratifiedRock_D_B */
+	Desc.bEditMode = false;
+	Desc.isShake = false;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_D_B_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+
+	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
 
 	/* LightPost */
 	LightDesc.bEditMode = false;
@@ -556,6 +640,8 @@ CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
 	//LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/SM_HW_LightFixture_Base_D.bin";
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &LightDesc)))
 	//	return E_FAIL;
+
+
 
 	return S_OK;
 }

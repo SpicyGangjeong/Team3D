@@ -178,6 +178,9 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Camera_Cinematic.h" />
     <ClInclude Include="..\Public\Camera_Model.h" />
     <ClInclude Include="..\Public\CutSceneInfo.h" />
+    <ClInclude Include="..\Public\Dialogue_Canvas.h" />
+    <ClInclude Include="..\Public\Dialogue_Choice.h" />
+    <ClInclude Include="..\Public\Dialogue_Panel.h" />
     <ClInclude Include="..\Public\Duelist_Levioso.h" />
     <ClInclude Include="..\Public\Duelist_NormalJap.h" />
     <ClInclude Include="..\Public\Duelist_Protego.h" />
@@ -205,6 +208,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
+    <ClInclude Include="..\Public\Ranrok_Prop.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h" />
     <ClInclude Include="..\Public\Ranrok_Swipe.h" />
@@ -467,6 +471,9 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Camera_Cinematic.cpp" />
     <ClCompile Include="..\Private\Camera_Model.cpp" />
     <ClCompile Include="..\Private\CutSceneInfo.cpp" />
+    <ClCompile Include="..\Private\Dialogue_Canvas.cpp" />
+    <ClCompile Include="..\Private\Dialogue_Choice.cpp" />
+    <ClCompile Include="..\Private\Dialogue_Panel.cpp" />
     <ClCompile Include="..\Private\Duelist_Levioso.cpp" />
     <ClCompile Include="..\Private\Duelist_NormalJap.cpp" />
     <ClCompile Include="..\Private\Duelist_Protego.cpp" />
@@ -496,6 +503,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ranrok_Land.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\PlayerRobe.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />
     <ClCompile Include="..\Private\Ranrok_Swipe.cpp" />

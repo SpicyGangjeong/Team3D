@@ -53,6 +53,8 @@ private:
 	vector<_wstring>					m_ModelPrototypeTags;
 	vector<_uint>						m_ModelPathIndices = {};
 
+	_float4x4							m_IdentityMatrix = {};
+
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

@@ -21,6 +21,10 @@ private:
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
 
 	_bool m_isDay = { true };
+
+	_bool m_bLevel = { false };
+	_bool m_bCurrentLevel = { false };
+
 private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);

@@ -145,6 +145,10 @@
 #include "Ride_HpBar.h"
 #include "Ride_HpSlot.h"
 
+#include "Dialogue_Canvas.h"
+#include "Dialogue_Panel.h"
+#include "Dialogue_Choice.h"
+
 #include "NPCInteraction.h"
 
 #include "Dialogue.h"
@@ -228,6 +232,7 @@
 #include "Ranrok_Swipe.h"
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
+#include "Ranrok_Prop.h"
 
 #pragma endregion
 
@@ -1263,8 +1268,21 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue_Canvas>(g_iStaticLevel, CDialogue_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue_Panel>(g_iStaticLevel, CDialogue_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDialogue_Choice>(g_iStaticLevel, CDialogue_Choice::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 		
-		if(FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
+	if(FAILED(m_pGameInstance->Add_Prototype<CNPCInteraction>(g_iStaticLevel, CNPCInteraction::Create(m_pDevice, m_pContext))))
 	{
 		
 		return E_FAIL;
@@ -1299,6 +1317,28 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 	m_strMessage = TEXT("PhysX Meshes Loading..");
 	{
+
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc1{};
+		{
+			Desc1.eType = ACTOR::SPHERE;
+			Desc1.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc1.fContactOffset = { 0.05f };
+			Desc1.vhalfGeometryInfo = { 2.f, 2.f, 2.f };
+			Desc1.fDensity = 1.f;
+			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc1.eLockFlag = {};
+			Desc1.vAutoDamping = { 1.f, 1.f };
+			Desc1.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
+			return E_FAIL;
+		}
+
 
 		// Dumping Box
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
@@ -1998,6 +2038,11 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_DeadImpact>(NEXT_LEVEL, CRanrok_DeadImpact::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_Prop>(NEXT_LEVEL, CRanrok_Prop::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	
 	/* For.Prototype_GameObject_Wand */
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
@@ -2174,6 +2219,9 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			return E_FAIL;
 		}
 	}
+
+
+
 
 	m_strMessage = TEXT("Texture Loading..");
 
@@ -3853,7 +3901,7 @@ if(isLoad_Map)
 #pragma region INSTANCE_MODEL
 	CVIBuffer_Model_Instance::INSTANCE_DESC InstanceDesc = {};
 
-	InstanceDesc.iNum = 20;
+	InstanceDesc.iNum = 200;
 
 	///* For.Prototype_Component_VIBuffer_Model_Instancel */
 	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel"),
@@ -3979,6 +4027,24 @@ if(isLoad_Map)
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_LightFixture_Base_D"),
 		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Models/InstanceProp/SM_HW_LightFixture_Base_D.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedCliff_A1_Lod1.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedRock_B.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OL_StratifiedRock_D_B.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 
 #pragma endregion // INSTANCE_MODEL

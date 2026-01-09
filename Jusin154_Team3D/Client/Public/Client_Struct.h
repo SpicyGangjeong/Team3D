@@ -37,28 +37,28 @@ typedef struct tagSpellInfo
 	_float			fVidio{};
 }SPELL_INFO;
 
-typedef struct DialogueChoice
-{
-	_int		eType = {false};
-	_wstring	pText;
-	_int		NextTypeID{};
-}DIALOGUECHOICEINFO;
+	typedef struct DialogueChoice
+	{
+		_int		eType = { false };
+		_wstring	pText;
+		_int		NextTypeID{};
+	}DIALOGUECHOICEINFO;
 
-typedef struct DialogueInfo
-{
-	_int						iLineID{};
-	_bool						bType = {false};
-	_wstring					pText;
-	_int						NextTextID{};
-	vector<DIALOGUECHOICEINFO>	ChoiceInfo;
-}CURRENTDIALOGUEINFO;
+	typedef struct DialogueInfo
+	{
+		_int						iLineID{};
+		_bool						bType{};
+		_wstring					pText;
+		_int						NextTextID{};
+		vector<DIALOGUECHOICEINFO>	ChoiceInfo;
+	}CURRENTDIALOGUEINFO;
 
-typedef struct NpcDialogue
-{
-	_wstring					pNpcName;
-	_int						iNpcID{};
-	unordered_map<_int, CURRENTDIALOGUEINFO> Info;
-}NPCDIALOGUEINFO;
+	typedef struct NpcDialogue
+	{
+		_wstring					pNpcName;
+		_int						iNpcID{};
+		map<_int, CURRENTDIALOGUEINFO> Info;
+	}NPCDIALOGUEINFO;
 
 typedef struct tagLockOnInfo {
 	CUnit* pUnit = { nullptr };
@@ -66,31 +66,37 @@ typedef struct tagLockOnInfo {
 	class CMapElement_Chest* pChest = { nullptr };
 }LOCKON_INFO;
 
-typedef struct tegNPCInteractionInfo
-{
-	CGameObject*	pOwner = { nullptr };
-	_wstring		pNPCName;
-	_wstring		pName;
-	_float4			fNPCPosition{};
-	_int			iTextID{};
-}NPCINTERACTIONINFO;
+	typedef struct tegNPCInteractionInfo
+	{
+		CGameObject* pOwner = { nullptr };
+		_wstring		pNPCName;
+		_wstring		pName;
+		_float4			fNPCPosition{};
+		_int			iTextID{};
+	}NPCINTERACTIONINFO;
 
-typedef struct tagUnitInfo
-{
-	_wstring		pUnit_Name;
-	_float			fCurrentHp{};
-	_float			fMaxHp{};
-	_float			fTargetHp{};
-	_float			fMelee{};
-	_float			fMagic{};
-	_float			fDefense{};
-	_float			fSpeed{};
-	_float			fAgility{};
-	_int			iLevel{};
-	_float			fExprince{};
-	_float			fMaxExprience{};
-	_int			iGold{};
-}UNITINFO;
+	typedef struct Choice
+	{
+		_int iChoice{};
+		_int iType{};
+	}CHOICEINFO;
+
+	typedef struct tagUnitInfo
+	{
+		_wstring		pUnit_Name;
+		_float			fCurrentHp{};
+		_float			fMaxHp{};
+		_float			fTargetHp{};
+		_float			fMelee{};
+		_float			fMagic{};
+		_float			fDefense{};
+		_float			fSpeed{};
+		_float			fAgility{};
+		_int			iLevel{};
+		_float			fExprince{};
+		_float			fMaxExprience{};
+		_int			iGold{};
+	}UNITINFO;
 
 typedef struct tagDamageInfo
 {
@@ -278,21 +284,21 @@ typedef struct tagEffectInfo
 	_bool		isMask_B = {};
 	_bool		isDissolve_B = {};
 
-	_float4     vPadding1 = {};
-	_float4     vPadding2 = {};
-	_float4     vPadding3 = {};
-	_float4     vPadding4 = {};
-	_float4     vPadding5 = {};
-	_float4     vPadding6 = {};
-}EFFECT_INFO;
-	
-typedef struct tagTrailInfo
-{
-	EFFECT_TYPE eEffectType = { EFFECT_TYPE::TRAIL };
-	/* 디퓨즈 */
-	_bool		isDiffuse = {};
-	_float		fDiffuseAlpha = { 1.f };
-	_float4		vColor = { 0.f ,0.f ,0.f ,1.f };
+		_float4     vPadding1 = {};
+		_float4     vPadding2 = {};
+		_float4     vPadding3 = {};
+		_float4     vPadding4 = {};
+		_float4     vPadding5 = {};
+		_float4     vPadding6 = {};
+	}EFFECT_INFO;
+
+	typedef struct tagTrailInfo
+	{
+		EFFECT_TYPE eEffectType = { EFFECT_TYPE::TRAIL };
+		/* 디퓨즈 */
+		_bool		isDiffuse = {};
+		_float		fDiffuseAlpha = { 1.f };
+		_float4		vColor = { 0.f ,0.f ,0.f ,1.f };
 
 	/* 마스크 */
 	_bool       isMask = {};

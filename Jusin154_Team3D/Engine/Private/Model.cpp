@@ -256,9 +256,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 			m_bLoopRestarted = true;
 			m_vPrevRootPos = { 0,0,0 };
 		}
-		//else {
-		//	XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-		//}
+		else {
+			m_vPrevRootPos = { m_OutTranslation.x,m_OutTranslation.y,m_OutTranslation.z };
+		}
 	}
 
 
@@ -445,7 +445,7 @@ _bool CModel::IsBlending() const
 }
 
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone,_bool bQueuedAnim)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone,_bool bQueuedAnim, _bool bInit)
 {
 	m_bQueuedAnim = bQueuedAnim;
 	if (m_iCurrentAnimIndex == iIndex)
@@ -470,13 +470,12 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		if (m_iCurrentAnimIndex != -1 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
-
-		/*	m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
-			m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(1.f);*/
 		}
 
-		m_fBlendTime = 0.f;
-		fRatio = 0.f;
+		if (bInit) {
+			m_fBlendTime = 0.f;
+			m_fRatio = 0.f;
+		}
 		m_bRootBone = bRootBone;
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;

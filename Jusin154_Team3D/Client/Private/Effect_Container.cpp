@@ -5,7 +5,7 @@
 #include "EffectParts.h"
 #include "TrailObject.h"
 #include "GameObject.h"
-
+#include "Unit.h"
 #include <sstream>
 
 CEffect_Container::CEffect_Container(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -739,6 +739,14 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
+					m_bHitShield = true;
+					if (!pUserData->pOwner->Get_Visible()) {
+						if (pUserData->pOwner->Get_Owner() != nullptr)
+						{
+							m_bHitShield = false;
+							pUserData->pOwner->Get_Owner()->OnCollision(this, &tagCollInfo);
+						}
+					}
 				}
 				break;
 				}
@@ -748,6 +756,14 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
+					m_bHitShield = true;
+					if (!pUserData->pOwner->Get_Visible()) {
+						if (pUserData->pOwner->Get_Owner() != nullptr)
+						{
+							m_bHitShield = false;
+							pUserData->pOwner->Get_Owner()->OnCollision(this, &tagCollInfo);
+						}
+					}
 				}
 				break;
 				}
@@ -1039,6 +1055,11 @@ ON_COLLISION_INFO CEffect_Container::MonsterRayCast(_fvector StartPos, _fvector 
 	}
 
 	return tagCollInfo;
+}
+
+_vector CEffect_Container::Get_UnitPos(LOCKON_INFO Info)
+{
+	return Info.pUnit->Get_Component<CCharacter_Controller>()->Get_Position();
 }
 
 

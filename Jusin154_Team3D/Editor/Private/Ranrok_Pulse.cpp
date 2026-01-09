@@ -89,7 +89,6 @@ HRESULT CRanrok_Pulse::Pre_Setting(CGameObject* pObject, void* pArg)
 	 /* 초기 객체 비지블*/
 
 	CEditEffect* pBottomDecal = Get_PartObject<CEditEffect>("Bottom_Decal");
-	CEditEffect* pBottomSplatter = Get_PartObject<CEditEffect>("BottomSplatter");
 	CEditEffect* pBottomSplatter2 = Get_PartObject<CEditEffect>("BottomSplatter2");
 	CEditEffect* pRed_Sphere = Get_PartObject<CEditEffect>("Red_Sphere");
 	CEditEffect* pRock_PT = Get_PartObject<CEditEffect>("Rock_PT");
@@ -123,7 +122,6 @@ HRESULT CRanrok_Pulse::Pre_Setting(CGameObject* pObject, void* pArg)
 	_vector vCompute_Pos = XMVectorSetY(vOwnerPos, XMVectorGetY(vPlayer_FootPos));
 
 	pBottomDecal->Get_Component<CTransform>()->Set_State(STATE::POSITION, vCompute_Pos);
-	pBottomSplatter->Get_Component<CTransform>()->Set_State(STATE::POSITION, vCompute_Pos);
 	pBottomSplatter2->Get_Component<CTransform>()->Set_State(STATE::POSITION, vCompute_Pos);
 	pRock_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vCompute_Pos);
 	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vCompute_Pos);

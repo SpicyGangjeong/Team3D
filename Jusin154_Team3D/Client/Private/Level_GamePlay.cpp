@@ -56,7 +56,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_isDay = true;
 #endif // 
 #ifdef 진우
-	m_isDay = true;
+	m_isDay = false;
 #endif // 
 #ifdef 기무리
 	m_isDay = true;
@@ -116,9 +116,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
-	
-	if(FAILED(m_pInfoInstance->Late_Initialize()))
+
+	if (FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
+
+	m_bLevel = true;
+	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
 	return S_OK;
 }
@@ -131,6 +134,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+
 	if (m_pGameInstance->Key_Pressing(DIK_0)) {
 		if (m_pGameInstance->Key_Up(DIK_1))
 		{
@@ -142,6 +146,10 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
 		m_pInfoInstance->Change_Level();
+
+		UI_STATE eState = UI_STATE::LEVELCHANGE;
+		m_pInfoInstance->Event_CallBack(TEXT("Canvas_Change"), &eState);
+
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::FIELD)))) {
 			return;
 		}
@@ -220,7 +228,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 HRESULT CLevel_GamePlay::Ready_Volumetric()
 {
 	// Volumetric 설정
-	if(m_isDay)
+	if (m_isDay)
 	{
 		m_pGameInstance->Setting_Volumetirc(
 			1.251f,                         // 밀도
@@ -271,7 +279,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_BACKGROUND, &Terrain_Desc))) {
 		return E_FAIL;
 	}
-	 
+
 	/* 물 오브젝트 */
 	if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
 		return E_FAIL;
@@ -288,13 +296,13 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = false;
+	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -314,9 +322,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // _DEBUG
 
 
-	
+
 	/* Map Containters */
-	if(false == isReady_Background)
+	if (false == isReady_Background)
 	{
 		/* 테스트용 맵 */
 		CInfoInstance::GetInstance()->Load_MapObjects("Map1215", LAYER_HOGSMEADE);
@@ -341,10 +349,12 @@ HRESULT CLevel_GamePlay::Ready_Background()
 				return E_FAIL;
 		}
 		
+
+
 		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;
 	}
-	
+
 	return S_OK;
 }
 
@@ -544,6 +554,11 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
 		return E_FAIL;
 	}
+	Desc.isShake = false;
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
+		return E_FAIL;
+	}
 
 	/* BearBerry */
 	Desc.isShake = true;
@@ -665,6 +680,10 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BogMyrtle_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 		return E_FAIL;
+	Desc.isShake = false;
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BogMyrtle_A_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
 
 	/* Dogwood_B */
 	Desc.isShake = true;
@@ -686,6 +705,74 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 		return E_FAIL;
 
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB_2.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AZ.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AV.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* StratifiedCliff_A1 */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.f, 0.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1";
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_BC.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AZ.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AV.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+
+	/* StratifiedRock_B */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_AZ.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_AW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* StratifiedRock_D_B */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_D_B_HN_BB.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
 
 	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
 
@@ -804,7 +891,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	_bool isLoad_RandomNPC = { true };
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // gimch
 #ifdef 진우
 	isLoad_RandomNPC = false;
@@ -823,7 +911,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 #endif // Bin
 #endif // _DEBUG
 
-	if(true == isLoad_NPC)
+	if (true == isLoad_NPC)
 	{
 		{
 			CNPC_Ollivander::NPCDESC NPCDesc{};
@@ -867,7 +955,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		}
 	}
 
-
 	return S_OK;
 }
 
@@ -908,7 +995,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 #endif // gimch
 #ifdef 진우
-	isLoad_Monster = false;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 기무리
 	isLoad_Monster = false;
@@ -947,9 +1034,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
-		}
+		}*/
 
 
 
@@ -964,7 +1051,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Manager(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRaceManager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pBroomRaceManager))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRaceManager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_pBroomRaceManager))) {
 		return E_FAIL;
 	}
 

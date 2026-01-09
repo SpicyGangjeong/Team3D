@@ -351,9 +351,9 @@ _int CInfoInstance::Get_SpellLearnIndex()
 //	m_pDialogue_Font->Add_Text(pArg);
 //}
 
-const NPCDIALOGUEINFO& CInfoInstance::Get_Dialogue(_wstring NpcName) const
+const CURRENTDIALOGUEINFO& CInfoInstance::Get_Dialogue(_wstring NpcName, _int iTextID) const
 {
-	return m_pDialogue_Data->Get_Info(NpcName);
+	return m_pDialogue_Data->Get_Info(NpcName, iTextID);
 }
 
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
@@ -375,6 +375,11 @@ HRESULT CInfoInstance::Deregist_ActiveInteractive(CMapElement_Interactable* pInt
 HRESULT CInfoInstance::ActiveAt_Interactive(_fvector vPosition)
 {
 	return m_pInteractiveInfo->ActiveAt_Interactive(vPosition);
+}
+
+void CInfoInstance::NextLevel(CHOICEINFO Choice)
+{
+	m_pDialogue_Font->NextLevel(Choice);
 }
 
 void CInfoInstance::Set_Broom_Timer(_float fTimer)
