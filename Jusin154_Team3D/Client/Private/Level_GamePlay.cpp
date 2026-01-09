@@ -907,7 +907,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 #endif // 
 #ifdef Bin
 	isLoad_NPC = true;
-	isLoad_RandomNPC = false;
+	isLoad_RandomNPC = true;
 #endif // Bin
 #endif // _DEBUG
 
@@ -949,7 +949,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		}
 
 		CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-		DuelistDesc.vPos = _float4(1007.032f, 1.085f, 1008.370f, 1.f);
+		DuelistDesc.vPos = _float4(1003.f, 5.f, 1005.f, 1.f);
 		DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &DuelistDesc))) {
 			return E_FAIL;
