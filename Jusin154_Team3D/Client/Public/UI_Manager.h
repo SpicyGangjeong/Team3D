@@ -60,6 +60,7 @@ private:
 	CGameObject* m_pMouse_Cursor = { nullptr };
 	CGameObject* m_pQuest_Canvas = { nullptr };
 	CGameObject* m_pSpellLearn_Canvas = { nullptr };
+	CGameObject* m_pDialogue_Canvas = { nullptr };
 	CGameObject* m_pCamera_LockOn = { nullptr };
 	CGameObject* m_pDamage_Font = { nullptr };
 	CGameObject* m_pDialogue_Font = { nullptr };
@@ -69,6 +70,8 @@ private:
 	_bool			m_bCanvas_Change = { false };
 
 	UI_STATE	m_eType{};
+
+	_float		m_fAlphaVelue{};
 
 	vector<class CGameObject*>			m_Canvases;			// 캔버스가 패널들을 관리 하기 위해서 필요함
 	vector<wstring>						m_CanvasNames;		// 패널들의 이름을 전해주기 위해서 
