@@ -95,6 +95,7 @@ public:
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 
 	HRESULT ActiveAt_Interactive(_fvector vPosition);
+	void NextLevel(CHOICEINFO Choice);
 #pragma endregion
 #pragma region BroomManager
 	void   Set_Broom_Timer(_float fTimer);

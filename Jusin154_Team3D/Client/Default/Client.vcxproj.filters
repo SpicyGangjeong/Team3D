@@ -889,6 +889,15 @@
     <ClInclude Include="..\Public\TimeSocket.h">
       <Filter>04.Mechanic\TimeSocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Choice.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Panel.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Canvas.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1847,6 +1856,15 @@
     <Filter Include="02.GameObjects\Item\ThestralCarriage">
       <UniqueIdentifier>{d07bd195-0cdf-4a47-8c50-e3a88361352f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas">
+      <UniqueIdentifier>{20f56d81-fd4b-4e24-a73e-792a4700c512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel">
+      <UniqueIdentifier>{6be7a9ad-d735-40db-8183-91b762b6d412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice">
+      <UniqueIdentifier>{89dba592-166f-49b8-9894-07c20a3eaca9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2689,6 +2707,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\TimeSocket.cpp">
       <Filter>04.Mechanic\TimeSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Canvas.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Choice.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Panel.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

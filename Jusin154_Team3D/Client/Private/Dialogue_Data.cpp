@@ -32,7 +32,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
     tinyxml2::XMLElement* pDialogue = pDialogueInfo->FirstChildElement("Dialogue");
     while (pDialogue)
     {
-        NpcDialogue npc{};
+        NPCDIALOGUEINFO npc{};
         const char* NpcName = pDialogue->Attribute("NpcName");
         if (pDialogue) npc.pNpcName = CMyTools::ToWstring(NpcName);
 
@@ -41,10 +41,12 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
         tinyxml2::XMLElement* pLine = pDialogue->FirstChildElement("Line");
         while (pLine)
         {
-            DialogueInfo line{};
+            CURRENTDIALOGUEINFO line{};
             pLine->QueryIntAttribute("ID", &line.iLineID);
 
-            pLine->QueryIntAttribute("Type", &line.iTextType);
+            int type = 0;
+            pLine->QueryIntAttribute("Type", &type);
+            line.bType = (type == 1);
 
             const char* text = pLine->Attribute("Text");
             if (text) line.pText = CMyTools::ToWstring(text);
@@ -55,10 +57,9 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
             tinyxml2::XMLElement* pChoice = pLine->FirstChildElement("Choice");
             while (pChoice)
             {
-                DialogueChoice choice{};
-                int choiceType = 0;
-                pChoice->QueryIntAttribute("Type", &choiceType);
-                choice.eType = choiceType;
+                DIALOGUECHOICEINFO choice{};
+
+                pChoice->QueryIntAttribute("Type", &choice.eType);
 
                 const char* choiceText = pChoice->Attribute("Text");
                 if (choiceText) choice.pText = CMyTools::ToWstring(choiceText);

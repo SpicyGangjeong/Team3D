@@ -43,6 +43,7 @@ public:
 	_int Get_RaceState() const { return m_eRaceState; }
 
 	HRESULT Load_RaceRing();
+
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
@@ -57,7 +58,9 @@ private:
 
 	_int								m_iLastRing{};
 
+	_float								m_fRedayTime{};
 	_bool								m_bRaceStart = { false };
+	_bool								m_bRaceReady = { false };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -68,6 +71,8 @@ private:
 	void			StartRaceMove();
 	void			Check_RingPassed();
 	void			Finish();
+
+	void			RaceReady();
 
 public:
 	static CBroomRaceManager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
