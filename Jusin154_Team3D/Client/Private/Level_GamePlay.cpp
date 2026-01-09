@@ -895,8 +895,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_RandomNPC = false;
 #endif // gimch
 #ifdef 진우
-	isLoad_RandomNPC = false;
-	isLoad_NPC = false;
+	isLoad_RandomNPC = true;
+	isLoad_NPC = true;
 #endif // 
 #ifdef 기무리
 	isLoad_NPC = true;

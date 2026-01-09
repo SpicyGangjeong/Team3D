@@ -39,9 +39,10 @@ private:
 													 , _float4(95.f , 0.f , 0.f , 0.f)
 													 , _float4(105.f , 250.f , 35.f , 60.f) };
 
-	class CPartObject* m_pProjectile = {};
-	class CPartObject* m_pProjectile_Side = {};
-
+	class CPartObject* m_pProjectile = { nullptr };
+	class CPartObject* m_pProjectile_Side = { nullptr  };
+	class CPartObject* m_pJapFire = { nullptr  };
+	
 	_float3 						  m_vRotateUp = {};
 	_float							  m_fAccMoveTime = {};
 	_float							  m_fAccRotateTime = {};

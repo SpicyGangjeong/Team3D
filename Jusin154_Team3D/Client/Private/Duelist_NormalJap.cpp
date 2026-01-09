@@ -24,7 +24,7 @@ CDuelist_NormalJap::CDuelist_NormalJap(const CDuelist_NormalJap& rhs)
 
 HRESULT CDuelist_NormalJap::Initialize_Prototype()
 {
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap"))) {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/NPCJap"))) {
 		return E_FAIL;
 	}
 
@@ -46,15 +46,17 @@ HRESULT CDuelist_NormalJap::Initialize(void* pArg)
 	m_iSkillType = ENUM_CLASS(SKILL_TYPE::DUELIST_JAP);
 
 
-	m_wstrEffectName = L"Nomal_Jap";
+	m_wstrEffectName = L"NPCJap";
 
 
 
 	m_pProjectile_Side = Get_PartObject<CEffectParts>("JapProjSide");
 	m_pProjectile = Get_PartObject<CEffectParts>("JapProjCircle");
+	m_pJapFire = Get_PartObject<CEffectParts>("JapFire");
 
 	SAFE_ADDREF(m_pProjectile);
 	SAFE_ADDREF(m_pProjectile_Side);
+	SAFE_ADDREF(m_pJapFire);
 
 	m_fDuration = 1.7f;
 	assert(m_fDuration > 0.f);
@@ -88,6 +90,7 @@ void CDuelist_NormalJap::Update(_float fTimeDelta)
 	// 선속도
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
 	m_pProjectile->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
+	m_pJapFire->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
 
 	//Up벡터 방향으로 파이만큼 이동
 
@@ -98,6 +101,7 @@ void CDuelist_NormalJap::Update(_float fTimeDelta)
 
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateUp) * sinf(m_fAccRotateTime) * m_fRotateAmount);
 	m_pProjectile->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateUp) * sinf(m_fAccRotateTime) * m_fRotateAmount);
+	m_pJapFire->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateUp) * sinf(m_fAccRotateTime) * m_fRotateAmount);
 
 	// 내 라이트 방향으로 좌우무빙 하도록 해보자 
 
@@ -109,6 +113,7 @@ void CDuelist_NormalJap::Update(_float fTimeDelta)
 
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateRight) * sinf(m_fAccZigZagTime) * m_fZigZagAmount);
 	m_pProjectile->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateRight) * sinf(m_fAccZigZagTime) * m_fZigZagAmount);
+	m_pJapFire->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateRight) * sinf(m_fAccZigZagTime) * m_fZigZagAmount);
 
 	XMStoreFloat4(&m_vEndPos, m_pProjectile->Get_WorldPostion());
 
@@ -128,7 +133,6 @@ void CDuelist_NormalJap::Late_Update(_float fTimeDelta)
 
 		OnCollision(this, &CollisionInfo);
 	}
-	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 
 	__super::Late_Update(fTimeDelta);
 }
@@ -148,14 +152,12 @@ HRESULT CDuelist_NormalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 	/* 초기 객체 위치 초기화 */
 	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 	m_pProjectile_Side->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
+	m_pJapFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 
 	/* 초기 객체 비지블 */
 	m_pProjectile->Set_Visible(true);
 	m_pProjectile_Side->Set_Visible(true);
-
-	/*트레일 초기화 */
-	Get_PartObject<CTrailObject>()->Set_Visible(true);
-	Get_PartObject<CTrailObject>()->Get_Component<CTrail>()->Reset_Trail();
+	m_pJapFire->Set_Visible(true);
 
 	_uint iIndex = *static_cast<_uint*>(pArg);
 
@@ -310,11 +312,10 @@ void CDuelist_NormalJap::OnCollision(CGameObject* pOther, void* pDesc)
 
 		m_pProjectile_Side->Set_Visible(false);
 		m_pProjectile->Set_Visible(false);
-		Get_PartObject<CEffectParts>("Circle_Particle_Red")->Set_Visible(false);
 
-		Get_PartObject<CTrailObject>()->Set_Visible(false);
-		Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		m_pJapFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
 	}
+
 	m_bHitShield = false;
 }
 
@@ -324,6 +325,7 @@ void CDuelist_NormalJap::Free()
 
 	Safe_Release(m_pProjectile);
 	Safe_Release(m_pProjectile_Side);
+	SAFE_RELEASE(m_pJapFire);
 
 }
 #ifdef _DEBUG
