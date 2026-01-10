@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EffectParts>
+    <Object>
+        <Position x="9.0245066" y="5.6648302" z="48.573296"/>
+        <Scale x="1.000041" y="1" z="1.000041"/>
+        <Rotation x="0" y="120" z="0"/>
+    </Object>
+    <Object>
+        <Position x="-51.44067" y="1.2976152" z="98.428291"/>
+        <Scale x="0.99979222" y="1" z="0.99979222"/>
+        <Rotation x="0" y="75" z="0"/>
+    </Object>
+    <Object>
+        <Position x="38.337936" y="-9.1145267" z="178.4655"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+    </Object>
+    <Object>
+        <Position x="-32.690269" y="-1.6851207" z="124.73969"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+    </Object>
+    <Object>
+        <Position x="-17.644304" y="-13.547722" z="220.52785"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+    </Object>
+</EffectParts>
