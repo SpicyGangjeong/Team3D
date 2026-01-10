@@ -108,6 +108,8 @@
 	<Anim state="PARRY2" index="949" loop="false"/>
 	<Anim state="PARRY3" index="956" loop="false"/>
 	<Anim state="PARRY4" index="922" loop="false"/>
+	<Anim state="PARRY5" index="914" loop="false"/>
+	<Anim state="PARRY6" index="938" loop="false"/>
 
 	<!-- HIT / FLINCH -->
 	<Anim state="HIT_BWD" index="1213" loop="false"/>

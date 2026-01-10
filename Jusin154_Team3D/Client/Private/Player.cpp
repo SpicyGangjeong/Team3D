@@ -205,6 +205,11 @@ void CPlayer::Late_Update(_float fTimeDelta)
 		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
 	}
 
+	if (m_pGameInstance->Key_Up(DIK_J)) {
+		m_bDuel_ZOnlyMove = true;
+	}
+
+
 	Player_PixRot();
 }
 

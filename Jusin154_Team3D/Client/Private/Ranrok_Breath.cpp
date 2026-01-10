@@ -89,8 +89,6 @@ void CRanrok_Breath::Update(_float fTimeDelta)
 
 	_matrix CombinedMat = BoneMat * WorldMat;
 
-
-
 	m_pBreath->Get_Component<CTransform>()->Set_WorldMatrix(CombinedMat);
 	m_pBreath_Black->Get_Component<CTransform>()->Set_WorldMatrix(CombinedMat);
 	m_pBreathSlog->Get_Component<CTransform>()->Set_WorldMatrix(CombinedMat);

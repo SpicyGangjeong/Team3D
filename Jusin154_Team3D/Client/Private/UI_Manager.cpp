@@ -512,7 +512,7 @@ void CUI_Manager::Change_Map()
 	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
 	if (nullptr != pLayer) {
 		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
-		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
+		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1008.f, 1.f));
 	}
 
 	m_pGameInstance->Setting_Volumetirc(

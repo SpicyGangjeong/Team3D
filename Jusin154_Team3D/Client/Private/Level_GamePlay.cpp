@@ -113,6 +113,11 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	if (FAILED(Ready_Layer_RacerAI(LAYER_RACERAI))) {
+		return E_FAIL;
+	}
+	
+
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
@@ -972,6 +977,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 				}
 			}
 		}
+
+		
+
 		CHuman_Duelist::DUELISTDESC DuelistDesc = {};
 		DuelistDesc.vPos = _float4(1007.f, 6.f, 1016.f, 1.f);
 		DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
@@ -980,6 +988,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_RacerAI(const _wstring& strLayerTag)
+{
+	CBroomRacerAI::RacerDesc Desc = {};
+	for (_uint i = 1; i < 4; i++)
+	{
+		Desc.pRacerManager = m_pBroomRaceManager;
+		Desc.iIndex = i;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, LAYER_RACERAI, &Desc)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 

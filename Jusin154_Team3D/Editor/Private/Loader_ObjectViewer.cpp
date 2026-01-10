@@ -69,10 +69,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
-	/*futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "C:/MeshTable\\Game\\RiggedObjects\\Characters\\Creatures\\Goblins\\OneOff\\T4Goblin_Melee_INST_A\\SK_GOB_M_T4Melee_INST_A_Master_ReverseTumble.fbx", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Characters\\Creatures\\Goblins\\OneOff\\T4Goblin_Melee_INST_A\\SK_GOB_M_T4Melee_INST_A_Master_ReverseTumble.fbx", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_SK_GOB_M_T4Melee_INST_A_Master_Model")
-	));*/
+	));
 
 #pragma region MONSTER
 

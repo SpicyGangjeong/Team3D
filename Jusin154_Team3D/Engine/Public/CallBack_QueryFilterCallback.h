@@ -36,6 +36,9 @@ public:
                 case PXOBJECT::RANROK_PROP:
                     return PSX::PxQueryHitType::eNONE;
                     break;
+                case PXOBJECT::POTION:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
                 case PXOBJECT::NPC:
                 case PXOBJECT::OLLIVANDER:
                 case PXOBJECT::ELEAZARFIG:

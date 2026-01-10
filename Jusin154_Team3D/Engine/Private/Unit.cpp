@@ -353,7 +353,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
 
         // PARRY
         { "PARRY_180", PARRY_180 },
-        { "PARRY2", PARRY2 }, { "PARRY3", PARRY3 }, { "PARRY4", PARRY4 },
+        { "PARRY2", PARRY2 }, { "PARRY3", PARRY3 }, { "PARRY4", PARRY4 }, { "PARRY5", PARRY5 }, { "PARRY6", PARRY6 },
 
         // BROOM (기존 세트)
         { "BROOM_IDLE", BROOM_IDLE },
@@ -490,6 +490,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "FIRESWEEP_WINDUP_A", FIRESWEEP_WINDUP_A },
         { "FIREBREATH_G", FIREBREATH_G },
         { "FIRESWEEP_G", FIRESWEEP_G },
+        { "FIRESWEEP_G_L", FIRESWEEP_G_L }, { "FIRESWEEP_G_R", FIRESWEEP_G_R },
 
         // ETC
         { "PULSE", PULSE },

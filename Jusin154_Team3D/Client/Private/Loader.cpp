@@ -2161,6 +2161,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC PotionDesc{};
+		{
+			PotionDesc.eType = ACTOR::SPHERE;
+			PotionDesc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			PotionDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			PotionDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			PotionDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			PotionDesc.fContactOffset = { 0.05f };
+			PotionDesc.vhalfGeometryInfo = { 0.07f, 0.07f, 0.07f };
+			PotionDesc.fDensity = 1.f;
+			PotionDesc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			PotionDesc.eLockFlag = {};
+			PotionDesc.vAutoDamping = { 1.f, 1.f };
+			PotionDesc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			PotionDesc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC RanrokDesc{};
 		{
@@ -2188,6 +2205,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_POTION"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, PotionDesc)))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, RanrokDesc)))) {
 			return E_FAIL;
 		}
