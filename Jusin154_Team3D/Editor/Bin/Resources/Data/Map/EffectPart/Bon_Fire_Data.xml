@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EffectParts>
+    <Object>
+        <Position x="1000.6465" y="0.49890903" z="1011.9321"/>
+        <Scale x="0.050004177" y="0.10000439" z="1.0000001"/>
+        <Rotation x="0" y="0" z="0"/>
+    </Object>
+    <Object>
+        <Position x="1000.7449" y="0.2007121" z="1011.8767"/>
+        <Scale x="0.050000504" y="0.10000125" z="1.0000001"/>
+        <Rotation x="0" y="0" z="0"/>
+    </Object>
+</EffectParts>

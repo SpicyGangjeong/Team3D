@@ -3446,6 +3446,32 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 	}
 
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_Stone_FrontSteps*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Stone_FrontSteps_A.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Stone_FrontSteps"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Quid_StoneKit_A.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightPost */
 	{
 		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
@@ -3966,6 +3992,12 @@ HRESULT CLoader::Loading_For_Field()
 	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::FIELD), TEXT("Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_BogMyrtle_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_PointLight */
 	if (FAILED(m_pGameInstance->Add_Prototype<CPointLight>(ENUM_CLASS(LEVEL::FIELD), CPointLight::Create(m_pDevice, m_pContext))))

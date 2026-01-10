@@ -87,6 +87,9 @@ private:
 
 	HRESULT		Save_RaceRing(const _char* pFileName);
 	HRESULT     Load_DADA_INT();
+
+	HRESULT		Save_EffectParts(const _char* pFileName);
+	HRESULT		Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath);
 #pragma endregion
 
 	void		Update_PrototypeList();
@@ -97,6 +100,7 @@ private:
 	void 		Update_LightSpawer();
 	void 		Update_Decal();
 	void 		Update_RaceRing();
+	void		Update_EffectParts();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
 	void		Create_Elemnt(_wstring& strPrototypeTag);

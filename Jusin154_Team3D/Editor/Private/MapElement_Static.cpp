@@ -50,6 +50,12 @@ HRESULT CMapElement_Static::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(m_vScale);
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	
+	_float fMaxScale = max(m_vScale.z, max(m_vScale.x, m_vScale.y));
+
+	m_fRadius = m_pModelComs[0]->Get_Radius() * fMaxScale;
+	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
+	XMStoreFloat3(&m_vWorldCenterPosition, XMVector3TransformCoord(XMLoadFloat3(&vOffset), m_pTransformCom->Get_XMWorldMatrix()));
 #endif // _DEBUG
 
 	return S_OK;
@@ -68,7 +74,7 @@ void CMapElement_Static::Update(_float fTimeDelta)
 
 void CMapElement_Static::Late_Update(_float fTimeDelta)
 {
-	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	//if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vWorldCenterPosition), 1.f), m_fRadius)) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	//}
 }

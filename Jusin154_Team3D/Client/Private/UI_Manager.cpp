@@ -503,7 +503,18 @@ void CUI_Manager::Set_Fade()
 
 void CUI_Manager::Change_Map()
 {
-	m_pInfoInstance->Load_DADA_INT();
+	if (FAILED(m_pInfoInstance->Load_DADA_INT()))
+		return;
+	
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
+		return;
+
+	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
+	if (nullptr != pLayer) {
+		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
+		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
+	}
+
 	m_pGameInstance->Setting_Volumetirc(
 		3.f,
 		0.01f,
@@ -511,11 +522,6 @@ void CUI_Manager::Change_Map()
 		1.0f,
 		0.f
 	);
-	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
-	if (nullptr != pLayer) {
-		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
-		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
-	}
 }
 
 void CUI_Manager::Set_Race(_bool bRace)

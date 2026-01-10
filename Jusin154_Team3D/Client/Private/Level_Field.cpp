@@ -14,6 +14,7 @@
 #include "SkyBox.h"
 #include "Ranrok.h"
 #include "UI_Manager.h"
+#include "InstancedProp.h"
 
 
 CLevel_Field::CLevel_Field(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -270,11 +271,20 @@ HRESULT CLevel_Field::Ready_Background()
 {
 	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
 
-
-
 	CInfoInstance::GetInstance()->Load_MapObjects("Dungeon_Map_Data", LAYER_BACKGROUND);
 	CInfoInstance::GetInstance()->Load_WorldDecal("Duengon_Decal_Data", LAYER_BACKGROUND);
 	CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data", LAYER_BACKGROUND);
+
+	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
+
+	Desc.bEnableRigidbody = false;
+	Desc.isShake = false;
+	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BogMyrtle_A_Dungeon.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -314,6 +324,31 @@ HRESULT CLevel_Field::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_Field::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Goo0_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo0")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Goo1_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo1")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Ranrok_Goo2_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo2")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Ranrok_Goo3_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo3")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Ranrok_Goo4_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo4")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Ranrok_Decal_15_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_15")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Rotate_Rock_Small_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Small")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Ranrok_Particle_Black_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Ranrok_Particle_Red_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Red")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Ranrok_Decal_35_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_35")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Rotate_Rock_Large1_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large1")))
+		return E_FAIL;
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
+		return E_FAIL;
+
 	return S_OK;
 }
 

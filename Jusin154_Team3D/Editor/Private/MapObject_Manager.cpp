@@ -17,7 +17,7 @@
 #include "DummyDecal.h"
 #include "RaceRing.h"
 #include "InstancedProp_Light.h"
-
+#include "EditEffect.h"
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext), m_pInfoInstance{CInfoInstance::GetInstance()}
@@ -86,26 +86,23 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//	return E_FAIL;
 
 #pragma region HOGSMEADE
-		//if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
-		//	return E_FAIL;
+	/*	if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
+			return E_FAIL;*/
 #pragma endregion
 
 #pragma region DUNGEON
-	//if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
-	//	return E_FAIL;
-	//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
-	//m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+	if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
+		return E_FAIL;
+	m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+	m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
 #pragma endregion
 
 #pragma region HOGWART
-	/*if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
-		return E_FAIL;
-	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
-		return E_FAIL;*/
+	//if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
+	//	return E_FAIL;
+	//if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
+	//	return E_FAIL;
 #pragma endregion
-
-	
-
 
 #pragma region Light
 	m_Light_Desc.eType = LIGHT::POINT;
@@ -118,6 +115,47 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	m_Light_Desc.fRange = 5.f;
 	m_Light_Desc.iLevel = NEXT_LEVEL;
 	m_Light_Desc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+#pragma endregion
+
+#pragma region DADA_INT
+	//Load_DADA_INT();
+	//m_pGameInstance->Get_Camera(g_iStaticLevel, CAMERA_DEBUG)
+	//	->Get_Component<CTransform>()
+	//	->Set_State(STATE::POSITION, XMVectorSet(1000.f, 0.f, 1000.f, 1.f));
+#pragma endregion
+
+	
+
+#pragma region EFFECT_PART
+	if (FAILED(Load_EffectParts("Goo0_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo0")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Goo1_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo1")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Ranrok_Goo2_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo2")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Ranrok_Goo3_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo3")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Ranrok_Goo4_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo4")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Ranrok_Decal_15_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_15")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Rotate_Rock_Small_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Small")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Ranrok_Particle_Black_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Ranrok_Particle_Red_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Red")))
+		return E_FAIL;
+	//if (FAILED(Load_EffectParts("Ranrok_Decal_35_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_35")))
+		//return E_FAIL;
+	if (FAILED(Load_EffectParts("Rotate_Rock_Large1_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large1")))
+		return E_FAIL;
+	if (FAILED(Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
+		return E_FAIL;
+
+
+	if (FAILED(Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
+		return E_FAIL;
+	
 #pragma endregion
 
 
@@ -232,9 +270,10 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 
 	//Update_LightSpawer();
 	//Update_Decal();
-	Update_RaceRing();
+	//Update_RaceRing();
+	Update_EffectParts();
 
-	Update_Unified();
+	//Update_Unified();
 
 	if (ADD_TYPE::CONTAINER == m_eType)
 	{
@@ -2036,6 +2075,114 @@ HRESULT CMapObject_Manager::Load_DADA_INT()
 	return S_OK;
 }
 
+HRESULT CMapObject_Manager::Save_EffectParts(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Effect_EDIT"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/EffectPart/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("EffectParts");
+	doc.InsertEndChild(root);
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CEditEffect* pEffect = dynamic_cast<CEditEffect*>(pGamObject);
+
+			if (nullptr == pEffect)
+				return E_FAIL;
+
+			if (FAILED(pEffect->Save_XML(doc, root)))
+				return E_FAIL;
+		}
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save EffectPart");
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapObject_Manager::Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/EffectPart/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("EffectParts");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		_float3 vScale = {};
+		_float3 vRotation = {};
+		_float3 vPosition = {};
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &vPosition.x);
+		Position->QueryFloatAttribute("y", &vPosition.y);
+		Position->QueryFloatAttribute("z", &vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &vScale.x);
+		Scale->QueryFloatAttribute("y", &vScale.y);
+		Scale->QueryFloatAttribute("z", &vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &vRotation.x);
+		Rotation->QueryFloatAttribute("y", &vRotation.y);
+		Rotation->QueryFloatAttribute("z", &vRotation.z);
+
+		CEditEffect* pEffect = { nullptr };
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::MAP), NEXT_LEVEL, TEXT("Layer_EffectParts"), &PartsDesc, nullptr, &pEffect)))
+			return E_FAIL;
+
+		if (nullptr == pEffect)
+			return E_FAIL;
+
+		CTransform* pTransformCom = pEffect->Get_Component<CTransform>();
+		
+		pTransformCom->Set_Scale(vScale);
+		pTransformCom->Rotation(XMConvertToRadians(vRotation.x), XMConvertToRadians(vRotation.y), XMConvertToRadians(vRotation.z));
+		pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+		pEffect->Load(pEffectrFilePath, LEVEL::MAP);
+		pEffect->Set_Visible(true);
+	}
+
+	return S_OK;
+}
+
 void CMapObject_Manager::Update_PrototypeList()
 {
 	GUI::Begin("Model Prototype List");
@@ -2399,6 +2546,50 @@ void CMapObject_Manager::Update_RaceRing()
 		{
 			if (m_iSelectedIndex == iIndex)
 				pObject->Describe_Entity();
+
+			++iIndex;
+		}
+	}
+
+	GUI::End();
+}
+
+void CMapObject_Manager::Update_EffectParts()
+{
+	GUI::Begin("EffectParts Editor");
+	GUI::InputText("MapFileName", m_szSaveFileName, MAX_PATH);
+	GUI::Spacing();
+	if (GUI::Button("Save EffectParts"))
+	{
+		Save_EffectParts(m_szSaveFileName);
+	}
+	if (GUI::Button("Load EffectParts"))
+	{
+		Load_EffectParts(m_szSaveFileName, "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black");
+	}
+	if (GUI::Button("Add Effect"))
+	{
+		CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+		PartsDesc.pParentTransform = m_pTransformCom;
+		CEditEffect* pEffect = { nullptr };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::MAP), NEXT_LEVEL, TEXT("Layer_Effect_EDIT"), &PartsDesc, nullptr, &pEffect)))
+			return;
+	
+		pEffect->Load("../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_35",LEVEL::MAP);
+		pEffect->Set_Visible(true);
+	}
+
+	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Effect_EDIT"));
+
+	if (nullptr != pLayer)
+	{
+		_uint iIndex = {};
+		for (auto& pObject : *pLayer->Get_Objects())
+		{
+			if (m_iSelectedIndex == iIndex)
+				dynamic_cast<CEditEffect*>(pObject)->Control_Transform();
 
 			++iIndex;
 		}

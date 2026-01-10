@@ -744,9 +744,8 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AW.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
-
 
 	/* StratifiedRock_B */
 	Desc.isShake = false;
@@ -763,7 +762,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_AW.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* StratifiedRock_D_B */
@@ -775,6 +774,32 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_D_B_HN_BB.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_D_B_BACK.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* Stone_FrontSteps */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Stone_FrontSteps";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/FrontSteps_A_HN_AW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
+		return E_FAIL;
+
+	/* StoneKit_A */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StoneKit_A_HW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+
 
 	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
 

@@ -28,6 +28,8 @@ public:
 	void	Reference_Mat_For_EditEffect();
 	HRESULT Save_Effect(const _char* pPath);
 	HRESULT Save_Path(HANDLE hFile);
+	void	Control_Transform();
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -49,6 +51,7 @@ public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
+	HRESULT Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root);
 };
 
 NS_END
