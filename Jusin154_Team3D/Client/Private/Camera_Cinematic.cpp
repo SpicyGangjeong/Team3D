@@ -4,6 +4,7 @@
 #include "TimeSocket.h"
 #include "CamPosition_Target.h"
 #include "Layer.h"
+#include "Unit.h"
 
 
 CCamera_Cinematic::CCamera_Cinematic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CCamera(pDevice, pContext) {}
@@ -82,14 +83,14 @@ void CCamera_Cinematic::Set_Priority(_uint iPriority)
 	m_iPriority = iPriority;
 }
 
-void CCamera_Cinematic::Set_LookTarget(CGameObject* pTarget)
+void CCamera_Cinematic::Set_LookTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix)
 {
-	m_pLookTargetPart->Stalking_Target(pTarget);
+	m_pLookTargetPart->Stalking_Target(pTarget, pTargetSocketMatrix);
 }
 
-void CCamera_Cinematic::Set_FollowTarget(CGameObject* pTarget)
+void CCamera_Cinematic::Set_FollowTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix)
 {
-	m_pFollowTargetPart->Stalking_Target(pTarget);
+	m_pFollowTargetPart->Stalking_Target(pTarget, pTargetSocketMatrix);
 }
 
 void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
@@ -122,11 +123,14 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::LOOK_AT:
 	{
-		Set_LookTarget(pContents->pOtherTarget);
+		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
+		Set_LookTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str()));
+		//Set_LookTarget(pUnit, nullptr);
 	}break;
 	case TIMESOCKET_FUNC::DONT_LOOK_AT:
 	{
-		Set_LookTarget(pContents->pOtherTarget);
+		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
+		Set_FollowTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str()));
 	}break;
 	case TIMESOCKET_FUNC::ZOOM_IN:
 	{

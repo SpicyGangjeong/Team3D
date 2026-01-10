@@ -115,7 +115,7 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 
 	m_pFSM->Update_State(fTimeDelta);
-
+	Update_CollidersPosition();
 	if (m_bMotionTrail) {
 		m_vCaptureTimer.x += fTimeDelta;
 		if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
@@ -266,6 +266,7 @@ void CRanrok::Late_Update(_float fTimeDelta)
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
 
@@ -283,6 +284,12 @@ HRESULT CRanrok::Render()
 		//hr = Render_Blend();
 		hr = S_OK;
 	}
+#ifdef _DEBUG
+	else if (RENDER::NONLIGHT == eCurrentPass) {
+		hr = Render_Collider();
+	}
+#endif // _DEBUG
+
 	return hr;
 }
 
@@ -339,12 +346,14 @@ void CRanrok::Trigger(CTimeSocket& Socket)
 	}break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
-		//m_pModelCom->Set_AnimationIndex();
 	}break;
 	case TIMESOCKET_FUNC::SET_FSMSTATE:
 	{
 		if (Socket.m_Contents.vFlags.b[0]) {
 			m_pFSM->Change_State(FSMSTATE::TUCKED);
+		}
+		else if (Socket.m_Contents.vFlags.b[1]) {
+			m_pFSM->Change_State(FSMSTATE::FIRESWEEP);
 		}
 	}break;
 	default:
@@ -378,18 +387,27 @@ HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 
 _vector CRanrok::Get_LockOnPos()
 {
-	_vector Offset = XMVectorZero();
-	//if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
-	//{
-	//	Offset = XMVectorSetY(Offset, 10.f);
-	//}
-	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
-		return m_pCharacter_Controller->Get_Position() + Offset;
+	_vector vCameraLook = m_pGameInstance->Get_CameraLook();
+	_vector vCameraPos = m_pGameInstance->Get_CamXMPosition();
+
+	_vector vNearestPos = m_pCharacter_Controller->Get_Position();
+	_vector vToMonsterDir = vNearestPos - vCameraPos;
+	_float fMaxDot = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);
+
+	{
+		for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
+			_vector vPosResult = m_pTargetableDO[i]->Get_Position();
+			vToMonsterDir = vPosResult - vCameraPos;
+			
+			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);
+
+			if (fMaxDot < fDotResult) {
+				vNearestPos = vPosResult;
+				fMaxDot = fDotResult;
+			}
+		}
 	}
-	else if (nullptr != m_pRigidBody) {
-		return m_pRigidBody->Get_Position() + Offset;
-	}
-	return Get_WorldPostion() + Offset;
+	return XMVectorSetW(vNearestPos, 1.f);
 }
 
 void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
@@ -476,6 +494,12 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 
 void CRanrok::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
+}
+
+_vector CRanrok::Get_BonePos(RANROK_ENUM_BONEMATRICES eType)
+{
+	PSX::PxTransform pxPos = m_pTargetableDO[ENUM_CLASS(eType)]->Get_GlobalPosition();
+	return XMVectorSet(pxPos.p.x, pxPos.p.y, pxPos.p.z, 1.f);
 }
 
 HRESULT CRanrok::Ready_Components()
@@ -618,9 +642,9 @@ HRESULT CRanrok::Ready_Parts()
 	m_pRightEye_Trail->Load_Trail("../Bin/Resources/Data/Effect/Ranrok/RanrokSide/Eye_Trail", static_cast<LEVEL>(g_iStaticLevel));
 	m_pRightEye_Trail->Set_Visible(true);
 
-	m_pLeftEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_left");
-	m_pRightEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_right");
-
+	if (FAILED(Ready_SubParts())) {
+		return E_FAIL;
+	}
 #pragma endregion
 
 	return S_OK;
@@ -650,6 +674,50 @@ HRESULT CRanrok::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+	return S_OK;
+}
+HRESULT CRanrok::Ready_SubParts()
+{
+	m_pLeftEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_left");
+	m_pRightEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_right");
+
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_WRIST)]	=	m_pRightWingWrist_BoneMat	= m_pModelCom->Get_BoneMatrixPtr("wrist_right");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_TIP)]		=	m_pRightWingTip_BoneMat		= m_pModelCom->Get_BoneMatrixPtr("middle_05_right");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_PINKY)]	=	m_pRightWingPinky_BoneMat	= m_pModelCom->Get_BoneMatrixPtr("pinkyelbowwing_04_right");
+
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_WRIST)]		=	m_pLeftWingWrist_BoneMat	= m_pModelCom->Get_BoneMatrixPtr("wrist_left");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_TIP)]		=	m_pLeftWingTip_BoneMat		= m_pModelCom->Get_BoneMatrixPtr("middle_05_left");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_PINKY)]		=	m_pLeftWingPinky_BoneMat	= m_pModelCom->Get_BoneMatrixPtr("pinkyelbowwing_04_left");
+
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::HEAD)]				=	m_pHead_BoneMat				= m_pModelCom->Get_BoneMatrixPtr("head");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::BODY)]				=	m_pBody_BoneMat				= m_pModelCom->Get_BoneMatrixPtr("chest_Main");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL0)]				=	m_pTail0_BoneMat			= m_pModelCom->Get_BoneMatrixPtr("tail_04");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL1)]				=	m_pTail1_BoneMat			= m_pModelCom->Get_BoneMatrixPtr("tail_08");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL2)]				=	m_pTail2_BoneMat			= m_pModelCom->Get_BoneMatrixPtr("tail_12");
+
+	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+	Desc.bAutoOwnerTranslation = false;
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK_PROP);
+	for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pTargetableDO[i], &Desc))) {
+			return E_FAIL;
+		}
+		m_pTargetableDO[i]->Set_Kinematic(true);
+	}
+
+#ifdef _DEBUG
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 6, false, false));
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+	depthStencilDesc.DepthEnable = FALSE;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.StencilEnable = FALSE;
+
+	HRESULT result = m_pDevice->CreateDepthStencilState(&depthStencilDesc, &m_pDepthStencilStateNone);
+	if (FAILED(result)) {
+		return E_FAIL;
+	}
+#endif // _DEBUG
 	return S_OK;
 }
 HRESULT CRanrok::Render_Nonblend()
@@ -731,6 +799,14 @@ HRESULT CRanrok::Render_Nonblend()
 		}
 	}
 #endif
+	return S_OK;
+}
+
+HRESULT CRanrok::Update_CollidersPosition()
+{
+	for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
+		m_pTargetableDO[i]->Set_Transform(XMLoadFloat4x4(m_pRanrokCombinedBoneMatrices[i]) * m_pTransformCom->Get_XMWorldMatrix(), true);
+	}
 	return S_OK;
 }
 
@@ -975,6 +1051,9 @@ void CRanrok::Free()
 	for (auto& Props : m_pRanrok_Props) {
 		SAFE_RELEASE(Props);
 	}
+	for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
+		SAFE_RELEASE(m_pTargetableDO[i]);
+	}
 	m_pRanrok_Props.clear();
 	SAFE_RELEASE(m_pMotionTrailCom);
 	SAFE_RELEASE(m_pCharacter_Controller);
@@ -1089,10 +1168,28 @@ void CRanrok::Describe_Entity()
 			}
 
 		}
-		
 		m_pTransformCom->Describe_Entity();
+		m_pModelCom->Describe_Entity();
 	}
 	GUI::End();
+}
+
+HRESULT CRanrok::Render_Collider()
+{
+	static _bool s_bRenderCollider = { true };
+	GUI::Begin("CutScene");
+	if (GUI::TreeNode("RenderCollider")) {
+		if (true == s_bRenderCollider) {
+			for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
+				m_pTargetableDO[i]->Render([this]() {
+					m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+					}, CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f));
+			}
+		}
+		GUI::TreePop();
+	}
+	GUI::End();
+	return S_OK;
 }
 
 #endif // _DEBUG

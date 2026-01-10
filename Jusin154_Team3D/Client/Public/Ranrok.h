@@ -4,6 +4,7 @@
 #include "Monster.h"
 #include "CallBack_Monster_Behavior.h"
 #include "CallBack_Ranrok_HitReport.h"
+#include "Ranrok_ENUM.h"
 
 NS_BEGIN(Client)
 
@@ -60,6 +61,7 @@ public:
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	_vector Get_BonePos(RANROK_ENUM_BONEMATRICES eType);
 
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
@@ -81,7 +83,9 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
+	HRESULT Ready_SubParts();
 	HRESULT Bind_ShaderResources();
+	HRESULT Update_CollidersPosition();
 	HRESULT Render_Nonblend();
 	HRESULT Render_Blend();
 	void MoveTo(_float fTimeDelta);
@@ -92,9 +96,7 @@ public:
 	virtual void Free() override;
 #ifdef _DEBUG
 	virtual void Describe_Entity() override;
-
-	_float4 m_vInitialRotQ = {};
-	_float3 m_vInitialTrans = {};
+	HRESULT Render_Collider();
 #endif // _DEBUG
 
 private:
@@ -146,6 +148,28 @@ private:
 
 	const _float4x4* m_pLeftEye_BoneMat = { nullptr };
 	const _float4x4* m_pRightEye_BoneMat = { nullptr };
+
+	const _float4x4* m_pRightWingWrist_BoneMat = { nullptr };
+	const _float4x4* m_pRightWingTip_BoneMat = { nullptr };
+	const _float4x4* m_pRightWingPinky_BoneMat = { nullptr };
+	const _float4x4* m_pLeftWingWrist_BoneMat = { nullptr };
+	const _float4x4* m_pLeftWingTip_BoneMat = { nullptr };
+	const _float4x4* m_pLeftWingPinky_BoneMat = { nullptr };
+	const _float4x4* m_pHead_BoneMat = { nullptr };
+	const _float4x4* m_pBody_BoneMat = { nullptr };
+	const _float4x4* m_pTail0_BoneMat = { nullptr };
+	const _float4x4* m_pTail1_BoneMat = { nullptr };
+	const _float4x4* m_pTail2_BoneMat = { nullptr };
+	const _float4x4* m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END)] = { nullptr };
+	CRigidBody_Dynamic* m_pTargetableDO[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END)] = { nullptr };
+#ifdef _DEBUG
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+	ID3D11DepthStencilState* m_pDepthStencilStateNone = { nullptr };
+
+	_float4 m_vInitialRotQ = {};
+	_float3 m_vInitialTrans = {};
+#endif // _DEBUG
+
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

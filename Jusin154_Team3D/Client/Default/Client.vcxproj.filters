@@ -920,6 +920,9 @@
     <ClInclude Include="..\Public\State_Block.h">
       <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_ENUM.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -32,6 +32,7 @@ HRESULT CTimeSocket::Initialize(void* pArg)
     m_Contents.vParam_10 = pDesc->vParam_10;
     m_Contents.vParam_11 = pDesc->vParam_11;
     m_Contents.funcEvent = pDesc->funcEvent;
+    m_Contents.vParam_12 = pDesc->vParam_12;
 
     switch (m_Contents.eTypeParam)
     {

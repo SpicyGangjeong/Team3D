@@ -625,10 +625,12 @@ void CLevel_Field::Load_CutSceneXML(const string& path, CCamera* pCamera, CMonst
 			}
 		}
 
-		// -------- vFlags / Param_10 / Param_11 ----------
+		// -------- vFlags / Param_10 / Param_11 / Param_12 ----------
 		ReadFlags16(pSocketNode->FirstChildElement("vFlags"), SocketContents.vFlags);
 		ReadUInt4(pSocketNode->FirstChildElement("Param_10"), SocketContents.vParam_10);
 		ReadFloat4(pSocketNode->FirstChildElement("Param_11"), SocketContents.vParam_11);
+		const _char* pStringParma = pSocketNode->FirstChildElement("Param_12")->FirstChildElement("string")->Attribute("tag");
+		SocketContents.vParam_12 = pStringParma;
 		CTimeSocket* pSocket = CTimeSocket::Create(&SocketContents);
 		if (!pSocket) {
 			continue;
