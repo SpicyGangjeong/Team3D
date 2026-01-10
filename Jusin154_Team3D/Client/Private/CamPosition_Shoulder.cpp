@@ -480,6 +480,7 @@ void CCamPosition_Shoulder::Describe_Entity()
 	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Cam_Shoulder")) {
 		m_pTransformCom->Describe_Entity();
+		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 		GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
 		GUI::SliderFloat("m_fFollowTargetIncludedAngleDegree", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
 		GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
