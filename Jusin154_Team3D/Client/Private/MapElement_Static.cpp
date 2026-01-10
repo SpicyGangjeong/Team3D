@@ -166,8 +166,6 @@ void CMapElement_Static::ConvertToPhysX()
 	}
 	m_bReadyToCreatePhysX = true;
 
-	m_RigidBodies.resize(m_iMaxLodLevel + 1);
-
 	CModel* pModel = m_pModelComs[0];
 
 	_uint iNumMeshes = pModel->Get_NumMeshes();
@@ -183,7 +181,7 @@ void CMapElement_Static::ConvertToPhysX()
 		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
 			assert(false);
 		}
-		m_RigidBodies[iIndex].push_back(pRigidBody);
+		m_RigidBodies.push_back(pRigidBody);
 	}
 }
 
@@ -220,9 +218,7 @@ void CMapElement_Static::Free()
 	SAFE_RELEASE(m_pShaderCom);
 
 	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
-		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
-			SAFE_RELEASE(m_RigidBodies[i][j]);
-		}
+		SAFE_RELEASE(m_RigidBodies[i]);
 	} m_RigidBodies.clear();
 
 	for (auto& pModel : m_pModelComs)

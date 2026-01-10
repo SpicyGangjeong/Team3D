@@ -173,8 +173,6 @@ void CMapObject_Render::ConvertToPhysX()
 	}
 	m_bReadyToCreatePhysX = true;
 
-	m_RigidBodies.resize(m_iMaxLodLevel + 1);
-
 	CModel* pModel = m_pModelComs[0];
 
 	_uint iNumMeshes = pModel->Get_NumMeshes();
@@ -190,7 +188,7 @@ void CMapObject_Render::ConvertToPhysX()
 		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
 			assert(false);
 		}
-		m_RigidBodies[iIndex] = pRigidBody;
+		m_RigidBodies.push_back(pRigidBody);
 	}
 }
 

@@ -432,7 +432,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
 	isLoad_NPC = true;
-	isLoad_Monster = false;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 나
 	isLoad_Background = false;
@@ -3773,25 +3773,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 
 	m_strMessage = TEXT("모델을 다시 불러오는 중입니다. ");
-	{
-		CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"));
-		CMotion_Trail::MODELCAPTURE_DESC Desc{};
-		Desc.fMaxCaptureLifeTime = 2.f;
-		Desc.iMaximumCapture = 4;
-		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
-			return E_FAIL;
-		}
-	}
 
-	{
-		CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
-		CMotion_Trail::MODELCAPTURE_DESC Desc{};
-		Desc.fMaxCaptureLifeTime = 2.f;
-		Desc.iMaximumCapture = 4;
-		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
-			return E_FAIL;
+	if (isLoad_Monster) {
+		{
+			CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"));
+			CMotion_Trail::MODELCAPTURE_DESC Desc{};
+			Desc.fMaxCaptureLifeTime = 2.f;
+			Desc.iMaximumCapture = 4;
+			Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
+				return E_FAIL;
+			}
+		}
+
+		{
+			CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
+			CMotion_Trail::MODELCAPTURE_DESC Desc{};
+			Desc.fMaxCaptureLifeTime = 2.f;
+			Desc.iMaximumCapture = 4;
+			Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
+				return E_FAIL;
+			}
 		}
 	}
 
