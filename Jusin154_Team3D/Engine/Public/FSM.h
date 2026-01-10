@@ -57,6 +57,7 @@ enum ESTATE : _u64Flag
 	DASH                        = 1ULL << 50,
     FEAR                        = 1ULL << 51,
     CUTSCENE                    = 1ULL << 52,
+    BLOCK                       = 1ULL << 53,
     END
 };
 NS_END

@@ -917,6 +917,9 @@
     <ClInclude Include="..\Public\Ranrok_Prop.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Block.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1899,6 +1902,9 @@
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit">
       <UniqueIdentifier>{75632dfe-2808-4ce3-abc1-8020563d3a6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Block">
+      <UniqueIdentifier>{c0fdb122-503b-47f0-a544-90d153464c9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2765,6 +2771,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Block.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

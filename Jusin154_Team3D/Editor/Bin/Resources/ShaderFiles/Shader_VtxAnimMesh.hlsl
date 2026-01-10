@@ -637,7 +637,7 @@ PS_OUT PS_SPECTOR_MAIN(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     return Out;
 }
 
