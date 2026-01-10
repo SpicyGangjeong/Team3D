@@ -97,6 +97,9 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 
 	Play_Event();
 
+
+
+
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
@@ -563,6 +566,8 @@ void CHuman_Duelist::Free()
 
 void CHuman_Duelist::Describe_Entity()
 {
+
+
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("HUMAN_DUELIST_DESC")) {
@@ -609,6 +614,12 @@ void CHuman_Duelist::Describe_Entity()
 		GUI::Text("%d", m_iStateMask);
 		GUI::Text("HP : %f, %f", m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp);
 		GUI::SameLine(); if (GUI::Button("FULL")) { m_pStat->Set_Stat(ENUM_CLASS(STAT::CURRENTHP), m_pStat->Get_Stat().fMaxHp); }
+
+
+		if(GUI::Button("Reset Pos"))
+		{
+			m_pCharacter_Controller->Set_Position(XMVectorSet(1007.f, 6.f, 1016.f, 1.f));
+		}
 
 		m_pLightCom->Describe_Entity();
 	}

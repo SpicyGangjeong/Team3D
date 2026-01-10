@@ -193,6 +193,10 @@
 #include "TransformationSide.h"
 #include "AvadakedavraSide.h"
 
+#include "Protego_Hit.h"
+#include "Goblin_ProtegoHit.h"
+#include "Duelist_ProtegoHit.h"
+
 #include "TrailObject.h"
 #include "Instance_Model.h"
 #include "Trail.h"
@@ -424,10 +428,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
-	isLoad_Hogwart = true;
-	isLoad_UI_SEQUANTIAL = true;
-	isLoad_NPC = true;
+	isLoad_Background = false;
+	isLoad_Hogwart = false;
+	isLoad_UI_SEQUANTIAL = false;
+	isLoad_NPC = false;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -445,6 +449,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 #pragma region MAP_MODELS
 	vector<future<vector<FOLDER_LOAD*>*>> jobMapModels;
+	vector<future<pair<_wstring, CShader*>*>> jobMapShaders;
 	{
 		{ /* Terrain */
 			jobMapModels.emplace_back(Deferred_FolderLoad(
@@ -1077,6 +1082,43 @@ HRESULT CLoader::Loading_For_GamePlay()
 			));
 		}
 	}
+
+#pragma region SHADER
+
+	{
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_UIEDITOR,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_UIINSTANCE,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"), VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_INSTANCE_MODEL,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxModelInstance.hlsl"), VTX_MODEL_INSTANCE_PARTICLE::Elements, VTX_MODEL_INSTANCE_PARTICLE::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_INSTANCE_PROP_MODEL,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"), VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_NPC_PBR_ANIM,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_ANIMMESH,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_POSTEX,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_NORTEX,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_MESH,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_VTXPOS,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
+	}
+
+#pragma endregion
 	/* LAND_MODEL */
 	{
 		/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
@@ -1893,70 +1935,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 #pragma endregion
-#pragma region SHADER
-
-	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
-			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIINSTANCE,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"),
-			VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_MODEL,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxModelInstance.hlsl"),
-			VTX_MODEL_INSTANCE_PARTICLE::Elements, VTX_MODEL_INSTANCE_PARTICLE::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"),
-			VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_VTXPOS,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"),
-			VTXPOS::Elements, VTXPOS::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
-			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_MESH,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxMesh.hlsl"),
-			VTXMESH::Elements, VTXMESH::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_ANIMMESH,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxAnimMesh.hlsl"),
-			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_POSTEX,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPosTex.hlsl"),
-			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NORTEX,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxNorTex.hlsl"),
-			VTXNORTEX::Elements, VTXNORTEX::iNumElements)))) {
-		return E_FAIL;
-	}
-
-#pragma endregion
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SpellSlotUIDesc{};
@@ -2571,6 +2549,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_ProtegoHit>(g_iStaticLevel, CGoblin_ProtegoHit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDuelist_ProtegoHit>(g_iStaticLevel, CDuelist_ProtegoHit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+		
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Attack>(g_iStaticLevel, CGoblin_Attack::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2612,6 +2600,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLightning>(g_iStaticLevel, CLightning::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CProtego_Hit>(g_iStaticLevel, CProtego_Hit::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -3738,11 +3730,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 #pragma region RECEIVE_THREAD
-	{ // MapModels
+	{
+		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
 		_uint iIndex = 0;
-		for (auto& JobMapModels : jobMapModels)
+		for (auto& JobMapShader : jobMapShaders)
 		{
-			vector<FOLDER_LOAD*>* pOut = JobMapModels.get();
+			pair<_wstring, CShader*>* pOut = JobMapShader.get();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
+				return E_FAIL;
+			}
+			Safe_Delete(pOut);
+		}
+	}
+
+/* 쉐이더 로딩 종료 이후 로딩*/
+
+
+	{ // MapModels
+		m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
+		_uint iIndex = 0;
+		for (auto& JobMapModel : jobMapModels)
+		{
+			vector<FOLDER_LOAD*>* pOut = JobMapModel.get();
 			for (_uint i = 0; i < pOut->size(); ++i) {
 				FOLDER_LOAD* pContents = (*pOut)[i];
 				if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, pContents->pModelTag, pContents->pLoadedModel))) {
@@ -4101,8 +4110,26 @@ pair<_wstring, CModel*>* APIENTRY Deferred_ModelLoad_Main(ID3D11Device* pDevice,
 	return Out;
 }
 
+pair<_wstring, CShader*>* APIENTRY Deferred_ShaderLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _wstring& strPrototypeTag, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+{
+	if (FAILED(CoInitializeEx(nullptr, 0))) {
+		assert(false);
+		return nullptr;
+	}
+
+	CShader* pShader = CShader::Create(pDevice, pContext, pShaderFilePath, pElements, iNumElements);
+
+	CoUninitialize();
+	pair<_wstring, CShader*>* Out = new pair<_wstring, CShader*>(strPrototypeTag, pShader);
+	return Out;
+}
+
 future<pair<_wstring, CModel*>*> CLoader::Deferred_ModelLoad(MODEL eType, const _char* pDirectoryPath, _fmatrix PreTransform, const _tchar* pPrototypeTag) {
 	return m_pGameInstance->EnqueueJob(&Deferred_ModelLoad_Main, m_pDevice, m_pContext, eType, pDirectoryPath, pPrototypeTag, PreTransform);
+}
+
+future<pair<_wstring, CShader*>*> CLoader::Deferred_ShaderLoad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _wstring& strPrototypeTag, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements) {
+	return m_pGameInstance->EnqueueJob(&Deferred_ShaderLoad_Main, pDevice, pContext, strPrototypeTag, pShaderFilePath, pElements, iNumElements);
 }
 
 void CLoader::Ready_MapModels(vector<future<vector<FOLDER_LOAD*>*>>& jobMapModels)

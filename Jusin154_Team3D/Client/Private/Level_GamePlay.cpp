@@ -310,9 +310,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -899,8 +899,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_NPC = true;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -998,7 +998,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = true;
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = true;
+	isLoad_Monster = false;
 #endif // 
 #ifdef 나
 
@@ -1063,7 +1063,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Manager(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Reday_Layer_EffectPool()
 {
-
 	//플레이어보다 먼저 생성해야함!
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, LAYER_EFFECTPOOL))) {
 		return E_FAIL;

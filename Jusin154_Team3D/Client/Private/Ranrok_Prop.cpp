@@ -131,7 +131,15 @@ HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	_vector vPos = pObject->Get_WorldPostion();
 
-	_vector vRandomPos = XMVectorSet(m_pGameInstance->Real_Random_Float(-20.f, 0.f), m_pGameInstance->Real_Random_Float(5.f, 15.f), m_pGameInstance->Real_Random_Float(-20.f, 0.f), 0.f);
+
+	_vector vForward = pObject->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+	_vector vRight = pObject->Get_Component<CTransform>()->Get_State(STATE::RIGHT);
+	_vector vUp = pObject->Get_Component<CTransform>()->Get_State(STATE::UP);
+
+	_float randRight = m_pGameInstance->Real_Random_Float(-13.f, 13.f);
+	_float randUp = m_pGameInstance->Real_Random_Float(5.f, 15.f);
+	_float randForward = m_pGameInstance->Real_Random_Float(0.f, 5.f);
+	_vector vRandomPos = vRight * randRight + vUp * randUp + vForward * randForward;
 		
 	vPos += vRandomPos;
 

@@ -69,7 +69,7 @@ void CCamera::Transition(_float fTimeDelta)
         fRatio = 1.f;
         m_bIsCurrentTransition = false;
     }
-
+     
     _vector vFollowTarget = m_pFollowTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION);
     _vector vLookTarget = m_pLookTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION);
 

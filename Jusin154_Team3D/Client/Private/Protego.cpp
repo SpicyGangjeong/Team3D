@@ -4,7 +4,8 @@
 #include "GameInstance.h"
 #include "EffectParts.h"
 #include "Player.h"
-
+#include "EffectPool.h"
+#include "Layer.h"
 
 CProtego::CProtego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -18,6 +19,8 @@ CProtego::CProtego(const CProtego& rhs)
 
 HRESULT CProtego::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
+		return E_FAIL;
 
 	return S_OK;
 
@@ -31,8 +34,6 @@ HRESULT CProtego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
-		return E_FAIL;
 
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
@@ -49,7 +50,7 @@ HRESULT CProtego::Initialize(void* pArg)
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
-	m_fDuration = 3.f;
+	m_fDuration = 6.f;
 
 	return S_OK;
 }
@@ -62,7 +63,11 @@ void CProtego::Priority_Update(_float fTimeDelta)
 void CProtego::Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
+	{
+		dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(false);
 		return;
+	}
+
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -116,6 +121,8 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 	_float3 vSize = _float3(1.f, 1.f, 1.f);
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
 	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
+
+
 
 	m_fSizeAccTime = 0.f;
 
@@ -182,6 +189,12 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);
+
+	m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>()
+		->Use_Skill(SKILL_TYPE::PROTEGO_HIT, m_pOwner, &CollisionDesc->vWorldPos);
+
+
+	static_cast<CPlayer*>(m_pOwner)->Start_CameraShake(0.3f, 2.f);
 }
 
 void CProtego::Free()

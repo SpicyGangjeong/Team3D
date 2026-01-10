@@ -143,6 +143,9 @@ void CBroom::Update(_float fTimeDelta)
 
 void CBroom::Late_Update(_float fTimeDelta)
 {
+	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
+		return;
+	}
 	__super::Late_Update(fTimeDelta);
 
 	if (m_bRide == true && m_pWindEffect != nullptr)
