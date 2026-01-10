@@ -35,8 +35,7 @@ private:
 	class  CInfoInstance*			  m_pInfoInstance = { nullptr };
 private:
 	_wstring						  m_wstrEffectName = {};
-	class CEffectParts*				  m_pProjectile0 = {};
-	class CEffectParts*				  m_pProjectile1 = {};
+	class CEffectParts*				  m_pProjectile = {};
 	class CEffectParts*				  m_pStupefy_PJ_PT = {};
 
 	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
