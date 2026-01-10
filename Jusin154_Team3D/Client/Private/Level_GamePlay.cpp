@@ -123,6 +123,8 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
+	m_pInfoInstance->Load_CutScenes();
+
 	return S_OK;
 }
 

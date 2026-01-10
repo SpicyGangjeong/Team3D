@@ -22,7 +22,7 @@ void CCutSceneInfo::Update(_float fTimeDelta)
 	Update_ActiveEvents(fTimeDelta);
 }
 
-void CCutSceneInfo::Change_Level()
+void CCutSceneInfo::Load_CutScenes()
 {
 	LEVEL eLevel = (LEVEL)m_pGameInstance->Get_NextLevelID();
 	switch (eLevel)
@@ -33,7 +33,7 @@ void CCutSceneInfo::Change_Level()
 		break;
 	case LEVEL::FIELD:
 		Clear_AllEvents();
-		Ready_GameplayCutScenes();
+		Ready_FieldCutScenes();
 		break;
 	default:
 		Clear_ActiveEvents();

@@ -62,6 +62,9 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
+
+	m_pInfoInstance->Load_CutScenes();
+
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 

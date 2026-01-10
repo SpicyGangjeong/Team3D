@@ -24,6 +24,8 @@ private:
 public:
 	HRESULT Initialize_Information(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	HRESULT Late_Initialize(); // GamePlay Initialize 할 때
+
+	void Load_CutScenes();
 	void Release_Information();
 	LEVEL Get_RestartLevel();
 public:

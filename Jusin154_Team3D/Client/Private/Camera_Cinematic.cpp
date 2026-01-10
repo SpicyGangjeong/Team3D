@@ -101,6 +101,13 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	case TIMESOCKET_FUNC::BIND_CAMERA:
 		m_pGameInstance->Bind_Camera(NEXT_LEVEL, pContents->wstrKeyName, true);
 		break;
+	case TIMESOCKET_FUNC::TELEPORTATION:
+	{
+		m_pTransformCom->Set_WorldMatrix(pContents->pxTransform);
+		m_pFollowTargetPart->Set_WorldPostion(m_pTransformCom->Get_State(STATE::POSITION));
+		m_pLookTargetPart->Set_WorldPostion(m_pTransformCom->Get_State(STATE::POSITION) + m_pTransformCom->Get_State(STATE::LOOK));
+		Clear_Lerp_Translation();
+	} break;
 	case TIMESOCKET_FUNC::TRANSLATION:
 	{
 		m_pFollowTargetPart->Set_WorldPostion(XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
@@ -123,13 +130,12 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	case TIMESOCKET_FUNC::LOOK_AT:
 	{
 		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
-		Set_LookTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str()));
+		Set_LookTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str())); 
 		//Set_LookTarget(pUnit, nullptr);
 	}break;
 	case TIMESOCKET_FUNC::DONT_LOOK_AT:
 	{
-		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
-		Set_FollowTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str()));
+		m_pLookTargetPart->Stop_Stalking();
 	}break;
 	case TIMESOCKET_FUNC::ZOOM_IN:
 	{

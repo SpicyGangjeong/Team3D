@@ -44,7 +44,7 @@ void CCamPosition_Target::Set_WorldPostion(_vector vPos)
 
 _bool CCamPosition_Target::IsStalking()
 {
-	return nullptr == m_pStalkingTarget;
+	return nullptr != m_pStalkingTarget;
 }
 
 void CCamPosition_Target::Stalking_Target(CUnit* pStalkingTarget, const _float4x4* pTargetSocketMatrix)
@@ -58,6 +58,7 @@ void CCamPosition_Target::Stalking_Target(CUnit* pStalkingTarget, const _float4x
 void CCamPosition_Target::Stop_Stalking()
 {
 	SAFE_RELEASE(m_pStalkingTarget);
+	m_pTargetSocketMatrix = nullptr;
 }
 
 HRESULT CCamPosition_Target::Initialize_Prototype()

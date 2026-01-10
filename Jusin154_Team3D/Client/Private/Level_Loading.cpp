@@ -25,7 +25,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	if (nullptr == m_pLoader) {
 		return E_FAIL;
 	}
-
+	
 	if (FAILED(Ready_Layer_BackGround(LAYER_UI))) {
 		return E_FAIL;
 	}

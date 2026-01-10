@@ -22,6 +22,7 @@ static constexpr pair<string_view, TIMESOCKET_PARAM> g_SocketParamTypeTable[ENUM
 
 typedef enum class typeTimeSocket_Func {
 	// COMMON
+	TELEPORTATION,
 	TRANSLATION,
 	TRANSLATION_LERP,
 	ROTATION,
@@ -57,6 +58,7 @@ typedef enum class typeTimeSocket_Func {
 
 static constexpr pair<string_view, TIMESOCKET_FUNC> g_SocketFuncTypeTable[ENUM_CLASS(TIMESOCKET_FUNC::END) + 1] =
 {
+	{"TELEPORTATION",		TIMESOCKET_FUNC::TELEPORTATION},
 	{"TRANSLATION",			TIMESOCKET_FUNC::TRANSLATION},
 	{"TRANSLATION_LERP",	TIMESOCKET_FUNC::TRANSLATION_LERP},
 	{"ROTATION",			TIMESOCKET_FUNC::ROTATION},
