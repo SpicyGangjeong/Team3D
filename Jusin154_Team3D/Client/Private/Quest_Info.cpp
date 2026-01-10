@@ -98,6 +98,13 @@ void CQuest_Info::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+
+	if (m_iCurrentIndex != m_iQuest_Index)
+	{
+		Y(m_fOriginPerviewSize + (m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size() * 50.f));
+		m_iCurrentIndex = m_iQuest_Index;
+	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -129,9 +136,14 @@ HRESULT CQuest_Info::Render()
 		return E_FAIL;
 	}
 
-	if (m_iQuest_Index != 0)
+	if (m_iQuest_Index != -1)
 	{
 		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+
+		for (_int i = 0; i < m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size(); ++i)
+		{
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo[i].pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY + 100 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+		}
 	}
 
 	return S_OK;
@@ -233,6 +245,15 @@ void CQuest_Info::Set_Hover(void* pArg)
 		return;
 	}
 	Visible(true);
+}
+
+void CQuest_Info::Y(_float fSizeY)
+{
+	m_fSizeY = fSizeY;
+
+	_float Delta = fSizeY - m_fOriginPerviewSize;
+
+	m_fY = m_fOrigin_Position.y - (Delta * 0.5f);
 }
 
 CQuest_Info* CQuest_Info::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

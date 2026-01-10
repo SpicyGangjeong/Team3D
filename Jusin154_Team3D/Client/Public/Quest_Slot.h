@@ -47,7 +47,7 @@ private:
 	void Font_Setting(_int Index);
 
 	_int Mousechack(POINT Mouse);
-
+	_float Get_SlotY(_int iIndex);
 public:
 	void Set_QuestType(_int Index);
 

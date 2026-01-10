@@ -59,7 +59,7 @@ private:
 
 	void Shop();
 	void SpellLearn();
-
+	void Quest();
 	void ReSet();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
@@ -76,15 +76,16 @@ private:
 	_bool	m_bCurrentInteract = { false };
 	_bool	m_bEndText = { false };
 	_bool	m_bNextText = { false };
-	
+
 	_wstring	m_pNpcName;
 	_wstring	m_pName;
 	_int		m_iTextID{};
 	_int		m_iNextID{};
 	_int		m_iType{};
 
-	_bool		m_bChoiceText = {false};
-	_bool		m_bCurrentChoiceText = {false};
+	_bool		m_bChoiceText = { false };
+	_bool		m_bCurrentChoiceText = { false };
+	_bool		m_bRace = { false };
 
 public:
 	static CDialogue_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

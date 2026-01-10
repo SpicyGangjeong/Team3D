@@ -189,9 +189,6 @@ HRESULT CCamera_Cinematic::Ready_SubPart()
 		m_pFollowTargetPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -10.4f, 1.f));
 		m_pLookTarget = m_pLookTargetPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
 		m_pLookTargetPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
-
-		SAFE_ADDREF(m_pFollowTargetPart);
-		SAFE_ADDREF(m_pLookTargetPart);
 	}
 	return S_OK;
 }
@@ -286,6 +283,31 @@ void CCamera_Cinematic::Clear_Lerp_FovY()
 	m_bLerpFovY = false;
 	m_vFovYLerp = { 60.f, 60.f };
 	m_vLerpFovYTimer = { 0.f, 0.f };
+}
+void CCamera_Cinematic::Transition(_float fTimeDelta)
+{
+	if (false == m_bIsCurrentTransition) {
+		return;
+	}
+	m_vTransitionTime.x += fTimeDelta;
+	_float fRatio = m_vTransitionTime.x / m_vTransitionTime.y;
+	if (fRatio > 1.f) {
+		fRatio = 1.f;
+		m_bIsCurrentTransition = false;
+	}
+
+	_vector vFollowTarget = m_pFollowTargetPart->Get_WorldPostion();
+	_vector vLookTarget = m_pLookTargetPart->Get_WorldPostion();
+
+	_matrix xmMatTarget = XMMatrixInverse(nullptr, XMMatrixLookAtLH(vFollowTarget, vLookTarget, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+
+	_float4x4 matOrigin = *m_pTransformCom->Get_WorldMatrixPtr();
+	_float4x4 matTarget = {}; XMStoreFloat4x4(&matTarget, xmMatTarget);
+	_float4x4 matResult = {};
+
+	CMyTools::MatrixLerp(&matOrigin, &matTarget, matResult, fRatio);
+
+	m_pTransformCom->Set_WorldMatrix(matResult);
 }
 CCamera_Cinematic* CCamera_Cinematic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

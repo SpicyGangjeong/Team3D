@@ -51,7 +51,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
             const char* text = pLine->Attribute("Text");
             if (text) line.pText = CMyTools::ToWstring(text);
 
-            pLine->QueryIntAttribute("NextText", &line.NextTextID);
+            pLine->QueryIntAttribute("NextID", &line.NextTextID);
 
             // 선택지 처리
             tinyxml2::XMLElement* pChoice = pLine->FirstChildElement("Choice");
@@ -64,7 +64,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
                 const char* choiceText = pChoice->Attribute("Text");
                 if (choiceText) choice.pText = CMyTools::ToWstring(choiceText);
 
-                pChoice->QueryIntAttribute("NextText", &choice.NextTypeID);
+                pChoice->QueryIntAttribute("NextID", &choice.NextTypeID);
 
                 line.ChoiceInfo.push_back(choice);
                 pChoice = pChoice->NextSiblingElement("Choice");
