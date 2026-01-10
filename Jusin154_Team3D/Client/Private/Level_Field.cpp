@@ -106,8 +106,6 @@ void CLevel_Field::Update(_float fTimeDelta)
 		UI_STATE eState = UI_STATE::GAMEPLAYER;
 		m_pInfoInstance->Event_CallBack(TEXT("Canvas_Change"), &eState);
 	}
-
-
 }
 
 HRESULT CLevel_Field::Render()

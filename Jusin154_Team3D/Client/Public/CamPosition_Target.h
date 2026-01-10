@@ -25,6 +25,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual _vector Get_WorldPostion() override;
 	virtual void Set_WorldPostion(_vector vPos);
+	virtual _bool IsStalking();
 	virtual void Stalking_Target(CUnit* pStalkingTarget, const _float4x4* pTargetSocketMatrix);
 	virtual void Stop_Stalking();
 

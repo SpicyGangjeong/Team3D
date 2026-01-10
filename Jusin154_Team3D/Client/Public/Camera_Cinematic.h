@@ -58,6 +58,9 @@ private:
 	void Clear_Lerp_FovY();
 
 	virtual void Transition(_float fTimeDelta) override;
+
+
+	void Rotation(_fvector vRotQ);
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CCamPosition_Target* m_pLookTargetPart = { nullptr };

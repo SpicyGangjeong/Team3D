@@ -19,8 +19,9 @@ void CCutSceneInfo::Update(_float fTimeDelta)
 		fRatio = CMyTools::Saturate(iter->second->m_vTimer.x / iter->second->m_vTimer.y);
 		for (list<CTimeSocket*>::iterator socketIter = pSockets->begin(); socketIter != pSockets->end();) {
 			GUI::Begin("CutScene");
-			if (GUI::TreeNode((*socketIter)->m_Contents.strEventName.c_str())) {
+			if (GUI::TreeNodeEx((*socketIter)->m_Contents.strEventName.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen)) {
 				GUI::Text("fRatio : %.2f", fRatio);
+				GUI::Text("fSecond : %.2f / %.2f", iter->second->m_vTimer.x, iter->second->m_vTimer.y);
 				GUI::TreePop();
 			}
 			GUI::End();
