@@ -441,15 +441,8 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 
 	if (m_bShield)
 	{
-		if (iCurrAnim != m_Animation[STATEANIM::SHIELD_BLOCK].first) {
-			Start_CameraShake(0.3f, 3.f);
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, true, false, false);
-			return;
-		}
-		else {
-			m_bShield = false;
-		}
+		m_pFSM->Change_State(FSMSTATE::BLOCK);
+		return;
 	}
 
 #ifdef _DEBUG
@@ -1029,6 +1022,7 @@ void CPlayer::Describe_Entity()
 			m_pShaderCom->Shader_Refresh();
 		}
 		m_pCharacter_Controller->Describe_Entity();
+		GUI::Checkbox("Shield", &m_bShield);
 		_float4 vMomentum = {};
 		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
 		GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
