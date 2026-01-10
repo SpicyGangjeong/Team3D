@@ -141,6 +141,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 	default:
 		return;
 	}
+	m_pInfoInstance->Event_CallBack(TEXT("Player_CanvasChange"), &m_eType);
 	m_pGameInstance->Toggle_MouseCenter();
 	m_pInfoInstance->Event_CallBack(TEXT("Player_CanvasChange"), &m_eType);
 }
@@ -505,7 +506,7 @@ void CUI_Manager::Set_Fade()
 
 void CUI_Manager::Change_Map()
 {
-	
+
 }
 
 void CUI_Manager::Set_Race(_bool bRace)

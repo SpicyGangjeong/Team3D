@@ -113,9 +113,6 @@ HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 
 void CInfoInstance::Get_LockOnInfo(LOCKON_INFO& Info)
 {
-	if (false == m_bSearchLockOnTarget) {
-		return;
-	}
 	Info.pUnit = m_pMonsterInfo->Get_LockOnUnit();
 	Info.pInteractive = m_pInteractiveInfo->Get_LockOnUnit();
 	Info.pEffect = m_pEffectInfo->Get_LockOnEffect();
@@ -170,6 +167,10 @@ HRESULT CInfoInstance::Load_WorldDecal(const _char* pFileName, const _wchar* pLa
 HRESULT CInfoInstance::Load_PointLights(const _char* pFileName, const _wchar* pLayerTag)
 {
 	return m_pMapInfo->Load_PointLights(pFileName, pLayerTag);
+}
+HRESULT CInfoInstance::Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath)
+{
+	return m_pMapInfo->Load_EffectParts(pFileName, pEffectrFilePath);
 }
 HRESULT CInfoInstance::Load_DADA_INT()
 {

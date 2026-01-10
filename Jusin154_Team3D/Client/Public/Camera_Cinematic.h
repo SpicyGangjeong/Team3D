@@ -3,6 +3,10 @@
 #include "Client_Define.h"
 #include "Camera.h"
 
+NS_BEGIN(Engine)
+class CUnit;
+NS_END
+
 NS_BEGIN(Client)
 class CCamPosition_Target;
 
@@ -28,8 +32,8 @@ public:
 	virtual void Active_Camera(pair<_float4, _float3>& pairTransitionInfo)override;
 	void Update_LerpTimer(_float fTimeDelta);
 	void Set_Priority(_uint iPriority);
-	void Set_LookTarget(CGameObject* pTarget);
-	void Set_FollowTarget(CGameObject* pTarget);
+	void Set_LookTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix);
+	void Set_FollowTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix);
 
 
 private:
@@ -54,6 +58,9 @@ private:
 	void Clear_Lerp_FovY();
 
 	virtual void Transition(_float fTimeDelta) override;
+
+
+	void Rotation(_fvector vRotQ);
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CCamPosition_Target* m_pLookTargetPart = { nullptr };

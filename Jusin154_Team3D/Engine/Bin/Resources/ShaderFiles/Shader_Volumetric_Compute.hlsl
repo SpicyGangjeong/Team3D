@@ -141,10 +141,12 @@ float ComputePointLightVisible(float3 vLightDir, float fRange)
 {
     float fDistance = length(vLightDir);
     
-    if (fDistance < fRange)
-        return 1.f;
-    else
-        return 0.f;
+    //if (fDistance < fRange)
+    //    return 1.f;
+    //else
+    //    return 0.f;
+    
+    return saturate((fRange * 1.5f - fDistance) / fRange);
 }
 
 float ComputeShadowVisibility(float3 vWorldPosition)

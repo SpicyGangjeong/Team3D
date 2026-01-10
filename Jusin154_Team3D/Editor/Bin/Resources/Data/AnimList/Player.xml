@@ -56,7 +56,13 @@
 	<!-- SKILL / ATTACK -->
 	<Anim state="SKILL" index="594" loop="false"/>
 	<Anim state="SKILL2" index="992" loop="false"/>
-	<Anim state="SHIELD_BLOCK" index="986" loop="false"/>
+	<Anim state="SHIELD_BLOCK1" index="985" loop="false"/>
+	<Anim state="SHIELD_BLOCK2" index="986" loop="false"/>
+	<Anim state="SHIELD_BLOCK3" index="1011" loop="false"/>
+	<Anim state="SHIELD_BLOCK4" index="1012" loop="false"/>
+	<Anim state="SHIELD_BLOCK5" index="1013" loop="false"/>
+	<Anim state="SHIELD_BLOCK6" index="1015" loop="false"/>
+	<Anim state="SHIELD_BLOCK7" index="1016" loop="false"/>
 
 	<Anim state="LIGHT_ATTACK" index="414" loop="false"/>
 	<Anim state="LIGHT_ATTACK_180_R" index="810" loop="false"/>
@@ -102,6 +108,8 @@
 	<Anim state="PARRY2" index="949" loop="false"/>
 	<Anim state="PARRY3" index="956" loop="false"/>
 	<Anim state="PARRY4" index="922" loop="false"/>
+	<Anim state="PARRY5" index="914" loop="false"/>
+	<Anim state="PARRY6" index="938" loop="false"/>
 
 	<!-- HIT / FLINCH -->
 	<Anim state="HIT_BWD" index="1213" loop="false"/>

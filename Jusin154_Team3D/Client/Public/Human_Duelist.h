@@ -32,6 +32,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	HRESULT Render_OutLine();
+	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
@@ -71,6 +73,9 @@ private:
 	_bool			m_bSpellHit = {};
 	_bool			m_bShield = { false };
 	_float			m_fAirTime = {};
+	_float			m_fBlendTime = { };
+	_float			m_fHitTimer = {};
+	_bool			m_bHitJap = {};
 
 
 	_float m_fSkillCoolTime[ENUM_CLASS(SKILL::END)] = {};

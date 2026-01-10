@@ -138,7 +138,7 @@ HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	_float randRight = m_pGameInstance->Real_Random_Float(-13.f, 13.f);
 	_float randUp = m_pGameInstance->Real_Random_Float(5.f, 15.f);
-	_float randForward = m_pGameInstance->Real_Random_Float(0.f, 5.f);
+	_float randForward = m_pGameInstance->Real_Random_Float(5.f, 7.f);
 	_vector vRandomPos = vRight * randRight + vUp * randUp + vForward * randForward;
 		
 	vPos += vRandomPos;

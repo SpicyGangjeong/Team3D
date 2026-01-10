@@ -43,6 +43,11 @@ void CUnit::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
+const _float4x4* CUnit::Get_SocketMatrixPtr(const _char* pSocketName)
+{
+    return m_pModelCom->Get_BoneMatrixPtr(pSocketName);
+}
+
 #ifdef _DEBUG
 void CUnit::Load_KeyFrame()
 {
@@ -299,7 +304,10 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         // COMBAT / SKILL
         { "COMBAT", COMBAT },
         { "SKILL", SKILL }, { "SKILL2", SKILL2 },
-        { "SHIELD_BLOCK", SHIELD_BLOCK },
+        { "SHIELD_BLOCK1", SHIELD_BLOCK1 }, { "SHIELD_BLOCK2", SHIELD_BLOCK2 },
+        { "SHIELD_BLOCK3", SHIELD_BLOCK3 }, { "SHIELD_BLOCK4", SHIELD_BLOCK4 },
+        { "SHIELD_BLOCK5", SHIELD_BLOCK5 }, { "SHIELD_BLOCK6", SHIELD_BLOCK6 },
+        { "SHIELD_BLOCK7", SHIELD_BLOCK7 },
 
         // SPELL
         { "SPELL", SPELL }, { "SPELL_180_R", SPELL_180_R },
@@ -345,7 +353,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
 
         // PARRY
         { "PARRY_180", PARRY_180 },
-        { "PARRY2", PARRY2 }, { "PARRY3", PARRY3 }, { "PARRY4", PARRY4 },
+        { "PARRY2", PARRY2 }, { "PARRY3", PARRY3 }, { "PARRY4", PARRY4 }, { "PARRY5", PARRY5 }, { "PARRY6", PARRY6 },
 
         // BROOM (기존 세트)
         { "BROOM_IDLE", BROOM_IDLE },
@@ -482,6 +490,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "FIRESWEEP_WINDUP_A", FIRESWEEP_WINDUP_A },
         { "FIREBREATH_G", FIREBREATH_G },
         { "FIRESWEEP_G", FIRESWEEP_G },
+        { "FIRESWEEP_G_L", FIRESWEEP_G_L }, { "FIRESWEEP_G_R", FIRESWEEP_G_R },
 
         // ETC
         { "PULSE", PULSE },

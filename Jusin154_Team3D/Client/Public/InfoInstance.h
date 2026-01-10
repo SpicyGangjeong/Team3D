@@ -26,6 +26,7 @@ public:
 	HRESULT Late_Initialize(); // GamePlay Initialize 할 때
 	void Release_Information();
 	LEVEL Get_RestartLevel();
+	_bool Get_SearchLockonFloag() { return m_bSearchLockOnTarget; }
 public:
 	void Update(_float fTimeDelta);
 	void Change_Level();
@@ -59,6 +60,7 @@ public:
 	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_PointLights(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath);
 	HRESULT Load_DADA_INT();
 #pragma endregion
 #pragma region Spell_INFO

@@ -57,6 +57,8 @@ Client::CEffect_Container* CEffectInfo::Get_LockOnEffect()
 
 HRESULT CEffectInfo::Refresh_LockOnEffects()
 {
+	if (!m_pInfoInstance->Get_SearchLockonFloag())
+		return S_OK;
 	SAFE_RELEASE(m_pLockOnEffect);
 	_vector vCameraLook = m_pGameInstance->Get_CameraLook();
 	_vector vCameraPos = m_pGameInstance->Get_CamXMPosition();

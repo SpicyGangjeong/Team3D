@@ -33,6 +33,7 @@ public:
 	void Set_CurrentTrackPosition(_float TrackPosition) { m_fCurrentTrackPosition = TrackPosition; }
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
 	_float Get_CurrentTrackProgressRatio() { return m_fTempTrack / m_fDurationSeconds;}
+	void Set_CurrentTrackProgressRatio(_float fRatio);
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
 

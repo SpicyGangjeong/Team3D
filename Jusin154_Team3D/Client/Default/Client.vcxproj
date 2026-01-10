@@ -195,6 +195,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Goblin_ProtegoHit.h" />
     <ClInclude Include="..\Public\Protego_Hit.h" />
     <ClInclude Include="..\Public\RandomNpc.h" />
+    <ClInclude Include="..\Public\Ranrok_ENUM.h" />
     <ClInclude Include="..\Public\Ranrok_Breath.h" />
     <ClInclude Include="..\Public\Ranrok_Charge.h" />
     <ClInclude Include="..\Public\Ranrok_DeadImpact.h" />
@@ -226,6 +227,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ride_InfoBG.h" />
     <ClInclude Include="..\Public\Ride_Info_Key.h" />
     <ClInclude Include="..\Public\Ride_Panel.h" />
+    <ClInclude Include="..\Public\State_Block.h" />
     <ClInclude Include="..\Public\State_CutScene.h" />
     <ClInclude Include="..\Public\State_Dash.h" />
     <ClInclude Include="..\Public\State_Fall.h" />
@@ -326,6 +328,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
     <ClInclude Include="..\public\MiniMap_Camera.h" />
     <ClInclude Include="..\Public\Goblin_Teleport.h" />
+    <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
     <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
@@ -526,6 +529,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ride_InfoBG.cpp" />
     <ClCompile Include="..\Private\Ride_Info_Key.cpp" />
     <ClCompile Include="..\Private\Ride_Panel.cpp" />
+    <ClCompile Include="..\Private\State_Block.cpp" />
     <ClCompile Include="..\Private\State_CutScene.cpp" />
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
@@ -631,6 +635,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Tucked.cpp" />
     <ClCompile Include="..\Private\StunEffect.cpp" />
     <ClCompile Include="..\Private\Goblin_Teleport.cpp" />
+    <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />

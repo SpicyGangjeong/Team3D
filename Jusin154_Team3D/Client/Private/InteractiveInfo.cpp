@@ -77,6 +77,8 @@ CMapElement_Interactable* CInteractiveInfo::Get_LockOnUnit()
 
 HRESULT CInteractiveInfo::Refresh_LockOnTarget()
 {
+	if (!m_pInfoInstance->Get_SearchLockonFloag())
+		return S_OK;
 	SAFE_RELEASE(m_pLockOnInteractive);
 	_vector vCameraLook = m_pGameInstance->Get_CameraLook();
 	_vector vCameraPos = m_pGameInstance->Get_CamXMPosition();

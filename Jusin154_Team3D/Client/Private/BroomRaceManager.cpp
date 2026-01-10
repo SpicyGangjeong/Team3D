@@ -129,6 +129,7 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 			if (racer.pRacer) {
 				if (m_fDelay >= 1.f) {
 					racer.pRacer->Get_Broom()->Set_Ride(false);
+					racer.pRacer->Get_Broom()->Set_Move(true);
 
 					racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::IDLE);
 
@@ -224,6 +225,7 @@ void CBroomRaceManager::Free()
 
 void CBroomRaceManager::Describe_Entity()
 {
+
 }
 
 #endif // _DEBUG
@@ -358,14 +360,16 @@ void CBroomRaceManager::RaceReady()
 	{
 		MSG_BOX("Failed Load RaceRing");
 	}
-	CBroomRacerAI::RacerDesc Desc = {};
-	for (_uint i = 1; i < 4; i++)
+	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_RACERAI);
+
+	if (nullptr != pLayer)
 	{
-		Desc.pRacerManager = this;
-		Desc.iIndex = i;
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, LAYER_RACERAI, &Desc)))
-			return;
+		for (auto& pUnified : *pLayer->Get_Objects())
+		{
+			dynamic_cast<CBroomRacerAI*>(pUnified)->Set_RaceInfo();
+		}
 	}
+
 	m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Set_RaceInfo();
 
 	for (auto& racer : m_Racers)
@@ -382,13 +386,15 @@ void CBroomRaceManager::RaceReady()
 		if (racer.pAI)
 		{
 			CTransform* pTransform =
-				racer.pAI->Get_Component<CTransform>();
-			_float fRand = m_pGameInstance->Real_Random_Float(-10.f, 10.f);
-			spawnPos.m128_f32[2] += fRand;
+				racer.pAI->Get_Broom()->Get_Component<CTransform>();
+			_float fSideRand = m_pGameInstance->Real_Random_Float(-10.f, 10.f);
+
+			_vector offset = XMVectorSet(0.f, 1.3f, 0.f, 0.f) + pTransform->Get_State(STATE::LOOK) * fSideRand;
+
+			spawnPos += offset;
 
 			pTransform->Set_State(STATE::POSITION, spawnPos);
 			pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
-
 			racer.pAI->Get_Broom()->Set_Move(false);
 		}
 		else if (racer.pRacer)

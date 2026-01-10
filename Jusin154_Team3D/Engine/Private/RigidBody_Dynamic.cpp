@@ -22,10 +22,14 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
 #ifdef _DEBUG
 HRESULT CRigidBody_Dynamic::Render()
 {
-	return Render(nullptr);
+	return Render(nullptr, CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f));
 }
 
 HRESULT CRigidBody_Dynamic::Render(function<void()> custumState)
+{
+	return Render(custumState, CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f));
+}
+HRESULT CRigidBody_Dynamic::Render(function<void()> custumState, _fvector vColor)
 {
 	if (m_pOwner->isDead())
 		return S_OK;
@@ -34,7 +38,6 @@ HRESULT CRigidBody_Dynamic::Render(function<void()> custumState)
 		* XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
 	switch (m_eActorType)
 	{
 	case ACTOR::BOX:

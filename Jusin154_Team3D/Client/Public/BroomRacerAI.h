@@ -47,6 +47,7 @@ public:
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 	void Set_RaceRing(class CRaceRing* pRaceRing) {m_pRaceRing = pRaceRing;}
 	class CBroom* Get_Broom() { return m_pBroom; }
+	void Set_RaceInfo();
 private:
 	CLight* m_pLightCom = { nullptr };
 	LIGHT_DESC LightDesc = {};

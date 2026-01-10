@@ -32,6 +32,7 @@ public:
 	_float3 Get_LocalTranslation() {return m_vLocalTranslation;	}
 	virtual HRESULT Render()override;
 	HRESULT Render(function<void()> custumState);
+	HRESULT Render(function<void()> custumState, _fvector vColor);
 #endif // _DEBUG
 
 	virtual PSX::PxRigidDynamic* Get_Actor()		override { return m_pRigidBody; };

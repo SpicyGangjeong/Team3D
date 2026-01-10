@@ -113,6 +113,11 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	if (FAILED(Ready_Layer_RacerAI(LAYER_RACERAI))) {
+		return E_FAIL;
+	}
+	
+
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
@@ -289,9 +294,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	// >> M A P Configuration <<
 	// 맵 로드할지 안할지 bool 설정
 	// ---------------------------------
-	_bool isReady_Background = { false };
-	_bool isReady_Hogsmeade = { false };
-	_bool isReady_Hogwart = { false };
+	_bool isReady_Background = { true };
+	_bool isReady_Hogsmeade = { true };
+	_bool isReady_Hogwart = { true };
 #ifdef _DEBUG
 
 #ifdef gimch
@@ -310,8 +315,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
@@ -742,9 +747,8 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AW.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
-
 
 	/* StratifiedRock_B */
 	Desc.isShake = false;
@@ -761,7 +765,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_AW.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
 	/* StratifiedRock_D_B */
@@ -773,6 +777,32 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_D_B_HN_BB.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 		return E_FAIL;
+
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_D_B_BACK.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* Stone_FrontSteps */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Stone_FrontSteps";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/FrontSteps_A_HN_AW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
+		return E_FAIL;
+
+	/* StoneKit_A */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StoneKit_A_HW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+
 
 	CInstancedProp_Light::INSTANCE_PROP_LIGHT_DESC LightDesc = {};
 
@@ -899,8 +929,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_NPC = true;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -947,6 +977,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 				}
 			}
 		}
+
+		
+
 		CHuman_Duelist::DUELISTDESC DuelistDesc = {};
 		DuelistDesc.vPos = _float4(1007.f, 6.f, 1016.f, 1.f);
 		DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
@@ -955,6 +988,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_RacerAI(const _wstring& strLayerTag)
+{
+	CBroomRacerAI::RacerDesc Desc = {};
+	for (_uint i = 1; i < 4; i++)
+	{
+		Desc.pRacerManager = m_pBroomRaceManager;
+		Desc.iIndex = i;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, LAYER_RACERAI, &Desc)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 

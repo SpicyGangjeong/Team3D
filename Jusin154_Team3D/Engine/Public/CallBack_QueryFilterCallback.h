@@ -33,6 +33,12 @@ public:
                 case PXOBJECT::JOINT_ANCHOR:
                     return PSX::PxQueryHitType::eNONE;
                     break;
+                case PXOBJECT::RANROK_PROP:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
+                case PXOBJECT::POTION:
+                    return PSX::PxQueryHitType::eNONE;
+                    break;
                 case PXOBJECT::NPC:
                 case PXOBJECT::OLLIVANDER:
                 case PXOBJECT::ELEAZARFIG:

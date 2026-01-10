@@ -38,13 +38,10 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_iIndex = static_cast<RacerDesc*>(pArg)->iIndex;
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
-
-	m_bAI = true;
-
-	m_iIndex = static_cast<RacerDesc*>(pArg)->iIndex;
 
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
@@ -72,11 +69,11 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
 	}
 
-	_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Y = m_pGameInstance->Real_Random_Float(-5.f, 5.f);
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
 
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-200.f, Y, 0.f, 1.f));
+	m_bAI = true;
 
 
 #ifdef _DEBUG
@@ -90,15 +87,9 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	m_pBroom->Set_Ride(true);
 
+	m_pBroom->Set_Move(false);
+
 	m_pBroomRaceManager = static_cast<RacerDesc*>(pArg)->pRacerManager;
-
-	CBroomRaceManager::RacerInfo Info;
-
-	Info.pAI = this;
-	Info.curRing = 0;
-	XMStoreFloat4(&Info.prevPos,Get_WorldPostion());
-
-	m_pBroomRaceManager->Push_BroomRacer(Info);
 
 	m_LaneOffsetX = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
 	m_LaneOffsetY = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
@@ -262,17 +253,15 @@ HRESULT CBroomRacerAI::Ready_Components()
 		return E_FAIL;
 	}
 
-	_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
-
-	switch (iRand)
+	switch (m_iIndex)
 	{
-	case 0:
+	case 1:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
 		break;
-	case 1:
+	case 2:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
 		break;
-	case 2:
+	case 3:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_ChiyoKogawa_Model");
 		break;
 	default:
@@ -386,6 +375,20 @@ HRESULT CBroomRacerAI::Bind_ShaderParameters(_uint iMeshOrder)
 		}
 	}
 	return S_OK;
+}
+
+void CBroomRacerAI::Set_RaceInfo()
+{
+	if (m_pBroomRaceManager)
+	{
+		CBroomRaceManager::RacerInfo Info;
+
+		Info.pAI = this;
+		Info.curRing = 0;
+		XMStoreFloat4(&Info.prevPos, Get_WorldPostion());
+
+		m_pBroomRaceManager->Push_BroomRacer(Info);
+	}
 }
 
 _vector CBroomRacerAI::Get_RingForwardTarget()
@@ -728,6 +731,8 @@ void CBroomRacerAI::Add_FSM()
 
 void CBroomRacerAI::Set_Input(_float fTimeDelta)
 {
+	if (m_pRaceRing == nullptr)
+		return;
 	_float targetX = ComputeTurnToRing();
 	_float targetY = ComputeHeightAdjust();
 

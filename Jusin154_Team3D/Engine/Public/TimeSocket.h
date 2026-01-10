@@ -98,6 +98,7 @@ typedef struct tagSocketContents {
 	_boolean			vFlags = {};
 	_uint4				vParam_10 = {};
 	_float4				vParam_11 = {};
+	_string				vParam_12 = {};
 	function<void(CTimeSocket&)>		funcEvent = { nullptr };
 }SOCKETCONTENTS;
 
