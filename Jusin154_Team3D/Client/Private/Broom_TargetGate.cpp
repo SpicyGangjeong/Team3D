@@ -51,9 +51,14 @@ void CBroom_TargetGate::Update(_float fTimeDelta)
 
 	m_fSize = _float3(45.f, 45.f, 1.f);
 	m_vPlayerPos = m_pInfoInstance->Get_PalyerPos();
+
 	if (m_vActive == true)
 	{
-		m_Distance = to_wstring(_int(floor(XMVectorGetX(XMVector3Length(XMVectorSubtract(XMLoadFloat4(&m_vTargetPos), XMLoadFloat4(&m_vPlayerPos)))))));
+		_vector Target = XMLoadFloat4(&m_vTargetPos);
+		_vector PlayerPos = XMLoadFloat4(&m_vPlayerPos);
+		_vector Dir = XMVectorSubtract(Target, PlayerPos);
+		_float Dist = XMVectorGetX(XMVector3Length(Dir));
+		m_Distance = to_wstring(_int(Dist));
 	}
 }
 

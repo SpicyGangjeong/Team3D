@@ -8,6 +8,7 @@
 #include "Quest_Data.h"
 #include "Quest_Slot.h"
 #include "Quest_Status.h"
+#include "InfoInstance.h"
 
 CQuest_Panel::CQuest_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -15,7 +16,8 @@ CQuest_Panel::CQuest_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CQuest_Panel::CQuest_Panel(const CQuest_Panel& rhs)
-	:CPanelObject(rhs)
+	:CPanelObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -52,6 +54,9 @@ HRESULT CQuest_Panel::Initialize(void* pArg)
 	Visible(true);
 	ElementAllVisible(true);
 	Set_Status();
+	//m_pInfoInstance->Set_AcceptQuest(0);
+	//m_pInfoInstance->Set_AcceptQuest(1);
+	//m_pInfoInstance->Set_AcceptQuest(2);
 	Add_Function(TEXT("Click"), [this](void* p) {this->Slot_Hover(*reinterpret_cast<_int*>(p)); });
 	//static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestPanelClose"), [this](void* p) {this->Slot_Hover(*reinterpret_cast<_int*>(p)); });
 	return S_OK;

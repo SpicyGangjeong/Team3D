@@ -61,6 +61,8 @@ void CDialogue_Font::Update(_float fTimeDelta)
 
 	if (m_bCurrentInteract == true)
 	{
+		_int a = 10;
+
 		if (m_bChoiceText == true)
 		{
 			switch (m_iType)
@@ -72,18 +74,20 @@ void CDialogue_Font::Update(_float fTimeDelta)
 				CHoice();
 				break;
 			case ENUM_CLASS(NPCTEXTTYPE::SHOPTEXT):
-
+				a = 10;
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::QUESTTEXT):
-
+				Quest();
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::SPELLLEAN):
-
+				a = 10;
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BROOM):
+				m_bRace = true;
+				m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bRace);
 				NextText();
 				break;
 			default:
@@ -281,10 +285,27 @@ void CDialogue_Font::SpellLearn()
 {
 }
 
+void CDialogue_Font::Quest()
+{
+	m_pInfoInstance->Set_AcceptQuest(m_iNextID);
+	_bool Interact = false;
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_pCurrentDialogue[0]->Set_Hover(Interact);
+	m_pCurrentDialogue[0]->Visible(Interact);
+	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+	if (m_bChoiceText == true)
+	{
+		m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
+		ReSet();
+	}
+}
+
 void CDialogue_Font::ReSet()
 {
 	m_bChoiceText = false;
 	m_bCurrentChoiceText = false;
+	m_bRace = false;
 	vector<_int> Dummy;
 	m_NextLevel.swap(Dummy);
 	for (auto it = m_pCurrentDialogue.begin(); it != m_pCurrentDialogue.end();)
