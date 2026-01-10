@@ -151,13 +151,11 @@ void CMapElement_Static::ReadyForPhysX()
 	}
 	m_bConverted = true;
 	_uint iLevel = NEXT_LEVEL;
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
-	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
-			assert(false);
-		}
+	CModel* pModel = m_pModelComs[0];
+
+	if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
+		assert(false);
 	}
 }
 
@@ -169,25 +167,23 @@ void CMapElement_Static::ConvertToPhysX()
 	m_bReadyToCreatePhysX = true;
 
 	m_RigidBodies.resize(m_iMaxLodLevel + 1);
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+
+	CModel* pModel = m_pModelComs[0];
+
+	_uint iNumMeshes = pModel->Get_NumMeshes();
+
+	for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
 	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
-
-		_uint iNumMeshes = pModel->Get_NumMeshes();
-
-		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
-		{
-			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
-			CRigidBody_Static* pRigidBody = { nullptr };
-			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
-			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-			Desc.pMeshName = wstrName.c_str();
-			Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-			if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
-				assert(false);
-			}
-			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+		_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+		CRigidBody_Static* pRigidBody = { nullptr };
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pMeshName = wstrName.c_str();
+		Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+			assert(false);
 		}
+		m_RigidBodies[iIndex].push_back(pRigidBody);
 	}
 }
 

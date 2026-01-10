@@ -48,7 +48,7 @@ private:
 	CShader*							m_pShaderCom = { nullptr };
 	CTexture*							m_pDefaultGlassTextureCom = { nullptr };
 	vector<CModel*>						m_pModelComs;
-	vector<vector<CRigidBody_Static*>>	m_RigidBodies;
+	vector<CRigidBody_Static*>			m_RigidBodies;
 
 	vector<_wstring>					m_ModelPrototypeTags;
 	vector<_uint>						m_ModelPathIndices = {};

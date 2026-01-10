@@ -146,22 +146,7 @@ HRESULT CCutSceneInfo::Ready_GameplayCutScenes()
 HRESULT CCutSceneInfo::Ready_FieldCutScenes()
 {
 	{
-		CMonster* pMonster = { nullptr };
-		CCamera* pCamera = { nullptr };
-		{
-			CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_MONSTER);
-			if (nullptr != pLayer) {
-				pMonster = pLayer->Get_Object<CRanrok>();
-			}
-		}
-		{
-			pCamera = m_pGameInstance->Get_Camera(NEXT_LEVEL, CAMERA_CINEMATIC);
-		}
-
-		if (nullptr == pMonster || nullptr == pCamera) {
-			return E_FAIL;
-		}
-		Load_CutSceneXML("../Bin/Resources/Data/CutScene/RanrokCutScene.xml", pCamera, pMonster);
+		Load_CutSceneXML("../Bin/Resources/Data/CutScene/RanrokCutScene.xml");
 	}
 	return S_OK;
 }
@@ -332,7 +317,7 @@ static void ReadFloat4(tinyxml2::XMLElement* param11Node, _float4& outValue)
 }
 
 
-void CCutSceneInfo::Load_CutSceneXML(const string& path, CCamera* pCamera)
+void CCutSceneInfo::Load_CutSceneXML(const string& path)
 {
 	tinyxml2::XMLDocument doc;
 	if (doc.LoadFile(path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -387,7 +372,7 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path, CCamera* pCamera)
 			{
 				if (strcmp(pTargetText, "CAMERA_CINEMATIC") == 0)
 				{
-					CCamera* pEventTarget = pCamera;
+					CCamera* pEventTarget = m_pGameInstance->Get_Camera(NEXT_LEVEL, CAMERA_CINEMATIC);
 					SocketContents.pEventTarget = pEventTarget;
 					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
 				}
@@ -439,7 +424,7 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path, CCamera* pCamera)
 				}
 				else if (string_view(pTypeIdText) == "CAMERA_CINEMATIC")
 				{
-					SocketContents.pOtherTarget = pCamera;
+					SocketContents.pOtherTarget = m_pGameInstance->Get_Camera(NEXT_LEVEL, CAMERA_CINEMATIC);
 				}
 				else if (string_view(pTypeIdText) == "CAMERA_SHOULDER")
 				{
@@ -473,6 +458,9 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path, CCamera* pCamera)
 		}
 		pTimeLine->m_Sockets.push_back(pSocket);
 	}
+	tinyxml2::XMLElement* pTriggerNode = pContentsNode->FirstChildElement("Trigger");
+
+	//pTriggerNode->QueryIntAttribute("W", )
 	pTimeLine->m_Sockets.sort([](CTimeSocket* a, CTimeSocket* b) {
 		return a->m_Contents.fRatio < b->m_Contents.fRatio;
 		});

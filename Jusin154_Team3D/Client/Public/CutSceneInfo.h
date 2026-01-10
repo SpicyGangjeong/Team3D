@@ -37,7 +37,7 @@ private:
 
 private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
-	void Load_CutSceneXML(const string& path, CCamera* pCamera);
+	void Load_CutSceneXML(const string& path);
 
 #ifdef _DEBUG
 public:

@@ -158,13 +158,11 @@ void CMapObject_Render::ReadyForPhysX()
 	m_bConverted = true;
 
 	_uint iLevel = NEXT_LEVEL;
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
-	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
-			assert(false);
-		}
+	CModel* pModel = m_pModelComs[0];
+
+	if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
+		assert(false);
 	}
 }
 
@@ -176,25 +174,23 @@ void CMapObject_Render::ConvertToPhysX()
 	m_bReadyToCreatePhysX = true;
 
 	m_RigidBodies.resize(m_iMaxLodLevel + 1);
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+
+	CModel* pModel = m_pModelComs[0];
+
+	_uint iNumMeshes = pModel->Get_NumMeshes();
+
+	for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
 	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
-
-		_uint iNumMeshes = pModel->Get_NumMeshes();
-
-		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
-		{
-			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
-			CRigidBody_Static* pRigidBody = { nullptr };
-			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
-			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-			Desc.pMeshName = wstrName.c_str();
-			Desc.pWorldMatrix = &m_CombinedWorldMatrix;
-			if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
-				assert(false);
-			}
-			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+		_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+		CRigidBody_Static* pRigidBody = { nullptr };
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pMeshName = wstrName.c_str();
+		Desc.pWorldMatrix = &m_CombinedWorldMatrix;
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+			assert(false);
 		}
+		m_RigidBodies[iIndex] = pRigidBody;
 	}
 }
 
@@ -305,9 +301,7 @@ void CMapObject_Render::Free()
 	SAFE_RELEASE(m_pDefaultGlassTextureCom);
 
 	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
-		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
-			SAFE_RELEASE(m_RigidBodies[i][j]);
-		}
+		SAFE_RELEASE(m_RigidBodies[i]);
 	} m_RigidBodies.clear();
 
 	for (auto& pModel : m_pModelComs)

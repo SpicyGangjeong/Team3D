@@ -328,6 +328,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
     <ClInclude Include="..\public\MiniMap_Camera.h" />
     <ClInclude Include="..\Public\Goblin_Teleport.h" />
+    <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
     <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
@@ -634,6 +635,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Tucked.cpp" />
     <ClCompile Include="..\Private\StunEffect.cpp" />
     <ClCompile Include="..\Private\Goblin_Teleport.cpp" />
+    <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />
