@@ -169,6 +169,7 @@ private:
 	_float			m_fAirTime = {};
 	_bool			m_bCanParry = {};
 	_bool			m_bBlock = {};
+	_bool			m_bDuel_ZOnlyMove = {};
 	/* 무적 불 변수*/
 #ifdef _DEBUG
 	_bool			m_isDebugMode = { false };

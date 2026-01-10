@@ -107,6 +107,8 @@ HRESULT CGoblin_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
@@ -140,7 +142,7 @@ HRESULT CGoblin_Protego::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 
-		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
@@ -180,6 +182,8 @@ CGameObject* CGoblin_Protego::Clone(void* pArg, CGameObject* pOwner)
 
 void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (!m_bVisible)
+		return;
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
@@ -194,14 +198,17 @@ void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
 			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
 			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
 			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 			break;
 		}
 	}
@@ -211,6 +218,7 @@ void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 		if (pProps != nullptr)
 		{
 			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 			m_bVisible = false;
 		}
 	}

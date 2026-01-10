@@ -1056,7 +1056,11 @@ void CRanrok::Free()
 		SAFE_RELEASE(m_pTargetableDO[i]);
 	}
 	m_pRanrok_Props.clear();
+#ifdef _DEBUG
 	SAFE_RELEASE(m_pDepthStencilStateNone);
+#endif // _DEBUG
+
+
 	SAFE_RELEASE(m_pMotionTrailCom);
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);

@@ -25,6 +25,7 @@
 	<Anim state="HIT_LEVIOSO" index="347" loop="true"/>
 	<Anim state="HIT_BWD" index="309" loop="false"/>
 	<Anim state="TUMBLE" index="471" loop="false"/>
+	<Anim state="TUMBLE_FWD" index="469" loop="false"/>
 	<Anim state="TUMBLE2" index="473" loop="false"/>
 	
 

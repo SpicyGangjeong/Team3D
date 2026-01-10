@@ -342,6 +342,12 @@ void CAnimation::CreateGPUData(ID3D11Device* pDevice)
 	CreateChannelBuffer(pDevice, channels);
 }
 
+void CAnimation::Set_CurrentTrackProgressRatio(_float fRatio)
+{
+	fRatio = clamp(fRatio, 0.f, 1.f);
+	m_fTempTrack = fRatio * m_fDurationSeconds;
+}
+
 
 #ifdef EDITOR_PROJECT
 

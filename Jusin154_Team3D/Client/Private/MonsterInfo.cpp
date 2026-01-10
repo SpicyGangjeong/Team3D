@@ -119,6 +119,8 @@ CMonster* CMonsterInfo::Get_TargetMonster()
 
 HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 {
+	if (!m_pInfoInstance->Get_SearchLockonFloag())
+		return S_OK;
 	SAFE_RELEASE(m_pLockOnMonster);
 	_vector vCameraLook = m_pGameInstance->Get_CameraLook();
 	_vector vCameraPos = m_pGameInstance->Get_CamXMPosition();
