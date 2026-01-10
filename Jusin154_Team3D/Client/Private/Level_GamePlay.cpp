@@ -289,9 +289,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	// >> M A P Configuration <<
 	// 맵 로드할지 안할지 bool 설정
 	// ---------------------------------
-	_bool isReady_Background = { false };
-	_bool isReady_Hogsmeade = { false };
-	_bool isReady_Hogwart = { false };
+	_bool isReady_Background = { true };
+	_bool isReady_Hogsmeade = { true };
+	_bool isReady_Hogwart = { true };
 #ifdef _DEBUG
 
 #ifdef gimch
@@ -312,7 +312,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef 기무리
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -899,8 +899,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_NPC = true;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
