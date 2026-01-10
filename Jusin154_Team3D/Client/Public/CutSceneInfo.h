@@ -36,6 +36,8 @@ private:
 	map<_string, TimeLine*> m_funcWaitEvents = {};
 
 private:
+	void Update_ActiveEvents(_float fTimeDelta);
+	void Update_WaitEvents(_float fTimeDelta);
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	void Load_CutSceneXML(const string& path);
 

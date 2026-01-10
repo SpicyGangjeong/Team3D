@@ -375,7 +375,7 @@ typedef struct tagEffectInfo
 struct TimeLine {
 	_float2				m_vTimer = {};
 	_uint				m_eTypeTimeLine = {};
-
+	class CTriggerBox*	m_pTriggerBox = { nullptr };
 	list<CTimeSocket*>	m_Sockets = {};
 };
 NS_END

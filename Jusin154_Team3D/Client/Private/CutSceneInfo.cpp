@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Monster.h"
+#include "TriggerBox.h"
 #include "Layer.h"
 #include "Player.h"
 #include "TimeSocket.h"
@@ -17,7 +18,61 @@ void CCutSceneInfo::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+	Update_WaitEvents(fTimeDelta);
+	Update_ActiveEvents(fTimeDelta);
+}
 
+void CCutSceneInfo::Change_Level()
+{
+	LEVEL eLevel = (LEVEL)m_pGameInstance->Get_NextLevelID();
+	switch (eLevel)
+	{
+	case LEVEL::GAMEPLAY:
+		Clear_AllEvents();
+		Ready_GameplayCutScenes();
+		break;
+	case LEVEL::FIELD:
+		Clear_AllEvents();
+		Ready_GameplayCutScenes();
+		break;
+	default:
+		Clear_ActiveEvents();
+		break;
+	}
+}
+
+void CCutSceneInfo::Active_Event(_string& strKey)
+{
+	map<_string, TimeLine*>::iterator iter = m_funcWaitEvents.find(strKey);
+	if (iter != m_funcWaitEvents.end()) {
+		m_funcActiveEvents.emplace(iter->first, iter->second);
+		m_funcWaitEvents.erase(iter);
+	}
+}
+
+HRESULT CCutSceneInfo::DeActive_ActiveEvent(_string& strKey)
+{
+	map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.find(strKey);
+	if (iter != m_funcActiveEvents.end()) {
+
+		for (list<CTimeSocket*>::iterator socketIter = (*iter).second->m_Sockets.begin(); 
+			socketIter != (*iter).second->m_Sockets.end(); ++socketIter) {
+			SAFE_RELEASE((*socketIter));
+		}
+		SAFE_RELEASE(iter->second->m_pTriggerBox);
+		Safe_Delete((*iter).second);
+		m_funcActiveEvents.erase(iter);
+	}
+	return S_OK;
+}
+
+void CCutSceneInfo::Load_Events(pair<_string, TimeLine*>& pairTimeLine)
+{
+	m_funcWaitEvents.emplace(pairTimeLine);
+}
+
+void CCutSceneInfo::Update_ActiveEvents(_float fTimeDelta)
+{
 	_float fRatio = 0.f;
 	for (map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.begin(); iter != m_funcActiveEvents.end();) {
 		list<CTimeSocket*>* pSockets = &iter->second->m_Sockets;
@@ -54,50 +109,23 @@ void CCutSceneInfo::Update(_float fTimeDelta)
 	}
 }
 
-void CCutSceneInfo::Change_Level()
+void CCutSceneInfo::Update_WaitEvents(_float fTimeDelta)
 {
-	LEVEL eLevel = (LEVEL)m_pGameInstance->Get_NextLevelID();
-	switch (eLevel)
-	{
-	case LEVEL::INTRO:
-		break;
-	case LEVEL::GAMEPLAY:
-		break;
-	case LEVEL::FIELD:
-		break;
-	default:
-		break;
-	}
-	Clear_ActiveEvents();
-}
-
-void CCutSceneInfo::Active_Event(_string& strKey)
-{
-	map<_string, TimeLine*>::iterator iter = m_funcWaitEvents.find(strKey);
-	if (iter != m_funcWaitEvents.end()) {
-		m_funcActiveEvents.emplace(iter->first, iter->second);
-		m_funcWaitEvents.erase(iter);
-	}
-}
-
-HRESULT CCutSceneInfo::DeActive_ActiveEvent(_string& strKey)
-{
-	map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.find(strKey);
-	if (iter != m_funcActiveEvents.end()) {
-
-		for (list<CTimeSocket*>::iterator socketIter = (*iter).second->m_Sockets.begin(); 
-			socketIter != (*iter).second->m_Sockets.end(); ++socketIter) {
-			SAFE_RELEASE((*socketIter));
+	for (map<_string, TimeLine*>::iterator iter = m_funcWaitEvents.begin(); iter != m_funcWaitEvents.end();) {
+		if (nullptr != iter->second->m_pTriggerBox) {
+			if (SUCCEEDED(iter->second->m_pTriggerBox->TryScanArea(fTimeDelta))) {
+				SAFE_RELEASE(iter->second->m_pTriggerBox);
+				m_funcActiveEvents.insert(*iter);
+				iter = m_funcWaitEvents.erase(iter);
+			}
+			else {
+				++iter;
+			}
 		}
-		Safe_Delete((*iter).second);
-		m_funcActiveEvents.erase(iter);
+		else {
+			++iter;
+		}
 	}
-	return S_OK;
-}
-
-void CCutSceneInfo::Load_Events(pair<_string, TimeLine*>& pairTimeLine)
-{
-	m_funcWaitEvents.emplace(pairTimeLine);
 }
 
 HRESULT CCutSceneInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
@@ -390,7 +418,7 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 				}
 				else if (strcmp(pTargetText, "ACTOR_RANROK") == 0)
 				{
-					CMonster* pEventTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CRanrok>();
+					CMonster* pEventTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_MONSTER)->Get_Object<CRanrok>();
 					SocketContents.pEventTarget = pEventTarget;
 					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
 				}
@@ -459,8 +487,17 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 		pTimeLine->m_Sockets.push_back(pSocket);
 	}
 	tinyxml2::XMLElement* pTriggerNode = pContentsNode->FirstChildElement("Trigger");
-
-	//pTriggerNode->QueryIntAttribute("W", )
+	{
+		CTriggerBox::TRIGGERBOX_DESC Desc{};
+		pTriggerNode->QueryFloatAttribute("W", &Desc.vPosition_Radius.w);
+		if (Desc.vPosition_Radius.w > 0) {
+			pTriggerNode->QueryFloatAttribute("X", &Desc.vPosition_Radius.x);
+			pTriggerNode->QueryFloatAttribute("Y", &Desc.vPosition_Radius.y);
+			pTriggerNode->QueryFloatAttribute("Z", &Desc.vPosition_Radius.z);
+			pTimeLine->m_pTriggerBox = CTriggerBox::Create(&Desc);
+		}
+	}
+	
 	pTimeLine->m_Sockets.sort([](CTimeSocket* a, CTimeSocket* b) {
 		return a->m_Contents.fRatio < b->m_Contents.fRatio;
 		});
