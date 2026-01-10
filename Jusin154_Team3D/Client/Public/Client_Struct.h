@@ -108,10 +108,11 @@ typedef struct tagDamageInfo
 
 typedef struct tagObjectiveInfo
 {
-	_bool	bClear{};
-	_int	iTargetID{};
-	_int	iRequiredCount{};
-	_int	iCurrentCount{};
+	_bool		bClear{};
+	_int		iTargetID{};
+	_wstring	pQuestInfo{};
+	_int		iRequiredCount{};
+	_int		iCurrentCount{};
 }OBJECTIVEINFO;
 
 typedef struct tagRewardsInfo
@@ -374,6 +375,7 @@ typedef struct tagEffectInfo
 struct TimeLine {
 	_float2				m_vTimer = {};
 	_uint				m_eTypeTimeLine = {};
+
 	list<CTimeSocket*>	m_Sockets = {};
 };
 NS_END

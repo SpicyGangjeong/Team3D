@@ -62,7 +62,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_isDay = true;
 #endif // 
 #ifdef 나
-	m_isDay = true;
+	m_isDay = false;
 #endif // 
 #endif // _DEBUG
 
@@ -312,11 +312,11 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef 기무리
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // 
 #endif // _DEBUG
@@ -998,7 +998,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = true;
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = true;
+	isLoad_Monster = false;
 #endif // 
 #ifdef 나
 
@@ -1063,7 +1063,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Manager(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Reday_Layer_EffectPool()
 {
-
 	//플레이어보다 먼저 생성해야함!
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, LAYER_EFFECTPOOL))) {
 		return E_FAIL;

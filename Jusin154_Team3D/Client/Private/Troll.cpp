@@ -65,7 +65,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(126.464f, 30.f, 117.585f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(110.f, 24.f, 135.f, 1.f));
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);

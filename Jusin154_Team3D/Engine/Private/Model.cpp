@@ -256,9 +256,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 			m_bLoopRestarted = true;
 			m_vPrevRootPos = { 0,0,0 };
 		}
-		else {
+		/*else {
 			m_vPrevRootPos = { m_OutTranslation.x,m_OutTranslation.y,m_OutTranslation.z };
-		}
+		}*/
 	}
 
 
@@ -501,8 +501,8 @@ void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLo
 		m_bIsSecondLoop = isLoop;
 		m_iBoneMask = m_BoneMask[BoneIndex];
 
-		m_fSecondBlendTime = 0.f;
-		m_fSecondRatio = 0.f;
+		/*m_fSecondBlendTime = 0.f;
+		m_fSecondRatio = 0.f;*/
 		m_bIsSecondFinishedAnim = false;
 
 		m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();

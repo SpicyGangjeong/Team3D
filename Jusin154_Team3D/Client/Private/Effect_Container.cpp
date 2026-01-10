@@ -915,6 +915,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_fvector StartPos, _fvec
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
+					m_bHitShield = true;
 				}
 				break;
 				}
@@ -1069,7 +1070,7 @@ _vector CEffect_Container::Get_LockOnPos(LOCKON_INFO Info)
 		return Info.pEffect->Get_WorldPostion();
 	}
 	if (Info.pUnit) {
-		return Info.pUnit->Get_Component<CCharacter_Controller>()->Get_Position();
+		return Info.pUnit->Get_LockOnPos();
 	}
 	return XMVectorZero();
 }

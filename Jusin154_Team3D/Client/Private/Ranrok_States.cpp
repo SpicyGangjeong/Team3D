@@ -248,7 +248,8 @@ void CRanrok::Behavior_HoverEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::HOVER);
 	_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
-	switch (iRand)
+	m_iHoverDash = iRand;
+	switch (m_iHoverDash)
 	{
 	case 0:
 		pairAnimInfo = m_Animation[STATEANIM::HOVER_DASH_LEFT];
@@ -834,9 +835,15 @@ void CRanrok::Behavior_PulseEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::PULSE);
 	m_bLookAt = false;
+	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)];
+
+	if (m_iCurrentFlow == 2) {
+		m_pFSM->Change_State(FSMSTATE::HOVER);
+		return;
+	}
 
 	pairAnimInfo = m_Animation[STATEANIM::PULSE];
-	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::PULSE)];
+
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 	Add_Event(pairAnimInfo.first,
@@ -969,7 +976,7 @@ void CRanrok::Behavior_LandEnter()
 	_float fAnimSpeed = 1.f;
 	m_pCharacter_Controller->SetGravity(true);
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::TUCKED)) {
-		fAnimSpeed = 2.f;
+		fAnimSpeed = 3.f;
 	}
 
 	pairAnimInfo = m_Animation[STATEANIM::LAND];

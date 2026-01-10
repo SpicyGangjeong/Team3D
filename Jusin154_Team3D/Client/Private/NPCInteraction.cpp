@@ -100,7 +100,7 @@ void CNPCInteraction::NpcInfo(void* pArg)
 	m_pInfo.fNPCPosition = Info->fNPCPosition;
 
 	_vector MonsterPos = static_cast<CUnit*>(Info->pOwner)->Get_WorldPostion();
-	_vector HeadPos = MonsterPos + XMVectorSet(0.5f, 2.f, 0.f, 0.f);
+	_vector HeadPos = MonsterPos + XMVectorSet(0.f, 2.f, 0.f, 0.f);
 	XMStoreFloat4(&m_pInfo.fNPCPosition, HeadPos);
 }
 
@@ -109,7 +109,7 @@ void CNPCInteraction::Priority_Update(_float fTimeDelta)
 	if (m_pInfo.pOwner != nullptr)
 	{
 		_vector MonsterPos = static_cast<CUnit*>(m_pInfo.pOwner)->Get_WorldPostion();
-		_vector HeadPos = XMVectorAdd(MonsterPos, XMVectorSet(0.5f, 2.f, 0.f, 0.f));
+		_vector HeadPos = XMVectorAdd(MonsterPos, XMVectorSet(0.f, 2.f, 0.f, 0.f));
 		XMStoreFloat4(&m_pInfo.fNPCPosition, HeadPos);
 
 		_vector ScreenPos = XMVector3Project(

@@ -116,7 +116,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
-	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
 
 	m_bAI = false;
 
@@ -430,13 +430,20 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	pair<_uint, _bool> pairAnimInfo;
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
+
 	if (m_pFSM->IsEnable(FSMSTATE::DODGE | FSMSTATE::BLINK) ||
-		m_bShield ||
 		iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first ||
 		iCurrAnim == m_Animation[STATEANIM::ANCIENT_LIGHTNING].first ||
 		iCurrAnim == m_Animation[STATEANIM::ANCIENT_THROW].first)
 		return;
+
+	if (m_bShield)
+	{
+		m_pFSM->Change_State(FSMSTATE::BLOCK);
+		return;
+	}
 
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
@@ -855,7 +862,8 @@ void CPlayer::Player_PixRot()
 {
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
 	if (iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first ||
-		iCurrAnim == m_Animation[STATEANIM::BROOM_DISMOUNT].first)
+		iCurrAnim == m_Animation[STATEANIM::BROOM_DISMOUNT].first||
+		iCurrAnim == m_Animation[STATEANIM::IDLE].first)
 	{
 		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
@@ -1014,6 +1022,7 @@ void CPlayer::Describe_Entity()
 			m_pShaderCom->Shader_Refresh();
 		}
 		m_pCharacter_Controller->Describe_Entity();
+		GUI::Checkbox("Shield", &m_bShield);
 		_float4 vMomentum = {};
 		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
 		GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);

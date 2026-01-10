@@ -167,7 +167,8 @@ private:
 	_bool			m_bOpenDoor = { false };
 	_bool			m_bOpeningCutScene = { false };
 	_float			m_fAirTime = {};
-
+	_bool			m_bCanParry = {};
+	_bool			m_bBlock = {};
 	/* 무적 불 변수*/
 #ifdef _DEBUG
 	_bool			m_isDebugMode = { false };
@@ -233,8 +234,12 @@ private:
 	void	Behavior_AncientSpellExit();
 
 	void	Behavior_ShieldEnter();
-	HRESULT Behavior_ShieldExitCheck();
+	HRESULT Behavior_ShieldExitCheck(_float fTimeDelta);
 	void	Behavior_ShieldExit();
+
+	void	Behavior_BlockEnter();
+	HRESULT Behavior_BlockExitCheck(_float fTimeDelta);
+	void	Behavior_BlockExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);

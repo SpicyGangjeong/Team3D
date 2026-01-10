@@ -169,7 +169,8 @@ HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_E
 	iHlslFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1 | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR ;
 #endif
 
-	ID3DBlob* pBlob;
+	ID3DBlob* pBlob = nullptr;
+
 
 	if (FAILED(D3DX11CompileEffectFromFile(pShaderFilePath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, iHlslFlag, 0, m_pDevice, &m_pEffect, &pBlob))) {
 		if (pBlob) {

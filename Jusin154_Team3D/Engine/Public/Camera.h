@@ -91,7 +91,7 @@ protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Bind_Matrices();
-	void Transition(_float fTimeDelta);
+	virtual void Transition(_float fTimeDelta);
 
 public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner)PURE;

@@ -24,6 +24,8 @@
 #include "Lumos.h"
 #include "WandEnd.h"
 
+#include "Protego_Hit.h"
+
 #include "Troll_Rush_Hit.h"
 #include "Troll_Nomal_Smoke.h"
 #include "TrollSwing.h"
@@ -45,6 +47,10 @@
 #include "Blink.h"
 #include "Transformation.h"
 #include "Avadakedavra.h"
+
+#include "Goblin_ProtegoHit.h"
+#include "Duelist_ProtegoHit.h"
+
 #include "Ranrok_FireBall.h"
 #include "Ranrok_Breath.h"
 #include "Ranrok_Point.h"
@@ -104,7 +110,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 나
-	m_isActiveEffectCreate = false;
+	m_isActiveEffectCreate = true;
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
 #endif
@@ -496,6 +502,17 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 	
 
+	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO_HIT, 10, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CProtego_Hit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CProtego_Hit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	
+
 	return S_OK;
 }
 
@@ -734,6 +751,24 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		CRanrok_Prop* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Prop>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_PROTEGO_HIT, 10, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CGoblin_ProtegoHit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CGoblin_ProtegoHit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::DUELIST_PROTEGO_HIT, 10, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CDuelist_ProtegoHit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDuelist_ProtegoHit>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

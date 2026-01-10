@@ -3,7 +3,12 @@
 #include "Client_Define.h"
 #include "Camera.h"
 
+NS_BEGIN(Engine)
+class CUnit;
+NS_END
+
 NS_BEGIN(Client)
+class CCamPosition_Target;
 
 class CCamera_Cinematic final : public CCamera
 {
@@ -24,33 +29,48 @@ public:
 	virtual void Trigger(CTimeSocket& Socket)override;
 
 public:
+	virtual void Active_Camera(pair<_float4, _float3>& pairTransitionInfo)override;
 	void Update_LerpTimer(_float fTimeDelta);
 	void Set_Priority(_uint iPriority);
-	void Set_LookTarget(CGameObject* pTarget);
-	void Set_FollowTarget(CGameObject* pTarget);
+	void Set_LookTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix);
+	void Set_FollowTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix);
 
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
+	virtual HRESULT Ready_SubPart();
 	HRESULT Bind_ShaderResources() override;
 
 	void Lerp_Translation(_float fTimeDelta);
 	void Start_Lerp_Translation(_float fTimeMaximum, PSX::PxTransform pxTransform);
-	void Start_Lerp_Translation(_float fTimeMaximum, _float3& vTrans, _float4& vRotQ);
+	void Start_Lerp_Translation(_float fTimeMaximum, _float3& vTrans);
 	void Clear_Lerp_Translation();
+	void Lerp_Rotation(_float fTimeDelta);
+	void Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform);
+	void Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ);
+	void Clear_Lerp_Rotation();
 
 
 	void Lerp_FovY(_float fTimeDelta);
 	void Start_Lerp_FovY(_float fTimeMaximum, _float2 vRange);
 	void Clear_Lerp_FovY();
 
+	virtual void Transition(_float fTimeDelta) override;
+
+
+	void Rotation(_fvector vRotQ);
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
+	CCamPosition_Target* m_pLookTargetPart = { nullptr };
+	CCamPosition_Target* m_pFollowTargetPart = { nullptr };
 
 	_bool	m_bLerpTranslation = { false };
 	_float2 m_vLerpTranslationTimer = {};
+
+	_bool	m_bLerpRotiation = { false };
+	_float2 m_vLerpRotiationTimer = {};
 
 	_float3 m_vLerpTranslationStart = {};
 	_float3 m_vLerpTranslationEnd = {};

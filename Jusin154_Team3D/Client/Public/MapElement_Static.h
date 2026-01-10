@@ -23,7 +23,7 @@ private:
 	_bool		m_bConverted = { false };
 	_float		m_fRadius = {};
 
-	vector<vector<CRigidBody_Static*>> m_RigidBodies;
+	vector<CRigidBody_Static*> m_RigidBodies;
 	
 private:
 	virtual HRESULT Initialize_Prototype() override;

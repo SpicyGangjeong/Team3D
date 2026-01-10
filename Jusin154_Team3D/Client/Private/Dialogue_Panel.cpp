@@ -88,11 +88,11 @@ void CDialogue_Panel::Choice_Slot(CHOICEINFO Choice)
 		break;
 
 	case ENUM_CLASS(NPCTEXTTYPE::SHOPTEXT):
-
+		m_pInfoInstance->Event_CallBack(TEXT("NPCNEXTTEXT"), &Choice);
 		break;
 
 	case ENUM_CLASS(NPCTEXTTYPE::QUESTTEXT):
-
+		m_pInfoInstance->Event_CallBack(TEXT("NPCNEXTTEXT"), &Choice);
 		break;
 
 	case ENUM_CLASS(NPCTEXTTYPE::SPELLLEAN):

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 
 #include "CamPosition_Target.h"
+#include "Unit.h"
 
 CCamPosition_Target::CCamPosition_Target(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CCamPosition(pDevice, pContext)
@@ -13,6 +14,14 @@ CCamPosition_Target::CCamPosition_Target(const CCamPosition_Target& rhs)
 
 void CCamPosition_Target::Priority_Update(_float fTimeDelta)
 {
+	if (nullptr != m_pStalkingTarget) {
+		if (nullptr != m_pTargetSocketMatrix) {
+			Set_WorldPostion(XMMatrixMultiply(XMLoadFloat4x4(m_pTargetSocketMatrix), m_pStalkingTarget->Get_Component<CTransform>()->Get_XMWorldMatrix()).r[3]);
+		}
+		else {
+			Set_WorldPostion(m_pStalkingTarget->Get_WorldPostion());
+		}
+	}
 }
 
 void CCamPosition_Target::Update(_float fTimeDelta)
@@ -26,6 +35,29 @@ void CCamPosition_Target::Late_Update(_float fTimeDelta)
 _vector CCamPosition_Target::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
+void CCamPosition_Target::Set_WorldPostion(_vector vPos)
+{
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+}
+
+_bool CCamPosition_Target::IsStalking()
+{
+	return nullptr == m_pStalkingTarget;
+}
+
+void CCamPosition_Target::Stalking_Target(CUnit* pStalkingTarget, const _float4x4* pTargetSocketMatrix)
+{
+	SAFE_RELEASE(m_pStalkingTarget);
+	m_pStalkingTarget = pStalkingTarget;
+	m_pTargetSocketMatrix = pTargetSocketMatrix;
+	SAFE_ADDREF(m_pStalkingTarget);
+}
+
+void CCamPosition_Target::Stop_Stalking()
+{
+	SAFE_RELEASE(m_pStalkingTarget);
 }
 
 HRESULT CCamPosition_Target::Initialize_Prototype()
@@ -88,6 +120,7 @@ CCamPosition_Target* CCamPosition_Target::Clone(void* pArg, class CGameObject* p
 void CCamPosition_Target::Free()
 {
 	__super::Free();
+	SAFE_RELEASE(m_pStalkingTarget);
 }
 #ifdef _DEBUG
 
