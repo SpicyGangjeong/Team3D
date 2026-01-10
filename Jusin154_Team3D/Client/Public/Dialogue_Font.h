@@ -86,6 +86,9 @@ private:
 	_bool		m_bChoiceText = { false };
 	_bool		m_bCurrentChoiceText = { false };
 	_bool		m_bRace = { false };
+	_bool		m_bBattle = { false };
+
+	_float		m_fTime{};
 
 public:
 	static CDialogue_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

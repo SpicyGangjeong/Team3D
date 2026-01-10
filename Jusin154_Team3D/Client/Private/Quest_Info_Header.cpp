@@ -231,6 +231,16 @@ void CQuest_Info_Header::Set_Hover(void* pArg)
 	Visible(true);
 }
 
+void CQuest_Info_Header::Set_QuestType(_int Index)
+{
+	m_iQuestSlot = Index;
+	if (m_iQuestSlot != m_iCurrentQeustSlot)
+	{
+		m_iCurrentQeustSlot = m_iQuestSlot;
+		m_iQuest_Index = -1;
+	}
+}
+
 CQuest_Info_Header* CQuest_Info_Header::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CQuest_Info_Header* pInstance = new CQuest_Info_Header(pDevice, pContext);

@@ -13,6 +13,12 @@ NS_BEGIN(Client)
 class CQuest_Data final : public CBase
 {
 private:
+	struct QuestAccepted
+	{
+		CGameObject* QeustData;
+		QUESTINFO QeustInfo;
+	};
+private:
 	CQuest_Data();
 	~CQuest_Data() = default;
 
@@ -29,9 +35,9 @@ public:
 	_int Get_Count(_int Index);
 	const vector<QUESTINFO>& Get_AllQuest() const;
 	const vector<QUESTINFO>& Get_ClearQuest() const;
-	const vector<QUESTINFO>& Get_AcceptQuest() const;
+	vector<QUESTINFO>& Get_AcceptQuest();
 	HRESULT Set_AcceptQuest(_int index);
-	
+
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CGameObject* m_pQuestInstance = { nullptr };
@@ -41,10 +47,12 @@ private:
 	OBJECTIVEINFO ObjectiveInfo = {};
 	REWARDSINFO RewardsInfo = {};
 
+	QuestAccepted m_AcceptedInfo{};
+
 	vector<QUESTINFO> QuestInfos;
 	vector<QUESTINFO> m_QuestNoneInfos;
-	vector<CGameObject*> m_QuestAcceptedInfoObject;
-	vector<QUESTINFO> m_QuestAcceptedInfos;
+	vector<QuestAccepted> m_QuestAcceptedInfos;
+	vector<QUESTINFO> m_QuestAcceptedInfo;
 	vector<QUESTINFO> m_QuestEndInfos;
 
 	_int m_iQuest_Count{};

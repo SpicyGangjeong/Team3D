@@ -42,6 +42,7 @@ private:
 	_int m_iColor = { false };
 	_int m_iQuest_Index{};
 	_int m_iCurrentQuest{};
+
 public:
 	static CQuest_Info_Line* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
