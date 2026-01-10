@@ -243,9 +243,9 @@ HRESULT CLevel_Field::Ready_Camera()
 		Camera_Desc.fFar = 500.f;
 		Camera_Desc.pCameraKey = CAMERA_CINEMATIC;
 		Camera_Desc.iPriority = 65;
-		Camera_Desc.bEnableTransitionLerp = true;
-		Camera_Desc.bEnableLookLerp = true;
-		Camera_Desc.bEnableFollowLerp = true;
+		Camera_Desc.bEnableTransitionLerp = false;
+		Camera_Desc.bEnableLookLerp = false;
+		Camera_Desc.bEnableFollowLerp = false;
 		Camera_Desc.vTransitionTime.y = 1.f;
 		Camera_Desc.pFollowTarget = { nullptr };
 		Camera_Desc.pLookTarget = { nullptr };
@@ -520,8 +520,8 @@ void CLevel_Field::Load_CutSceneXML(const string& path, CCamera* pCamera, CMonst
 		SOCKETCONTENTS SocketContents = {};
 
 		SocketContents .fRatio = 0.f;
-		_int fStartPosition = 0;
-		pSocketNode->QueryIntAttribute("fStartPosition", &fStartPosition);
+		_float fStartPosition = 0;
+		pSocketNode->QueryFloatAttribute("fStartPosition", &fStartPosition);
 		SocketContents.fRatio = CMyTools::Saturate(fStartPosition / pTimeLine->m_vTimer.y);
 		// Info
 		tinyxml2::XMLElement* pInfoNode = pSocketNode->FirstChildElement("Info");

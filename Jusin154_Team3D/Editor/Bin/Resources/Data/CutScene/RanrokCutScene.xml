@@ -1,4 +1,4 @@
-<RanrokIntro fDuration = "10">
+<RanrokIntro fDuration = "15">
 	<Socket fStartPosition = "0">
 		<Info strEventName = "On_Camera" eTypeParam = "TARGET" pTarget = "CAMERA_CINEMATIC" eTypeFunc="BIND_CAMERA"/>
 		<Param_0>
@@ -38,8 +38,8 @@
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="-0.078" Y="0.221" Z="0.018" W="0.972"/>
-				<Trans X="10.088" Y="7.579" Z="26.052"/>
+				<RotQ X="-0.096" Y="0.216" Z="0.021" W="0.972"/>
+				<Trans X="11.494" Y="7.807" Z="27.081"/>
 			</Transform>
 		</Param_0>
 		<vFlags>
@@ -72,8 +72,8 @@
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="-0.078" Y="0.221" Z="0.018" W="0.972"/>
-				<Trans X="10.088" Y="7.579" Z="26.052"/>
+				<RotQ X="-0.096" Y="0.216" Z="0.021" W="0.972"/>
+				<Trans X="11.494" Y="7.807" Z="27.081"/>
 			</Transform>
 		</Param_0>
 		<vFlags>
@@ -166,10 +166,10 @@
 			<uint X="" Y="" Z="" W=""/>
 		</Param_10>
 		<Param_11>
-			<float X="60" Y="20" Z="0.5" W=""/>
+			<float X="60" Y="4" Z="1" W=""/>
 		</Param_11>
 	</Socket>
-	<Socket fStartPosition = "1.5" >
+	<Socket fStartPosition = "2" >
 		<Info strEventName = "ZOOM_OUT_LERP" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ZOOM_LERP"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
@@ -200,16 +200,16 @@
 			<uint X="" Y="" Z="" W=""/>
 		</Param_10>
 		<Param_11>
-			<float X="20" Y="40" Z="2" W=""/>
+			<float X="4" Y="40" Z="2" W=""/>
 		</Param_11>
 	</Socket>
-	<Socket fStartPosition = "1.5" >
-		<Info strEventName = "ZOOM_OUT_TRANS_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TRANSLATION"/>
+	<Socket fStartPosition = "2" >
+		<Info strEventName = "ZOOM_OUT_TRANS_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TRANSLATION_LERP"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="-0.100" Y="0.205" Z="0.021" W="0.973"/>
-				<Trans X="65.920" Y="32.915" Z="149.397"/>
+				<RotQ X="-0.128" Y="0.392" Z="0.055" W="0.909"/>
+				<Trans X="59.834" Y="33.752" Z="149.152"/>
 			</Transform>
 		</Param_0>
 		<vFlags>
@@ -237,7 +237,41 @@
 			<float X="2" Y="0" Z="0" W=""/>
 		</Param_11>
 	</Socket>
-	<Socket fStartPosition = "3.5" >
+	<Socket fStartPosition = "2" >
+		<Info strEventName = "ZOOM_OUT_ROT_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ROTATION_LERP"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="-0.128" Y="0.392" Z="0.055" W="0.909"/>
+				<Trans X="59.834" Y="33.752" Z="149.152"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="2" Y="0" Z="0" W=""/>
+		</Param_11>
+	</Socket>
+	<Socket fStartPosition = "6" >
 		<Info strEventName = "Ranrok_TUCK_0" eTypeParam = "NOT_USE" pTarget = "ACTOR_RANROK" eTypeFunc="SET_FSMSTATE"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>

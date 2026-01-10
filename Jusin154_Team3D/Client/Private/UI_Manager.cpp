@@ -59,10 +59,12 @@ HRESULT CUI_Manager::Initialize(void* pArg)
 	m_fAlpha = 0.f;
 	m_fAlphaTime = 1.f;
 	m_fSortZ = 0.f;
+	m_bActive = false;
 	m_pInfoInstance->Set_UISTATE(m_eType);
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Canvas_Change(*reinterpret_cast<UI_STATE*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteract"), [this](void* p) {this->NpcInteract(*reinterpret_cast<_bool*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("UIManagerFadeIn"), [this](void* p) {this->Set_Fade(); });
+	m_pInfoInstance->Add_Event(TEXT("RACEREADY"), [this](void* p) {this->Set_Race(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -138,7 +140,9 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 	default:
 		return;
 	}
+	m_pInfoInstance->Event_CallBack(TEXT("Player_CanvasChange"), &m_eType);
 	m_pGameInstance->Toggle_MouseCenter();
+	m_pInfoInstance->Event_CallBack(TEXT("Player_CanvasChange"), &m_eType);
 }
 
 void CUI_Manager::Clear_Canvas()
@@ -175,6 +179,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+
 	if (m_pGameInstance->Key_Down(DIK_T))
 	{
 		m_fAlphaVelue = 1.f;
@@ -183,45 +188,49 @@ void CUI_Manager::Update(_float fTimeDelta)
 		else if (m_eType == UI_STATE::SPELL)
 			Canvas_Change(UI_STATE::GAMEPLAYER);
 	}
+	
 
-	if (m_eType == UI_STATE::GAMEPLAYER || m_eType == UI_STATE::QUEST)
+	if (m_bRace == false)
 	{
-		if (m_pGameInstance->Key_Down(DIK_TAB))
+		if (m_eType == UI_STATE::GAMEPLAYER || m_eType == UI_STATE::QUEST)
 		{
-			m_fAlphaVelue = 1.f;
-			if (m_bActive == false)
+			if (m_pGameInstance->Key_Down(DIK_TAB))
 			{
-				m_bActive = true;
-				m_bAlphaZero = true;
-				if (m_eType == UI_STATE::GAMEPLAYER)
+				m_fAlphaVelue = 1.f;
+				if (m_bActive == false)
 				{
-					m_eType = UI_STATE::QUEST;
+					m_bActive = true;
+					m_bAlphaZero = true;
+					if (m_eType == UI_STATE::GAMEPLAYER)
+					{
+						m_eType = UI_STATE::QUEST;
 
-				}
-				else if (m_eType == UI_STATE::QUEST)
-				{
-					m_eType = UI_STATE::GAMEPLAYER;
+					}
+					else if (m_eType == UI_STATE::QUEST)
+					{
+						m_eType = UI_STATE::GAMEPLAYER;
+					}
 				}
 			}
 		}
-	}
 
-	if (m_eType == UI_STATE::GAMEPLAYER || m_eType == UI_STATE::SPELLLNEARN)
-	{
-		if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+		if (m_eType == UI_STATE::GAMEPLAYER || m_eType == UI_STATE::SPELLLNEARN)
 		{
-			m_fAlphaVelue = 1.f;
-			if (m_bActive == false)
+			if (m_pGameInstance->Key_Down(DIK_ESCAPE))
 			{
-				m_bActive = true;
-				m_bAlphaZero = true;
-				if (m_eType == UI_STATE::GAMEPLAYER)
+				m_fAlphaVelue = 1.f;
+				if (m_bActive == false)
 				{
-					m_eType = UI_STATE::SPELLLNEARN;
-				}
-				else if (m_eType == UI_STATE::SPELLLNEARN)
-				{
-					m_eType = UI_STATE::GAMEPLAYER;
+					m_bActive = true;
+					m_bAlphaZero = true;
+					if (m_eType == UI_STATE::GAMEPLAYER)
+					{
+						m_eType = UI_STATE::SPELLLNEARN;
+					}
+					else if (m_eType == UI_STATE::SPELLLNEARN)
+					{
+						m_eType = UI_STATE::GAMEPLAYER;
+					}
 				}
 			}
 		}
@@ -290,7 +299,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 			m_bCgangede = true;
 		}
 
-		if (m_fAlpha < 0.f)
+		if (m_fAlpha <= 0.f)
 		{
 			m_fAlpha = 0.f;
 			m_bActive = false;
@@ -507,6 +516,11 @@ void CUI_Manager::Change_Map()
 		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
 		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
 	}
+}
+
+void CUI_Manager::Set_Race(_bool bRace)
+{
+	m_bRace = bRace;
 }
 
 CUI_Manager* CUI_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

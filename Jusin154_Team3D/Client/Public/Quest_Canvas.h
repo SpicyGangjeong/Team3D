@@ -39,7 +39,6 @@ public:
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CGameObject* m_pQuest_Panel = { nullptr };
-	CInfoInstance* m_pInfoInstance = { nullptr };
 	_bool	m_bClick[3] = { false };
 	_int m_iIndex{};
 public:

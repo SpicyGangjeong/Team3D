@@ -108,10 +108,11 @@ typedef struct tagDamageInfo
 
 typedef struct tagObjectiveInfo
 {
-	_bool	bClear{};
-	_int	iTargetID{};
-	_int	iRequiredCount{};
-	_int	iCurrentCount{};
+	_bool		bClear{};
+	_int		iTargetID{};
+	_wstring	pQuestInfo{};
+	_int		iRequiredCount{};
+	_int		iCurrentCount{};
 }OBJECTIVEINFO;
 
 typedef struct tagRewardsInfo

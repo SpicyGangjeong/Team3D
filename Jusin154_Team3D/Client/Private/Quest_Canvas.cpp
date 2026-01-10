@@ -3,7 +3,6 @@
 #include "Quest_Canvas.h"
 #include "GameInstance.h"
 #include "Quest_Panel.h"
-#include "InfoInstance.h"
 
 CQuest_Canvas::CQuest_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CCanvasObject(pDevice, pContext)
@@ -11,8 +10,7 @@ CQuest_Canvas::CQuest_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 
 CQuest_Canvas::CQuest_Canvas(const CQuest_Canvas& rhs)
-	:CCanvasObject(rhs),
-	m_pInfoInstance(CInfoInstance::GetInstance())
+	:CCanvasObject(rhs)
 {
 }
 
@@ -43,9 +41,6 @@ HRESULT CQuest_Canvas::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	Visible(false);
-	m_pInfoInstance->Set_AcceptQuest(0);
-	m_pInfoInstance->Set_AcceptQuest(1);
-	m_pInfoInstance->Set_AcceptQuest(2);
 	return S_OK;
 }
 

@@ -300,12 +300,14 @@ void CDuelist_NormalJap::OnCollision(CGameObject* pOther, void* pDesc)
 		_vector vDir = m_pTransformCom->Get_State(STATE::LOOK);
 		vDir = XMVector3Normalize(vDir);
 
-		_float fRandAngle = XMConvertToRadians(m_pGameInstance->Real_Random_Float(-180.f, 0.f));
+		_float fRandAngle = XMConvertToRadians(m_pGameInstance->Real_Random_Float(-180.f, 180.f));
 
 		_matrix rotX = XMMatrixRotationX(fRandAngle);
 		_vector vRandDir = XMVector3TransformNormal(vDir, rotX);
 
 		XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(vRandDir));
+
+		m_fLinearSpeed = 15.f;
 	}
 	else {
 		Get_PartObject<CEffectParts>("JapPT0")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());

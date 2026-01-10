@@ -299,7 +299,10 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         // COMBAT / SKILL
         { "COMBAT", COMBAT },
         { "SKILL", SKILL }, { "SKILL2", SKILL2 },
-        { "SHIELD_BLOCK", SHIELD_BLOCK },
+        { "SHIELD_BLOCK1", SHIELD_BLOCK1 }, { "SHIELD_BLOCK2", SHIELD_BLOCK2 },
+        { "SHIELD_BLOCK3", SHIELD_BLOCK3 }, { "SHIELD_BLOCK4", SHIELD_BLOCK4 },
+        { "SHIELD_BLOCK5", SHIELD_BLOCK5 }, { "SHIELD_BLOCK6", SHIELD_BLOCK6 },
+        { "SHIELD_BLOCK7", SHIELD_BLOCK7 },
 
         // SPELL
         { "SPELL", SPELL }, { "SPELL_180_R", SPELL_180_R },

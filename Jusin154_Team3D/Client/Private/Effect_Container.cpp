@@ -915,6 +915,7 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_fvector StartPos, _fvec
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
+					m_bHitShield = true;
 				}
 				break;
 				}

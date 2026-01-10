@@ -32,6 +32,7 @@
 #include "State_Spell.h"
 #include "State_AncientSpell.h"
 #include "State_Shield.h"
+#include "State_Block.h"
 #include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #include "State_Broom_Ride_Move.h"
@@ -1685,6 +1686,7 @@ void CPlayer::Behavior_ShieldEnter()
 	pair<_uint, _bool> pairAnimInfo;
 
 	m_pFSM->Enable_State(FSMSTATE::SHIELD);
+
 	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.3f);
 
@@ -1699,17 +1701,102 @@ HRESULT CPlayer::Behavior_ShieldExitCheck(_float fTimeDelta)
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	_float fEventRatio = 0.2f;
+	
+	if (m_pModelCom->IsFinishedAnim()) {
+		if (SUCCEEDED(InputMove()))
+		{
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
+		}
+		else {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return E_FAIL;
+		}
+	}
 
-	if (iCurrAnimIndex == m_Animation[STATEANIM::SHIELD_BLOCK].first)
+	if (m_pFSM->IsEnable(FSMSTATE::PARRY))
 	{
-		if (fRatio >= 0.1f && fRatio <= 0.2f)
+		if (fRatio >= 0.35f)
+		{
+			if (SUCCEEDED(InputMove()))
+			{
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
+			else {
+				m_pFSM->Change_State(FSMSTATE::IDLE);
+				return E_FAIL;
+			}
+		}
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_ShieldExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SHIELD);
+	m_pFSM->Disable_State(FSMSTATE::PARRY);
+	Reset_Event();
+	m_bLookAt = false;
+}
+
+void CPlayer::Behavior_BlockEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::BLOCK);
+	pair<_uint, _bool> pairAnimInfo;
+	if (m_bShield) {
+		m_bBlock = true;
+		Start_CameraShake(0.3f, 3.f);
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 6);
+
+		switch (iRand)
+		{
+		case 0:
+			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK1];
+			break;
+		case 1:
+			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK2];
+			break;
+		case 2:
+			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK3];
+			break;
+		case 3:
+			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK4];
+			break;
+		case 4:
+			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK5];
+			break;
+		case 5:
+			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK6];
+			break;
+		case 6:
+			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK7];
+			break;
+		}
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, true, false, false);
+	}
+}
+
+HRESULT CPlayer::Behavior_BlockExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo;
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	_float fEventRatio = 0.2f;
+	if (m_bBlock)
+	{
+		if (fRatio >= 0.1f && fRatio <= 0.2f) {
 			m_bCanParry = true;
-		else
+		}
+		else {
 			m_bCanParry = false;
+		}
 	}
 
 	if (m_bShield && m_bCanParry && m_pGameInstance->Key_Pressing(DIK_Q))
 	{
+		m_bBlock = false;
 		m_pFSM->Enable_State(FSMSTATE::PARRY);
 		if (m_LockOnInfo.pUnit)
 		{
@@ -1774,9 +1861,9 @@ HRESULT CPlayer::Behavior_ShieldExitCheck(_float fTimeDelta)
 		return S_OK;
 	}
 
-		
-	
-	
+
+
+
 	if (m_pModelCom->IsFinishedAnim()) {
 		if (SUCCEEDED(InputMove()))
 		{
@@ -1788,32 +1875,13 @@ HRESULT CPlayer::Behavior_ShieldExitCheck(_float fTimeDelta)
 			return E_FAIL;
 		}
 	}
-
-	if (m_pFSM->IsEnable(FSMSTATE::PARRY))
-	{
-		if (fRatio >= 0.35f)
-		{
-			if (SUCCEEDED(InputMove()))
-			{
-				m_pFSM->Change_State(FSMSTATE::MOVE);
-				return E_FAIL;
-			}
-			else {
-				m_pFSM->Change_State(FSMSTATE::IDLE);
-				return E_FAIL;
-			}
-		}
-	}
 	return S_OK;
 }
 
-void CPlayer::Behavior_ShieldExit()
+void CPlayer::Behavior_BlockExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::SHIELD);
-	m_pFSM->Disable_State(FSMSTATE::PARRY);
-	Reset_Event();
+	m_pFSM->Disable_State(FSMSTATE::BLOCK);
 	m_bShield = false;
-	m_bLookAt = false;
 }
 
 void CPlayer::Behavior_HitEnter()
@@ -1897,6 +1965,7 @@ void CPlayer::Behavior_HitExit()
 	m_pCharacter_Controller->SetGravity(true);
 	m_eHitType = ENUM_CLASS(HIT_TYPE::END);
 	m_bLookAt = false;
+	m_bShield = false;
 	m_fAirTime = 0.f;
 
 }
@@ -3189,6 +3258,17 @@ void CPlayer::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::SHIELD, CState_Shield::Create(&Desc));
+	}
+
+	{
+		CState_Block::STATE_BLOCK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_BlockEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_BlockExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_BlockExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::BLOCK, CState_Block::Create(&Desc));
 	}
 #pragma endregion
 #pragma region Behavior_Combat_Focus

@@ -37,6 +37,7 @@ private:
 	void Slot_Hover(_int Index);
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };

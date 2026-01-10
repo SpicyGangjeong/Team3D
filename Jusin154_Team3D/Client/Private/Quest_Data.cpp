@@ -61,8 +61,9 @@ HRESULT CQuest_Data::Load_QuestInfo(const _char* pFilePath)
 				pObjective->QueryIntAttribute("Clear", &Clear);
 				obj.bClear = Clear != 0;
 				pObjective->QueryIntAttribute("TargetID", &obj.iTargetID);
-				pObjective->QueryIntAttribute("RequiredCount", &obj.iRequiredCount);
+				obj.pQuestInfo = CMyTools::ToWstring(pObjective->Attribute("QuestInfo"));
 				pObjective->QueryIntAttribute("CurrentCount", &obj.iCurrentCount);
+				pObjective->QueryIntAttribute("RequiredCount", &obj.iRequiredCount);
 
 				quest.ObjectiveInfo.push_back(obj);
 
