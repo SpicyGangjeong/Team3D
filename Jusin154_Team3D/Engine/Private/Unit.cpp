@@ -43,6 +43,11 @@ void CUnit::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
+const _float4x4* CUnit::Get_SocketMatrixPtr(const _char* pSocketName)
+{
+    return m_pModelCom->Get_BoneMatrixPtr(pSocketName);
+}
+
 #ifdef _DEBUG
 void CUnit::Load_KeyFrame()
 {

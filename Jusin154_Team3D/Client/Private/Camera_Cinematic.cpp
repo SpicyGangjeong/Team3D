@@ -4,6 +4,7 @@
 #include "TimeSocket.h"
 #include "CamPosition_Target.h"
 #include "Layer.h"
+#include "Unit.h"
 
 
 CCamera_Cinematic::CCamera_Cinematic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CCamera(pDevice, pContext) {}
@@ -82,14 +83,14 @@ void CCamera_Cinematic::Set_Priority(_uint iPriority)
 	m_iPriority = iPriority;
 }
 
-void CCamera_Cinematic::Set_LookTarget(CGameObject* pTarget)
+void CCamera_Cinematic::Set_LookTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix)
 {
-	m_pLookTargetPart->Stalking_Target(pTarget);
+	m_pLookTargetPart->Stalking_Target(pTarget, pTargetSocketMatrix);
 }
 
-void CCamera_Cinematic::Set_FollowTarget(CGameObject* pTarget)
+void CCamera_Cinematic::Set_FollowTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix)
 {
-	m_pFollowTargetPart->Stalking_Target(pTarget);
+	m_pFollowTargetPart->Stalking_Target(pTarget, pTargetSocketMatrix);
 }
 
 void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
@@ -111,8 +112,7 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 		Start_Lerp_Translation(pContents->vParam_11.x, pContents->pxTransform);
 	} break;
 	case TIMESOCKET_FUNC::ROTATION: {
-		m_pTransformCom->RotationQ(pContents->pxTransform.q);
-		m_pLookTargetPart->Set_WorldPostion(m_pTransformCom->Get_State(STATE::POSITION) + m_pTransformCom->Get_State(STATE::LOOK) * 10.f);
+		Rotation(XMLoadFloat4((_float4*)&pContents->pxTransform.q));
 		Clear_Lerp_Rotation();
 	} break;
 	case TIMESOCKET_FUNC::ROTATION_LERP:
@@ -122,11 +122,14 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::LOOK_AT:
 	{
-		Set_LookTarget(pContents->pOtherTarget);
+		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
+		Set_LookTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str()));
+		//Set_LookTarget(pUnit, nullptr);
 	}break;
 	case TIMESOCKET_FUNC::DONT_LOOK_AT:
 	{
-		Set_LookTarget(pContents->pOtherTarget);
+		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
+		Set_FollowTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str()));
 	}break;
 	case TIMESOCKET_FUNC::ZOOM_IN:
 	{
@@ -219,7 +222,7 @@ void CCamera_Cinematic::Start_Lerp_Translation(_float fTimeMaximum, _float3& vTr
 {
 	m_bLerpTranslation = { fTimeMaximum != 0 };
 	m_vLerpTranslationTimer = { 0.f, fTimeMaximum };
-	XMStoreFloat3(&m_vLerpTranslationStart, m_pTransformCom->Get_State(STATE::POSITION));
+	XMStoreFloat3(&m_vLerpTranslationStart, m_pFollowTarget->Get_WorldPostion());
 	m_vLerpTranslationEnd = vTrans;
 }
 void CCamera_Cinematic::Clear_Lerp_Translation()
@@ -237,9 +240,8 @@ void CCamera_Cinematic::Lerp_Rotation(_float fTimeDelta)
 			m_vLerpRotiationTimer.x = m_vLerpRotiationTimer.y;
 			m_bLerpRotiation = false;
 		}
-		_vector vRotQ = XMQuaternionSlerp(XMLoadFloat4(&m_vLerpRotQStart), XMLoadFloat4(&m_vLerpRotQEnd), m_vLerpRotiationTimer.x / m_vLerpRotiationTimer.y);
-		_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
-		m_pLookTargetPart->Get_Component<CTransform>()->RotationQ(vRotQ);
+		_vector vRotQ = XMQuaternionNormalize(XMQuaternionSlerp(XMLoadFloat4(&m_vLerpRotQStart), XMLoadFloat4(&m_vLerpRotQEnd), m_vLerpRotiationTimer.x / m_vLerpRotiationTimer.y));
+		Rotation(vRotQ);
 	}
 }
 void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform)
@@ -308,6 +310,20 @@ void CCamera_Cinematic::Transition(_float fTimeDelta)
 	CMyTools::MatrixLerp(&matOrigin, &matTarget, matResult, fRatio);
 
 	m_pTransformCom->Set_WorldMatrix(matResult);
+}
+void CCamera_Cinematic::Rotation(_fvector vRotQ)
+{
+	_vector vPos = m_pFollowTargetPart->Get_WorldPostion();
+	_vector vLookPos = m_pLookTargetPart->Get_WorldPostion();
+	_float fDistance = XMVectorGetX(XMVector3Length(vLookPos - vPos));
+	_vector vLookDir = XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotQ);
+
+	if (true == m_pLookTargetPart->IsStalking()) { // 스토킹 중이면 팔로우가 움직이고 아니면 룩타겟이 움직임
+		m_pFollowTargetPart->Set_WorldPostion(XMVectorSetW(vLookPos - (fDistance * vLookDir), 1.f));
+	}
+	else {
+		m_pLookTargetPart->Set_WorldPostion(XMVectorSetW(vPos + (fDistance * vLookDir), 1.f));
+	}
 }
 CCamera_Cinematic* CCamera_Cinematic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

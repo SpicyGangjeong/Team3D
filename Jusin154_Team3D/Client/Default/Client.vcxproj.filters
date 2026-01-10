@@ -913,13 +913,17 @@
     </ClInclude>
     <ClInclude Include="..\Public\Duelist_ProtegoHit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
-          </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Prop.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Block.h">
       <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_ENUM.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2775,6 +2779,7 @@
     <ClCompile Include="..\Private\State_Block.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Goblin_States.cpp">

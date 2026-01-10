@@ -428,10 +428,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = false;
+	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -3446,6 +3446,32 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 	}
 
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_Stone_FrontSteps*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Stone_FrontSteps_A.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Stone_FrontSteps"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Quid_StoneKit_A.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightPost */
 	{
 		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
@@ -3773,25 +3799,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 
 	m_strMessage = TEXT("모델을 다시 불러오는 중입니다. ");
-	{
-		CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"));
-		CMotion_Trail::MODELCAPTURE_DESC Desc{};
-		Desc.fMaxCaptureLifeTime = 2.f;
-		Desc.iMaximumCapture = 4;
-		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
-			return E_FAIL;
-		}
-	}
 
-	{
-		CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
-		CMotion_Trail::MODELCAPTURE_DESC Desc{};
-		Desc.fMaxCaptureLifeTime = 2.f;
-		Desc.iMaximumCapture = 4;
-		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
-			return E_FAIL;
+	if (isLoad_Monster) {
+		{
+			CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"));
+			CMotion_Trail::MODELCAPTURE_DESC Desc{};
+			Desc.fMaxCaptureLifeTime = 2.f;
+			Desc.iMaximumCapture = 4;
+			Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
+				return E_FAIL;
+			}
+		}
+
+		{
+			CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
+			CMotion_Trail::MODELCAPTURE_DESC Desc{};
+			Desc.fMaxCaptureLifeTime = 2.f;
+			Desc.iMaximumCapture = 4;
+			Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
+				return E_FAIL;
+			}
 		}
 	}
 
@@ -3963,6 +3992,12 @@ HRESULT CLoader::Loading_For_Field()
 	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::FIELD), TEXT("Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_BogMyrtle_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_PointLight */
 	if (FAILED(m_pGameInstance->Add_Prototype<CPointLight>(ENUM_CLASS(LEVEL::FIELD), CPointLight::Create(m_pDevice, m_pContext))))

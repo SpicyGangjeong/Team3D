@@ -1070,7 +1070,7 @@ _vector CEffect_Container::Get_LockOnPos(LOCKON_INFO Info)
 		return Info.pEffect->Get_WorldPostion();
 	}
 	if (Info.pUnit) {
-		return Info.pUnit->Get_Component<CCharacter_Controller>()->Get_Position();
+		return Info.pUnit->Get_LockOnPos();
 	}
 	return XMVectorZero();
 }
