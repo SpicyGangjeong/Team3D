@@ -61,9 +61,11 @@ HRESULT CPlayer::InputAction()
 {
 	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) && 
 		m_eUIState !=ENUM_CLASS(UI_STATE::QUEST) && 
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) && 
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+	{
 		if (
-			m_pGameInstance->Key_Down(DIK_SPACE)
+			m_pGameInstance->Key_Down(DIK_SPACE) 
 			|| m_pGameInstance->Key_Down(DIK_LCONTROL)
 			|| m_pGameInstance->Key_Down(DIK_E)
 			|| m_pGameInstance->Key_Down(DIK_R)
@@ -108,7 +110,8 @@ HRESULT CPlayer::InputMove()
 {
 	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
 		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT)) {
 
 		if (m_pGameInstance->Key_Pressing(DIK_W)
 			|| m_pGameInstance->Key_Pressing(DIK_A)
@@ -126,7 +129,8 @@ HRESULT CPlayer::InputKeyUpMove()
 {
 	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
 		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT)) {
 		if (m_pGameInstance->Key_Up(DIK_W)
 			|| m_pGameInstance->Key_Up(DIK_A)
 			|| m_pGameInstance->Key_Up(DIK_S)
@@ -142,7 +146,8 @@ HRESULT CPlayer::InputSpell()
 {
 	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
 		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT)) {
 		if (
 			m_pGameInstance->Key_Down(DIK_1)
 			|| m_pGameInstance->Key_Down(DIK_2)
@@ -164,11 +169,16 @@ HRESULT CPlayer::InputSpell()
 
 HRESULT CPlayer::InputAim()
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON) ||
-		m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
-	{
-		if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {m_bAim  = true;}
-		return S_OK;
+	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT)) {
+		if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON) ||
+			m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+		{
+			if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) { m_bAim = true; }
+			return S_OK;
+		}
 	}
 	return E_FAIL;
 }

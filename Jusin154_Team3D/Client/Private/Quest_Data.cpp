@@ -8,7 +8,7 @@
 #include "GameInstance.h"
 
 CQuest_Data::CQuest_Data()
-		: m_pInfoInstance(CInfoInstance::GetInstance()) ,
+	: m_pInfoInstance(CInfoInstance::GetInstance()),
 	m_pGameInstance(CGameInstance::GetInstance())
 {
 }
@@ -79,8 +79,8 @@ HRESULT CQuest_Data::Load_QuestInfo(const _char* pFilePath)
 			{
 				REWARDSINFO reward{};
 
-				pReward->QueryIntAttribute("RequiredCount", &reward.iRewardType);
-				pReward->QueryIntAttribute("CurrentCount", &reward.iRewardID);
+				pReward->QueryIntAttribute("Type", &reward.iRewardType);
+				pReward->QueryIntAttribute("Value", &reward.iRewardID);
 
 				quest.RewardsInfo.push_back(reward);
 
@@ -103,7 +103,7 @@ QUESTINFO CQuest_Data::Get_Quest(_int QuestType, _int QuestID)
 	case 0:
 		return QuestInfos[QuestID];
 	case 1:
-		return m_QuestAcceptedInfos[QuestID];
+		return m_QuestAcceptedInfos[QuestID].QeustInfo;
 	case 2:
 		return m_QuestEndInfos[QuestID];
 	default:
@@ -122,9 +122,14 @@ const vector<QUESTINFO>& CQuest_Data::Get_ClearQuest() const
 	return	m_QuestEndInfos;
 }
 
-const vector<QUESTINFO>& CQuest_Data::Get_AcceptQuest() const
+vector<QUESTINFO>& CQuest_Data::Get_AcceptQuest()
 {
-	return m_QuestAcceptedInfos;
+	m_QuestAcceptedInfo.reserve(m_QuestAcceptedInfos.size());
+
+	for (const auto& q : m_QuestAcceptedInfos)
+		m_QuestAcceptedInfo.push_back(q.QeustInfo);
+
+	return m_QuestAcceptedInfo;
 }
 
 _int CQuest_Data::Get_Count(_int Index)
@@ -156,8 +161,9 @@ HRESULT CQuest_Data::Set_AcceptQuest(_int Index)
 		return E_FAIL;
 	}
 	m_pInfoInstance->Add_Event(TEXT("MonsterDead"), [this](void* p) {this->Update_AcceptQuest(*reinterpret_cast<_int*>(p)); });
-	m_QuestAcceptedInfoObject.push_back(m_pQuestInstance);
-	m_QuestAcceptedInfos.push_back(QuestInfos[Index]);
+	m_AcceptedInfo.QeustData = m_pQuestInstance;
+	m_AcceptedInfo.QeustInfo = QuestInfos[Index];
+	m_QuestAcceptedInfos.push_back(m_AcceptedInfo);
 	m_iAcceptQeustCount++;
 	return S_OK;
 }
@@ -176,23 +182,29 @@ void CQuest_Data::Set_ClearQuest(_int Index)
 
 void CQuest_Data::Update_AcceptQuest(_int MonsterID)
 {
-	vector<_int> toRemoveIndex;
-
-	_int index = 0;
-	for (auto* instance : m_QuestAcceptedInfoObject)
+	for (auto it = m_QuestAcceptedInfos.begin(); it != m_QuestAcceptedInfos.end(); )
 	{
-		if (static_cast<CQuestInstance*>(instance)->Update_Objective(MonsterID))
+		auto* quest = static_cast<CQuestInstance*>(it->QeustData);
+		auto& info = it->QeustInfo;
+
+		_bool QuestClear = static_cast<CQuestInstance*>(quest)->Update_Objective(MonsterID);
+
+		if (QuestClear == true)
 		{
-			Set_ClearQuest(static_cast<CQuestInstance*>(instance)->Get_QuestID());
-			toRemoveIndex.push_back(index); 
+			Set_ClearQuest(quest->Get_QuestID());
+			it = m_QuestAcceptedInfos.erase(it);
 		}
-		index++;
-	}
-
-	for (auto it = toRemoveIndex.rbegin(); it != toRemoveIndex.rend(); ++it)
-	{
-		m_QuestAcceptedInfoObject.erase(m_QuestAcceptedInfoObject.begin() + *it);
-		m_QuestAcceptedInfos.erase(m_QuestAcceptedInfos.begin() + *it);
+		else
+		{
+			for (auto& obj : info.ObjectiveInfo)
+			{
+				if (obj.iTargetID == MonsterID)
+				{
+					obj.iCurrentCount++;
+				}
+			}
+			++it;
+		}
 	}
 }
 

@@ -14,6 +14,12 @@ NS_BEGIN(Client)
 class CQuest_Info final : public CElementObject
 {
 private:
+	struct Text
+	{
+		_wstring		pCurrentText;
+		_wstring		pRequiredText;
+	};
+private:
 	CQuest_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CQuest_Info(const CQuest_Info& rhs);
 	virtual ~CQuest_Info() = default;
@@ -33,6 +39,7 @@ private:
 
 public:
 	void Set_Hover(void* pArg);
+	void Set_QuestType(_int Index);
 
 private:
 	void Y(_float fSizeY);
@@ -44,17 +51,23 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
-	_wstring m_pQuest_Info;
+	_wstring		m_pQuest_Info;
 
-	_float	m_fOriginPerviewSize{};
-	_float	m_fPreviewOffSet{};
-	_float4 m_vHeaderBack{};
+	_float			m_fOriginPerviewSize{};
+	_float			m_fPreviewOffSet{};
+	_float4			m_vHeaderBack{};
 
-	_int	m_iQuest_Index{};
-	_int	m_iCurrentQuest{};
+	_int			m_iQuest_Index{};
+	_int			m_iCurrentQuest{};
 
-	_int	m_iPerQuestIndex{};
-	_int	m_iCurrentIndex{};
+	_int			m_iPerQuestIndex{};
+	_int			m_iCurrentIndex{};
+
+	vector<Text>	m_Text{};
+
+	_int			m_iQuestSlot{};
+	_int			m_iCurrentQeustSlot{};
+
 public:
 	static CQuest_Info* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
