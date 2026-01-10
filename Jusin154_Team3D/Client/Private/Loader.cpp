@@ -3728,22 +3728,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 
-#pragma region RECEIVE_THREAD
-	{
-		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
-		_uint iIndex = 0;
-		for (auto& JobMapShader : jobMapShaders)
-		{
-			pair<_wstring, CShader*>* pOut = JobMapShader.get();
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
-				return E_FAIL;
-			}
-			Safe_Delete(pOut);
-		}
-	}
 
 /* 쉐이더 로딩 종료 이후 로딩*/
 
+#pragma region RECEIVE_THREAD
 
 	{ // MapModels
 		m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
@@ -3768,7 +3756,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Safe_Delete(pOut);
 		}
 	}
+
+
+	{
+		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+		_uint iIndex = 0;
+		for (auto& JobMapShader : jobMapShaders)
+		{
+			pair<_wstring, CShader*>* pOut = JobMapShader.get();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
+				return E_FAIL;
+			}
+			Safe_Delete(pOut);
+		}
+	}
+
 #pragma endregion
+
 	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 
 	m_strMessage = TEXT("모델을 다시 불러오는 중입니다. ");
