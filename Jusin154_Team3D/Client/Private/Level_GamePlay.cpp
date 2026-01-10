@@ -203,6 +203,11 @@ HRESULT CLevel_GamePlay::Render()
 	return S_OK;
 }
 
+void CLevel_GamePlay::ResettingEnvironment()
+{
+	Ready_Volumetric();
+}
+
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
 

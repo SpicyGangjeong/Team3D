@@ -494,8 +494,7 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 		m_pCharacter_Controller->Set_Position(vNewPos);
 		m_pTransformCom->RotationQ(pContents->pxTransform.q);
 		m_pTransformCom->RewindMomentum();
-	}
-		break;
+	} break;
 	case TIMESOCKET_FUNC::TRANSLATION_LERP:
 	{
 

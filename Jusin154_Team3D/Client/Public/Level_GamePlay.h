@@ -14,6 +14,7 @@ private:
 public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void ResettingEnvironment();
 
 
 private:
