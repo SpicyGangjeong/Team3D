@@ -53,6 +53,8 @@ typedef enum class typeTimeSocket_Func {
 	// SOUND
 
 	// TRIGGER
+	SET_VOLUMETRIC,
+
 	END
 }TIMESOCKET_FUNC;
 

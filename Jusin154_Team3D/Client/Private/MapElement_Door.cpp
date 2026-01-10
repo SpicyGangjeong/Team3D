@@ -271,7 +271,7 @@ void CMapElement_Door::Free()
 #ifdef _DEBUG
 void CMapElement_Door::Describe_Entity()
 {
-	GUI::Begin("PhysX");
+	GUI::Begin("PhysX", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Door")) {
 		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 		GUI::Text("m_vKinematicTimer %.3f", m_vKinematicTimer.x);

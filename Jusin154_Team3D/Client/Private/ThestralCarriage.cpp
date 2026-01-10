@@ -264,6 +264,7 @@ void CThestralCarriage::Describe_Entity()
 		{
 			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
 		}
+		m_pModelCom->Describe_Entity();
 	}
 	GUI::End();
 }

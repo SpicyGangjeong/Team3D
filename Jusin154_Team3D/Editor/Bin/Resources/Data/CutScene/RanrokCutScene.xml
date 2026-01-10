@@ -37,7 +37,7 @@
 		</Param_12>
 	</Socket>
 	<Socket fStartPosition = "0">
-		<Info strEventName = "TELEPORTATION" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TELEPORTATION"/>
+		<Info strEventName = "TELEPORTATION" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TELEPORTATION"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
@@ -998,5 +998,5 @@
 			<string tag =""/>
 		</Param_12>
 	</Socket>
-	<Trigger X="11.601" Y="5.321" Z="28.620" W="3.f"/>
+	<Trigger X="11.601" Y="5.321" Z="28.620" W="3.0"/>
 </RanrokIntro>
