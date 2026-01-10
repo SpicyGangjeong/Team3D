@@ -231,49 +231,12 @@ void CInfoInstance::Key_Input(_uint Input)
 	case ENUM_CLASS(KEYINPUT::INPUT_4):
 		Event_CallBack(TEXT("Spell"), &m_eInput);
 		break;
-	//case ENUM_CLASS(KEYINPUT::INPUT_T):
-	//	if (m_eUI_State == UI_STATE::GAMEPLAYER)
-	//	{
-	//		m_eUI_State = UI_STATE::SPELL;
-	//		Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
-	//	}
-	//	else if (m_eUI_State == UI_STATE::SPELL)
-	//	{
-	//		m_eUI_State = UI_STATE::GAMEPLAYER;
-	//		Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
-	//	}
-	//	break;
 	case ENUM_CLASS(KEYINPUT::INPUT_X):
 		Event_CallBack(TEXT("Ancient_Magic_Throw"));
 		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_G):
 		Event_CallBack(TEXT("Use_Potion"));
 		break;
-	/*case ENUM_CLASS(KEYINPUT::INPUT_TAB):
-		if (m_eUI_State == UI_STATE::GAMEPLAYER)
-		{
-			m_eUI_State = UI_STATE::QUEST;
-			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
-		}
-		else if (m_eUI_State == UI_STATE::QUEST)
-		{
-			m_eUI_State = UI_STATE::GAMEPLAYER;
-			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
-		}
-		break;
-	case ENUM_CLASS(KEYINPUT::INPUT_ESPACE):
-		if (m_eUI_State == UI_STATE::GAMEPLAYER)
-		{
-			m_eUI_State = UI_STATE::SPELLNEARN;
-			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
-		}
-		else if (m_eUI_State == UI_STATE::SPELLNEARN)
-		{
-			m_eUI_State = UI_STATE::GAMEPLAYER;
-			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
-		}
-		break;*/
-
 	default:
 		break;
 	}

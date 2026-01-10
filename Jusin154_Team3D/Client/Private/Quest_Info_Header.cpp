@@ -129,7 +129,7 @@ HRESULT CQuest_Info_Header::Render()
 		return E_FAIL;
 	}
 
-	if (m_iQuest_Index != 0)
+	if (m_iQuest_Index != -1)
 	{
 		_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).pQuestName.c_str()) - 30) * 0.5f;
 		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).pQuestName.c_str(), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));

@@ -35,6 +35,9 @@ public:
 	void Set_Hover(void* pArg);
 
 private:
+	void Y(_float fSizeY);
+
+private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
@@ -51,6 +54,7 @@ private:
 	_int	m_iCurrentQuest{};
 
 	_int	m_iPerQuestIndex{};
+	_int	m_iCurrentIndex{};
 public:
 	static CQuest_Info* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
