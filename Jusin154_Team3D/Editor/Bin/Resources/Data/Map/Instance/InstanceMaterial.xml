@@ -282,4 +282,20 @@
             <Surface>SRO</Surface>
         </Mesh>
    </SM_OL_StratifiedRock_D_B>
+    <SM_HM_Stone_FrontSteps_A mesh="1">
+        <Mesh>
+            <Material>T_HoneyDukes_BaseStone_01_D</Material>
+            <Material>T_HoneyDukes_BaseStone_01_N</Material>
+            <Material>T_HoneyDukes_BaseStone_01_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SM_HM_Stone_FrontSteps_A>
+    <SM_HM_Quid_StoneKit_A mesh="1">
+        <Mesh>
+            <Material>T_HM_Quid_StoneKit_A_D</Material>
+            <Material>T_HM_Quid_StoneKit_A_N</Material>
+            <Material>T_HM_Quid_StoneKit_A_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+   </SM_HM_Quid_StoneKit_A>
 </Instance>

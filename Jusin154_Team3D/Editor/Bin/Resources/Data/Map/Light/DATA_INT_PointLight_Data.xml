@@ -16,7 +16,7 @@
         <Rotation x="0" y="0" z="0"/>
         <Diffuse x="0.82745099" y="0.3137255" z="0" w="0.99215686"/>
         <Ambient x="0.74683547" y="0.32142287" z="0"/>
-        <Specular x="0.22784811" y="0.17785612" z="0.17785612"/>
+        <Specular x="0.03" y="0.03" z="0.03"/>
         <PosOffset x="0" y="0" z="0"/>
         <Info Range="8" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
     </Object>
@@ -26,7 +26,7 @@
         <Rotation x="0" y="0" z="0"/>
         <Diffuse x="0.38039216" y="0.11372549" z="0" w="0.27450982"/>
         <Ambient x="0.59493673" y="0.21086365" z="0"/>
-        <Specular x="0.2" y="0" z="0"/>
+        <Specular x="0.01" y="0.01" z="0.01"/>
         <PosOffset x="0" y="0" z="0"/>
         <Info Range="6" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
     </Object>
@@ -36,7 +36,7 @@
         <Rotation x="0" y="0" z="0"/>
         <Diffuse x="0.68776369" y="0.4923408" z="0.2466663" w="1"/>
         <Ambient x="0.75105488" y="0.3712424" z="0.18380249"/>
-        <Specular x="0.2" y="0" z="0"/>
+        <Specular x="0.01" y="0.01" z="0.01"/>
         <PosOffset x="0" y="0" z="0"/>
         <Info Range="13" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
     </Object>
@@ -46,7 +46,7 @@
         <Rotation x="0" y="0" z="0"/>
         <Diffuse x="0.82278478" y="0.43123361" z="0.13539498" w="1"/>
         <Ambient x="0.72151899" y="0.51515597" z="0.25572824"/>
-        <Specular x="0.2" y="0" z="0"/>
+        <Specular x="0.01" y="0.01" z="0.01"/>
         <PosOffset x="0" y="0" z="0"/>
         <Info Range="15" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
     </Object>
@@ -56,8 +56,8 @@
         <Rotation x="0" y="0" z="0"/>
         <Diffuse x="1" y="0.17647059" z="0" w="1"/>
         <Ambient x="1" y="0.3019608" z="0"/>
-        <Specular x="0.16877639" y="0.16877639" z="0.16877639"/>
+        <Specular x="0.01" y="0.01" z="0.01"/>
         <PosOffset x="0" y="0" z="0"/>
-        <Info Range="7" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
+        <Info Range="5" LightAttRange="1" LightAttSpeed="1" Pow="1"/>
     </Object>
 </MapLightObjects>

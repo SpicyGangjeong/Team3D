@@ -22,6 +22,7 @@ private:
 	_bool		m_bReadyToCreatePhysX = { false };
 	_bool		m_bConverted = { false };
 	_float		m_fRadius = {};
+	_float3		m_vWorldCenterPosition = {};
 
 	vector<CRigidBody_Static*> m_RigidBodies;
 	

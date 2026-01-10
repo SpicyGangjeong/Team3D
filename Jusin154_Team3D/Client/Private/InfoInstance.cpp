@@ -171,6 +171,10 @@ HRESULT CInfoInstance::Load_PointLights(const _char* pFileName, const _wchar* pL
 {
 	return m_pMapInfo->Load_PointLights(pFileName, pLayerTag);
 }
+HRESULT CInfoInstance::Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath)
+{
+	return m_pMapInfo->Load_EffectParts(pFileName, pEffectrFilePath);
+}
 HRESULT CInfoInstance::Load_DADA_INT()
 {
 	return m_pMapInfo->Load_DADA_INT();
