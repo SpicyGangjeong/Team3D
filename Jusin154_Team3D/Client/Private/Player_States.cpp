@@ -1806,6 +1806,23 @@ HRESULT CPlayer::Behavior_BlockExitCheck(_float fTimeDelta)
 				return E_FAIL;
 			}
 		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::PARRY4];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY_SIDE, Get_PartObject<CWand>()); },
+			0.01f);
+
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
+			fEventRatio);
+
+		//m_pGameInstance->SlowMotion(0.8f, 0.3f);
+		m_bShield = false;
+		return S_OK;
 	}
 
 	if (fRatio >= 0.9f) {

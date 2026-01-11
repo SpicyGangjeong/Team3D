@@ -164,18 +164,24 @@ void CDialogue_Panel::Change_Map()
 
 
 
-	CLayer* pNpcLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_NPC);
+	/*CLayer* pNpcLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_NPC);
 	if (nullptr != pNpcLayer) {
 
 		for (auto& pNpc : *pNpcLayer->Get_Objects())
 		{
 			pNpc->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1016.f, 1.f));
 		}
-	}
+	}*/
+
 }
 
 void CDialogue_Panel::Priority_Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_J))
+	{
+		Change_Map();
+	}
+
 	if (!__super::Chack_Visible())
 	{
 		return;

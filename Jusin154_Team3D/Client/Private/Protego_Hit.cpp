@@ -94,6 +94,7 @@ HRESULT CProtego_Hit::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEffectParts* pProtego_HitPT =  Get_PartObject<CEffectParts>("Protego_HitPT");
 	CEffectParts* pProtego_HitPT_Line = Get_PartObject<CEffectParts>("Protego_HitPT_Line");
 	CEffectParts* pProtegoHit = Get_PartObject<CEffectParts>("ProtegoHit");
+	CEffectParts* pScreenFX_Hit = Get_PartObject<CEffectParts>("ScreenFX_Hit");
 
 	m_pHit_SphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pHit_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -109,7 +110,7 @@ HRESULT CProtego_Hit::Pre_Setting(CGameObject* pObject, void* pArg)
 	pProtego_HitPT->Set_Visible(true);
 	pProtego_HitPT_Line->Set_Visible(true);
 	pProtegoHit->Set_Visible(true);
-
+	pScreenFX_Hit->Set_Visible(true);
 
 
 

@@ -163,6 +163,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Barral_Splesh.h" />
     <ClInclude Include="..\Public\Avadakedavra.h" />
     <ClInclude Include="..\Public\AvadakedavraSide.h" />
+    <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Broom_Circle.h" />
     <ClInclude Include="..\Public\Broom_Exit.h" />
     <ClInclude Include="..\Public\Broom_Finish.h" />
@@ -465,6 +466,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Avadakedavra.cpp" />
     <ClCompile Include="..\Private\AvadakedavraSide.cpp" />
+    <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Broom_Circle.cpp" />
     <ClCompile Include="..\Private\Broom_Exit.cpp" />
     <ClCompile Include="..\Private\Broom_Finish.cpp" />

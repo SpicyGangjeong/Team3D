@@ -730,6 +730,8 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
+			tagCollInfo.eCollisionType = ENUM_CLASS(PXOBJECT(pUserData->iSubKind));
+
 			switch (pUserData->eKind)
 			{
 			case PHYSX_KIND::BODY_DYNAMIC:

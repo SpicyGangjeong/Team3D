@@ -143,7 +143,13 @@ public:
 		_bool       isNonSoftEffect = {};
 		
 		_float2     vDissolveSmoothRange = {0.1f , 0.1f};
-		_float2     vPadding0 = {};
+
+		_float      fPadding1 = {};
+
+		_bool		isScreenFX = {};
+		_bool       isPadding0 = {};
+		_bool       isPadding1 = {};
+		_bool       isPadding2 = {};
 
 		_bool		isRimLight = {};
 		_bool		isMask_G = {};
@@ -339,6 +345,9 @@ protected:
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
 	const _float4x4* m_pPerentMatrix = { nullptr };
+
+	_float4x4		m_ScreenViewMatrix = {};
+	_float4x4       m_OrthographicMatrix = {};
 protected:
 	EFFECT_INFO m_EffectInfo = {};
 	_string		m_strDiffuseName = {};

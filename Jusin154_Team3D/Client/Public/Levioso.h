@@ -37,23 +37,11 @@ private:
 	_wstring	     m_wstrEffectName = {};
 	class CPlayer*	 m_pPlayer = {};
 
-	class CEffectParts*  m_pLeviosoPJ_0   = { nullptr };
-	class CEffectParts*  m_pLeviosoPJ_1   = { nullptr };
-	class CEffectParts*  m_pTrail_PT_0 = { nullptr };
-
-	class CEffectParts* m_pLevioso_Rotate0 = { nullptr };
-	class CEffectParts* m_pLevioso_Rotate1 = { nullptr };
-
-	class CTransform*    m_pEnemyTransform = { nullptr };
-
-	_vector				m_vOwnerLook = {};
-	_float				m_fAccRotateTime = {};
-	_float				m_fTurnSpeed = {};
-	_float				m_fRange = {};
+	class CEffectParts* m_pLeviosoPJ = { nullptr };
 
 	_float4				m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
 	_float4				m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
-	_float				m_fLinearSpeed = 0.25f;
+	_float				m_fLinearSpeed = 0.75f;
 	_float3				m_vCameraLook = {};
 public:
 	static CLevioso* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

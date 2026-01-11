@@ -93,7 +93,7 @@ float g_fWinSizeY;
 
 /* 소프트 이펙트 */
 bool g_isNonSoftEffect;
-
+bool g_isScreenFX;
 /* 디퓨즈 */
 float4 g_vColor;
 float  g_fDiffuseAlpha;
