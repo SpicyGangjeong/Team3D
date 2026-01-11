@@ -133,12 +133,10 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					racer.pRacer->Get_Broom()->Set_Ride(false);
 					racer.pRacer->Get_Broom()->Set_Move(true);
 
-					racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::IDLE);
-
 					CTransform* pTransform = racer.pRacer->Get_Component<CTransform>();
 					CCharacter_Controller* pCharacter = racer.pRacer->Get_Component<CCharacter_Controller>();
-					pCharacter->Set_Position(XMLoadFloat4(&m_OriginPos));
 					pTransform->Set_State(STATE::POSITION, XMLoadFloat4(&m_OriginPos));
+					pCharacter->Set_Position(XMLoadFloat4(&m_OriginPos));
 					m_bRaceEnd = false;
 					m_fDelay = 0.f;
 					m_bCurrentRace = false;
@@ -296,13 +294,6 @@ void CBroomRaceManager::Check_RingPassed()
 
 		_float Prev = XMVectorGetX(XMVector3Dot(prevPos - ringPos, ringFwd));
 		_float Curr = XMVectorGetX(XMVector3Dot(currPos - ringPos, ringFwd));
-#ifdef _DEBUG
-		GUI::Text("%s", racer.pAI ? "AI" : "Player");
-		GUI::SameLine();
-		GUI::Text("CurRing %d", racer.curRing);
-		GUI::Text("PrevSide %.2f", Prev);
-		GUI::Text("CurrSide %.2f", Curr);
-#endif // _DEBUG
 		if (Prev * Curr <= 0.f && fabs(Prev - Curr) > 1e-4f)
 		{
 			_float t = Prev / (Prev - Curr);
@@ -352,8 +343,6 @@ void CBroomRaceManager::Finish()
 
 void CBroomRaceManager::RaceReady()
 {
-	//if (GUI::Button("Race Start"))
-//{
 	m_bCurrentRace = true;
 	m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
 	const _float SPAWN_DISTANCE = 30.f;
@@ -428,7 +417,7 @@ void CBroomRaceManager::RaceReady()
 			pCharacter->Set_Position(spawnPos);
 			pTransform->Set_State(STATE::POSITION, spawnPos);
 			pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
-			racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::BROOM_RIDE);
+			racer.pRacer->Get_Broom()->Set_Ride(true);
 			racer.pRacer->Get_Broom()->Set_Move(false);
 
 		}

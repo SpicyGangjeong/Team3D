@@ -216,6 +216,12 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_vector xmvRight = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::RIGHT), 0.f));
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (m_pBroom->Get_Ride())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+		return E_FAIL;
+	}
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
 			m_pFSM->Change_State(FSMSTATE::JUMP);
@@ -413,6 +419,7 @@ void CPlayer::Behavior_MoveEnter()
 	_bool bRight = m_pGameInstance->Key_Pressing(DIK_D);
 	_bool bBackward = m_pGameInstance->Key_Pressing(DIK_S);
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
+
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::DODGE | FSMSTATE::LAND | FSMSTATE::DISMOUNT)) {
 
 		if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE))
@@ -495,6 +502,11 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
+	if (m_pBroom->Get_Ride())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+		return E_FAIL;
+	}
 
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
@@ -1806,23 +1818,6 @@ HRESULT CPlayer::Behavior_BlockExitCheck(_float fTimeDelta)
 				return E_FAIL;
 			}
 		}
-		else {
-			pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		}
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY_SIDE, Get_PartObject<CWand>()); },
-			0.01f);
-
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
-			fEventRatio);
-
-		//m_pGameInstance->SlowMotion(0.8f, 0.3f);
-		m_bShield = false;
-		return S_OK;
 	}
 
 	if (fRatio >= 0.9f) {
@@ -1935,7 +1930,7 @@ HRESULT CPlayer::Behavior_ParryExitCheck(_float fTimeDelta)
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 	{
-		if (fRatio >= 0.6f)
+		if (fRatio >= 0.5f)
 		{
 			if (SUCCEEDED(InputAction())) {
 				m_pFSM->Change_State(FSMSTATE::COMBAT);
@@ -1948,16 +1943,11 @@ HRESULT CPlayer::Behavior_ParryExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (fRatio >= 0.9f) {
-		if (SUCCEEDED(InputMove()))
-		{
-			m_pFSM->Change_State(FSMSTATE::MOVE);
-			return E_FAIL;
-		}
-		else {
-			m_pFSM->Change_State(FSMSTATE::IDLE);
-			return E_FAIL;
-		}
+	if (fRatio >= 0.8f) {
+
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+		
 	}
 	return S_OK;
 }
@@ -1970,7 +1960,6 @@ void CPlayer::Behavior_ParryExit()
 void CPlayer::Behavior_HitEnter()
 {
 	m_pBroom->Set_Ride(false);
-	m_pFSM->Enable_State(FSMSTATE::HIT);
 	pair<_uint, _bool> pairAnimInfo;
 
 	if (m_eHitSpell != ENUM_CLASS(SKILL_TYPE::END)) {
@@ -2027,11 +2016,15 @@ HRESULT CPlayer::Behavior_HitExitCheck(_float fTimeDelta)
 
 	Hit_Levioso(fTimeDelta);
 
-	if (SUCCEEDED(InputMove()))
+	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 	{
-		if (iCurrAnimIndex != m_Animation[STATEANIM::HIT_LEVIOSO].first) {
-			if (fRatio >= 0.6f) {
+		if (iCurrAnimIndex != m_Animation[STATEANIM::HIT_LEVIOSO].first && fRatio >= 0.6f) {
+			if (SUCCEEDED(InputMove())) {
 				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
+			if (SUCCEEDED(InputAction())) {
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
 				return E_FAIL;
 			}
 		}
@@ -2045,7 +2038,6 @@ HRESULT CPlayer::Behavior_HitExitCheck(_float fTimeDelta)
 
 void CPlayer::Behavior_HitExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::HIT);
 	Reset_Event();
 	m_pCharacter_Controller->SetGravity(true);
 	m_eHitType = ENUM_CLASS(HIT_TYPE::END);
@@ -2142,6 +2134,11 @@ HRESULT CPlayer::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pair<_uint, _bool> pairAnimInfo;
+
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
 
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
 	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
@@ -2284,6 +2281,11 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pair<_uint, _bool> pairAnimInfo;
+
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
 
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
 	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
@@ -2452,6 +2454,11 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pair<_uint, _bool> pairAnimInfo;
+
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
 
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
 	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
@@ -2716,35 +2723,37 @@ void CPlayer::Throwing_Interactive()
 
 void CPlayer::Attach_Broom()
 {
-	_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
-	_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
+	if (m_pBroom->Get_Ride()) {
+		_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
+		_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 
-	_vector Scale, Rot, Trans;
+		_vector Scale, Rot, Trans;
 
-	XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
+		XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
 
-	_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
+		_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
 
-	m_OffsetPos = { 0.f,0.9f,0.f };
+		m_OffsetPos = { 0.f,0.9f,0.f };
 
-	_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
-		m_OffsetPos.y, m_OffsetPos.z);
+		_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
+			m_OffsetPos.y, m_OffsetPos.z);
 
-	_vector BS, BR, BT;
-	XMMatrixDecompose(&BS, &BR, &BT, BroomWorld);
-	_matrix BroomWorld_NoScale =
-		XMMatrixRotationQuaternion(BR) *
-		XMMatrixTranslationFromVector(BT);
+		_vector BS, BR, BT;
+		XMMatrixDecompose(&BS, &BR, &BT, BroomWorld);
+		_matrix BroomWorld_NoScale =
+			XMMatrixRotationQuaternion(BR) *
+			XMMatrixTranslationFromVector(BT);
 
 
-	_matrix SocketWorld = BoneNoScale * Offset * BroomWorld_NoScale;
+		_matrix SocketWorld = BoneNoScale * Offset * BroomWorld_NoScale;
 
-	_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
+		_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
 
-	_matrix FinalWorld = FixRot * SocketWorld;
+		_matrix FinalWorld = FixRot * SocketWorld;
 
-	m_pTransformCom->Set_WorldMatrix(FinalWorld);
-	m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
+		m_pTransformCom->Set_WorldMatrix(FinalWorld);
+		m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
+	}
 }
 
 void CPlayer::ProcessHitBehavior()
@@ -3419,9 +3428,7 @@ void CPlayer::Add_FSM()
 				m_pBroomTransform->Set_State(STATE::RIGHT, m_pTransformCom->Get_State(STATE::RIGHT));
 
 				_float3 vScale = { 0.3f,0.3f,0.3f };
-				_float3 vPlayerScale = { 1.f,1.f,1.f };
 				m_pBroomTransform->Set_Scale(vScale);
-				m_pTransformCom->Set_Scale(vPlayerScale);
 				m_bOnce = true;
 				m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
 			}

@@ -164,7 +164,6 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	array<_float4x4, 256> SkinMatrices = {};
 	array<_int, 256> SecondMaskIndex = {};
 	_bool			m_bOpenDoor = { false };
 	_bool			m_bOpeningCutScene = { false };

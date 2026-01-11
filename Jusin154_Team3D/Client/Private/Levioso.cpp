@@ -216,8 +216,6 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 
 	CCharacter_Controller* pHitCCT = CollisionDesc.pObject->Get_Component<CCharacter_Controller>();
 
-
-
 	if (pHitCCT != nullptr)
 	{
 		CEffectParts* pLevioso_Spline = Get_PartObject<CEffectParts>("Levioso_Spline");
