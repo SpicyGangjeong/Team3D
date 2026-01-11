@@ -242,6 +242,8 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
+		fRatio = 1.f;
+		m_fBlendTime = 0.f;
 	}
 
 
@@ -328,6 +330,8 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		CAnimation* pSecondAnim = m_Animations[m_iCurrSecondAnimIndex];
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
+
+		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
 
 		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation);
 
@@ -445,7 +449,7 @@ _bool CModel::IsBlending() const
 }
 
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone,_bool bQueuedAnim, _bool bInit)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone,_bool bQueuedAnim)
 {
 	m_bQueuedAnim = bQueuedAnim;
 	if (m_iCurrentAnimIndex == iIndex)
@@ -472,10 +476,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 		}
 
-		if (bInit) {
-			m_fBlendTime = 0.f;
-			m_fRatio = 0.f;
-		}
+		m_fBlendTime = 0.f;
+		fRatio = 0.f;
 		m_bRootBone = bRootBone;
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
