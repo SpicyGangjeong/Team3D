@@ -934,6 +934,10 @@
     </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+      </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h" />
+    <ClInclude Include="..\Public\Broom_TargetGate2D.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1928,6 +1932,9 @@
     </Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_Parry">
       <UniqueIdentifier>{b57b393b-0e6f-47ad-9301-46b8f725a452}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
+      <UniqueIdentifier>{4a11eb4b-127e-41f2-8456-cae963c94a4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2810,6 +2817,10 @@
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+         </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp" />
+    <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
