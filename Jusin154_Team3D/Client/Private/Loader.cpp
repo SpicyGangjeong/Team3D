@@ -470,7 +470,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #ifdef _DEBUG
 #ifdef gimch
 	isLoad_Background = true;
-	isLoad_Hogwart = true;
+	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
 	isLoad_NPC = true;
 	isLoad_DataClassroom = false;
@@ -3609,10 +3609,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 #pragma endregion
 
-	///* For.Prototype_Component_FloatingBalloon */
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_FloatingBalloon"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.fbx"))))
-	//	return E_FAIL;
+	/* For.Prototype_Component_FloatingBalloon */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_FloatingBalloon"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.bin"))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Hogwart_Lake"),

@@ -21,6 +21,7 @@
 #include "Mesh.h"
 #include "Effect_Container.h"
 #include "ThestralCarriage.h"
+#include "MapElement_Chest.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -899,6 +900,25 @@ void CPlayer::Player_PixRot()
 		m_pTransformCom->Set_State(STATE::UP, vUp);
 		m_pTransformCom->Set_State(STATE::LOOK, vLook);
 	}
+}
+
+void CPlayer::Find_HiddenObjects()
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_HIDDEN);
+
+	if (nullptr == pLayer)
+		return;
+
+	const list<class CGameObject*>* pHiddenObjects = pLayer->Get_Objects();
+
+	for (auto& pObject : *pHiddenObjects)
+	{
+		CMapElement_Chest* pChest = dynamic_cast<CMapElement_Chest*>(pObject);
+		if (nullptr != pChest)
+			if (pChest->IsScannable(m_pTransformCom->Get_State(STATE::POSITION)))
+				return;
+	}
+
 }
 
 void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)

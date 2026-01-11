@@ -107,6 +107,7 @@ private:
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
 	void Play_SpellHitAnim();
 	void Player_PixRot();
+	void Find_HiddenObjects();
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
