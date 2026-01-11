@@ -216,6 +216,8 @@ void CQuest_Info_Line::Set_Hover(void* pArg)
 	Visible(true);
 }
 
+
+
 CQuest_Info_Line* CQuest_Info_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CQuest_Info_Line* pInstance = new CQuest_Info_Line(pDevice, pContext);

@@ -69,6 +69,8 @@ namespace Client {
 #define LAYER_RING			TEXT("Layer_Ring")
 #define LAYER_RACERAI		TEXT("Layer_RacerAI")
 #define LAYER_DADA_INT		TEXT("Layer_DADA_INT")
+#define LAYER_DUELIST		TEXT("Layer_Duelist")
+#define LAYER_NPC			TEXT("Layer_Npc")
 
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")

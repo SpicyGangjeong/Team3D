@@ -16,6 +16,8 @@
 #include "LeviosoSide.h"
 #include "DecendoSide.h"
 #include "NomalJapSide.h"
+#include "Stupefy.h"
+#include "StupefySide.h"
 
 
 #include "Troll_Rush_Hit.h"
@@ -303,6 +305,24 @@ HRESULT CEffectPool::Ready_Effect()
 		CBlink* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CBlink>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::STUPEFY, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CStupefy* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CStupefy>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::STUPEFY_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CStupefySide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CStupefySide>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

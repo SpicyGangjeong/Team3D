@@ -46,6 +46,8 @@ private:
 	_bool			m_isCamPos = {};
 
 	_float4			m_vCamOffset = {};
+
+
 public:
 	static CEditEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

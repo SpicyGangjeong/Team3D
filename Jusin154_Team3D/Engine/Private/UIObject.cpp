@@ -35,6 +35,7 @@ HRESULT CUIObject::Initialize(void* pArg)
 	// 이제 뷰포트의 개수랑 정보를 저장할 포인터를 넣어준다.
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
 
+
 	// 이제 받아온 fX,fY,fSizeX,fSizeY를 다 저장 해 놓는다.
 	UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
 

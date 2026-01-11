@@ -57,7 +57,10 @@ protected:
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
 	const _float4x4* m_pParentMatrix = { nullptr };
-	_float4x4 m_FinalParentMatrix;
+
+	_float4x4    m_ScreenViewMatrix = {};
+	_float4x4    m_OrthographicMatrix = {};
+	_float4x4    m_FinalParentMatrix;
 
 protected:
 	EFFECT_INFO  m_EffectInfo = {};

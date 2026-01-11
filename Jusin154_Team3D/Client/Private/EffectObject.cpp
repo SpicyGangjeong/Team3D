@@ -395,6 +395,12 @@ HRESULT CEffectObject::Load(CEffect_Container::EFFECT_SAVE_INFO EffectSaveInfo, 
 
 	m_pInstance_ModelCom->Load_InstanceModel(EffectSaveInfo.InstanceModelInfo);
 
+	if (m_EffectInfo.isScreenFX == true)
+	{
+		XMStoreFloat4x4(&m_ScreenViewMatrix, XMMatrixIdentity());
+		XMStoreFloat4x4(&m_OrthographicMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+	}
+
 	return S_OK;
 }
 
@@ -769,11 +775,31 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
-		return E_FAIL;
+	if (m_EffectInfo.isScreenFX == false)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV)))) {
+			return E_FAIL;
+		}
 	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
-		return E_FAIL;
+	else
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_OrthographicMatrix))) {
+			return E_FAIL;
+		}
 	}
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV)))) {

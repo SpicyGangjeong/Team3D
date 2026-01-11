@@ -21,7 +21,6 @@ HRESULT CQuest::Initialize(void* pArg)
 	QUESTINFO* Info = static_cast<QUESTINFO*>(pArg);
 	m_iQuestID = Info->iQuestID;
 	m_ObjectiveInfo = Info->ObjectiveInfo;
-
 	return S_OK;
 }
 
@@ -38,7 +37,7 @@ _bool CQuest::Update_Objective(_int MonsterID)
 			continue;
 
 		++it.iCurrentCount;
-
+		m_iMonsterID = MonsterID;
 		if (it.iCurrentCount >= it.iRequiredCount)
 			it.bClear = true;
 
@@ -57,6 +56,11 @@ _bool CQuest::Update_Objective(_int MonsterID)
 _int CQuest::Get_QuestID()
 {
 	return m_iQuestID;
+}
+
+_int CQuest::Get_MonsterID()
+{
+	return m_iMonsterID;
 }
 
 void CQuest::Free()
