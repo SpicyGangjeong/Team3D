@@ -244,6 +244,7 @@
 #include "Barral_Splesh.h"
 #include "Screen_Wind.h"
 #include "Stupefy.h"
+#include "StupefySide.h"
 #include "Lightning.h"
 #include "LightningSide.h"
 #include "Transformation.h"
@@ -374,6 +375,55 @@ HRESULT CLoader::Loading_For_Logo()
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+#if 진우
+#pragma region SHADER
+	vector<future<pair<_wstring, CShader*>*>> jobMapShaders;
+
+	{
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_UIEDITOR,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_UIINSTANCE,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"), VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_INSTANCE_MODEL,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxModelInstance.hlsl"), VTX_MODEL_INSTANCE_PARTICLE::Elements, VTX_MODEL_INSTANCE_PARTICLE::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_INSTANCE_PROP_MODEL,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"), VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_NPC_PBR_ANIM,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_ANIMMESH,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_POSTEX,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_NORTEX,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_MESH,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_VTXPOS,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
+	}
+
+	for (auto& JobMapShader : jobMapShaders)
+	{
+		pair<_wstring, CShader*>* pOut = JobMapShader.get();
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
+			return E_FAIL;
+		}
+		Safe_Delete(pOut);
+	}
+
+#endif
+
+#pragma endregion
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
@@ -396,6 +446,8 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype<CLogo_Glow>(g_iStaticLevel, CLogo_Glow::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+
 
 	m_strMessage = TEXT("로딩이 완료되었습니다..");
 
@@ -1084,6 +1136,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 	}
 
+#ifndef 진우
 #pragma region SHADER
 
 	{
@@ -1120,6 +1173,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 #pragma endregion
+#endif
 	/* LAND_MODEL */
 	{
 		/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
@@ -2181,6 +2235,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC PotionDesc{};
+		{
+			PotionDesc.eType = ACTOR::SPHERE;
+			PotionDesc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			PotionDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			PotionDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			PotionDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			PotionDesc.fContactOffset = { 0.05f };
+			PotionDesc.vhalfGeometryInfo = { 0.07f, 0.07f, 0.07f };
+			PotionDesc.fDensity = 1.f;
+			PotionDesc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			PotionDesc.eLockFlag = {};
+			PotionDesc.vAutoDamping = { 1.f, 1.f };
+			PotionDesc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			PotionDesc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC RanrokDesc{};
 		{
@@ -2208,6 +2279,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_POTION"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, PotionDesc)))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, RanrokDesc)))) {
 			return E_FAIL;
 		}
@@ -2541,13 +2617,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(g_iStaticLevel, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CBombardSide>(g_iStaticLevel, CBombardSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(g_iStaticLevel, CDecendoSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CStupefySide>(g_iStaticLevel, CStupefySide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	
 	if (FAILED(m_pGameInstance->Add_Prototype<CTransformationSide>(g_iStaticLevel, CTransformationSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -3790,22 +3872,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 
-#pragma region RECEIVE_THREAD
-	{
-		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
-		_uint iIndex = 0;
-		for (auto& JobMapShader : jobMapShaders)
-		{
-			pair<_wstring, CShader*>* pOut = JobMapShader.get();
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
-				return E_FAIL;
-			}
-			Safe_Delete(pOut);
-		}
-	}
 
 /* 쉐이더 로딩 종료 이후 로딩*/
 
+#pragma region RECEIVE_THREAD
 
 	{ // MapModels
 		m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
@@ -3830,7 +3900,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Safe_Delete(pOut);
 		}
 	}
+
+
+	{
+		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+		_uint iIndex = 0;
+		for (auto& JobMapShader : jobMapShaders)
+		{
+			pair<_wstring, CShader*>* pOut = JobMapShader.get();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
+				return E_FAIL;
+			}
+			Safe_Delete(pOut);
+		}
+	}
+
 #pragma endregion
+
 	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 
 	m_strMessage = TEXT("모델을 다시 불러오는 중입니다. ");

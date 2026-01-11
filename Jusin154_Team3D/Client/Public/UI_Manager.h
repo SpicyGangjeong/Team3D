@@ -51,6 +51,8 @@ private:
 	void Set_Fade();
 	void Change_Map();
 	void Set_Race(_bool bRace);
+	void Set_Battle(_bool bBattle);
+	void FadeIn(_float fAlphaVelue);
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
@@ -91,7 +93,7 @@ private:
 	_bool	m_bAlphaZero = { false };
 
 	_bool	m_bRace = { false };
-
+	_bool	m_bBattle = { false };
 public:
 	static CUI_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

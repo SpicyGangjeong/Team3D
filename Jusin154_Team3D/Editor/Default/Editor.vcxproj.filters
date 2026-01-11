@@ -787,6 +787,12 @@
     <Filter Include="02.GameObjects\Env\03.MapElement\Balloon">
       <UniqueIdentifier>{6c70f152-f512-4622-b6ef-27931092deed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy">
+      <UniqueIdentifier>{546b1677-5dbb-45dd-a152-5b216655e51f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy\StupefySide">
+      <UniqueIdentifier>{d84324ea-6303-442d-8f00-ed6555e6b02b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1592,6 +1598,12 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Balloon.h">
       <Filter>02.GameObjects\Env\03.MapElement\Balloon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StupefySide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy\StupefySide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Stupefy.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2406,6 +2418,12 @@
     </ClCompile>
     <ClCompile Include="..\private\MapElement_Balloon.cpp">
       <Filter>02.GameObjects\Env\03.MapElement\Balloon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StupefySide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy\StupefySide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stupefy.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

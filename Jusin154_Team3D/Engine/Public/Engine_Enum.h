@@ -201,7 +201,7 @@ enum class PXOBJECT : _uint {
 	ITEM = 600,
 	DROPITEM = 630,
 	TRAP = 660,
-
+    POTION = 690,
 #pragma endregion
 #pragma region TRIGGERBOX
 	TRIGGERBOX = 700,

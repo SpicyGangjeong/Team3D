@@ -81,8 +81,6 @@ void CRandomNpc::Update(_float fTimeDelta)
 
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
-	//m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
-
 	_vector vCurrentPos = Get_WorldPostion();
 	pair<CUnit*, CTransform*> pairTarget = m_pInfoInstance->Get_NearestPlayerAlly(vCurrentPos);
 	if (nullptr != pairTarget.first) {

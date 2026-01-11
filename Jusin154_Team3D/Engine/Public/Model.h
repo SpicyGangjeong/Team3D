@@ -87,6 +87,7 @@ public:
 	const _char*	Get_AnimList(_uint iIndex);
 	_float			Get_CurrentTrackPosition();
 	_float			Get_CurrentTrackProgressRatio();
+	void			Set_CurrentTrackProgressRatio(_float fRatio);
 	_float			Get_TrackProgressRatio(_uint iIndex);
 
 	size_t			Get_AnimSize() { return m_Animations.size(); }

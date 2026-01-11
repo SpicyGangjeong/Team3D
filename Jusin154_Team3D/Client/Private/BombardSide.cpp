@@ -50,7 +50,7 @@ HRESULT CBombardSide::Initialize(void* pArg)
 	SAFE_ADDREF(m_pWandTrail);
 	SAFE_ADDREF(m_pWandParticle);
 
-	m_fDuration = 2.f;
+	m_fDuration = 3.f;
 
 	m_Events.emplace(0.6f, [&]() {
 		m_isParticleEnd = true;

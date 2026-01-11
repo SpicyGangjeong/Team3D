@@ -730,6 +730,8 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
+			tagCollInfo.eCollisionType = ENUM_CLASS(PXOBJECT(pUserData->iSubKind));
+
 			switch (pUserData->eKind)
 			{
 			case PHYSX_KIND::BODY_DYNAMIC:
@@ -740,13 +742,6 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
 					m_bHitShield = true;
-					if (!pUserData->pOwner->Get_Visible()) {
-						if (pUserData->pOwner->Get_Owner() != nullptr)
-						{
-							m_bHitShield = false;
-							pUserData->pOwner->Get_Owner()->OnCollision(this, &tagCollInfo);
-						}
-					}
 				}
 				break;
 				}
@@ -757,13 +752,6 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
 					m_bHitShield = true;
-					if (!pUserData->pOwner->Get_Visible()) {
-						if (pUserData->pOwner->Get_Owner() != nullptr)
-						{
-							m_bHitShield = false;
-							pUserData->pOwner->Get_Owner()->OnCollision(this, &tagCollInfo);
-						}
-					}
 				}
 				break;
 				case PXOBJECT::RANROK_PROP:
