@@ -908,9 +908,6 @@
     <ClInclude Include="..\Public\Goblin_ProtegoHit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego\Goblin_ProtegoHit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Duelist_ProtegoHit.h">
-      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Prop.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
     </ClInclude>
@@ -922,6 +919,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_ProtegoHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

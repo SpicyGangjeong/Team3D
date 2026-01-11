@@ -438,7 +438,10 @@ CGameObject* CCamera_Cinematic::Clone(void* pArg, CGameObject* pOwner)
 void CCamera_Cinematic::Free()
 {
 	__super::Free();
-
+#ifdef _DEBUG
+	SAFE_RELEASE(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+#endif // _DEBUG
 	SAFE_RELEASE(m_pLookTargetPart);
 	SAFE_RELEASE(m_pFollowTargetPart);
 }

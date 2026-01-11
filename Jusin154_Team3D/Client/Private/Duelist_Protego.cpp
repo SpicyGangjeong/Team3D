@@ -62,8 +62,9 @@ void CDuelist_Protego::Priority_Update(_float fTimeDelta)
 
 void CDuelist_Protego::Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
+	if (m_bVisible == false) {
 		return;
+	}
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -99,6 +100,12 @@ void CDuelist_Protego::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
 	__super::Late_Update(fTimeDelta);
 
+}
+
+void CDuelist_Protego::Set_Visible(_bool bVisible)
+{
+	m_bVisible = true;
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), CURRENT_LEVEL);
 }
 
 HRESULT CDuelist_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
@@ -194,10 +201,12 @@ void CDuelist_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 		{
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
 			break;
 		}

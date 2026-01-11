@@ -102,6 +102,12 @@ void CGoblin_Protego::Late_Update(_float fTimeDelta)
 
 }
 
+void CGoblin_Protego::Set_Visible(_bool bVisible)
+{
+	m_bVisible = true;
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), CURRENT_LEVEL);
+}
+
 HRESULT CGoblin_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
@@ -193,14 +199,17 @@ void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 		{
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
 			break;
 		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
 			break;
 		}
@@ -211,6 +220,7 @@ void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 		if (pProps != nullptr)
 		{
 			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
 		}
 	}
