@@ -206,6 +206,8 @@
 #include "LeviosoSide.h"
 #include "DecendoSide.h"
 #include "NomalJapSide.h"
+#include "Stupefy.h"
+#include "StupefySide.h"
 
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
@@ -1977,6 +1979,14 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CBlink>(NEXT_LEVEL, CBlink::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(NEXT_LEVEL, CStupefy::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CStupefySide>(NEXT_LEVEL, CStupefySide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

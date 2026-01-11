@@ -32,6 +32,11 @@ HRESULT CEditEffect::Initialize(void* pArg)
 
 	m_bVisible = false;
 
+
+	XMStoreFloat4x4(&m_ScreenViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_OrthographicMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+
+
 	return S_OK;
 }
 
@@ -524,7 +529,7 @@ void CEditEffect::Describe_Entity()
 
 
 	GUI::Checkbox("NonSoftEffect", &m_EffectInfo.isNonSoftEffect);
-	
+	GUI::Checkbox("ScreenFX", &m_EffectInfo.isScreenFX);
 
 	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 

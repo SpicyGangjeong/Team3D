@@ -1848,7 +1848,7 @@ HRESULT CPlayer::Behavior_BlockExitCheck(_float fTimeDelta)
 		}
 
 		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY_SIDE, Get_PartObject<CWand>()); },
 			0.01f);
 
 
