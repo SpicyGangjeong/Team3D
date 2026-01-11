@@ -298,4 +298,18 @@
             <Surface>SRO</Surface>
         </Mesh>
    </SM_HM_Quid_StoneKit_A>
+    <SK_BRR_RouteMarker mesh="2">
+        <Mesh>
+            <Material>T_BRR_RouteBanner_D</Material>
+            <Material>T_BRR_RouteBanner_N</Material>
+            <Material>T_BRR_RouteBanner_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_BRR_RouteBanner_D</Material>
+            <Material>T_BRR_RouteBanner_N</Material>
+            <Material>T_BRR_RouteBanner_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SK_BRR_RouteMarker>
 </Instance>

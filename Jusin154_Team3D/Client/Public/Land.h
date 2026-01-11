@@ -9,7 +9,7 @@ class CShader;
 NS_END
 
 NS_BEGIN(Client)
-
+class CInstancedProp;
 class CLand final : public CGameObject
 {
 public:
@@ -32,6 +32,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 
+	void	Add_InstanceProp(CInstancedProp* pIntanceProp);
 private:
 	_float				m_fRaduis = {};
 	_float				m_fUsingSurfaceParams = {};
@@ -44,6 +45,7 @@ private:
 	CTexture*			m_pMROTextureCom = { nullptr };
 	CTexture*			m_pMaskTextureCom = { nullptr };
 
+	list<class CInstancedProp*>  m_InstanceProps = {};
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
