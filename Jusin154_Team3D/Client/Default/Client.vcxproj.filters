@@ -922,16 +922,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\StupefySide.h">
       <Filter>02.GameObjects\Effect\Effects\Stupefy\StupefySide</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Ranrok_ENUM.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\public\MapElement_Balloon.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Balloon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Parry.h">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h">
+      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1923,7 +1925,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Stupefy\StupefySide">
       <UniqueIdentifier>{b38bbd65-c266-4117-9a36-a0ec4a8377ca}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_Parry">
       <UniqueIdentifier>{b57b393b-0e6f-47ad-9301-46b8f725a452}</UniqueIdentifier>
     </Filter>
@@ -2799,13 +2801,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\StupefySide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Stupefy\StupefySide</Filter>
-	</ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
+    </ClCompile>
     <ClCompile Include="..\private\MapElement_Balloon.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Balloon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Parry.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp">
+      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

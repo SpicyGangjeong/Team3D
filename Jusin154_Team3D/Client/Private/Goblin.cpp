@@ -399,6 +399,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		{
 		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::DESCENDO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
@@ -406,6 +407,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		case ENUM_CLASS(SKILL_TYPE::JAP):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
 			m_fTumbleTimer = 0.f;
+			m_fHitTimer = 0.f; 
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
@@ -662,6 +664,8 @@ void CGoblin::Describe_Entity()
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("Goblin")) {
+		_bool OnGround = m_pCharacter_Controller->IsOnGround();
+		GUI::Checkbox("OnGround", &OnGround);
 		GUI::Checkbox("LookAt", &m_bLookAt);
 
 		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());

@@ -12,6 +12,7 @@ protected:
 	{
 		GROUND,
 		AIR_LEVIOSO,
+		DESCENDO,
 		STUN,
 		END
 	};

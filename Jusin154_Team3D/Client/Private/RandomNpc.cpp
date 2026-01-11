@@ -67,7 +67,8 @@ void CRandomNpc::Update(_float fTimeDelta)
 	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
 		return;
 	}
-	m_pFSM->Update_State(fTimeDelta);
+	BattleObserve_Anim();
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
@@ -319,7 +320,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	if (FAILED(__super::Ready_Components(&Desc))) {
+	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, pArg))) {
 		return E_FAIL;
 	}
 	 
@@ -348,6 +349,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHINEASBLACK"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
+		m_bBattleObserve_Npc = true;
 		break;
 	case 4:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_Kitchen_Female_Model");
@@ -360,6 +362,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("F_STUDENT"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
+		m_bBattleObserve_Npc = true;
 		break;
 	case 6:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_Elf_Model");
@@ -378,6 +381,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("GEORGEOSRIC"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
+		m_bBattleObserve_Npc = true;
 		break;
 	case 9:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_DinahHecat_Model");
@@ -390,6 +394,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MUDIWAONAI"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
+		m_bBattleObserve_Npc = true;
 		break;
 	}
 
@@ -435,6 +440,49 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CRandomNpc::BattleObserve_Anim()
+{
+	if (m_eNpcState == ENUM_CLASS(NPC_STATE::OBSERVE))
+	{
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+		_float fRandX = 0.f;
+		if (iRand == 0)
+		{
+			fRandX = m_pGameInstance->Real_Random_Float(1002.f, 1004.f);
+		}
+		else {
+			fRandX = m_pGameInstance->Real_Random_Float(1010.f, 1012.f);
+		} 
+
+		_float fRandY = m_pGameInstance->Real_Random_Float(1008.f, 1016.f);
+
+		m_pCharacter_Controller->Set_Position(XMVectorSet(fRandX, 2.f, fRandY, 1.f));
+
+		_vector vPos = Get_WorldPostion();
+		_vector vForward = XMVectorZero();
+		if (fRandX <= 1007.f) {
+			vForward = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+		}
+		else {
+			vForward = XMVectorSet(-1.f, 0.f, 0.f, 0.f);
+		}
+
+
+		m_pTransformCom->LookAt(vPos + vForward);
+
+		m_eNpcState = ENUM_CLASS(NPC_STATE::IDLE);
+	}
+
+	if (m_bBattleObserve_Npc && m_bBattle) {
+
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(14, 21);
+			m_pModelCom->Set_AnimationIndex(iRand, false,1.f,false,1.f,false);
+		}
+	}
 }
 
 CRandomNpc* CRandomNpc::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

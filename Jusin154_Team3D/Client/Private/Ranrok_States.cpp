@@ -999,7 +999,6 @@ void CRanrok::Behavior_LandExit()
 void CRanrok::Behavior_HitEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
-	m_pFSM->Enable_State(FSMSTATE::HIT);
 
 	m_bLookAt = false;
 
@@ -1029,7 +1028,6 @@ HRESULT CRanrok::Behavior_HitExitCheck(_float fTimeDelta)
 
 void CRanrok::Behavior_HitExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::HIT);
 	m_bLookAt = true;
 }
 
