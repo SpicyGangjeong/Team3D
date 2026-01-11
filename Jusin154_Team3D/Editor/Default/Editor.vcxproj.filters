@@ -784,6 +784,9 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit">
       <UniqueIdentifier>{b8e8e46c-ec9f-4a89-a970-c9de2ac3f521}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Balloon">
+      <UniqueIdentifier>{6c70f152-f512-4622-b6ef-27931092deed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1586,6 +1589,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Protego_Hit.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Balloon.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Balloon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2397,6 +2403,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Protego_Hit.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Balloon.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Balloon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

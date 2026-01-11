@@ -86,6 +86,11 @@ private:
 	HRESULT		Save_Decal(const _char* pFileName);
 
 	HRESULT		Save_RaceRing(const _char* pFileName);
+	HRESULT		Load_RaceRing(const _char* pFileName);
+
+	HRESULT		Save_Balloons(const _char* pFileName);
+	HRESULT		Load_Balloons(const _char* pFileName);
+
 	HRESULT     Load_DADA_INT();
 
 	HRESULT		Save_EffectParts(const _char* pFileName);
@@ -101,6 +106,7 @@ private:
 	void 		Update_Decal();
 	void 		Update_RaceRing();
 	void		Update_EffectParts();
+	void		Update_Balloon();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
 	void		Create_Elemnt(_wstring& strPrototypeTag);

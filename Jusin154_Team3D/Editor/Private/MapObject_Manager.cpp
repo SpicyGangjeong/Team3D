@@ -18,6 +18,7 @@
 #include "RaceRing.h"
 #include "InstancedProp_Light.h"
 #include "EditEffect.h"
+#include "MapElement_Balloon.h"
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext), m_pInfoInstance{CInfoInstance::GetInstance()}
@@ -91,17 +92,17 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 #pragma endregion
 
 #pragma region DUNGEON
-	if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
+	/*if (FAILED(Load_MapData("Dungeon_Map_Data", L"LAYER_BACKGOURN")))
 		return E_FAIL;
 	m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
-	m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");
+	m_pInfoInstance->Load_PointLights("Duengon_PointLight_Data");*/
 #pragma endregion
 
 #pragma region HOGWART
-	//if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
-	//	return E_FAIL;
-	//if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
-	//	return E_FAIL;
+	if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
+		return E_FAIL;
+	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region Light
@@ -124,37 +125,43 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//	->Set_State(STATE::POSITION, XMVectorSet(1000.f, 0.f, 1000.f, 1.f));
 #pragma endregion
 
-	
+#pragma region BROOM_RACE
+	if (FAILED(Load_RaceRing("RaceRing_Data")))
+		return E_FAIL;
+
+	if (FAILED(Load_Balloons("Ballon_Data")))
+		return E_FAIL;
+#pragma endregion
 
 #pragma region EFFECT_PART
-	if (FAILED(Load_EffectParts("Goo0_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo0")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Goo1_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo1")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Ranrok_Goo2_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo2")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Ranrok_Goo3_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo3")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Ranrok_Goo4_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo4")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Ranrok_Decal_15_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_15")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Rotate_Rock_Small_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Small")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Ranrok_Particle_Black_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Ranrok_Particle_Red_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Red")))
-		return E_FAIL;
-	//if (FAILED(Load_EffectParts("Ranrok_Decal_35_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_35")))
-		//return E_FAIL;
-	if (FAILED(Load_EffectParts("Rotate_Rock_Large1_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large1")))
-		return E_FAIL;
-	if (FAILED(Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
-		return E_FAIL;
+	//if (FAILED(Load_EffectParts("Goo0_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo0")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Goo1_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo1")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Ranrok_Goo2_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo2")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Ranrok_Goo3_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo3")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Ranrok_Goo4_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo4")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Ranrok_Decal_15_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_15")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Rotate_Rock_Small_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Small")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Ranrok_Particle_Black_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Ranrok_Particle_Red_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Red")))
+	//	return E_FAIL;
+	////if (FAILED(Load_EffectParts("Ranrok_Decal_35_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_35")))
+	//	//return E_FAIL;
+	//if (FAILED(Load_EffectParts("Rotate_Rock_Large1_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large1")))
+	//	return E_FAIL;
+	//if (FAILED(Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
+	//	return E_FAIL;
 
 
-	if (FAILED(Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
-		return E_FAIL;
+	//if (FAILED(Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
+	//	return E_FAIL;
 	
 #pragma endregion
 
@@ -271,9 +278,11 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	//Update_LightSpawer();
 	//Update_Decal();
 	//Update_RaceRing();
-	Update_EffectParts();
+	//Update_Balloon();
+	//Update_EffectParts();
+	//Update_Balloon();
 
-	//Update_Unified();
+	Update_Unified();
 
 	if (ADD_TYPE::CONTAINER == m_eType)
 	{
@@ -2052,6 +2061,144 @@ HRESULT CMapObject_Manager::Save_RaceRing(const _char* pFileName)
 	return S_OK;
 }
 
+HRESULT CMapObject_Manager::Load_RaceRing(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/RaceRing/RaceRing_Data.xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Ring");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CRaceRing::RACERING_DESC Desc = {};
+
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Scale");
+		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Scale = Object->FirstChildElement("Rotation");
+		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_RaceRing"), &Desc)))
+			return E_FAIL;
+	}
+
+
+	return S_OK;
+}
+
+HRESULT CMapObject_Manager::Save_Balloons(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Balloon"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/Balloon/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("Balloon");
+	doc.InsertEndChild(root);
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CMapElement_Balloon* pRaceRing = dynamic_cast<CMapElement_Balloon*>(pGamObject);
+
+			if (nullptr == pRaceRing)
+				return E_FAIL;
+
+			if (FAILED(pRaceRing->Save_XML(doc, root)))
+				return E_FAIL;
+		}
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save CMapElement_Balloon");
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapObject_Manager::Load_Balloons(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Balloon/Ballon_Data.xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Balloon");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Balloon::BALLOON_DESC Desc = {};
+
+		auto* Value = Object->FirstChildElement("Value");
+		Value->QueryBoolAttribute("isFloating", &Desc.isFloating);
+		Value->QueryUnsignedAttribute("DiffuseIndex", &Desc.iDiffuseIndex);
+
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Scale");
+		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Scale = Object->FirstChildElement("Rotation");
+		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Balloon>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Balloon"), &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CMapObject_Manager::Load_DADA_INT()
 {
 	if (FAILED(Load_MapData("DATA_INT_Data")))
@@ -2529,7 +2676,7 @@ void CMapObject_Manager::Update_RaceRing()
 	}
 	if (GUI::Button("Load Ring"))
 	{
-		//m_pInfoInstance->Load_Decal("Duengon_Decal_Data");
+		Load_RaceRing("RaceRing_Data");
 	}
 	if (GUI::Button("Add Ring"))
 	{
@@ -2590,6 +2737,42 @@ void CMapObject_Manager::Update_EffectParts()
 		{
 			if (m_iSelectedIndex == iIndex)
 				dynamic_cast<CEditEffect*>(pObject)->Control_Transform();
+
+			++iIndex;
+		}
+	}
+
+	GUI::End();
+}
+
+void CMapObject_Manager::Update_Balloon()
+{
+	GUI::Begin("Ballon Editor");
+	if (GUI::Button("Save Ballon"))
+	{
+		Save_Balloons("Ballon_Data");
+	}
+	if (GUI::Button("Load Ballon"))
+	{
+		Load_Balloons("Ballon_Data");
+	}
+	if (GUI::Button("Add Ballon"))
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Balloon>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Balloon"))))
+		{
+		}
+	}
+
+	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Balloon"));
+
+	if (nullptr != pLayer)
+	{
+		_uint iIndex = {};
+		for (auto& pObject : *pLayer->Get_Objects())
+		{
+			if (m_iSelectedIndex == iIndex)
+				pObject->Describe_Entity();
 
 			++iIndex;
 		}

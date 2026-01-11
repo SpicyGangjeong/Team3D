@@ -200,6 +200,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\InstancedProp_Light.h" />
     <ClInclude Include="..\public\Interaction_Panel.h" />
     <ClInclude Include="..\public\LightSpawner.h" />
+    <ClInclude Include="..\public\MapElement_Balloon.h" />
     <ClInclude Include="..\public\MapElement_Chest.h" />
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
@@ -484,6 +485,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Interaction_Panel.cpp" />
     <ClCompile Include="..\private\LightSpawner.cpp" />
     <ClCompile Include="..\Private\Loader_ObjectViewer.cpp" />
+    <ClCompile Include="..\private\MapElement_Balloon.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
