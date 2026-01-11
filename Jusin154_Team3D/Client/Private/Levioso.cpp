@@ -216,9 +216,10 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 
 	CCharacter_Controller* pHitCCT = CollisionDesc.pObject->Get_Component<CCharacter_Controller>();
 
+
+
 	if (pHitCCT != nullptr)
 	{
-
 		CEffectParts* pLevioso_Spline = Get_PartObject<CEffectParts>("Levioso_Spline");
 		CEffectParts* pLevioso_Hit0 = Get_PartObject<CEffectParts>("Levioso_Hit0");
 
@@ -229,6 +230,7 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 		pLevioso_Spline->Set_Visible(true);
 
 		/* 바람과 파티클은 풋포지션 */
+
 
 		_vector vFootPos = pHitCCT->Get_FootPosition();
 
@@ -241,6 +243,31 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 		pLevioso_Rotate0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
 		pLevioso_Rotate1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
 		pLevioso_Bottom_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+
+
+		_float3 vScale = _float3(1.f, 1.f, 1.f);
+		pLevioso_Tornado->Get_Component<CTransform>()->Set_Scale(vScale);
+		pLevioso_Rotate0->Get_Component<CTransform>()->Set_Scale(vScale);
+		pLevioso_Rotate1->Get_Component<CTransform>()->Set_Scale(vScale);
+		pLevioso_Bottom_PT->Get_Component<CTransform>()->Set_Scale(vScale);
+
+		switch (static_cast<PXOBJECT>(CollisionDesc.eCollisionType))
+		{
+		case PXOBJECT::GOBLIN_MAGICIAN:
+		case PXOBJECT::GOBLIN_ASSASSIN:
+		case PXOBJECT::GOBLIN_WARRIOR:
+		{
+			_float3 vScale = _float3(0.7f, 0.7f, 0.7f);
+			pLevioso_Tornado->Get_Component<CTransform>()->Set_Scale(vScale);
+			pLevioso_Rotate0->Get_Component<CTransform>()->Set_Scale(vScale);
+			pLevioso_Rotate1->Get_Component<CTransform>()->Set_Scale(vScale);
+			pLevioso_Bottom_PT->Get_Component<CTransform>()->Set_Scale(vScale);
+			break;
+		}
+
+		default:
+			break;
+		}
 
 		pLevioso_Tornado->Set_Visible(true);
 		pLevioso_Rotate0->Set_Visible(true);
