@@ -909,6 +909,7 @@ HRESULT CPlayer::Behavior_DodgeExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -1039,8 +1040,20 @@ void CPlayer::Behavior_CombatEnter()
 
 	if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
 	{
-		m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), -1);
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+		pairAnimInfo = m_Animation[STATEANIM::LUMOS_STOP];
+		m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), pairAnimInfo.first, pairAnimInfo.second);
+		if (SUCCEEDED(InputMove()))
+		{
+			m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return;
+		}
+		else {
+			m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return;
+		}
+
 	}
 
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell()))
@@ -1794,7 +1807,7 @@ void CPlayer::Behavior_BlockEnter()
 		}
 		
 
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, true, false, false);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f);
 	}
 }
 
@@ -1882,34 +1895,34 @@ void CPlayer::Behavior_ParryEnter()
 				break;
 			}
 
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, false, false);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
 		}
 		else if (Degree <= 60.f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, false, false);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
 		}
 		else if (Degree <= 135.f)
 		{
 			if (Cross < 0.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::PARRY2];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false, false, false);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false);
 			}
 			else {
 				pairAnimInfo = m_Animation[STATEANIM::PARRY3];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false, false, false);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false);
 				fEventRatio = 0.3f;
 			}
 		}
 		else {
 			pairAnimInfo = m_Animation[STATEANIM::PARRY_180];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false, false, false);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false);
 		}
 	}
 	else {
 		pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false, false, false);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false);
 	}
 
 	Add_Event(pairAnimInfo.first,
