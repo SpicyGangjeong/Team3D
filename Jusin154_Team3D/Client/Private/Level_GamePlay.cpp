@@ -122,6 +122,15 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	if (FAILED(Ready_Layer_Duelist())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_LayeR_Npc())) {
+		return E_FAIL;
+	}
+
+
 	if (FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
 
@@ -916,78 +925,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	}
-
-	_bool isLoad_NPC = { true };
-	_bool isLoad_RandomNPC = { true };
-#ifdef _DEBUG
-#ifdef gimch
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
-#endif // gimch
-#ifdef 진우
-	isLoad_RandomNPC = true;
-	isLoad_NPC = true;
-#endif // 
-#ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
-#endif // 
-#ifdef 나
-	isLoad_RandomNPC = true;
-#endif // 
-#ifdef Bin
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
-#endif // Bin
-#endif // _DEBUG
-
-	if (true == isLoad_NPC)
-	{
-		{
-			CNPC_Ollivander::NPCDESC NPCDesc{};
-			NPCDesc.vPos = _float4(40.f, 4.f, 68.9f, 1.f);
-			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
-				return E_FAIL;
-			}
-		}
-		{
-			CNPC_EleazarFig::NPCDESC NPCDesc{};
-			NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
-			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
-				return E_FAIL;
-			}
-		}
-	}
-
-	if (true == isLoad_RandomNPC)
-	{
-		for (_uint i = 0; i < 11; i++)
-		{
-			{
-				CRandomNpc::NPCDESC NPCDesc{};
-				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
-				_float Z = m_pGameInstance->Real_Random_Float(20.f, 29.f);
-				NPCDesc.vPos = _float4(X, 1.f, Z, 1.f);
-				NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-				NPCDesc.iIndex = i;
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRandomNpc>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &NPCDesc))) {
-					return E_FAIL;
-				}
-			}
-		}
-
-		
-
-		CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-		DuelistDesc.vPos = _float4(1007.f, 6.f, 1016.f, 1.f);
-		DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &DuelistDesc))) {
-			return E_FAIL;
-		}
-	}
-
 	return S_OK;
 }
 
@@ -1112,6 +1049,84 @@ HRESULT CLevel_GamePlay::Reday_Layer_EffectPool()
 	//플레이어보다 먼저 생성해야함!
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, LAYER_EFFECTPOOL))) {
 		return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Duelist()
+{
+
+	CHuman_Duelist::DUELISTDESC DuelistDesc = {};
+	DuelistDesc.vPos = _float4(1007.f, 6.f, 1016.f, 1.f);
+	DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, LAYER_DUELIST, &DuelistDesc))) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_LayeR_Npc()
+{
+	_bool isLoad_NPC = { true };
+	_bool isLoad_RandomNPC = { true };
+#ifdef _DEBUG
+#ifdef gimch
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
+#endif // gimch
+#ifdef 진우
+	isLoad_RandomNPC = true;
+	isLoad_NPC = true;
+#endif // 
+#ifdef 기무리
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
+#endif // 
+#ifdef 나
+	isLoad_RandomNPC = true;
+#endif // 
+#ifdef Bin
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
+#endif // Bin
+#endif // _DEBUG
+
+	if (true == isLoad_NPC)
+	{
+		{
+			CNPC_Ollivander::NPCDESC NPCDesc{};
+			NPCDesc.vPos = _float4(40.f, 4.f, 68.9f, 1.f);
+			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &NPCDesc))) {
+				return E_FAIL;
+			}
+		}
+		{
+			CNPC_EleazarFig::NPCDESC NPCDesc{};
+			NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
+			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &NPCDesc))) {
+				return E_FAIL;
+			}
+		}
+	}
+
+	if (true == isLoad_RandomNPC)
+	{
+		for (_uint i = 0; i < 11; i++)
+		{
+			{
+				CRandomNpc::NPCDESC NPCDesc{};
+				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
+				_float Z = m_pGameInstance->Real_Random_Float(20.f, 29.f);
+				NPCDesc.vPos = _float4(X, 1.f, Z, 1.f);
+				NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+				NPCDesc.iIndex = i;
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRandomNpc>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &NPCDesc))) {
+					return E_FAIL;
+				}
+			}
+		}
 	}
 	return S_OK;
 }
