@@ -316,8 +316,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
@@ -528,7 +528,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogsmeade()
 	CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info", LAYER_HOGSMEADE);
 
 	/* Chests */
-	CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info", LAYER_HOGSMEADE);
+	CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info", LAYER_HIDDEN);
 
 	/* Hogsmeade Unified*/
 	CUnified::UNIFIED_DESC Desc = {};
@@ -1104,8 +1104,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	_bool isLoad_RandomNPC = { true };
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // gimch
 #ifdef 진우
 	isLoad_RandomNPC = true;

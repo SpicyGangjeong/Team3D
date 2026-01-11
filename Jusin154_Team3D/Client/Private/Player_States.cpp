@@ -1063,6 +1063,7 @@ void CPlayer::Behavior_CombatEnter()
 			pairAnimInfo = m_Animation[STATEANIM::SKILL];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
+			Find_HiddenObjects();
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Q)) {
 
