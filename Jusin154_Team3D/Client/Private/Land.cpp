@@ -2,6 +2,7 @@
 #include "Land.h"
 
 #include "GameInstance.h"
+#include "InstancedProp.h"
 
 CLand::CLand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
@@ -16,16 +17,24 @@ CLand::CLand(const CLand& rhs)
 
 void CLand::Priority_Update(_float fTimeDelta)
 {
+	for (auto& pInstanceProp : m_InstanceProps)
+		pInstanceProp->Priority_Update(fTimeDelta);
 }
 
 void CLand::Update(_float fTimeDelta)
 {
+	for (auto& pInstanceProp : m_InstanceProps)
+		pInstanceProp->Update(fTimeDelta);
 }
 
 void CLand::Late_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_fRaduis))
+	{
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		for (auto& pInstanceProp : m_InstanceProps)
+			pInstanceProp->Late_Update(fTimeDelta);
+	}
 }
 
 HRESULT CLand::Render()
@@ -33,9 +42,6 @@ HRESULT CLand::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-
-	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom)))
-	//	return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::LAND)))) {
 		return E_FAIL;
@@ -68,6 +74,11 @@ HRESULT CLand::Render_Shadow(SHADOW eType)
 	}
 
 	return S_OK;
+}
+
+void CLand::Add_InstanceProp(CInstancedProp* pIntanceProp)
+{
+	m_InstanceProps.push_back(pIntanceProp);
 }
 
 HRESULT CLand::Initialize_Prototype()
@@ -207,6 +218,9 @@ void CLand::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
+
+	for (auto& pInstanceProp : m_InstanceProps)
+		SAFE_RELEASE(pInstanceProp);
 }
 #ifdef _DEBUG
 void CLand::Describe_Entity()

@@ -64,13 +64,13 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
+		return E_FAIL;
+	}
 
-	//if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+		return E_FAIL;
+	}
 
 	//if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
 	//	return E_FAIL;
@@ -92,8 +92,8 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
-	//m_pGameInstance->Setting_Volumetirc(0.f, 0.003f, 0.56f, 1.f, 0.031f);
+	//m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+	m_pGameInstance->Setting_Volumetirc(0.f, 0.003f, 0.56f, 1.f, 0.031f);
 
 	return S_OK;
 }
@@ -148,15 +148,15 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	CTerrain::TERRAIN_DESC Desc = {};
 
 	///* Hogsmeade */
-	//Desc.isEdit = false;
-	//Desc.iAlphaSizeX = 2048; 
-	//Desc.iAlphaSizeY = 2048;
-	//Desc.vPosition = _float3(-194, 18.5f, -153.f);
-	//Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
-	//Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
-	//Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-	//	return E_FAIL;
+	Desc.isEdit = false;
+	Desc.iAlphaSizeX = 2048; 
+	Desc.iAlphaSizeY = 2048;
+	Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
+	Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
 
 	/* Hogwart */
 	Desc.isEdit = false;
@@ -374,6 +374,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	/* Oak_Tree */
 	Desc.bEditMode = false;
 	Desc.isShake = true;
+	Desc.iShaderPassIndex = 0;
 	Desc.vRadius = _float2(0.015f, 0.03f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
@@ -630,6 +631,16 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StoneKit_A_HW.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	Desc.bEditMode = true;
+	Desc.isShake = false;
+	Desc.iShaderPassIndex = 4;
+	Desc.vRadius = _float2(0.f, 0.f);
+	Desc.vSpeed = _float2(0.f, 0.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SK_BRR_RouteMarker";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/RouteMarker.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 

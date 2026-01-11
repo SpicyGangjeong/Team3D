@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Balloon>
+    <Object Type="0">
+        <Position x="-595.79913" y="1.7381403" z="-386.89825"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="true" DiffuseIndex="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-399.21182" y="16.988613" z="-435.05957"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="true" DiffuseIndex="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-355.6976" y="20.500385" z="-427.71918"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="true" DiffuseIndex="2"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-220.76079" y="4.8693914" z="-440.48648"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="true" DiffuseIndex="3"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-131.2449" y="-7.465642" z="-436.41437"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="true" DiffuseIndex="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-83.475883" y="17.231688" z="-598.29675"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="false" DiffuseIndex="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-101.88627" y="13.544448" z="-625.04291"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="false" DiffuseIndex="2"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-297.40833" y="36.911461" z="-581.37213"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="true" DiffuseIndex="3"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-493.08221" y="5.0396428" z="-485.26929"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="true" DiffuseIndex="0"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-501.56476" y="0.36256272" z="-498.14041"/>
+        <Scale x="2" y="2" z="2"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Value isFloating="true" DiffuseIndex="3"/>
+    </Object>
+</Balloon>

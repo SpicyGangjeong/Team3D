@@ -19,6 +19,7 @@ public:
 		_bool		bEditMode{};
 		_bool		isAddCollider{};
 		_bool		isShake;
+		_uint		iShaderPassIndex{};
 		_float2		vRadius;
 		_float2		vSpeed;
 		_wstring 	strPrototypeTag;
@@ -41,6 +42,7 @@ private:
 
 	_uint						m_iInstanceIndex = {};
 	_uint						m_iNumInstanceIndex = {};
+	_uint						m_iShaderPassIndex = {};
 
 	CVIBuffer_Model_Instance*	m_pVIBufferInstanceCom = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
