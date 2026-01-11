@@ -208,9 +208,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 		m_pTransformCom->LookAt_Horizontal_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
 	}
 
-	if (m_pGameInstance->Key_Up(DIK_J)) {
-		m_bDuel_ZOnlyMove = true;
-	}
 
 
 	Player_PixRot();
@@ -1129,6 +1126,7 @@ void CPlayer::Describe_Entity()
 		auto dotLR = XMVectorGetX(XMVector3Dot(vLook, vRight));
 
 		GUI::Text("dot RU %.4f | UL %.4f | LR %.4f\n", dotRU, dotUL, dotLR);
+
 
 
 		m_pLightCom->Describe_Entity();
