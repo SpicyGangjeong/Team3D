@@ -108,8 +108,7 @@ void CDialogue_Font::Update(_float fTimeDelta)
 						m_fTime = 0.5f;
 						NextText();
 						break;
-					case
-					ENUM_CLASS(NPCTEXTTYPE::CHOICE):
+					case ENUM_CLASS(NPCTEXTTYPE::CHOICE):
 						m_fTime = 0.5f;
 						CHoice();
 						break;
@@ -334,6 +333,7 @@ void CDialogue_Font::ReSet()
 		m_DialoguInfo.push_back((*it));
 		it = m_pCurrentDialogue.erase(it);
 	}
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &m_bChoiceText);
 }
 
 void CDialogue_Font::NextText()

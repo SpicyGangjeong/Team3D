@@ -784,6 +784,9 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit">
       <UniqueIdentifier>{b8e8e46c-ec9f-4a89-a970-c9de2ac3f521}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
+      <UniqueIdentifier>{bde6e952-c6ee-4136-8559-99392c01645e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1586,6 +1589,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Protego_Hit.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_TargetGate2D.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2397,6 +2403,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Protego_Hit.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_TargetGate2D.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

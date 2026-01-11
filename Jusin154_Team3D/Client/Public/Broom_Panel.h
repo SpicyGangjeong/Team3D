@@ -37,6 +37,7 @@ private:
 	void Current_Ring();
 	void Race_End();
 	void Race_Results();
+	void Set_TargetPosition(_fvector Target);
 
 public:
 	void Set_BroomTimer();
@@ -54,12 +55,16 @@ private:
 	CGameObject*	m_pBroom_Record = { nullptr };
 	CGameObject*	m_pBroom_Exit = { nullptr };
 	CGameObject*	m_pBroom_Trophy = { nullptr };
+	CGameObject*	m_pBroom_TargetGate2D = { nullptr };
 
 	_float			m_fRaceTime{};
 
+	_bool			m_bRaceBattle = { false };
 	_bool			m_bDinish = { false };
 	_bool			m_bResults = { false };
-
+	_bool			m_bGateUI = { false };
+	_float2			m_fUIScreenPos{};
+	_float3			m_fTargetPos{};
 public:
 	static CBroom_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

@@ -135,6 +135,7 @@
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
 #include "broom_Trophy.h"
+#include "Broom_TargetGate2D.h"
 
 #include "Ride_Panel.h"
 #include "Ride_Info_Key.h"
@@ -1237,6 +1238,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_Trophy>(g_iStaticLevel, CBroom_Trophy::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_TargetGate2D>(g_iStaticLevel, CBroom_TargetGate2D::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

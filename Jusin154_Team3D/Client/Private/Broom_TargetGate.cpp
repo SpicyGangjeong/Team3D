@@ -49,7 +49,7 @@ void CBroom_TargetGate::Update(_float fTimeDelta)
 	if (m_bVisible != true)
 		return;
 
-	m_fSize = _float3(45.f, 45.f, 1.f);
+	m_fSize = _float3(70.f, 70.f, 1.f);
 	m_vPlayerPos = m_pInfoInstance->Get_PalyerPos();
 
 	if (m_vActive == true)

@@ -8,6 +8,7 @@
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
 #include "Broom_Trophy.h"
+#include "Broom_TargetGate2D.h"
 #include "InfoInstance.h"
 
 CBroom_Panel::CBroom_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -55,6 +56,7 @@ HRESULT CBroom_Panel::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("Race_Count"), [this](void* p) {this->Race_Count(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Race_Start"), [this](void* p) {this->Race_Start(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("RaceEnd"), [this](void* p) {this->Race_End(); });
+	m_pInfoInstance->Add_Event(TEXT("BroomTargetGate"), [this](void* p) {this->Set_TargetPosition(*reinterpret_cast<_vector*>(p)); });
 
 	Visible(false);
 	ElementAllVisible(false);
@@ -96,6 +98,18 @@ void CBroom_Panel::Update(_float fTimeDelta)
 			m_bDinish = false;
 			m_bResults = false;
 			ElementAllVisible(false);
+		}
+	}
+
+	
+	if (m_bRaceBattle == true)
+	{
+		_bool Screen = World_to_ScreenUI(m_fTargetPos, m_fUIScreenPos, 130.f);
+		static_cast<CBroom_TargetGate2D*>(m_pBroom_TargetGate2D)->Visible(Screen);
+
+		if (Screen == true)
+		{
+			static_cast<CBroom_TargetGate2D*>(m_pBroom_TargetGate2D)->Move(m_fUIScreenPos.x, m_fUIScreenPos.y);
 		}
 	}
 
@@ -184,6 +198,12 @@ HRESULT CBroom_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Broom_Trophy"), m_pBroom_Trophy);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_TargetGate2D>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_TargetGate2D**>(&m_pBroom_TargetGate2D))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_TargetGate2D"), m_pBroom_TargetGate2D);
+
 	return S_OK;
 }
 
@@ -212,6 +232,8 @@ void CBroom_Panel::Race_Start(_int iRing)
 	static_cast<CBroom_Flag*>(m_pBroom_Flag)->Set_Hover(true);
 	static_cast<CBroom_Scoreboard*>(m_pBroom_Scoreboard)->Visible(true);
 	static_cast<CBroom_Scoreboard*>(m_pBroom_Scoreboard)->Set_MaxRing(iRing);
+	static_cast<CBroom_TargetGate2D*>(m_pBroom_TargetGate2D)->Visible(true);
+	m_bRaceBattle = true;
 }
 
 void CBroom_Panel::Current_Ring()
@@ -226,6 +248,7 @@ void CBroom_Panel::Race_End()
 	static_cast<CBroom_Finish*>(m_pBroom_Finish)->Finish(m_fRaceTime);
 	static_cast<CBroom_Record*>(m_pBroom_Record)->Finish(m_fRaceTime);
 	m_bDinish = true;
+	m_bRaceBattle = false;
 }
 
 void CBroom_Panel::Race_Results()
@@ -236,6 +259,11 @@ void CBroom_Panel::Race_Results()
 	static_cast<CBroom_Record*>(m_pBroom_Record)->Rece_Results();
 	static_cast<CBroom_Exit*>(m_pBroom_Exit)->Rece_Results();
 	static_cast<CBroom_Trophy*>(m_pBroom_Trophy)->Score(static_cast<CBroom_Record*>(m_pBroom_Record)->NewScore());
+}
+
+void CBroom_Panel::Set_TargetPosition(_fvector Target)
+{
+	XMStoreFloat3(&m_fTargetPos, Target);
 }
 
 void CBroom_Panel::Set_BroomTimer()

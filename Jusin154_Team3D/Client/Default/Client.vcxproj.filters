@@ -924,6 +924,9 @@
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h" />
+    <ClInclude Include="..\Public\Broom_TargetGate2D.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1909,6 +1912,9 @@
     <Filter Include="04.Mechanic\State\State_Combat\State_Block">
       <UniqueIdentifier>{c0fdb122-503b-47f0-a544-90d153464c9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
+      <UniqueIdentifier>{4a11eb4b-127e-41f2-8456-cae963c94a4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2780,6 +2786,9 @@
       <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp" />
+    <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Goblin_States.cpp">

@@ -44,43 +44,43 @@ void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
-		switch (m_eRaceState)
+	switch (m_eRaceState)
+	{
+	case ENUM_CLASS(RACE_STATE::COUNTDOWN):
+		Update_Countdown(fTimeDelta);
+		break;
+	case ENUM_CLASS(RACE_STATE::RACING):
+		Check_RingPassed();
+		break;
+	case ENUM_CLASS(RACE_STATE::FINISH):
+		break;
+	case ENUM_CLASS(RACE_STATE::END):
+	{
+		if (m_bCurrentRace == true)
 		{
-		case ENUM_CLASS(RACE_STATE::COUNTDOWN):
-			Update_Countdown(fTimeDelta);
-			break;
-		case ENUM_CLASS(RACE_STATE::RACING):
-			Check_RingPassed();
-			break;
-		case ENUM_CLASS(RACE_STATE::FINISH):
-			break;
-		case ENUM_CLASS(RACE_STATE::END):
-		{
-			if (m_bCurrentRace == true)
+			if (m_pGameInstance->Key_Down(DIK_ESCAPE))
 			{
-				if (m_pGameInstance->Key_Down(DIK_ESCAPE))
-				{
-					m_bRaceEnd = true;
-					_float Alpha = 2.f;
-					m_pInfoInstance->Event_CallBack(TEXT("UIFadeIn"), &Alpha);
-				}
-
-				for (auto& racer : m_Racers)
-				{
-					if (racer.pAI)
-					{
-						racer.pAI->Get_Broom()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
-					}
-					if (racer.pRacer)
-					{
-
-					}
-				}
+				m_bRaceEnd = true;
+				_float Alpha = 2.f;
+				m_pInfoInstance->Event_CallBack(TEXT("UIFadeIn"), &Alpha);
 			}
 
+			for (auto& racer : m_Racers)
+			{
+				if (racer.pAI)
+				{
+					racer.pAI->Get_Broom()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+				}
+				if (racer.pRacer)
+				{
+
+				}
+			}
 		}
-		break;
-		}
+
+	}
+	break;
+	}
 
 
 }
@@ -122,7 +122,7 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_bRaceEnd) 
+	if (m_bRaceEnd)
 	{
 		m_fDelay += fTimeDelta;
 		for (auto& racer : m_Racers) {
@@ -350,8 +350,6 @@ void CBroomRaceManager::Finish()
 
 void CBroomRaceManager::RaceReady()
 {
-	//if (GUI::Button("Race Start"))
-//{
 	m_bCurrentRace = true;
 	m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
 	const _float SPAWN_DISTANCE = 30.f;
@@ -413,15 +411,6 @@ void CBroomRaceManager::RaceReady()
 	}
 
 	m_bRaceReady = true;
-	//}
-	//if (m_eRaceState == ENUM_CLASS(RACE_STATE::READY))
-	//{
-	//	/*if (GUI::Button("Countdown"))
-	//	{*/
-	//	m_pInfoInstance->Event_CallBack(TEXT("Ready_Race"));
-	//	m_eRaceState = ENUM_CLASS(RACE_STATE::COUNTDOWN);
-	//	//}
-	//}
 }
 
 void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
@@ -491,32 +480,31 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 		return S_OK;
 	}
 
-	//for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
-	//{
-	auto* Object = root->FirstChildElement("Object");
-	CRaceRing::RACERING_DESC Desc = {};
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CRaceRing::RACERING_DESC Desc = {};
 
-	Desc.pBroomRaceManager = this;
+		Desc.pBroomRaceManager = this;
 
-	/* Transform */
-	auto* Rotation = Object->FirstChildElement("Scale");
-	Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
-	Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
-	Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Scale");
+		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
 
-	auto* Scale = Object->FirstChildElement("Rotation");
-	Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
-	Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
-	Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+		auto* Scale = Object->FirstChildElement("Rotation");
+		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
 
-	auto* Position = Object->FirstChildElement("Position");
-	Position->QueryFloatAttribute("x", &Desc.vPosition.x);
-	Position->QueryFloatAttribute("y", &Desc.vPosition.y);
-	Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
-		return E_FAIL;
-	//}
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
+			return E_FAIL;
+	}
 
 
 	return S_OK;

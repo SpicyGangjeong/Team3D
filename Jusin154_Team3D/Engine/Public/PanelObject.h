@@ -42,6 +42,12 @@ protected:
 	virtual _bool Chack_Visible() override;
 
 	virtual _bool Chack_Element(_float2 Position, _float2 Target, _float Scale, _float TargetScale);
+
+	_bool	World_Screen(_float3 fWorld_Pos, _float2& fScreenPos, _float& fDepth);
+	_bool	Screen(_float2& fWorld_Pos, _float Winx, _float Winy);
+	_float2 Get_EdgePosition(_float2 fWorld_Pos, _float Winx, _float Winy, _float OffSetY);
+	_bool	World_to_ScreenUI(_float3 fWorld_Pos, _float2& fScreenPos, _float OffSetY);
+
 protected:
 	vector<class CGameObject*>			m_Elements;				// 패널이 엘리먼츠를 관리하기 위해 만듬
 	vector<wstring>						m_ElementName;			// 엘리멘트들의 이름을 전해주기 위해서
@@ -51,6 +57,7 @@ protected:
 
 	_int								m_iElements_Count{};	// 전체 엘리멘트의 갯수
 
+	_bool						m_bShowOffScreenUI = { false };
 private:
 	virtual class CGameObject* Find_Element(const wstring& Name);
 

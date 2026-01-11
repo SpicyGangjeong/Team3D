@@ -42,6 +42,7 @@ public:
 	void			UpdateGrapInteractive(_float fTimeDelta);
 	void			Update_CameraShake(_float fTimeDelta);
 	HRESULT			Update_RaycastElements();
+	void			Set_Interaction(_bool bInteraction);
 #ifdef _DEBUG
 	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -58,6 +59,7 @@ private:
 	_bool m_bCameraShake = { false };
 
 	_bool m_bNpcInteraction = { false };
+	_bool m_bCurrentInteraction = { false };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };

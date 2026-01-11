@@ -117,6 +117,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("NpcInteraction"), [this](void* p) {this->Set_Interaction(*reinterpret_cast<_bool*>(p)); });
 
 	m_bAI = false;
 
@@ -168,6 +169,7 @@ void CPlayer::Update(_float fTimeDelta)
 	{
 		if (m_bNpcInteraction == true)
 		{
+			m_bCurrentInteraction = true;
 			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bNpcInteraction);
 		}
 	}
@@ -367,7 +369,7 @@ HRESULT CPlayer::Update_RaycastElements()
 
 		else
 		{
-			if (m_pCurrentNpcInteraction)
+			if (m_pCurrentNpcInteraction && !m_bCurrentInteraction)
 			{
 				m_bNpcInteraction = false;
 				m_pCurrentNpcInteraction = nullptr;
@@ -378,7 +380,7 @@ HRESULT CPlayer::Update_RaycastElements()
 
 	else
 	{
-		if (m_pCurrentNpcInteraction)
+		if (m_pCurrentNpcInteraction && !m_bCurrentInteraction)
 		{
 			m_bNpcInteraction = false;
 			m_pCurrentNpcInteraction = nullptr;
@@ -386,6 +388,11 @@ HRESULT CPlayer::Update_RaycastElements()
 		}
 	}
 	return S_OK;
+}
+
+void CPlayer::Set_Interaction(_bool bInteraction)
+{
+	m_bCurrentInteraction = bInteraction;
 }
 
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
