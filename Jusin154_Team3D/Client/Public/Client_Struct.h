@@ -76,6 +76,13 @@ typedef struct tagSpellInfo
 		_int			iTextID{};
 	}NPCINTERACTIONINFO;
 
+	typedef struct tegBoxInteractionInfo
+	{
+		CGameObject* pOwner = { nullptr };
+		_wstring		pName;
+		_float4			fPosition{};
+	}BOXINTERACTIONINFO;
+
 	typedef struct Choice
 	{
 		_int iChoice{};

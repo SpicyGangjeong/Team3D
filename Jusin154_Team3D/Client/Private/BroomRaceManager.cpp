@@ -368,7 +368,7 @@ void CBroomRaceManager::RaceReady()
 	Instance_Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SK_BRR_RouteMarker";
 	Instance_Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/RouteMarker.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Instance_Desc))) {
-		return; 
+		return;
 	}
 
 	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_RACERAI);
@@ -380,7 +380,7 @@ void CBroomRaceManager::RaceReady()
 			dynamic_cast<CBroomRacerAI*>(pUnified)->Set_RaceInfo();
 		}
 	}
-	
+
 	m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Set_RaceInfo();
 
 	for (auto& racer : m_Racers)
@@ -530,28 +530,6 @@ HRESULT CBroomRaceManager::Load_Balloons()
 
 	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
 		return E_FAIL;
-
-		Desc.pBroomRaceManager = this;
-
-		/* Transform */
-		auto* Rotation = Object->FirstChildElement("Scale");
-		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
-		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
-		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
-
-		auto* Scale = Object->FirstChildElement("Rotation");
-		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
-		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
-		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
-
-		auto* Position = Object->FirstChildElement("Position");
-		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
-		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
-		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
-
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
-			return E_FAIL;
-	}
 
 	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Balloon");
 

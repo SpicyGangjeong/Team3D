@@ -29,9 +29,10 @@ private:
 	_float4 ComputeUV(_tchar Alphabat);
 	void Set_ImageSizePosition();
 	void ActiveOff();
+	void BoxOff();
 public:
 	void NpcInfo(void* pArg);
-
+	void BoxInfo(void* pArg);
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
@@ -63,7 +64,11 @@ private:
 	_float m_fFontSize{};
 	_bool	m_bActive{};
 
+	_bool	m_bBoxActive = {false};
+
 	NPCINTERACTIONINFO m_pInfo{};
+	BOXINTERACTIONINFO m_pBoxInfo{};
+
 public:
 	static CNPCInteraction* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
