@@ -171,6 +171,9 @@ void CPlayer::Update(_float fTimeDelta)
 			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bNpcInteraction);
 		}
 	}
+	if (m_bGuarding) {
+		m_fParryTimer += fTimeDelta;
+	}
 
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
@@ -444,11 +447,19 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 		iCurrAnim == m_Animation[STATEANIM::ANCIENT_THROW].first)
 		return;
 
-	if (m_bShield)
-	{
-		m_pFSM->Change_State(FSMSTATE::BLOCK);
-		return;
+	if (m_bShield) {
+		if (IsParryWindow())
+		{
+			m_pFSM->Change_State(FSMSTATE::PARRY);
+			m_fParryTimer = 0.f;
+			return;
+		}
+		else {
+			m_pFSM->Change_State(FSMSTATE::BLOCK);
+			return;
+		}
 	}
+	
 
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
@@ -548,6 +559,12 @@ void CPlayer::Set_RaceInfo()
 		m_pBroomRaceManager->Push_BroomRacer(Info);
 	}
 }
+
+_bool CPlayer::IsParryWindow()
+{
+	return m_fParryTimer <= 0.15f;
+}
+
 
 HRESULT CPlayer::Ready_Components()
 {

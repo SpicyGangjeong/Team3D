@@ -64,6 +64,15 @@
 	<Anim state="SHIELD_BLOCK6" index="1015" loop="false"/>
 	<Anim state="SHIELD_BLOCK7" index="1016" loop="false"/>
 
+	<Anim state="SHIELD_BLOCK_90_L1" index="964" loop="false"/>
+	<Anim state="SHIELD_BLOCK_90_L2" index="965" loop="false"/>
+	<Anim state="SHIELD_BLOCK_90_R1" index="969" loop="false"/>
+	<Anim state="SHIELD_BLOCK_90_R2" index="970" loop="false"/>
+	<Anim state="SHIELD_BLOCK_180_L" index="963" loop="false"/>
+	<Anim state="SHIELD_BLOCK_180_R" index="968" loop="false"/>
+
+
+
 	<Anim state="LIGHT_ATTACK" index="414" loop="false"/>
 	<Anim state="LIGHT_ATTACK_180_R" index="810" loop="false"/>
 

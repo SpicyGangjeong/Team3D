@@ -33,6 +33,7 @@
 #include "State_AncientSpell.h"
 #include "State_Shield.h"
 #include "State_Block.h"
+#include "State_Parry.h"
 #include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #include "State_Broom_Ride_Move.h"
@@ -617,7 +618,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 
 		_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
 		m_fabsDir = fabsf(vDir);
-		m_fCross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
+		_float Cross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
 
 		_float2 fCamLook = { XMVectorGetX(xmvCamLook), XMVectorGetZ(xmvCamLook) };
 
@@ -647,7 +648,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 					}
 				}
 				else if (absDir < XMConvertToRadians(160.f)) {
-					if (m_fCross > 0)
+					if (Cross > 0)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 						m_fAmount = 1.f;
@@ -676,8 +677,6 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 
 		return S_OK;
 	}
-
-
 	else if (m_pFSM->IsEnable(FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::SPRINT) ||
 		!SUCCEEDED(InputMove())) {
 		if (!m_pFSM->IsEnable(FSMSTATE::STOP))
@@ -686,29 +685,15 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			if (m_pFSM->IsEnable(FSMSTATE::WALK) || m_fMoveTime <= 0.13f) { 
 				m_bWalkToggle = false;
 				m_pFSM->Disable_State(FSMSTATE::WALK);
-				if (m_fabsDir < XMConvertToRadians(45.f))
+				
+				_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+				if (iRand == 0)
 				{
-					if (iCurrentAnimIndex == m_Animation[STATEANIM::WALK_STOP_L].first)
-					{
-						pairAnimInfo = m_Animation[STATEANIM::WALK_STOP_R];
-					}
-					else {
-						pairAnimInfo = m_Animation[STATEANIM::WALK_STOP_L];
-					}
-				}
-				else if (m_fabsDir < XMConvertToRadians(135.f))
-				{
-					if (m_fCross > 0.f) {
-						pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_L];
-					}
-					else {
-						pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_R];
-					}
+					pairAnimInfo = m_Animation[STATEANIM::WALK_STOP_R];
 				}
 				else {
-					pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_BWD];
+					pairAnimInfo = m_Animation[STATEANIM::WALK_STOP_L];
 				}
-
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 			else if (m_pFSM->IsEnable(FSMSTATE::SPRINT)) {
@@ -1212,25 +1197,13 @@ void CPlayer::Behavior_LightAttackEnter()
 	
 	if (m_LockOnInfo.pUnit)
 	{
-		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-		_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+		Calc_CameraPlayerAngle();
 
-		vLook = XMVector3Normalize(vLook);
-		vCameraLook = XMVector3Normalize(vCameraLook);
-
-		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
-		fDot = clamp(fDot, -1.0f, 1.0f);
-
-		_float fAngleRad = acosf(fDot);
-		_float Degree = XMConvertToDegrees(fAngleRad);
-		_vector vCross = XMVector3Cross(vLook, vCameraLook);
-		_float Cross = XMVectorGetY(vCross);
-
-		if (Degree <= 30.f)
+		if (m_fDegree <= 30.f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 		}
-		else if (Degree <= 80.f)
+		else if (m_fDegree <= 80.f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 			Add_Event(pairAnimInfo.first,
@@ -1238,9 +1211,9 @@ void CPlayer::Behavior_LightAttackEnter()
 				},
 				0.01f);
 		}
-		else if (Degree <= 135.f)
+		else if (m_fDegree <= 135.f)
 		{
-			if (Cross < 0.f)
+			if (m_fCross < 0.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_L];
 				fRatio = 0.15f;
@@ -1403,26 +1376,14 @@ void CPlayer::Behavior_SpellEnter()
 	{
 		if (m_LockOnInfo.pUnit)
 		{
-			_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-			_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+			Calc_CameraPlayerAngle();
 
-			vLook = XMVector3Normalize(vLook);
-			vCameraLook = XMVector3Normalize(vCameraLook);
-
-			_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
-			fDot = clamp(fDot, -1.0f, 1.0f);
-
-			_float fAngleRad = acosf(fDot);
-			_float Degree = XMConvertToDegrees(fAngleRad);
-			_vector vCross = XMVector3Cross(vLook, vCameraLook);
-			_float Cross = XMVectorGetY(vCross);
-
-			if (Degree <= 30.f)
+			if (m_fDegree <= 30.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::SPELL];
 				fRatio = 0.2f;
 			}
-			else if (Degree <= 60.f)
+			else if (m_fDegree <= 60.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::SPELL];
 				fRatio = 0.2f;
@@ -1431,9 +1392,9 @@ void CPlayer::Behavior_SpellEnter()
 					},
 					0.01f);
 			}
-			else if (Degree <= 120.f)
+			else if (m_fDegree <= 120.f)
 			{
-				if (Cross < 0.f)
+				if (m_fCross < 0.f)
 				{
 					_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
 					switch (iRand)
@@ -1466,7 +1427,7 @@ void CPlayer::Behavior_SpellEnter()
 					case 1:
 						pairAnimInfo = m_Animation[STATEANIM::SPELL_90_R];
 						fRatio = 0.14f;
-						if (Degree >= 120.f)
+						if (m_fDegree >= 120.f)
 						{
 							Add_Event(pairAnimInfo.first,
 								[this]() {m_bLookAt = true;
@@ -1704,6 +1665,9 @@ void CPlayer::Behavior_ShieldEnter()
 	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.3f);
 
+	m_bGuarding = true;
+	m_fParryTimer = 0.f;
+
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
 		0.1f);
@@ -1728,28 +1692,12 @@ HRESULT CPlayer::Behavior_ShieldExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (m_pFSM->IsEnable(FSMSTATE::PARRY))
-	{
-		if (fRatio >= 0.35f)
-		{
-			if (SUCCEEDED(InputMove()))
-			{
-				m_pFSM->Change_State(FSMSTATE::MOVE);
-				return E_FAIL;
-			}
-			else {
-				m_pFSM->Change_State(FSMSTATE::IDLE);
-				return E_FAIL;
-			}
-		}
-	}
 	return S_OK;
 }
 
 void CPlayer::Behavior_ShieldExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SHIELD);
-	m_pFSM->Disable_State(FSMSTATE::PARRY);
 	Reset_Event();
 	m_bLookAt = false;
 }
@@ -1761,34 +1709,80 @@ void CPlayer::Behavior_BlockEnter()
 	if (m_bShield) {
 		m_bBlock = true;
 		Start_CameraShake(0.3f, 3.f);
-		_int iRand = m_pGameInstance->Real_Random_Int(0, 6);
 
-		switch (iRand)
-		{
-		case 0:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK1];
-			break;
-		case 1:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK2];
-			break;
-		case 2:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK3];
-			break;
-		case 3:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK4];
-			break;
-		case 4:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK5];
-			break;
-		case 5:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK6];
-			break;
-		case 6:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK7];
-			break;
+		Calc_CameraPlayerAngle();
+		
+		if (m_fDegree <= 60.f) {
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 6);
+
+			switch (iRand)
+			{
+			case 0:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK1];
+				break;
+			case 1:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK2];
+				break;
+			case 2:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK3];
+				break;
+			case 3:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK4];
+				break;
+			case 4:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK5];
+				break;
+			case 5:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK6];
+				break;
+			case 6:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK7];
+				break;
+			}
 		}
+		else if (m_fDegree <= 120.f) {
+			if (m_fCross < 0.f)
+			{
+				_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
 
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, true, false, false);
+				switch (iRand)
+				{
+				case 0:
+					pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_90_L1];
+					break;
+				case 1:
+					pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_90_L2];
+					break;
+				}
+			}
+			else if (m_fCross > 0.f)
+			{
+				_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+
+				switch (iRand)
+				{
+				case 0:
+					pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_90_R1];
+					break;
+				case 1:
+					pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_90_R2];
+					break;
+				}
+			}
+		}
+		else  {
+			if (m_fCross > 0.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_180_L];
+			}
+			else if (m_fCross < 0.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_180_R];
+			}
+		}
+		
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, true, false, false);
 	}
 }
 
@@ -1798,102 +1792,19 @@ HRESULT CPlayer::Behavior_BlockExitCheck(_float fTimeDelta)
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	_float fEventRatio = 0.2f;
-	if (m_bBlock)
-	{
-		if (fRatio >= 0.1f && fRatio <= 0.2f) {
-			m_bCanParry = true;
-		}
-		else {
-			m_bCanParry = false;
-		}
-	}
 
-	if (m_bShield && m_bCanParry && m_pGameInstance->Key_Pressing(DIK_Q))
-	{
-		m_bBlock = false;
-		m_pFSM->Enable_State(FSMSTATE::PARRY);
-		if (m_LockOnInfo.pUnit)
-		{
-			_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-			_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
-
-			vLook = XMVector3Normalize(vLook);
-			vCameraLook = XMVector3Normalize(vCameraLook);
-
-			_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
-			fDot = clamp(fDot, -1.0f, 1.0f);
-
-			_float fAngleRad = acosf(fDot);
-			_float Degree = XMConvertToDegrees(fAngleRad);
-			_vector vCross = XMVector3Cross(vLook, vCameraLook);
-			_float Cross = XMVectorGetY(vCross);
-
-			if (Degree <= 30.f)
-			{
-				_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
-				switch (iRand) 
-				{
-				case 0 :
-					pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-					break;
-				case 1:
-					pairAnimInfo = m_Animation[STATEANIM::PARRY5];
-					break;
-				case 2:
-					pairAnimInfo = m_Animation[STATEANIM::PARRY6];
-					break;
-				}
-
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, false, false);
-			}
-			else if (Degree <= 60.f)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, false, false);
-			}
-			else if (Degree <= 135.f)
-			{
-				if (Cross < 0.f)
-				{
-					pairAnimInfo = m_Animation[STATEANIM::PARRY2];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false, false, false);
-				}
-				else {
-					pairAnimInfo = m_Animation[STATEANIM::PARRY3];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false, false, false);
-					fEventRatio = 0.3f;
-				}
-			}
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::PARRY_180];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false, false, false);
-			}
-		}
-		else {
-			pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false, false, false);
-		}
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
-			0.01f);
-
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
-			fEventRatio);
-
-		//m_pGameInstance->SlowMotion(0.8f, 0.3f);
-		m_bShield = false;
-		return S_OK;
-	}
-
-	if (SUCCEEDED(InputMove()))
+	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 	{
 		if (fRatio >= 0.6f)
 		{
-			m_pFSM->Change_State(FSMSTATE::MOVE);
-			return E_FAIL;
+			if (SUCCEEDED(InputAction())) {
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
+				return E_FAIL;
+			}
+			if (SUCCEEDED(InputMove())) {
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
 		}
 	}
 
@@ -1915,6 +1826,128 @@ void CPlayer::Behavior_BlockExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BLOCK);
 	m_bShield = false;
+}
+
+void CPlayer::Behavior_ParryEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	_float fEventRatio = 0.2f;
+	m_bGuarding = false;
+
+	m_pFSM->Enable_State(FSMSTATE::PARRY);
+
+	if (m_LockOnInfo.pUnit)
+	{
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+		_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+		vLook = XMVector3Normalize(vLook);
+		vCameraLook = XMVector3Normalize(vCameraLook);
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
+		fDot = clamp(fDot, -1.0f, 1.0f);
+
+		_float fAngleRad = acosf(fDot);
+		_float Degree = XMConvertToDegrees(fAngleRad);
+		_vector vCross = XMVector3Cross(vLook, vCameraLook);
+		_float Cross = XMVectorGetY(vCross);
+
+		if (Degree <= 30.f)
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				pairAnimInfo = m_Animation[STATEANIM::PARRY4];
+				break;
+			case 1:
+				pairAnimInfo = m_Animation[STATEANIM::PARRY5];
+				break;
+			case 2:
+				pairAnimInfo = m_Animation[STATEANIM::PARRY6];
+				break;
+			}
+
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, false, false);
+		}
+		else if (Degree <= 60.f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::PARRY4];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, false, false);
+		}
+		else if (Degree <= 135.f)
+		{
+			if (Cross < 0.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::PARRY2];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false, false, false);
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::PARRY3];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false, false, false);
+				fEventRatio = 0.3f;
+			}
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::PARRY_180];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false, false, false);
+		}
+	}
+	else {
+		pairAnimInfo = m_Animation[STATEANIM::PARRY4];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false, false, false);
+	}
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+		0.01f);
+
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
+		fEventRatio);
+
+	m_bShield = false;
+	
+}
+
+HRESULT CPlayer::Behavior_ParryExitCheck(_float fTimeDelta)
+{
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
+	{
+		if (fRatio >= 0.6f)
+		{
+			if (SUCCEEDED(InputAction())) {
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
+				return E_FAIL;
+			}
+			if (SUCCEEDED(InputMove())) {
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
+		}
+	}
+
+	if (fRatio >= 0.9f) {
+		if (SUCCEEDED(InputMove()))
+		{
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
+		}
+		else {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_ParryExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::PARRY);
 }
 
 void CPlayer::Behavior_HitEnter()
@@ -2787,6 +2820,23 @@ void CPlayer::ProcessHitBehavior()
 	}
 }
 
+void CPlayer::Calc_CameraPlayerAngle()
+{
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+	vLook = XMVector3Normalize(vLook);
+	vCameraLook = XMVector3Normalize(vCameraLook);
+
+	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
+	fDot = clamp(fDot, -1.0f, 1.0f);
+
+	_float fAngleRad = acosf(fDot);
+	m_fDegree = XMConvertToDegrees(fAngleRad);
+	_vector vCross = XMVector3Cross(vLook, vCameraLook);
+	m_fCross = XMVectorGetY(vCross);
+}
+
 void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 {
 	pair<_uint, _bool> pairAnimInfo;
@@ -3301,6 +3351,17 @@ void CPlayer::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::BLOCK, CState_Block::Create(&Desc));
+	}
+
+	{
+		CState_Parry::STATE_PARRY_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_ParryEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_ParryExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_ParryExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::PARRY, CState_Parry::Create(&Desc));
 	}
 #pragma endregion
 #pragma region Behavior_Combat_Focus

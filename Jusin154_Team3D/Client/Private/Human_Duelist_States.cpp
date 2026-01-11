@@ -270,7 +270,8 @@ void CHuman_Duelist::Behavior_HitEnter()
 		Add_Event(pairAnimInfo.first,
 			[this]() {
 				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::DAZED_LOOP];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_eHitState = ENUM_CLASS(HIT_STATE::STUN); },
 			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::DAZED_LOOP].first,
@@ -286,9 +287,6 @@ void CHuman_Duelist::Behavior_HitEnter()
 			0.95f);
 		break;
 	}
-
-
-
 }
 
 HRESULT CHuman_Duelist::Behavior_HitExitCheck(_float fTimeDelta)
@@ -364,7 +362,7 @@ void CHuman_Duelist::HitState_Behavior(_float fTimeDelta)
 		{
 			if (iCurrAnimIndex != m_Animation[STATEANIM::TUMBLE_FWD].first) {
 				pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, false, 1.3f);
 
 				Add_Event(pairAnimInfo.first,
 					[this]() {
@@ -384,7 +382,7 @@ void CHuman_Duelist::HitState_Behavior(_float fTimeDelta)
 			}
 			else {
 				pairAnimInfo = m_Animation[STATEANIM::TUMBLE];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, false, 1.3f);
 				m_bHitJap = true;
 				Add_Event(pairAnimInfo.first,
 					[this]() {
@@ -402,14 +400,31 @@ void CHuman_Duelist::HitState_Behavior(_float fTimeDelta)
 					},
 					0.95f);
 			}
-
-	
-			
-
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
 		}
 		break;
 		}
+	}
+
+	if (m_eHitState == ENUM_CLASS(HIT_STATE::STUN))
+	{
+		switch (m_eHitSpell)
+		{
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+		{
+			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+		break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		{
+			pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_fAirTime = 0.f;
+		}
+		break;
+		}
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
 	}
 
 	if (m_bHitJap) {

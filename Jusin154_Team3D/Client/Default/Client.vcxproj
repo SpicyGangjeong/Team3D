@@ -233,6 +233,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_Fear.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
+    <ClInclude Include="..\Public\State_Parry.h" />
     <ClInclude Include="..\Public\State_Slash.h" />
     <ClInclude Include="..\Public\ThestralCarriage.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
@@ -534,6 +535,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\State_Fear.cpp" />
+    <ClCompile Include="..\Private\State_Parry.cpp" />
     <ClCompile Include="..\Private\State_Slash.cpp" />
     <ClCompile Include="..\Private\ThestralCarriage.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
