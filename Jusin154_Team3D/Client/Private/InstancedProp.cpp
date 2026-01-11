@@ -88,6 +88,10 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	INSTANCE_PROP_DESC* pDesc = static_cast<INSTANCE_PROP_DESC*>(pArg);
+
+	m_eShaderPass = pDesc->eShaderPass;
+
 	return S_OK;
 }
 
