@@ -39,6 +39,8 @@ public:
 		_float   UpperBlend;           
 		_int   SecondAnimIndex;
 		_float SecondAnimTime;
+
+		_float4x4 WorldMatrix;
 	}ANIMSTATE_DESC;
 
 	typedef struct tagBoneInsertionDesc {

@@ -3609,10 +3609,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 #pragma endregion
 
-	/* For.Prototype_Component_FloatingBalloon */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_FloatingBalloon"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.fbx"))))
-		return E_FAIL;
+	///* For.Prototype_Component_FloatingBalloon */
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_FloatingBalloon"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.fbx"))))
+	//	return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Hogwart_Lake"),

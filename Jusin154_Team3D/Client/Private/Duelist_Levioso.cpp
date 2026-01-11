@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "EffectParts.h"
-#include "Player.h"
+#include "Human_Duelist.h"
 #include "TrailObject.h"
 #include "Wand.h"
 #include "InfoInstance.h"
@@ -41,7 +41,7 @@ HRESULT CDuelist_Levioso::Initialize(void* pArg)
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
-	m_iSkillType = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::DUELIST_LEVIOSO);
 
 	m_pLeviosoPJ = Get_PartObject<CEffectParts>("Levioso_PJ");
 
@@ -106,12 +106,12 @@ HRESULT CDuelist_Levioso::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
-	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
+	CHuman_Duelist* pDuelist = static_cast<CHuman_Duelist*>(m_pOwner);
 
-	if (pPlayer == nullptr)
+	if (pDuelist == nullptr)
 		return E_FAIL;
 
-	_vector WandPos = pPlayer->Get_WandPos().r[3];
+	_vector WandPos = pDuelist->Get_WandPos().r[3];
 
 	CEffectParts* pWandSmoke = Get_PartObject<CEffectParts>("Wand_Smoke");
 	CEffectParts* pWandLight = Get_PartObject<CEffectParts>("Wand_Light_P");
@@ -120,9 +120,9 @@ HRESULT CDuelist_Levioso::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_pLeviosoPJ->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 
-	pWandSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
-	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
-	pSpread_Circle->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
+	pWandSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, pDuelist->Get_PartObject<CWand>()->Get_WorldPostion());
+	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pDuelist->Get_PartObject<CWand>()->Get_WorldPostion());
+	pSpread_Circle->Get_Component<CTransform>()->Set_State(STATE::POSITION, pDuelist->Get_PartObject<CWand>()->Get_WorldPostion());
 
 	m_pLeviosoPJ->Set_Visible(true);
 	pWandSmoke->Set_Visible(true);
@@ -139,11 +139,15 @@ HRESULT CDuelist_Levioso::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	{ /* 대상 위치 지정 */
 
-		m_pInfoInstance->Get_LockOnInfo(m_Info);
+		CUnit* pPlayer = m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first;
 
-		if (nullptr != m_Info.pUnit) {
+		if (pPlayer == nullptr)
+			return E_FAIL;
 
-			XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
+		_vector vPlayerPos = pPlayer->Get_Component<CCharacter_Controller>()->Get_Position();
+
+		if (nullptr != pPlayer) {
+			XMStoreFloat4(&m_vTargetPos, vPlayerPos);
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}
@@ -205,6 +209,8 @@ void CDuelist_Levioso::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_bHit == false)
 		return;
 
+
+
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
@@ -214,14 +220,7 @@ void CDuelist_Levioso::OnCollision(CGameObject* pOther, void* pDesc)
 
 	_vector vHitPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
-	CEffectParts* pLevioso_Spline = Get_PartObject<CEffectParts>("Levioso_Spline");
-	CEffectParts* pLevioso_Hit0 = Get_PartObject<CEffectParts>("Levioso_Hit0");
 
-	pLevioso_Hit0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vHitPos);
-	pLevioso_Spline->Get_Component<CTransform>()->Set_State(STATE::POSITION, vHitPos);
-
-	pLevioso_Hit0->Set_Visible(true);
-	pLevioso_Spline->Set_Visible(true);
 	/* 바람과 파티클은 풋포지션 */
 	CCharacter_Controller* pHitCCT = CollisionDesc.pObject->Get_Component<CCharacter_Controller>();
 
@@ -234,12 +233,18 @@ void CDuelist_Levioso::OnCollision(CGameObject* pOther, void* pDesc)
 		CEffectParts* pLevioso_Rotate1 = Get_PartObject<CEffectParts>("Levioso_Rotate1");
 		CEffectParts* pLevioso_Bottom_PT = Get_PartObject<CEffectParts>("Levioso_Bottom_PT");
 		CEffectParts* pLevioso_Spline = Get_PartObject<CEffectParts>("Levioso_Spline");
-
+		CEffectParts* pLevioso_Hit0 = Get_PartObject<CEffectParts>("Levioso_Hit0");
 
 		pLevioso_Tornado->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
 		pLevioso_Rotate0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
 		pLevioso_Rotate1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
 		pLevioso_Bottom_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+
+		pLevioso_Hit0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vHitPos);
+		pLevioso_Spline->Get_Component<CTransform>()->Set_State(STATE::POSITION, vHitPos);
+
+		pLevioso_Hit0->Set_Visible(true);
+		pLevioso_Spline->Set_Visible(true);
 
 		pLevioso_Tornado->Set_Visible(true);
 		pLevioso_Rotate0->Set_Visible(true);

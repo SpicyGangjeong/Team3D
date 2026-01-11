@@ -2120,7 +2120,9 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->UseUpperBody = m_bSecondAnim;
 		pDesc->UpperBlend = m_fSecondRatio;
 		pDesc->SecondAnimIndex = m_iCurrSecondAnimIndex;
-		pDesc->SecondAnimTime = m_Animations[m_iCurrSecondAnimIndex]->Get_CurrentTrackPosition();;
+		pDesc->SecondAnimTime = m_Animations[m_iCurrSecondAnimIndex]->Get_CurrentTrackPosition();
+		
+		pDesc->WorldMatrix = *m_pTransform->Get_WorldMatrixPtr();
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
