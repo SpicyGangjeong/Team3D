@@ -48,6 +48,12 @@ HRESULT CLumos::Initialize(void* pArg)
 
 void CLumos::Priority_Update(_float fTimeDelta)
 {
+	CWand* pWand = static_cast<CWand*>(m_pOwner);
+
+	if (pWand == nullptr)
+		return;
+
+	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	__super::Priority_Update(fTimeDelta);
 
 
@@ -80,12 +86,7 @@ void CLumos::Late_Update(_float fTimeDelta)
 
 	__super::Late_Update(fTimeDelta);
 
-	CWand* pWand = static_cast<CWand*>(m_pOwner);
 
-	if (pWand == nullptr)
-		return;
-
-	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 }
 
