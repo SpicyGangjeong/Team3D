@@ -39,7 +39,7 @@ private:
 	void Choice_Slot(CHOICEINFO Choice);
 
 	void ReSet_Choice();
-
+	void Change_Map();
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -55,6 +55,7 @@ private:
 	_int m_iChoiceCount{};
 
 	_bool		m_bBroomRace = { false };
+	_bool		m_bBttle = { false };
 
 public:
 	static CDialogue_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

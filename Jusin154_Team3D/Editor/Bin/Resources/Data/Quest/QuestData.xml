@@ -3,8 +3,8 @@
 		<Quest QuestID="0" QuestType="Main" QuestName="고블린 군대!" QuestInfo="고블린 전사, 마법사, 도적을 잡아라!" AcceptState="0">
 			<Objectives>
 				<Objective Type="0" TargetID="0" QuestInfo="고블린 전 사" CurrentCount="0" RequiredCount="1"/>
-				<Objective Type="0" TargetID="1" QuestInfo="고블린 마법사" CurrentCount="0" RequiredCount="1"/>
-				<Objective Type="0" TargetID="2" QuestInfo="고블린 도 적" CurrentCount="0" RequiredCount="1"/>
+				<Objective Type="0" TargetID="1" QuestInfo="고블린 도 적" CurrentCount="0" RequiredCount="1"/>
+				<Objective Type="0" TargetID="2" QuestInfo="고블린 마법사" CurrentCount="0" RequiredCount="1"/>
 			</Objectives>
 			<Rewards>
 				<Reward Type="1" Value="BOMBARDA"/>
@@ -26,7 +26,7 @@
 				<Reward Type="1" Value="BOMBARDA"/>
 			</Rewards>
 		</Quest>
-		<Quest QuestID="3" QuestType="Main" QuestName="빗자루 레이스!" QuestInfo="빗자루 레이스에서 기록 세우기" AcceptState="0"> 
+		<Quest QuestID="3" QuestType="Main" QuestName="빗자루 레이스!" QuestInfo="빗자루 레이스에서 신 기록 세우기" AcceptState="0"> 
 			<Objectives>
 				<Objective Type="2" TargetID="-1" QuestInfo="등 수" CurrentCount="0" RequiredCount="1"/>
 			</Objectives>

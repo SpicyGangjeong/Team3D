@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Dialogue_Choice.h"
 #include "InfoInstance.h"
+#include "Player.h"
+#include "Layer.h"
 
 CDialogue_Panel::CDialogue_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -104,6 +106,11 @@ void CDialogue_Panel::Choice_Slot(CHOICEINFO Choice)
 		m_bBroomRace = true;
 		break;
 
+	case ENUM_CLASS(NPCTEXTTYPE::BATTLE):
+		m_pInfoInstance->Event_CallBack(TEXT("NPCNEXTTEXT"), &Choice);
+		m_bBttle = true;
+		break;
+
 	default:
 		break;
 	}
@@ -119,6 +126,23 @@ void CDialogue_Panel::ReSet_Choice()
 		(static_cast<CUIObject*>(*it))->Set_Hover(false);
 		m_Choices.push_back((*it));
 		it = m_CurrentChoices.erase(it);
+	}
+}
+
+void CDialogue_Panel::Change_Map()
+{
+	m_pInfoInstance->Load_DADA_INT();
+	m_pGameInstance->Setting_Volumetirc(
+		3.f,
+		0.01f,
+		0.11f,
+		1.0f,
+		0.f
+	);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
+	if (nullptr != pLayer) {
+		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
+		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
 	}
 }
 
@@ -139,15 +163,23 @@ void CDialogue_Panel::Update(_float fTimeDelta)
 	}
 
 
-	if (m_bBroomRace == true)
+	if (m_bBroomRace == true || m_bBttle == true)
 	{
 		m_fTime += fTimeDelta;
 	}
 
 	if (m_fTime >= 1.f)
 	{
-		m_bBroomRace = false;
-		m_pInfoInstance->Event_CallBack(TEXT("BROOMRACENPCINTERACT"));
+		if(m_bBroomRace == true)
+		{
+			m_bBroomRace = false;
+			m_pInfoInstance->Event_CallBack(TEXT("BROOMRACENPCINTERACT"));
+		}
+		else if (m_bBttle == true)
+		{
+			m_bBttle = false;
+			Change_Map();
+		}
 	}
 	__super::Update(fTimeDelta);
 }
