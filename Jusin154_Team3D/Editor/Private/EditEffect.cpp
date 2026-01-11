@@ -1123,3 +1123,49 @@ void CEditEffect::Describe_Entity()
 
 
 }
+
+HRESULT CEditEffect::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
+{
+	tinyxml2::XMLElement* object = doc.NewElement("Object");
+	root->InsertEndChild(object);
+
+	_float3 vPosition = {};
+	XMStoreFloat3(&vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+	_float3 vScale = m_pTransformCom->Get_Scale();
+	_float3 vRotation = m_pTransformCom->Get_Rotation();
+
+	tinyxml2::XMLElement* Position = doc.NewElement("Position");
+	Position->SetAttribute("x", vPosition.x);
+	Position->SetAttribute("y", vPosition.y);
+	Position->SetAttribute("z", vPosition.z);
+	object->InsertEndChild(Position);
+
+	tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
+	Scale->SetAttribute("x", vScale.x);
+	Scale->SetAttribute("y", vScale.y);
+	Scale->SetAttribute("z", vScale.z);
+	object->InsertEndChild(Scale);
+
+	tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
+	Rotation->SetAttribute("x", vRotation.x);
+	Rotation->SetAttribute("y", vRotation.y);
+	Rotation->SetAttribute("z", vRotation.z);
+	object->InsertEndChild(Rotation);
+
+	return S_OK;
+}
+
+void CEditEffect::Control_Transform()
+{
+	m_pTransformCom->Describe_Entity();
+
+	_float3 vPosition = {};
+	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		_float3 vPosition = {};
+		if (m_pGameInstance->isPicking(&vPosition))
+		{
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+		}
+	}
+}

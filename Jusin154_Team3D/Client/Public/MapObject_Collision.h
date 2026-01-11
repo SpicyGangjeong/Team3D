@@ -25,7 +25,7 @@ public:
 	void ConvertToPhysX();
 private:
 	CShader*			m_pShaderCom = { nullptr };
-	vector<vector<CRigidBody_Static*>> m_RigidBodies;
+	vector<CRigidBody_Static*> m_RigidBodies;
 	vector<CModel*>		m_pModelComs;
 
 	_bool				m_bReadyToCreatePhysX = { false };

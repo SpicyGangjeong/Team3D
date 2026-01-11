@@ -19,7 +19,9 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	_bool m_isCollision = {};
+	_bool		m_isCollision = {};
+	_float		m_fRadius = {};
+	_float3		m_vWorldCenterPosition = {};
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

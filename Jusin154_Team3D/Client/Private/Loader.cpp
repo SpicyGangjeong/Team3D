@@ -480,10 +480,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = false;
+	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -2215,6 +2215,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC PotionDesc{};
+		{
+			PotionDesc.eType = ACTOR::SPHERE;
+			PotionDesc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			PotionDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			PotionDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			PotionDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			PotionDesc.fContactOffset = { 0.05f };
+			PotionDesc.vhalfGeometryInfo = { 0.07f, 0.07f, 0.07f };
+			PotionDesc.fDensity = 1.f;
+			PotionDesc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			PotionDesc.eLockFlag = {};
+			PotionDesc.vAutoDamping = { 1.f, 1.f };
+			PotionDesc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			PotionDesc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC RanrokDesc{};
 		{
@@ -2242,6 +2259,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_POTION"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, PotionDesc)))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, RanrokDesc)))) {
 			return E_FAIL;
 		}
@@ -3506,6 +3528,32 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 	}
 
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_Stone_FrontSteps*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Stone_FrontSteps_A.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Stone_FrontSteps"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_Quid_StoneKit_A.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_StoneKit_A"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_LightPost */
 	{
 		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
@@ -3837,25 +3885,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 
 	m_strMessage = TEXT("모델을 다시 불러오는 중입니다. ");
-	{
-		CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"));
-		CMotion_Trail::MODELCAPTURE_DESC Desc{};
-		Desc.fMaxCaptureLifeTime = 2.f;
-		Desc.iMaximumCapture = 4;
-		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
-			return E_FAIL;
-		}
-	}
 
-	{
-		CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
-		CMotion_Trail::MODELCAPTURE_DESC Desc{};
-		Desc.fMaxCaptureLifeTime = 2.f;
-		Desc.iMaximumCapture = 4;
-		Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
-			return E_FAIL;
+	if (isLoad_Monster) {
+		{
+			CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"));
+			CMotion_Trail::MODELCAPTURE_DESC Desc{};
+			Desc.fMaxCaptureLifeTime = 2.f;
+			Desc.iMaximumCapture = 4;
+			Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
+				return E_FAIL;
+			}
+		}
+
+		{
+			CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
+			CMotion_Trail::MODELCAPTURE_DESC Desc{};
+			Desc.fMaxCaptureLifeTime = 2.f;
+			Desc.iMaximumCapture = 4;
+			Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
+				return E_FAIL;
+			}
 		}
 	}
 
@@ -4027,6 +4078,12 @@ HRESULT CLoader::Loading_For_Field()
 	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::FIELD), TEXT("Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_BogMyrtle_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_PointLight */
 	if (FAILED(m_pGameInstance->Add_Prototype<CPointLight>(ENUM_CLASS(LEVEL::FIELD), CPointLight::Create(m_pDevice, m_pContext))))

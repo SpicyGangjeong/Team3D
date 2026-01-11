@@ -5,6 +5,7 @@
 
 NS_BEGIN(Engine)
 class CGameObject;
+class CCamera;
 NS_END
 
 
@@ -35,18 +36,28 @@ private:
 	map<_string, TimeLine*> m_funcWaitEvents = {};
 
 private:
+	void Update_ActiveEvents(_float fTimeDelta);
+	void Update_WaitEvents(_float fTimeDelta);
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
+	void Load_CutSceneXML(const string& path);
+
 #ifdef _DEBUG
 public:
 #endif // _DEBUG
 	HRESULT Clear_ActiveEvents();
 	HRESULT Clear_Events(map<_string, TimeLine*>&Events);
-
 	HRESULT Clear_AllEvents();
+
+	HRESULT Ready_GameplayCutScenes();
+	HRESULT Ready_FieldCutScenes();
 
 public:
 	static CCutSceneInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	virtual void Free() override;
+#ifdef _DEBUG
+	virtual void Describe_Entity();
+#endif // _DEBUG
+
 };
 
 NS_END

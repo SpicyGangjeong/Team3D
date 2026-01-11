@@ -12,7 +12,7 @@ protected:
 	{
 		GROUND,
 		AIR_LEVIOSO,
-		AIR_KNOCKBACK,
+		STUN,
 		END
 	};
 

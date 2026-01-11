@@ -143,26 +143,23 @@ void CMapObject_Collision::ReadyForPhysX()
 	}
 	m_bConverted = true;
 	_uint iLevel = NEXT_LEVEL;
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
-	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		_matrix parentMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
-		_matrix idenMatrix = XMMatrixIdentity();
-		_bool bSkip = { false };
-		for (_int i = 0; i < 4; ++i) {
-			if (false == XMVector4NearEqual(idenMatrix.r[i], parentMatrix.r[i], XMVectorReplicate(FLT_EPSILON5))) {
-				if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix), iLevel))) {
-					assert(false);
-				}
-				bSkip = true;
-				break;
-			}
-		}
-		if (false == bSkip) {
-			if (FAILED(pModel->Ready_PhysXMeshes(m_pParentTransformCom->Get_XMWorldMatrix(), iLevel))) {
+	CModel* pModel = m_pModelComs[0];
+	_matrix parentMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
+	_matrix idenMatrix = XMMatrixIdentity();
+	_bool bSkip = { false };
+	for (_int i = 0; i < 4; ++i) {
+		if (false == XMVector4NearEqual(idenMatrix.r[i], parentMatrix.r[i], XMVectorReplicate(FLT_EPSILON5))) {
+			if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix), iLevel))) {
 				assert(false);
 			}
+			bSkip = true;
+			break;
+		}
+	}
+	if (false == bSkip) {
+		if (FAILED(pModel->Ready_PhysXMeshes(m_pParentTransformCom->Get_XMWorldMatrix(), iLevel))) {
+			assert(false);
 		}
 	}
 }
@@ -174,26 +171,22 @@ void CMapObject_Collision::ConvertToPhysX()
 	}
 	m_bReadyToCreatePhysX = true;
 
-	m_RigidBodies.resize(m_iMaxLodLevel + 1);
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
-	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
+	CModel* pModel = m_pModelComs[0];
 
-		_uint iNumMeshes = pModel->Get_NumMeshes();
-		
-		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
-		{
-			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
-			CRigidBody_Static* pRigidBody = { nullptr };
-			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
-			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-			Desc.pMeshName = wstrName.c_str();
-			Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-			if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
-				assert(false);
-			}
-			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+	_uint iNumMeshes = pModel->Get_NumMeshes();
+
+	for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
+	{
+		_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+		CRigidBody_Static* pRigidBody = { nullptr };
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pMeshName = wstrName.c_str();
+		Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+			assert(false);
 		}
+		m_RigidBodies.push_back(pRigidBody);
 	}
 }
 
@@ -278,10 +271,7 @@ void CMapObject_Collision::Free()
 	} m_pModelComs.clear();
 
 	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
-		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
-			SAFE_RELEASE(m_RigidBodies[i][j]);
-		}
-		m_RigidBodies[i].clear();
+		SAFE_RELEASE(m_RigidBodies[i]);
 	} m_RigidBodies.clear();
 
 	m_ModelPrototypeTags.clear();

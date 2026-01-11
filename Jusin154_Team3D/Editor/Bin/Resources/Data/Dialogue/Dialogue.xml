@@ -64,8 +64,11 @@
 	</Dialogue>
 
 	<Dialogue NpcName="DINAHHECAT" NpcID="11" NpcInrteract="1">
-		<Line ID="0" Type="0" Text="뭐? 나랑 대결을 하고싶다고?" NextID="1"> </Line>
-		<Line ID="1" Type="0" Text="아직은 때가 아니야" NextID="-1"> </Line>
+		<Line ID="0" Type="0" Text="뭐? 대련을 하고 싶다고?" NextID="1"> </Line>
+		<Line ID="1" Type="1" Text="다시 한번 생각할 시간을 주겠네" NextID="-1">
+			<Choice Type="6" Text="보내 돌라고 한다." NextID="-1" />
+			<Choice Type="0" Text="다시 한번 생각한다." NextID="-1" />
+		</Line>
 	</Dialogue>
 
 	<Dialogue NpcName="MUDIWAONAI" NpcID="12" NpcInrteract="0">

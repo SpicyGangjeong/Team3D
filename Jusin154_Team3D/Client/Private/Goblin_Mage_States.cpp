@@ -410,7 +410,7 @@ void CGoblin_Mage::Behavior_HitEnter()
 		fAnimSpeed = 2.f;
 
 		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-			[&]() {			pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
+			[this]() {			pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 0.5f);
 		m_pCharacter_Controller->SetGravity(false);
 		m_bAir = true;
@@ -418,7 +418,7 @@ void CGoblin_Mage::Behavior_HitEnter()
 			0.3f);
 
 		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-			[&]() {
+			[this]() {
 				CameraShake(10.f, 1.f, 2.f, 0.3f);
 			},
 			0.27f);
@@ -428,7 +428,7 @@ void CGoblin_Mage::Behavior_HitEnter()
 			0.75f);
 
 		Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
-			[&]() {			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+			[this]() {			pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		m_bAir = false;
 		m_pCharacter_Controller->SetGravity(true);
@@ -436,12 +436,12 @@ void CGoblin_Mage::Behavior_HitEnter()
 			0.96f);
 
 		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-			[&]() {			pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
+			[this]() {			pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f); },
 			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
-			[&]() {m_bLookAt = true; },
+			[this]() {m_bLookAt = true; },
 			0.7f);
 
 		break;
@@ -536,7 +536,7 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 	if (iCurrAnimIndex == m_Animation[STATEANIM::TUMBLE_FWD].first)
 	{
 		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-			[&]() {CameraShake(3.f, 0.8f, 1.f, 0.2f); },
+			[this]() {CameraShake(3.f, 0.8f, 1.f, 0.2f); },
 			0.17f);
 	}
 
@@ -560,11 +560,11 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-				[&]() {CameraShake(3.f, 0.8f, 1.f, 0.2f); },
+				[this]() {CameraShake(3.f, 0.8f, 1.f, 0.2f); },
 				0.21f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-				[&]() {			pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
+				[this]() {			pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
 			m_fAirTime = 0.f; },
 				0.95f);
@@ -716,7 +716,7 @@ void CGoblin_Mage::HitState_Behavior(_float fTimeDelta)
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 2.f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-				[&]() {			pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
+				[this]() {			pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 0.5f);
 			m_pCharacter_Controller->SetGravity(false);
 			m_bAir = true;
@@ -724,7 +724,7 @@ void CGoblin_Mage::HitState_Behavior(_float fTimeDelta)
 				0.3f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-				[&]() {
+				[this]() {
 					CameraShake(10.f, 1.f, 2.f, 0.3f);
 				},
 				0.27f);
@@ -734,7 +734,7 @@ void CGoblin_Mage::HitState_Behavior(_float fTimeDelta)
 				0.75f);
 
 			Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
-				[&]() {			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+				[this]() {			pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_bAir = false;
 			m_pCharacter_Controller->SetGravity(true);
@@ -742,12 +742,12 @@ void CGoblin_Mage::HitState_Behavior(_float fTimeDelta)
 				0.96f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-				[&]() {			pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
+				[this]() {			pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f); },
 				0.95f);
 
 			Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
-				[&]() {m_bLookAt = true; },
+				[this]() {m_bLookAt = true; },
 				0.7f);
 		}
 		break;

@@ -39,6 +39,9 @@
 	<Anim state="FIREBREATH_G" index="6" loop="false"/>
 	<Anim state="FIRESWEEP_G" index="7" loop="false"/>
 
+	<Anim state="FIRESWEEP_G_L" index="85" loop="false"/>
+	<Anim state="FIRESWEEP_G_R" index="86" loop="false"/>
+
 	<Anim state="FIREBALL1_G" index="2" loop="false"/>
 	<Anim state="FIREBALL2_G" index="5" loop="false"/>
 

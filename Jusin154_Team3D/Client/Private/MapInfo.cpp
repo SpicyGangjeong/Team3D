@@ -17,6 +17,7 @@
 #include "PointLight.h"
 #include "InstancedProp_Light.h"
 #include "Layer.h"
+#include "EffectParts.h"
 
 CMapInfo::CMapInfo()
 {
@@ -760,6 +761,69 @@ HRESULT CMapInfo::Load_PointLights(const _char* pFilePath, const _wchar* pLayerT
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPointLight>(NEXT_LEVEL, NEXT_LEVEL, pLayerTag, &Desc)))
 			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/EffectPart/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("EffectParts");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = nullptr;
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		_float3 vScale = {};
+		_float3 vRotation = {};
+		_float3 vPosition = {};
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &vPosition.x);
+		Position->QueryFloatAttribute("y", &vPosition.y);
+		Position->QueryFloatAttribute("z", &vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &vScale.x);
+		Scale->QueryFloatAttribute("y", &vScale.y);
+		Scale->QueryFloatAttribute("z", &vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &vRotation.x);
+		Rotation->QueryFloatAttribute("y", &vRotation.y);
+		Rotation->QueryFloatAttribute("z", &vRotation.z);
+
+		CEffectParts* pEffect = { nullptr };
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectParts>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &PartsDesc, nullptr, &pEffect)))
+			return E_FAIL;
+
+		if (nullptr == pEffect)
+			return E_FAIL;
+
+		CTransform* pTransformCom = pEffect->Get_Component<CTransform>();
+
+		pTransformCom->Set_Scale(vScale);
+		pTransformCom->Rotation(XMConvertToRadians(vRotation.x), XMConvertToRadians(vRotation.y), XMConvertToRadians(vRotation.z));
+		pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+		pEffect->Load(pEffectrFilePath, static_cast<LEVEL>(g_iStaticLevel));
+		pEffect->Set_Visible(true);
 	}
 
 	return S_OK;

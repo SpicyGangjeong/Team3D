@@ -43,10 +43,12 @@ HRESULT CMapElement_Static::Initialize(void* pArg)
 	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 
-	_float fMaxScale = max(pDesc->vScale.x, pDesc->vScale.y);
-	fMaxScale = max(fMaxScale, pDesc->vScale.z);
+	_float fMaxScale = max(max(pDesc->vScale.x, pDesc->vScale.y), pDesc->vScale.z);
 
-	m_fRadius = m_pModelComs[0]->Get_Radius() * fMaxScale * 1.2f;
+	m_fRadius = m_pModelComs[0]->Get_Radius() * fMaxScale;
+
+	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
+	XMStoreFloat3(&m_vWorldCenterPosition, XMVector3TransformCoord(XMLoadFloat3(&vOffset), m_pTransformCom->Get_XMWorldMatrix()));
 
 	ReadyForPhysX();
 	ConvertToPhysX();
@@ -63,15 +65,11 @@ void CMapElement_Static::Update(_float fTimeDelta)
 }
 
 void CMapElement_Static::Late_Update(_float fTimeDelta)
-{/*
-	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_fRadius)) {
-
-		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
-
-		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (m_fRadius * m_fRadius + 40000.f)));*/
-	if(m_bVisible)
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	//}
+{
+	if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vWorldCenterPosition), 1.f), m_fRadius)) {
+		if(m_bVisible)
+			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
 }
 
 HRESULT CMapElement_Static::Render()
@@ -151,13 +149,11 @@ void CMapElement_Static::ReadyForPhysX()
 	}
 	m_bConverted = true;
 	_uint iLevel = NEXT_LEVEL;
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
-	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
-			assert(false);
-		}
+	CModel* pModel = m_pModelComs[0];
+
+	if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
+		assert(false);
 	}
 }
 
@@ -168,26 +164,22 @@ void CMapElement_Static::ConvertToPhysX()
 	}
 	m_bReadyToCreatePhysX = true;
 
-	m_RigidBodies.resize(m_iMaxLodLevel + 1);
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+	CModel* pModel = m_pModelComs[0];
+
+	_uint iNumMeshes = pModel->Get_NumMeshes();
+
+	for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
 	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
-
-		_uint iNumMeshes = pModel->Get_NumMeshes();
-
-		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
-		{
-			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
-			CRigidBody_Static* pRigidBody = { nullptr };
-			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
-			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-			Desc.pMeshName = wstrName.c_str();
-			Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-			if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
-				assert(false);
-			}
-			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+		_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+		CRigidBody_Static* pRigidBody = { nullptr };
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pMeshName = wstrName.c_str();
+		Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+			assert(false);
 		}
+		m_RigidBodies.push_back(pRigidBody);
 	}
 }
 
@@ -224,9 +216,7 @@ void CMapElement_Static::Free()
 	SAFE_RELEASE(m_pShaderCom);
 
 	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
-		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
-			SAFE_RELEASE(m_RigidBodies[i][j]);
-		}
+		SAFE_RELEASE(m_RigidBodies[i]);
 	} m_RigidBodies.clear();
 
 	for (auto& pModel : m_pModelComs)
