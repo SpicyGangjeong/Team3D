@@ -8,6 +8,7 @@
 #include "Character_Controller.h"
 #include "CallBack_Playable_Behavior.h"
 #include "CallBack_Playable_HitReport.h"
+#include "Effect_Container.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -18,6 +19,7 @@
 #include "State_Spell.h"
 #include "State_Shield.h"
 #include "State_Hit.h"
+#include "State_CutScene.h"
 #pragma endregion
 
 #include "EffectPool.h"
@@ -33,13 +35,21 @@ void CHuman_Duelist::Behavior_IdleEnter()
 
 HRESULT CHuman_Duelist::Behavior_IdleExitCheck(_float fTimeDelta)
 {
-	for (_uint i = 0; i < ENUM_CLASS(SKILL::END); i++)
-	{
-		if (m_fSkillCoolTime[i] == 0.f) {
-			m_pFSM->Change_State(FSMSTATE::COMBAT);
-			return E_FAIL;
+	if (m_bBattle) {
+		m_pFSM->Change_State(FSMSTATE::CUTSCENE);
+		return E_FAIL;
+	}
+
+	if (m_fTargetDistance <= 20.f) {
+		for (_uint i = 0; i < ENUM_CLASS(SKILL::END); i++)
+		{
+			if (m_fSkillCoolTime[i] == 0.f) {
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
+				return E_FAIL;
+			}
 		}
 	}
+
 	return S_OK;
 }
 
@@ -251,12 +261,15 @@ void CHuman_Duelist::Behavior_ShieldExit()
 
 void CHuman_Duelist::Behavior_HitEnter()
 {
-	m_pFSM->Enable_State(FSMSTATE::HIT);
 	pair<_uint, _bool> pairAnimInfo;
 	m_bLookAt = false;
+
 	switch (m_eHitSpell)
 	{
 	case ENUM_CLASS(SKILL_TYPE::JAP):
+		if (m_eHitState != ENUM_CLASS(HIT_STATE::END)) {
+			return;
+		}
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		break;
@@ -265,12 +278,16 @@ void CHuman_Duelist::Behavior_HitEnter()
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+		if (m_eHitState != ENUM_CLASS(HIT_STATE::END)) {
+			return;
+		}
 		pairAnimInfo = m_Animation[STATEANIM::DAZED_START];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f);
 		Add_Event(pairAnimInfo.first,
 			[this]() {
 				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::DAZED_LOOP];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_eHitState = ENUM_CLASS(HIT_STATE::STUN); },
 			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::DAZED_LOOP].first,
@@ -287,7 +304,39 @@ void CHuman_Duelist::Behavior_HitEnter()
 		break;
 	}
 
+	{
+		Add_Event(m_Animation[STATEANIM::TUMBLE_FWD].first,
+			[this]() {
+				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_pCharacter_Controller->SetGravity(true);
+				m_pCharacter_Controller->Set_GravityAmount(1.4f);
+				m_eHitState = ENUM_CLASS(HIT_STATE::END); },
+			0.75f);
 
+		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT].first,
+			[this]() {
+				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_FWD];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			},
+			0.95f);
+
+		Add_Event(m_Animation[STATEANIM::TUMBLE].first,
+			[this]() {
+				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_pCharacter_Controller->SetGravity(true);
+				m_pCharacter_Controller->Set_GravityAmount(1.4f);
+				m_eHitState = ENUM_CLASS(HIT_STATE::END); },
+			0.75f);
+
+		Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
+			[this]() {
+				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			},
+			0.95f);
+	}
 
 }
 
@@ -311,13 +360,34 @@ HRESULT CHuman_Duelist::Behavior_HitExitCheck(_float fTimeDelta)
 
 void CHuman_Duelist::Behavior_HitExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::HIT);
-	m_pCharacter_Controller->SetGravity(true);
 	m_pCharacter_Controller->Reset_GravityAmount();
-	m_eHitState = ENUM_CLASS(HIT_STATE::END);
 	m_bLookAt = true;
 	m_fAirTime = 0.f;
 	
+}
+
+void CHuman_Duelist::Behavior_CutSceneEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::CUTSCENE);
+	pair<_uint, _bool> pairAnimInfo;
+	pairAnimInfo = m_Animation[STATEANIM::CUTSCENE_DUEL];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CHuman_Duelist::Behavior_CutSceneExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CHuman_Duelist::Behavior_CutSceneExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::CUTSCENE);
+	m_bBattle = false;
 }
 
 void CHuman_Duelist::Hit_Levioso(_float fTimeDelta)
@@ -340,6 +410,7 @@ void CHuman_Duelist::Hit_Levioso(_float fTimeDelta)
 		}
 		if (m_fAirTime > 2.3f)
 		{
+			m_eHitState = ENUM_CLASS(HIT_STATE::END);
 			pairAnimInfo = m_Animation[STATEANIM::LAND];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_fAirTime = 0.f;
@@ -364,52 +435,38 @@ void CHuman_Duelist::HitState_Behavior(_float fTimeDelta)
 		{
 			if (iCurrAnimIndex != m_Animation[STATEANIM::TUMBLE_FWD].first) {
 				pairAnimInfo = m_Animation[STATEANIM::TUMBLE_FWD];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-
-				Add_Event(pairAnimInfo.first,
-					[this]() {
-						pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT];
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-						m_pCharacter_Controller->SetGravity(true);
-						m_pCharacter_Controller->Set_GravityAmount(1.4f);
-						m_eHitState = ENUM_CLASS(HIT_STATE::END); },
-					0.7f);
-
-				Add_Event(m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT].first,
-					[this]() {
-						pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_FWD];
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-					},
-					0.95f);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.7f, false, 1.5f);
 			}
 			else {
 				pairAnimInfo = m_Animation[STATEANIM::TUMBLE];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.7f, false, 1.5f);
 				m_bHitJap = true;
-				Add_Event(pairAnimInfo.first,
-					[this]() {
-						pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-						m_pCharacter_Controller->SetGravity(true);
-						m_pCharacter_Controller->Set_GravityAmount(1.4f);
-						m_eHitState = ENUM_CLASS(HIT_STATE::END); },
-					0.7f);
-
-				Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-					[this]() {
-						pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
-						m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-					},
-					0.95f);
 			}
-
-	
-			
-
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
 		}
 		break;
 		}
+	}
+
+	if (m_eHitState == ENUM_CLASS(HIT_STATE::STUN))
+	{
+		switch (m_eHitSpell)
+		{
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+		{
+			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+		break;
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		{
+			pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_fAirTime = 0.f;
+		}
+		break;
+		}
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
 	}
 
 	if (m_bHitJap) {
@@ -516,6 +573,15 @@ void CHuman_Duelist::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::HIT, CState_Hit::Create(&Desc));
+	}
+
+	{
+		CState_CutScene::STATE_CUTSCENE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_CutSceneEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_CutSceneExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_CutSceneExit(); };
+		m_States.emplace(FSMSTATE::CUTSCENE, CState_CutScene::Create(&Desc));
 	}
 
 #pragma endregion

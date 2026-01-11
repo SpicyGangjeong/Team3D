@@ -4,6 +4,8 @@
 #include "Dialogue_Choice.h"
 #include "InfoInstance.h"
 #include "Player.h"
+#include "Human_Duelist.h"
+#include "RandomNpc.h"
 #include "Layer.h"
 
 CDialogue_Panel::CDialogue_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -139,15 +141,55 @@ void CDialogue_Panel::Change_Map()
 		1.0f,
 		0.f
 	);
+
+
+	CLayer* pDuelistLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_DUELIST);
+	if (nullptr != pDuelistLayer) {
+		CHuman_Duelist* pDuelist = pDuelistLayer->Get_Object<CHuman_Duelist>();
+		pDuelist->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1016.f, 1.f));
+		pDuelist->Set_Battle(true);
+	}
+
 	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
 	if (nullptr != pLayer) {
+		CHuman_Duelist* pDuelist = pDuelistLayer->Get_Object<CHuman_Duelist>();
 		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
-		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
+		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1008.f, 1.f));
+		pPlayer->Set_Battle(true);
+
+		_vector vPos = pPlayer->Get_WorldPostion();
+		_vector vForward = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+		pPlayer->Get_Component<CTransform>()->LookAt(vPos + vForward);
+
 	}
+
+#ifdef Bin
+	CLayer* pNpcLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_NPC);
+	if (nullptr != pNpcLayer) {
+
+		for (auto& pNpc : *pNpcLayer->Get_Objects())
+		{
+			if (nullptr == dynamic_cast<CRandomNpc*>(pNpc))
+				continue;
+			if (false == dynamic_cast<CRandomNpc*>(pNpc)->Get_BattleObserve_Npc())
+				continue;
+
+			dynamic_cast<CRandomNpc*>(pNpc)->Set_NpcState(ENUM_CLASS(CRandomNpc::NPC_STATE::OBSERVE));
+			dynamic_cast<CRandomNpc*>(pNpc)->Set_Battle(true);
+		}
+	}
+#endif // Bin
+
 }
 
 void CDialogue_Panel::Priority_Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_J))
+	{
+		Change_Map();
+	}
+
 	if (!__super::Chack_Visible())
 	{
 		return;
@@ -181,6 +223,7 @@ void CDialogue_Panel::Update(_float fTimeDelta)
 			Change_Map();
 		}
 	}
+	
 	__super::Update(fTimeDelta);
 }
 

@@ -36,12 +36,14 @@ public:
 	void			Set_RaceRing(class CRaceRing* pRaceRing);
 	class CBroom*	Get_Broom() { return m_pBroom; }
 	void			Set_RaceInfo();
+	_bool			IsParryWindow();
 	_bool			Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix			Get_WandPos();
 	void			Set_OpenDoor(_bool bOpen) { m_bOpenDoor = bOpen; }
 	void			UpdateGrapInteractive(_float fTimeDelta);
 	void			Update_CameraShake(_float fTimeDelta);
 	HRESULT			Update_RaycastElements();
+	void			Set_Battle(_bool bBattle) { m_bDuel_ZOnlyMove = bBattle; }
 	void			Set_Interaction(_bool bInteraction);
 #ifdef _DEBUG
 	void			Render_CameraCoordinateSystem();
@@ -107,6 +109,7 @@ private:
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
 	void Play_SpellHitAnim();
 	void Player_PixRot();
+	void Find_HiddenObjects();
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
@@ -164,7 +167,6 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	array<_float4x4, 256> SkinMatrices = {};
 	array<_int, 256> SecondMaskIndex = {};
 	_bool			m_bOpenDoor = { false };
 	_bool			m_bOpeningCutScene = { false };
@@ -172,6 +174,11 @@ private:
 	_bool			m_bCanParry = {};
 	_bool			m_bBlock = {};
 	_bool			m_bDuel_ZOnlyMove = {};
+	_float			m_fDegree = {};
+	_bool			m_bGuarding = {};
+	_float 			m_fParryTimer = {};
+		
+
 	/* 무적 불 변수*/
 #ifdef _DEBUG
 	_bool			m_isDebugMode = { false };
@@ -244,6 +251,10 @@ private:
 	HRESULT Behavior_BlockExitCheck(_float fTimeDelta);
 	void	Behavior_BlockExit();
 
+	void	Behavior_ParryEnter();
+	HRESULT Behavior_ParryExitCheck(_float fTimeDelta);
+	void	Behavior_ParryExit();
+
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
@@ -276,6 +287,8 @@ private:
 	void Throwing_Interactive();
 	void Attach_Broom();
 	void ProcessHitBehavior();
+	void Calc_CameraPlayerAngle();
+
 #pragma endregion
 
 #pragma region HITBEHAVIOR

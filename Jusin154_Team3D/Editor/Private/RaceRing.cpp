@@ -28,6 +28,15 @@ HRESULT CRaceRing::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	if(nullptr != pArg)
+	{
+		RACERING_DESC* pDesc = static_cast<RACERING_DESC*>(pArg);
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
+		m_pTransformCom->Set_Scale(pDesc->vScale);
+		m_pTransformCom->Set_Rotation(pDesc->vRotation);
+		m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
+	}
+
 	m_iIndex = 0;
 
 	return S_OK;

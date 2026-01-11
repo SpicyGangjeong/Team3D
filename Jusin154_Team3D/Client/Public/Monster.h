@@ -12,7 +12,8 @@ protected:
 	{
 		GROUND,
 		AIR_LEVIOSO,
-		AIR_KNOCKBACK,
+		DESCENDO,
+		STUN,
 		END
 	};
 

@@ -39,6 +39,7 @@ public:
 	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
 	void Set_Shield(_bool bShield) { m_bShield = bShield; }
 	_matrix Get_WandPos();
+	void Set_Battle(_bool bBattle) { m_bBattle = bBattle; }
 private:
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -76,6 +77,7 @@ private:
 	_float			m_fBlendTime = { };
 	_float			m_fHitTimer = {};
 	_bool			m_bHitJap = {};
+	_bool			m_bBattle = {};
 
 
 	_float m_fSkillCoolTime[ENUM_CLASS(SKILL::END)] = {};
@@ -108,6 +110,10 @@ private:
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
+
+	void	Behavior_CutSceneEnter();
+	HRESULT Behavior_CutSceneExitCheck(_float fTimeDelta);
+	void	Behavior_CutSceneExit();
 
 #pragma region HIT_BEHAVIOR
 

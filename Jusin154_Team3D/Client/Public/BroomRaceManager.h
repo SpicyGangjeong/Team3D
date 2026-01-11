@@ -43,6 +43,7 @@ public:
 	_int Get_RaceState() const { return m_eRaceState; }
 
 	HRESULT Load_RaceRing();
+	HRESULT	Load_Balloons();
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };

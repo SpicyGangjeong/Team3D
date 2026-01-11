@@ -406,12 +406,13 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (pEffect_Container != nullptr)
 	{
 		_uint iSkillType = pEffect_Container->Get_SkillType();
-		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+		//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
 
 		switch (iSkillType)
 		{
 		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			m_eHitState = ENUM_CLASS(HIT_STATE::DESCENDO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
@@ -419,6 +420,7 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 		case ENUM_CLASS(SKILL_TYPE::JAP):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
 			m_fTumbleTimer = 0.f;
+			m_fHitTimer = 0.f;
 			break;
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
@@ -452,14 +454,14 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 
-	m_DamageInfo.fDamage = damagePair.first;
+	/*m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
 		_int ID = m_pStat->Get_Stat().iObjectID;
 		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
-	}
+	}*/
 
 
 	m_pFSM->Change_State(FSMSTATE::HIT);

@@ -31,10 +31,10 @@ private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Volumetric();
 	HRESULT Ready_Background();
-	HRESULT Ready_Land();
+	HRESULT Ready_Land(map<_string, class CLand*>* Lands);
 	HRESULT Ready_Layer_Hogsmeade();
 	HRESULT Ready_Layer_Hogwart();
-	HRESULT Ready_IntstanceProp();
+	HRESULT Ready_IntstanceProp(map<_string, class CLand*>* Lands);
 	HRESULT Ready_Markers();
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Camera();
@@ -47,7 +47,10 @@ private:
 	HRESULT Ready_Layer_Monster();
 	HRESULT Ready_Layer_Manager(const _wstring& strLayerTag);
 	HRESULT Reday_Layer_EffectPool();
+	HRESULT Ready_Layer_Duelist();
+	HRESULT Ready_Layer_Npc();
 
+	HRESULT Bind_InstanceProp(map<_string, class CLand*>* Lands, class CInstancedProp* pInstnace, const _char* LandTag);
 public:
 	static pair<CLevel*, function<void()>> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg);
 	virtual void Free() override;

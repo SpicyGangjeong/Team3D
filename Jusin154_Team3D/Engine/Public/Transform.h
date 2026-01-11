@@ -91,7 +91,8 @@ public:
 	void Add_SpeedPerSec(_float fSpeedPerSec);
 
 #ifdef _DEBUG
-	_float3& Get_Rotation() { return m_vRotation; }
+	_float3&	Get_Rotation() { return m_vRotation; }
+	void		Set_Rotation(_float3 vRotation) { m_vRotation = vRotation; }
 #endif // _DEBUG
 
 private:

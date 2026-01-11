@@ -49,7 +49,7 @@ namespace Client {
 #define LAYER_HOGSMEADE		TEXT("Layer_Hogsmeade")
 #define LAYER_HOGWART		TEXT("Layer_Hogwart")
 #define LAYER_MARKER		TEXT("Layer_Marker")
-#define LAYER_PLAYER		TEXT("Layer_Player")
+#define LAYER_PLAYER		TEXT("Layer__Player")
 #define LAYER_CAMERA		TEXT("Layer_Camera")
 #define LAYER_MONSTER		TEXT("Layer_Monster")
 #define LAYER_UI			TEXT("Layer_UI")
@@ -65,10 +65,12 @@ namespace Client {
 #define LAYER_INTERACTABLE	TEXT("Layer_Interactable")
 #define LAYER_UNIFIED		TEXT("Layer_Unified")
 #define LAYER_DOOR			TEXT("Layer_Door")
-#define LAYER_HIDDEN		TEXT("Layer_HIDDEN")
+#define LAYER_HIDDEN		TEXT("Layer__HIDDEN")
 #define LAYER_RING			TEXT("Layer_Ring")
 #define LAYER_RACERAI		TEXT("Layer_RacerAI")
 #define LAYER_DADA_INT		TEXT("Layer_DADA_INT")
+#define LAYER_DUELIST		TEXT("Layer_Duelist")
+#define LAYER_NPC			TEXT("Layer_Npc")
 
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
