@@ -501,6 +501,22 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
+	} break;
+	case TIMESOCKET_FUNC::SET_FSMSTATE:
+	{
+		if (pContents->vFlags.b[0]) {
+			m_pFSM->Change_State(FSMSTATE::CUTSCENE);
+		}
+		else if (pContents->vFlags.b[1]) {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+		}
+	} break;
+	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
+	{
+		
+	} break;
+	case TIMESOCKET_FUNC::UNBIND_SOCKET_MATRIX:
+	{
 
 	} break;
 	default:
@@ -931,7 +947,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pRobePart);
+	//SAFE_RELEASE(m_pRobePart);
 	SAFE_RELEASE(m_pGrapInteractive);
 
 	if (nullptr != m_pInfoInstance) {

@@ -21,6 +21,8 @@ private:
 private:
 	virtual HRESULT Initialize() override;
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
+	void	ResetLevel_Environment() {};
+
 
 
 public:

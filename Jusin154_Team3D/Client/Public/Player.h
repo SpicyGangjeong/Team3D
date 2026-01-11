@@ -86,7 +86,7 @@ private:
 	class CTransform* m_pBroomTransform = { nullptr };
 	class CBroom* m_pBroom = { nullptr };
 	CStat* m_pStat = { nullptr };
-	class CPlayerRobe* m_pRobePart = { nullptr };
+	//class CPlayerRobe* m_pRobePart = { nullptr };
 
 
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
@@ -138,6 +138,7 @@ private:
 	function<void()> m_InputAction = nullptr;
 	_int			m_eUIState = { };
 
+	const _float4x4* m_pCinematicSocketMatrix = { nullptr };
 	_float3			m_OffsetPos = {};
 	_float			m_fAmount = { 1.f };
 	_float			m_fInputTime = {};

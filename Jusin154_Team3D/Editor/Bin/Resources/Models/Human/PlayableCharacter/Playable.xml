@@ -1,210 +1,7 @@
 <Material>
-	<MI_HUM_N_Heads_EyeOcclusion	ShaderIndex = "3" OutLineWrite="3">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="BaseFlattenNormalMap" Extension=".png"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="" Extension=""/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</MI_HUM_N_Heads_EyeOcclusion>
-	<MI_Young_F_Head	ShaderIndex = "6" OutLineWrite="6">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Young_F_Head_Ivory_D" Extension=".png"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="T_Young_F_Head_Generic00_N" Extension=".dds"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="T_YF_HeadBase02_Ivory_SRXO" Extension=".dds"/>
-	</MI_Young_F_Head>
-	<MI_HUM_N_Heads_Teeth	ShaderIndex = "1" OutLineWrite="1">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_Head_Teeth_D" Extension=".dds"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="BaseFlattenNormalMap" Extension=".png"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="T_HUM_Head_Teeth_SRXO" Extension=".dds"/>
-	</MI_HUM_N_Heads_Teeth>
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "25" OutLineWrite="36">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_STUHair18_PrincessLong_DAO_MSK" Extension=".dds"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="BaseFlattenNormalMap" Extension=".png"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="T_Eyelash_A" Extension=".dds"/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="T_HUM_F_Hair_STUHair18_PrincessLong_THV_MSK" Extension=".dds"/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</MI_HUM_N_Heads_Eyelash>
-	<MI_HUM_N_Heads_Eye	ShaderIndex = "26" OutLineWrite="37">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Poltergeist_Eye_D" Extension=".dds"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="BaseFlattenNormalMap" Extension=".png"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="T_Poltergeist_Eye_MRO" Extension=".dds"/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</MI_HUM_N_Heads_Eye>
-	<MI_HUM_F_Body_Arms01	ShaderIndex = "6" OutLineWrite="6">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Adult_F_Arms_Ivory02_D" Extension=".png"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="T_Adult_F_Arms_Ivory02_N" Extension=".dds"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="T_Adult_F_Arms_Ivory_SRXO" Extension=".dds"/>
-	</MI_HUM_F_Body_Arms01>
-	<MI_HUM_F_Hair_Kit	ShaderIndex = "23" OutLineWrite="34">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_STUHair18_PrincessLong_DAO_MSK" Extension=".dds"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="T_HUM_F_Hair_STUHair18_PrincessLong_D" Extension=".dds"/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="BaseFlattenNormalMap" Extension=".png"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="T_HUM_F_Hair_STUHair18_PrincessLong_THV_MSK" Extension=".dds"/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</MI_HUM_F_Hair_Kit>
 	<MI_ClothSim	ShaderIndex = "3" OutLineWrite="3">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="BaseFlattenNormalMap" Extension=".png"/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Blank2_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
@@ -231,110 +28,24 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_ClothSim>
-	<M_HUM_F_Lower_ArcanePants01_Long_RonanAvatar	ShaderIndex = "24" OutLineWrite="35">
+
+	<MI_HUM_F_Acc_GarlickHair	ShaderIndex = "23" OutLineWrite="5">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Low_ArcanePants01_Long_RonanAvatar2_D" Extension=".dds"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="T_HUM_F_Low_ArcanePants01_Long_RonanAvatar2_SRO" Extension=".dds"/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="T_HUM_F_Low_ArcanePants01_Long_RonanAvatar2_N" Extension=".dds"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</M_HUM_F_Lower_ArcanePants01_Long_RonanAvatar>
-	<MI_HUM_F_Shoes_DarkArts01_Short_RonanAvatar	ShaderIndex = "24" OutLineWrite="35">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Shoes_DarkArts01_Short_RonanAvatar_D" Extension=".dds"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="T_HUM_F_Shoes_DarkArts01_Short_RonanAvatar_SRO" Extension=".dds"/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="T_HUM_F_Shoes_DarkArts01_Short_RonanAvatar_N" Extension=".dds"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</MI_HUM_F_Shoes_DarkArts01_Short_RonanAvatar>
-	<MI_HUM_F_Upp_StuUni01	ShaderIndex = "24" OutLineWrite="35">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Upp_StuUni01_D" Extension=".dds"/>
-		<aiTextureType_SPECULAR                Index="2"  Filename="T_HUM_F_Upp_StuUni01_SRO" Extension=".dds"/>
-		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
-		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="T_HUM_F_Upp_StuUni01_N" Extension=".dds"/>
-		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
-		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
-		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
-		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
-		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
-		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
-		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
-		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
-		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
-		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
-		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
-		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
-		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</MI_HUM_F_Upp_StuUni01>
-	<MI_HUM_M_Robe_RelicRobeGry	ShaderIndex = "27" OutLineWrite="38">
-		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_M_Robe_RelicRobeGry_D" Extension=".dds"/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Garlick_Hair_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
-		<aiTextureType_EMISSIVE                Index="4"  Filename="T_HUM_M_Robe_RelicRobeGry_Glow_MSK" Extension=".dds"/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
 		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
-		<aiTextureType_NORMALS                 Index="6"  Filename="T_HUM_M_Robe_RelicRobeGry_N" Extension=".dds"/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_DefaultGrey_D" Extension=".png"/>
 		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
 		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="T_Garlick_Hair_THV_MSK" Extension=".dds"/>
 		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
 		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
 		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
 		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
 		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-		<aiTextureType_METALNESS               Index="15" Filename="T_HUM_M_Robe_RelicRobeGry_MRO" Extension=".dds"/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
 		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
 		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
@@ -346,10 +57,159 @@
 		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</MI_HUM_M_Robe_RelicRobeGry>
-	<MI_HUM_M_RobeRelicRobeGry_Fur	ShaderIndex = "2" OutLineWrite="2">
+	</MI_HUM_F_Acc_GarlickHair>
+
+	<MI_Professor_MirabelGarlick_Updated	ShaderIndex = "8" OutLineWrite="8">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_M_Robe_RelicRobeGry_Fur_D" Extension=".png"/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_MirabelGarlick_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_MirabelGarlick_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="T_MirabelGarlick_MRO" Extension=".dds"/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_Professor_MirabelGarlick_Updated>
+
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "23" OutLineWrite="23">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Garlick_Hair_DAO_MSK" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_DefaultGrey_D" Extension=".png"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="T_Garlick_Hair_THV_MSK" Extension=".dds"/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_HUM_N_Heads_Eyelash>
+	<MI_HUM_N_Heads_Teeth	ShaderIndex = "1" OutLineWrite="1">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_Head_Teeth_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_HUM_Head_Teeth_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="T_HUM_Head_Teeth_SRXO" Extension=".dds"/>
+	</MI_HUM_N_Heads_Teeth>
+	<MI_Adult_F_Head_MirabelGarlick	ShaderIndex = "6" OutLineWrite="6">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Adult_F_Head_MirabelGarlick_D" Extension=".png"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_Adult_F_Head_MIrabelGarlick_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="T_Adult_F_Head_MirabelGarlick_SRXO" Extension=".dds"/>
+	</MI_Adult_F_Head_MirabelGarlick>
+
+	<MI_HUM_N_Heads_EyeOcclusion	ShaderIndex = "3" OutLineWrite="3">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Blank2_MSK" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="" Extension=""/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_HUM_N_Heads_EyeOcclusion>
+
+	<MI_HUM_N_Heads_Eye	ShaderIndex = "2" OutLineWrite="2">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Eye_Iris_D" Extension=".png"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
@@ -375,5 +235,35 @@
 		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
-	</MI_HUM_M_RobeRelicRobeGry_Fur>
+	</MI_HUM_N_Heads_Eye>
+
+	<MI_HUM_F_Hat_GarlickHat01Flowers	ShaderIndex = "8" OutLineWrite="22">
+		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_MirabelGarlick_D" Extension=".dds"/>
+		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
+		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
+		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
+		<aiTextureType_HEIGHT                  Index="5"  Filename="" Extension=""/>
+		<aiTextureType_NORMALS                 Index="6"  Filename="T_MirabelGarlick_N" Extension=".dds"/>
+		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
+		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="" Extension=""/>
+		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
+		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
+		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
+		<aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
+		<aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
+		<aiTextureType_METALNESS               Index="15" Filename="T_MirabelGarlick_MRO" Extension=".dds"/>
+		<aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
+		<aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
+		<aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
+		<aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
+		<aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
+		<aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
+		<aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
+		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
+		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
+	</MI_HUM_F_Hat_GarlickHat01Flowers>
 </Material>

@@ -21,6 +21,7 @@
 #include "BroomRaceManager.h"
 #include "ReparoObject.h"
 #include "ThestralCarriage.h"
+#include "Camera_Cinematic.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -123,7 +124,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
-	m_pInfoInstance->Load_CutScenes();
 
 	return S_OK;
 }
@@ -203,11 +203,6 @@ HRESULT CLevel_GamePlay::Render()
 	return S_OK;
 }
 
-void CLevel_GamePlay::ResettingEnvironment()
-{
-	Ready_Volumetric();
-}
-
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
 
@@ -225,7 +220,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc, nullptr, &m_pLight))) {
 		return E_FAIL;
 	}
 
@@ -317,9 +312,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -890,6 +885,28 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 
 #endif // _DEBUG
 
+	{
+		CCamera_Cinematic::Camera_Cinematic_DESC            Camera_Desc{};
+		Camera_Desc.fSpeedPerSec = 5.f;
+		Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
+		Camera_Desc.fFovy = XMConvertToRadians(60.0f);
+		Camera_Desc.fNear = 0.3f;
+		Camera_Desc.fFar = 500.f;
+		Camera_Desc.pCameraKey = CAMERA_CINEMATIC;
+		Camera_Desc.iPriority = 52;
+		Camera_Desc.bEnableTransitionLerp = false;
+		Camera_Desc.bEnableLookLerp = false;
+		Camera_Desc.bEnableFollowLerp = false;
+		Camera_Desc.vTransitionTime.y = 1.f;
+		Camera_Desc.pFollowTarget = { nullptr };
+		Camera_Desc.pLookTarget = { nullptr };
+
+		CCamera_Cinematic* pCamera = { nullptr };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Cinematic>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_CINEMATIC);
+	}
 	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, true))) {
 		return E_FAIL;
 	}
@@ -931,8 +948,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	isLoad_NPC = true;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -1030,7 +1047,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = true;
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = true;
+	isLoad_Monster = false;
 #endif // 
 #ifdef 나
 
@@ -1102,6 +1119,27 @@ HRESULT CLevel_GamePlay::Reday_Layer_EffectPool()
 	return S_OK;
 }
 
+void CLevel_GamePlay::ResetLevel_Environment()
+{
+	Ready_Volumetric();
+	_float4 vDiffuse;
+	_float4 vAmbient;
+	_float4 vSpecular;
+	if (m_isDay)
+	{
+		vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
+		vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
+		vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
+	}
+	else
+	{
+		vDiffuse = _float4(0.0471f, 0.0745f, 0.1294f, 0.2549f);
+		vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
+		vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+}
+
 pair<CLevel*, function<void()>> CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg)
 {
 	CLevel_GamePlay* pInstance = new CLevel_GamePlay(pDevice, pContext, eLevelID);
@@ -1112,7 +1150,8 @@ pair<CLevel*, function<void()>> CLevel_GamePlay::Create(ID3D11Device* pDevice, I
 		SAFE_RELEASE(pInstance);
 	}
 
-	return { pInstance, [pInstance]() { pInstance->Ready_Layer_Camera(); pInstance->Ready_Layer_Sound(); } };
+	return { pInstance, [=]() { pInstance->Ready_Layer_Camera(); pInstance->Ready_Layer_Sound();
+	pInstance->m_pInfoInstance->Load_CutScenes(); } };
 }
 
 void CLevel_GamePlay::Free()

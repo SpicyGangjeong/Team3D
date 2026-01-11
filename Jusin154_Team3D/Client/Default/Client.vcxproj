@@ -212,7 +212,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Impact.h" />
     <ClInclude Include="..\Public\Ranrok_Land.h" />
     <ClInclude Include="..\Public\Ranrok_Point.h" />
-    <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
     <ClInclude Include="..\Public\Ranrok_Prop.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
@@ -494,7 +493,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Human_Duelist_States.cpp" />
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Duelist_JapSide.cpp" />
-    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
     <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Protego_Hit.cpp" />
@@ -515,7 +513,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ranrok_Impact.cpp" />
     <ClCompile Include="..\Private\Ranrok_Land.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
-    <ClCompile Include="..\Private\PlayerRobe.cpp" />
     <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />

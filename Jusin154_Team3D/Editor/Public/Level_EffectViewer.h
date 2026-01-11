@@ -24,6 +24,7 @@ private:
 	HRESULT Ready_Layer_Effect(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_PhysX(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);
+	void ResetLevel_Environment() {};
 
 	PHYSX_USERDATA		 m_PlaneData = {};
 	class CInfoInstance* m_pInfoInstance = { nullptr };

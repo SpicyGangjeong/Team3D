@@ -14,12 +14,11 @@ private:
 public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual void ResettingEnvironment();
-
 
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
+	class CLight_Main* m_pLight = { nullptr };
 
 	_bool m_isDay = { true };
 
@@ -47,6 +46,7 @@ private:
 	HRESULT Ready_Layer_Monster();
 	HRESULT Ready_Layer_Manager(const _wstring& strLayerTag);
 	HRESULT Reday_Layer_EffectPool();
+	void	ResetLevel_Environment();
 
 public:
 	static pair<CLevel*, function<void()>> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg);

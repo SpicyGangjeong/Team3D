@@ -9,6 +9,7 @@
 #include "CamPosition_Arm.h"
 #include "State_CutScene.h"
 #include "Wand.h"
+#include "ThestralCarriage.h"
 #include "Item_Potion.h"
 #include "Character_Controller.h"
 #include "MapElement_Interactable.h"
@@ -370,16 +371,11 @@ HRESULT CPlayer::Behavior_CutSceneExitCheck(_float fTimeDelta)
 {
 	if (m_bOpeningCutScene)
 	{
-		//_vector Offset = XMVectorSet(1.820f, 0.44f, 0.f, 0.f);
-		//m_pTransformCom->Set_WorldMatrix(m_pCarriage->Get_Component<CTransform>()->Get_XMWorldMatrix());
-		m_pCharacter_Controller->Set_Position(m_pCarriage->Get_WorldPostion() /*+ Offset*/);
+		m_pTransformCom->Set_State(STATE::POSITION, m_pCarriage->Get_SocketWorldMatrix(CThestralCarriage::CARRIAGE_SOCKET::FRONT_RIGHT).r[3]);
+		m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
+		m_pTransformCom->RotationQ(XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f)));
 	}
 
-	/*if (m_pCarriage->Get_Component<CModel>()->IsFinishedAnim())
-	{
-		m_pFSM->Change_State(FSMSTATE::IDLE);
-		return E_FAIL;
-	}*/
 	return S_OK;
 }
 

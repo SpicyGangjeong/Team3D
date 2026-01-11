@@ -9,6 +9,7 @@
 #include "TimeSocket.h"
 #include "Camera_Cinematic.h"
 #include "Ranrok.h"
+#include "ThestralCarriage.h"
 
 CCutSceneInfo::CCutSceneInfo()
 {
@@ -169,6 +170,9 @@ HRESULT CCutSceneInfo::Clear_AllEvents()
 }
 HRESULT CCutSceneInfo::Ready_GameplayCutScenes()
 {
+	{
+		Load_CutSceneXML("../Bin/Resources/Data/CutScene/CarriageIntro.xml");
+	}
 	return S_OK;
 }
 HRESULT CCutSceneInfo::Ready_FieldCutScenes()
@@ -353,7 +357,7 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 	}
 
 	TimeLine* pTimeLine = new TimeLine();
-	tinyxml2::XMLElement* pContentsNode = doc.FirstChildElement("RanrokIntro");
+	tinyxml2::XMLElement* pContentsNode = doc.FirstChildElement();
 	if (!pContentsNode) {
 		return;
 	}
@@ -368,11 +372,13 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 	{
 		SOCKETCONTENTS SocketContents = {};
 
+		_float fStartPosition = 0.f;
 		SocketContents.fRatio = 0.f;
-		_float fStartPosition = 0;
 		pSocketNode->QueryFloatAttribute("fStartPosition", &fStartPosition);
 		SocketContents.fRatio = CMyTools::Saturate(fStartPosition / pTimeLine->m_vTimer.y);
+
 		// Info
+		_bool bUseSystem = false;
 		tinyxml2::XMLElement* pInfoNode = pSocketNode->FirstChildElement("Info");
 		if (pInfoNode != nullptr)
 		{
@@ -422,8 +428,27 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 					SocketContents.pEventTarget = pEventTarget;
 					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
 				}
+				else if (strcmp(pTargetText, "ACTOR_CARRIAGE") == 0)
+				{
+					CThestralCarriage* pEventTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_ITEM)->Get_Object<CThestralCarriage>();
+					SocketContents.pEventTarget = pEventTarget;
+					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
+				}
+				else if (strcmp(pTargetText, "SYSTEM") == 0)
+				{
+					bUseSystem = true;
+				}
+				assert((nullptr != SocketContents.pEventTarget) || bUseSystem);
+				assert((nullptr != SocketContents.funcEvent) || bUseSystem);
 			}
 		}
+
+		// -------- vFlags / Param_10 / Param_11 / Param_12 ----------
+		ReadFlags16(pSocketNode->FirstChildElement("vFlags"), SocketContents.vFlags);
+		ReadUInt4(pSocketNode->FirstChildElement("Param_10"), SocketContents.vParam_10);
+		ReadFloat4(pSocketNode->FirstChildElement("Param_11"), SocketContents.vParam_11);
+		const _char* pStringParma = pSocketNode->FirstChildElement("Param_12")->FirstChildElement("string")->Attribute("tag");
+		SocketContents.vParam_12 = pStringParma;
 
 		// -------- Param_0 ----------
 		tinyxml2::XMLElement* pParam0Node = pSocketNode->FirstChildElement("Param_0");
@@ -445,10 +470,17 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 				SocketContents.wstrLayerName = CMyTools::ToWstring(pLayerNameText);
 				SocketContents.wstrKeyName = CMyTools::ToWstring(pTypeIdText);
 
-				if (string_view(pTypeIdText) == "Ranrok")
+				if (string_view(pTypeIdText) == "ACTOR_RANROK")
 				{
-					SocketContents.pOtherTarget =
-						m_pGameInstance->Get_Layer(NEXT_LEVEL, SocketContents.wstrLayerName)->Get_Object<CRanrok>();
+					SocketContents.pOtherTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, SocketContents.wstrLayerName)->Get_Object<CRanrok>();
+				}
+				else if (string_view(pTypeIdText) == "ACTOR_PLAYER")
+				{
+					SocketContents.pOtherTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, SocketContents.wstrLayerName)->Get_Object<CPlayer>();
+				}
+				else if (string_view(pTypeIdText) == "ACTOR_CARRIAGE")
+				{
+					SocketContents.pOtherTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, SocketContents.wstrLayerName)->Get_Object<CThestralCarriage>();
 				}
 				else if (string_view(pTypeIdText) == "CAMERA_CINEMATIC")
 				{
@@ -458,28 +490,48 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 				{
 					SocketContents.pOtherTarget = m_pGameInstance->Get_Camera(NEXT_LEVEL, CAMERA_SHOULDER);
 				}
-
-				break;
-			}
-
+				assert(nullptr != SocketContents.pOtherTarget);
+			}break;
 			case TIMESOCKET_PARAM::TRANSFORM:
 			{
 				tinyxml2::XMLElement* pTransformNode = pParam0Node->FirstChildElement("Transform");
 				ReadPxTransform(pTransformNode, SocketContents.pxTransform);
-				break;
-			}
+				
+			}break;
+			case TIMESOCKET_PARAM::NOT_USE:
+			{
+				if (true == bUseSystem) {
+					switch (SocketContents.eTypeFunc)
+					{
+					case TIMESOCKET_FUNC::STOP_CINEMATIC:
+						SocketContents.funcEvent = [&](CTimeSocket& Socket) { m_pInfoInstance->DeActive_ActiveEvent(Socket.m_Contents.vParam_12); };
+						break;
+					case TIMESOCKET_FUNC::RESET_ENVIRONMENT:
+						SocketContents.funcEvent = [&](CTimeSocket& Socket) { m_pGameInstance->ResetLevel_Environment();  };
+						break;
+					case TIMESOCKET_FUNC::SET_VOLUMETRIC:
+						SocketContents.funcEvent = [&](CTimeSocket& Socket) { 
+							if (Socket.m_Contents.vFlags.b[0]) {
+								m_pGameInstance->Setting_Volumetirc(
+									Socket.m_Contents.pxTransform.q.x, Socket.m_Contents.pxTransform.q.y, Socket.m_Contents.pxTransform.q.z,
+									Socket.m_Contents.pxTransform.p.x, Socket.m_Contents.pxTransform.p.y);
+							}
+							else {
+							}
+							};
+						break;
+					default:
+						break;
+					}
+					assert(nullptr != SocketContents.funcEvent);
+				}
+			}break;
 			case TIMESOCKET_PARAM::END:
 			default:
 				break;
 			}
 		}
 
-		// -------- vFlags / Param_10 / Param_11 / Param_12 ----------
-		ReadFlags16(pSocketNode->FirstChildElement("vFlags"), SocketContents.vFlags);
-		ReadUInt4(pSocketNode->FirstChildElement("Param_10"), SocketContents.vParam_10);
-		ReadFloat4(pSocketNode->FirstChildElement("Param_11"), SocketContents.vParam_11);
-		const _char* pStringParma = pSocketNode->FirstChildElement("Param_12")->FirstChildElement("string")->Attribute("tag");
-		SocketContents.vParam_12 = pStringParma;
 		CTimeSocket* pSocket = CTimeSocket::Create(&SocketContents);
 		if (!pSocket) {
 			continue;

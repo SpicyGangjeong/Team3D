@@ -61,6 +61,11 @@ void CCamPosition_Target::Stop_Stalking()
 	m_pTargetSocketMatrix = nullptr;
 }
 
+_matrix CCamPosition_Target::Get_XMWorldMatrix()
+{
+	return m_pTransformCom->Get_XMWorldMatrix();
+}
+
 HRESULT CCamPosition_Target::Initialize_Prototype()
 {
 	return S_OK;

@@ -746,9 +746,6 @@
     <ClInclude Include="..\Public\Player_ENUM.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerRobe.h">
-      <Filter>02.GameObjects\Player\Robe</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Goblin_Assassin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
     </ClInclude>
@@ -923,7 +920,9 @@
     <ClInclude Include="..\Public\Ranrok_ENUM.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h" />
+    <ClInclude Include="..\Public\TriggerBox.h">
+      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1569,9 +1568,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point">
       <UniqueIdentifier>{a94e24d2-0f61-4263-b834-bfdf9f6c06ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Player\Robe">
-      <UniqueIdentifier>{f3c7cf8d-2b83-49d3-85da-fe135e376a11}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin">
       <UniqueIdentifier>{af9f5cf6-151a-49bc-9af4-28ba0bde1d37}</UniqueIdentifier>
@@ -2614,9 +2610,6 @@
     <ClCompile Include="..\Private\State_Dash.cpp">
       <Filter>04.Mechanic\State\Movement\Dash</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerRobe.cpp">
-      <Filter>02.GameObjects\Player\Robe</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Goblin_Spector.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector</Filter>
     </ClCompile>
@@ -2707,9 +2700,6 @@
     <ClCompile Include="..\Private\Human_Duelist_States.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp">
-      <Filter>02.GameObjects\Player\Robe</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush</Filter>
     </ClCompile>
@@ -2779,7 +2769,9 @@
     <ClCompile Include="..\Private\State_Block.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
+    <ClCompile Include="..\Private\TriggerBox.cpp">
+      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Goblin_States.cpp">

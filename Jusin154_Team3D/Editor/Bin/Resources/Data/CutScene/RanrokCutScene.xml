@@ -409,7 +409,7 @@
 	<Socket fStartPosition = "10">
 		<Info strEventName = "LOOK_RANROK" eTypeParam = "TARGET" pTarget = "CAMERA_CINEMATIC" eTypeFunc="LOOK_AT"/>
 		<Param_0>
-			<OtherTarget Layer = "Layer_Monster" TypeID = "Ranrok"/>
+			<OtherTarget Layer = "Layer_Monster" TypeID = "ACTOR_RANROK"/>
 			<Transform>
 				<RotQ X="" Y="" Z="" W=""/>
 				<Trans X="" Y="" Z=""/>

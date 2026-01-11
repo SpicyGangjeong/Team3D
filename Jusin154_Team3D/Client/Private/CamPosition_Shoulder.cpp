@@ -455,7 +455,7 @@ CCamPosition_Shoulder* CCamPosition_Shoulder::Create(ID3D11Device* pDevice, ID3D
 }
 CCamPosition_Shoulder* CCamPosition_Shoulder::Clone(void* pArg, class CGameObject* pOWner)
 {
-	CCamPosition_Shoulder* pInstance = new CCamPosition_Shoulder(*this);
+      	CCamPosition_Shoulder* pInstance = new CCamPosition_Shoulder(*this);
 	pInstance->m_pOwner = pOWner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
