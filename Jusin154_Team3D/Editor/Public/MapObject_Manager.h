@@ -95,6 +95,8 @@ private:
 
 	HRESULT		Save_EffectParts(const _char* pFileName);
 	HRESULT		Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath);
+
+	HRESULT		Save_DummyNpc(const _char* pFileName);
 #pragma endregion
 
 	void		Update_PrototypeList();
@@ -107,6 +109,7 @@ private:
 	void 		Update_RaceRing();
 	void		Update_EffectParts();
 	void		Update_Balloon();
+	void		Update_DummyNpc();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
 	void		Create_Elemnt(_wstring& strPrototypeTag);

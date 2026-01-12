@@ -634,7 +634,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
-	Desc.bEditMode = true;
+	Desc.bEditMode = false;
 	Desc.isShake = false;
 	Desc.iShaderPassIndex = 4;
 	Desc.vRadius = _float2(0.f, 0.f);
