@@ -329,6 +329,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
+	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
@@ -565,6 +566,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogwart()
 {
 	CInfoInstance::GetInstance()->Load_MapObjects("Hogwart_MapContainer_Data", LAYER_HOGWART);
 	CInfoInstance::GetInstance()->Load_MapObjects("HogwartMap1221", LAYER_HOGWART);
+	CInfoInstance::GetInstance()->Load_MapObjects("CaveData", LAYER_HOGWART);
 
 	CUnified::UNIFIED_DESC Desc = {};
 
@@ -986,11 +988,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-			return E_FAIL;
-		}
-	}
+	//for (_uint i = 0; i < 1; ++i) {
+	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+	//		return E_FAIL;
+	//	}
+	//}
 
 	return S_OK;
 }

@@ -19,6 +19,8 @@
 #include "Layer.h"
 #include "EffectParts.h"
 #include "RandomNpc.h"
+#include "MapElement_Cave.h"
+#include "ReparoObject.h"
 
 CMapInfo::CMapInfo()
 {
@@ -155,6 +157,10 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTa
 		{
 			Desc.bVisible = false;
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc);
+		}
+		else if (MAPOBJECT_TYPE::ELEMENT_CAVE == eType)
+		{
+			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Cave>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc);
 		}
 		/*else if (MAPOBJECT_TYPE::ELEMENT_INTERACT == eType)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);*/
@@ -825,6 +831,48 @@ HRESULT CMapInfo::Load_EffectParts(const _char* pFileName, const _char* pEffectr
 		pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
 		pEffect->Load(pEffectrFilePath, static_cast<LEVEL>(g_iStaticLevel));
 		pEffect->Set_Visible(true);
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_ReparoObjects(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Reparo/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Reparo");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CReparoObject::REPARO_OBJECT_DESC Desc = {};
+
+		Object->QueryUnsignedAttribute("Type", &Desc.iModelID);
+		Object->QueryFloatAttribute("Radius", &Desc.fRadius);
+
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, LAYER_REPARO, &Desc)))
+			return E_FAIL;
 	}
 
 	return S_OK;

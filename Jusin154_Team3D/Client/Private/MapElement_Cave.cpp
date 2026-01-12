@@ -1,26 +1,26 @@
 ﻿#include "pch.h"
-#include "MapElement_Static.h"
-
+#include "MapElement_Cave.h"
 #include "GameInstance.h"
 
 #include "Layer.h"
+#include "TriggerBox.h"
 
-CMapElement_Static::CMapElement_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMapElement_Cave::CMapElement_Cave(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapElement{ pDevice, pContext }
 {
 }
 
-CMapElement_Static::CMapElement_Static(const CMapElement_Static& rhs)
+CMapElement_Cave::CMapElement_Cave(const CMapElement_Cave& rhs)
 	: CMapElement(rhs)
 {
 }
 
-HRESULT CMapElement_Static::Initialize_Prototype()
+HRESULT CMapElement_Cave::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMapElement_Static::Initialize(void* pArg)
+HRESULT CMapElement_Cave::Initialize(void* pArg)
 {
 	MAPELEMENT_DESC* pDesc = static_cast<MAPELEMENT_DESC*>(pArg);
 
@@ -52,26 +52,42 @@ HRESULT CMapElement_Static::Initialize(void* pArg)
 	ReadyForPhysX();
 	ConvertToPhysX();
 
+	if (FAILED(Ready_TriggerBox()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
-void CMapElement_Static::Priority_Update(_float fTimeDelta)
+void CMapElement_Cave::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CMapElement_Static::Update(_float fTimeDelta)
+void CMapElement_Cave::Update(_float fTimeDelta)
 {
 }
 
-void CMapElement_Static::Late_Update(_float fTimeDelta)
+void CMapElement_Cave::Late_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vWorldCenterPosition), 1.f), m_fRadius)) {
-		if(m_bVisible)
+		if (m_bVisible)
+		{
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#ifdef _DEBUG
+			m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, m_pTriggerBox);
+#endif // _DEBUG
+
+		}
+
+
+
+		if (SUCCEEDED(m_pTriggerBox->TryScanArea(fTimeDelta)))
+		{
+			Enter_Cave();
+		}
 	}
 }
 
-HRESULT CMapElement_Static::Render()
+HRESULT CMapElement_Cave::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -83,7 +99,7 @@ HRESULT CMapElement_Static::Render()
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		
+
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
 			return E_FAIL;
 		}
@@ -96,7 +112,7 @@ HRESULT CMapElement_Static::Render()
 	return S_OK;
 }
 
-HRESULT CMapElement_Static::Ready_Components(void* pArg)
+HRESULT CMapElement_Cave::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
@@ -122,7 +138,7 @@ HRESULT CMapElement_Static::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CMapElement_Static::Bind_ShaderResources()
+HRESULT CMapElement_Cave::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
@@ -141,7 +157,23 @@ HRESULT CMapElement_Static::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CMapElement_Static::ReadyForPhysX()
+HRESULT CMapElement_Cave::Ready_TriggerBox()
+{
+	CTriggerBox::TRIGGERBOX_DESC Desc = {};
+
+	XMStoreFloat4(&Desc.vPosition_Radius, m_pTransformCom->Get_State(STATE::POSITION));
+	Desc.vPosition_Radius.w = 10.f;
+
+	m_pTriggerBox = CTriggerBox::Create(m_pDevice, m_pContext, &Desc);
+
+#ifdef _DEBUG
+
+#endif // _DEBUG
+
+	return S_OK;
+}
+
+void CMapElement_Cave::ReadyForPhysX()
 {
 	if (true == m_bConverted) {
 		return;
@@ -156,7 +188,7 @@ void CMapElement_Static::ReadyForPhysX()
 	}
 }
 
-void CMapElement_Static::ConvertToPhysX()
+void CMapElement_Cave::ConvertToPhysX()
 {
 	if (true == m_bReadyToCreatePhysX) {
 		return;
@@ -182,33 +214,38 @@ void CMapElement_Static::ConvertToPhysX()
 	}
 }
 
-CMapElement_Static* CMapElement_Static::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+void CMapElement_Cave::Enter_Cave()
 {
-	CMapElement_Static* pInstance = new CMapElement_Static(pDevice, pContext);
+	m_pGameInstance->Set_LevelToChange();
+}
+
+CMapElement_Cave* CMapElement_Cave::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CMapElement_Cave* pInstance = new CMapElement_Cave(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMapElement_Static");
+		MSG_BOX("Failed to Created : CMapElement_Cave");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMapElement_Static::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CMapElement_Cave::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMapElement_Static* pInstance = new CMapElement_Static(*this);
+	CMapElement_Cave* pInstance = new CMapElement_Cave(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMapElement_Static");
+		MSG_BOX("Failed to Cloned : CMapElement_Cave");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMapElement_Static::Free()
+void CMapElement_Cave::Free()
 {
 	__super::Free();
 
@@ -223,7 +260,7 @@ void CMapElement_Static::Free()
 }
 
 #ifdef _DEBUG
-void CMapElement_Static::Describe_Entity()
+void CMapElement_Cave::Describe_Entity()
 {
 
 }

@@ -947,6 +947,9 @@
     <ClInclude Include="..\Public\Elf.h">
       <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapElement_Cave.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1953,6 +1956,12 @@
     <Filter Include="02.GameObjects\NPC\Ally\Elf">
       <UniqueIdentifier>{9263815e-9651-4ba2-813f-c2a7f207522d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.InfoInstance\NewFilter1">
+      <UniqueIdentifier>{44a8eee1-6b7f-4c9a-bf92-21f6b90e84c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Cave">
+      <UniqueIdentifier>{5599bbbd-12f7-4b40-8e3d-24f869cce464}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2819,6 +2828,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\StupefySide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Stupefy\StupefySide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Cave.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
