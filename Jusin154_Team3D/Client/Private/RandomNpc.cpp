@@ -40,9 +40,9 @@ HRESULT CRandomNpc::Initialize(void* pArg)
 	_vector vPos = XMLoadFloat4(&pDesc->vPos);
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pCharacter_Controller->Set_Position(vPos);
-	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
+	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotQ.x), XMConvertToRadians(pDesc->vRotQ.y), XMConvertToRadians(pDesc->vRotQ.z));
 
-	m_pModelCom->Set_AnimationIndex(0, true);
+	m_pModelCom->Set_AnimationIndex(1, true);
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	m_bNpc = true;
@@ -320,7 +320,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, pArg))) {
+	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, &Desc))) {
 		return E_FAIL;
 	}
 	 
@@ -363,33 +363,27 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 		m_bBattleObserve_Npc = true;
-		break;
+		break;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	case 6:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_Elf_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("ELF"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-	case 7:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_BaiHowin_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("BAIHOWIN"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		break;
-	case 8:
+	case 7:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_GeorgeOsric_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("GEORGEOSRIC"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		m_bBattleObserve_Npc = true;
 		break;
-	case 9:
+	case 8:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_DinahHecat_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("DINAHHECAT"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		break;
-	case 10:
+	case 9:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_MudiwaOnai_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MUDIWAONAI"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;

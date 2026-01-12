@@ -35,6 +35,7 @@
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
 #include "RandomNpc.h"
+#include "Elf.h"
 #pragma endregion
 
 
@@ -107,9 +108,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
@@ -1105,10 +1106,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 {
 	_bool isLoad_NPC = { true };
 	_bool isLoad_RandomNPC = { true };
+	_bool isRandomPosition = { true };
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
+	isRandomPosition = false;
 #endif // gimch
 #ifdef 진우
 	isLoad_RandomNPC = true;
@@ -1145,12 +1148,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 				return E_FAIL;
 			}
 		}
+		{
+			CElf::ELFDESC ElfDesc{};
+			ElfDesc.vPos = _float4(-84.20f, -30.98f, -60.13f, 1.f);
+			ElfDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CElf>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &ElfDesc))) {
+				return E_FAIL;
+			}
+		}
 	}
 
 	if (true == isLoad_RandomNPC)
 	{
-		for (_uint i = 0; i < 11; i++)
+		if(isRandomPosition)
 		{
+			for (_uint i = 0; i < 10; i++)
 			{
 				CRandomNpc::NPCDESC NPCDesc{};
 				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
@@ -1163,6 +1176,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 				}
 			}
 		}
+		else
+			m_pInfoInstance->Load_Npc();
 	}
 	return S_OK;
 }

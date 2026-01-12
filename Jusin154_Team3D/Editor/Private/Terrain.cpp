@@ -306,35 +306,35 @@ void CTerrain::Describe_Entity()
 	GUI::Begin("Terrain");
 
 #pragma region ALPHA_MAP
-	//GUI::InputInt("Color", &m_iColorIndex);
-	//m_iColorIndex = max(0, min(4, m_iColorIndex));
-
+	GUI::InputInt("Color", &m_iColorIndex);
+	m_iColorIndex = max(0, min(4, m_iColorIndex));
+	//GUI::Checkbox("Flat", &m_isFlat);
 	GUI::InputInt("Rnage", (_int*)(&m_iMaskRange));
-	//GUI::DragFloat("Value", &m_fMaskValue, 0.01f, -1.0f, 1.f);
-	//if (GUI::Button("Save", ImVec2(100.f, 30.f)))
-	//{
-	//	m_pAlphaMap->Save_ToFile("Hogwart_AlphaMap.bin");
-	//}
-	//if (GUI::Button("Load", ImVec2(100.f, 30.f)))
-	//{
-	//	m_pAlphaMap->Load_ToFile("Hogwart_AlphaMap.bin");
-	//}	
+	GUI::DragFloat("Value", &m_fMaskValue, 0.01f, -1.0f, 1.f);
+	if (GUI::Button("Save", ImVec2(100.f, 30.f)))
+	{
+		m_pAlphaMap->Save_ToFile("Hogsmeade_AlphaMap.bin");
+	}
+	if (GUI::Button("Load", ImVec2(100.f, 30.f)))
+	{
+		m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
+	}	
 
 	m_iMaskRange = max(0, m_iMaskRange);
 	GUI::InputFloat("Up Value", &m_fUpValue, 0.001f, 0.1f);
-
+	GUI::InputFloat3("Picking Pos", (_float*)(&m_vPickingPosition));
 	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 	{
 		if (m_pGameInstance->isPicking(&m_vPickingPosition))
-		{
+		{/*
 			if (m_pGameInstance->Key_Pressing(DIK_PERIOD))
-				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue, m_vPickingPosition, m_iMaskRange);
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue , m_vPickingPosition, m_iMaskRange, m_isFlat);
 			if (m_pGameInstance->Key_Pressing(DIK_COMMA))
-				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue * -1.f, m_vPickingPosition, m_iMaskRange);
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue, m_vPickingPosition, m_iMaskRange, m_isFlat);*/
 
-			//XMStoreFloat3(&m_vPickingPosition, XMVector3TransformCoord(XMLoadFloat3(&m_vPickingPosition), m_pTransformCom->Get_WorldMatrixInv()));
-			//if(m_pGameInstance->Key_Pressing(DIK_M))
-			//	m_pAlphaMap->Update(m_vPickingPosition, m_iColorIndex, m_fMaskValue, m_iMaskRange);
+			XMStoreFloat3(&m_vPickingPosition, XMVector3TransformCoord(XMLoadFloat3(&m_vPickingPosition), m_pTransformCom->Get_WorldMatrixInv()));
+			if(m_pGameInstance->Key_Pressing(DIK_M))
+				m_pAlphaMap->Update(m_vPickingPosition, m_iColorIndex, m_fMaskValue, m_iMaskRange);
 
 		}
 	}

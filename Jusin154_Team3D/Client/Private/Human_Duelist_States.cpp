@@ -263,6 +263,7 @@ void CHuman_Duelist::Behavior_HitEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	m_bLookAt = false;
+	m_bCameraShake = true;
 
 	switch (m_eHitSpell)
 	{
@@ -343,6 +344,15 @@ void CHuman_Duelist::Behavior_HitEnter()
 HRESULT CHuman_Duelist::Behavior_HitExitCheck(_float fTimeDelta)
 {
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first || 
+		iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT].first)
+	{
+		if (true == m_pCharacter_Controller->IsOnGround() && m_bCameraShake) {
+			CameraShake(10.f, 1.f, 2.f, 0.3f);
+			m_bCameraShake = false;
+		}
+	}
 	
 	Hit_Levioso(fTimeDelta);
 

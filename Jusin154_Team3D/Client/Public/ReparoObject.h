@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "Unit.h"
+#include "Monster.h"
 
 NS_BEGIN(Client)
 
-class CReparoObject final : public CUnit
+class CReparoObject final : public CMonster
 {
 private:
 	CReparoObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -21,11 +21,9 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CInfoInstance* m_pInfoInstance = { nullptr };
-
-private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	HRESULT Render_OutLine();
 
 public:
 	static CReparoObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

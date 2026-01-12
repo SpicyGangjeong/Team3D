@@ -931,6 +931,9 @@
     <ClInclude Include="..\Public\Broom_TargetGate2D.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Elf.h">
+      <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1925,6 +1928,12 @@
     <Filter Include="02.GameObjects\Effect\Effects\Accio\AccioSide">
       <UniqueIdentifier>{0e6d6920-c33c-4202-a2a5-3c883e1d4597}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\Elf">
+      <UniqueIdentifier>{9263815e-9651-4ba2-813f-c2a7f207522d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\NewFilter1">
+      <UniqueIdentifier>{44a8eee1-6b7f-4c9a-bf92-21f6b90e84c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2811,6 +2820,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Elf.cpp">
+      <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

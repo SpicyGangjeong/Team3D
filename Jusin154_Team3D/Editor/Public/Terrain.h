@@ -50,6 +50,7 @@ private:
 
 	_bool					m_bUsePsx = { false };
 	_bool					m_isEdit = {};
+	_bool					m_isFlat = {};
 
 	_float					m_fUsingSurfaceParams = {};
 	_float					m_fHeightRatio = {1.f};

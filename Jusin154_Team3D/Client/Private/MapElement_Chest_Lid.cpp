@@ -36,7 +36,7 @@ HRESULT CMapElement_Chest_Lid::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_fOpenDuration = 0.1f;
+	m_fOpenDuration = 0.3f;
 	m_fRotationAngle = pDesc->fRotaitionAngle;
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vLid_Offset), 1.f));
 

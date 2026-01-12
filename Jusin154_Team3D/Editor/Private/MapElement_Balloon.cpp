@@ -47,8 +47,8 @@ HRESULT CMapElement_Balloon::Initialize(void* pArg)
 		m_isFloating = false;
 		m_iDiffuseIndex = 0;
 		m_vPosition = _float3(0.f, 0.f, 0.f);
-		m_vScale = _float3(0.f, 0.f, 0.f);
-		m_vRotation = _float3(1.f, 1.f, 1.f);
+		m_vScale = _float3(1.f, 1.f, 1.f);
+		m_vRotation = _float3(0.f, 0.f, 0.f);
 	}
 
 	memcpy(&m_vOriginPosition, &m_vPosition, sizeof(_float3));

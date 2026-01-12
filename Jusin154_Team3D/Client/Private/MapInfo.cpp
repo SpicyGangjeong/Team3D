@@ -18,6 +18,7 @@
 #include "InstancedProp_Light.h"
 #include "Layer.h"
 #include "EffectParts.h"
+#include "RandomNpc.h"
 
 CMapInfo::CMapInfo()
 {
@@ -849,6 +850,47 @@ HRESULT CMapInfo::Load_DADA_INT()
 	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/SM_HW_LightFixture_Base_D.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_DADA_INT, &LightDesc)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_Npc()
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/NPC/DummyNPC_Data.xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("NPC");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CRandomNpc::NPCDESC NPCDesc{};
+		Object->QueryIntAttribute("Index", &NPCDesc.iIndex);
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &NPCDesc.vPos.x);
+		Position->QueryFloatAttribute("y", &NPCDesc.vPos.y);
+		Position->QueryFloatAttribute("z", &NPCDesc.vPos.z);
+		NPCDesc.vPos.w = 1.f;
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &NPCDesc.vRotQ.x);
+		Rotation->QueryFloatAttribute("y", &NPCDesc.vRotQ.y);
+		Rotation->QueryFloatAttribute("z", &NPCDesc.vRotQ.z);
+		NPCDesc.vRotQ.w = 1.f;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRandomNpc>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &NPCDesc))) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
