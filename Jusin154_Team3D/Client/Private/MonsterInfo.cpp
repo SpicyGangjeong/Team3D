@@ -147,7 +147,7 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 		{
 			// (카메라의 룩)과 (카메라 -> 몬스터 방향 벡터)를 내적해서 가장 큰 크기가 나온 몬스타가 락온 대상
 			CMonster* pMonster = (*iter);
-			if (pMonster->Get_Hp().x <= 0) {
+			if (pMonster->isDead()) {
 				continue;
 			}
 			vMonsterPos = pMonster->Get_LockOnPos();

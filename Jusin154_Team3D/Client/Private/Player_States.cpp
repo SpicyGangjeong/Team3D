@@ -1116,7 +1116,6 @@ void CPlayer::Behavior_CombatEnter()
 				0.1f);
 		}
 	}
-	
 }
 
 HRESULT CPlayer::Behavior_CombatExitCheck()

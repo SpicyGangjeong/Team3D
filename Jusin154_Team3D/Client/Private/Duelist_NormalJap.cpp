@@ -135,8 +135,11 @@ void CDuelist_NormalJap::Late_Update(_float fTimeDelta)
 			_vector vEndPos = XMLoadFloat4(&m_vEndPos);
 			if (false == XMVector3NearEqual(vEndPos, XMVectorZero(), XMVectorReplicate(FLT_EPSILON5)))
 			{
-				ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.02f);
+				ON_COLLISION_INFO CollisionInfo = MonsterSweepTarget(vStartPos, vEndPos, 0.02f);
 				OnCollision(this, &CollisionInfo);
+			}
+			else {
+				int a = 0;
 			}
 		}
 	}
