@@ -95,6 +95,7 @@
 #include "Enemy_Panel.h"
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
+#include "Enemy_SkillUI.h"
 #include "Boss_HpBar.h"
 #include "Enemy_Detection.h"
 
@@ -3007,6 +3008,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_NoMountIcon*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Info>(g_iStaticLevel, CEnemy_Info::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Enemy_SkillUI*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_SkillUI>(g_iStaticLevel, CEnemy_SkillUI::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	/* For.Prototype_GameObject_NoMountIcon*/

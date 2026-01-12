@@ -1020,7 +1020,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = false;
 #endif // 
 #ifdef 나
-
+	isLoad_Monster = true;
 #endif // 
 #ifdef Bin
 	isLoad_Monster = true;

@@ -304,7 +304,7 @@ void CPlayer::Update_CameraShake(_float fTimeDelta)
 HRESULT CPlayer::Update_RaycastElements()
 {
 	CGameObject* pFoundNPC = nullptr;
-
+	CGameObject* pFoundBox = nullptr;
 	if (E_FAIL == m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER)) {
 		m_iRayHitCount = 0;
 		return E_FAIL;
@@ -317,6 +317,7 @@ HRESULT CPlayer::Update_RaycastElements()
 	if (true == bHit)
 	{
 		NPCINTERACTIONINFO Info{};
+		BOXINTERACTIONINFO BoxInfo{};
 
 		CMyTools::SortHitsByDistance(m_vRayHits);
 		for (_uint i = 0; i < m_iRayHitCount; ++i)
@@ -335,18 +336,36 @@ HRESULT CPlayer::Update_RaycastElements()
 			pData->pBody->OnRayCollision(this, i, m_vRayHits[i].distance, _float3(m_vRayHits[i].position.x, m_vRayHits[i].position.y, m_vRayHits[i].position.z));
 
 			CUnit* Npc = dynamic_cast<CUnit*>(pData->pOwner);
-
-			if (!Npc)
+			CMapElement_Chest* Chest = dynamic_cast<CMapElement_Chest*>(pData->pOwner);
+			if (!Npc && !Chest)
 			{
 				continue;
 			}
 
-			if (!Npc->Get_Npc())
+			if (Npc)
 			{
-				continue;
+				if (!Npc->Get_Npc())
+				{
+					continue;
+				}
+			}
+			else if (Chest)
+			{
+				if (!Chest->Get_Chest())
+				{
+					continue;
+				}
 			}
 
-			pFoundNPC = Npc;
+			if (Npc)
+			{
+				pFoundNPC = Npc;
+			}
+			
+			if (Chest)
+			{
+				pFoundBox = Chest;
+			}
 			break;
 		}
 
@@ -367,6 +386,19 @@ HRESULT CPlayer::Update_RaycastElements()
 				m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOn"), &Info);
 			}
 		}
+		else if (pFoundBox)
+		{
+			if (m_pCurrentNpcInteraction != pFoundBox)
+			{
+				m_pCurrentNpcInteraction = pFoundBox;
+				BoxInfo.pOwner = pFoundBox;
+				BoxInfo.pName = TEXT("상자");
+				_float4 Pos{};
+				XMStoreFloat4(&Pos, m_pTransformCom->Get_State(STATE::POSITION));
+				BoxInfo.fPosition = Pos;
+				m_pInfoInstance->Event_CallBack(TEXT("BOXInteractionOn"), &BoxInfo);
+			}
+		}
 
 		else
 		{
@@ -375,7 +407,9 @@ HRESULT CPlayer::Update_RaycastElements()
 				m_bNpcInteraction = false;
 				m_pCurrentNpcInteraction = nullptr;
 				m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
+				m_pInfoInstance->Event_CallBack(TEXT("BOXInteractionOff"));
 			}
+
 		}
 	}
 
@@ -386,7 +420,9 @@ HRESULT CPlayer::Update_RaycastElements()
 			m_bNpcInteraction = false;
 			m_pCurrentNpcInteraction = nullptr;
 			m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
+			m_pInfoInstance->Event_CallBack(TEXT("BOXInteractionOff"));
 		}
+
 	}
 	return S_OK;
 }
@@ -462,7 +498,7 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 			return;
 		}
 	}
-	
+
 
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
@@ -514,6 +550,8 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 		m_pTransformCom->RotationQ(pContents->pxTransform.q);
 		m_pTransformCom->RewindMomentum();
 	} break;
+	}
+	break;
 	case TIMESOCKET_FUNC::TRANSLATION_LERP:
 	{
 
@@ -622,7 +660,7 @@ HRESULT CPlayer::Ready_Components()
 
 	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
 	SAFE_ADDREF(m_pStat);
-	
+
 	m_Components.push_back(m_pStat);
 	SAFE_ADDREF(m_pStat);
 
@@ -768,6 +806,64 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 		fMixerFactor = 0.5f;
 		iColorMixerMethod = 1;
 		break;
+	case PLAYER_MESH_ORDER::SHOES:
+		bUseColorMixer = true;
+		iColorParam = 0x614242;
+		fMixerFactor = 0.5f;
+		iColorMixerMethod = 1;
+		break;
+	case PLAYER_MESH_ORDER::UPPER:
+		bUseColorMixer = true;
+		iColorParam = 0xBFAC29;
+		fMixerFactor = 0.658333f;
+		iColorMixerMethod = 1;
+		break;
+		//#ifdef 기무리
+		//
+		//	case PLAYER_MESH_ORDER::ROBE_CLOTH:
+		//	{
+		//		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
+		//		_uint MeshBoneCount = pMesh->Get_NumBone();
+		//
+		//		for (_uint i = 0; i < MeshBoneCount; ++i)
+		//		{
+		//			XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
+		//		}
+		//
+		//		_uint temp = 0;
+		//		vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
+		//		vector<_int> boneIndices = pMesh->Get_BoneIndices();
+		//
+		//		for (_uint i = 0; i < MeshBoneCount; ++i)
+		//		{
+		//			_uint global = boneIndices[i];
+		//			if (global == 38)
+		//				continue;
+		//			if (globalMask[global] == 1)
+		//			{
+		//				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
+		//			}
+		//		}
+		//
+		//		GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
+		//
+		//		if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
+		//			return E_FAIL;
+		//		}
+		//
+		//
+		//		if (FAILED(m_pShaderCom->Bind_Matrices(
+		//			"g_BoneMatrices",
+		//			SkinMatrices.data(),
+		//			(_int)SkinMatrices.size()
+		//		)))
+		//		{
+		//			return E_FAIL;
+		//		}
+		//	}
+		//	break;
+		//#endif // _DEBUG
+
 	default:
 		break;
 	}
@@ -831,7 +927,7 @@ void CPlayer::SetGravity()
 	eCollisionFlags;
 	if (false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN)
 		&& false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP|FSMSTATE::CUTSCENE) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY) && m_fAirTime == 0.f) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP | FSMSTATE::CUTSCENE) && m_eHitType != ENUM_CLASS(HIT_TYPE::HIT_HEAVY) && m_fAirTime == 0.f) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
 		else { // 점프 중일 땐 off
@@ -847,7 +943,7 @@ void CPlayer::Player_PixRot()
 {
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
 	if (iCurrAnim == m_Animation[STATEANIM::AVADA_KEDAVRA].first ||
-		iCurrAnim == m_Animation[STATEANIM::BROOM_DISMOUNT].first||
+		iCurrAnim == m_Animation[STATEANIM::BROOM_DISMOUNT].first ||
 		iCurrAnim == m_Animation[STATEANIM::IDLE].first)
 	{
 		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);

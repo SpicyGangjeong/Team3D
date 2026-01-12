@@ -207,7 +207,7 @@ void CRanrok::Update(_float fTimeDelta)
 			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP, this, nullptr, &pEffect);
 			m_vCreatePropTime.x = 0.f;
 
-			if(nullptr != pEffect)
+			if (nullptr != pEffect)
 				m_pRanrok_Props.push_back(pEffect);
 		}
 

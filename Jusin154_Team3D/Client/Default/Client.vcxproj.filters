@@ -949,6 +949,9 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Cave.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
+      </ClInclude>
+    <ClInclude Include="..\public\Enemy_SkillUI.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1961,6 +1964,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Cave">
       <UniqueIdentifier>{5599bbbd-12f7-4b40-8e3d-24f869cce464}</UniqueIdentifier>
+         </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI">
+      <UniqueIdentifier>{b28b8285-3d1a-49cf-bde2-c7ebc18e6389}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2867,6 +2873,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Elf.cpp">
       <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
+       </ClCompile>
+    <ClCompile Include="..\private\Enemy_SkillUI.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
