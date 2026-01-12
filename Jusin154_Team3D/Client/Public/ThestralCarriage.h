@@ -13,6 +13,11 @@ NS_BEGIN(Client)
 class CThestralCarriage final : public CUnit
 {
 public:
+	enum class CARRIAGE_MESH_ORDER {
+		CARRIAGE
+		, WINDOWS
+	};
+
 	enum class CARRIAGE_SOCKET {
 		BACK,
 		BACK_LEFT,

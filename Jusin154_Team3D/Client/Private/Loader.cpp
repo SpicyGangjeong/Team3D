@@ -46,10 +46,6 @@
 #include "Ranrok.h"
 #include "RandomNpc.h"
 #include "Elf.h"
-#ifdef _DEBUG
-#include "Camera_Model.h"
-#endif // _DEBUG
-
 #pragma endregion
 
 
@@ -484,9 +480,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = true;
-	isLoad_UI_SEQUANTIAL = true;
-	isLoad_NPC = true;
+	isLoad_Hogwart = false;
+	isLoad_UI_SEQUANTIAL = false;
+	isLoad_NPC = false;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -2440,7 +2436,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
-			Desc1.vhalfGeometryInfo = { 2.f, 2.f, 2.f };
+			Desc1.vhalfGeometryInfo = { 2.34f, 2.34f, 2.34f };
 			Desc1.fDensity = 1.f;
 			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc1.eLockFlag = {};
@@ -3767,14 +3763,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CElf>(g_iStaticLevel, CElf::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-
-#ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Model>(g_iStaticLevel, CCamera_Model::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-#endif // _DEBUG
-
-
 #pragma endregion
 
 

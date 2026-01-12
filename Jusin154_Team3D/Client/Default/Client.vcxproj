@@ -216,7 +216,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Impact.h" />
     <ClInclude Include="..\Public\Ranrok_Land.h" />
     <ClInclude Include="..\Public\Ranrok_Point.h" />
-    <ClInclude Include="..\Public\Player_ENUM.h" />
     <ClInclude Include="..\Public\Ranrok_Prop.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h" />

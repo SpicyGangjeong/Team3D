@@ -21,6 +21,7 @@ HRESULT CTimeSocket::Initialize(void* pArg)
     SOCKETCONTENTS* pDesc = static_cast<SOCKETCONTENTS*>(pArg);
 
     m_Contents.fRatio = pDesc->fRatio;
+    m_Contents.pxTransform = pDesc->pxTransform;
     m_Contents.bTriggerred = pDesc->bTriggerred;
     m_Contents.pEventTarget = pDesc->pEventTarget;
     m_Contents.strEventName = pDesc->strEventName;
@@ -43,7 +44,6 @@ HRESULT CTimeSocket::Initialize(void* pArg)
         m_Contents.pxTransform = pDesc->pxTransform;
         break;
     case TIMESOCKET_PARAM::NOT_USE:
-        m_Contents.pOtherTarget = nullptr;
         break;
     default:
         m_Contents.pOtherTarget = nullptr;
