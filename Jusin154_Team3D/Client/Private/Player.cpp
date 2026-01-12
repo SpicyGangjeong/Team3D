@@ -639,6 +639,7 @@ HRESULT CPlayer::Ready_Components()
 			return E_FAIL;
 		}
 		m_pCharacter_Controller->SetGravity(false);
+		m_pCharacter_Controller->Set_GravityAmount(1.2f);
 	}
 
 	{ // DO

@@ -71,11 +71,12 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
 #pragma region MONSTER
-
+#ifndef 기무리
 	/* For.Prototype_Component_Hogsmead_NorthLakeShallow */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Wands\\CharacterWands\\SK_Wands_Amit.fbx", XMMatrixIdentity()))))
 		return E_FAIL;
+#endif // 기무리
 
 
 

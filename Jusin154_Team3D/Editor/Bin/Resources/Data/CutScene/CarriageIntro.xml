@@ -79,11 +79,11 @@
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
 				<RotQ X="0.939" Y="0.0347" Z="-0.6125" W="0.773"/>
-				<Trans X="0.00694" Y="9.7" Z=""/>
+				<Trans X="0.00694" Y="" Z=""/>
 			</Transform>
 		</Param_0>
 		<vFlags>
-			<Flag id ="0">false</Flag>
+			<Flag id ="0">true</Flag>
 			<Flag id ="1">false</Flag>
 			<Flag id ="2">false</Flag>
 			<Flag id ="3">false</Flag>

@@ -383,7 +383,7 @@ void CPlayer::Behavior_CutSceneEnter()
 	m_bSprintToggle = false;
 	m_bWalkToggle = false;
 
-	pairAnimInfo = m_Animation[STATEANIM::CUTSCENE_OPENINGINTRO2];
+	pairAnimInfo = m_Animation[STATEANIM::CUTSCENE_OPENINGINTRO1];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	m_bOpeningCutScene = true;
 }
@@ -394,7 +394,7 @@ HRESULT CPlayer::Behavior_CutSceneExitCheck(_float fTimeDelta)
 	{
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCarriage->Get_SocketWorldMatrix(CThestralCarriage::CARRIAGE_SOCKET::FRONT_RIGHT).r[3]);
 		m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
-		m_pTransformCom->RotationQ(XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f)));
+		m_pTransformCom->RotationQ(XMQuaternionRotationAxis(XMVectorSet(0.f, -1.f, 0.f, 0.f), XMConvertToRadians(90.f)));
 	}
 
 	return S_OK;

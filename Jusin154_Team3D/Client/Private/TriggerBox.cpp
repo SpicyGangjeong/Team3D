@@ -1,21 +1,49 @@
 ﻿#include "pch.h"
 #include "TriggerBox.h"
 
-CTriggerBox::CTriggerBox():
-    m_pGameInstance(CGameInstance::GetInstance())
+CTriggerBox::CTriggerBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CGameObject(pDevice, pContext)
 {
-    SAFE_ADDREF(m_pGameInstance);
+}
+
+CTriggerBox::CTriggerBox(const CTriggerBox& rhs)
+	: CGameObject(rhs)
+{
 }
 
 HRESULT CTriggerBox::TryScanArea(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+#endif // _DEBUG
     m_vScanTimer.x += fTimeDelta;
     if (m_vScanTimer.x > m_vScanTimer.y) {
-        m_vScanTimer.x = m_vScanTimer.y;
+        m_vScanTimer.x = 0.f;
 		return Scan();
     }
     return E_FAIL;
 }
+
+HRESULT CTriggerBox::Render()
+{
+	m_Batch->Begin();
+	
+	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0f0f, CMyTools::Saturate(m_vScanTimer.x / m_vScanTimer.y + 0.1f));
+	m_pSubShape->Draw(XMMatrixTranslation(m_vPosition.x, m_vPosition.y, m_vPosition.z), ViewMatrix, ProjMatrix, vColor, nullptr, true);
+
+	m_Batch->End();
+	return S_OK;
+}
+
+#ifdef _DEBUG
+void CTriggerBox::Create_DebugShape(ID3D11DeviceContext* pContext)
+{
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_fRadius, 12, false, false));
+	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
+}
+#endif // _DEBUG
 
 HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 {
@@ -69,18 +97,31 @@ HRESULT CTriggerBox::Scan()
     return E_FAIL;
 }
 
-CTriggerBox* CTriggerBox::Create(TRIGGERBOX_DESC* Desc)
+CTriggerBox* CTriggerBox::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TRIGGERBOX_DESC* Desc)
 {
-    CTriggerBox* pInstance = new CTriggerBox();
-    
-    if (FAILED(pInstance->Initialize(Desc))) {
-        SAFE_RELEASE(pInstance);
-    }
-    return pInstance;
+	CTriggerBox* pInstance = new CTriggerBox(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize(Desc))) {
+		SAFE_RELEASE(pInstance);
+	}
+	return pInstance;
 }
 
 void CTriggerBox::Free()
 {
     __super::Free();
-    SAFE_RELEASE(m_pGameInstance);
+}
+
+HRESULT CTriggerBox::Bind_ShaderResources()
+{
+	return E_NOTIMPL;
+}
+
+CGameObject* CTriggerBox::Clone(void* pArg, CGameObject* pOwner)
+{
+	return nullptr;
+}
+
+void CTriggerBox::Describe_Entity()
+{
 }

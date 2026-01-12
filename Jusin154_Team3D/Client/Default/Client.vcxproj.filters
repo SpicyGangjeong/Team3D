@@ -1931,9 +1931,6 @@
     <Filter Include="02.GameObjects\NPC\Ally\Elf">
       <UniqueIdentifier>{9263815e-9651-4ba2-813f-c2a7f207522d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.InfoInstance\NewFilter1">
-      <UniqueIdentifier>{44a8eee1-6b7f-4c9a-bf92-21f6b90e84c3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
