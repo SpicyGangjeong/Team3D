@@ -934,13 +934,22 @@
     </ClInclude>
     <ClInclude Include="..\Public\AccioSide.h">
       <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-      </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\Broom_TargetGate2D.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Shout.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Shout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rush.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Self_Hit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1935,12 +1944,21 @@
     </Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_Parry">
       <UniqueIdentifier>{b57b393b-0e6f-47ad-9301-46b8f725a452}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
       <UniqueIdentifier>{4a11eb4b-127e-41f2-8456-cae963c94a4c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Accio\AccioSide">
       <UniqueIdentifier>{0e6d6920-c33c-4202-a2a5-3c883e1d4597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Rush">
+      <UniqueIdentifier>{a4b6f0be-8841-4748-8947-e497d755c2d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Shout">
+      <UniqueIdentifier>{34b736fb-456e-46e3-8038-49cff23b2f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit">
+      <UniqueIdentifier>{c276c050-7000-441e-bb53-30ec3c20c6f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2821,7 +2839,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\AccioSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\MapElement_Balloon.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Balloon</Filter>
     </ClCompile>
@@ -2830,10 +2848,19 @@
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-         </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rush.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Shout.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Shout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Self_Hit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

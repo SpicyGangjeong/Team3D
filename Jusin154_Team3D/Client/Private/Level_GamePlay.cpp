@@ -56,7 +56,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_isDay = true;
 #endif // 
 #ifdef 진우
-	m_isDay = false;
+	m_isDay = true;
 #endif // 
 #ifdef 기무리
 	m_isDay = true;
@@ -85,13 +85,15 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 
 	map<_string, CLand*> Lands = {};
 
+
 	if (FAILED(Ready_Land(&Lands))) {
 		return E_FAIL;
 	}
 
+#ifndef 진우
 	if (FAILED(Ready_IntstanceProp(&Lands)))
 		return E_FAIL;
-
+#endif
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}
@@ -258,6 +260,7 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			0.f
 		);
 	}
+
 	else
 	{
 		m_pGameInstance->Setting_Volumetirc(
@@ -1108,8 +1111,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_RandomNPC = false;
 #endif // gimch
 #ifdef 진우
-	isLoad_RandomNPC = true;
-	isLoad_NPC = true;
+	isLoad_RandomNPC = false;
+	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
 	isLoad_NPC = true;
