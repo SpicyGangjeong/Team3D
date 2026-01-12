@@ -29,6 +29,8 @@ public:
 	virtual void Stalking_Target(CUnit* pStalkingTarget, const _float4x4* pTargetSocketMatrix);
 	virtual void Stop_Stalking();
 
+	_matrix Get_XMWorldMatrix();
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

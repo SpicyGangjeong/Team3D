@@ -42,7 +42,7 @@ void CInfoInstance::Change_Level()
 	m_pInteractiveInfo->Change_Level();
 	m_pEffectInfo->Change_Level();
 //	UI_Event.clear();
-	m_pCutSceneInfo->Change_Level();
+	m_pCutSceneInfo->Load_CutScenes();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()
@@ -539,6 +539,11 @@ HRESULT CInfoInstance::NPC_FileLoad(const _char* pDirectoryPath)
 	}
 
 	return S_OK;
+}
+
+void CInfoInstance::Load_CutScenes()
+{
+	m_pCutSceneInfo->Load_CutScenes();
 }
 
 void CInfoInstance::Release_Information()

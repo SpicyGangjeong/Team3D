@@ -679,6 +679,11 @@ void CGameInstance::Set_LevelToChange()
 	return m_pLevel_Manager->Set_LevelToChange();
 }
 
+void CGameInstance::ResetLevel_Environment()
+{
+	return m_pLevel_Manager->ResetLevel_Environment();
+}
+
 CComponent* CGameInstance::Clone_Asset_Prototype(_uint iTargetLevel, const _wstring& strPrototypeTag, void* pArg, CGameObject* pOwner)
 {
 	return m_pPrototype_Manager->Clone_Asset_Prototype(iTargetLevel, strPrototypeTag, pArg, pOwner);

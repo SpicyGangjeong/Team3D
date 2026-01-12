@@ -131,6 +131,12 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 	return S_OK;
 }
 
+void CProtego::Set_Visible(_bool bVisible)
+{
+	m_bVisible = true;
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), CURRENT_LEVEL);
+}
+
 HRESULT CProtego::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
@@ -199,8 +205,7 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 
 	static_cast<CPlayer*>(m_pOwner)->Start_CameraShake(0.3f, 2.f);
 
-	m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
-
+	m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 	m_bVisible = false;
 }
 

@@ -94,26 +94,9 @@ HRESULT CCamera_Model::Render()
 #ifdef _DEBUG
 		m_Batch->Begin();
 
-		_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
-		_vector vUp = m_pTransformCom->Get_State(STATE::UP);
-		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-		_vector vPosition = m_pTransformCom->Get_State(STATE::POSITION);
 		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 		_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-		static _float fLength = 1.f;
-		GUI::DragFloat("Length", &fLength, 0.1f, 0.1f, 10.f, "%.1f");
-		m_Batch->DrawLine(
-			VertexPositionColor(vPosition, DirectX::Colors::GhostWhite),
-			VertexPositionColor(vPosition + vRight * fLength, DirectX::Colors::Green)
-		);
-		m_Batch->DrawLine(
-			VertexPositionColor(vPosition, DirectX::Colors::GhostWhite),
-			VertexPositionColor(vPosition + vUp * fLength, DirectX::Colors::Red)
-		);
-		m_Batch->DrawLine(
-			VertexPositionColor(vPosition, DirectX::Colors::GhostWhite),
-			VertexPositionColor(vPosition + vLook * fLength, DirectX::Colors::Blue)
-		);
+
 		_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0000, 1.f);
 		_matrix WorldMatrix;
 		WorldMatrix = XMLoadFloat4x4(m_CtrlCam);

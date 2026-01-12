@@ -8,6 +8,7 @@
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
 #include "broom_Trophy.h"
+#include "Broom_TargetGate2D.h"
 
 
 CBroom_Panel::CBroom_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -49,7 +50,7 @@ HRESULT CBroom_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	Visible(false);
+	Visible(true);
 	ElementAllVisible(true);
 	return S_OK;	
 }
@@ -154,6 +155,12 @@ HRESULT CBroom_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Broom_Trophy"), m_pBroom_Trophy);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_TargetGate2D>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_TargetGate2D**>(&m_pBroom_TargetGate2D))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Broom_TargetGate2D"), m_pBroom_TargetGate2D);
 		
 	return S_OK;
 }

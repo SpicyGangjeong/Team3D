@@ -172,6 +172,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Broom_Record.h" />
     <ClInclude Include="..\Public\Broom_Scoreboard.h" />
     <ClInclude Include="..\public\Broom_TargetGate.h" />
+    <ClInclude Include="..\Public\Broom_TargetGate2D.h" />
     <ClInclude Include="..\Public\Broom_Trophy.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
@@ -214,7 +215,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Impact.h" />
     <ClInclude Include="..\Public\Ranrok_Land.h" />
     <ClInclude Include="..\Public\Ranrok_Point.h" />
-    <ClInclude Include="..\Public\PlayerRobe.h" />
     <ClInclude Include="..\Public\Player_ENUM.h" />
     <ClInclude Include="..\Public\Ranrok_Prop.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
@@ -238,6 +238,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Parry.h" />
     <ClInclude Include="..\Public\State_Slash.h" />
     <ClInclude Include="..\Public\ThestralCarriage.h" />
+    <ClInclude Include="..\Public\AccioSide.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
     <ClInclude Include="..\Public\Transformation.h" />
     <ClInclude Include="..\Public\LightningSide.h" />
@@ -476,6 +477,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Broom_Record.cpp" />
     <ClCompile Include="..\Private\Broom_Scoreboard.cpp" />
     <ClCompile Include="..\private\Broom_TargetGate.cpp" />
+    <ClCompile Include="..\Private\Broom_TargetGate2D.cpp" />
     <ClCompile Include="..\Private\Broom_Trophy.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
@@ -499,7 +501,6 @@ call Update_Resources.bat
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Duelist_JapSide.cpp" />
     <ClCompile Include="..\private\MapElement_Balloon.cpp" />
-    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
     <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Protego_Hit.cpp" />
@@ -520,7 +521,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ranrok_Impact.cpp" />
     <ClCompile Include="..\Private\Ranrok_Land.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
-    <ClCompile Include="..\Private\PlayerRobe.cpp" />
     <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />
@@ -542,6 +542,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Parry.cpp" />
     <ClCompile Include="..\Private\State_Slash.cpp" />
     <ClCompile Include="..\Private\ThestralCarriage.cpp" />
+    <ClCompile Include="..\Private\AccioSide.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
     <ClCompile Include="..\Private\LightningSide.cpp" />

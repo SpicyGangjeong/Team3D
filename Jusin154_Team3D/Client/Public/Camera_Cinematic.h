@@ -80,6 +80,12 @@ private:
 	_bool	m_bLerpFovY = { false };
 	_float2 m_vFovYLerp = { 60.f, 60.f };
 	_float2 m_vLerpFovYTimer = { };
+#ifdef _DEBUG
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
+	class CModel* m_pModelCom = { nullptr };
+	class CShader* m_pShaderCom = { nullptr };
+#endif // _DEBUG
 
 public:
 	static CCamera_Cinematic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -44,6 +44,7 @@ public:
 	void			Update_CameraShake(_float fTimeDelta);
 	HRESULT			Update_RaycastElements();
 	void			Set_Battle(_bool bBattle) { m_bDuel_ZOnlyMove = bBattle; }
+	void			Set_Interaction(_bool bInteraction);
 #ifdef _DEBUG
 	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -60,6 +61,7 @@ private:
 	_bool m_bCameraShake = { false };
 
 	_bool m_bNpcInteraction = { false };
+	_bool m_bCurrentInteraction = { false };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
@@ -88,7 +90,7 @@ private:
 	class CTransform* m_pBroomTransform = { nullptr };
 	class CBroom* m_pBroom = { nullptr };
 	CStat* m_pStat = { nullptr };
-	class CPlayerRobe* m_pRobePart = { nullptr };
+	//class CPlayerRobe* m_pRobePart = { nullptr };
 
 
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
@@ -107,6 +109,7 @@ private:
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
 	void Play_SpellHitAnim();
 	void Player_PixRot();
+	void Find_HiddenObjects();
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
@@ -140,6 +143,7 @@ private:
 	function<void()> m_InputAction = nullptr;
 	_int			m_eUIState = { };
 
+	const _float4x4* m_pCinematicSocketMatrix = { nullptr };
 	_float3			m_OffsetPos = {};
 	_float			m_fAmount = { 1.f };
 	_float			m_fInputTime = {};

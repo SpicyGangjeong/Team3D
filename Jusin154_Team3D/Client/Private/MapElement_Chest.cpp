@@ -128,8 +128,8 @@ void CMapElement_Chest::Late_Update(_float fTimeDelta)
 
 		if (CMapElement_Chest::CHEST_STATE::FOUND == m_eCurState)
 		{
-			m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
-			m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
+			//m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 		}
 		else
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
@@ -180,7 +180,23 @@ void CMapElement_Chest::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder,
 	}
 	if (fDistance < m_fEncounterDistance) {
 		m_iEntered = 4;
+		if (m_pGameInstance->Key_Down(DIK_F) && m_eCurState != CHEST_STATE::OPENED)
+		{
+			m_eCurState = CHEST_STATE::OPENED;
+		}
 	}
+}
+
+_bool CMapElement_Chest::IsScannable(_fvector vPosition)
+{
+	_float fDistance = XMVectorGetX(XMVector3Length(m_pTransformCom->Get_State(STATE::POSITION) - vPosition));
+
+	if (fDistance <= 20.f && m_eCurState == CHEST_STATE::IDLE)
+	{
+		m_eCurState = CHEST_STATE::FOUND;
+	}
+
+	return false;
 }
 
 HRESULT CMapElement_Chest::Ready_Components(void* pArg)

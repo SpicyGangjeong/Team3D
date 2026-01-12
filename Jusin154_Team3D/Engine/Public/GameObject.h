@@ -18,6 +18,7 @@ public:
 	virtual void Priority_Update(_float fTimeDelta);
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
+	virtual void Trigger(class CTimeSocket& Socket) {};
 
 	virtual HRESULT Render();
 	virtual HRESULT Render_Shadow(SHADOW eType) { return S_OK; }
@@ -39,8 +40,8 @@ public:
 
 	_uint	Get_ObjectTag() const { return m_iObjectTag; }
 	_uint	Get_CollisionID() const { return m_iCollisionID; }
-	_bool	Get_Visible() const { return m_bVisible; }
-	void	Set_Visible(_bool bValue) { m_bVisible = bValue; }
+	virtual _bool	Get_Visible() const { return m_bVisible; }
+	virtual void	Set_Visible(_bool bValue) { m_bVisible = bValue; }
 	CGameObject* Get_Owner() const { return m_pOwner; }
 
 public:

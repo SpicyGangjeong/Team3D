@@ -37,6 +37,7 @@ private:
 	_float4x4						  m_TrailStopMat = {};
 
 	class CEditEffect* m_pWandLight = { nullptr };
+	class CEditEffect* m_pWand_Fire = { nullptr };
 	class CTrailObject* m_pWandTrail = { nullptr };
 
 public:

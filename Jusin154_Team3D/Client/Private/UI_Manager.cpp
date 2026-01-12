@@ -15,6 +15,8 @@
 #include "NPCInteraction.h"
 #include "Broom_TargetGate.h"
 
+
+
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
 {
@@ -506,7 +508,6 @@ void CUI_Manager::Set_Fade()
 
 void CUI_Manager::Change_Map()
 {
-
 }
 
 void CUI_Manager::Set_Race(_bool bRace)

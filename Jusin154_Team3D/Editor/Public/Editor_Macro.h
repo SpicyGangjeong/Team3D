@@ -43,7 +43,7 @@ namespace Editor {
 #define LAYER_EDITOR_CAMERA TEXT("Layer_Editor_Camera")
 #define LAYER_BACKGROUND	TEXT("Layer_BackGround")
 #define LAYER_MARKER		TEXT("Layer_Marker")
-#define LAYER_PLAYER		TEXT("Layer_Player")
+#define LAYER_PLAYER		TEXT("Layer__Player")
 #define LAYER_CAMERA		TEXT("Layer_Camera")
 #define LAYER_MONSTER		TEXT("Layer_Monster")
 #define LAYER_UI			TEXT("Layer_UI")
