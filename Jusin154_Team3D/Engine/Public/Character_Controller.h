@@ -49,6 +49,7 @@ private:
 public:
 #ifdef _DEBUG
 	virtual HRESULT Render() override;
+	virtual void Set_Name(const _char* pName);
 #endif
 	PSX::PxRigidDynamic* Get_Actor();
 	PSX::PxController* Get_Controller();

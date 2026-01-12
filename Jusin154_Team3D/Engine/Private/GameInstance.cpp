@@ -52,9 +52,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		}
 	}
 #ifdef _DEBUG
-#ifdef 기무리
-	m_pThreadHolder = CThreadHolder::Create(8);
-#elif Bin
+#ifdef Bin
 	m_pThreadHolder = CThreadHolder::Create(8);
 #else
 	m_pThreadHolder = CThreadHolder::Create(6);
@@ -64,9 +62,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 #ifndef _DEBUG
 	m_pThreadHolder = CThreadHolder::Create(12);
 #endif // !_DEBUG
-
-
-
 
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;

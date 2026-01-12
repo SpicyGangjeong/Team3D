@@ -61,6 +61,10 @@ HRESULT CCharacter_Controller::Render()
 	}
 	return S_OK;
 }
+void CCharacter_Controller::Set_Name(const _char* pName)
+{
+	m_pController->getActor()->setName(pName);
+}
 #endif // _DEBUG
 PSX::PxRigidDynamic* CCharacter_Controller::Get_Actor()
 {

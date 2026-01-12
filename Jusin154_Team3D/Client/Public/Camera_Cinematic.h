@@ -66,6 +66,8 @@ private:
 	CCamPosition_Target* m_pLookTargetPart = { nullptr };
 	CCamPosition_Target* m_pFollowTargetPart = { nullptr };
 
+
+
 	_bool	m_bLerpTranslation = { false };
 	_float2 m_vLerpTranslationTimer = {};
 

@@ -197,6 +197,12 @@ void CCamera_Debug::Describe_Entity()
 	}
 	GUI::End();
 	GUI::Begin("CAMERA");
+	_int iPriority = m_iPriority;
+	size_t iAddress = (size_t)this;
+	_string strHeader = "DEBUG_CAMERA_Priority##" + to_string(iAddress);
+	if (GUI::SliderInt(strHeader.c_str(), &iPriority, 45, 60)) {
+		m_iPriority = iPriority;
+	}
 	if (GUI::CollapsingHeader("DebugCamera")){
 		m_pTransformCom->Describe_Entity();
 	}

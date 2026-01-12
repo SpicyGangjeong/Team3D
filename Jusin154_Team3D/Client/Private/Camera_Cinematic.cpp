@@ -12,17 +12,6 @@ CCamera_Cinematic::CCamera_Cinematic(const CCamera_Cinematic& rhs) : CCamera(rhs
 
 void CCamera_Cinematic::Priority_Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
-	if (m_pGameInstance->Key_Pressing(DIK_HOME)) {
-		if (m_pGameInstance->Key_Up(DIK_END)) {
-			_string strCutSceneName = "RanrokIntro";
-			m_pInfoInstance->Active_Event(strCutSceneName);
-		}
-	}
-#endif // _DEBUG
-	if (false == m_bActive) {
-		return;
-	}
 	if (false == m_bIsCurrentTransition) {
 		m_pLookTargetPart->Priority_Update(fTimeDelta);
 		m_pFollowTargetPart->Priority_Update(fTimeDelta);
@@ -32,8 +21,11 @@ void CCamera_Cinematic::Priority_Update(_float fTimeDelta)
 	else {
 		Transition(fTimeDelta);
 	}
-	m_bActive = true;
 	Update_LerpTimer(fTimeDelta);
+	if (false == m_bActive) {
+		return;
+	}
+
 	__super::Bind_Matrices();
 }
 
@@ -51,6 +43,7 @@ void CCamera_Cinematic::Late_Update(_float fTimeDelta)
 	if (false == m_bActive) {
 #ifdef _DEBUG
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
 #endif // _DEBUG
 		return;
 	}
@@ -58,6 +51,10 @@ void CCamera_Cinematic::Late_Update(_float fTimeDelta)
 	}
 }
 HRESULT CCamera_Cinematic::Render() {
+#ifdef _DEBUG
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
 
 	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
 	if (RENDER::NONBLEND == eType) {
@@ -79,7 +76,7 @@ HRESULT CCamera_Cinematic::Render() {
 		}
 	}
 	else if (RENDER::NONLIGHT == eType) {
-#ifdef _DEBUG
+
 		m_Batch->Begin();
 
 		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
@@ -91,12 +88,15 @@ HRESULT CCamera_Cinematic::Render() {
 		m_pSubShape->Draw(m_pFollowTargetPart->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
 
 		m_Batch->End();
-#endif // _DEBUG
+
 
 
 	}
+#endif // _DEBUG
 	return S_OK;
 }
+
+
 void CCamera_Cinematic::Active_Camera(pair<_float4, _float3>& pairTransitionInfo)
 {
 	if (true == m_bEnable_TransitionLerp) {
@@ -114,12 +114,12 @@ void CCamera_Cinematic::Active_Camera(pair<_float4, _float3>& pairTransitionInfo
 
 void CCamera_Cinematic::Update_LerpTimer(_float fTimeDelta)
 {
-	if (false == m_bActive) {
-		return;
-	}
 	Lerp_Translation(fTimeDelta);
 	Lerp_Rotation(fTimeDelta);
 	Lerp_FovY(fTimeDelta);
+	if (false == m_bActive) {
+		return;
+	}
 }
 
 void CCamera_Cinematic::Set_Priority(_uint iPriority)
@@ -235,6 +235,8 @@ HRESULT CCamera_Cinematic::Initialize(void* pArg)
 
 #ifdef _DEBUG
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.25f, 12, false, false));
+
+	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 	return S_OK;
 }
@@ -243,7 +245,7 @@ HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
-
+#ifdef _DEBUG
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Camera_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
@@ -254,7 +256,7 @@ HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
-
+#endif // _DEBUG
 	return S_OK;
 }
 
@@ -273,6 +275,7 @@ HRESULT CCamera_Cinematic::Ready_SubPart()
 
 HRESULT CCamera_Cinematic::Bind_ShaderResources()
 {
+#ifdef _DEBUG
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
@@ -285,7 +288,9 @@ HRESULT CCamera_Cinematic::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+#endif // _DEBUG
 	return S_OK;
+
 }
 void CCamera_Cinematic::Lerp_Translation(_float fTimeDelta)
 {
@@ -451,6 +456,12 @@ void CCamera_Cinematic::Free()
 void CCamera_Cinematic::Describe_Entity()
 {
 	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	_int iPriority = m_iPriority;
+	size_t iAddress = (size_t)this;
+	_string strHeader = "CINEMATIC_CAMERA_Priority##" + to_string(iAddress);
+	if (GUI::SliderInt(strHeader.c_str(), &iPriority, 45, 60)) {
+		m_iPriority = iPriority;
+	}
 	if (GUI::CollapsingHeader("Camera_Cinematic_Describe")) {
 		if (GUI::SmallButton("Trigger_RanrokIntro")) {
 			_string strCutSceneName = "RanrokIntro";

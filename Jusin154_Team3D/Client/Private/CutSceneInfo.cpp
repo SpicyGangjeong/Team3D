@@ -510,16 +510,17 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 						SocketContents.funcEvent = [&](CTimeSocket& Socket) { m_pGameInstance->ResetLevel_Environment();  };
 						break;
 					case TIMESOCKET_FUNC::SET_VOLUMETRIC:
-						SocketContents.funcEvent = [&](CTimeSocket& Socket) { 
+					{
+						tinyxml2::XMLElement* pTransformNode = pParam0Node->FirstChildElement("Transform");
+						ReadPxTransform(pTransformNode, SocketContents.pxTransform);
+						SocketContents.funcEvent = [&](CTimeSocket& Socket) {
 							if (Socket.m_Contents.vFlags.b[0]) {
 								m_pGameInstance->Setting_Volumetirc(
-									Socket.m_Contents.pxTransform.q.x, Socket.m_Contents.pxTransform.q.y, Socket.m_Contents.pxTransform.q.z,
-									Socket.m_Contents.pxTransform.p.x, Socket.m_Contents.pxTransform.p.y);
+									Socket.m_Contents.pxTransform.q.x, Socket.m_Contents.pxTransform.q.y, Socket.m_Contents.pxTransform.q.z, Socket.m_Contents.pxTransform.q.w,
+									Socket.m_Contents.pxTransform.p.x);
 							}
-							else {
-							}
-							};
-						break;
+						};
+					}break;
 					default:
 						break;
 					}
@@ -546,7 +547,7 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 			pTriggerNode->QueryFloatAttribute("X", &Desc.vPosition_Radius.x);
 			pTriggerNode->QueryFloatAttribute("Y", &Desc.vPosition_Radius.y);
 			pTriggerNode->QueryFloatAttribute("Z", &Desc.vPosition_Radius.z);
-			pTimeLine->m_pTriggerBox = CTriggerBox::Create(&Desc);
+			pTimeLine->m_pTriggerBox = CTriggerBox::Create(m_pDevice, m_pContext, &Desc);
 		}
 	}
 	

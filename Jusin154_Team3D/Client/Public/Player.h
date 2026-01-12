@@ -2,13 +2,25 @@
 
 #include "Client_Define.h"
 #include "Unit.h"
-#include "Player_ENUM.h"
 
 NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
 public:
+	enum PLAYER_MESH_ORDER {
+		CLOTH_SIM
+		, HAIR_MAIN
+		, CLOTH
+		, EYELASH
+		, TEETH
+		, BODY
+		, HEAD_EYE_OCC
+		, HEAD_EYES
+		, FLOWERS
+		, END
+	};
+
 	typedef struct tagPlayerInitDesc {
 		_float4 vPos;
 		_float4 vRotQ;
@@ -45,6 +57,8 @@ public:
 	HRESULT			Update_RaycastElements();
 	void			Set_Battle(_bool bBattle) { m_bDuel_ZOnlyMove = bBattle; }
 	void			Set_Interaction(_bool bInteraction);
+	void			ExitBattle();
+	void			Set_OriginPos(_vector vPos) { XMStoreFloat4(&m_OriginPos, vPos); }
 #ifdef _DEBUG
 	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -178,6 +192,8 @@ private:
 	_float			m_fDegree = {};
 	_bool			m_bGuarding = {};
 	_float 			m_fParryTimer = {};
+	_bool			m_bStartSpellAnim = {};
+	_float4			m_OriginPos = {};
 		
 
 	/* 무적 불 변수*/
