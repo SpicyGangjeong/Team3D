@@ -30,10 +30,11 @@ public:
 private:
 	HRESULT Initialize(TRIGGERBOX_DESC*);
 	HRESULT Scan();
+	HRESULT CheckPlayerHit(PSX::PxActor* pActor);
 
 
 private:
-	_float2 m_vScanTimer = { 0.f, 0.5f };
+	_float2 m_vScanTimer = { 0.f, 0.8f };
 #ifdef _DEBUG
 	_bool m_bRender = false;
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };

@@ -120,20 +120,27 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_RacerAI(LAYER_RACERAI))) {
-		return E_FAIL;
+	_bool bLoadNPC = { true };
+#ifdef _DEBUG
+#ifdef 기무리
+	bLoadNPC = false;
+#endif
+#endif // _DEBUG
+	if (true == bLoadNPC) {
+		if (FAILED(Ready_Layer_RacerAI(LAYER_RACERAI))) {
+			return E_FAIL;
+		}
+		if (FAILED(Ready_Layer_Duelist())) {
+			return E_FAIL;
+		}
+
+		if (FAILED(Ready_Layer_Npc())) {
+			return E_FAIL;
+		}
 	}
 	
 
 	if (FAILED(Ready_Layer_Monster())) {
-		return E_FAIL;
-	}
-
-	if (FAILED(Ready_Layer_Duelist())) {
-		return E_FAIL;
-	}
-
-	if (FAILED(Ready_Layer_Npc())) {
 		return E_FAIL;
 	}
 
@@ -332,9 +339,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -1006,7 +1013,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = true;
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = true;
+	isLoad_Monster = false;
 #endif // 
 #ifdef 나
 
@@ -1118,8 +1125,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_NPC = true;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;

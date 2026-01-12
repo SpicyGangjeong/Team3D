@@ -255,7 +255,7 @@ HRESULT CPlayer::Render()
 		}
 #ifdef _DEBUG
 #ifdef 기무리
-		Render_CameraCoordinateSystem();
+		//Render_CameraCoordinateSystem();
 #endif // 기무리
 		//m_pCharacter_Controller->Render();
 #endif // _DEBUG
@@ -640,6 +640,9 @@ HRESULT CPlayer::Ready_Components()
 		}
 		m_pCharacter_Controller->SetGravity(false);
 		m_pCharacter_Controller->Set_GravityAmount(1.2f);
+#ifdef _DEBUG
+		m_pCharacter_Controller->Set_Name("CCT_PLAYER");
+#endif // _DEBUG
 	}
 
 	{ // DO

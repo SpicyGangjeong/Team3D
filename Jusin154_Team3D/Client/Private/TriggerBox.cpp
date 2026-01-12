@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "TriggerBox.h"
+#include "Layer.h"
+#include "Player.h"
 
 CTriggerBox::CTriggerBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -50,60 +52,82 @@ HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 	Desc.fRadius = pDesc->vPosition_Radius.w;
 	Desc.fRotationPerSec = 0;
 	Desc.fSpeedPerSec = 0;
-	if (FAILED(__super::Initialize(pDesc))) {
+	if (FAILED(__super::Ready_Components(&Desc))) {
 		return E_FAIL;
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat4(&pDesc->vPosition_Radius), 1.f));
 
-	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_pTransformCom->Get_Radius(), 12, false, false));
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_pTransformCom->Get_Radius() * 2.f, 12, false, false));
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
+
+	m_vScanTimer.y += m_pGameInstance->Real_Random_Float(0.f, 0.2f);
+
     return S_OK;
 }
 
 HRESULT CTriggerBox::Scan()
 {
 	_float fRadius = m_pTransformCom->Get_Radius();
-    PSX::PxSweepBuffer pxBuffer = {};
+
+	PSX::PxSweepHit hitBuffer[32];
+	PSX::PxSweepBuffer pxBuffer(hitBuffer, 32);
 	_bool bHit = m_pGameInstance->SphereCast(fRadius, m_pTransformCom->Get_State(STATE::POSITION), XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.1f,
-		PSX::PxHitFlag::ePOSITION, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+		PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
 
 	const PSX::PxSweepHit & hit = pxBuffer.block;
 	PSX::PxRigidActor* pActor = hit.actor;
+	_uint iHitCount = pxBuffer.getNbAnyHits();
+	HRESULT hr = E_FAIL;
 	if (bHit) {
-		if (nullptr != pActor && nullptr != pActor->userData)
-		{
-			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
-			switch (pUserData->eKind)
-			{
-			case PHYSX_KIND::BODY_DYNAMIC:
-			{
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::PLAYER:
-				{
-					return S_OK;
-				}break;
-				default:
-					break;
-				} 
-			}break;
-			case PHYSX_KIND::CCTActor:
-			{
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::PLAYER: {
-					return S_OK;
-				} break;
-				default:
+		hr = CheckPlayerHit(pActor);
+		if (FAILED(hr)) {
+			for (_uint i = 0; i < iHitCount; ++i) {
+				PSX::PxSweepHit* pHit = &pxBuffer.touches[i];
+				hr = CheckPlayerHit(pHit->actor);
+				if (SUCCEEDED(hr)) {
 					break;
 				}
+			}
+		}
+	}
+    return hr;
+}
+
+HRESULT CTriggerBox::CheckPlayerHit(PSX::PxActor* pActor)
+{
+	if (nullptr != pActor && nullptr != pActor->userData)
+	{
+		PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		switch (pUserData->eKind)
+		{
+		case PHYSX_KIND::BODY_DYNAMIC:
+		{
+			switch (PXOBJECT(pUserData->iSubKind))
+			{
+			case PXOBJECT::PLAYER:
+			{
+				return S_OK;
+			}break;
+			default:
+				break;
+			}
+		}break;
+		case PHYSX_KIND::CCTActor:
+		{
+			switch (PXOBJECT(pUserData->iSubKind))
+			{
+			case PXOBJECT::PLAYER: {
+				return S_OK;
 			} break;
 			default:
 				break;
 			}
+		} break;
+		default:
+			break;
 		}
 	}
-    return E_FAIL;
+	return E_FAIL;
 }
 
 CTriggerBox* CTriggerBox::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TRIGGERBOX_DESC* Desc)
