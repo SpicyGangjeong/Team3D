@@ -162,7 +162,6 @@ void CAlphaMap::Load_ToFile(const _char* pFilePath)
 		in.read(reinterpret_cast<_char*>(&m_pPixels[i]), sizeof(_float4));
 	}
 
-
 	in.close();
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
@@ -175,8 +174,8 @@ void CAlphaMap::Load_ToFile(const _char* pFilePath)
 
 	m_pContext->Unmap(m_pTexture2D, 0);
 
-	/*if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Terrain/Hogsmeade_AlphaMap.dds")))
-		return;*/
+	if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Terrain/Hogsmeade_AlphaMap.dds")))
+		return;
 }
 
 void CAlphaMap::Save_DDS(const _char* pFilePath)

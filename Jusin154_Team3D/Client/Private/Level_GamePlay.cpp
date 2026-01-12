@@ -1128,8 +1128,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	_bool isLoad_RandomNPC = { true };
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // gimch
 #ifdef 진우
 	isLoad_RandomNPC = true;
