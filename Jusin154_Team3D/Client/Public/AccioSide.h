@@ -1,19 +1,19 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "Effect_Container.h"
 
 NS_BEGIN(Engine)
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CRevelio final : public CEffect_Container
+class CAccioSide final : public CEffect_Container
 {
 private:
-	CRevelio(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CRevelio(const CRevelio& rhs);
-	virtual ~CRevelio() = default;
+	CAccioSide(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAccioSide(const CAccioSide& rhs);
+	virtual ~CAccioSide() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -31,16 +31,18 @@ private:
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
-	_wstring	     m_wstrEffectName = {};
-	class CPlayer*	 m_pPlayer = {};
+	_wstring			m_wstrEffectName = {};
 
-	class CEditEffect* m_pRevelioPT_Y = { nullptr };
-	class CEditEffect* m_pRevelioPT_B = { nullptr };
-	class CEditEffect* m_pRevelioPT_R = { nullptr };
-	class CEditEffect* m_pWand_Light = { nullptr };
+	_bool				m_isParticleEnd = {};
+	_bool				m_isTrailEnd = {};
+	_float4x4			m_TrailStopMat = {};
+
+	class CEffectParts* m_pWandLight = { nullptr };
+	class CTrailObject* m_pWandTrail = { nullptr };
+	//class CEffectParts* m_pWandParticle = { nullptr };
 
 public:
-	static CRevelio* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CAccioSide* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 #ifdef _DEBUG

@@ -191,6 +191,7 @@
 #include "DecendoSide.h"
 #include "BombardSide.h"
 #include "LeviosoSide.h"
+#include "AccioSide.h"
 #include "TransformationSide.h"
 #include "AvadakedavraSide.h"
 
@@ -2624,6 +2625,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(g_iStaticLevel, CDecendoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CAccioSide>(g_iStaticLevel, CAccioSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

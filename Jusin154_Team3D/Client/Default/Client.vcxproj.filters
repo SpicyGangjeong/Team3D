@@ -932,6 +932,9 @@
     <ClInclude Include="..\Public\State_Parry.h">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AccioSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
       </ClInclude>
@@ -1936,6 +1939,9 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
       <UniqueIdentifier>{4a11eb4b-127e-41f2-8456-cae963c94a4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Accio\AccioSide">
+      <UniqueIdentifier>{0e6d6920-c33c-4202-a2a5-3c883e1d4597}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2809,6 +2815,13 @@
     <ClCompile Include="..\Private\StupefySide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Stupefy\StupefySide</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp" />
+    <ClCompile Include="..\Private\State_Parry.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AccioSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
+	</ClCompile>
     <ClCompile Include="..\private\MapElement_Balloon.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Balloon</Filter>
     </ClCompile>

@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "TransformationSide.h"
+#include "AccioSide.h"
 
 #include "GameInstance.h"
 #include "EffectParts.h"
@@ -8,27 +8,27 @@
 #include "TrailObject.h"
 
 
-CTransformationSide::CTransformationSide(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CAccioSide::CAccioSide(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
 {
 }
 
-CTransformationSide::CTransformationSide(const CTransformationSide& rhs)
+CAccioSide::CAccioSide(const CAccioSide& rhs)
 	: CEffect_Container(rhs)
 {
 }
 
-HRESULT CTransformationSide::Initialize_Prototype()
+HRESULT CAccioSide::Initialize_Prototype()
 {
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/TransformationSide")))
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/AccioSide")))
 		return E_FAIL;
 
 	return S_OK;
 
 }
 
-HRESULT CTransformationSide::Initialize(void* pArg)
+HRESULT CAccioSide::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -39,7 +39,7 @@ HRESULT CTransformationSide::Initialize(void* pArg)
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
-	m_wstrEffectName = L"TransformationSide";
+	m_wstrEffectName = L"AccioSide";
 
 
 	//m_pWandParticle = Get_PartObject<CEffectParts>("Wand_PT");
@@ -61,13 +61,13 @@ HRESULT CTransformationSide::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CTransformationSide::Priority_Update(_float fTimeDelta)
+void CAccioSide::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
 }
 
-void CTransformationSide::Update(_float fTimeDelta)
+void CAccioSide::Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
 		return;
@@ -95,7 +95,7 @@ void CTransformationSide::Update(_float fTimeDelta)
 
 }
 
-void CTransformationSide::Late_Update(_float fTimeDelta)
+void CAccioSide::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
 		return;
@@ -105,7 +105,7 @@ void CTransformationSide::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CTransformationSide::Pre_Setting(CGameObject* pObject, void* pArg)
+HRESULT CAccioSide::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
@@ -133,7 +133,7 @@ HRESULT CTransformationSide::Pre_Setting(CGameObject* pObject, void* pArg)
 	return S_OK;
 }
 
-HRESULT CTransformationSide::Ready_Components(void* pArg)
+HRESULT CAccioSide::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
@@ -142,18 +142,18 @@ HRESULT CTransformationSide::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CTransformationSide::Ready_Child()
+HRESULT CAccioSide::Ready_Child()
 {
 	return S_OK;
 }
 
-CTransformationSide* CTransformationSide::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CAccioSide* CAccioSide::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CTransformationSide* pInstance = new CTransformationSide(pDevice, pContext);
+	CAccioSide* pInstance = new CAccioSide(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CTransformationSide");
+		MSG_BOX("Failed to Created : CAccioSide");
 		SAFE_RELEASE(pInstance);
 	}
 
@@ -161,26 +161,26 @@ CTransformationSide* CTransformationSide::Create(ID3D11Device* pDevice, ID3D11De
 }
 
 
-CGameObject* CTransformationSide::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CAccioSide::Clone(void* pArg, CGameObject* pOwner)
 {
-	CTransformationSide* pInstance = new CTransformationSide(*this);
+	CAccioSide* pInstance = new CAccioSide(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CTransformationSide");
+		MSG_BOX("Failed to Cloned : CAccioSide");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CTransformationSide::OnCollision(CGameObject* pOther, void* pDesc)
+void CAccioSide::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 }
 
-void CTransformationSide::Free()
+void CAccioSide::Free()
 {
 	__super::Free();
 
@@ -191,14 +191,14 @@ void CTransformationSide::Free()
 }
 #ifdef _DEBUG
 
-void CTransformationSide::Describe_Entity()
+void CAccioSide::Describe_Entity()
 {
 
 }
 
 #endif // _DEBUG
 
-HRESULT CTransformationSide::Bind_ShaderResources()
+HRESULT CAccioSide::Bind_ShaderResources()
 {
 	return S_OK;
 }
