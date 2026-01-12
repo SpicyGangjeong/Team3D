@@ -51,22 +51,8 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	//CTerrain::TERRAIN_DESC Desc = {};
-	///* Hogsmeade */
-
-	//Desc.isEdit = false;
-	//Desc.iAlphaSizeX = 2048;
-	//Desc.iAlphaSizeY = 2048;
-	//Desc.vPosition = _float3(-194, 18.5f, -153.f);
-	//Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
-	//Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
-	//Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
-
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Terrain"), &Desc)))
-	//	return E_FAIL;
 
 
-	/* 논 블랜드 중에서도 최 하단으로 들어가야함 */
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Z_Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
 	{
 		return E_FAIL;
@@ -91,11 +77,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 /*	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 		return E_FAIL;*/	
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
-	//	return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+	//	return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky")))){
 		return E_FAIL;
@@ -108,8 +94,17 @@ HRESULT CLevel_EffectViewer::Initialize()
 	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
 
+/* 호그 스미드 */
+	
+	m_pGameInstance->Setting_Volumetirc(
+		1.251f,                         // 밀도
+		0.0253f,                          // 빛 강도
+		0.9f,                          // 산란 계수
+		1.78f,                           // 깊이 분포 계수
+		0.f);
 
-	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+/* 란록 맵*/
+	//m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
 
 
 	return S_OK;
@@ -168,10 +163,18 @@ HRESULT CLevel_EffectViewer::Ready_Layer_Light()
 	//_float4 vDiffuse = _float4(0.607f, 0.658f, 0.698f, 0.f);
 	//_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
 	//_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+	
+	/* 란록맵 */
+	//_float4 vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
+	//_float4 vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
+	//_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 
-	_float4 vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
-	_float4 vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
-	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+	/* 호그스미드 */
+	_float4 vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
+	_float4 vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
+	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
+
+
 
 	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
@@ -228,12 +231,28 @@ HRESULT CLevel_EffectViewer::Ready_Layer_PhysX(const _wstring& strLayerTag)
 
 HRESULT CLevel_EffectViewer::Ready_Layer_BackGround(const _wstring& strLayerTag)
 {
-	_float4 vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	m_pGameInstance->Set_FogColor(vColor);
-	m_pGameInstance->Set_Fog(10.f, 5.f);
-	m_pInfoInstance->Load_MapObjects("Dungeon_Map_Data");
 
-	CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data");
+
+	CTerrain::TERRAIN_DESC Desc = {};
+	/* Hogsmeade */
+
+	Desc.isEdit = false;
+	Desc.iAlphaSizeX = 2048;
+	Desc.iAlphaSizeY = 2048;
+	Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
+	Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Terrain"), &Desc)))
+		return E_FAIL;
+
+	//_float4 vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	//m_pGameInstance->Set_FogColor(vColor);
+	//m_pGameInstance->Set_Fog(10.f, 5.f);
+	//m_pInfoInstance->Load_MapObjects("Dungeon_Map_Data");
+
+	//CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data");
 
 	return S_OK;
 }

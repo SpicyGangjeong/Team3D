@@ -2740,7 +2740,7 @@ void CPlayer::Attach_Broom()
 
 		_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
 
-		m_OffsetPos = { 0.f,0.9f,0.f };
+		m_OffsetPos = { 0.f,1.f,0.f };
 
 		_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
 			m_OffsetPos.y, m_OffsetPos.z);

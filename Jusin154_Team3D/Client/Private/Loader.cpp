@@ -212,7 +212,9 @@
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
-
+#include "Troll_Rush.h"
+#include "Troll_Shout.h"
+#include "Troll_Self_Hit.h"
 
 #include "WandEnd.h"
 #include "Goblin_Protego.h"
@@ -2628,6 +2630,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush_Hit>(g_iStaticLevel, CTroll_Rush_Hit::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush>(g_iStaticLevel, CTroll_Rush::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Shout>(g_iStaticLevel, CTroll_Shout::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Self_Hit>(g_iStaticLevel, CTroll_Self_Hit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(g_iStaticLevel, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2836,6 +2851,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		});
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/DragonMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Rock", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))

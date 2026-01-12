@@ -57,6 +57,8 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 					if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
 						CFSM* pFSM = pOwner->Get_Component<CFSM>();
 						pFSM->Change_State(FSMSTATE::STUN);
+
+						/**/
 					}
 				}
 				if (vWorldNormal.y > 0) {

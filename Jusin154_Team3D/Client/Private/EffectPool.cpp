@@ -31,6 +31,10 @@
 #include "Troll_Rush_Hit.h"
 #include "Troll_Nomal_Smoke.h"
 #include "TrollSwing.h"
+#include "Troll_Rush.h"
+#include "Troll_Shout.h"
+#include "Troll_Self_Hit.h"
+
 #include "Goblin_Protego.h"
 #include "Goblin_Attack.h"
 #include "Mage_Down_Attack.h"
@@ -768,7 +772,36 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_SHOUT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Shout* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Shout>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_RUSH, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Rush* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Rush>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_SELF_HIT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Self_Hit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Self_Hit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	return S_OK;
 }
 

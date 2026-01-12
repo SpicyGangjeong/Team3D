@@ -59,9 +59,13 @@ private:
 	class CEffectParts* m_pTroll_Particle = { nullptr };
 	class CEffectParts* m_pTroll_Particle2 = { nullptr };
 
+	class CEffectParts* m_pDead_Smoke = { nullptr };
+
+
 	class CTrailObject* m_pLeftTrail = { nullptr };
 	class CTrailObject* m_pRightTrail = { nullptr };
 	class CTrailObject* m_pWeaponTrail = { nullptr };
+
 
 	const _float4x4* m_pLeftHand_BoneMat = { nullptr };
 	const _float4x4* m_pRightHand_BoneMat = { nullptr };
@@ -96,6 +100,7 @@ private:
 	_float m_fRushTime = {};
 	_float m_fAttackDelay = {};
 
+	class   CEffect_Container* m_pRushEffect = nullptr;
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

@@ -63,7 +63,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, 5.f, -20.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(110.f, 24.f, 135.f, 1.f));
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Z_Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -116,6 +116,10 @@ void CTroll::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(TROLL_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
+		if (m_pRock_Smoke->Get_Visible() == true)
+	{
+		m_pRock_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, Get_PartObject<CTroll_Rock>()->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+	}
 
 #pragma region TRAIL_UPDATE
 
@@ -398,10 +402,20 @@ HRESULT CTroll::Ready_Parts()
 	m_pLeft_Smoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
 
 
+
+	if (FAILED(Add_PartObject<CEditEffect>("Rock_Smoke", NEXT_LEVEL, &m_pRock_Smoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+	m_pRock_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollThrow/Black_Fire", static_cast<LEVEL>(NEXT_LEVEL));
+
+
+
 	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", NEXT_LEVEL, &m_pLeftTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
 	;
+
 
 	m_pLeftTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
 	m_pLeftTrail->Set_Visible(false);
@@ -456,6 +470,9 @@ void CTroll::Troll_Trail_Visible(_bool isTrailVisible)
 {
 	m_pLeftTrail->Set_Visible(isTrailVisible);
 	m_pRightTrail->Set_Visible(isTrailVisible);
+
+	m_pLeftTrail->Get_Component<CTrail>()->Reset_Trail();
+	m_pRightTrail->Get_Component<CTrail>()->Reset_Trail();
 }
 
 CTroll* CTroll::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -507,6 +524,8 @@ void CTroll::Free()
 	SAFE_RELEASE(m_pRightTrail);
 	SAFE_RELEASE(m_pWeaponTrail);
 	SAFE_RELEASE(m_pStunEffect);
+	SAFE_RELEASE(m_pRushEffect);
+	SAFE_RELEASE(m_pRock_Smoke);
 }
 #ifdef _DEBUG
 

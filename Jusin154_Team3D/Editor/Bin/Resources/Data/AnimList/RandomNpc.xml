@@ -1,0 +1,39 @@
+﻿<NPCAnimations>
+
+	<NPC Model="DEFAULT">
+		<Anim Name="IDLE">
+			<Index>0</Index>
+			<Index>1</Index>
+			<Index>2</Index>
+			<Index>3</Index>
+			<Index>4</Index>
+			<Index>5</Index>
+			<Index>6</Index>
+			<Index>7</Index>
+			<Index>8</Index>
+			<Index>9</Index>
+			<Index>10</Index>
+			<Index>11</Index>
+			<Index>12</Index>
+		</Anim>
+	</NPC>
+
+	<NPC Model="RACING">
+		<Anim Name="IDLE">
+			<Index>76</Index>
+			<Index>77</Index>
+			<Index>78</Index>
+			<Index>79</Index>
+			<Index>80</Index>
+			<Index>81</Index>
+			<Index>82</Index>
+			<Index>83</Index>
+			<Index>84</Index>
+			<Index>85</Index>
+			<Index>86</Index>
+			<Index>87</Index>
+			<Index>88</Index>
+		</Anim>
+	</NPC>
+
+</NPCAnimations>

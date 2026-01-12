@@ -37,16 +37,20 @@ HRESULT CRandomNpc::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	Load_AnimXML(("../Bin/Resources/Data/AnimList/RandomNpc.xml"));
+
 	_vector vPos = XMLoadFloat4(&pDesc->vPos);
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pCharacter_Controller->Set_Position(vPos);
 	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotQ.x), XMConvertToRadians(pDesc->vRotQ.y), XMConvertToRadians(pDesc->vRotQ.z));
 
 	_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
-	m_pModelCom->Set_AnimationIndex(iRandom, false);
+	m_pModelCom->Set_AnimationIndex(m_Anims[iRandom], false,1.f,false,1.f,false);
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	m_bNpc = true;
+
+
 	return S_OK;
 }
 
@@ -76,7 +80,7 @@ void CRandomNpc::Update(_float fTimeDelta)
 		if (false == m_bBattle)
 		{
 			_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
-			m_pModelCom->Set_AnimationIndex(iRandom, false, 1.f, false, 1.f, false);
+			m_pModelCom->Set_AnimationIndex(m_Anims[iRandom], false, 1.f, false, 1.f, false);
 		}
 	}
 
@@ -379,6 +383,20 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		}
 		m_bBattleObserve_Npc = true;
 		break;
+	case 10:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("VICTORROCKWOOD"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		m_bBroomRacer = true;
+		break;
+	case 11:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_ChiyoKogawa_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("CHIYOKOGAWA"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		m_bBroomRacer = true;
+		break;
 	}
 
 	/* Com_Model */
@@ -469,6 +487,42 @@ void CRandomNpc::BattleObserve_Anim()
 		}
 	}
 }
+
+void CRandomNpc::Load_AnimXML(const _char* pFilePath)
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(pFilePath) != tinyxml2::XML_SUCCESS)
+		return;
+
+	tinyxml2::XMLElement* pRoot = doc.FirstChildElement("NPCAnimations");
+
+	const char* pModelType =
+		(m_bBroomRacer == true) ? "RACING" : "DEFAULT";
+
+	for (tinyxml2::XMLElement* pNPC = pRoot->FirstChildElement("NPC");
+		pNPC;
+		pNPC = pNPC->NextSiblingElement("NPC"))
+	{
+		if (strcmp(pNPC->Attribute("Model"), pModelType) != 0)
+			continue;
+
+		for (tinyxml2::XMLElement* pAnim = pNPC->FirstChildElement("Anim");
+			pAnim;
+			pAnim = pAnim->NextSiblingElement("Anim"))
+		{
+			string animName = pAnim->Attribute("Name");
+
+			for (tinyxml2::XMLElement* pIndex = pAnim->FirstChildElement("Index");
+				pIndex;
+				pIndex = pIndex->NextSiblingElement("Index"))
+			{
+				m_Anims.push_back(pIndex->IntText());
+			}
+		}
+		break;
+	}
+}
+
 
 CRandomNpc* CRandomNpc::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
