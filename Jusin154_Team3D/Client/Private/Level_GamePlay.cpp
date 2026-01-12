@@ -1126,10 +1126,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 {
 	_bool isLoad_NPC = { true };
 	_bool isLoad_RandomNPC = { true };
+	_bool isRandomPosition = { true };
 #ifdef _DEBUG
 #ifdef gimch
 	isLoad_NPC = true;
 	isLoad_RandomNPC = true;
+	isRandomPosition = false;
 #endif // gimch
 #ifdef 진우
 	isLoad_RandomNPC = true;
@@ -1170,8 +1172,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 
 	if (true == isLoad_RandomNPC)
 	{
-		for (_uint i = 0; i < 11; i++)
+		if(isRandomPosition)
 		{
+			for (_uint i = 0; i < 11; i++)
 			{
 				CRandomNpc::NPCDESC NPCDesc{};
 				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
@@ -1184,6 +1187,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 				}
 			}
 		}
+		else
+			m_pInfoInstance->Load_Npc();
 	}
 	return S_OK;
 }

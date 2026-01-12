@@ -40,9 +40,9 @@ HRESULT CRandomNpc::Initialize(void* pArg)
 	_vector vPos = XMLoadFloat4(&pDesc->vPos);
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pCharacter_Controller->Set_Position(vPos);
-	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
+	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotQ.x), XMConvertToRadians(pDesc->vRotQ.y), XMConvertToRadians(pDesc->vRotQ.z));
 
-	m_pModelCom->Set_AnimationIndex(0, true);
+	m_pModelCom->Set_AnimationIndex(1, true);
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	m_bNpc = true;
@@ -320,7 +320,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, pArg))) {
+	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, &Desc))) {
 		return E_FAIL;
 	}
 	 

@@ -64,6 +64,7 @@ public:
 	HRESULT Load_PointLights(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath);
 	HRESULT Load_DADA_INT();
+	HRESULT Load_Npc();
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);
