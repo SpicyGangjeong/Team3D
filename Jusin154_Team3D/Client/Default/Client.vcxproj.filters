@@ -739,9 +739,6 @@
     <ClInclude Include="..\Public\Ranrok_Point.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_ENUM.h">
-      <Filter>02.GameObjects\Player</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Goblin_Assassin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
     </ClInclude>

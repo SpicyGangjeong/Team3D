@@ -2,13 +2,25 @@
 
 #include "Client_Define.h"
 #include "Unit.h"
-#include "Player_ENUM.h"
 
 NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
 public:
+	enum PLAYER_MESH_ORDER {
+		CLOTH_SIM
+		, HAIR_MAIN
+		, CLOTH
+		, EYELASH
+		, TEETH
+		, BODY
+		, HEAD_EYE_OCC
+		, HEAD_EYES
+		, FLOWERS
+		, END
+	};
+
 	typedef struct tagPlayerInitDesc {
 		_float4 vPos;
 		_float4 vRotQ;

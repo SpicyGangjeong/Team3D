@@ -120,7 +120,7 @@
 
 	<MI_HUM_N_Heads_Eye	ShaderIndex = "2" OutLineWrite="2">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Eye_Iris_D" Extension=".png"/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Poltergeist_Eye_E" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>

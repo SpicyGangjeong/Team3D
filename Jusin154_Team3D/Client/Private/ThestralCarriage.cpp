@@ -98,7 +98,7 @@ void CThestralCarriage::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-
+	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 }
 
 HRESULT CThestralCarriage::Render()
@@ -117,24 +117,55 @@ HRESULT CThestralCarriage::Render()
 	}
 #endif // _DEBUG
 
-
+	RENDER ePass = m_pGameInstance->Get_CurrentRenderPass();
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	if (RENDER::NONBLEND == ePass) {
+		for (_uint i = 0; i < iNumMeshes; i++)
+		{
+			if (i == ENUM_CLASS(CARRIAGE_MESH_ORDER::WINDOWS)) {
+				continue;
+			}
+			if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+				return E_FAIL;
+			}
 
-	for (_uint i = 0; i < iNumMeshes; i++)
-	{
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			if (FAILED(m_pShaderCom->Bind_Matrices(
+				"g_OffsetMatrix",
+				m_pModelCom->Get_OffsetMatrix(i).data(),
+				(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+			)))
+			{
+				return E_FAIL;
+			}
+			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+				return E_FAIL;
+			}
+#ifdef _DEBUG
+			if (m_bRender_WireFrame) {
+				m_pContext->RSSetState(m_pRSS);
+			}
+#endif // _DEBUG
+			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+
+			if (FAILED(m_pModelCom->Render(i))) {
+				return E_FAIL;
+			}
+		}
+	}
+	else if (RENDER::BLEND == ePass) {
+		if (FAILED(m_pModelCom->Bind_Material(1, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
 		if (FAILED(m_pShaderCom->Bind_Matrices(
 			"g_OffsetMatrix",
-			m_pModelCom->Get_OffsetMatrix(i).data(),
-			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+			m_pModelCom->Get_OffsetMatrix(1).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(1).size()
 		)))
 		{
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+		if (FAILED(m_pModelCom->Begin(1, m_pShaderCom))) {
 			return E_FAIL;
 		}
 #ifdef _DEBUG
@@ -144,7 +175,7 @@ HRESULT CThestralCarriage::Render()
 #endif // _DEBUG
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 
-		if (FAILED(m_pModelCom->Render(i))) {
+		if (FAILED(m_pModelCom->Render(1))) {
 			return E_FAIL;
 		}
 	}
@@ -297,7 +328,6 @@ HRESULT CThestralCarriage::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -348,6 +378,7 @@ void CThestralCarriage::Describe_Entity()
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Carriage")) {
 		m_pTransformCom->Describe_Entity();
+		m_pShaderCom->Describe_Entity();
 		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 		GUI::Text(AnimList.c_str());
 		GUI::Text("AnimIndex %d", m_pModelCom->Get_AnimIndex());
