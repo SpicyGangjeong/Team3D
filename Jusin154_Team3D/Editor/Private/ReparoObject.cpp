@@ -5,7 +5,6 @@
 #include "InfoInstance.h"
 #include "Unit.h"
 #include "PartObject.h"
-#include "EffectParts.h"
 
 CReparoObject::CReparoObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
@@ -275,7 +274,53 @@ void CReparoObject::Free()
 void CReparoObject::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	
+
+	if (m_pModelCom->Get_AnimSize() <= 0)
+		return;
+
+	if (GUI::BeginTabBar("Anim_List"))
+	{
+		if (GUI::BeginTabItem("ReparoObject"))
+		{
+			for (_uint i = 0; i < m_pModelCom->Get_AnimSize(); i++)
+			{
+				if (GUI::Button(m_pModelCom->Get_AnimList(i)))
+				{
+					m_pModelCom->Set_AnimationIndex(i);
+				}
+			}
+
+			GUI::EndTabItem();
+		}
+		GUI::EndTabBar();
+	}
+
+	_char label[24];
+
+	sprintf_s(label, "%s %d", "AnimIndex", m_pModelCom->Get_AnimIndex());
+
+	GUI::Text(label);
+
+	_float AnimTrack = m_pModelCom->Get_CurrentTrackPosition();
+	if (GUI::DragFloat("AnimTrack", &AnimTrack))
+	{
+		if (AnimTrack >= 0.f)
+			m_pModelCom->Set_CurrentTrackPosition(AnimTrack);
+	}
+
+	_float AnimRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	GUI::DragFloat("AnimRatio", &AnimRatio);
+
+	_float AnimSpeed = m_pModelCom->Get_AnimSpeed();
+	GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
+	m_pModelCom->Set_AnimSpeed(AnimSpeed);
+
+	_bool bPlayAnim = m_pModelCom->Get_PlayAnim();
+	if (GUI::Checkbox("Play Anim", &bPlayAnim))
+	{
+		m_pModelCom->Set_PlayAnim(bPlayAnim);
+	}
+
 	GUI::End();
 }
 

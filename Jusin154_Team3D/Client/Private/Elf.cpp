@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "RandomNpc.h"
+#include "Elf.h"
 
 #include "GameInstance.h"
 #include "InfoInstance.h"
@@ -7,53 +7,55 @@
 #include "NPCInteraction.h"
 #include "CallBack_NonPlayable_Behavior.h"
 #include "CallBack_NonPlayable_HitReport.h"
+#include "Layer.h"
 
-CRandomNpc::CRandomNpc(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CElf::CElf(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
 {
 }
 
-CRandomNpc::CRandomNpc(const CRandomNpc& Prototype)
+CElf::CElf(const CElf& Prototype)
 	: CUnit(Prototype),
 	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
-HRESULT CRandomNpc::Initialize_Prototype()
+HRESULT CElf::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CRandomNpc::Initialize(void* pArg)
+HRESULT CElf::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
 	}
 
-	NPCDESC* pDesc = static_cast<NPCDESC*>(pArg);
-	m_iIndex = pDesc->iIndex;
+	ELFDESC* pDesc = static_cast<ELFDESC*>(pArg);
 
 	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
 	}
 
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Elf.xml");
+
+	Load_ElfPos("../Bin/Resources/Data/ElfPos/ElfPos.xml");
+
 	_vector vPos = XMLoadFloat4(&pDesc->vPos);
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pCharacter_Controller->Set_Position(vPos);
-	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotQ.x), XMConvertToRadians(pDesc->vRotQ.y), XMConvertToRadians(pDesc->vRotQ.z));
+	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
 
-	m_pModelCom->Set_AnimationIndex(1, true);
+	m_pModelCom->Set_AnimationIndex(m_Anims[m_iCurrentFlow].AnimIndex, false);
+
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
-	m_bNpc = true;
+
 	return S_OK;
 }
 
-void CRandomNpc::Priority_Update(_float fTimeDelta)
+void CElf::Priority_Update(_float fTimeDelta)
 {
-	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
-		return;
-	}
 	m_pTransformCom->RewindMomentum();
 	m_iEntered -= 1;
 	if (m_iEntered < 0) {
@@ -62,14 +64,14 @@ void CRandomNpc::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CRandomNpc::Update(_float fTimeDelta)
+void CElf::Update(_float fTimeDelta)
 {
-	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
-		return;
-	}
-	BattleObserve_Anim();
+	MoveTo(fTimeDelta);
+
+	Set_Anim();
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
@@ -91,36 +93,12 @@ void CRandomNpc::Update(_float fTimeDelta)
 		SAFE_RELEASE(m_pTarget);
 		m_fTargetDistance = { FLT_MAX };
 	}
-
-	/*if (m_fTargetDistance <= 5.f && m_bInteract == false)
-	{
-		m_pInfoInstance->Event_CallBack(TEXT("NPCDialogue"), m_pNpcStat);
-		m_bInteract = true;
-	}
-
-	if (m_bInteract != m_bPreviousInteract)
-	{
-		m_bPreviousInteract = m_bInteract;
-		m_fInteractTime = 0.f;
-	}
-	else
-	{
-		m_fInteractTime += fTimeDelta;
-	}
-
-	if (m_fInteractTime >= 5.f)
-	{
-		m_bInteract = false;
-		m_fInteractTime = 0.f;
-	}*/
 }
 
-void CRandomNpc::Late_Update(_float fTimeDelta)
+void CElf::Late_Update(_float fTimeDelta)
 {
-	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
-		return;
-	}
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
@@ -131,7 +109,7 @@ void CRandomNpc::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CRandomNpc::Render()
+HRESULT CElf::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
@@ -171,7 +149,7 @@ HRESULT CRandomNpc::Render()
 	return S_OK;
 }
 
-HRESULT CRandomNpc::Render_Shadow(SHADOW eType)
+HRESULT CElf::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
@@ -209,7 +187,7 @@ HRESULT CRandomNpc::Render_Shadow(SHADOW eType)
 	return S_OK;
 }
 
-void CRandomNpc::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
+void CElf::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
 	if (nullptr == pPlayer) {
@@ -220,17 +198,17 @@ void CRandomNpc::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float
 	}
 }
 
-_wstring CRandomNpc::Get_Name()
+_wstring CElf::Get_Name()
 {
 	return m_pNpcStat->Get_Stat().pNpc_Name;
 }
 
-_wstring CRandomNpc::Get_NpcName()
+_wstring CElf::Get_NpcName()
 {
 	return m_pNpcStat->Get_Stat().pName;
 }
 
-void CRandomNpc::Set_Target(CUnit& pTarget, CTransform& pTransform)
+void CElf::Set_Target(CUnit& pTarget, CTransform& pTransform)
 {
 	SAFE_RELEASE(m_pTarget);
 	m_pTarget = &pTarget;
@@ -244,7 +222,7 @@ void CRandomNpc::Set_Target(CUnit& pTarget, CTransform& pTransform)
 }
 
 
-HRESULT CRandomNpc::Bind_ShaderResources()
+HRESULT CElf::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
@@ -270,7 +248,7 @@ HRESULT CRandomNpc::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CRandomNpc::Bind_ShaderParameters(_uint iMeshOrder)
+HRESULT CElf::Bind_ShaderParameters(_uint iMeshOrder)
 {
 	_bool bUseColorMixer = false;
 
@@ -281,20 +259,13 @@ HRESULT CRandomNpc::Bind_ShaderParameters(_uint iMeshOrder)
 	switch (m_pModelCom->Get_UsingPass(iMeshOrder, m_pShaderCom))
 	{
 	case 23:
-		if (m_strModelPrototypeTag == TEXT("Prototype_Component_F_Student_Model"))
-		{
-			bUseColorMixer = true;
-			iColorParam = 0x2E2E2E;
-			fMixerFactor = 0.00f;
-			iColorMixerMethod = 1;
-		}
-		else {
-			bUseColorMixer = true;
-			iColorParam = 0x2E2E2E;
-			fMixerFactor = 0.9f;
-			iColorMixerMethod = 1;
-		}
-		break;
+	{
+		bUseColorMixer = true;
+		iColorParam = 0x2E2E2E;
+		fMixerFactor = 0.9f;
+		iColorMixerMethod = 1;
+	}
+	break;
 	}
 	if (true == bUseColorMixer) {
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_iPackedBlendColor", &iColorParam, sizeof(_uint)))) {
@@ -312,7 +283,145 @@ HRESULT CRandomNpc::Bind_ShaderParameters(_uint iMeshOrder)
 	return S_OK;
 }
 
-HRESULT CRandomNpc::Ready_Components(void* pArg)
+void CElf::MoveTo(_float fTimeDelta)
+{
+	if (m_Points.empty())
+		return;
+
+	if (m_iCurrentFlow > m_Points.size())
+	{
+		return;
+	}
+
+	_vector Target = XMLoadFloat4(&m_Points[m_iCurrentFlow]);
+
+	_vector CurPos = m_pCharacter_Controller->Get_Position();
+	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+
+	_vector toTarget = Target - CurPos;
+	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
+
+	if (fDist < 3.f)
+	{
+		if (m_iCurrentFlow + 1 < m_Points.size())
+		{
+			if (m_pModelCom->IsFinishedAnim() && m_Anims[m_iCurrentFlow].Trigger == ENUM_CLASS(FLOW_TRIGGER::ARRIVE_POS)) {
+				m_iCurrentFlow++;
+			}
+		}
+	}
+
+	m_pTransformCom->LookAt_Horizontal_Lerp(Target, fTimeDelta, 5.f);
+}
+
+void CElf::Set_Anim()
+{
+	if (m_Anims[m_iCurrentFlow].Trigger == ENUM_CLASS(FLOW_TRIGGER::ANIM_END))
+	{
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			m_iCurrentFlow++;
+		}
+	}
+
+	_bool bRootBone = true;
+
+	m_pairAnimInfo = m_Anims[m_iCurrentFlow];
+	if (m_pairAnimInfo.AnimIndex == 1)
+	{
+		bRootBone = false;
+	}
+	m_pModelCom->Set_AnimationIndex(m_pairAnimInfo.AnimIndex, m_pairAnimInfo.Loop, 1.f, false, 1.f, bRootBone);
+}
+
+
+void CElf::Load_AnimXML(const string& path)
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(path.c_str()) != tinyxml2::XML_SUCCESS)
+		return;
+
+	tinyxml2::XMLElement* pDialogue = doc.FirstChildElement("Dialogue");
+	if (!pDialogue)
+		return;
+
+	for (tinyxml2::XMLElement* pName = pDialogue->FirstChildElement("Name");
+		pName;
+		pName = pName->NextSiblingElement("Name"))
+	{
+		_int flow = pName->IntAttribute("Flow");
+
+		pName->QueryIntAttribute("Flow", &flow);
+
+		auto* pAnim = pName->FirstChildElement("Anim");
+		if (!pAnim) continue;
+
+		const char* stateStr = pAnim->Attribute("state");
+		if (!stateStr)
+			continue;
+
+		DialogueAnim Anim = {};
+
+		STATEANIM::ESTATE State = StringToStateAnim(stateStr);
+
+		Anim.AnimIndex = pAnim->IntAttribute("index");
+		Anim.Loop = pAnim->BoolAttribute("loop");
+
+		const char* trig = pName->Attribute("Trigger");
+
+		if (!strcmp(trig, "DIALOGUE_END"))
+			Anim.Trigger = ENUM_CLASS(FLOW_TRIGGER::DIALOGUE_END);
+		else if (!strcmp(trig, "ARRIVE_POS"))
+			Anim.Trigger = ENUM_CLASS(FLOW_TRIGGER::ARRIVE_POS);
+		else if (!strcmp(trig, "ANIM_END"))
+			Anim.Trigger = ENUM_CLASS(FLOW_TRIGGER::ANIM_END);
+
+
+		m_Anims[flow] = Anim;
+
+		m_Animation[State] = { Anim.AnimIndex, Anim.Loop };
+	}
+}
+
+HRESULT CElf::Load_ElfPos(const _char* pFilePath)
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(pFilePath) != tinyxml2::XML_SUCCESS)
+		return E_FAIL;
+
+	auto* pElfPosInfo = doc.FirstChildElement("ElfPosInfo");
+	if (!pElfPosInfo) return E_FAIL;
+
+	auto* pElfPosData = pElfPosInfo->FirstChildElement("ElfPosData");
+	if (!pElfPosData) return E_FAIL;
+
+	for (auto* pName = pElfPosData->FirstChildElement("Name");
+		pName;
+		pName = pName->NextSiblingElement("Name"))
+	{
+		int flow = -1;
+		pName->QueryIntAttribute("Flow", &flow);
+
+		auto* pPosition = pName->FirstChildElement("Position");
+		if (!pPosition) continue;
+
+		auto* pPos = pPosition->FirstChildElement("Pos");
+		if (!pPos) continue;
+
+		_float x{}, y{}, z{};
+		pPos->QueryFloatAttribute("x", &x);
+		pPos->QueryFloatAttribute("y", &y);
+		pPos->QueryFloatAttribute("z", &z);
+
+		m_Points[flow] = { x, y, z, 1.f };
+	}
+
+	return S_OK;
+}
+
+
+HRESULT CElf::Ready_Components(void* pArg)
 {
 	CTransform::TRANSFORM_DESC Desc = {};
 
@@ -320,81 +429,17 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, &Desc))) {
+	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, pArg))) {
 		return E_FAIL;
-	}
-	 
-	switch (m_iIndex)
-	{
-	case 0:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_MatildaWeasely_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MATILDAWEASELY"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;
-	case 1:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_SatyavatiShah_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("SATYAVATI"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;
-	case 2:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_Ghost_Peeves_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PEEVES"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;
-	case 3:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_PhineasBlack_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHINEASBLACK"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		m_bBattleObserve_Npc = true;
-		break;
-	case 4:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_Kitchen_Female_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("KITCHENFEMALE"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;
-	case 5:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_F_Student_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("F_STUDENT"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		m_bBattleObserve_Npc = true;
-		break;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-	case 6:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_BaiHowin_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("BAIHOWIN"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;
-	case 7:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_GeorgeOsric_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("GEORGEOSRIC"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		m_bBattleObserve_Npc = true;
-		break;
-	case 8:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_DinahHecat_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("DINAHHECAT"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;
-	case 9:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_MudiwaOnai_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MUDIWAONAI"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		m_bBattleObserve_Npc = true;
-		break;
 	}
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Elf_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("ELF"), (CComponent**)&m_pNpcStat))) {
 		return E_FAIL;
 	}
 
@@ -436,74 +481,31 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CRandomNpc::BattleObserve_Anim()
+CElf* CElf::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	if (m_eNpcState == ENUM_CLASS(NPC_STATE::OBSERVE))
-	{
-		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
-		_float fRandX = 0.f;
-		if (iRand == 0)
-		{
-			fRandX = m_pGameInstance->Real_Random_Float(1002.f, 1004.f);
-		}
-		else {
-			fRandX = m_pGameInstance->Real_Random_Float(1010.f, 1012.f);
-		} 
-
-		_float fRandY = m_pGameInstance->Real_Random_Float(1008.f, 1016.f);
-
-		m_pCharacter_Controller->Set_Position(XMVectorSet(fRandX, 2.f, fRandY, 1.f));
-
-		_vector vPos = Get_WorldPostion();
-		_vector vForward = XMVectorZero();
-		if (fRandX <= 1007.f) {
-			vForward = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-		}
-		else {
-			vForward = XMVectorSet(-1.f, 0.f, 0.f, 0.f);
-		}
-
-
-		m_pTransformCom->LookAt(vPos + vForward);
-
-		m_eNpcState = ENUM_CLASS(NPC_STATE::IDLE);
-	}
-
-	if (m_bBattleObserve_Npc && m_bBattle) {
-
-		if (m_pModelCom->IsFinishedAnim())
-		{
-			_int iRand = m_pGameInstance->Real_Random_Int(14, 21);
-			m_pModelCom->Set_AnimationIndex(iRand, false,1.f,false,1.f,false);
-		}
-	}
-}
-
-CRandomNpc* CRandomNpc::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CRandomNpc* pInstance = new CRandomNpc(pDevice, pContext);
+	CElf* pInstance = new CElf(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CRandomNpc");
+		MSG_BOX("Failed to Created : CElf");
 		SAFE_RELEASE(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CRandomNpc::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CElf::Clone(void* pArg, CGameObject* pOwner)
 {
-	CRandomNpc* pInstance = new CRandomNpc(*this);
+	CElf* pInstance = new CElf(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CRandomNpc");
+		MSG_BOX("Failed to Cloned : CElf");
 		SAFE_RELEASE(pInstance);
 	}
 	return pInstance;
 }
 
-void CRandomNpc::Free()
+void CElf::Free()
 {
 	__super::Free();
 
@@ -526,8 +528,101 @@ void CRandomNpc::Free()
 }
 #ifdef _DEBUG
 
-void CRandomNpc::Describe_Entity()
+void CElf::Describe_Entity()
 {
-}
+	if (m_Anims[m_iCurrentFlow].Trigger == ENUM_CLASS(FLOW_TRIGGER::DIALOGUE_END))
+	{
+		GUI::InputInt("Flow", &m_iCurrentFlow);
+	}
 
+	_float3 Pos;
+	XMStoreFloat3(&Pos, Get_WorldPostion());
+
+	if (GUI::DragFloat3("Pos", (_float*)&Pos, 0.01f))
+	{
+		m_pCharacter_Controller->Set_Position(
+			XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
+	}
+
+	_float4 vMomentum = {};
+	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+
+	if (GUI::Button("Move To Player"))
+	{
+		CPlayer* pPlayer =
+			m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>();
+		m_pCharacter_Controller->Set_Position(pPlayer->Get_WorldPostion());
+
+		_vector vCurPos = m_pCharacter_Controller->Get_Position();
+		_float4 vPos;
+		XMStoreFloat4(&vPos, vCurPos);
+
+		char buf[128];
+		sprintf_s(buf,
+			"<Pos x=\"%.3f\" y=\"%.3f\" z=\"%.3f\"/>",
+			vPos.x, vPos.y, vPos.z);
+
+		GUI::SetClipboardText(buf);
+	}
+
+	GUI::Separator();
+
+	if (GUI::TreeNode("Points"))
+	{
+		GUI::Text("Total Count : %d", (_int)m_Points.size());
+
+		for (auto it = m_Points.begin(); it != m_Points.end(); )
+		{
+			_int index = it->first;
+			_float4& p = it->second;
+
+			GUI::PushID(index);
+
+			GUI::Text("[%d] (%.2f, %.2f, %.2f)", index, p.x, p.y, p.z);
+			GUI::SameLine();
+
+			if (GUI::SmallButton("Move"))
+			{
+				m_pCharacter_Controller->Set_Position(
+					XMVectorSet(p.x, p.y, p.z, 1.f));
+			}
+
+			GUI::SameLine();
+
+			if (GUI::SmallButton("Copy"))
+			{
+				_vector vCurPos = m_pCharacter_Controller->Get_Position();
+				XMStoreFloat4(&p, vCurPos);
+
+				char buf[128];
+				sprintf_s(buf,
+					"<Pos x=\"%.3f\" y=\"%.3f\" z=\"%.3f\"/>",
+					p.x, p.y, p.z);
+
+				GUI::SetClipboardText(buf);
+			}
+
+			GUI::SameLine();
+
+			if (GUI::SmallButton("X"))
+			{
+				it = m_Points.erase(it);
+				GUI::PopID();
+				continue;
+			}
+
+			GUI::PopID();
+			++it;
+		}
+
+		if (GUI::SmallButton("Clear All"))
+		{
+			m_Points.clear();
+		}
+
+		GUI::TreePop();
+	}
+
+}
 #endif // _DEBUG

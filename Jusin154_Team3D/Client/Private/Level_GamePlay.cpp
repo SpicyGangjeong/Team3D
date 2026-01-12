@@ -36,6 +36,7 @@
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
 #include "RandomNpc.h"
+#include "Elf.h"
 #pragma endregion
 
 
@@ -108,9 +109,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
@@ -1165,6 +1166,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 			NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
 			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &NPCDesc))) {
+				return E_FAIL;
+			}
+		}
+		{
+			CElf::ELFDESC ElfDesc{};
+			ElfDesc.vPos = _float4(-84.20f, -30.98f, -60.13f, 1.f);
+			ElfDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CElf>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &ElfDesc))) {
 				return E_FAIL;
 			}
 		}

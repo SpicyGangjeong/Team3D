@@ -78,6 +78,7 @@ private:
 	_float			m_fHitTimer = {};
 	_bool			m_bHitJap = {};
 	_bool			m_bBattle = {};
+	_bool			m_bCameraShake = { };
 
 
 	_float m_fSkillCoolTime[ENUM_CLASS(SKILL::END)] = {};
