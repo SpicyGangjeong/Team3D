@@ -40,7 +40,7 @@ HRESULT CDialogue_Canvas::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-	Visible(true);
+	Visible(false);
 	return S_OK;
 }
 

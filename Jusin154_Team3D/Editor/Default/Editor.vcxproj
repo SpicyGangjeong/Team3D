@@ -185,6 +185,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Broom_Flag.h" />
     <ClInclude Include="..\public\Broom_Record.h" />
     <ClInclude Include="..\public\Broom_Scoreboard.h" />
+    <ClInclude Include="..\public\Broom_TargetGate2D.h" />
     <ClInclude Include="..\public\Broom_Trophy.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
     <ClInclude Include="..\public\Dialogue_Canvas.h" />
@@ -200,6 +201,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\InstancedProp_Light.h" />
     <ClInclude Include="..\public\Interaction_Panel.h" />
     <ClInclude Include="..\public\LightSpawner.h" />
+    <ClInclude Include="..\public\MapElement_Balloon.h" />
     <ClInclude Include="..\public\MapElement_Chest.h" />
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
@@ -271,6 +273,8 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\State_Throw.h" />
     <ClInclude Include="..\Public\State_Tucked.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
+    <ClInclude Include="..\Public\Stupefy.h" />
+    <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Troll.h" />
     <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
     <ClInclude Include="..\Public\Troll_Nomal_Smoke.h" />
@@ -468,6 +472,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Broom_Flag.cpp" />
     <ClCompile Include="..\private\Broom_Record.cpp" />
     <ClCompile Include="..\private\Broom_Scoreboard.cpp" />
+    <ClCompile Include="..\private\Broom_TargetGate2D.cpp" />
     <ClCompile Include="..\private\Broom_Trophy.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
@@ -484,6 +489,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Interaction_Panel.cpp" />
     <ClCompile Include="..\private\LightSpawner.cpp" />
     <ClCompile Include="..\Private\Loader_ObjectViewer.cpp" />
+    <ClCompile Include="..\private\MapElement_Balloon.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
@@ -556,6 +562,8 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\State_Throw.cpp" />
     <ClCompile Include="..\Private\State_Tucked.cpp" />
     <ClCompile Include="..\Private\StunEffect.cpp" />
+    <ClCompile Include="..\Private\Stupefy.cpp" />
+    <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Troll.cpp" />
     <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp" />

@@ -9,10 +9,11 @@ class ENGINE_DLL CQuest abstract : public CGameObject
 public:
 	typedef struct tagObjectiveInfo
 	{
-		_bool	bClear{};
-		_int	iTargetID{};
-		_int	iRequiredCount{};
-		_int	iCurrentCount{};
+	_bool		bClear{};
+	_int		iTargetID{};
+	_wstring	pQuestInfo{};
+	_int		iRequiredCount{};
+	_int		iCurrentCount{};
 	}OBJECTIVEINFO;
 
 	typedef struct tagRewardsInfo
@@ -43,10 +44,11 @@ protected:
 public:
 	virtual _bool Update_Objective(_int MonsterID);
 	virtual _int Get_QuestID();
-
+	virtual _int Get_MonsterID();
 protected:
 	vector<OBJECTIVEINFO> m_ObjectiveInfo;
 	_int m_iQuestID{};
+	_int m_iMonsterID{};
 
 public:
 	virtual void Free() override;

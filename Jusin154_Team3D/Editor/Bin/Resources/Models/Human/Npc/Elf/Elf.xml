@@ -61,7 +61,7 @@
 	</MI_NPC_HouseElf_M_Head1>
 
 
-	<MM_Eyelash	ShaderIndex = "23" OutLineWrite="34">
+	<MM_Eyelash	ShaderIndex = "25" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Old_M_Hair_Fig_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>

@@ -14,8 +14,8 @@
 #include "Interaction_Key.h"
 #include "NPCInteraction.h"
 #include "Broom_TargetGate.h"
-#include "Player.h"
-#include "Layer.h"
+
+
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -64,7 +64,9 @@ HRESULT CUI_Manager::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Canvas_Change(*reinterpret_cast<UI_STATE*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteract"), [this](void* p) {this->NpcInteract(*reinterpret_cast<_bool*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("UIManagerFadeIn"), [this](void* p) {this->Set_Fade(); });
+	m_pInfoInstance->Add_Event(TEXT("UIFadeIn"), [this](void* p) {this->FadeIn(*reinterpret_cast<_float*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("RACEREADY"), [this](void* p) {this->Set_Race(*reinterpret_cast<_bool*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("BATTLE"), [this](void* p) {this->Set_Battle(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -84,6 +86,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
+		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
 		break;
 
 	case UI_STATE::SPELL:
@@ -188,9 +191,9 @@ void CUI_Manager::Update(_float fTimeDelta)
 		else if (m_eType == UI_STATE::SPELL)
 			Canvas_Change(UI_STATE::GAMEPLAYER);
 	}
-	
 
-	if (m_bRace == false)
+
+	if (m_bRace == false && m_bCurrentNPCInteract == false)
 	{
 		if (m_eType == UI_STATE::GAMEPLAYER || m_eType == UI_STATE::QUEST)
 		{
@@ -313,10 +316,12 @@ void CUI_Manager::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_J))
+	if (m_bBattle == true)
 	{
-		Change_Map();
+		if (m_fAlpha >= 1.f)
+			Change_Map();
 	}
+
 
 	__super::Update(fTimeDelta);
 }
@@ -495,7 +500,7 @@ void CUI_Manager::NpcInteract(_bool bInteract)
 
 void CUI_Manager::Set_Fade()
 {
-	m_fAlphaVelue = 1.5f;
+	m_fAlpha = 1.5f;
 	m_bActive = true;
 	m_bHover = true;
 	m_bCgangede = true;
@@ -503,30 +508,27 @@ void CUI_Manager::Set_Fade()
 
 void CUI_Manager::Change_Map()
 {
-	if (FAILED(m_pInfoInstance->Load_DADA_INT()))
-		return;
-	
-	if (FAILED(m_pInfoInstance->Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
-		return;
-
-	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
-	if (nullptr != pLayer) {
-		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
-		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1003.f, 5.f, 1005.f, 1.f));
-	}
-
-	m_pGameInstance->Setting_Volumetirc(
-		3.f,
-		0.01f,
-		0.11f,
-		1.0f,
-		0.f
-	);
 }
 
 void CUI_Manager::Set_Race(_bool bRace)
 {
 	m_bRace = bRace;
+	static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(bRace);
+}
+
+void CUI_Manager::Set_Battle(_bool bBattle)
+{
+	m_bBattle = bBattle;
+	//FadeIn(1.5f);
+}
+
+void CUI_Manager::FadeIn(_float fAlphaVelue)
+{
+	m_fAlphaVelue = fAlphaVelue;
+	m_bActive = true;
+	m_bHover = false;
+	m_bCgangede = true;
+	m_bAlphaZero = true;
 }
 
 CUI_Manager* CUI_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

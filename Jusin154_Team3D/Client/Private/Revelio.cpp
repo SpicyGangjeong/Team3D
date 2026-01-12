@@ -18,7 +18,6 @@ CRevelio::CRevelio(const CRevelio& rhs)
 
 HRESULT CRevelio::Initialize_Prototype()
 {
-
 	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Revelio")))
 		return E_FAIL;
 
@@ -41,10 +40,12 @@ HRESULT CRevelio::Initialize(void* pArg)
 	m_pRevelioPT_Y = Get_PartObject<CEffectParts>("WandPT_Y");
 	m_pRevelioPT_B = Get_PartObject<CEffectParts>("WandPT_B");
 	m_pRevelioPT_R = Get_PartObject<CEffectParts>("WandPT_R");
+	m_pWand_Light = Get_PartObject<CEffectParts>("Wand_Light");
 
 	SAFE_ADDREF(m_pRevelioPT_Y);
 	SAFE_ADDREF(m_pRevelioPT_B);
 	SAFE_ADDREF(m_pRevelioPT_R);
+	SAFE_ADDREF(m_pWand_Light);
 
 	m_wstrEffectName = L"Revelio";
 
@@ -69,7 +70,7 @@ void CRevelio::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
-	
+
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
 
 	if (pPlayer == nullptr)
@@ -82,6 +83,7 @@ void CRevelio::Update(_float fTimeDelta)
 	m_pRevelioPT_Y->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
 	m_pRevelioPT_R->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
 	m_pRevelioPT_B->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
+	m_pWand_Light->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
 
 }
 
@@ -97,9 +99,8 @@ void CRevelio::Late_Update(_float fTimeDelta)
 
 HRESULT CRevelio::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
-
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
 
@@ -113,15 +114,43 @@ HRESULT CRevelio::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pRevelioPT_Y->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
 	m_pRevelioPT_R->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
 	m_pRevelioPT_B->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
+	m_pWand_Light->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
 
 	m_pRevelioPT_Y->Set_Visible(true);
 	m_pRevelioPT_R->Set_Visible(true);
 	m_pRevelioPT_B->Set_Visible(true);
+	m_pWand_Light->Set_Visible(true);
 
 
-	Get_PartObject<CEffectParts>("Revelio_Ring")->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	Get_PartObject<CEffectParts>("Revelio_Ring")->Set_Visible(true);
+	CEffectParts* pRevelio_ScreenFX = Get_PartObject<CEffectParts>("Revelio_ScreenFX");
+	CEffectParts* pRevelio_ScreenFX_Reverse = Get_PartObject<CEffectParts>("Revelio_ScreenFX_Reverse");
+	CEffectParts* pRevelio_Smoke = Get_PartObject<CEffectParts>("Revelio_Smoke");
+	CEffectParts* pRevelio_Distortion = Get_PartObject<CEffectParts>("Revelio_Distortion");
+	CEffectParts* pBottom_PT = Get_PartObject<CEffectParts>("Bottom_PT");
 
+	pRevelio_ScreenFX->Set_Visible(true);
+	pRevelio_ScreenFX_Reverse->Set_Visible(true);
+	pRevelio_Smoke->Set_Visible(true);
+	pRevelio_Distortion->Set_Visible(true);
+	pBottom_PT->Set_Visible(true);
+
+
+	CCharacter_Controller* pCCT = m_pOwner->Get_Component<CCharacter_Controller>();
+
+	_vector vFootPos = {};
+	_vector vPos = {};
+
+	if (pCCT != nullptr)
+	{
+		vFootPos = pCCT->Get_FootPosition();
+		vPos = pCCT->Get_Position();
+
+		pRevelio_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+		pBottom_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+		pRevelio_Distortion->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+
+
+	}
 
 	return S_OK;
 }
@@ -186,7 +215,7 @@ void CRevelio::Free()
 	SAFE_RELEASE(m_pRevelioPT_Y);
 	SAFE_RELEASE(m_pRevelioPT_B);
 	SAFE_RELEASE(m_pRevelioPT_R);
-
+	SAFE_RELEASE(m_pWand_Light);
 }
 #ifdef _DEBUG
 

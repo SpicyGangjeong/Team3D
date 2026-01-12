@@ -44,7 +44,7 @@ HRESULT CWand::Initialize(void* pArg)
 
 void CWand::Priority_Update(_float fTimeDelta)
 {
-	m_pModelCom->Combined_BoneMatrix();
+
 #ifdef _DEBUG
 	Describe_Entity();
 
@@ -59,11 +59,7 @@ void CWand::Update(_float fTimeDelta)
 
 void CWand::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-}
-
-HRESULT CWand::Render()
-{
+	m_pModelCom->Combined_BoneMatrix();
 	_matrix socketMatrix = {};
 
 	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
@@ -74,6 +70,13 @@ HRESULT CWand::Render()
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 	XMStoreFloat4x4(&m_pWandTipMatrix, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Effect")) * m_pTransformCom->Get_XMWorldMatrix());
+
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+}
+
+HRESULT CWand::Render()
+{
+
 
 	if (!m_bVisible)
 		return S_OK;

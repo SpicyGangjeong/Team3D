@@ -163,6 +163,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Barral_Splesh.h" />
     <ClInclude Include="..\Public\Avadakedavra.h" />
     <ClInclude Include="..\Public\AvadakedavraSide.h" />
+    <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Broom_Circle.h" />
     <ClInclude Include="..\Public\Broom_Exit.h" />
     <ClInclude Include="..\Public\Broom_Finish.h" />
@@ -171,6 +172,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Broom_Record.h" />
     <ClInclude Include="..\Public\Broom_Scoreboard.h" />
     <ClInclude Include="..\public\Broom_TargetGate.h" />
+    <ClInclude Include="..\Public\Broom_TargetGate2D.h" />
     <ClInclude Include="..\Public\Broom_Trophy.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
@@ -193,6 +195,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Duelist_JapSide.h" />
     <ClInclude Include="..\Public\Duelist_ProtegoHit.h" />
     <ClInclude Include="..\Public\Goblin_ProtegoHit.h" />
+    <ClInclude Include="..\public\MapElement_Balloon.h" />
     <ClInclude Include="..\Public\Protego_Hit.h" />
     <ClInclude Include="..\Public\RandomNpc.h" />
     <ClInclude Include="..\Public\Ranrok_ENUM.h" />
@@ -232,8 +235,10 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Fall.h" />
     <ClInclude Include="..\Public\State_Fear.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
+    <ClInclude Include="..\Public\State_Parry.h" />
     <ClInclude Include="..\Public\State_Slash.h" />
     <ClInclude Include="..\Public\ThestralCarriage.h" />
+    <ClInclude Include="..\Public\AccioSide.h" />
     <ClInclude Include="..\Public\TransformationSide.h" />
     <ClInclude Include="..\Public\Transformation.h" />
     <ClInclude Include="..\Public\LightningSide.h" />
@@ -463,6 +468,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Avadakedavra.cpp" />
     <ClCompile Include="..\Private\AvadakedavraSide.cpp" />
+    <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Broom_Circle.cpp" />
     <ClCompile Include="..\Private\Broom_Exit.cpp" />
     <ClCompile Include="..\Private\Broom_Finish.cpp" />
@@ -471,6 +477,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Broom_Record.cpp" />
     <ClCompile Include="..\Private\Broom_Scoreboard.cpp" />
     <ClCompile Include="..\private\Broom_TargetGate.cpp" />
+    <ClCompile Include="..\Private\Broom_TargetGate2D.cpp" />
     <ClCompile Include="..\Private\Broom_Trophy.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
@@ -493,6 +500,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Human_Duelist_States.cpp" />
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Duelist_JapSide.cpp" />
+    <ClCompile Include="..\private\MapElement_Balloon.cpp" />
+    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
     <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Protego_Hit.cpp" />
@@ -531,8 +540,10 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Dash.cpp" />
     <ClCompile Include="..\Private\State_Fall.cpp" />
     <ClCompile Include="..\Private\State_Fear.cpp" />
+    <ClCompile Include="..\Private\State_Parry.cpp" />
     <ClCompile Include="..\Private\State_Slash.cpp" />
     <ClCompile Include="..\Private\ThestralCarriage.cpp" />
+    <ClCompile Include="..\Private\AccioSide.cpp" />
     <ClCompile Include="..\Private\TransformationSide.cpp" />
     <ClCompile Include="..\Private\Transformation.cpp" />
     <ClCompile Include="..\Private\LightningSide.cpp" />

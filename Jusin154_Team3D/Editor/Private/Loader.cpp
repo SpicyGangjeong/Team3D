@@ -135,6 +135,7 @@
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
 #include "broom_Trophy.h"
+#include "Broom_TargetGate2D.h"
 
 #include "Ride_Panel.h"
 #include "Ride_Info_Key.h"
@@ -182,6 +183,7 @@
 #include "MapElement_Chest_Lid.h"
 #include "LightSpawner.h"
 #include "RaceRing.h"
+#include "MapElement_Balloon.h"
 
 #pragma endregion
 
@@ -206,6 +208,8 @@
 #include "LeviosoSide.h"
 #include "DecendoSide.h"
 #include "NomalJapSide.h"
+#include "Stupefy.h"
+#include "StupefySide.h"
 
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
@@ -1240,6 +1244,10 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_TargetGate2D>(g_iStaticLevel, CBroom_TargetGate2D::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Panel>(g_iStaticLevel, CRide_Panel::Create(m_pDevice, m_pContext))))
 	{
@@ -1980,6 +1988,14 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(NEXT_LEVEL, CStupefy::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CStupefySide>(NEXT_LEVEL, CStupefySide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_FireBall>(NEXT_LEVEL, CRanrok_FireBall::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2577,6 +2593,8 @@ future<pair<_wstring, CModel*>*> CLoader::Deferred_ModelLoad(MODEL eType, const 
 
 HRESULT CLoader::Loading_For_MapViewer()
 {
+#pragma region EFFECTS
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CEditEffect>(ENUM_CLASS(LEVEL::MAP), CEditEffect::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2796,6 +2814,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return S_OK;
 
 		});
+#pragma endregion
 
 #pragma region PLAYER_AND_RANROK
 	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
@@ -2890,6 +2909,23 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 	}
 	
+	/* Balloon_Diffuse */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Balloon_Diffuse"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Balloon/T_FloatingBalloonTarget_D_%d.dds"), 4)))) {
+		return E_FAIL;
+	}
+
+	/* Balloon_Normal */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Balloon_Normal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Balloon/T_FloatingBalloonTarget_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	/* Balloon_MRO */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Balloon_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Balloon/T_FloatingBalloonTarget_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
 
 	/* Terrain_Diffuse */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Diffuse"),
@@ -3079,7 +3115,10 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/TU_BBLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
-	
+	/* For.Prototype_Component_FloatingBalloon */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_FloatingBalloon"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.fbx"))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogwart_Lake"),
@@ -3385,7 +3424,7 @@ _bool bLoadHogsmeade = true;
 	}
 
 #pragma region HOGWART
-_bool bHogwartLoad = { false };
+_bool bHogwartLoad = { true };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
@@ -3610,7 +3649,7 @@ if(bHogwartLoad)
 
 #pragma region DUNGEON
 
-_bool bDungeonLoad = { true };
+_bool bDungeonLoad = { false };
 
 if (bDungeonLoad)
 {
@@ -4097,7 +4136,7 @@ if(isLoad_Map)
 #pragma region INSTANCE_MODEL
 	CVIBuffer_Model_Instance::INSTANCE_DESC InstanceDesc = {};
 
-	InstanceDesc.iNum = 20;
+	InstanceDesc.iNum = 50;
 
 	///* For.Prototype_Component_VIBuffer_Model_Instancel */
 	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel"),
@@ -4255,6 +4294,12 @@ if(isLoad_Map)
 			"../Bin/Resources/Models/InstanceProp/SM_HM_Quid_StoneKit_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_SK_BRR_RouteMarker */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SK_BRR_RouteMarker"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext, &InstanceDesc,
+			"../Bin/Resources/Models/InstanceProp/SK_BRR_RouteMarker.fbx", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
 #pragma endregion // INSTANCE_MODEL
 
 	/* For.Prototype_Component_VIBuffer_Box */
@@ -4311,6 +4356,10 @@ if(isLoad_Map)
 
 	/* For.Prototype_GameObject_MapElement_Light */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Light>(g_iStaticLevel, CMapElement_Light::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Light */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Balloon>(g_iStaticLevel, CMapElement_Balloon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Terrain */

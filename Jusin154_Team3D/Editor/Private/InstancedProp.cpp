@@ -32,8 +32,8 @@ void CInstancedProp::Update(_float fTimeDelta)
 			m_pVIBufferInstanceCom->Add_Instance(m_pTransformCom->Get_XMWorldMatrix());
 			m_pVIBufferInstanceCom->Update_Instance();
 
-			m_vRotation.y = m_pGameInstance->Real_Random_Float(-360.f, 360.f);
-			m_vScale.y = m_pGameInstance->Random_Float(0.8f, 1.2f);
+			//m_vRotation.y = m_pGameInstance->Real_Random_Float(-360.f, 360.f);
+			//m_vScale.y = m_pGameInstance->Random_Float(0.8f, 1.2f);
 
 			_float3 vPosition = {};
 			if (m_pGameInstance->isPicking(&vPosition))
@@ -70,7 +70,7 @@ HRESULT CInstancedProp::Render()
 		if(FAILED(m_pVIBufferInstanceCom->Bind_Matrial(m_pShaderCom, i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(m_iShaderPassIndex)))
 			return E_FAIL;
 
 		m_pVIBufferInstanceCom->Render(i);
@@ -94,7 +94,7 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 	m_bEditMode = pDesc->bEditMode;
 	m_isShake = pDesc->isShake;
 	m_strPrototypeTag = pDesc->strPrototypeTag;
-
+	m_iShaderPassIndex = pDesc->iShaderPassIndex;
 	m_iInstanceIndex = 0;
 
 	if (FAILED(Ready_Components(pArg)))

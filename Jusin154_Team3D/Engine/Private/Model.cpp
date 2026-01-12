@@ -242,6 +242,8 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
+		fRatio = 1.f;
+		m_fBlendTime = 0.f;
 	}
 
 
@@ -329,9 +331,11 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
+		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
+
 		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation);
 
-		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio* 5.f);
+		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
 
 		if (fRatio >= 1.f)
 		{
@@ -363,7 +367,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation, m_iRootBoneIndex);
 
 		m_bIsSecondFinishedAnim = m_Animations[m_iCurrSecondAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask, m_OutScale, m_OutRotation, m_OutTranslation);
-		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio * 5.f);
+		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 
 		if (m_bIsSecondFinishedAnim)
@@ -445,7 +449,7 @@ _bool CModel::IsBlending() const
 }
 
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone,_bool bQueuedAnim, _bool bInit)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone,_bool bQueuedAnim)
 {
 	m_bQueuedAnim = bQueuedAnim;
 	if (m_iCurrentAnimIndex == iIndex)
@@ -472,10 +476,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 		}
 
-		if (bInit) {
-			m_fBlendTime = 0.f;
-			m_fRatio = 0.f;
-		}
+		m_fBlendTime = 0.f;
+		fRatio = 0.f;
 		m_bRootBone = bRootBone;
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
@@ -501,8 +503,8 @@ void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLo
 		m_bIsSecondLoop = isLoop;
 		m_iBoneMask = m_BoneMask[BoneIndex];
 
-		/*m_fSecondBlendTime = 0.f;
-		m_fSecondRatio = 0.f;*/
+		m_fSecondBlendTime = 0.f;
+		m_fSecondRatio = 0.f;
 		m_bIsSecondFinishedAnim = false;
 
 		m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
@@ -596,10 +598,10 @@ void CModel::Update_RootBone(_float Amount)
 
 			_float yaw = axis.y * angle;
 
-			if (m_bRootBone)
-			{
+		/*	if (m_bRootBone)
+			{*/
 				m_pTransform->TurnAngle_Y(yaw);
-			}
+			//}
 			
 
 		}
@@ -858,6 +860,11 @@ _float CModel::Get_CurrentTrackPosition()
 _float CModel::Get_CurrentTrackProgressRatio()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackProgressRatio();
+}
+
+void CModel::Set_CurrentTrackProgressRatio(_float fRatio)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_CurrentTrackProgressRatio(fRatio);
 }
 
 _float CModel::Get_TrackProgressRatio(_uint iIndex)
@@ -2113,9 +2120,11 @@ void CModel::ComputeLocal(_uint AnimIndex, _uint MeshIndex)
 		pDesc->RootInitRot = m_vInitialRootRot;
 
 		pDesc->UseUpperBody = m_bSecondAnim;
-		pDesc->UpperBlend = 1.f;
+		pDesc->UpperBlend = m_fSecondRatio;
 		pDesc->SecondAnimIndex = m_iCurrSecondAnimIndex;
-		pDesc->SecondAnimTime = m_Animations[m_iCurrSecondAnimIndex]->Get_CurrentTrackPosition();;
+		pDesc->SecondAnimTime = m_Animations[m_iCurrSecondAnimIndex]->Get_CurrentTrackPosition();
+		
+		pDesc->WorldMatrix = *m_pTransform->Get_WorldMatrixPtr();
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}

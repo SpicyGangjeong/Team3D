@@ -162,10 +162,12 @@ private:
 	const _float4x4* m_pTail2_BoneMat = { nullptr };
 	const _float4x4* m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END)] = { nullptr };
 	CRigidBody_Dynamic* m_pTargetableDO[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END)] = { nullptr };
+
+
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-	ID3D11DepthStencilState* m_pDepthStencilStateNone = { nullptr };
 
+	ID3D11DepthStencilState* m_pDepthStencilStateNone = { nullptr };
 	_float4 m_vInitialRotQ = {};
 	_float3 m_vInitialTrans = {};
 #endif // _DEBUG

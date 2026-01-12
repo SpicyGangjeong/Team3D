@@ -47,7 +47,12 @@ HRESULT CLeviosoSide::Initialize(void* pArg)
 	SAFE_ADDREF(m_pWandLight);
 	SAFE_ADDREF(m_pWandTrail);
 
-	m_fDuration = 1.f;
+	m_fDuration = 2.f;
+
+	m_Events.emplace(0.8f, [&]() {
+
+		m_pWandTrail->SetDissolve(true);
+		});
 
 	return S_OK;
 }
@@ -75,7 +80,7 @@ void CLeviosoSide::Update(_float fTimeDelta)
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
-	m_pWandTrail->Get_Component<CTrail>()->Trail_Update(fTimeDelta, pWand->Get_WorldMatrix());
+	m_pWandTrail->Oneside_Rope_Trail_Update(pWand->Get_WorldMatrix() , fTimeDelta);
 
 }
 

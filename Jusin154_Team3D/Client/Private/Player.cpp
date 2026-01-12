@@ -21,6 +21,7 @@
 #include "Mesh.h"
 #include "Effect_Container.h"
 #include "ThestralCarriage.h"
+#include "MapElement_Chest.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -117,6 +118,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("NpcInteraction"), [this](void* p) {this->Set_Interaction(*reinterpret_cast<_bool*>(p)); });
 
 	m_bAI = false;
 
@@ -168,8 +170,12 @@ void CPlayer::Update(_float fTimeDelta)
 	{
 		if (m_bNpcInteraction == true)
 		{
+			m_bCurrentInteraction = true;
 			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bNpcInteraction);
 		}
+	}
+	if (m_bGuarding) {
+		m_fParryTimer += fTimeDelta;
 	}
 
 	m_pInfoInstance->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
@@ -362,7 +368,7 @@ HRESULT CPlayer::Update_RaycastElements()
 
 		else
 		{
-			if (m_pCurrentNpcInteraction)
+			if (m_pCurrentNpcInteraction && !m_bCurrentInteraction)
 			{
 				m_bNpcInteraction = false;
 				m_pCurrentNpcInteraction = nullptr;
@@ -373,7 +379,7 @@ HRESULT CPlayer::Update_RaycastElements()
 
 	else
 	{
-		if (m_pCurrentNpcInteraction)
+		if (m_pCurrentNpcInteraction && !m_bCurrentInteraction)
 		{
 			m_bNpcInteraction = false;
 			m_pCurrentNpcInteraction = nullptr;
@@ -381,6 +387,11 @@ HRESULT CPlayer::Update_RaycastElements()
 		}
 	}
 	return S_OK;
+}
+
+void CPlayer::Set_Interaction(_bool bInteraction)
+{
+	m_bCurrentInteraction = bInteraction;
 }
 
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
@@ -439,11 +450,19 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 		iCurrAnim == m_Animation[STATEANIM::ANCIENT_THROW].first)
 		return;
 
-	if (m_bShield)
-	{
-		m_pFSM->Change_State(FSMSTATE::BLOCK);
-		return;
+	if (m_bShield) {
+		if (IsParryWindow())
+		{
+			m_pFSM->Change_State(FSMSTATE::PARRY);
+			m_fParryTimer = 0.f;
+			return;
+		}
+		else {
+			m_pFSM->Change_State(FSMSTATE::BLOCK);
+			return;
+		}
 	}
+	
 
 #ifdef _DEBUG
 	if (m_isDebugMode == true)
@@ -558,6 +577,12 @@ void CPlayer::Set_RaceInfo()
 		m_pBroomRaceManager->Push_BroomRacer(Info);
 	}
 }
+
+_bool CPlayer::IsParryWindow()
+{
+	return m_fParryTimer <= 0.15f;
+}
+
 
 HRESULT CPlayer::Ready_Components()
 {
@@ -899,6 +924,25 @@ void CPlayer::Player_PixRot()
 	}
 }
 
+void CPlayer::Find_HiddenObjects()
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_HIDDEN);
+
+	if (nullptr == pLayer)
+		return;
+
+	const list<class CGameObject*>* pHiddenObjects = pLayer->Get_Objects();
+
+	for (auto& pObject : *pHiddenObjects)
+	{
+		CMapElement_Chest* pChest = dynamic_cast<CMapElement_Chest*>(pObject);
+		if (nullptr != pChest)
+			if (pChest->IsScannable(m_pTransformCom->Get_State(STATE::POSITION)))
+				return;
+	}
+
+}
+
 void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
@@ -1037,7 +1081,7 @@ void CPlayer::Describe_Entity()
 			m_pShaderCom->Shader_Refresh();
 		}
 		m_pCharacter_Controller->Describe_Entity();
-		GUI::Checkbox("Shield", &m_bShield);
+		GUI::Checkbox("Battle", &m_bDuel_ZOnlyMove);
 		_float4 vMomentum = {};
 		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
 		GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
@@ -1122,6 +1166,7 @@ void CPlayer::Describe_Entity()
 		auto dotLR = XMVectorGetX(XMVector3Dot(vLook, vRight));
 
 		GUI::Text("dot RU %.4f | UL %.4f | LR %.4f\n", dotRU, dotUL, dotLR);
+
 
 
 		m_pLightCom->Describe_Entity();

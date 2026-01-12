@@ -28,6 +28,7 @@ public:
 	void Load_CutScenes();
 	void Release_Information();
 	LEVEL Get_RestartLevel();
+	_bool Get_SearchLockonFloag() { return m_bSearchLockOnTarget; }
 public:
 	void Update(_float fTimeDelta);
 	void Change_Level();

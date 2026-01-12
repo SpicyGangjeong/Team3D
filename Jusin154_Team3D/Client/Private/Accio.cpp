@@ -66,7 +66,18 @@ HRESULT CAccio::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_TrailWorld, XMMatrixIdentity());
 
-	m_fDuration = 6.f;
+	m_fDuration = 4.f;
+
+	m_Events.emplace(2.f, [&]() {
+
+		m_pRope_Trail->Get_Component<CTrail>()->Rope_Fix(true);
+
+		if (m_isDissolve)
+			m_pRope_Trail->SetDissolve(true);
+
+		m_pRope_Trail->Get_TrailInfo()->fMass = 0.1f;
+
+		});
 
 	return S_OK;
 }
@@ -187,8 +198,6 @@ HRESULT CAccio::Pre_Setting(CGameObject* pObject, void* pArg)
 	pCircle->Set_Visible(true);
 	
 	m_pWandLight->Set_Visible(true);
-	m_pWandLight->Get_Effect_Info()->isDissolve = false;
-	m_pWandLight->Get_Effect_Info()->isLightDissolve = false;
 
 	pSpread_Circle->Set_Visible(true);
 
@@ -311,8 +320,6 @@ void CAccio::OnCollision(CGameObject* pOther, void* pDesc)
 	pCircle->Set_Visible(false);
 	pSpread_Circle->Set_Visible(false);
 
-	m_pWandLight->Get_Effect_Info()->isDissolve = true;
-	m_pWandLight->Get_Effect_Info()->isLightDissolve = true;
 
 	m_pRotate0->Set_Visible(true);
 	m_pRotate1->Set_Visible(true);

@@ -309,6 +309,10 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "SHIELD_BLOCK5", SHIELD_BLOCK5 }, { "SHIELD_BLOCK6", SHIELD_BLOCK6 },
         { "SHIELD_BLOCK7", SHIELD_BLOCK7 },
 
+        { "SHIELD_BLOCK_90_L1", SHIELD_BLOCK_90_L1 },  { "SHIELD_BLOCK_90_L2", SHIELD_BLOCK_90_L2 },
+        { "SHIELD_BLOCK_90_R1", SHIELD_BLOCK_90_R1 },  { "SHIELD_BLOCK_90_R2", SHIELD_BLOCK_90_R2 },
+        { "SHIELD_BLOCK_180_L", SHIELD_BLOCK_180_L },  { "SHIELD_BLOCK_180_R", SHIELD_BLOCK_180_R },
+
         // SPELL
         { "SPELL", SPELL }, { "SPELL_180_R", SPELL_180_R },
         { "SPELL_90_R", SPELL_90_R }, { "SPELL_90_L", SPELL_90_L },
@@ -353,7 +357,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
 
         // PARRY
         { "PARRY_180", PARRY_180 },
-        { "PARRY2", PARRY2 }, { "PARRY3", PARRY3 }, { "PARRY4", PARRY4 },
+        { "PARRY2", PARRY2 }, { "PARRY3", PARRY3 }, { "PARRY4", PARRY4 }, { "PARRY5", PARRY5 }, { "PARRY6", PARRY6 },
 
         // BROOM (기존 세트)
         { "BROOM_IDLE", BROOM_IDLE },
@@ -490,6 +494,7 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "FIRESWEEP_WINDUP_A", FIRESWEEP_WINDUP_A },
         { "FIREBREATH_G", FIREBREATH_G },
         { "FIRESWEEP_G", FIRESWEEP_G },
+        { "FIRESWEEP_G_L", FIRESWEEP_G_L }, { "FIRESWEEP_G_R", FIRESWEEP_G_R },
 
         // ETC
         { "PULSE", PULSE },
@@ -523,6 +528,9 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "CUTSCENE_OPENINGINTRO1", CUTSCENE_OPENINGINTRO1 },
         { "CUTSCENE_OPENINGINTRO2", CUTSCENE_OPENINGINTRO2 },
         { "CUTSCENE_OPENINGINTRO3", CUTSCENE_OPENINGINTRO3 },
+
+        // CUTSCENE_DUEL
+        { "CUTSCENE_DUEL", CUTSCENE_DUEL },
 
         // BROOM (B 세트)
         { "BROOM_MOUNT_B", BROOM_MOUNT_B },

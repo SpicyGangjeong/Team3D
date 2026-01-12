@@ -86,6 +86,8 @@ HRESULT CProtego_Hit::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEditEffect* pProtego_HitPT =  Get_PartObject<CEditEffect>("Protego_HitPT");
 	CEditEffect* pProtego_HitPT_Line = Get_PartObject<CEditEffect>("Protego_HitPT_Line");
 	CEditEffect* pProtegoHit = Get_PartObject<CEditEffect>("Protego_HitPT_Line");
+	CEditEffect* pScreenFX_Hit = Get_PartObject<CEditEffect>("ScreenFX_Hit");
+	
 
 	m_pHit_SphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pHit_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -99,6 +101,8 @@ HRESULT CProtego_Hit::Pre_Setting(CGameObject* pObject, void* pArg)
 	pProtego_HitPT->Set_Visible(true);
 	pProtego_HitPT_Line->Set_Visible(true);
 	pProtegoHit->Set_Visible(true);
+
+	pScreenFX_Hit->Set_Visible(true);
 
 
 	return S_OK;

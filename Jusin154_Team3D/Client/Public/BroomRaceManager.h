@@ -43,6 +43,7 @@ public:
 	_int Get_RaceState() const { return m_eRaceState; }
 
 	HRESULT Load_RaceRing();
+	HRESULT	Load_Balloons();
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
@@ -65,6 +66,8 @@ private:
 	_float								m_fDelay = {};
 	_bool								m_bRaceEnd = {};
 
+	_bool								m_bReturnPosition = { false };
+	_bool								m_bCurrentRace = { false };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

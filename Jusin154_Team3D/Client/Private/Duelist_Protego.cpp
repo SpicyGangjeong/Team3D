@@ -113,6 +113,8 @@ HRESULT CDuelist_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
@@ -146,7 +148,7 @@ HRESULT CDuelist_Protego::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 
-		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
@@ -203,11 +205,13 @@ void CDuelist_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 			m_pOwner->OnCollision(pOther, CollisionDesc);
 			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 			m_pOwner->OnCollision(pOther, CollisionDesc);
 			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 			break;
 		}
 	}

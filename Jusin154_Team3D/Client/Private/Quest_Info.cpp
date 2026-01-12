@@ -48,8 +48,9 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	SizeUpY(m_fOriginPerviewSize);
 	m_fSortZ = 0.02f;
 	m_fFontX = 530.f;
-	m_fFontY = 500.f;
+	m_fFontY = 530.f;
 	m_iPerQuestIndex = -1;
+	m_iCurrentIndex = -1;
 	Visible(false);
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
 	return S_OK;
@@ -101,8 +102,17 @@ void CQuest_Info::Update(_float fTimeDelta)
 
 	if (m_iCurrentIndex != m_iQuest_Index)
 	{
-		Y(m_fOriginPerviewSize + (m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size() * 50.f));
+		Y(m_fOriginPerviewSize + (m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size() * 30.f));
 		m_iCurrentIndex = m_iQuest_Index;
+		vector<Text> Texts;
+		Text Textinfo;
+		m_Text.swap(Texts);
+		for (_int i = 0; i < m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size(); ++i)
+		{
+			Textinfo.pCurrentText = to_wstring(m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo[i].iCurrentCount);
+			Textinfo.pRequiredText = to_wstring(m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo[i].iRequiredCount);
+			m_Text.push_back(Textinfo);
+		}
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -138,11 +148,14 @@ HRESULT CQuest_Info::Render()
 
 	if (m_iQuest_Index != -1)
 	{
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fOriginPerviewSize), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 
 		for (_int i = 0; i < m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size(); ++i)
 		{
-			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo[i].pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY + 100 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo[i].pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fOriginPerviewSize + 80 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_Text[i].pCurrentText.c_str(), _float2(m_fFontX + m_fX + 800.f, m_fFontY - m_fOriginPerviewSize + 80 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("/"), _float2(m_fFontX + m_fX + 830.f, m_fFontY - m_fOriginPerviewSize + 80 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_Text[i].pRequiredText.c_str(), _float2(m_fFontX + m_fX + 860.f, m_fFontY - m_fOriginPerviewSize + 80 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 		}
 	}
 
@@ -245,6 +258,16 @@ void CQuest_Info::Set_Hover(void* pArg)
 		return;
 	}
 	Visible(true);
+}
+
+void CQuest_Info::Set_QuestType(_int Index)
+{
+	m_iQuestSlot = Index;
+	if (m_iCurrentQeustSlot != m_iQuestSlot)
+	{
+		m_iCurrentQeustSlot = m_iQuestSlot;
+		m_iCurrentIndex = -1;
+	}
 }
 
 void CQuest_Info::Y(_float fSizeY)

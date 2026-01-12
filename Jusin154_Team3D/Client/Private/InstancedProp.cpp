@@ -27,7 +27,6 @@ void CInstancedProp::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
 }
@@ -42,7 +41,7 @@ HRESULT CInstancedProp::Render()
 		if (FAILED(m_pVIBufferInstanceCom->Bind_Matrial(m_pShaderCom, i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_WORLDMODLE_INSTANCE::DEFAULT))))
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_eShaderPass))))
 			return E_FAIL;
 
 		m_pVIBufferInstanceCom->Render(i);
@@ -67,7 +66,7 @@ HRESULT CInstancedProp::Render_Shadow(SHADOW eType)
 		if (FAILED(m_pVIBufferInstanceCom->Bind_Matrial(m_pShaderCom, i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(3)))
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_WORLDMODLE_INSTANCE::SHADOW))))
 			return E_FAIL;
 
 		m_pVIBufferInstanceCom->Render(i);
@@ -88,6 +87,10 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
+
+	INSTANCE_PROP_DESC* pDesc = static_cast<INSTANCE_PROP_DESC*>(pArg);
+
+	m_eShaderPass = pDesc->eShaderPass;
 
 	return S_OK;
 }

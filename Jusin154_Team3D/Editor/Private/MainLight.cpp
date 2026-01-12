@@ -143,10 +143,13 @@ HRESULT CMainLight::Ready_Components()
 	LightDesc.iLevel = NEXT_LEVEL;
 
 #ifdef gimch
+	//LightDesc.vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
+	//LightDesc.vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
 	LightDesc.vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
-	LightDesc.vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
+	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.0f);
 
 #endif // gimch
+
 	/* Com_Light*/
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
 	{

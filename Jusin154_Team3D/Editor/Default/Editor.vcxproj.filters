@@ -784,6 +784,18 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit">
       <UniqueIdentifier>{b8e8e46c-ec9f-4a89-a970-c9de2ac3f521}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Balloon">
+      <UniqueIdentifier>{6c70f152-f512-4622-b6ef-27931092deed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy">
+      <UniqueIdentifier>{546b1677-5dbb-45dd-a152-5b216655e51f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy\StupefySide">
+      <UniqueIdentifier>{d84324ea-6303-442d-8f00-ed6555e6b02b}</UniqueIdentifier>
+        </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
+      <UniqueIdentifier>{bde6e952-c6ee-4136-8559-99392c01645e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1586,6 +1598,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Protego_Hit.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Balloon.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Balloon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StupefySide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy\StupefySide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Stupefy.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy</Filter>
+          </ClInclude>
+    <ClInclude Include="..\public\Broom_TargetGate2D.h">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2397,6 +2421,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Protego_Hit.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\08.Protego\Protego_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Balloon.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Balloon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StupefySide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy\StupefySide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stupefy.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy</Filter>
+          </ClCompile>
+    <ClCompile Include="..\private\Broom_TargetGate2D.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

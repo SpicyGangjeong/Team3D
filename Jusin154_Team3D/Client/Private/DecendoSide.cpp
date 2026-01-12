@@ -44,21 +44,19 @@ HRESULT CDecendoSide::Initialize(void* pArg)
 
 	m_pWandLight = Get_PartObject<CEffectParts>("Wand_Light_R");
 	m_pWandTrail = Get_PartObject<CTrailObject>();
+	m_pWand_Fire = Get_PartObject<CEffectParts>("Wand_Fire");
 
 	SAFE_ADDREF(m_pWandLight);
 	SAFE_ADDREF(m_pWandTrail);
+	SAFE_ADDREF(m_pWand_Fire);
 
 	m_fDuration = 2.f;
 
-	m_Events.emplace(0.6f, [&]() {
-		CWand* pWand = static_cast<CWand*>(m_pOwner);
 
-		if (pWand == nullptr)
-			return;
-
-		m_isTrailEnd = true;
-
-		XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
+	m_Events.emplace(0.8f, [&]() {
+		m_isParticleEnd = true;
+		m_pWandTrail->SetDissolve(true);
+		m_pWand_Fire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
 		});
 
 	return S_OK;
@@ -87,6 +85,9 @@ void CDecendoSide::Update(_float fTimeDelta)
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
+	if(m_isParticleEnd == false)
+		m_pWand_Fire->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+
 	_matrix TrailMat = m_isTrailEnd ? XMLoadFloat4x4(&m_TrailStopMat) : pWand->Get_WorldMatrix();
 	m_pWandTrail->Trail_Update(TrailMat, fTimeDelta);
 
@@ -114,17 +115,20 @@ HRESULT CDecendoSide::Pre_Setting(CGameObject* pObject, void* pArg)
 		return E_FAIL;
 
 	m_isTrailEnd = false;
+	m_isParticleEnd = false;
 
 	m_pWandLight->Set_Visible(true);
+	m_pWand_Fire->Set_Visible(true);
 
 	/*트레일 초기화 */
 	m_pWandTrail->Set_Visible(true);
+
 	m_pWandTrail->Get_Component<CTrail>()->Reset_Trail();
 
 	/*_vector pPos = pPlayer->Get_WandPos().r[3];*/
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
+	m_pWand_Fire->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	return S_OK;
 }
 
@@ -182,6 +186,8 @@ void CDecendoSide::Free()
 
 	Safe_Release(m_pWandLight);
 	Safe_Release(m_pWandTrail);
+	Safe_Release(m_pWand_Fire);
+	
 }
 #ifdef _DEBUG
 

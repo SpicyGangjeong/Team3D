@@ -304,17 +304,25 @@ void CDuelist_NormalJap::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 	if (m_bHitShield) {
-		_vector vDir = m_pTransformCom->Get_State(STATE::LOOK);
-		vDir = XMVector3Normalize(vDir);
+		_vector vIncident = XMVector3Normalize(XMLoadFloat4(&CollisionDesc.vHitDir));
 
-		_float fRandAngle = XMConvertToRadians(m_pGameInstance->Real_Random_Float(-180.f, 180.f));
+		_vector vNormal = XMVector3Normalize(XMLoadFloat4(&CollisionDesc.vWorldNomal));
 
-		_matrix rotX = XMMatrixRotationX(fRandAngle);
-		_vector vRandDir = XMVector3TransformNormal(vDir, rotX);
+		_vector vReflect = XMVector3Reflect(vIncident, vNormal);
 
-		XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(vRandDir));
+		_float y = XMVectorGetY(vReflect);
+		if (y < 0.f)
+			vReflect = XMVectorSetY(vReflect, 0.f);
 
-		m_fLinearSpeed = 15.f;
+		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		_vector vFinal = XMVector3Normalize(
+			vReflect * (1.f - 0.25f) + vUp * 0.25f
+		);
+
+		XMStoreFloat3(&m_vCameraLook, vFinal);
+
+
+		m_fLinearSpeed = 30.f;
 	}
 	else {
 		Get_PartObject<CEffectParts>("JapPT0")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());

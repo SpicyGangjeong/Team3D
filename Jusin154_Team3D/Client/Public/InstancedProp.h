@@ -16,12 +16,13 @@ class CInstancedProp final : public CGameObject
 public:
 	typedef struct tagInstancedPropDesc
 	{
-		_bool				isShake;
-		_bool				bEnableRigidbody;
-		_float2				vRadius;
-		_float2				vSpeed;
-		_wstring 			strPrototypeTag;
-		_string 			strInstanceDataPath;
+		SHADER_PASS_WORLDMODLE_INSTANCE eShaderPass;
+		_bool							isShake;
+		_bool							bEnableRigidbody;
+		_float2							vRadius;
+		_float2							vSpeed;
+		_wstring 						strPrototypeTag;
+		_string 						strInstanceDataPath;
 	}INSTANCE_PROP_DESC;
 private:
 	CInstancedProp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -36,13 +37,15 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType)override;
 
 private:
-	_bool						m_isShake = {};
-	_uint						m_iNumMesh = {};
-	_uint						m_iNumInstacne = {};
+	_bool								m_isShake = {};
+	_uint								m_iNumMesh = {};
+	_uint								m_iNumInstacne = {};
+	SHADER_PASS_WORLDMODLE_INSTANCE		m_eShaderPass = {};
 
-	vector<CRigidBody_Static*>	m_RigidBody = { nullptr };
-	CVIBuffer_Model_Instance*	m_pVIBufferInstanceCom = { nullptr };
-	CShader*					m_pShaderCom = { nullptr };
+	CShader*							m_pShaderCom = { nullptr };
+	CVIBuffer_Model_Instance*			m_pVIBufferInstanceCom = { nullptr };
+
+	vector<CRigidBody_Static*>			m_RigidBody = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

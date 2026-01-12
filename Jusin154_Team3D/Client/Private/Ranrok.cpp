@@ -483,6 +483,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 #endif
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
+		_int ID = m_pStat->Get_Stat().iObjectID;
+		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
 	}
 
@@ -1056,7 +1058,11 @@ void CRanrok::Free()
 		SAFE_RELEASE(m_pTargetableDO[i]);
 	}
 	m_pRanrok_Props.clear();
+#ifdef _DEBUG
 	SAFE_RELEASE(m_pDepthStencilStateNone);
+#endif // _DEBUG
+
+
 	SAFE_RELEASE(m_pMotionTrailCom);
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);

@@ -43,11 +43,12 @@ HRESULT CStupefy::Initialize(void* pArg)
 
 	m_wstrEffectName = L"Stupefy";
 
-	m_pProjectile0 = Get_PartObject<CEffectParts>("Stupefy_PJ0");
-	SAFE_ADDREF(m_pProjectile0);
+	m_pProjectile = Get_PartObject<CEffectParts>("Stupefy_PJ");
+	SAFE_ADDREF(m_pProjectile);
 
-	m_pProjectile1 = Get_PartObject<CEffectParts>("Stupefy_PJ1");
-	SAFE_ADDREF(m_pProjectile1);
+	m_pProjectile2 = Get_PartObject<CEffectParts>("Stupefy_PJ2");
+	SAFE_ADDREF(m_pProjectile2);
+
 
 	m_pStupefy_PJ_PT = Get_PartObject<CEffectParts>("Stupefy_PJ_PT");
 	SAFE_ADDREF(m_pStupefy_PJ_PT);
@@ -74,8 +75,8 @@ void CStupefy::Update(_float fTimeDelta)
 	Update_Event(fTimeDelta);
 
 	m_pStupefy_PJ_PT->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
-
-
+	m_pProjectile->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
+	m_pProjectile2->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
 }
 
 void CStupefy::Late_Update(_float fTimeDelta)
@@ -119,9 +120,6 @@ HRESULT CStupefy::Pre_Setting(CGameObject* pObject, void* pArg)
 
 
 
-
-	CEffectParts* pStupefy_PJ0 = Get_PartObject<CEffectParts>("Stupefy_PJ0");
-	CEffectParts* pStupefy_PJ1 = Get_PartObject<CEffectParts>("Stupefy_PJ1");
 	CEffectParts* pWand_Distortion = Get_PartObject<CEffectParts>("Wand_Distortion");
 
 	CEffectParts* pStupefy_Light_Long = Get_PartObject<CEffectParts>("Stupefy_Light_Long");
@@ -129,13 +127,13 @@ HRESULT CStupefy::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	CEffectParts* pStupefy_Smoke = Get_PartObject<CEffectParts>("Stupefy_Smoke");
 
-	pStupefy_PJ0->Set_Visible(true);
-	pStupefy_PJ1->Set_Visible(true);
 	pWand_Distortion->Set_Visible(true);
 	pStupefy_Light_Long->Set_Visible(true);
 	pBodyFlare->Set_Visible(true);
 	pStupefy_Smoke->Set_Visible(true);
-	m_pStupefy_PJ_PT->Set_Visible(true);
+	//m_pStupefy_PJ_PT->Set_Visible(true);
+	m_pProjectile->Set_Visible(true);
+	m_pProjectile2->Set_Visible(true);
 
 	_vector vDirection = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 
@@ -143,10 +141,10 @@ HRESULT CStupefy::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	_vector vWandPos = pWand->Get_WorldPostion();
 
-	pStupefy_PJ0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
-	pStupefy_PJ1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
 
 	m_pStupefy_PJ_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
+	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
+	m_pProjectile2->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
 
 	pStupefy_Light_Long->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
 	pBodyFlare->Get_Component<CTransform>()->Set_State(STATE::POSITION, vWandPos);
@@ -160,7 +158,7 @@ HRESULT CStupefy::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	_vector vPlayerFootPos = m_pOwner->Get_Component<CCharacter_Controller>()->Get_FootPosition();
 
-	pStupefy_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerFootPos + XMVectorSet(0.f ,1.f ,0.f ,0.f));
+	pStupefy_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerFootPos);
 
 
 
@@ -186,22 +184,14 @@ HRESULT CStupefy::Pre_Setting(CGameObject* pObject, void* pArg)
 	}
 
 
-	/* PJ 월드 구성하기  */
-
-	_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - vPlayerPos));
-
-	CTransform* pPJ0_Transform = pStupefy_PJ0->Get_Component<CTransform>();
-	CTransform* pPJ1_Transform = pStupefy_PJ1->Get_Component<CTransform>();
-
-	_vector vUp = XMVector3Normalize(vDirection) * fLength;
-	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 0.f, 1.f, 0.f) , vUp));
-	_vector vLook = XMVector3Normalize(XMVector3Cross(vUp, vRight));
-	_vector vPos = vPlayerPos;
+	_vector vRight = XMVector3Normalize(XMLoadFloat3(&m_vCameraLook));
+	_vector vLook = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vRight));
+	_vector vUp = XMVector3Normalize(XMVector3Cross(vRight, vLook));
+	_vector vPos = pWand->Get_WorldPostion();
 
 	_matrix PJ_WorldMat = { vRight , vUp ,vLook , vPos };
 
-	pPJ0_Transform->Set_WorldMatrix(PJ_WorldMat);
-	pPJ1_Transform->Set_WorldMatrix(PJ_WorldMat);
+	m_pProjectile2->Get_Component<CTransform>()->Set_WorldMatrix(PJ_WorldMat);
 
 	return S_OK;
 }
@@ -270,11 +260,8 @@ void CStupefy::OnCollision(CGameObject* pOther, void* pDesc)
 
 
 	
-	m_pProjectile0->Set_Visible(false);
-	m_pProjectile1->Set_Visible(false);
-
-	/*맞는순간 위로 올리기*/
-	m_pStupefy_PJ_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 500.f, 0.f, 1.f)); 
+	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
+	m_pStupefy_PJ_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f)); 
 
 
 }
@@ -283,9 +270,10 @@ void CStupefy::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pProjectile0);
-	SAFE_RELEASE(m_pProjectile1);
+	SAFE_RELEASE(m_pProjectile);
+	SAFE_RELEASE(m_pProjectile2);
 	SAFE_RELEASE(m_pStupefy_PJ_PT);
+	
 }
 
 #ifdef _DEBUG

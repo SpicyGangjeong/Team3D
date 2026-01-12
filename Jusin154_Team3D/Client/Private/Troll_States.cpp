@@ -652,7 +652,6 @@ void CTroll::Behavior_StunExit()
 
 void CTroll::Behavior_HitEnter()
 {
-	m_pFSM->Enable_State(FSMSTATE::HIT);
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	pair<_uint, _bool> pairAnimInfo;
@@ -711,7 +710,6 @@ HRESULT CTroll::Behavior_HitExitCheck()
 
 void CTroll::Behavior_HitExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::HIT);
 }
 
 void CTroll::Behavior_DeadEnter()

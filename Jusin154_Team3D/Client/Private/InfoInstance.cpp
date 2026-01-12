@@ -113,9 +113,6 @@ HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 
 void CInfoInstance::Get_LockOnInfo(LOCKON_INFO& Info)
 {
-	if (false == m_bSearchLockOnTarget) {
-		return;
-	}
 	Info.pUnit = m_pMonsterInfo->Get_LockOnUnit();
 	Info.pInteractive = m_pInteractiveInfo->Get_LockOnUnit();
 	Info.pEffect = m_pEffectInfo->Get_LockOnEffect();

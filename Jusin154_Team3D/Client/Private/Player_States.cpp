@@ -34,6 +34,7 @@
 #include "State_AncientSpell.h"
 #include "State_Shield.h"
 #include "State_Block.h"
+#include "State_Parry.h"
 #include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #include "State_Broom_Ride_Move.h"
@@ -63,9 +64,11 @@ HRESULT CPlayer::InputAction()
 {
 	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) && 
 		m_eUIState !=ENUM_CLASS(UI_STATE::QUEST) && 
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) && 
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+	{
 		if (
-			m_pGameInstance->Key_Down(DIK_SPACE)
+			m_pGameInstance->Key_Down(DIK_SPACE) 
 			|| m_pGameInstance->Key_Down(DIK_LCONTROL)
 			|| m_pGameInstance->Key_Down(DIK_E)
 			|| m_pGameInstance->Key_Down(DIK_R)
@@ -110,8 +113,10 @@ HRESULT CPlayer::InputMove()
 {
 	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
 		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
-
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		!m_bDuel_ZOnlyMove && 
+     m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+  {
 		if (m_pGameInstance->Key_Pressing(DIK_W)
 			|| m_pGameInstance->Key_Pressing(DIK_A)
 			|| m_pGameInstance->Key_Pressing(DIK_S)
@@ -128,7 +133,10 @@ HRESULT CPlayer::InputKeyUpMove()
 {
 	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
 		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		!m_bDuel_ZOnlyMove && 
+     m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+    {
 		if (m_pGameInstance->Key_Up(DIK_W)
 			|| m_pGameInstance->Key_Up(DIK_A)
 			|| m_pGameInstance->Key_Up(DIK_S)
@@ -144,7 +152,8 @@ HRESULT CPlayer::InputSpell()
 {
 	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
 		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN)) {
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT)) {
 		if (
 			m_pGameInstance->Key_Down(DIK_1)
 			|| m_pGameInstance->Key_Down(DIK_2)
@@ -166,11 +175,16 @@ HRESULT CPlayer::InputSpell()
 
 HRESULT CPlayer::InputAim()
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON) ||
-		m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
-	{
-		if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {m_bAim  = true;}
-		return S_OK;
+	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT)) {
+		if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON) ||
+			m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+		{
+			if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) { m_bAim = true; }
+			return S_OK;
+		}
 	}
 	return E_FAIL;
 }
@@ -191,6 +205,7 @@ void CPlayer::Behavior_IdleEnter() {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	m_bSprintToggle = false;
 	m_bWalkToggle = false;
+	m_bOnce = false;
 
 	pairAnimInfo = m_Animation[STATEANIM::IDLE];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -202,6 +217,12 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_vector xmvRight = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::RIGHT), 0.f));
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (m_pBroom->Get_Ride())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+		return E_FAIL;
+	}
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
 			m_pFSM->Change_State(FSMSTATE::JUMP);
@@ -394,6 +415,7 @@ void CPlayer::Behavior_MoveEnter()
 	_bool bRight = m_pGameInstance->Key_Pressing(DIK_D);
 	_bool bBackward = m_pGameInstance->Key_Pressing(DIK_S);
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
+
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::DODGE | FSMSTATE::LAND | FSMSTATE::DISMOUNT)) {
 
 		if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE))
@@ -476,6 +498,11 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
+	if (m_pBroom->Get_Ride())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+		return E_FAIL;
+	}
 
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
@@ -587,7 +614,6 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		if (m_pGameInstance->Key_Pressing(DIK_D))
 			xmvInputDir += xmvCamRight;
 
-
 		if (XMVector3Equal(xmvInputDir, XMVectorZero()))
 			return S_OK;
 
@@ -600,7 +626,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 
 		_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
 		m_fabsDir = fabsf(vDir);
-		m_fCross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
+		_float Cross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
 
 		_float2 fCamLook = { XMVectorGetX(xmvCamLook), XMVectorGetZ(xmvCamLook) };
 
@@ -630,7 +656,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 					}
 				}
 				else if (absDir < XMConvertToRadians(160.f)) {
-					if (m_fCross > 0)
+					if (Cross > 0)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 						m_fAmount = 1.f;
@@ -659,8 +685,6 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 
 		return S_OK;
 	}
-
-
 	else if (m_pFSM->IsEnable(FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::SPRINT) ||
 		!SUCCEEDED(InputMove())) {
 		if (!m_pFSM->IsEnable(FSMSTATE::STOP))
@@ -669,29 +693,15 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			if (m_pFSM->IsEnable(FSMSTATE::WALK) || m_fMoveTime <= 0.13f) { 
 				m_bWalkToggle = false;
 				m_pFSM->Disable_State(FSMSTATE::WALK);
-				if (m_fabsDir < XMConvertToRadians(45.f))
+				
+				_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+				if (iRand == 0)
 				{
-					if (iCurrentAnimIndex == m_Animation[STATEANIM::WALK_STOP_L].first)
-					{
-						pairAnimInfo = m_Animation[STATEANIM::WALK_STOP_R];
-					}
-					else {
-						pairAnimInfo = m_Animation[STATEANIM::WALK_STOP_L];
-					}
-				}
-				else if (m_fabsDir < XMConvertToRadians(135.f))
-				{
-					if (m_fCross > 0.f) {
-						pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_L];
-					}
-					else {
-						pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_R];
-					}
+					pairAnimInfo = m_Animation[STATEANIM::WALK_STOP_R];
 				}
 				else {
-					pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_BWD];
+					pairAnimInfo = m_Animation[STATEANIM::WALK_STOP_L];
 				}
-
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 			else if (m_pFSM->IsEnable(FSMSTATE::SPRINT)) {
@@ -895,6 +905,7 @@ HRESULT CPlayer::Behavior_DodgeExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -910,7 +921,7 @@ void CPlayer::Behavior_BlinkEnter()
 	m_bVisible = false;
 	Get_PartObject<CWand>()->Set_Visible(false);
 	Add_Event(m_Animation[STATEANIM::DODGE].first,
-		[&]() {
+		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::BLINK, this);
 		},
 		0.1f);
@@ -972,7 +983,7 @@ void CPlayer::Behavior_SlideEnter()
 	pairAnimInfo = m_Animation[STATEANIM::SLIDE_START_R];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	Add_Event(pairAnimInfo.first,
-		[&]() {	pairAnimInfo = m_Animation[STATEANIM::SLIDE_LOOP_R];
+		[this]() {	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::SLIDE_LOOP_R];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
 		0.95f);
 }
@@ -1025,8 +1036,20 @@ void CPlayer::Behavior_CombatEnter()
 
 	if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
 	{
-		m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), -1);
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+		pairAnimInfo = m_Animation[STATEANIM::LUMOS_STOP];
+		m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), pairAnimInfo.first, pairAnimInfo.second);
+		if (SUCCEEDED(InputMove()))
+		{
+			m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return;
+		}
+		else {
+			m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return;
+		}
+
 	}
 
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell()))
@@ -1036,6 +1059,7 @@ void CPlayer::Behavior_CombatEnter()
 			pairAnimInfo = m_Animation[STATEANIM::SKILL];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
+			Find_HiddenObjects();
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Q)) {
 
@@ -1195,25 +1219,13 @@ void CPlayer::Behavior_LightAttackEnter()
 	
 	if (m_LockOnInfo.pUnit)
 	{
-		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-		_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+		Calc_CameraPlayerAngle();
 
-		vLook = XMVector3Normalize(vLook);
-		vCameraLook = XMVector3Normalize(vCameraLook);
-
-		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
-		fDot = clamp(fDot, -1.0f, 1.0f);
-
-		_float fAngleRad = acosf(fDot);
-		_float Degree = XMConvertToDegrees(fAngleRad);
-		_vector vCross = XMVector3Cross(vLook, vCameraLook);
-		_float Cross = XMVectorGetY(vCross);
-
-		if (Degree <= 30.f)
+		if (m_fDegree <= 30.f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 		}
-		else if (Degree <= 80.f)
+		else if (m_fDegree <= 80.f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 			Add_Event(pairAnimInfo.first,
@@ -1221,9 +1233,9 @@ void CPlayer::Behavior_LightAttackEnter()
 				},
 				0.01f);
 		}
-		else if (Degree <= 135.f)
+		else if (m_fDegree <= 135.f)
 		{
-			if (Cross < 0.f)
+			if (m_fCross < 0.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK_90_L];
 				fRatio = 0.15f;
@@ -1386,26 +1398,14 @@ void CPlayer::Behavior_SpellEnter()
 	{
 		if (m_LockOnInfo.pUnit)
 		{
-			_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-			_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+			Calc_CameraPlayerAngle();
 
-			vLook = XMVector3Normalize(vLook);
-			vCameraLook = XMVector3Normalize(vCameraLook);
-
-			_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
-			fDot = clamp(fDot, -1.0f, 1.0f);
-
-			_float fAngleRad = acosf(fDot);
-			_float Degree = XMConvertToDegrees(fAngleRad);
-			_vector vCross = XMVector3Cross(vLook, vCameraLook);
-			_float Cross = XMVectorGetY(vCross);
-
-			if (Degree <= 30.f)
+			if (m_fDegree <= 30.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::SPELL];
 				fRatio = 0.2f;
 			}
-			else if (Degree <= 60.f)
+			else if (m_fDegree <= 60.f)
 			{
 				pairAnimInfo = m_Animation[STATEANIM::SPELL];
 				fRatio = 0.2f;
@@ -1414,9 +1414,9 @@ void CPlayer::Behavior_SpellEnter()
 					},
 					0.01f);
 			}
-			else if (Degree <= 120.f)
+			else if (m_fDegree <= 120.f)
 			{
-				if (Cross < 0.f)
+				if (m_fCross < 0.f)
 				{
 					_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
 					switch (iRand)
@@ -1449,7 +1449,7 @@ void CPlayer::Behavior_SpellEnter()
 					case 1:
 						pairAnimInfo = m_Animation[STATEANIM::SPELL_90_R];
 						fRatio = 0.14f;
-						if (Degree >= 120.f)
+						if (m_fDegree >= 120.f)
 						{
 							Add_Event(pairAnimInfo.first,
 								[this]() {m_bLookAt = true;
@@ -1630,7 +1630,7 @@ void CPlayer::Behavior_AncientSpellEnter()
 	m_pFSM->Enable_State(FSMSTATE::ANCIENT_SPELL);
 	pairAnimInfo = m_Animation[STATEANIM::ANCIENT_LIGHTNING];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-	//m_pInfoInstance->Set_SearchLockOnFlag(false);
+	m_pInfoInstance->Set_SearchLockOnFlag(false);
 	if (m_LockOnInfo.pUnit)
 		m_pTransformCom->LookAt(m_LockOnInfo.pUnit->Get_WorldPostion());
 
@@ -1673,6 +1673,7 @@ HRESULT CPlayer::Behavior_AncientSpellExitCheck()
 void CPlayer::Behavior_AncientSpellExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::ANCIENT_SPELL);
+	m_pInfoInstance->Set_SearchLockOnFlag(true);
 	Reset_Event();
 	m_bLookAt = false;
 }
@@ -1685,6 +1686,9 @@ void CPlayer::Behavior_ShieldEnter()
 
 	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.3f);
+
+	m_bGuarding = true;
+	m_fParryTimer = 0.f;
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
@@ -1710,28 +1714,12 @@ HRESULT CPlayer::Behavior_ShieldExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (m_pFSM->IsEnable(FSMSTATE::PARRY))
-	{
-		if (fRatio >= 0.35f)
-		{
-			if (SUCCEEDED(InputMove()))
-			{
-				m_pFSM->Change_State(FSMSTATE::MOVE);
-				return E_FAIL;
-			}
-			else {
-				m_pFSM->Change_State(FSMSTATE::IDLE);
-				return E_FAIL;
-			}
-		}
-	}
 	return S_OK;
 }
 
 void CPlayer::Behavior_ShieldExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SHIELD);
-	m_pFSM->Disable_State(FSMSTATE::PARRY);
 	Reset_Event();
 	m_bLookAt = false;
 }
@@ -1743,34 +1731,80 @@ void CPlayer::Behavior_BlockEnter()
 	if (m_bShield) {
 		m_bBlock = true;
 		Start_CameraShake(0.3f, 3.f);
-		_int iRand = m_pGameInstance->Real_Random_Int(0, 6);
 
-		switch (iRand)
-		{
-		case 0:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK1];
-			break;
-		case 1:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK2];
-			break;
-		case 2:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK3];
-			break;
-		case 3:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK4];
-			break;
-		case 4:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK5];
-			break;
-		case 5:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK6];
-			break;
-		case 6:
-			pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK7];
-			break;
+		Calc_CameraPlayerAngle();
+		
+		if (m_fDegree <= 60.f) {
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 6);
+
+			switch (iRand)
+			{
+			case 0:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK1];
+				break;
+			case 1:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK2];
+				break;
+			case 2:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK3];
+				break;
+			case 3:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK4];
+				break;
+			case 4:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK5];
+				break;
+			case 5:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK6];
+				break;
+			case 6:
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK7];
+				break;
+			}
 		}
+		else if (m_fDegree <= 120.f) {
+			if (m_fCross < 0.f)
+			{
+				_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
 
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, true, false, false);
+				switch (iRand)
+				{
+				case 0:
+					pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_90_L1];
+					break;
+				case 1:
+					pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_90_L2];
+					break;
+				}
+			}
+			else if (m_fCross > 0.f)
+			{
+				_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+
+				switch (iRand)
+				{
+				case 0:
+					pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_90_R1];
+					break;
+				case 1:
+					pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_90_R2];
+					break;
+				}
+			}
+		}
+		else  {
+			if (m_fCross > 0.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_180_L];
+			}
+			else if (m_fCross < 0.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::SHIELD_BLOCK_180_R];
+			}
+		}
+		
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f);
 	}
 }
 
@@ -1780,87 +1814,23 @@ HRESULT CPlayer::Behavior_BlockExitCheck(_float fTimeDelta)
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	_float fEventRatio = 0.2f;
-	if (m_bBlock)
-	{
-		if (fRatio >= 0.1f && fRatio <= 0.2f) {
-			m_bCanParry = true;
-		}
-		else {
-			m_bCanParry = false;
-		}
-	}
 
-	if (m_bShield && m_bCanParry && m_pGameInstance->Key_Pressing(DIK_Q))
+	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 	{
-		m_bBlock = false;
-		m_pFSM->Enable_State(FSMSTATE::PARRY);
-		if (m_LockOnInfo.pUnit)
+		if (fRatio >= 0.6f)
 		{
-			_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
-			_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
-
-			vLook = XMVector3Normalize(vLook);
-			vCameraLook = XMVector3Normalize(vCameraLook);
-
-			_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
-			fDot = clamp(fDot, -1.0f, 1.0f);
-
-			_float fAngleRad = acosf(fDot);
-			_float Degree = XMConvertToDegrees(fAngleRad);
-			_vector vCross = XMVector3Cross(vLook, vCameraLook);
-			_float Cross = XMVectorGetY(vCross);
-
-			if (Degree <= 30.f)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, true, false, false);
+			if (SUCCEEDED(InputAction())) {
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
+				return E_FAIL;
 			}
-			else if (Degree <= 60.f)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, true, false, false);
-			}
-			else if (Degree <= 135.f)
-			{
-				if (Cross < 0.f)
-				{
-					pairAnimInfo = m_Animation[STATEANIM::PARRY2];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, true, false, false);
-				}
-				else {
-					pairAnimInfo = m_Animation[STATEANIM::PARRY3];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, true, false, false);
-					fEventRatio = 0.3f;
-				}
-			}
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::PARRY_180];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, true, false, false);
+			if (SUCCEEDED(InputMove())) {
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
 			}
 		}
-		else {
-			pairAnimInfo = m_Animation[STATEANIM::PARRY4];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		}
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
-			0.01f);
-
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
-			fEventRatio);
-
-		//m_pGameInstance->SlowMotion(0.8f, 0.3f);
-		m_bShield = false;
-		return S_OK;
 	}
 
-
-
-
-	if (m_pModelCom->IsFinishedAnim()) {
+	if (fRatio >= 0.9f) {
 		if (SUCCEEDED(InputMove()))
 		{
 			m_pFSM->Change_State(FSMSTATE::MOVE);
@@ -1880,10 +1850,126 @@ void CPlayer::Behavior_BlockExit()
 	m_bShield = false;
 }
 
+void CPlayer::Behavior_ParryEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	_float fEventRatio = 0.2f;
+	m_bGuarding = false;
+
+	m_pFSM->Enable_State(FSMSTATE::PARRY);
+
+	if (m_LockOnInfo.pUnit)
+	{
+		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+		_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+		vLook = XMVector3Normalize(vLook);
+		vCameraLook = XMVector3Normalize(vCameraLook);
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
+		fDot = clamp(fDot, -1.0f, 1.0f);
+
+		_float fAngleRad = acosf(fDot);
+		_float Degree = XMConvertToDegrees(fAngleRad);
+		_vector vCross = XMVector3Cross(vLook, vCameraLook);
+		_float Cross = XMVectorGetY(vCross);
+
+		if (Degree <= 30.f)
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				pairAnimInfo = m_Animation[STATEANIM::PARRY4];
+				break;
+			case 1:
+				pairAnimInfo = m_Animation[STATEANIM::PARRY5];
+				break;
+			case 2:
+				pairAnimInfo = m_Animation[STATEANIM::PARRY6];
+				break;
+			}
+
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
+		}
+		else if (Degree <= 60.f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::PARRY4];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
+		}
+		else if (Degree <= 135.f)
+		{
+			if (Cross < 0.f)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::PARRY2];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false);
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::PARRY3];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f, false);
+				fEventRatio = 0.3f;
+			}
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::PARRY_180];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false);
+		}
+	}
+	else {
+		pairAnimInfo = m_Animation[STATEANIM::PARRY4];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f, false);
+	}
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+		0.01f);
+
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
+		fEventRatio);
+
+	m_bShield = false;
+	
+}
+
+HRESULT CPlayer::Behavior_ParryExitCheck(_float fTimeDelta)
+{
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
+	{
+		if (fRatio >= 0.5f)
+		{
+			if (SUCCEEDED(InputAction())) {
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
+				return E_FAIL;
+			}
+			if (SUCCEEDED(InputMove())) {
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
+		}
+	}
+
+	if (fRatio >= 0.8f) {
+
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+		
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_ParryExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::PARRY);
+}
+
 void CPlayer::Behavior_HitEnter()
 {
 	m_pBroom->Set_Ride(false);
-	m_pFSM->Enable_State(FSMSTATE::HIT);
 	pair<_uint, _bool> pairAnimInfo;
 
 	if (m_eHitSpell != ENUM_CLASS(SKILL_TYPE::END)) {
@@ -1893,7 +1979,7 @@ void CPlayer::Behavior_HitEnter()
 		{
 			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,0.5f);
 			return;
 		}
 			break;
@@ -1940,14 +2026,20 @@ HRESULT CPlayer::Behavior_HitExitCheck(_float fTimeDelta)
 
 	Hit_Levioso(fTimeDelta);
 
-	if (SUCCEEDED(InputMove()))
+	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 	{
-		if (fRatio >= 0.6f) {
-			m_pFSM->Change_State(FSMSTATE::MOVE);
-			return E_FAIL;
+		if (iCurrAnimIndex != m_Animation[STATEANIM::HIT_LEVIOSO].first && fRatio >= 0.6f) {
+			if (SUCCEEDED(InputMove())) {
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
+			if (SUCCEEDED(InputAction())) {
+				m_pFSM->Change_State(FSMSTATE::COMBAT);
+				return E_FAIL;
+			}
 		}
 	}
-	else if (m_pModelCom->IsFinishedAnim()) {
+	else if (fRatio >= 0.9f) {
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
@@ -1956,7 +2048,6 @@ HRESULT CPlayer::Behavior_HitExitCheck(_float fTimeDelta)
 
 void CPlayer::Behavior_HitExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::HIT);
 	Reset_Event();
 	m_pCharacter_Controller->SetGravity(true);
 	m_eHitType = ENUM_CLASS(HIT_TYPE::END);
@@ -2053,6 +2144,11 @@ HRESULT CPlayer::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pair<_uint, _bool> pairAnimInfo;
+
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
 
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
 	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
@@ -2196,6 +2292,11 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pair<_uint, _bool> pairAnimInfo;
 
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
 	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
 	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
@@ -2290,7 +2391,7 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 
 			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, true);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
 			}
 		}
 		else {
@@ -2299,7 +2400,7 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 
 			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false, true);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
 			}
 		}
 
@@ -2363,6 +2464,11 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pair<_uint, _bool> pairAnimInfo;
+
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
 
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
 	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
@@ -2443,7 +2549,7 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 
 			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first,pairAnimInfo.second,1.f, false, 1.f, false,true);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
 			}
 		}
 		else {
@@ -2452,7 +2558,7 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 
 			if (iCurrAnimIndex != pairAnimInfo.first)
 			{
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first,pairAnimInfo.second,1.f, false, 1.f, false, true);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
 			}
 		}
 	}
@@ -2496,16 +2602,6 @@ void CPlayer::Behavior_Broom_DismountEnter()
 	pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_DISMOUNT);
 	m_pFSM->Enable_State(FSMSTATE::BROOM_DISMOUNT);
 	m_pBroom->Set_Ride(false);
-	//_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
-
-	//_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-	//_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
-	//_vector up = XMVector3Normalize(XMVector3Cross(look, right));
-
-	//m_pTransformCom->Set_State(STATE::RIGHT, right);
-	//m_pTransformCom->Set_State(STATE::UP, up);
-	//m_pTransformCom->Set_State(STATE::LOOK, look);
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.6f);
 }
 
@@ -2547,6 +2643,7 @@ void CPlayer::Behavior_Broom_DismountExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BROOM_DISMOUNT);
 	Reset_Event();
+	m_bOnce = false;
 }
 
 void CPlayer::Player_InterpTurn(_float fTimeDelta)
@@ -2636,35 +2733,37 @@ void CPlayer::Throwing_Interactive()
 
 void CPlayer::Attach_Broom()
 {
-	_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
-	_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
+	if (m_pBroom->Get_Ride()) {
+		_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
+		_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 
-	_vector Scale, Rot, Trans;
+		_vector Scale, Rot, Trans;
 
-	XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
+		XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
 
-	_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
+		_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
 
-	m_OffsetPos = { 0.f,0.9f,0.f };
+		m_OffsetPos = { 0.f,0.9f,0.f };
 
-	_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
-		m_OffsetPos.y, m_OffsetPos.z);
+		_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
+			m_OffsetPos.y, m_OffsetPos.z);
 
-	_vector BS, BR, BT;
-	XMMatrixDecompose(&BS, &BR, &BT, BroomWorld);
-	_matrix BroomWorld_NoScale =
-		XMMatrixRotationQuaternion(BR) *
-		XMMatrixTranslationFromVector(BT);
+		_vector BS, BR, BT;
+		XMMatrixDecompose(&BS, &BR, &BT, BroomWorld);
+		_matrix BroomWorld_NoScale =
+			XMMatrixRotationQuaternion(BR) *
+			XMMatrixTranslationFromVector(BT);
 
 
-	_matrix SocketWorld = BoneNoScale * Offset * BroomWorld_NoScale;
+		_matrix SocketWorld = BoneNoScale * Offset * BroomWorld_NoScale;
 
-	_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
+		_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
 
-	_matrix FinalWorld = FixRot * SocketWorld;
+		_matrix FinalWorld = FixRot * SocketWorld;
 
-	m_pTransformCom->Set_WorldMatrix(FinalWorld);
-	m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
+		m_pTransformCom->Set_WorldMatrix(FinalWorld);
+		m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
+	}
 }
 
 void CPlayer::ProcessHitBehavior()
@@ -2720,14 +2819,16 @@ void CPlayer::ProcessHitBehavior()
 			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD];
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD].first,
-				[&]() {pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
+				[this]() {
+					pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_pCharacter_Controller->SetGravity(true);
 			m_eHitType = ENUM_CLASS(HIT_TYPE::END); },
 				0.9f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first,
-				[&]() {pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
+				[this]() {
+					pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_BWD];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f); },
 				0.5f);
 		}
@@ -2735,14 +2836,16 @@ void CPlayer::ProcessHitBehavior()
 			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_FWD].first,
-				[&]() {pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT];
+				[this]() {
+					pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			m_pCharacter_Controller->SetGravity(true);
 			m_eHitType = ENUM_CLASS(HIT_TYPE::END); },
 				0.9f);
 
 			Add_Event(m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT].first,
-				[&]() {pairAnimInfo = m_Animation[STATEANIM::GETUP_FWD];
+				[this]() {
+					pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::GETUP_FWD];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f); },
 				0.5f);
 		}
@@ -2751,6 +2854,23 @@ void CPlayer::ProcessHitBehavior()
 	}
 	break;
 	}
+}
+
+void CPlayer::Calc_CameraPlayerAngle()
+{
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+	vLook = XMVector3Normalize(vLook);
+	vCameraLook = XMVector3Normalize(vCameraLook);
+
+	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vCameraLook));
+	fDot = clamp(fDot, -1.0f, 1.0f);
+
+	_float fAngleRad = acosf(fDot);
+	m_fDegree = XMConvertToDegrees(fAngleRad);
+	_vector vCross = XMVector3Cross(vLook, vCameraLook);
+	m_fCross = XMVectorGetY(vCross);
 }
 
 void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
@@ -2794,9 +2914,14 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		break;
 
 	case ENUM_CLASS(SKILL_TYPE::ACCIO):
+
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
 			fRatio);
+
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO_SIDE, Get_PartObject<CWand>()); },
+			0.f);
 		Info.pText = TEXT("아씨오!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
@@ -2850,12 +2975,14 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 
 		Add_Event(pairAnimInfo.first,
-			[&]() {		pairAnimInfo = m_Animation[STATEANIM::REPARO_LOOP];
+			[this]() {		
+				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::REPARO_LOOP];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
 			0.95f);
 
 		Add_Event(m_Animation[STATEANIM::REPARO_LOOP].first,
-			[&]() {		pairAnimInfo = m_Animation[STATEANIM::REPARO_END];
+			[this]() {		
+				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::REPARO_END];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
 			0.95f);
 	}
@@ -2973,7 +3100,7 @@ void CPlayer::Hit_Levioso(_float fTimeDelta)
 		else {
 			m_pCharacter_Controller->Set_Position(vPos);
 		}
-		if (m_fAirTime > 2.3f)
+		if (m_fAirTime > 2.1f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::LEVIOSO_LAND];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -3266,6 +3393,17 @@ void CPlayer::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::BLOCK, CState_Block::Create(&Desc));
 	}
+
+	{
+		CState_Parry::STATE_PARRY_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_ParryEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_ParryExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_ParryExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::PARRY, CState_Parry::Create(&Desc));
+	}
 #pragma endregion
 #pragma region Behavior_Combat_Focus
 
@@ -3305,9 +3443,7 @@ void CPlayer::Add_FSM()
 				m_pBroomTransform->Set_State(STATE::RIGHT, m_pTransformCom->Get_State(STATE::RIGHT));
 
 				_float3 vScale = { 0.3f,0.3f,0.3f };
-				_float3 vPlayerScale = { 1.f,1.f,1.f };
 				m_pBroomTransform->Set_Scale(vScale);
-				m_pTransformCom->Set_Scale(vPlayerScale);
 				m_bOnce = true;
 				m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
 			}

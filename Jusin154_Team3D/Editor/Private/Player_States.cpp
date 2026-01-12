@@ -832,19 +832,25 @@ void CPlayer::Behavior_CombatEnter()
 		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  }, 0.0f);
 	}
 	else if (SUCCEEDED(InputSpell())) {
+
 		m_pFSM->Enable_State(FSMSTATE::SPELL);
+		_float fEventRatio = 0.2f;
+		pairAnimInfo = m_Animation[STATEANIM::SPELL];
+
 		if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
 		{
-			pairAnimInfo = m_Animation[STATEANIM::SPELL];
 			switch (m_eSpell)
 			{
 			case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); },
-					0.2f);
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
+					0.01f);
+
+
 				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
-					0.f);
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this);  },
+					0.2f);
+
 				break;
 			case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 				Add_Event(pairAnimInfo.first,

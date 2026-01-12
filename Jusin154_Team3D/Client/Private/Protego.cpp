@@ -151,7 +151,7 @@ HRESULT CProtego::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 
-		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;

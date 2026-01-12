@@ -43,6 +43,7 @@ HRESULT CTransformationSide::Initialize(void* pArg)
 
 
 	//m_pWandParticle = Get_PartObject<CEffectParts>("Wand_PT");
+
 	m_pWandLight = Get_PartObject<CEffectParts>("Wand_Light_B");
 	m_pWandTrail = Get_PartObject<CTrailObject>();
 
@@ -52,18 +53,9 @@ HRESULT CTransformationSide::Initialize(void* pArg)
 
 	m_fDuration = 2.f;
 
-	m_Events.emplace(0.6f, [&]() {
+	m_Events.emplace(0.8f, [&]() {
 		m_isParticleEnd = true;
-		//m_pWandParticle->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
-
-		CWand* pWand = static_cast<CWand*>(m_pOwner);
-
-		if (pWand == nullptr)
-			return;
-
-		m_isTrailEnd = true;
-
-		XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
+		m_pWandTrail->SetDissolve(true);
 		});
 
 	return S_OK;
@@ -99,7 +91,7 @@ void CTransformationSide::Update(_float fTimeDelta)
 
 	// 트레일이 종료되면 위치를 고정함
 	_matrix TrailMat = m_isTrailEnd ? XMLoadFloat4x4(&m_TrailStopMat) : pWand->Get_WorldMatrix();
-	m_pWandTrail->Trail_Update(TrailMat, fTimeDelta);
+	m_pWandTrail->Oneside_Rope_Trail_Update(TrailMat, fTimeDelta);
 
 }
 
