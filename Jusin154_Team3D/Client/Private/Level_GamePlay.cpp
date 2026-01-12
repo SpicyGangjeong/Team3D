@@ -163,7 +163,23 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	_bool bStartCinematic = { true };
+#ifdef _DEBUG
+#ifdef 기무리
+	bStartCinematic = true;
+#elif 진우
+	bStartCinematic = true;
+#else
 
+#endif
+#endif // _DEBUG
+
+	if (bStartCinematic && false == m_bIntroCinematic) {
+		m_bIntroCinematic = true;
+		bStartCinematic = false;
+		_string strCutSceneName = "CarriageIntro";
+		m_pInfoInstance->Active_Event(strCutSceneName);
+	}
 	if (m_pGameInstance->Key_Pressing(DIK_0)) {
 		if (m_pGameInstance->Key_Up(DIK_1))
 		{
@@ -339,9 +355,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -915,7 +931,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 		Camera_Desc.fNear = 0.3f;
 		Camera_Desc.fFar = 500.f;
 		Camera_Desc.pCameraKey = CAMERA_CINEMATIC;
-		Camera_Desc.iPriority = 52;
+		Camera_Desc.iPriority = 54;
 		Camera_Desc.bEnableTransitionLerp = false;
 		Camera_Desc.bEnableLookLerp = false;
 		Camera_Desc.bEnableFollowLerp = false;

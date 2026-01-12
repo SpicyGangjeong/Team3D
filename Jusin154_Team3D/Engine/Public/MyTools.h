@@ -136,18 +136,18 @@ public:
 							_Out_ _float4x4& matOut, _float fRatio) {
 		_matrix matOrigin = XMLoadFloat4x4(pMatOrigin);
 		_matrix matTarget = XMLoadFloat4x4(pMatTarget);
-		MatrixLerp(&matOrigin, &matTarget, matOut, fRatio);
+		MatrixLerp(matOrigin, matTarget, matOut, fRatio);
 	}
 	
-	inline static void MatrixLerp(	_In_ _matrix* pMatOrigin, // Origin -> 0
-							_In_ _matrix* pMatTarget, // Target -> 1
+	inline static void MatrixLerp(	_In_ _fmatrix pMatOrigin, // Origin -> 0
+							_In_ _cmatrix pMatTarget, // Target -> 1
 							_Out_ _float4x4& matOut, _float fRatio) {
 		fRatio = Saturate(fRatio);
 
 		_vector vTargetScale{}, vTargetRotq{}, vTargetTrans{};
 		_vector vOriginScale{}, vOriginRotq{}, vOriginTrans{};
-		XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, *pMatTarget);
-		XMMatrixDecompose(&vOriginScale, &vOriginRotq, &vOriginTrans, *pMatOrigin);
+		XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, pMatTarget);
+		XMMatrixDecompose(&vOriginScale, &vOriginRotq, &vOriginTrans, pMatOrigin);
 
 		vTargetScale = XMVectorLerp(vOriginScale, vTargetScale, fRatio);
 		vTargetRotq = XMQuaternionSlerp(vOriginRotq, vTargetRotq, fRatio);
