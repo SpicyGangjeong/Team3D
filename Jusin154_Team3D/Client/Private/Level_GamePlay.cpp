@@ -1116,7 +1116,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 {
 	_bool isLoad_NPC = { true };
 	_bool isLoad_RandomNPC = { true };
-	_bool isRandomPosition = { false };
+	_bool isRandomPosition = { true };
 #ifdef _DEBUG
 #ifdef gimch
 	isLoad_NPC = true;
@@ -1173,7 +1173,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	{
 		if(isRandomPosition)
 		{
-			for (_uint i = 0; i < 10; i++)
+			for (_uint i = 0; i < 12; i++)
 			{
 				CRandomNpc::NPCDESC NPCDesc{};
 				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
