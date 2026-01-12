@@ -46,10 +46,6 @@
 #include "Ranrok.h"
 #include "RandomNpc.h"
 
-#ifdef _DEBUG
-#include "Camera_Model.h"
-#endif // _DEBUG
-
 #pragma endregion
 
 
@@ -3762,14 +3758,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CRandomNpc>(g_iStaticLevel, CRandomNpc::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-
-#ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Model>(g_iStaticLevel, CCamera_Model::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-#endif // _DEBUG
-
-
 #pragma endregion
 
 

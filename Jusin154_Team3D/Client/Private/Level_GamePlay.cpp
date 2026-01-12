@@ -5,7 +5,6 @@
 #include "Light_Main.h"
 #include "Camera_Debug.h"
 #include "InfoInstance.h"
-#include "Camera_Model.h"
 #include "UI_Manager.h"
 #include "Layer.h"
 #include "SkyBox.h"
@@ -897,26 +896,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 
 		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
 	}
-	{
-		CCamera_Model::CAMERA_MODEL_DESC            Camera_Desc{};
-		Camera_Desc.fSpeedPerSec = 5.f;
-		Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
-		Camera_Desc.fFovy = XMConvertToRadians(60.0f);
-		Camera_Desc.fNear = 0.1f;
-		Camera_Desc.fFar = 500.f;
-		Camera_Desc.pCameraKey = CAMERA_MODEL;
-		Camera_Desc.iPriority = 49;
-		Camera_Desc.pFollowTarget = { nullptr };
-		Camera_Desc.pLookTarget = { nullptr };
-
-		CCamera_Model* pCamera = { nullptr };
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Model>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
-			return E_FAIL;
-		}
-		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_MODEL);
-
-	}
-
 
 #endif // _DEBUG
 

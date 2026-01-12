@@ -46,6 +46,8 @@ HRESULT CThestralCarriage::Initialize(void* pArg)
 #endif // _DEBUG
 
 
+	m_iAnimationIndex = 2;
+	m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
 	//vector<pair<_uint, _bool>> chain =
 	//{
 	//	{ 0, false },
@@ -72,19 +74,6 @@ void CThestralCarriage::Priority_Update(_float fTimeDelta)
 void CThestralCarriage::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
-	switch (m_iAnimationIndex)
-	{
-	case 0:
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-480.036f, 200.166f, -436.154f, 1.f));
-		break;
-	case 1:
-		break;
-	case 2:
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-480.036f, 200.166f, -436.154f, 1.f));
-		break;
-	default:
-		break;
-	}
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 #ifdef _DEBUG
@@ -213,21 +202,21 @@ void CThestralCarriage::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::SET_FSMSTATE:
 	{
-		if (pContents->vFlags.b[0]) {
-			m_iAnimationIndex = 0;
-			m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
-			m_pModelCom->IsRootBone(false);
-		}
-		else if (pContents->vFlags.b[1]) {
-			m_iAnimationIndex = 1;
-			m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
-			m_pModelCom->IsRootBone(false);
-		}
-		else if (pContents->vFlags.b[2]) {
-			m_iAnimationIndex = 2;
-			m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
-			m_pModelCom->IsRootBone(false);
-		}
+	//	if (pContents->vFlags.b[0]) {
+	//		m_iAnimationIndex = 0;
+	//		m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
+	//		m_pModelCom->IsRootBone(false);
+	//	}
+	//	else if (pContents->vFlags.b[1]) {
+	//		m_iAnimationIndex = 1;
+	//		m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
+	//		m_pModelCom->IsRootBone(false);
+	//	}
+	//	else if (pContents->vFlags.b[2]) {
+	//		m_iAnimationIndex = 2;
+	//		m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
+	//		m_pModelCom->IsRootBone(false);
+	//	}
 	} break;
 	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
 	{

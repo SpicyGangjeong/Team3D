@@ -247,6 +247,12 @@ void CCamera_Gaze::Free()
 void CCamera_Gaze::Describe_Entity()
 {
 	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	_int iPriority = m_iPriority;
+	size_t iAddress = (size_t)this;
+	_string strHeader = "GAZE_CAMERA_Priority##" + to_string(iAddress);
+	if (GUI::SliderInt(strHeader.c_str(), &iPriority, 45, 60)) {
+		m_iPriority = iPriority;
+	}
 	if (GUI::CollapsingHeader("Camera_Gaze_Describe")) {
 		m_pTransformCom->Describe_Entity();
 		GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);

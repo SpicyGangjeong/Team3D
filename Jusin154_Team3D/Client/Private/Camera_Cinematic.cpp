@@ -58,7 +58,9 @@ void CCamera_Cinematic::Late_Update(_float fTimeDelta)
 	}
 }
 HRESULT CCamera_Cinematic::Render() {
-
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
 	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
 	if (RENDER::NONBLEND == eType) {
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -451,6 +453,12 @@ void CCamera_Cinematic::Free()
 void CCamera_Cinematic::Describe_Entity()
 {
 	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	_int iPriority = m_iPriority;
+	size_t iAddress = (size_t)this;
+	_string strHeader = "CINEMATIC_CAMERA_Priority##" + to_string(iAddress);
+	if (GUI::SliderInt(strHeader.c_str(), &iPriority, 45, 60)) {
+		m_iPriority = iPriority;
+	}
 	if (GUI::CollapsingHeader("Camera_Cinematic_Describe")) {
 		if (GUI::SmallButton("Trigger_RanrokIntro")) {
 			_string strCutSceneName = "RanrokIntro";
