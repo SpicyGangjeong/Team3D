@@ -176,6 +176,10 @@ HRESULT CInfoInstance::Load_DADA_INT()
 {
 	return m_pMapInfo->Load_DADA_INT();
 }
+HRESULT CInfoInstance::Load_Npc()
+{
+	return m_pMapInfo->Load_Npc();
+}
 #pragma endregion
 
 #pragma region EFFECT_INFO
