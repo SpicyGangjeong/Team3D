@@ -2895,9 +2895,14 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		break;
 
 	case ENUM_CLASS(SKILL_TYPE::ACCIO):
+
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
 			fRatio);
+
+		Add_Event(AnimIndex,
+			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO_SIDE, Get_PartObject<CWand>()); },
+			0.f);
 		Info.pText = TEXT("아씨오!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;

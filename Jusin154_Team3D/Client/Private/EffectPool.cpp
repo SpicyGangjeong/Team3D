@@ -20,6 +20,7 @@
 #include "AvadakedavraSide.h"
 #include "StupefySide.h"
 #include "TransformationSide.h"
+#include "AccioSide.h"
 
 #include "NomalJapSide.h"
 #include "Lumos.h"
@@ -521,6 +522,14 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::ACCIO_SIDE, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CAccioSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CAccioSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 
 	return S_OK;
 }
