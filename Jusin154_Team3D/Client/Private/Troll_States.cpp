@@ -11,6 +11,7 @@
 #include "Troll_Weapon.h"
 #include "Effect_Container.h"
 #include "EffectParts.h"
+#include "ReparoObject.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -966,6 +967,19 @@ void CTroll::Add_FSM()
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
 			m_fDeadRatio = fDeadRatio;
 			if (m_fDeadRatio > 1.f) {
+				CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_REPARO);
+
+				if (nullptr != pLayer)
+				{
+					const list<class CGameObject*>* pReparoObjects = pLayer->Get_Objects();
+
+					for (auto& pObject : *pReparoObjects)
+					{
+						CReparoObject* pReparoObject = dynamic_cast<CReparoObject*>(pObject);
+						if (nullptr != pReparoObject)
+							pReparoObject->IsRepairable(true);
+					}
+				}
 				m_bDead = true;
 			}
 			};

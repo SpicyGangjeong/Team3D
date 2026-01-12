@@ -172,6 +172,10 @@ HRESULT CInfoInstance::Load_EffectParts(const _char* pFileName, const _char* pEf
 {
 	return m_pMapInfo->Load_EffectParts(pFileName, pEffectrFilePath);
 }
+HRESULT CInfoInstance::Load_ReparoObjects(const _char* pFileName)
+{
+	return m_pMapInfo->Load_ReparoObjects(pFileName);
+}
 HRESULT CInfoInstance::Load_DADA_INT()
 {
 	return m_pMapInfo->Load_DADA_INT();

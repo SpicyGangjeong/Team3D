@@ -71,6 +71,7 @@ namespace Client {
 #define LAYER_DADA_INT		TEXT("Layer_DADA_INT")
 #define LAYER_DUELIST		TEXT("Layer_Duelist")
 #define LAYER_NPC			TEXT("Layer_Npc")
+#define LAYER_REPARO		TEXT("Layer_Reparo")
 
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")

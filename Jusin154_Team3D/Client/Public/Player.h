@@ -124,6 +124,7 @@ private:
 	void Play_SpellHitAnim();
 	void Player_PixRot();
 	void Find_HiddenObjects();
+	void Check_Reparoobejcts();
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG

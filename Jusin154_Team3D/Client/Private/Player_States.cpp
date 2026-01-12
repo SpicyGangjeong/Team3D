@@ -1468,6 +1468,8 @@ void CPlayer::Behavior_SpellEnter()
 					0.01f);
 			}
 			Add_SpellEvent(pairAnimInfo.first, fRatio);
+			if(ENUM_CLASS(SKILL_TYPE::REPARO) == m_eSpell)
+				Check_Reparoobejcts();
 			if (!m_bStartSpellAnim)
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, fAnimSpeed);
 
