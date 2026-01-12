@@ -32,7 +32,6 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
-	virtual void Trigger(class CTimeSocket& Socket) {};
 	virtual const _float4x4* Get_SocketMatrixPtr(const _char* pSocketName);
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 	_bool IsAI() { return m_bAI; }
@@ -104,7 +103,7 @@ protected:
 	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bKeep = false);
 	void Reset_Event();
 	void Check_HitAngle(_vector ProjectileDir);
-	void Load_AnimXML(const string& path);
+	virtual void Load_AnimXML(const string& path);
 	STATEANIM::ESTATE StringToStateAnim(const string& s);
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;

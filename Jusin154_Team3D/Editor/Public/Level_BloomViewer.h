@@ -22,6 +22,7 @@ private:
 	HRESULT Ready_Layer_Light();
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Effect(const _wstring& strLayerTag);
+	void ResetLevel_Environment() {};
 
 public:
 	static CLevel_BloomViewer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID);

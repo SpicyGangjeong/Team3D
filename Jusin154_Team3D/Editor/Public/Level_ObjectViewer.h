@@ -41,6 +41,7 @@ private:
 	void Load_KeyFrame(const _char* Name);
 	void Find_Anim();
 	void Save_KeyFrame();
+	void ResetLevel_Environment() {};
 
 private:
 	vector<CGameObject*>	m_Objects;

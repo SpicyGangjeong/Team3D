@@ -184,6 +184,7 @@
 #include "LightSpawner.h"
 #include "RaceRing.h"
 #include "MapElement_Balloon.h"
+#include "DummyNPC.h"
 
 #pragma endregion
 
@@ -241,6 +242,7 @@
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
 #include "Ranrok_Prop.h"
+#include "ReparoObject.h"
 
 #pragma endregion
 
@@ -2886,6 +2888,9 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CReparoObject>(g_iStaticLevel, CReparoObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 #pragma endregion
 
 
@@ -3056,6 +3061,24 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
 		return E_FAIL;
 
+#pragma region DUMMY_NPC
+	/* DUMMY_NPC_Diffuse */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("DUMMY_NPC_Diffuse"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Props/T_AgedTombProtector_Grunt_A_D.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* DUMMY_NPC_Normal */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("DUMMY_NPC_Normal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Props/T_AgedTombProtector_Grunt_A_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Model_DummyNpc */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Model_DummyNpc"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "C:/MeshTable/Game/Environment/DummyNpc.fbx", XMMatrixRotationY(XMConvertToRadians(180.f))))))
+		return E_FAIL;
+#pragma endregion
+
 #pragma region MAP_LANDS
 	/* For.Prototype_Component_Hogsmead_Land */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_Land"),
@@ -3135,7 +3158,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_FloatingBalloon */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_FloatingBalloon"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
@@ -3442,7 +3465,7 @@ _bool bLoadHogsmeade = true;
 	}
 
 #pragma region HOGWART
-_bool bHogwartLoad = { true };
+_bool bHogwartLoad = { false };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
@@ -3778,7 +3801,7 @@ vector<future<void>> jobFutures;
 _uint iLoadCount = 44;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { false };
+_bool isLoad_Map = { true };
 if(isLoad_Map)
 {
 	{ /* Terrain */
@@ -4410,6 +4433,9 @@ if(isLoad_Map)
 
 	/* For.Prototype_GameObject_RaceRing */
 	if (FAILED(m_pGameInstance->Add_Prototype<CRaceRing>(g_iStaticLevel, CRaceRing::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_DummyNPC */
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummyNPC>(g_iStaticLevel, CDummyNPC::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapObject_Manager */

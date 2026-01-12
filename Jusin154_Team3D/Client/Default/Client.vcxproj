@@ -163,6 +163,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Barral_Splesh.h" />
     <ClInclude Include="..\Public\Avadakedavra.h" />
     <ClInclude Include="..\Public\AvadakedavraSide.h" />
+    <ClInclude Include="..\Public\Elf.h" />
     <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Broom_Circle.h" />
     <ClInclude Include="..\Public\Broom_Exit.h" />
@@ -215,8 +216,6 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Ranrok_Impact.h" />
     <ClInclude Include="..\Public\Ranrok_Land.h" />
     <ClInclude Include="..\Public\Ranrok_Point.h" />
-    <ClInclude Include="..\Public\PlayerRobe.h" />
-    <ClInclude Include="..\Public\Player_ENUM.h" />
     <ClInclude Include="..\Public\Ranrok_Prop.h" />
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h" />
@@ -472,6 +471,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Avadakedavra.cpp" />
     <ClCompile Include="..\Private\AvadakedavraSide.cpp" />
+    <ClCompile Include="..\Private\Elf.cpp" />
     <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Broom_Circle.cpp" />
     <ClCompile Include="..\Private\Broom_Exit.cpp" />
@@ -505,7 +505,6 @@ call Update_Resources.bat
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Duelist_JapSide.cpp" />
     <ClCompile Include="..\private\MapElement_Balloon.cpp" />
-    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
     <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Protego_Hit.cpp" />
@@ -526,7 +525,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Ranrok_Impact.cpp" />
     <ClCompile Include="..\Private\Ranrok_Land.cpp" />
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
-    <ClCompile Include="..\Private\PlayerRobe.cpp" />
     <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
     <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />

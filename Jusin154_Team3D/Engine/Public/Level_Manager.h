@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Base.h"
 
@@ -16,6 +16,7 @@ public:
 	_bool	Check_LevelShouldChange() const;
 	void	Set_LevelToChange();
 	_uint	Get_Current_LevelID();
+	void	ResetLevel_Environment();
 	_uint	Get_NextLevelID();
 	void	Update(_float fTimeDelta);
 	HRESULT Render();

@@ -656,7 +656,20 @@ void CTransform::Describe_Entity()
 		GUI::InputFloat("Y##Rotation", &m_vRotation.y, 1.f, 15.f);
 		GUI::InputFloat("Z##Rotation", &m_vRotation.z, 1.f, 15.f);
 
+#ifndef 기무리
 		Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+#endif // 기무리
+#ifdef 기무리
+		_float3 vRot = {};
+		XMStoreFloat3(&vRot, Get_RollPitchYawVector());
+		GUI::Text("R : %.2f", XMConvertToDegrees(vRot.x)); GUI::SameLine();
+		GUI::Text("\tY : %.2f", XMConvertToDegrees(vRot.y)); GUI::SameLine();
+		GUI::Text("\tP : %.2f", XMConvertToDegrees(vRot.z));
+		if (GUI::SmallButton("ApplyRotation")) {
+			Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+		}
+#endif // 기무리
+
 
 		_float3 vScale = Get_Scale();
 

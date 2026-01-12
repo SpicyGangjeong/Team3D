@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Base.h"
 
@@ -13,9 +13,10 @@ protected:
 
 public:
 			_uint	Get_LevelID() const { return m_iID; }
-	virtual _uint	Get_NextLevelID() { return m_iID; } // ·Îµù·¹º§ÀÏ ¶§¸¸ ÀÇ¹Ì°¡ ÀÖÀ½
+	virtual _uint	Get_NextLevelID() { return m_iID; } // ë¡œë”©ë ˆë²¨ì¼ ë•Œë§Œ ì˜ë¯¸ê°€ ìˆìŒ
 	virtual void	Update(_float fTimeDelta)PURE;
 	virtual HRESULT Render()PURE;
+	virtual void	ResetLevel_Environment()PURE;
 protected:
 	class CGameInstance*	m_pGameInstance = { nullptr };
 	ID3D11Device*			m_pDevice = { nullptr };

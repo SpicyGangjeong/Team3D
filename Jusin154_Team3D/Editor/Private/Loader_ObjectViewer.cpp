@@ -25,6 +25,7 @@
 #include "CamPosition_Shoulder.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
+#include "ReparoObject.h"
 
 #pragma endregion
 
@@ -70,6 +71,19 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
 #pragma region MONSTER
+#ifndef 기무리
+	/* For.Prototype_Component_Hogsmead_NorthLakeShallow */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\VFX\\Meshes\\Animated\\HM_Troll_OLI_Reparo\\VFX_SK_OLI_TrollFight_BlockerA\\VFX_SK_OLI_TrollFight_BlockerA.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Hogsmead_NorthLakeShallow */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\VFX\\Meshes\\Animated\\HM_Troll_OLI_Reparo\\VFX_SK_OLI_TrollFight_BlockerB\\VFX_SK_OLI_TrollFight_BlockerB.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+#endif // 기무리
+
+
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/SK_GOB_M_T4Melee_INST_A_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
@@ -249,9 +263,9 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	TEXT("Prototype_Component_Playable_Model")
 	//));
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+	//	return E_FAIL;
 
 #pragma region NPC
 
@@ -315,7 +329,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Elf.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Elf_Model")
 	));
-	
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Kitchen_Female/Kitchen_Female.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
@@ -347,6 +360,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_MudiwaOnai_Model")
 	));
 
+	///////////////////////////////
+
 
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_AvadaKedavra.fbx", XMMatrixIdentity(),
@@ -364,9 +379,14 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//));
 
 	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_Playable_Model")
+	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_OpeningIntro.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Student_Cmbt_Model")
 	//));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Playable_Model")
+	));
 
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable_Cmbt.fbx", XMMatrixIdentity(),
@@ -452,6 +472,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	///* For.Prototype_GameObject_Terrain */
 	//if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
 	//	return E_FAIL;
+
+	/* For.Prototype_Component_FSM */
+	if (FAILED(m_pGameInstance->Add_Prototype<CReparoObject>(g_iStaticLevel, CReparoObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_FSM */
 	if (FAILED(m_pGameInstance->Add_Prototype<CFSM>(g_iStaticLevel, CFSM::Create(m_pDevice, m_pContext))))

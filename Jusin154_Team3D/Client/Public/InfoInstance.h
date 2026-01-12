@@ -24,6 +24,8 @@ private:
 public:
 	HRESULT Initialize_Information(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	HRESULT Late_Initialize(); // GamePlay Initialize 할 때
+
+	void Load_CutScenes();
 	void Release_Information();
 	LEVEL Get_RestartLevel();
 	_bool Get_SearchLockonFloag() { return m_bSearchLockOnTarget; }
@@ -62,6 +64,7 @@ public:
 	HRESULT Load_PointLights(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath);
 	HRESULT Load_DADA_INT();
+	HRESULT Load_Npc();
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);

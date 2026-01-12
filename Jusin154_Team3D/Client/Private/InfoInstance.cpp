@@ -42,7 +42,7 @@ void CInfoInstance::Change_Level()
 	m_pInteractiveInfo->Change_Level();
 	m_pEffectInfo->Change_Level();
 //	UI_Event.clear();
-	m_pCutSceneInfo->Change_Level();
+	m_pCutSceneInfo->Load_CutScenes();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()
@@ -175,6 +175,10 @@ HRESULT CInfoInstance::Load_EffectParts(const _char* pFileName, const _char* pEf
 HRESULT CInfoInstance::Load_DADA_INT()
 {
 	return m_pMapInfo->Load_DADA_INT();
+}
+HRESULT CInfoInstance::Load_Npc()
+{
+	return m_pMapInfo->Load_Npc();
 }
 #pragma endregion
 
@@ -539,6 +543,11 @@ HRESULT CInfoInstance::NPC_FileLoad(const _char* pDirectoryPath)
 	}
 
 	return S_OK;
+}
+
+void CInfoInstance::Load_CutScenes()
+{
+	m_pCutSceneInfo->Load_CutScenes();
 }
 
 void CInfoInstance::Release_Information()

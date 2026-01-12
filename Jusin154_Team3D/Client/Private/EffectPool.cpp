@@ -97,6 +97,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
 	// 디버그 모드일 때
 #ifdef _DEBUG
 #ifdef gimch
@@ -120,31 +122,6 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
 #endif
-	//// 디버그 모드가 아닐 때, 릴리즈모드에
-#ifndef _DEBUG
-#ifdef gimch
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // gimch
-#ifdef Bin
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // 
-#ifdef 진우
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // 
-#ifdef 기무리
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // 
-#ifdef 나
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // 
-#endif // !_DEBUG
-
-
 	if (m_isActiveEffectCreate)
 	{
 		if (FAILED(Ready_Effect()))

@@ -15,7 +15,6 @@
 #include "MapElement_Interactable.h"
 #include "Monster.h"
 #include "TimeSocket.h"
-#include "PlayerRobe.h"
 #include "RaceRing.h"
 #include "Wand.h"
 #include "Mesh.h"
@@ -255,7 +254,9 @@ HRESULT CPlayer::Render()
 			}
 		}
 #ifdef _DEBUG
-		Render_CameraCoordinateSystem();
+#ifdef 기무리
+		//Render_CameraCoordinateSystem();
+#endif // 기무리
 		//m_pCharacter_Controller->Render();
 #endif // _DEBUG
 
@@ -394,6 +395,12 @@ void CPlayer::Set_Interaction(_bool bInteraction)
 	m_bCurrentInteraction = bInteraction;
 }
 
+void CPlayer::ExitBattle()
+{
+	m_bDuel_ZOnlyMove = false;
+	m_pCharacter_Controller->Set_Position(XMLoadFloat4(&m_OriginPos));
+}
+
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
@@ -419,16 +426,8 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 		if (FAILED(Bind_ShaderParameters(i))) {
 			return E_FAIL;
 		}
-		if (i == ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH)) {
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW_LEGACY)))) {
-				return E_FAIL;
-			}
-
-		}
-		else {
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
-				return E_FAIL;
-			}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
+			return E_FAIL;
 		}
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
@@ -513,13 +512,28 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 		m_pCharacter_Controller->Set_Position(vNewPos);
 		m_pTransformCom->RotationQ(pContents->pxTransform.q);
 		m_pTransformCom->RewindMomentum();
-	}
-		break;
+	} break;
 	case TIMESOCKET_FUNC::TRANSLATION_LERP:
 	{
 
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
+	{
+	} break;
+	case TIMESOCKET_FUNC::SET_FSMSTATE:
+	{
+		if (pContents->vFlags.b[0]) {
+			m_pFSM->Change_State(FSMSTATE::CUTSCENE);
+		}
+		else if (pContents->vFlags.b[1]) {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+		}
+	} break;
+	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
+	{
+		
+	} break;
+	case TIMESOCKET_FUNC::UNBIND_SOCKET_MATRIX:
 	{
 
 	} break;
@@ -631,6 +645,10 @@ HRESULT CPlayer::Ready_Components()
 			return E_FAIL;
 		}
 		m_pCharacter_Controller->SetGravity(false);
+		m_pCharacter_Controller->Set_GravityAmount(1.2f);
+#ifdef _DEBUG
+		m_pCharacter_Controller->Set_Name("CCT_PLAYER");
+#endif // _DEBUG
 	}
 
 	{ // DO
@@ -734,80 +752,21 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 	_float fMixerFactor = { FLT_MAX };
 	_uint iColorMixerMethod = { 0 };
 
-	switch (PLAYER_MESH_ORDER(iMeshOrder))
+	switch (CPlayer::PLAYER_MESH_ORDER(iMeshOrder))
 	{
-	case PLAYER_MESH_ORDER::HAIR_MAIN:
-	case PLAYER_MESH_ORDER::HEAD_EYELASH:
-	case PLAYER_MESH_ORDER::HAIR_SUB:
+	case CPlayer::PLAYER_MESH_ORDER::HAIR_MAIN:
+	case CPlayer::PLAYER_MESH_ORDER::EYELASH:
 		bUseColorMixer = true;
 		iColorParam = 0x2E2E2E;
 		fMixerFactor = 0.9f;
 		iColorMixerMethod = 1;
 		break;
-	case PLAYER_MESH_ORDER::LOWER:
+	case CPlayer::PLAYER_MESH_ORDER::CLOTH:
 		bUseColorMixer = true;
 		iColorParam = 0x292557;
 		fMixerFactor = 0.5f;
 		iColorMixerMethod = 1;
 		break;
-	case PLAYER_MESH_ORDER::SHOES:
-		bUseColorMixer = true;
-		iColorParam = 0x614242;
-		fMixerFactor = 0.5f;
-		iColorMixerMethod = 1;
-		break;
-	case PLAYER_MESH_ORDER::UPPER:
-		bUseColorMixer = true;
-		iColorParam = 0xBFAC29;
-		fMixerFactor = 0.658333f;
-		iColorMixerMethod = 1;
-		break;
-//#ifdef 기무리
-//
-//	case PLAYER_MESH_ORDER::ROBE_CLOTH:
-//	{
-//		CMesh* pMesh = m_pModelCom->Get_Mesh(ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH));
-//		_uint MeshBoneCount = pMesh->Get_NumBone();
-//
-//		for (_uint i = 0; i < MeshBoneCount; ++i)
-//		{
-//			XMStoreFloat4x4(&SkinMatrices[i], XMMatrixIdentity());
-//		}
-//
-//		_uint temp = 0;
-//		vector<_uint> globalMask = m_pModelCom->Get_BoneMask(ENUM_CLASS(BLEND_BONE::HIPS_CLOTH));
-//		vector<_int> boneIndices = pMesh->Get_BoneIndices();
-//
-//		for (_uint i = 0; i < MeshBoneCount; ++i)
-//		{
-//			_uint global = boneIndices[i];
-//			if (global == 38)
-//				continue;
-//			if (globalMask[global] == 1)
-//			{
-//				SkinMatrices[i] = m_pRobePart->Get_RobeJointAnchorMatrix(temp++);
-//			}
-//		}
-//
-//		GUI::DragFloat("TempWeight", &m_fTempWeight, 0.01f);
-//
-//		if (FAILED(m_pShaderCom->Bind_RawValue("g_TempWeight", &m_fTempWeight, sizeof(_float)))) {
-//			return E_FAIL;
-//		}
-//
-//
-//		if (FAILED(m_pShaderCom->Bind_Matrices(
-//			"g_BoneMatrices",
-//			SkinMatrices.data(),
-//			(_int)SkinMatrices.size()
-//		)))
-//		{
-//			return E_FAIL;
-//		}
-//	}
-//	break;
-//#endif // _DEBUG
-
 	default:
 		break;
 	}
@@ -976,7 +935,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pRobePart);
+	//SAFE_RELEASE(m_pRobePart);
 	SAFE_RELEASE(m_pGrapInteractive);
 
 	if (nullptr != m_pInfoInstance) {
@@ -1155,12 +1114,9 @@ void CPlayer::Describe_Entity()
 
 
 		m_pLightCom->Describe_Entity();
-		for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
-		{
-			if (GUI::Button(m_pModelCom->Get_AnimList(i)))
-			{
-				m_pModelCom->Set_AnimationIndex(i);
-			}
+		if (GUI::TreeNode("PLAYER_ANIMLIST")) {
+			m_pModelCom->Describe_Entity();
+			GUI::TreePop();
 		}
 	}
 	GUI::End();
