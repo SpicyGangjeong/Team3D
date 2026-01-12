@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 #include "Troll.h"
+#include "EffectPool.h"
+#include "Layer.h"
 
 CTroll_Rock::CTroll_Rock(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -33,11 +35,17 @@ HRESULT CTroll_Rock::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
+
 	return S_OK;
 }
 
 void CTroll_Rock::Priority_Update(_float fTimeDelta)
 {
+
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 	m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)
@@ -152,6 +160,9 @@ void CTroll_Rock::RockHit()
 							break;
 						}
 						m_bVisible = false;
+
+
+						m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, m_pOwner , &tagCollInfo.vWorldPos);
 						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}
 					break;
@@ -287,7 +298,7 @@ void CTroll_Rock::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
-
+	SAFE_RELEASE(m_pEffectPool);
 }
 #ifdef _DEBUG
 

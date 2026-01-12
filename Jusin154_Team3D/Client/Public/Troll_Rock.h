@@ -34,6 +34,8 @@ private:
 	CModel* m_pModelCom = { nullptr };
 	_bool m_bAttach = { true };
 
+	class CEffectPool* m_pEffectPool = { nullptr };
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

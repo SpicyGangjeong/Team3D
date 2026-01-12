@@ -581,6 +581,14 @@ HRESULT CTroll::Ready_Parts()
 	m_pLeft_Smoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
 
 
+	if (FAILED(Add_PartObject<CEffectParts>("Troll_Dead_Smoke", g_iStaticLevel, &m_pDead_Smoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+	m_pDead_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollDead/TrollDead", static_cast<LEVEL>(g_iStaticLevel));
+
+
+
 	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeftTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
@@ -691,12 +699,15 @@ void CTroll::Free()
 	SAFE_RELEASE(m_pLeftTrail);
 	SAFE_RELEASE(m_pRightTrail);
 	SAFE_RELEASE(m_pWeaponTrail);
+	SAFE_RELEASE(m_pRushEffect);
+	SAFE_RELEASE(m_pDead_Smoke);
 }
 #ifdef _DEBUG
 
 void CTroll::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+
 	if (GUI::CollapsingHeader("Troll")) {
 		__super::Describe_Entity();
 
@@ -713,8 +724,6 @@ void CTroll::Describe_Entity()
 				m_pModelCom->Set_AnimationIndex(i);
 			}
 		}
-
-
 
 		m_pTransformCom->Describe_Entity();
 	}

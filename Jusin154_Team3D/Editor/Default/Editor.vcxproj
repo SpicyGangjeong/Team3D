@@ -278,6 +278,8 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Stupefy.h" />
     <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Troll.h" />
+    <ClInclude Include="..\Public\Troll_Rush.h" />
+    <ClInclude Include="..\Public\Troll_Shout.h" />
     <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
     <ClInclude Include="..\Public\Troll_Nomal_Smoke.h" />
     <ClInclude Include="..\Public\TrollSwing.h" />
@@ -569,6 +571,8 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Stupefy.cpp" />
     <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Troll.cpp" />
+    <ClCompile Include="..\Private\Troll_Rush.cpp" />
+    <ClCompile Include="..\Private\Troll_Shout.cpp" />
     <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp" />
     <ClCompile Include="..\Private\TrollSwing.cpp" />

@@ -80,17 +80,26 @@ HRESULT CTrollSwing::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	_vector vPos = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::POSITION);
 
-	vPos += m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK) * 2.f;
+	vPos += m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK) * 4.f;
 
 	CEditEffect* pRockPT = Get_PartObject<CEditEffect>("Rock_PT_25");
+	CEditEffect* pRock_PT_Brown = Get_PartObject<CEditEffect>("Rock_PT_Brown");
+	CEditEffect* pRock_PT_Large = Get_PartObject<CEditEffect>("Rock_PT_Large");
+	CEditEffect* pCrack_Decal = Get_PartObject<CEditEffect>("Crack_Decal");
 	CEditEffect* pSmoke = Get_PartObject<CEditEffect>("Smoke");
 
 	pRockPT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.5f, 0.f, 0.f));
-	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.2f, 0.f, 0.f));
+	pRock_PT_Brown->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.5f, 0.f, 0.f));
+	pRock_PT_Large->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.5f, 0.f, 0.f));
 
+	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 1.5f, 0.f, 0.f));
+	pCrack_Decal->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.2f, 0.f, 0.f));
 
 	pRockPT->Set_Visible(true);
 	pSmoke->Set_Visible(true);
+	//pRock_PT_Brown->Set_Visible(true);
+	pRock_PT_Large->Set_Visible(true);
+	pCrack_Decal->Set_Visible(true);
 
 	return S_OK;
 }

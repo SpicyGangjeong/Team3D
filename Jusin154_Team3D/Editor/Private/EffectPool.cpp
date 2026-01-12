@@ -23,6 +23,8 @@
 #include "Troll_Rush_Hit.h"
 #include "Troll_Nomal_Smoke.h"
 #include "TrollSwing.h"
+#include "Troll_Shout.h"
+#include "Troll_Rush.h"
 #include "StunEffect.h"
 #include "Blink.h"
 #include "Ranrok_FireBall.h"
@@ -492,15 +494,33 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
-	//if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PROP, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_SHOUT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
-	//	CRanrok_Prop* pEffect = nullptr;
+		CTroll_Shout* pEffect = nullptr;
 
-	//	pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Prop>(iPrototypeLevel, nullptr);
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Shout>(iPrototypeLevel, nullptr);
 
-	//	return pEffect; }
-	//))) return E_FAIL;
-	//
+		return pEffect; }
+	))) return E_FAIL;
+	
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_RUSH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Rush* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Rush>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PROP, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Prop* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Prop>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+	
 
 	return S_OK;
 }
