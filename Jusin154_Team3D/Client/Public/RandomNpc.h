@@ -71,6 +71,7 @@ protected:
 	_bool									m_bBattleObserve_Npc = {};
 	_bool									m_bBattle = {};
 	_int									m_eNpcState = ENUM_CLASS(NPC_STATE::END);
+	_bool									m_bBroomRacer = {};
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

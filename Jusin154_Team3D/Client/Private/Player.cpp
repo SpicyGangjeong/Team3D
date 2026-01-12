@@ -395,6 +395,12 @@ void CPlayer::Set_Interaction(_bool bInteraction)
 	m_bCurrentInteraction = bInteraction;
 }
 
+void CPlayer::ExitBattle()
+{
+	m_bDuel_ZOnlyMove = false;
+	m_pCharacter_Controller->Set_Position(XMLoadFloat4(&m_OriginPos));
+}
+
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
