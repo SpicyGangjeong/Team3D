@@ -30,22 +30,22 @@
         <Scale x="0.99999529" y="1" z="0.99999529"/>
         <Rotation x="0" y="315" z="0"/>
     </Object>
-    <Object ID="9" Index="7">
+    <Object ID="9" Index="6">
         <Position x="35.15633" y="1.5198594" z="50.624886"/>
         <Scale x="0.99999732" y="1" z="0.99999732"/>
         <Rotation x="0" y="120" z="0"/>
     </Object>
-    <Object ID="10" Index="8">
+    <Object ID="10" Index="7">
         <Position x="129.77383" y="15.728663" z="121.83965"/>
         <Scale x="0.99999732" y="1" z="0.99999732"/>
         <Rotation x="0" y="-105" z="0"/>
     </Object>
-    <Object ID="11" Index="9"> 
+    <Object ID="11" Index="8"> 
         <Position x="-393.24478" y="-33.342117" z="-362.13519"/>
         <Scale x="0.9999885" y="1" z="0.9999885"/>
         <Rotation x="0" y="285" z="0"/>
     </Object>
-    <Object ID="12" Index="10">
+    <Object ID="12" Index="9">
         <Position x="79.841499" y="3.8484674" z="83.004013"/>
         <Scale x="0.99980307" y="1" z="0.99980307"/>
         <Rotation x="0" y="210" z="0"/>

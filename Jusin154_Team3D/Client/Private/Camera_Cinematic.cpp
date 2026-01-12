@@ -51,9 +51,11 @@ void CCamera_Cinematic::Late_Update(_float fTimeDelta)
 	}
 }
 HRESULT CCamera_Cinematic::Render() {
+#ifdef _DEBUG
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
+
 	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
 	if (RENDER::NONBLEND == eType) {
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -74,7 +76,7 @@ HRESULT CCamera_Cinematic::Render() {
 		}
 	}
 	else if (RENDER::NONLIGHT == eType) {
-#ifdef _DEBUG
+
 		m_Batch->Begin();
 
 		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
@@ -86,12 +88,15 @@ HRESULT CCamera_Cinematic::Render() {
 		m_pSubShape->Draw(m_pFollowTargetPart->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
 
 		m_Batch->End();
-#endif // _DEBUG
+
 
 
 	}
+#endif // _DEBUG
 	return S_OK;
 }
+
+
 void CCamera_Cinematic::Active_Camera(pair<_float4, _float3>& pairTransitionInfo)
 {
 	if (true == m_bEnable_TransitionLerp) {
@@ -240,7 +245,7 @@ HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
-
+#ifdef _DEBUG
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Camera_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
@@ -251,7 +256,7 @@ HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
-
+#endif // _DEBUG
 	return S_OK;
 }
 
@@ -270,6 +275,7 @@ HRESULT CCamera_Cinematic::Ready_SubPart()
 
 HRESULT CCamera_Cinematic::Bind_ShaderResources()
 {
+#ifdef _DEBUG
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
@@ -282,7 +288,9 @@ HRESULT CCamera_Cinematic::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+#endif // _DEBUG
 	return S_OK;
+
 }
 void CCamera_Cinematic::Lerp_Translation(_float fTimeDelta)
 {

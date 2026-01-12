@@ -68,6 +68,7 @@ HRESULT CHuman_Duelist::Initialize(void* pArg)
 		_vector vRotQ = XMLoadFloat4(&pDesc->vRotQ);
 		m_pCharacter_Controller->Set_Position(vPos);
 		m_pTransformCom->Set_State(STATE::POSITION, vPos);
+		m_OriginPos = pDesc->vPos;
 		m_pTransformCom->Rotation(vRotQ);
 	}
 
@@ -94,8 +95,7 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 
 	Play_Event();
 
-
-
+	Check_BattleLose();
 
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
@@ -110,8 +110,6 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 
 	for (_uint i = 0; i < ENUM_CLASS(SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
-
-
 }
 
 void CHuman_Duelist::Late_Update(_float fTimeDelta)
@@ -514,6 +512,29 @@ HRESULT CHuman_Duelist::Bind_ShaderParameters(_uint iMeshOrder)
 		}
 	}
 	return S_OK;
+}
+
+void CHuman_Duelist::Check_BattleLose()
+{
+	if (!m_bBattle)
+		return;
+
+	_float vPosY = XMVectorGetY(m_pCharacter_Controller->Get_Position());
+
+	if (m_OriginPos.y > vPosY)
+	{
+		if (true == m_pCharacter_Controller->IsOnGround())
+		{
+			m_pEffectPool->Use_Skill(SKILL_TYPE::BOX_SPLESH, this);
+			m_bBattle = false;
+			CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
+
+			if (pPlayer == nullptr)
+				return;
+
+			pPlayer->ExitBattle();
+		}
+	}
 }
 
 

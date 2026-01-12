@@ -144,7 +144,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-
 	if (FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
 
@@ -1101,11 +1100,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Duelist()
 {
 
 	CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-	DuelistDesc.vPos = _float4(1007.f, 6.f, 1016.f, 1.f);
+	DuelistDesc.vPos = _float4(1007.23f, 1.775f, 1015.f, 1.f);
 	DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, LAYER_DUELIST, &DuelistDesc))) {
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -1113,7 +1113,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 {
 	_bool isLoad_NPC = { true };
 	_bool isLoad_RandomNPC = { true };
-	_bool isRandomPosition = { true };
+	_bool isRandomPosition = { false };
 #ifdef _DEBUG
 #ifdef gimch
 	isLoad_NPC = true;
