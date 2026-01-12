@@ -1184,7 +1184,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	{
 		if(isRandomPosition)
 		{
-			for (_uint i = 0; i < 11; i++)
+			for (_uint i = 0; i < 10; i++)
 			{
 				CRandomNpc::NPCDESC NPCDesc{};
 				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
