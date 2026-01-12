@@ -796,6 +796,12 @@
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
       <UniqueIdentifier>{bde6e952-c6ee-4136-8559-99392c01645e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Shout">
+      <UniqueIdentifier>{9ff77639-f62d-4cdd-a3f1-21d58323f5d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush">
+      <UniqueIdentifier>{9b246a74-cf6e-4f02-86fb-0a499cb39d4e}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\Dummys\DummyNPC">
       <UniqueIdentifier>{aa6ef154-b82d-42eb-82a7-f8b7f6631a1e}</UniqueIdentifier>
     </Filter>
@@ -1617,6 +1623,12 @@
     <ClInclude Include="..\public\Broom_TargetGate2D.h">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Troll_Shout.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Shout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rush.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush</Filter>
+	</ClInclude>
     <ClInclude Include="..\public\DummyNPC.h">
       <Filter>02.GameObjects\Dummys\DummyNPC</Filter>
     </ClInclude>
@@ -2446,6 +2458,12 @@
     <ClCompile Include="..\private\Broom_TargetGate2D.cpp">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Troll_Shout.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Shout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rush.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush</Filter>
+	</ClCompile>
     <ClCompile Include="..\private\DummyNPC.cpp">
       <Filter>02.GameObjects\Dummys\DummyNPC</Filter>
     </ClCompile>
