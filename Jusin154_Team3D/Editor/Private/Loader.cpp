@@ -239,6 +239,7 @@
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
 #include "Ranrok_Prop.h"
+#include "ReparoObject.h"
 
 #pragma endregion
 
@@ -2868,6 +2869,9 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CReparoObject>(g_iStaticLevel, CReparoObject::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 #pragma endregion
 

@@ -45,7 +45,7 @@
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
 #include "RandomNpc.h"
-
+#include "Elf.h"
 #ifdef _DEBUG
 #include "Camera_Model.h"
 #endif // _DEBUG
@@ -3760,6 +3760,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_RandomNpc */
 	if (FAILED(m_pGameInstance->Add_Prototype<CRandomNpc>(g_iStaticLevel, CRandomNpc::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Elf */
+	if (FAILED(m_pGameInstance->Add_Prototype<CElf>(g_iStaticLevel, CElf::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

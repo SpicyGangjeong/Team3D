@@ -792,12 +792,15 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy\StupefySide">
       <UniqueIdentifier>{d84324ea-6303-442d-8f00-ed6555e6b02b}</UniqueIdentifier>
-        </Filter>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
       <UniqueIdentifier>{bde6e952-c6ee-4136-8559-99392c01645e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyNPC">
       <UniqueIdentifier>{aa6ef154-b82d-42eb-82a7-f8b7f6631a1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ReparoObject">
+      <UniqueIdentifier>{29bd6d08-5bfd-48ca-bd32-40824c276032}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1610,12 +1613,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Stupefy.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy</Filter>
-          </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\Broom_TargetGate2D.h">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
     <ClInclude Include="..\public\DummyNPC.h">
       <Filter>02.GameObjects\Dummys\DummyNPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ReparoObject.h">
+      <Filter>02.GameObjects\ReparoObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2436,12 +2442,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Stupefy.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Magic\11.Stupefy</Filter>
-          </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Broom_TargetGate2D.cpp">
       <Filter>50.UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
     <ClCompile Include="..\private\DummyNPC.cpp">
       <Filter>02.GameObjects\Dummys\DummyNPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ReparoObject.cpp">
+      <Filter>02.GameObjects\ReparoObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

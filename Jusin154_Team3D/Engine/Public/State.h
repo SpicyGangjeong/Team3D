@@ -9,7 +9,8 @@ enum ESTATE
     WALK, WALK_FWD,WALK_RIGHT,WALK_LEFT, WALK_BWD,WALK_START, WALK_STOP,WALK_STOP_L, WALK_STOP_R,                                                                                                                                                       
 	JOG,JOG_START, JOG_FWD, JOG_RIGHT, JOG_LEFT, JOG_BWD, JOG_STOP, JOG_AIM_LEFT, JOG_AIM_RIGHT, JOG_AIM_BWD, JOG_AIM_STOP_L, JOG_AIM_STOP_R, JOG_AIM_STOP_BWD,JOG_LEFT_TURN,JOG_RIGHT_TURN,JOG_112_L,JOG_112_R,JOG_90_L,JOG_90_R,                      
     SPRINT,                                                                                                                                                                                                                                             
-    SLIDE_START_R,SLIDE_LOOP_R,SLIDE_STOP_R,                                                                                                                                                                                                            
+    SLIDE_START_R,SLIDE_LOOP_R,SLIDE_STOP_R,
+    CROUCH,
     JUMP,JUMP_JOG,JUMP_SPRINT,FALL_LOOP,
     LAND,LAND_TO_JOG,LAND_TO_SPRINT,LAND_HARD,LAND_MID,LAND_SOFT,
     DODGE,DODGE_BLINK, DODGE_LEFT, DODGE_RIGHT,DODGE_ATTACK,
@@ -57,6 +58,11 @@ enum ESTATE
 #pragma region CUTSCENE
     CUTSCENE_TROLLINTRO,CUTSCENE_OPENINGINTRO1, CUTSCENE_OPENINGINTRO2, CUTSCENE_OPENINGINTRO3,CUTSCENE_DUEL,
 #pragma endregion
+
+#pragma region ELF
+    HELLO,PLEASE, BROWSE_START, BROWSE_END, FINGERSNAP, CROUCHALERT,
+#pragma endregion
+
     END
 };
 NS_END

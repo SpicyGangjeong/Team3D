@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include "Client_Define.h"
+#include "Editor_Define.h"
 #include "Monster.h"
 
-NS_BEGIN(Client)
+NS_BEGIN(Editor)
 
 class CReparoObject final : public CMonster
 {
@@ -21,9 +21,16 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	_float4			m_vOutLineColor = CMyTools::ColorRGBA_HEXtoFLOAT4(0xfefefe00);
+	_float			m_fOutLineThickness = { 5.f };
+	_float			m_fOutLineScale = { 2.f };
+	_float			m_fOutLinePower = { 2.f };
+
+private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 	HRESULT Render_OutLine();
+
 
 public:
 	static CReparoObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

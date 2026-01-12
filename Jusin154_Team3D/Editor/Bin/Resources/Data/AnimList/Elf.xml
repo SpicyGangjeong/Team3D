@@ -1,0 +1,55 @@
+﻿<Dialogue id="ELF_ANIM">
+
+	<Name Flow="0" Trigger="DIALOGUE_END">
+		<Anim state="BROWSE_START" index="51" loop="false"/>
+	</Name>
+	
+	<Name Flow="1" Trigger="DIALOGUE_END">
+		<Anim state="BROWSE_END" index="50" loop="false"/>
+	</Name>
+
+	<Name Flow="2" Trigger="ARRIVE_POS">
+		<Anim state="SPRINT" index="0" loop="true"/>
+	</Name>
+
+	<Name Flow="3" Trigger="DIALOGUE_END">
+		<Anim state="CROUCH" index="18" loop="true"/>
+	</Name>
+
+	<Name Flow="4" Trigger="ARRIVE_POS">
+		<Anim state="SPRINT" index="0" loop="true"/>
+	</Name>
+
+	<Name Flow="5" Trigger="ARRIVE_POS">
+		<Anim state="SPRINT" index="0" loop="true"/>
+	</Name>
+
+	<Name Flow="6" Trigger="ARRIVE_POS">
+		<Anim state="IDLE" index="1" loop="true"/>
+	</Name>
+
+	<Name Flow="7" Trigger="DIALOGUE_END">
+		<Anim state="HELLO" index="19" loop="true"/>
+	</Name>
+
+	<Name Flow="8" Trigger="DIALOGUE_END">
+		<Anim state="IDLE" index="1" loop="true"/>
+	</Name>
+
+	<Name Flow="9" Trigger="ANIM_END">
+		<Anim state="FINGERSNAP" index="16" loop="false"/>
+	</Name>
+
+	<Name Flow="10" Trigger="DIALOGUE_END">
+		<Anim state="IDLE" index="1" loop="true"/>
+	</Name>
+
+	<Name Flow="11" Trigger="ANIM_END">
+		<Anim state="CROUCHALERT" index="17" loop="false"/>
+	</Name>
+
+	<Name Flow="12" Trigger="DIALOGUE_END">
+		<Anim state="IDLE" index="1" loop="true"/>
+	</Name>
+
+</Dialogue>

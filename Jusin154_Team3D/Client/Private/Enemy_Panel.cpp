@@ -62,6 +62,10 @@ void CEnemy_Panel::Update_Target()
 		static_cast<CUIObject*>(m_pEnemy_Info)->Set_FadeOut();
 		return;
 	}
+
+	CStat* pStat = m_pInfoInstance->Get_TargetMonster()->Get_Stat();
+	if (pStat == nullptr)
+		return;
 	if (m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().bBoss == true)
 	{
 		static_cast<CBoss_HpBar*>(m_pBoss_HpBar)->Update_Target();
