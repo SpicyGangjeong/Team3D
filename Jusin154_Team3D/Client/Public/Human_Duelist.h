@@ -54,6 +54,7 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
+	void Check_BattleLose();
 
 public:
 	static CHuman_Duelist* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -78,6 +79,7 @@ private:
 	_bool			m_bHitJap = {};
 	_bool			m_bBattle = {};
 	_bool			m_bCameraShake = { };
+	_float4			m_OriginPos = { };
 
 
 	_float m_fSkillCoolTime[ENUM_CLASS(SKILL::END)] = {};

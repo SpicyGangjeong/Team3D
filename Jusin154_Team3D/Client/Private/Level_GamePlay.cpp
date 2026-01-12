@@ -57,7 +57,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_isDay = true;
 #endif // 
 #ifdef 진우
-	m_isDay = false;
+	m_isDay = true;
 #endif // 
 #ifdef 기무리
 	m_isDay = true;
@@ -86,13 +86,15 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 
 	map<_string, CLand*> Lands = {};
 
+
 	if (FAILED(Ready_Land(&Lands))) {
 		return E_FAIL;
 	}
 
+#ifndef 진우
 	if (FAILED(Ready_IntstanceProp(&Lands)))
 		return E_FAIL;
-
+#endif
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}
@@ -143,7 +145,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
-
 
 	if (FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
@@ -283,6 +284,7 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			0.f
 		);
 	}
+
 	else
 	{
 		m_pGameInstance->Setting_Volumetirc(
@@ -343,6 +345,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
+	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
@@ -579,6 +582,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogwart()
 {
 	CInfoInstance::GetInstance()->Load_MapObjects("Hogwart_MapContainer_Data", LAYER_HOGWART);
 	CInfoInstance::GetInstance()->Load_MapObjects("HogwartMap1221", LAYER_HOGWART);
+	CInfoInstance::GetInstance()->Load_MapObjects("CaveData", LAYER_HOGWART);
 
 	CUnified::UNIFIED_DESC Desc = {};
 
@@ -1000,11 +1004,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-			return E_FAIL;
-		}
-	}
+	//for (_uint i = 0; i < 1; ++i) {
+	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+	//		return E_FAIL;
+	//	}
+	//}
 
 	return S_OK;
 }
@@ -1117,11 +1121,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Duelist()
 {
 
 	CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-	DuelistDesc.vPos = _float4(1007.f, 6.f, 1016.f, 1.f);
+	DuelistDesc.vPos = _float4(1007.23f, 1.775f, 1015.f, 1.f);
 	DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, LAYER_DUELIST, &DuelistDesc))) {
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -1137,8 +1142,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isRandomPosition = false;
 #endif // gimch
 #ifdef 진우
-	isLoad_RandomNPC = true;
-	isLoad_NPC = true;
+	isLoad_RandomNPC = false;
+	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
 	isLoad_NPC = false;
@@ -1186,7 +1191,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	{
 		if(isRandomPosition)
 		{
-			for (_uint i = 0; i < 10; i++)
+			for (_uint i = 0; i < 12; i++)
 			{
 				CRandomNpc::NPCDESC NPCDesc{};
 				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);

@@ -57,6 +57,8 @@ public:
 	HRESULT			Update_RaycastElements();
 	void			Set_Battle(_bool bBattle) { m_bDuel_ZOnlyMove = bBattle; }
 	void			Set_Interaction(_bool bInteraction);
+	void			ExitBattle();
+	void			Set_OriginPos(_vector vPos) { XMStoreFloat4(&m_OriginPos, vPos); }
 #ifdef _DEBUG
 	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -122,6 +124,7 @@ private:
 	void Play_SpellHitAnim();
 	void Player_PixRot();
 	void Find_HiddenObjects();
+	void Check_Reparoobejcts();
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
@@ -190,6 +193,8 @@ private:
 	_float			m_fDegree = {};
 	_bool			m_bGuarding = {};
 	_float 			m_fParryTimer = {};
+	_bool			m_bStartSpellAnim = {};
+	_float4			m_OriginPos = {};
 		
 
 	/* 무적 불 변수*/

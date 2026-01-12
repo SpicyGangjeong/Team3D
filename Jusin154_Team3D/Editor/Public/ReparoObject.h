@@ -31,7 +31,6 @@ private:
 	HRESULT Bind_ShaderResources();
 	HRESULT Render_OutLine();
 
-
 public:
 	static CReparoObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;

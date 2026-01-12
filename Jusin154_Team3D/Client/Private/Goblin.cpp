@@ -393,7 +393,10 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (pEffect_Container != nullptr)
 	{
 		_uint iSkillType = pEffect_Container->Get_SkillType();
+
+
 		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
 
 		switch (iSkillType)
 		{
@@ -439,7 +442,6 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
 		}
 	}
-
 
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);

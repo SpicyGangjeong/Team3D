@@ -162,6 +162,8 @@ public:
 
 public:
 	HRESULT Ready_PhysXMeshes(_fmatrix& PreTransformMatrix, _uint iLevel);
+	HRESULT Ready_PhysXMeshes(_fmatrix& PreTransformMatrix, _uint iLevel, const _char* pName);
+
 #ifdef EDITOR_PROJECT	
 	HRESULT Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);

@@ -21,6 +21,7 @@
 #include "Effect_Container.h"
 #include "ThestralCarriage.h"
 #include "MapElement_Chest.h"
+#include "ReparoObject.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -393,6 +394,12 @@ HRESULT CPlayer::Update_RaycastElements()
 void CPlayer::Set_Interaction(_bool bInteraction)
 {
 	m_bCurrentInteraction = bInteraction;
+}
+
+void CPlayer::ExitBattle()
+{
+	m_bDuel_ZOnlyMove = false;
+	m_pCharacter_Controller->Set_Position(XMLoadFloat4(&m_OriginPos));
 }
 
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
@@ -879,6 +886,24 @@ void CPlayer::Find_HiddenObjects()
 				return;
 	}
 
+}
+
+void CPlayer::Check_Reparoobejcts()
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_REPARO);
+
+	if (nullptr == pLayer)
+		return;
+
+	const list<class CGameObject*>* pReparoObjects = pLayer->Get_Objects();
+
+	for (auto& pObject : *pReparoObjects)
+	{
+		CReparoObject* pReparoObject = dynamic_cast<CReparoObject*>(pObject);
+		if (nullptr != pReparoObject)
+			if (pReparoObject->IsRepairable(false))
+				return;
+	}
 }
 
 void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)

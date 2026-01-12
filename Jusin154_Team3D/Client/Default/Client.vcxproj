@@ -164,6 +164,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Avadakedavra.h" />
     <ClInclude Include="..\Public\AvadakedavraSide.h" />
     <ClInclude Include="..\Public\Elf.h" />
+    <ClInclude Include="..\public\MapElement_Cave.h" />
     <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Broom_Circle.h" />
     <ClInclude Include="..\Public\Broom_Exit.h" />
@@ -333,6 +334,9 @@ call Update_Resources.bat
     <ClInclude Include="..\public\MiniMap_Camera.h" />
     <ClInclude Include="..\Public\Goblin_Teleport.h" />
     <ClInclude Include="..\Public\TriggerBox.h" />
+    <ClInclude Include="..\Public\Troll_Rush.h" />
+    <ClInclude Include="..\Public\Troll_Self_Hit.h" />
+    <ClInclude Include="..\Public\Troll_Shout.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
     <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
@@ -469,6 +473,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Avadakedavra.cpp" />
     <ClCompile Include="..\Private\AvadakedavraSide.cpp" />
     <ClCompile Include="..\Private\Elf.cpp" />
+    <ClCompile Include="..\private\MapElement_Cave.cpp" />
     <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Broom_Circle.cpp" />
     <ClCompile Include="..\Private\Broom_Exit.cpp" />
@@ -644,6 +649,9 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\StunEffect.cpp" />
     <ClCompile Include="..\Private\Goblin_Teleport.cpp" />
     <ClCompile Include="..\Private\TriggerBox.cpp" />
+    <ClCompile Include="..\Private\Troll_Rush.cpp" />
+    <ClCompile Include="..\Private\Troll_Self_Hit.cpp" />
+    <ClCompile Include="..\Private\Troll_Shout.cpp" />
     <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />

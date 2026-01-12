@@ -1469,8 +1469,9 @@ void CPlayer::Behavior_SpellEnter()
 					0.01f);
 			}
 			Add_SpellEvent(pairAnimInfo.first, fRatio);
-			if (m_eSpell != ENUM_CLASS(SKILL_TYPE::LUMOS) &&
-				m_eSpell != ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA))
+			if(ENUM_CLASS(SKILL_TYPE::REPARO) == m_eSpell)
+				Check_Reparoobejcts();
+			if (!m_bStartSpellAnim)
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, fAnimSpeed);
 
 		}
@@ -1478,8 +1479,7 @@ void CPlayer::Behavior_SpellEnter()
 			fRatio = 0.2f;
 			pairAnimInfo = m_Animation[STATEANIM::SPELL];
 			Add_SpellEvent(pairAnimInfo.first, fRatio);
-			if (m_eSpell != ENUM_CLASS(SKILL_TYPE::LUMOS) && 
-				m_eSpell !=ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA))
+			if (!m_bStartSpellAnim)
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		}
 
@@ -1501,7 +1501,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 	_uint iIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	if (SUCCEEDED(InputSpell()) && !m_bSpellHit)
+	if (SUCCEEDED(InputSpell()) && !m_bSpellHit && iIndex != m_Animation[STATEANIM::AVADA_KEDAVRA].first)
 	{
 		_uint iCurr = m_pModelCom->Get_AnimIndex();
 		_uint iStart = m_Animation[STATEANIM::SPELL].first;
@@ -1621,7 +1621,7 @@ void CPlayer::Behavior_SpellExit()
 	Reset_Event();
 	m_bLookAt = false;
 	m_bSpellHit = false;
-
+	m_bStartSpellAnim = false;
 }
 
 void CPlayer::Behavior_AncientSpellEnter()
@@ -2743,7 +2743,7 @@ void CPlayer::Attach_Broom()
 
 		_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
 
-		m_OffsetPos = { 0.f,0.9f,0.f };
+		m_OffsetPos = { 0.f,1.f,0.f };
 
 		_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
 			m_OffsetPos.y, m_OffsetPos.z);
@@ -2881,6 +2881,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 	switch (m_eSpell)
 	{
 	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		m_bStartSpellAnim = false;
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); }, /* 임시로 바꿔놓음 */
 			fRatio);
@@ -2892,6 +2893,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		break;
 
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+		m_bStartSpellAnim = false;
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
 			fRatio);
@@ -2903,6 +2905,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		break;
 
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		m_bStartSpellAnim = false;
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
 			fRatio);
@@ -2914,7 +2917,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		break;
 
 	case ENUM_CLASS(SKILL_TYPE::ACCIO):
-
+		m_bStartSpellAnim = false;
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
 			fRatio);
@@ -2927,6 +2930,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		break;
 
 	case ENUM_CLASS(SKILL_TYPE::TRANSFORMATION):
+		m_bStartSpellAnim = false;
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::TRANSFORMATION, this); },
 			fRatio);
@@ -2937,19 +2941,8 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Info.pText = TEXT("베라베르토!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
-
-	case ENUM_CLASS(SKILL_TYPE::DIFFINDO):
-		pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-		Info.pText = TEXT("디핀도!");
-		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
-		break;
-
-	case ENUM_CLASS(SKILL_TYPE::DISILLUSIONMENT):
-		pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_ENTER];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-		break;
 	case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+		m_bStartSpellAnim = true;
 		m_pInfoInstance->Set_SearchLockOnFlag(false);
 		pairAnimInfo = m_Animation[STATEANIM::AVADA_KEDAVRA];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false,1.f,true);
@@ -2971,6 +2964,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		break;
 	case ENUM_CLASS(SKILL_TYPE::REPARO):
 	{
+		m_bStartSpellAnim = true;
 		pairAnimInfo = m_Animation[STATEANIM::REPARO_START];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 
@@ -2988,6 +2982,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 	}
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LUMOS):
+		m_bStartSpellAnim = true;
 		if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
 		{
 			if (SUCCEEDED(InputMove()))
@@ -3034,6 +3029,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		}
 		break;
 	default:
+		m_bStartSpellAnim = true;
 		pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
 		Add_Event(AnimIndex,
 			[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },

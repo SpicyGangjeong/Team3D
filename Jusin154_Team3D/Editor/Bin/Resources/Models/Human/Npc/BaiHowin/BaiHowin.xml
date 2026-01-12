@@ -90,7 +90,7 @@
 	</MI_HUM_N_Heads_Teeth>
 	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "25" OutLineWrite="5">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_F_Hair_PROHair01_Asuka_DAO_MSK" Extension=".dds"/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Old_M_Hair_BaiHowin_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
@@ -98,7 +98,7 @@
 		<aiTextureType_NORMALS                 Index="6"  Filename="T_DefaultGrey_D" Extension=".png"/>
 		<aiTextureType_SHININESS               Index="7"  Filename="" Extension=""/>
 		<aiTextureType_OPACITY                 Index="8"  Filename="" Extension=""/>
-		<aiTextureType_DISPLACEMENT            Index="9"  Filename="T_HUM_F_Hair_PROHair01_Asuka_THV_MSK" Extension=".dds"/>
+		<aiTextureType_DISPLACEMENT            Index="9"  Filename="T_Old_M_Hair_BaiHowin_THV_MSK" Extension=".dds"/>
 		<aiTextureType_LIGHTMAP                Index="10" Filename="" Extension=""/>
 		<aiTextureType_REFLECTION              Index="11" Filename="" Extension=""/>
 		<aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
@@ -120,7 +120,7 @@
 
 	<MI_HUM_N_Heads_Eye	ShaderIndex = "2" OutLineWrite="2">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Poltergeist_Eye_E" Extension=".dds"/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Eye_Iris_D" Extension=".png"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
