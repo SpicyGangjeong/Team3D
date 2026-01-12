@@ -33,7 +33,7 @@
 
 #include "Player.h"
 #include "Human_Duelist.h"
-#include "PlayerRobe.h"
+//#include "PlayerRobe.h"
 #include "Goblin.h"
 #include "Goblin_Mage.h"
 #include "Goblin_Assassin.h"
@@ -45,11 +45,7 @@
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
 #include "RandomNpc.h"
-
-#ifdef _DEBUG
-#include "Camera_Model.h"
-#endif // _DEBUG
-
+#include "Elf.h"
 #pragma endregion
 
 
@@ -192,6 +188,7 @@
 #include "DecendoSide.h"
 #include "BombardSide.h"
 #include "LeviosoSide.h"
+#include "AccioSide.h"
 #include "TransformationSide.h"
 #include "AvadakedavraSide.h"
 
@@ -216,7 +213,9 @@
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
-
+#include "Troll_Rush.h"
+#include "Troll_Shout.h"
+#include "Troll_Self_Hit.h"
 
 #include "WandEnd.h"
 #include "Goblin_Protego.h"
@@ -276,6 +275,7 @@
 #include "WorldDecal.h"
 #include "PointLight.h"
 #include "MapElement_Balloon.h"
+#include "MapElement_Cave.h"
 
 #pragma endregion
 
@@ -306,7 +306,7 @@ unsigned int APIENTRY LoadingMain(void* pArg)
 HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 {
 	m_eNextLevelID = eNextLevelID;
-
+////
 	m_pGameInstance->EnqueueJob(&LoadingMain, this);
 
 	return S_OK;
@@ -486,7 +486,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
+	isLoad_NPC = false;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -504,6 +504,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 #pragma region MAP_MODELS
 	vector<future<vector<FOLDER_LOAD*>*>> jobMapModels;
+	vector<future<pair<_wstring, CModel*>*>> jobCharacterModels = {};
 	vector<future<pair<_wstring, CShader*>*>> jobMapShaders;
 	{
 		{ /* Terrain */
@@ -1102,6 +1103,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_DADATower/StaticMesh/EXT",
 				".bin", false
 			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Overland_Common/Meshes",
+				".bin", false
+			));
 		}
 
 		if (true == isLoad_DataClassroom)
@@ -1137,6 +1142,200 @@ HRESULT CLoader::Loading_For_GamePlay()
 			));
 		}
 	}
+
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixIdentity(),
+		TEXT("Prototype_Component_Box")
+	));
+
+#pragma region ACTOR
+
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+		TEXT("Prototype_Component_Playable_Model")
+	));
+	if (true == isLoad_NPC) {
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Npc_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_GerboldOlivander_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Professor_EleazarFig_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_VictorRookWood_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/ChiyoKogawa/ChiyoKogawa.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_ChiyoKogawa_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MatildaWeasely/MatildaWeasely.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_MatildaWeasely_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/SatyavatiShah/SatyavatiShah.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_SatyavatiShah_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Ghost_Peeves_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/M_Student/M_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_M_Student_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/PhineasBlack/PhineasBlack.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_PhineasBlack_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/F_Student/F_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_F_Student_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Elf.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Elf_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Kitchen_Female/Kitchen_Female.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Kitchen_Female_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/BaiHowin/BaiHowin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_BaiHowin_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GeorgeOsric/GeorgeOsric.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_GeorgeOsric_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/DinahHecat/DinahHecat.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_DinahHecat_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MudiwaOnai/MudiwaOnai.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_MudiwaOnai_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixRotationZ(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+			TEXT("Prototype_Component_GerboldOlivander_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+			TEXT("Prototype_Component_Professor_EleazarFig_Model")
+		));
+	}
+	if (true == isLoad_Monster) {
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/SK_GOB_M_T4Melee_INST_A_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Goblin_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin_Mage/GoblinMage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Goblin_Mage_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Goblin_Spector_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Goblin_Assassin_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Troll_Model")
+		));
+		jobCharacterModels.emplace_back(Deferred_ModelLoad(
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			TEXT("Prototype_Component_Ranrok_Model")
+		));
+	}
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/Camera.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Camera_Model")
+	));
+#pragma endregion
+
+#pragma region ITEM
+
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/SK_Wands_Amit.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Wand_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/Potion/SM_Bottle_EmptyCapOff.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_Potion_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/RaceRing/SM_BRR_RaceRing_01.bin", XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_RaceRing_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Broom_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/MoonTrimmerBroom/SK_MoonTrimmerBroom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_SK_MoonTrimmerBroom_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/DarkWizardBroom/DarkWizardBroom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_DarkWizardBroom_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/WildFireBroom/WildFireBroom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_WildFireBroom_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Troll_Weapon_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/VFX_SM_Rock_01.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Troll_Rock_Big_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_Goblin_Dagger_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword_L.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_Goblin_Sword_L_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword_R.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_Goblin_Sword_R_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin", XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Goblin_BattleAxe_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerA.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerB.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/ThestralCarriage/ThestralCarriage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_ThestralCarriage_Model")
+	));
+	jobCharacterModels.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_SkyboxModel")
+	));
+
+#pragma endregion
 
 #ifndef 진우
 #pragma region SHADER
@@ -1174,127 +1373,158 @@ HRESULT CLoader::Loading_For_GamePlay()
 			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
 	}
 
+	{
+		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+		_uint iIndex = 0;
+		for (auto& JobMapShader : jobMapShaders)
+		{
+			pair<_wstring, CShader*>* pOut = JobMapShader.get();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
+				return E_FAIL;
+			}
+			Safe_Delete(pOut);
+		}
+	}
 #pragma endregion
 #endif
+
 	/* LAND_MODEL */
 	{
+		CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{}; // 
+		{
+			Desc.eType = ACTOR::TRIANGLEMESH;
+			Desc.ePxRigidBodyFlags = {};
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+			Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+			Desc.fContactOffset = 0.001f;
+		}
+	
 		/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_South_Hogwart_Land_LOD1"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		CRigidBody_Static* pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_South_Hogwart_Land_LOD1_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_North_Hogwart_Land_LOD1 */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart_Land_LOD1"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_North_Hogwart_Land_LOD1_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_North_Hogwart2_Land_LOD1 */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_West_Hogwart_Land_LOD1 */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_West_Hogwart_Land_LOD1"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_West_Hogwart_Land_LOD1_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_East_Hogwart_Land_LOD1 */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
-		// -----------------
 		/* For.Prototype_Component_Land_HN_BA */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BA"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BALOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_HN_BA_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_Land_HN_BD */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BD"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BDLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_HN_BD_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_Land_HN_BE */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BE"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BELOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_HN_BE_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_Land_HN_BF */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BF"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BFLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_HN_BF_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_Land_HN_BG */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BG"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BGLOD/SM_LandscapeStreamingProxy_1_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_HN_BG_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_Land_HN_BH */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BH"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BHLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_HN_BH_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 	
 		/* For.Prototype_Component_Land_HN_BI */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BI"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BILOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_HN_BI_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_Land_HN_BJ */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BJ"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BJLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_HN_BJ_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 
 		/* For.Prototype_Component_Land_TU_BB */
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_TU_BB"),
 			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/TU_BBLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 			return E_FAIL;
-
-
-		///* For.Prototype_Component_Land_HN_BA */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BA"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BALOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		//	return E_FAIL;
-
-		///* For.Prototype_Component_Land_HN_BD */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BD"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BDLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		//	return E_FAIL;
-
-		///* For.Prototype_Component_Land_HN_BG */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BG"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BGLOD/SM_LandscapeStreamingProxy_1_LOD1.bin"))))
-		//	return E_FAIL;
-
-		///* For.Prototype_Component_Land_HN_BH */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BH"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BHLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		//	return E_FAIL;
-
-
-		///* For.Prototype_Component_Land_HN_BE */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BE"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BELOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		//	return E_FAIL;
-
-		///* For.Prototype_Component_Land_HN_BF */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BF"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BFLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		//	return E_FAIL;
-
-		///* For.Prototype_Component_Land_HN_BI */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BI"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BILOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		//	return E_FAIL;
-
-		///* For.Prototype_Component_Land_HN_BJ */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_HN_BJ"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BJLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		//	return E_FAIL;
-
-		///* For.Prototype_Component_Land_TU_BB */
-		//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Land_TU_BB"),
-		//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/TU_BBLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
-		//	return E_FAIL;
+		pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Land_TU_BB_RigidBody"), pRigid))) {
+			return E_FAIL;
+		}
 	}
 #pragma endregion
 #pragma region UI
@@ -2228,7 +2458,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
-			Desc1.vhalfGeometryInfo = { 2.f, 2.f, 2.f };
+			Desc1.vhalfGeometryInfo = { 2.34f, 2.34f, 2.34f };
 			Desc1.fDensity = 1.f;
 			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc1.eLockFlag = {};
@@ -2307,251 +2537,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.1f };
 			Desc.fContactOffset = { 0.05f };
 			Desc.vhalfGeometryInfo = { 0.5f, 1.f, 0.01f };
-			Desc.fDensity = 100.f;
+			Desc.fDensity = 10.f;
 			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 1.f, 0.f));
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.5f, 1.375f, 0.f };
 
 			Desc.pxMassCenter = pxPivotTransform;
-			Desc.vAutoDamping = { 10.f, 10.f };
+			Desc.vAutoDamping = { 5.f, 5.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
 	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Box"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))) {
-		return E_FAIL;
-	}
-
-#pragma region ACTOR
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Playable_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))){
-		return E_FAIL;
-	}
-	if (true == isLoad_NPC) {
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Npc_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GerboldOlivander_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Professor_EleazarFig_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VictorRookWood_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ChiyoKogawa_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/ChiyoKogawa/ChiyoKogawa.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_MatildaWeasely_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MatildaWeasely/MatildaWeasely.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SatyavatiShah_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/SatyavatiShah/SatyavatiShah.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ghost_Peeves_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_PhineasBlack_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/PhineasBlack/PhineasBlack.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Student_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/M_Student/M_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_F_Student_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/F_Student/F_Student.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Elf_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Elf.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Kitchen_Female_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Elf/Kitchen_Female/Kitchen_Female.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_BaiHowin_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/BaiHowin/BaiHowin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GeorgeOsric_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GeorgeOsric/GeorgeOsric.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_DinahHecat_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/DinahHecat/DinahHecat.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_MudiwaOnai_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/MudiwaOnai/MudiwaOnai.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-	}
-	if (true == isLoad_Monster) {
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/SK_GOB_M_T4Melee_INST_A_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Mage_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin_Mage/GoblinMage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-			return E_FAIL;
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Spector_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-			return E_FAIL;
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-			return E_FAIL;
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GerboldOlivander_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Professor_EleazarFig_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ghost_Peeves_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/Ghost_Peeves/Ghost_Peeves.bin", XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Spector_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-			return E_FAIL;
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-			return E_FAIL;
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Camera_Model"),
-			CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/Camera.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-			return E_FAIL;
-		}
-	}
-#pragma endregion
-
-#pragma region ITEM
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Wand_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/SK_Wands_Amit.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Potion_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Potion/SM_Bottle_EmptyCapOff.bin", XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_RaceRing_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/RaceRing/SM_BRR_RaceRing_01.bin", XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SK_MoonTrimmerBroom_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/MoonTrimmerBroom/SK_MoonTrimmerBroom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_DarkWizardBroom_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/DarkWizardBroom/DarkWizardBroom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_WildFireBroom_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/WildFireBroom/WildFireBroom.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Weapon_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Rock_Big_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/VFX_SM_Rock_01.bin",  XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Dagger_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Sword_L_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword_L.bin",  XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Sword_R_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword_R.bin",  XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_BattleAxe_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin",  XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerA.bin", XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerB.bin", XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_ThestralCarriage_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/ThestralCarriage/ThestralCarriage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-
-#pragma endregion
-
-	if (FAILED(m_pGameInstance->Add_Prototype(g_iStaticLevel, CPlayerRobe::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_CCL_CameraRig.001_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Camera/CCL_CameraRig.001.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_SkyboxModel */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SkyboxModel"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.bin", XMMatrixIdentity()))))
-		return E_FAIL;
-
 
 	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
 
@@ -2628,6 +2625,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CAccioSide>(g_iStaticLevel, CAccioSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CStupefySide>(g_iStaticLevel, CStupefySide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2647,6 +2648,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush_Hit>(g_iStaticLevel, CTroll_Rush_Hit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush>(g_iStaticLevel, CTroll_Rush::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Shout>(g_iStaticLevel, CTroll_Shout::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Self_Hit>(g_iStaticLevel, CTroll_Self_Hit::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(g_iStaticLevel, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
@@ -2857,6 +2871,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		});
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/DragonMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Rock", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
@@ -3622,7 +3646,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_Component_FloatingBalloon */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_FloatingBalloon"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.bin"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
@@ -3715,6 +3739,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Lake>(g_iStaticLevel, CMapElement_Lake::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Cave */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Cave>(g_iStaticLevel, CMapElement_Cave::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Land */
 	if (FAILED(m_pGameInstance->Add_Prototype<CLand>(g_iStaticLevel, CLand::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -3784,13 +3812,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-#ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Model>(g_iStaticLevel, CCamera_Model::Create(m_pDevice, m_pContext)))) {
+	/* For.Prototype_GameObject_Elf */
+	if (FAILED(m_pGameInstance->Add_Prototype<CElf>(g_iStaticLevel, CElf::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
-
-
 #pragma endregion
 
 
@@ -3883,11 +3908,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 
-
-/* 쉐이더 로딩 종료 이후 로딩*/
-
 #pragma region RECEIVE_THREAD
-
 	{ // MapModels
 		m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 		_uint iIndex = 0;
@@ -3912,19 +3933,17 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 	}
 
-
 	{
-		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
-		_uint iIndex = 0;
-		for (auto& JobMapShader : jobMapShaders)
-		{
-			pair<_wstring, CShader*>* pOut = JobMapShader.get();
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
+		for (auto& job : jobCharacterModels) {
+			pair<_wstring, CModel*>* pResult = job.get();
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pResult->first, pResult->second))) {
+				assert(false);
 				return E_FAIL;
 			}
-			Safe_Delete(pOut);
+			Safe_Delete(pResult);
 		}
 	}
+
 
 #pragma endregion
 

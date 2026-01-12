@@ -78,6 +78,8 @@ public:
 #endif // _DEBUG
 private:
 	class CEffectPool* m_pEffectPool = nullptr;
+	class CEffect_Container* m_pRushEffect = nullptr;
+	class CEditEffect* m_pRock_Smoke = { nullptr };
 private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();

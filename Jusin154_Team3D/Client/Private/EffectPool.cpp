@@ -20,6 +20,7 @@
 #include "AvadakedavraSide.h"
 #include "StupefySide.h"
 #include "TransformationSide.h"
+#include "AccioSide.h"
 
 #include "NomalJapSide.h"
 #include "Lumos.h"
@@ -30,6 +31,10 @@
 #include "Troll_Rush_Hit.h"
 #include "Troll_Nomal_Smoke.h"
 #include "TrollSwing.h"
+#include "Troll_Rush.h"
+#include "Troll_Shout.h"
+#include "Troll_Self_Hit.h"
+
 #include "Goblin_Protego.h"
 #include "Goblin_Attack.h"
 #include "Mage_Down_Attack.h"
@@ -92,6 +97,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
 	// 디버그 모드일 때
 #ifdef _DEBUG
 #ifdef gimch
@@ -115,31 +122,6 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #endif
-	//// 디버그 모드가 아닐 때, 릴리즈모드에
-#ifndef _DEBUG
-#ifdef gimch
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // gimch
-#ifdef Bin
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // 
-#ifdef 진우
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // 
-#ifdef 기무리
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // 
-#ifdef 나
-	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = true;
-#endif // 
-#endif // !_DEBUG
-
-
 	if (m_isActiveEffectCreate)
 	{
 		if (FAILED(Ready_Effect()))
@@ -521,6 +503,14 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::ACCIO_SIDE, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CAccioSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CAccioSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 
 	return S_OK;
 }
@@ -782,7 +772,36 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_SHOUT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Shout* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Shout>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_RUSH, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Rush* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Rush>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_SELF_HIT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Self_Hit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Self_Hit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	return S_OK;
 }
 

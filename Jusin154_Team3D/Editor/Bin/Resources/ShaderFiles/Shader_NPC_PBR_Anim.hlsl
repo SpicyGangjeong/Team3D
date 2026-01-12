@@ -829,7 +829,7 @@ PS_OUT PS_UPPER_DMRON_ToMRO(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
+PS_OUT PS_GLASSES_DSRON_ToSRO(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
@@ -840,22 +840,22 @@ PS_OUT PS_GLASSES_DMRON_ToMRO(PS_IN In)
         vDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vDiffuse, In.vTexcoord);
     }
 
-    clip(vDiffuse.a - 0.2f);
-    
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    float4 vMRO_Mask = g_MetalnessTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vSRO_Mask = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
+    float fAlpha = 1.f - vSRO_Mask.b - 0.3f;
 
-    Out.vAlbedo = vDiffuse;
+    Out.vAlbedo = vDiffuse.rgba;
+    Out.vAlbedo.a = vSRO_Mask.b;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 源딆씠 ( 0~ 1)
-        (In.vProjPos.w / g_fFar), // 酉??ㅽ럹?댁뒪 Z 
-        (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // ?쒗럹?댁뒪 ?뚮씪誘명꽣
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w),
+        (In.vProjPos.w / g_fFar),
+        (float) AI_TEXTURE_TYPE_SPECULAR / (float) AI_TEXTURE_TYPE_MAX,
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
-    Out.vSurface = float4(vMRO_Mask.r, vMRO_Mask.g, vMRO_Mask.b, 0.f);
+    Out.vSurface = float4(vSRO_Mask.r, vSRO_Mask.g, vSRO_Mask.b, 0.f);
     Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     // SRO
     return Out;
@@ -1474,10 +1474,10 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         
-        PixelShader = compile ps_5_0 PS_GLASSES_DMRON_ToMRO();
+        PixelShader = compile ps_5_0 PS_GLASSES_DSRON_ToSRO();
     }
     pass EmissiveMetalness_DENMRO_ToMRO // 10
     {

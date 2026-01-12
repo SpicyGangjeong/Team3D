@@ -400,7 +400,6 @@
     <ClInclude Include="..\Public\Goblin_Mage.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Goblin.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
     </ClInclude>
@@ -439,9 +438,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Lake.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Goblin.h">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Protego.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego</Filter>
@@ -743,12 +739,6 @@
     <ClInclude Include="..\Public\Ranrok_Point.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_ENUM.h">
-      <Filter>02.GameObjects\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\PlayerRobe.h">
-      <Filter>02.GameObjects\Player\Robe</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Goblin_Assassin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
     </ClInclude>
@@ -911,9 +901,6 @@
     <ClInclude Include="..\Public\Goblin_ProtegoHit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego\Goblin_ProtegoHit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Duelist_ProtegoHit.h">
-      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Ranrok_Prop.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
     </ClInclude>
@@ -932,6 +919,9 @@
     <ClInclude Include="..\Public\State_Parry.h">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AccioSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClInclude>
@@ -939,6 +929,27 @@
     <ClInclude Include="..\Public\Broom_TargetGate2D.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Troll_Shout.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Shout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rush.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Self_Hit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\Duelist_ProtegoHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_TargetGate2D.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Elf.h">
+      <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Cave.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
+      </ClInclude>
     <ClInclude Include="..\public\Enemy_SkillUI.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
     </ClInclude>
@@ -1378,9 +1389,6 @@
     <Filter Include="02.GameObjects\Item\Goblin_Axe">
       <UniqueIdentifier>{e666a8b4-c92e-48ee-b63b-40d852b27b06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Effect\Effects\WandEnd">
-      <UniqueIdentifier>{14ad0431-680b-4c8b-93d7-601aee5ce435}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.InfoInstance\03.InteractiveInfo">
       <UniqueIdentifier>{1d1dc743-5cf2-4b8f-a80e-16b16437c7aa}</UniqueIdentifier>
     </Filter>
@@ -1587,9 +1595,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point">
       <UniqueIdentifier>{a94e24d2-0f61-4263-b834-bfdf9f6c06ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Player\Robe">
-      <UniqueIdentifier>{f3c7cf8d-2b83-49d3-85da-fe135e376a11}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin">
       <UniqueIdentifier>{af9f5cf6-151a-49bc-9af4-28ba0bde1d37}</UniqueIdentifier>
@@ -1939,6 +1944,27 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
       <UniqueIdentifier>{4a11eb4b-127e-41f2-8456-cae963c94a4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Accio\AccioSide">
+      <UniqueIdentifier>{0e6d6920-c33c-4202-a2a5-3c883e1d4597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Rush">
+      <UniqueIdentifier>{a4b6f0be-8841-4748-8947-e497d755c2d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Shout">
+      <UniqueIdentifier>{34b736fb-456e-46e3-8038-49cff23b2f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit">
+      <UniqueIdentifier>{c276c050-7000-441e-bb53-30ec3c20c6f5}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\Elf">
+      <UniqueIdentifier>{9263815e-9651-4ba2-813f-c2a7f207522d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\NewFilter1">
+      <UniqueIdentifier>{44a8eee1-6b7f-4c9a-bf92-21f6b90e84c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Cave">
+      <UniqueIdentifier>{5599bbbd-12f7-4b40-8e3d-24f869cce464}</UniqueIdentifier>
+         </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI">
       <UniqueIdentifier>{b28b8285-3d1a-49cf-bde2-c7ebc18e6389}</UniqueIdentifier>
     </Filter>
@@ -2647,9 +2673,6 @@
     <ClCompile Include="..\Private\State_Dash.cpp">
       <Filter>04.Mechanic\State\Movement\Dash</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerRobe.cpp">
-      <Filter>02.GameObjects\Player\Robe</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Goblin_Spector.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector</Filter>
     </ClCompile>
@@ -2740,9 +2763,6 @@
     <ClCompile Include="..\Private\Human_Duelist_States.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp">
-      <Filter>02.GameObjects\Player\Robe</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush</Filter>
     </ClCompile>
@@ -2815,6 +2835,17 @@
     <ClCompile Include="..\Private\StupefySide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Stupefy\StupefySide</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\MapElement_Cave.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Private\State_Parry.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AccioSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\MapElement_Balloon.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Balloon</Filter>
     </ClCompile>
@@ -2828,6 +2859,21 @@
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rush.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Shout.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Shout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Self_Hit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Elf.cpp">
+      <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
+       </ClCompile>
     <ClCompile Include="..\private\Enemy_SkillUI.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
     </ClCompile>

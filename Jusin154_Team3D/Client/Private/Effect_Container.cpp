@@ -565,7 +565,7 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_fAccTime = 0.f;
 	m_fPreAccTime = 0.f;
 
-	m_bVisible = true;
+	Set_Visible(true);
 	m_isCollisionEnter = false;
 
 	m_bHit = false;

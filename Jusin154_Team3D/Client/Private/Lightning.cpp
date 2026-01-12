@@ -109,6 +109,7 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 	CPartObject* pHitPT0 = Get_PartObject<CEffectParts>("HitPT0");
 	CPartObject* pLightning_Tornado_PT = Get_PartObject<CEffectParts>("Lightning_Tornado_PT");
 	CPartObject* pLightning0 = Get_PartObject<CEffectParts>("Lightning0");
+	CPartObject* pLightning1 = Get_PartObject<CEffectParts>("Lightning1");
 	CPartObject* pStart_Line = Get_PartObject<CEffectParts>("Start_Line");
 	CPartObject* pLightning_Smoke = Get_PartObject<CEffectParts>("Lightning_Smoke");
 	CPartObject* pLightning_Rock_PT = Get_PartObject<CEffectParts>("Lightning_Rock_PT");
@@ -124,13 +125,25 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 		m_pInfoInstance->Get_LockOnInfo(m_Info);
 		if (nullptr != m_Info.pUnit || nullptr != m_Info.pEffect) {
 
-			XMStoreFloat4(&m_vTargetPos, Get_LockOnPos(m_Info));
+			_vector vLockOnPos = Get_LockOnPos(m_Info);
+
+			CCharacter_Controller* pCCT = m_Info.pUnit->Get_Component<CCharacter_Controller>();
+
+			if (pCCT != nullptr)
+			{
+				_float fYHeight = XMVectorGetY(pCCT->Get_FootPosition()) - pCCT->Get_Volume().y * 2.f + pCCT->Get_Volume().x * 2.f;
+				//_float fYHeight = XMVectorGetY(m_Info.pUnit->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+				vLockOnPos = XMVectorSetY(vLockOnPos, fYHeight);
+			}
+
+			XMStoreFloat4(&m_vTargetPos, vLockOnPos);
+
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}
 		else {
 			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
-			XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);
+			XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 10.f);
 		}
 	}
 
@@ -139,18 +152,20 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 	pHitPT0->Set_Visible(true);
 	pLightning_Tornado_PT->Set_Visible(true);
 	pLightning0->Set_Visible(true);
+	pLightning1->Set_Visible(true);
 	pStart_Line->Set_Visible(true);
 	pLightning_Smoke->Set_Visible(true);
-	//pLightning_Rock_PT->Set_Visible(true);
+	pLightning_Rock_PT->Set_Visible(true);
 
 	pBottomLightning->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pFlare->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pHitPT0->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pLightning_Tornado_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pLightning0->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
+	pLightning1->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pStart_Line->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 	pLightning_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
-	//pLightning_Rock_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
+	pLightning_Rock_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&m_vTargetPos));
 
 	m_fDistance = XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 
@@ -209,17 +224,6 @@ void CLightning::OnCollision(CGameObject* pOther, void* pDesc)
 
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
-
-	for (auto& pPair : m_PartObjects)
-	{
-		pPair.second->Set_Visible(true);
-		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
-	}
-
-	CWand* pWand = static_cast<CWand*>(m_pOwner);
-
-	if (pWand == nullptr)
-		return;
 
 
 }

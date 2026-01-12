@@ -35,10 +35,14 @@ void CHuman_Duelist::Behavior_IdleEnter()
 
 HRESULT CHuman_Duelist::Behavior_IdleExitCheck(_float fTimeDelta)
 {
-	if (m_bBattle) {
-		m_pFSM->Change_State(FSMSTATE::CUTSCENE);
-		return E_FAIL;
+	if (false == m_pFSM->IsEnable_Previous(FSMSTATE::COMBAT))
+	{
+		if (m_bBattle) {
+			m_pFSM->Change_State(FSMSTATE::CUTSCENE);
+			return E_FAIL;
+		}
 	}
+
 
 	if (m_fTargetDistance <= 20.f) {
 		for (_uint i = 0; i < ENUM_CLASS(SKILL::END); i++)
@@ -263,6 +267,7 @@ void CHuman_Duelist::Behavior_HitEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	m_bLookAt = false;
+	m_bCameraShake = true;
 
 	switch (m_eHitSpell)
 	{
@@ -278,11 +283,8 @@ void CHuman_Duelist::Behavior_HitEnter()
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::STUPEFY):
-		if (m_eHitState != ENUM_CLASS(HIT_STATE::END)) {
-			return;
-		}
 		pairAnimInfo = m_Animation[STATEANIM::DAZED_START];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.3f);
 		Add_Event(pairAnimInfo.first,
 			[this]() {
 				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::DAZED_LOOP];
@@ -343,6 +345,15 @@ void CHuman_Duelist::Behavior_HitEnter()
 HRESULT CHuman_Duelist::Behavior_HitExitCheck(_float fTimeDelta)
 {
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first || 
+		iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT].first)
+	{
+		if (true == m_pCharacter_Controller->IsOnGround() && m_bCameraShake) {
+			CameraShake(10.f, 1.f, 2.f, 0.3f);
+			m_bCameraShake = false;
+		}
+	}
 	
 	Hit_Levioso(fTimeDelta);
 
@@ -387,7 +398,7 @@ HRESULT CHuman_Duelist::Behavior_CutSceneExitCheck(_float fTimeDelta)
 void CHuman_Duelist::Behavior_CutSceneExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::CUTSCENE);
-	m_bBattle = false;
+	//m_bBattle = false;
 }
 
 void CHuman_Duelist::Hit_Levioso(_float fTimeDelta)

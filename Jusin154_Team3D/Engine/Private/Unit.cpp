@@ -284,6 +284,9 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         // SPRINT
         { "SPRINT", SPRINT },
 
+        //  CROUCH
+        { "CROUCH", CROUCH },
+
         // SLIDE
         { "SLIDE_START_R", SLIDE_START_R },
         { "SLIDE_LOOP_R", SLIDE_LOOP_R },
@@ -550,6 +553,11 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
         { "BROOM_FLY_UP_B", BROOM_FLY_UP_B },
         { "BROOM_FLY_B", BROOM_FLY_B },
         { "BROOM_ADD", BROOM_ADD },
+
+        { "HELLO", HELLO },{ "PLEASE", PLEASE },
+        { "BROWSE_START", BROWSE_START },{ "BROWSE_END", BROWSE_END },
+        { "FINGERSNAP", FINGERSNAP }, { "CROUCHALERT", CROUCHALERT }
+
     };
 
 

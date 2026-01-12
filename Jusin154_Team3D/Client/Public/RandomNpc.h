@@ -71,6 +71,8 @@ protected:
 	_bool									m_bBattleObserve_Npc = {};
 	_bool									m_bBattle = {};
 	_int									m_eNpcState = ENUM_CLASS(NPC_STATE::END);
+	_bool									m_bBroomRacer = {};
+	vector<_int>							m_Anims;
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;
@@ -82,6 +84,8 @@ protected:
 private:
 
 	void BattleObserve_Anim();
+
+	void Load_AnimXML(const _char* pFilePath);
 
 public:
 	static CRandomNpc* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

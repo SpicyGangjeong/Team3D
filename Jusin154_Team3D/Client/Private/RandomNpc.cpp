@@ -37,15 +37,20 @@ HRESULT CRandomNpc::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	Load_AnimXML(("../Bin/Resources/Data/AnimList/RandomNpc.xml"));
+
 	_vector vPos = XMLoadFloat4(&pDesc->vPos);
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	m_pCharacter_Controller->Set_Position(vPos);
-	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
+	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotQ.x), XMConvertToRadians(pDesc->vRotQ.y), XMConvertToRadians(pDesc->vRotQ.z));
 
-	m_pModelCom->Set_AnimationIndex(0, true);
+	_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
+	m_pModelCom->Set_AnimationIndex(m_Anims[iRandom], false,1.f,false,1.f,false);
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	m_bNpc = true;
+
+
 	return S_OK;
 }
 
@@ -67,7 +72,17 @@ void CRandomNpc::Update(_float fTimeDelta)
 	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
 		return;
 	}
+
 	BattleObserve_Anim();
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		if (false == m_bBattle)
+		{
+			_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
+			m_pModelCom->Set_AnimationIndex(m_Anims[iRandom], false, 1.f, false, 1.f, false);
+		}
+	}
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 	__super::Update(fTimeDelta);
@@ -91,28 +106,6 @@ void CRandomNpc::Update(_float fTimeDelta)
 		SAFE_RELEASE(m_pTarget);
 		m_fTargetDistance = { FLT_MAX };
 	}
-
-	/*if (m_fTargetDistance <= 5.f && m_bInteract == false)
-	{
-		m_pInfoInstance->Event_CallBack(TEXT("NPCDialogue"), m_pNpcStat);
-		m_bInteract = true;
-	}
-
-	if (m_bInteract != m_bPreviousInteract)
-	{
-		m_bPreviousInteract = m_bInteract;
-		m_fInteractTime = 0.f;
-	}
-	else
-	{
-		m_fInteractTime += fTimeDelta;
-	}
-
-	if (m_fInteractTime >= 5.f)
-	{
-		m_bInteract = false;
-		m_fInteractTime = 0.f;
-	}*/
 }
 
 void CRandomNpc::Late_Update(_float fTimeDelta)
@@ -320,7 +313,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, pArg))) {
+	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, &Desc))) {
 		return E_FAIL;
 	}
 	 
@@ -363,38 +356,46 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 		m_bBattleObserve_Npc = true;
-		break;
+		break;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	case 6:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_Elf_Model");
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("ELF"), (CComponent**)&m_pNpcStat))) {
-			return E_FAIL;
-		}
-		break;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-	case 7:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_BaiHowin_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("BAIHOWIN"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		break;
-	case 8:
+	case 7:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_GeorgeOsric_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("GEORGEOSRIC"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		m_bBattleObserve_Npc = true;
 		break;
-	case 9:
+	case 8:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_DinahHecat_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("DINAHHECAT"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		break;
-	case 10:
+	case 9:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_MudiwaOnai_Model");
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("MUDIWAONAI"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
 		m_bBattleObserve_Npc = true;
+		break;
+	case 10:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("VICTORROCKWOOD"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		m_bBroomRacer = true;
+		break;
+	case 11:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_ChiyoKogawa_Model");
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("CHIYOKOGAWA"), (CComponent**)&m_pNpcStat))) {
+			return E_FAIL;
+		}
+		m_bBroomRacer = true;
 		break;
 	}
 
@@ -450,15 +451,15 @@ void CRandomNpc::BattleObserve_Anim()
 		_float fRandX = 0.f;
 		if (iRand == 0)
 		{
-			fRandX = m_pGameInstance->Real_Random_Float(1002.f, 1004.f);
+			fRandX = m_pGameInstance->Real_Random_Float(1003.f, 1005.f);
 		}
 		else {
-			fRandX = m_pGameInstance->Real_Random_Float(1010.f, 1012.f);
+			fRandX = m_pGameInstance->Real_Random_Float(1009.f, 1011.f);
 		} 
 
-		_float fRandY = m_pGameInstance->Real_Random_Float(1008.f, 1016.f);
+		_float fRandZ = m_pGameInstance->Real_Random_Float(1008.f, 1016.f);
 
-		m_pCharacter_Controller->Set_Position(XMVectorSet(fRandX, 2.f, fRandY, 1.f));
+		m_pCharacter_Controller->Set_Position(XMVectorSet(fRandX, 2.f, fRandZ, 1.f));
 
 		_vector vPos = Get_WorldPostion();
 		_vector vForward = XMVectorZero();
@@ -469,6 +470,8 @@ void CRandomNpc::BattleObserve_Anim()
 			vForward = XMVectorSet(-1.f, 0.f, 0.f, 0.f);
 		}
 
+		_int iRandIndex = m_pGameInstance->Real_Random_Int(14, 21);
+		m_pModelCom->Set_AnimationIndex(iRandIndex, false, 1.f, false, 1.f, false);
 
 		m_pTransformCom->LookAt(vPos + vForward);
 
@@ -480,10 +483,46 @@ void CRandomNpc::BattleObserve_Anim()
 		if (m_pModelCom->IsFinishedAnim())
 		{
 			_int iRand = m_pGameInstance->Real_Random_Int(14, 21);
-			m_pModelCom->Set_AnimationIndex(iRand, false,1.f,false,1.f,false);
+			m_pModelCom->Set_AnimationIndex(iRand, false, 1.f, false, 1.f, false);
 		}
 	}
 }
+
+void CRandomNpc::Load_AnimXML(const _char* pFilePath)
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(pFilePath) != tinyxml2::XML_SUCCESS)
+		return;
+
+	tinyxml2::XMLElement* pRoot = doc.FirstChildElement("NPCAnimations");
+
+	const char* pModelType =
+		(m_bBroomRacer == true) ? "RACING" : "DEFAULT";
+
+	for (tinyxml2::XMLElement* pNPC = pRoot->FirstChildElement("NPC");
+		pNPC;
+		pNPC = pNPC->NextSiblingElement("NPC"))
+	{
+		if (strcmp(pNPC->Attribute("Model"), pModelType) != 0)
+			continue;
+
+		for (tinyxml2::XMLElement* pAnim = pNPC->FirstChildElement("Anim");
+			pAnim;
+			pAnim = pAnim->NextSiblingElement("Anim"))
+		{
+			string animName = pAnim->Attribute("Name");
+
+			for (tinyxml2::XMLElement* pIndex = pAnim->FirstChildElement("Index");
+				pIndex;
+				pIndex = pIndex->NextSiblingElement("Index"))
+			{
+				m_Anims.push_back(pIndex->IntText());
+			}
+		}
+		break;
+	}
+}
+
 
 CRandomNpc* CRandomNpc::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

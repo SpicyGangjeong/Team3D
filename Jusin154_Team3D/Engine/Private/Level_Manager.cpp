@@ -42,6 +42,11 @@ _uint CLevel_Manager::Get_Current_LevelID()
 	return m_pCurrentLevel->Get_LevelID();
 }
 
+void CLevel_Manager::ResetLevel_Environment()
+{
+	m_pCurrentLevel->ResetLevel_Environment();
+}
+
 _uint CLevel_Manager::Get_NextLevelID()
 {
 	if (m_pCurrentLevel == nullptr) {

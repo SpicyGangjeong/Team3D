@@ -18,6 +18,9 @@
 #include "InstancedProp_Light.h"
 #include "Layer.h"
 #include "EffectParts.h"
+#include "RandomNpc.h"
+#include "MapElement_Cave.h"
+#include "ReparoObject.h"
 
 CMapInfo::CMapInfo()
 {
@@ -154,6 +157,10 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTa
 		{
 			Desc.bVisible = false;
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc);
+		}
+		else if (MAPOBJECT_TYPE::ELEMENT_CAVE == eType)
+		{
+			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Cave>(g_iStaticLevel, NEXT_LEVEL, pLayerTag, &Desc);
 		}
 		/*else if (MAPOBJECT_TYPE::ELEMENT_INTERACT == eType)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);*/
@@ -829,6 +836,48 @@ HRESULT CMapInfo::Load_EffectParts(const _char* pFileName, const _char* pEffectr
 	return S_OK;
 }
 
+HRESULT CMapInfo::Load_ReparoObjects(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Reparo/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Reparo");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CReparoObject::REPARO_OBJECT_DESC Desc = {};
+
+		Object->QueryUnsignedAttribute("Type", &Desc.iModelID);
+		Object->QueryFloatAttribute("Radius", &Desc.fRadius);
+
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, LAYER_REPARO, &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CMapInfo::Load_DADA_INT()
 {
 	if (FAILED(Load_MapObjects("DATA_INT_Data", LAYER_DADA_INT)))
@@ -849,6 +898,47 @@ HRESULT CMapInfo::Load_DADA_INT()
 	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/SM_HW_LightFixture_Base_D.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_DADA_INT, &LightDesc)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_Npc()
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/NPC/DummyNPC_Data.xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("NPC");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CRandomNpc::NPCDESC NPCDesc{};
+		Object->QueryIntAttribute("Index", &NPCDesc.iIndex);
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &NPCDesc.vPos.x);
+		Position->QueryFloatAttribute("y", &NPCDesc.vPos.y);
+		Position->QueryFloatAttribute("z", &NPCDesc.vPos.z);
+		NPCDesc.vPos.w = 1.f;
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &NPCDesc.vRotQ.x);
+		Rotation->QueryFloatAttribute("y", &NPCDesc.vRotQ.y);
+		Rotation->QueryFloatAttribute("z", &NPCDesc.vRotQ.z);
+		NPCDesc.vRotQ.w = 1.f;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRandomNpc>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &NPCDesc))) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }

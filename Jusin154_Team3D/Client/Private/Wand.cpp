@@ -44,7 +44,7 @@ HRESULT CWand::Initialize(void* pArg)
 
 void CWand::Priority_Update(_float fTimeDelta)
 {
-
+	m_pModelCom->Combined_BoneMatrix();
 #ifdef _DEBUG
 	Describe_Entity();
 
@@ -59,7 +59,7 @@ void CWand::Update(_float fTimeDelta)
 
 void CWand::Late_Update(_float fTimeDelta)
 {
-	m_pModelCom->Combined_BoneMatrix();
+
 	_matrix socketMatrix = {};
 
 	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);

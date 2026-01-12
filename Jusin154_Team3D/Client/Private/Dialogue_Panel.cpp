@@ -150,7 +150,7 @@ void CDialogue_Panel::Change_Map()
 	CLayer* pDuelistLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_DUELIST);
 	if (nullptr != pDuelistLayer) {
 		CHuman_Duelist* pDuelist = pDuelistLayer->Get_Object<CHuman_Duelist>();
-		pDuelist->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1016.f, 1.f));
+		pDuelist->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1015.f, 1.f));
 		pDuelist->Set_Battle(true);
 	}
 
@@ -158,9 +158,10 @@ void CDialogue_Panel::Change_Map()
 	if (nullptr != pLayer) {
 		CHuman_Duelist* pDuelist = pDuelistLayer->Get_Object<CHuman_Duelist>();
 		CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
-		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1008.f, 1.f));
+		_vector vOriginPos = pPlayer->Get_Component<CCharacter_Controller>()->Get_Position();
+		pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1010.f, 1.f));
 		pPlayer->Set_Battle(true);
-
+		pPlayer->Set_OriginPos(vOriginPos);
 		_vector vPos = pPlayer->Get_WorldPostion();
 		_vector vForward = XMVectorSet(0.f, 0.f, 1.f, 0.f);
 
@@ -184,7 +185,6 @@ void CDialogue_Panel::Change_Map()
 		}
 	}
 #endif // Bin
-
 }
 
 void CDialogue_Panel::Priority_Update(_float fTimeDelta)

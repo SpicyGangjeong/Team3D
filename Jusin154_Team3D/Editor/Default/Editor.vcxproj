@@ -193,6 +193,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Dialogue_Panel.h" />
     <ClInclude Include="..\public\DummyDecal.h" />
     <ClInclude Include="..\public\Dialogue.h" />
+    <ClInclude Include="..\public\DummyNPC.h" />
     <ClInclude Include="..\public\Enemy_Detection.h" />
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
@@ -233,6 +234,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Ranrok_Pulse.h" />
     <ClInclude Include="..\Public\Ranrok_Point.h" />
     <ClInclude Include="..\Public\Ranrok_FireBall.h" />
+    <ClInclude Include="..\Public\ReparoObject.h" />
     <ClInclude Include="..\public\Ride_BoosterBar.h" />
     <ClInclude Include="..\public\Ride_Booster_Slot.h" />
     <ClInclude Include="..\public\Ride_HpBar.h" />
@@ -276,6 +278,8 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Stupefy.h" />
     <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Troll.h" />
+    <ClInclude Include="..\Public\Troll_Rush.h" />
+    <ClInclude Include="..\Public\Troll_Shout.h" />
     <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
     <ClInclude Include="..\Public\Troll_Nomal_Smoke.h" />
     <ClInclude Include="..\Public\TrollSwing.h" />
@@ -480,6 +484,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Dialogue_Choice.cpp" />
     <ClCompile Include="..\private\Dialogue_Panel.cpp" />
     <ClCompile Include="..\private\DummyDecal.cpp" />
+    <ClCompile Include="..\private\DummyNPC.cpp" />
     <ClCompile Include="..\Private\Enemy_Detection.cpp" />
     <ClCompile Include="..\Private\Goblin_BattleAxe.cpp" />
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
@@ -522,6 +527,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Ranrok_Point.cpp" />
     <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
     <ClCompile Include="..\Private\Ranrok_States.cpp" />
+    <ClCompile Include="..\Private\ReparoObject.cpp" />
     <ClCompile Include="..\private\Ride_BoosterBar.cpp" />
     <ClCompile Include="..\private\Ride_Booster_Slot.cpp" />
     <ClCompile Include="..\private\Ride_HpBar.cpp" />
@@ -565,6 +571,8 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Stupefy.cpp" />
     <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Troll.cpp" />
+    <ClCompile Include="..\Private\Troll_Rush.cpp" />
+    <ClCompile Include="..\Private\Troll_Shout.cpp" />
     <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp" />
     <ClCompile Include="..\Private\TrollSwing.cpp" />

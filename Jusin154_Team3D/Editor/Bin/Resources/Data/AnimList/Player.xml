@@ -58,11 +58,11 @@
 	<Anim state="SKILL2" index="992" loop="false"/>
 	<Anim state="SHIELD_BLOCK1" index="985" loop="false"/>
 	<Anim state="SHIELD_BLOCK2" index="986" loop="false"/>
-	<Anim state="SHIELD_BLOCK3" index="1011" loop="false"/>
-	<Anim state="SHIELD_BLOCK4" index="1012" loop="false"/>
-	<Anim state="SHIELD_BLOCK5" index="1013" loop="false"/>
-	<Anim state="SHIELD_BLOCK6" index="1015" loop="false"/>
-	<Anim state="SHIELD_BLOCK7" index="1016" loop="false"/>
+	<Anim state="SHIELD_BLOCK3" index="1009" loop="false"/>
+	<Anim state="SHIELD_BLOCK4" index="1010" loop="false"/>
+	<Anim state="SHIELD_BLOCK5" index="1011" loop="false"/>
+	<Anim state="SHIELD_BLOCK6" index="1013" loop="false"/>
+	<Anim state="SHIELD_BLOCK7" index="1014" loop="false"/>
 
 	<Anim state="SHIELD_BLOCK_90_L1" index="964" loop="false"/>
 	<Anim state="SHIELD_BLOCK_90_L2" index="965" loop="false"/>
@@ -121,27 +121,27 @@
 	<Anim state="PARRY6" index="938" loop="false"/>
 
 	<!-- HIT / FLINCH -->
-	<Anim state="HIT_BWD" index="1213" loop="false"/>
-	<Anim state="HIT_L" index="1216" loop="false"/>
-	<Anim state="HIT_R" index="1217" loop="false"/>
-	<Anim state="HIT_FWD" index="1218" loop="false"/>
-	<Anim state="HIT_LEVIOSO" index="1114" loop="true"/>
-	<Anim state="LEVIOSO_LAND" index="1115" loop="false"/>
+	<Anim state="HIT_BWD" index="1211" loop="false"/>
+	<Anim state="HIT_L" index="1214" loop="false"/>
+	<Anim state="HIT_R" index="1215" loop="false"/>
+	<Anim state="HIT_FWD" index="1216" loop="false"/>
+	<Anim state="HIT_LEVIOSO" index="1112" loop="true"/>
+	<Anim state="LEVIOSO_LAND" index="1113" loop="false"/>
 
-	<Anim state="FLINCH_BWD" index="1076" loop="false"/>
-	<Anim state="FLINCH_FWD" index="1077" loop="false"/>
-	<Anim state="FLINCH_LEFT" index="1078" loop="false"/>
-	<Anim state="FLINCH_RIGHT" index="1079" loop="false"/>
+	<Anim state="FLINCH_BWD" index="1074" loop="false"/>
+	<Anim state="FLINCH_FWD" index="1075" loop="false"/>
+	<Anim state="FLINCH_LEFT" index="1076" loop="false"/>
+	<Anim state="FLINCH_RIGHT" index="1077" loop="false"/>
 
 	<!-- KNOCKDOWN -->
-	<Anim state="KNOCKDOWN_BWD" index="1087" loop="false"/>
-	<Anim state="KNOCKDOWN_FWD" index="1089" loop="false"/>
-	<Anim state="KNOCKDOWN_BWD_SPLT" index="1091" loop="false"/>
-	<Anim state="KNOCKDOWN_FWD_SPLT" index="1090" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD" index="1086" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD" index="1087" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD_SPLT" index="1089" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD_SPLT" index="1088" loop="false"/>
 
 	<!-- GETUP -->
-	<Anim state="GETUP_BWD" index="1095" loop="false"/>
-	<Anim state="GETUP_FWD" index="1100" loop="false"/>
+	<Anim state="GETUP_BWD" index="1093" loop="false"/>
+	<Anim state="GETUP_FWD" index="1098" loop="false"/>
 
 	<!-- BROOM -->
 	<Anim state="BROOM_IDLE" index="711" loop="true"/>
@@ -180,15 +180,13 @@
 	<Anim state="OPEN_DOOR_R" index="1005" loop="false"/>
 
 	<!-- SPELL LEARNING -->
-	<Anim state="SPELL_LEARNING_FAIL" index="1292" loop="false"/>
-	<Anim state="SPELL_LEARNING_LOOP" index="1293" loop="true"/>
-	<Anim state="SPELL_LEARNING_START" index="1294" loop="false"/>
-	<Anim state="SPELL_LEARNING_SUCCESS" index="1295" loop="false"/>
-	<Anim state="SPELL_LEARNING_WANDWAVE" index="1296" loop="false"/>
+	<Anim state="SPELL_LEARNING_FAIL" index="1290" loop="false"/>
+	<Anim state="SPELL_LEARNING_LOOP" index="1291" loop="true"/>
+	<Anim state="SPELL_LEARNING_START" index="1292" loop="false"/>
+	<Anim state="SPELL_LEARNING_SUCCESS" index="1293" loop="false"/>
+	<Anim state="SPELL_LEARNING_WANDWAVE" index="1294" loop="false"/>
 
 	<!-- CUT SCENE -->
-	<Anim state="CUTSCENE_TROLLINTRO" index="1297" loop="false"/>
+	<Anim state="CUTSCENE_TROLLINTRO" index="1295" loop="false"/>
 	<Anim state="CUTSCENE_OPENINGINTRO1" index="1006" loop="false"/>
-	<Anim state="CUTSCENE_OPENINGINTRO2" index="1007" loop="true"/>
-	<Anim state="CUTSCENE_OPENINGINTRO3" index="1008" loop="false"/>
 </Animations>

@@ -22,7 +22,7 @@ public:
 	_bool m_isDay = { true };
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
-
+	class CLight_Main* m_pLight = { nullptr };
 	_bool	m_bLevel = { false };
 	_bool	m_bCurrentLevel = { false };
 
@@ -42,6 +42,7 @@ private:
 	HRESULT Ready_Layer_Effect(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster();
 	HRESULT Reday_Layer_EffectPool();
+	void	ResetLevel_Environment();
 
 public:
 	static pair<CLevel*, function<void()>> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg);

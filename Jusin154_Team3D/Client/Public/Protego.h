@@ -19,6 +19,7 @@ public:
 
 public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
+	virtual void Set_Visible(_bool bVisible)override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

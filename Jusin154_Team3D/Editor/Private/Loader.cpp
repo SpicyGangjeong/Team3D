@@ -184,6 +184,7 @@
 #include "LightSpawner.h"
 #include "RaceRing.h"
 #include "MapElement_Balloon.h"
+#include "DummyNPC.h"
 
 #pragma endregion
 
@@ -214,6 +215,9 @@
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
+#include "Troll_Shout.h"
+#include "Troll_Rush.h"
+
 #include "Goblin_Protego.h"
 
 #include "Troll.h"
@@ -238,6 +242,7 @@
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
 #include "Ranrok_Prop.h"
+#include "ReparoObject.h"
 
 #pragma endregion
 
@@ -1714,8 +1719,13 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Weapon_Model"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+	//	return E_FAIL;
+
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Weapon_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Rock_Big_Model"),
@@ -1961,6 +1971,16 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush_Hit>(NEXT_LEVEL, CTroll_Rush_Hit::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Shout>(NEXT_LEVEL, CTroll_Shout::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush>(NEXT_LEVEL, CTroll_Rush::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(NEXT_LEVEL, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -2850,6 +2870,15 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
+	/* For. Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerA.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+	/* For. Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerB.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Camera_Gaze */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Gaze>(g_iStaticLevel, CCamera_Gaze::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -2867,6 +2896,9 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CReparoObject>(g_iStaticLevel, CReparoObject::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 #pragma endregion
 
@@ -3038,6 +3070,24 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/Decal/DecalBox.fbx", XMMatrixIdentity()))))
 		return E_FAIL;
 
+#pragma region DUMMY_NPC
+	/* DUMMY_NPC_Diffuse */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("DUMMY_NPC_Diffuse"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Props/T_AgedTombProtector_Grunt_A_D.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* DUMMY_NPC_Normal */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("DUMMY_NPC_Normal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment/Sanctum_Dungeon/Textures/Props/T_AgedTombProtector_Grunt_A_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Model_DummyNpc */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Model_DummyNpc"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "C:/MeshTable/Game/Environment/DummyNpc.fbx", XMMatrixRotationY(XMConvertToRadians(180.f))))))
+		return E_FAIL;
+#pragma endregion
+
 #pragma region MAP_LANDS
 	/* For.Prototype_Component_Hogsmead_Land */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_Land"),
@@ -3117,7 +3167,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_FloatingBalloon */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_FloatingBalloon"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
@@ -3424,7 +3474,7 @@ _bool bLoadHogsmeade = true;
 	}
 
 #pragma region HOGWART
-_bool bHogwartLoad = { true };
+_bool bHogwartLoad = { false };
 
 /* Hogwart LOD */
 if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD",
@@ -3751,6 +3801,13 @@ if (bLoad_DADATower_INT)
 
 #pragma endregion
 
+#pragma region CAVE
+if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Overland_Common/Meshes",
+	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+#pragma endregion
+
+
 
 
 #ifdef gimch
@@ -3760,7 +3817,7 @@ vector<future<void>> jobFutures;
 _uint iLoadCount = 44;
 vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-_bool isLoad_Map = { false };
+_bool isLoad_Map = { true };
 if(isLoad_Map)
 {
 	{ /* Terrain */
@@ -4392,6 +4449,9 @@ if(isLoad_Map)
 
 	/* For.Prototype_GameObject_RaceRing */
 	if (FAILED(m_pGameInstance->Add_Prototype<CRaceRing>(g_iStaticLevel, CRaceRing::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_DummyNPC */
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummyNPC>(g_iStaticLevel, CDummyNPC::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapObject_Manager */

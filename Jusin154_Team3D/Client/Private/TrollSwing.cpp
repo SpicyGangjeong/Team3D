@@ -83,19 +83,29 @@ HRESULT CTrollSwing::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
+
 	_vector vPos = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::POSITION);
 
-	vPos += m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK) * 2.f;
+	vPos += m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK) * 4.f;
 
 	CEffectParts* pRockPT = Get_PartObject<CEffectParts>("Rock_PT_25");
+	CEffectParts* pRock_PT_Brown = Get_PartObject<CEffectParts>("Rock_PT_Brown");
+	CEffectParts* pRock_PT_Large = Get_PartObject<CEffectParts>("Rock_PT_Large");
+	CEffectParts* pCrack_Decal = Get_PartObject<CEffectParts>("Crack_Decal");
 	CEffectParts* pSmoke = Get_PartObject<CEffectParts>("Smoke");
 
 	pRockPT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.5f, 0.f, 0.f));
-	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.2f, 0.f, 0.f));
+	pRock_PT_Large->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.5f, 0.f, 0.f));
 
+	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 1.5f, 0.f, 0.f));
+	pCrack_Decal->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.2f, 0.f, 0.f));
 
 	pRockPT->Set_Visible(true);
+	pRock_PT_Large->Set_Visible(true);
+
 	pSmoke->Set_Visible(true);
+	//pRock_PT_Brown->Set_Visible(true);
+	pCrack_Decal->Set_Visible(true);
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first);
 
@@ -155,25 +165,6 @@ CGameObject* CTrollSwing::Clone(void* pArg, CGameObject* pOwner)
 
 void CTrollSwing::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	_int iIndex = CollisionCheck();
-
-	if (iIndex < 0)
-		return;
-
-	if (m_isCollisionEnter == true)
-		return;
-
-	m_isCollisionEnter = true;
-
-	_vector vPos = XMVectorSet(m_Hitbuffer.touches[iIndex].position.x, m_Hitbuffer.touches[iIndex].position.y, m_Hitbuffer.touches[iIndex].position.z, 1.f);
-
-
-	for (auto& pPair : m_PartObjects)
-	{
-		pPair.second->Set_Visible(true);
-		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
-	}
-
 
 }
 

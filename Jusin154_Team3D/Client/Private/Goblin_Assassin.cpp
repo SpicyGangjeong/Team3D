@@ -406,7 +406,12 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (pEffect_Container != nullptr)
 	{
 		_uint iSkillType = pEffect_Container->Get_SkillType();
-		//damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+#ifndef Bin
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+#endif // !Bin
+
+
 
 		switch (iSkillType)
 		{
@@ -453,16 +458,16 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 		}
 	}
 
-
-	/*m_DamageInfo.fDamage = damagePair.first;
+#ifndef Bin
+	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
 		_int ID = m_pStat->Get_Stat().iObjectID;
 		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
-	}*/
-
+	}
+#endif // !Bin
 
 	m_pFSM->Change_State(FSMSTATE::HIT);
 	

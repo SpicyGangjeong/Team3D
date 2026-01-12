@@ -15,13 +15,13 @@
 #include "MapElement_Interactable.h"
 #include "Monster.h"
 #include "TimeSocket.h"
-#include "PlayerRobe.h"
 #include "RaceRing.h"
 #include "Wand.h"
 #include "Mesh.h"
 #include "Effect_Container.h"
 #include "ThestralCarriage.h"
 #include "MapElement_Chest.h"
+#include "ReparoObject.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -255,7 +255,9 @@ HRESULT CPlayer::Render()
 			}
 		}
 #ifdef _DEBUG
-		Render_CameraCoordinateSystem();
+#ifdef 기무리
+		//Render_CameraCoordinateSystem();
+#endif // 기무리
 		//m_pCharacter_Controller->Render();
 #endif // _DEBUG
 
@@ -430,6 +432,12 @@ void CPlayer::Set_Interaction(_bool bInteraction)
 	m_bCurrentInteraction = bInteraction;
 }
 
+void CPlayer::ExitBattle()
+{
+	m_bDuel_ZOnlyMove = false;
+	m_pCharacter_Controller->Set_Position(XMLoadFloat4(&m_OriginPos));
+}
+
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
@@ -455,16 +463,8 @@ HRESULT CPlayer::Render_Shadow(SHADOW eType)
 		if (FAILED(Bind_ShaderParameters(i))) {
 			return E_FAIL;
 		}
-		if (i == ENUM_CLASS(PLAYER_MESH_ORDER::ROBE_CLOTH)) {
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW_LEGACY)))) {
-				return E_FAIL;
-			}
-
-		}
-		else {
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
-				return E_FAIL;
-			}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
+			return E_FAIL;
 		}
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
@@ -549,6 +549,7 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 		m_pCharacter_Controller->Set_Position(vNewPos);
 		m_pTransformCom->RotationQ(pContents->pxTransform.q);
 		m_pTransformCom->RewindMomentum();
+	} break;
 	}
 	break;
 	case TIMESOCKET_FUNC::TRANSLATION_LERP:
@@ -556,6 +557,22 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
+	{
+	} break;
+	case TIMESOCKET_FUNC::SET_FSMSTATE:
+	{
+		if (pContents->vFlags.b[0]) {
+			m_pFSM->Change_State(FSMSTATE::CUTSCENE);
+		}
+		else if (pContents->vFlags.b[1]) {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+		}
+	} break;
+	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
+	{
+		
+	} break;
+	case TIMESOCKET_FUNC::UNBIND_SOCKET_MATRIX:
 	{
 
 	} break;
@@ -667,6 +684,10 @@ HRESULT CPlayer::Ready_Components()
 			return E_FAIL;
 		}
 		m_pCharacter_Controller->SetGravity(false);
+		m_pCharacter_Controller->Set_GravityAmount(1.2f);
+#ifdef _DEBUG
+		m_pCharacter_Controller->Set_Name("CCT_PLAYER");
+#endif // _DEBUG
 	}
 
 	{ // DO
@@ -770,17 +791,16 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 	_float fMixerFactor = { FLT_MAX };
 	_uint iColorMixerMethod = { 0 };
 
-	switch (PLAYER_MESH_ORDER(iMeshOrder))
+	switch (CPlayer::PLAYER_MESH_ORDER(iMeshOrder))
 	{
-	case PLAYER_MESH_ORDER::HAIR_MAIN:
-	case PLAYER_MESH_ORDER::HEAD_EYELASH:
-	case PLAYER_MESH_ORDER::HAIR_SUB:
+	case CPlayer::PLAYER_MESH_ORDER::HAIR_MAIN:
+	case CPlayer::PLAYER_MESH_ORDER::EYELASH:
 		bUseColorMixer = true;
 		iColorParam = 0x2E2E2E;
 		fMixerFactor = 0.9f;
 		iColorMixerMethod = 1;
 		break;
-	case PLAYER_MESH_ORDER::LOWER:
+	case CPlayer::PLAYER_MESH_ORDER::CLOTH:
 		bUseColorMixer = true;
 		iColorParam = 0x292557;
 		fMixerFactor = 0.5f;
@@ -964,6 +984,24 @@ void CPlayer::Find_HiddenObjects()
 
 }
 
+void CPlayer::Check_Reparoobejcts()
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_REPARO);
+
+	if (nullptr == pLayer)
+		return;
+
+	const list<class CGameObject*>* pReparoObjects = pLayer->Get_Objects();
+
+	for (auto& pObject : *pReparoObjects)
+	{
+		CReparoObject* pReparoObject = dynamic_cast<CReparoObject*>(pObject);
+		if (nullptr != pReparoObject)
+			if (pReparoObject->IsRepairable(false))
+				return;
+	}
+}
+
 void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
@@ -1012,7 +1050,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pRobePart);
+	//SAFE_RELEASE(m_pRobePart);
 	SAFE_RELEASE(m_pGrapInteractive);
 
 	if (nullptr != m_pInfoInstance) {
@@ -1191,12 +1229,9 @@ void CPlayer::Describe_Entity()
 
 
 		m_pLightCom->Describe_Entity();
-		for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
-		{
-			if (GUI::Button(m_pModelCom->Get_AnimList(i)))
-			{
-				m_pModelCom->Set_AnimationIndex(i);
-			}
+		if (GUI::TreeNode("PLAYER_ANIMLIST")) {
+			m_pModelCom->Describe_Entity();
+			GUI::TreePop();
 		}
 	}
 	GUI::End();

@@ -5,7 +5,6 @@
 #include "Light_Main.h"
 #include "Camera_Debug.h"
 #include "InfoInstance.h"
-#include "Camera_Model.h"
 #include "UI_Manager.h"
 #include "Layer.h"
 #include "SkyBox.h"
@@ -21,6 +20,7 @@
 #include "BroomRaceManager.h"
 #include "ReparoObject.h"
 #include "ThestralCarriage.h"
+#include "Camera_Cinematic.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -35,6 +35,7 @@
 #include "BroomRacerAI.h"
 #include "Ranrok.h"
 #include "RandomNpc.h"
+#include "Elf.h"
 #pragma endregion
 
 
@@ -56,7 +57,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_isDay = true;
 #endif // 
 #ifdef 진우
-	m_isDay = false;
+	m_isDay = true;
 #endif // 
 #ifdef 기무리
 	m_isDay = true;
@@ -85,13 +86,15 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 
 	map<_string, CLand*> Lands = {};
 
+
 	if (FAILED(Ready_Land(&Lands))) {
 		return E_FAIL;
 	}
 
+#ifndef 진우
 	if (FAILED(Ready_IntstanceProp(&Lands)))
 		return E_FAIL;
-
+#endif
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}
@@ -107,9 +110,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
@@ -119,8 +122,23 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_RacerAI(LAYER_RACERAI))) {
-		return E_FAIL;
+	_bool bLoadNPC = { true };
+#ifdef _DEBUG
+#ifdef 기무리
+	bLoadNPC = false;
+#endif
+#endif // _DEBUG
+	if (true == bLoadNPC) {
+		if (FAILED(Ready_Layer_RacerAI(LAYER_RACERAI))) {
+			return E_FAIL;
+		}
+		if (FAILED(Ready_Layer_Duelist())) {
+			return E_FAIL;
+		}
+
+		if (FAILED(Ready_Layer_Npc())) {
+			return E_FAIL;
+		}
 	}
 	
 
@@ -128,20 +146,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_Duelist())) {
-		return E_FAIL;
-	}
-
-	if (FAILED(Ready_Layer_Npc())) {
-		return E_FAIL;
-	}
-
-
 	if (FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
 
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
+
 
 	return S_OK;
 }
@@ -238,7 +248,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 		Desc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc, nullptr, &m_pLight))) {
 		return E_FAIL;
 	}
 
@@ -258,6 +268,7 @@ HRESULT CLevel_GamePlay::Ready_Volumetric()
 			0.f
 		);
 	}
+
 	else
 	{
 		m_pGameInstance->Setting_Volumetirc(
@@ -318,6 +329,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
+	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
@@ -330,8 +342,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
@@ -554,6 +566,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogwart()
 {
 	CInfoInstance::GetInstance()->Load_MapObjects("Hogwart_MapContainer_Data", LAYER_HOGWART);
 	CInfoInstance::GetInstance()->Load_MapObjects("HogwartMap1221", LAYER_HOGWART);
+	CInfoInstance::GetInstance()->Load_MapObjects("CaveData", LAYER_HOGWART);
 
 	CUnified::UNIFIED_DESC Desc = {};
 
@@ -895,29 +908,31 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 
 		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
 	}
-	{
-		CCamera_Model::CAMERA_MODEL_DESC            Camera_Desc{};
-		Camera_Desc.fSpeedPerSec = 5.f;
-		Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
-		Camera_Desc.fFovy = XMConvertToRadians(60.0f);
-		Camera_Desc.fNear = 0.1f;
-		Camera_Desc.fFar = 500.f;
-		Camera_Desc.pCameraKey = CAMERA_MODEL;
-		Camera_Desc.iPriority = 49;
-		Camera_Desc.pFollowTarget = { nullptr };
-		Camera_Desc.pLookTarget = { nullptr };
-
-		CCamera_Model* pCamera = { nullptr };
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Model>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
-			return E_FAIL;
-		}
-		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_MODEL);
-
-	}
-
 
 #endif // _DEBUG
 
+	{
+		CCamera_Cinematic::Camera_Cinematic_DESC            Camera_Desc{};
+		Camera_Desc.fSpeedPerSec = 5.f;
+		Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
+		Camera_Desc.fFovy = XMConvertToRadians(60.0f);
+		Camera_Desc.fNear = 0.3f;
+		Camera_Desc.fFar = 500.f;
+		Camera_Desc.pCameraKey = CAMERA_CINEMATIC;
+		Camera_Desc.iPriority = 52;
+		Camera_Desc.bEnableTransitionLerp = false;
+		Camera_Desc.bEnableLookLerp = false;
+		Camera_Desc.bEnableFollowLerp = false;
+		Camera_Desc.vTransitionTime.y = 1.f;
+		Camera_Desc.pFollowTarget = { nullptr };
+		Camera_Desc.pLookTarget = { nullptr };
+
+		CCamera_Cinematic* pCamera = { nullptr };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Cinematic>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_CINEMATIC);
+	}
 	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, true))) {
 		return E_FAIL;
 	}
@@ -973,11 +988,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
 {
-	for (_uint i = 0; i < 1; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-			return E_FAIL;
-		}
-	}
+	//for (_uint i = 0; i < 1; ++i) {
+	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+	//		return E_FAIL;
+	//	}
+	//}
 
 	return S_OK;
 }
@@ -1090,11 +1105,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Duelist()
 {
 
 	CHuman_Duelist::DUELISTDESC DuelistDesc = {};
-	DuelistDesc.vPos = _float4(1007.f, 6.f, 1016.f, 1.f);
+	DuelistDesc.vPos = _float4(1007.23f, 1.775f, 1015.f, 1.f);
 	DuelistDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHuman_Duelist>(g_iStaticLevel, NEXT_LEVEL, LAYER_DUELIST, &DuelistDesc))) {
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -1102,18 +1118,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 {
 	_bool isLoad_NPC = { true };
 	_bool isLoad_RandomNPC = { true };
+	_bool isRandomPosition = { true };
 #ifdef _DEBUG
 #ifdef gimch
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
+	isRandomPosition = false;
 #endif // gimch
 #ifdef 진우
-	isLoad_RandomNPC = true;
-	isLoad_NPC = true;
+	isLoad_RandomNPC = false;
+	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -1142,12 +1160,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 				return E_FAIL;
 			}
 		}
+		{
+			CElf::ELFDESC ElfDesc{};
+			ElfDesc.vPos = _float4(-84.20f, -30.98f, -60.13f, 1.f);
+			ElfDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CElf>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &ElfDesc))) {
+				return E_FAIL;
+			}
+		}
 	}
 
 	if (true == isLoad_RandomNPC)
 	{
-		for (_uint i = 0; i < 11; i++)
+		if(isRandomPosition)
 		{
+			for (_uint i = 0; i < 12; i++)
 			{
 				CRandomNpc::NPCDESC NPCDesc{};
 				_float X = m_pGameInstance->Real_Random_Float(22.f, 29.f);
@@ -1160,8 +1188,31 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 				}
 			}
 		}
+		else
+			m_pInfoInstance->Load_Npc();
 	}
 	return S_OK;
+}
+
+void CLevel_GamePlay::ResetLevel_Environment()
+{
+	Ready_Volumetric();
+	_float4 vDiffuse;
+	_float4 vAmbient;
+	_float4 vSpecular;
+	if (m_isDay)
+	{
+		vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
+		vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
+		vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
+	}
+	else
+	{
+		vDiffuse = _float4(0.0471f, 0.0745f, 0.1294f, 0.2549f);
+		vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
+		vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 }
 
 pair<CLevel*, function<void()>> CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg)
@@ -1174,7 +1225,8 @@ pair<CLevel*, function<void()>> CLevel_GamePlay::Create(ID3D11Device* pDevice, I
 		SAFE_RELEASE(pInstance);
 	}
 
-	return { pInstance, [pInstance]() { pInstance->Ready_Layer_Camera(); pInstance->Ready_Layer_Sound(); } };
+	return { pInstance, [=]() { pInstance->Ready_Layer_Camera(); pInstance->Ready_Layer_Sound();
+	pInstance->m_pInfoInstance->Load_CutScenes(); } };
 }
 
 void CLevel_GamePlay::Free()

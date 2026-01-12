@@ -180,7 +180,7 @@ void CEffectObject::FollowParents(const _float4x4* pParentsMat,const _float4x4* 
 		m_pParentMatrix = pParentsMat;
 	}
 
-	m_bVisible = true;
+	Set_Visible(true);
 }
 
 

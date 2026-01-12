@@ -44,7 +44,10 @@ HRESULT CTransformation::Initialize(void* pArg)
 	m_wstrEffectName = L"Transformation";
 
 	m_pTransformation_PJ = Get_PartObject<CEffectParts>("Transformation_PJ");
+	m_pTransformation_PJ_PT = Get_PartObject<CEffectParts>("Transformation_PJ_PT");
+
 	SAFE_ADDREF(m_pTransformation_PJ);
+	SAFE_ADDREF(m_pTransformation_PJ_PT);
 
 	m_fDuration = 3.5f;
 
@@ -70,7 +73,7 @@ void CTransformation::Update(_float fTimeDelta)
 	CTransform* pPJTransform = m_pTransformation_PJ->Get_Component<CTransform>();
 
 	pPJTransform->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
-
+	m_pTransformation_PJ_PT->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
 
 }
 
@@ -89,9 +92,16 @@ void CTransformation::Late_Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
 
-		OnCollision(this, &CollisionInfo);
+		if (false == m_bHit) {
+			_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+			_vector vEndPos = XMLoadFloat4(&m_vEndPos);
+			if (false == XMVector3NearEqual(vEndPos, XMVectorZero(), XMVectorReplicate(FLT_EPSILON5)))
+			{
+				ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.02f);
+				OnCollision(this, &CollisionInfo);
+			}
+		}
 	}
 
 }
@@ -108,6 +118,7 @@ HRESULT CTransformation::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_pTransformation_PJ->Get_Effect_Info()->isDissolve = false;
 	m_pTransformation_PJ->Set_Visible(true);
+	m_pTransformation_PJ_PT->Set_Visible(true);
 
 	CEffectParts* pWand_Distortion = Get_PartObject<CEffectParts>("Wand_Distortion");
 	CEffectParts* pWand_Light = Get_PartObject<CEffectParts>("Wand_Light");
@@ -120,6 +131,7 @@ HRESULT CTransformation::Pre_Setting(CGameObject* pObject, void* pArg)
 	pWand_Distortion->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pWand_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pWand_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	m_pTransformation_PJ_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	_vector vDirection = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 	XMStoreFloat3(&m_vCameraLook, vDirection);
@@ -257,6 +269,7 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 
 	pHit_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, vHitPos);
 	pHit_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vHitPos);
+	m_pGameInstance->BillBoard(pHit_PT->Get_Component<CTransform>());
 
 	pHit_Light->Set_Visible(true);
 	pHit_PT->Set_Visible(true);
@@ -282,7 +295,7 @@ void CTransformation::Free()
 	__super::Free();
 
 	Safe_Release(m_pTransformation_PJ);
-
+	Safe_Release(m_pTransformation_PJ_PT);
 }
 #ifdef _DEBUG
 void CTransformation::Describe_Entity()

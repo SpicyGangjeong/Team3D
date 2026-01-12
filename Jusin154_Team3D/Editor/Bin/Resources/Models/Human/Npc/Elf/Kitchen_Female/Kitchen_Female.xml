@@ -32,7 +32,7 @@
 	</MI_HouseElf_F_Upp_Dress02>
 
 
-	<MI_ClothSim	ShaderIndex = "8" OutLineWrite="8">
+	<MI_ClothSim	ShaderIndex = "3" OutLineWrite="3">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HouseElf_F_Upp_Dress02_D" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -155,7 +155,7 @@
 
 	<MI_HousElf_Female_Eye1	ShaderIndex = "2" OutLineWrite="2">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
-		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Eye_Iris_D" Extension=".png"/>
+		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Poltergeist_Eye_E" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
 		<aiTextureType_AMBIENT                 Index="3"  Filename="" Extension=""/>
 		<aiTextureType_EMISSIVE                Index="4"  Filename="" Extension=""/>
