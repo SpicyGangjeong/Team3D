@@ -14,7 +14,10 @@ CTriggerBox::CTriggerBox(const CTriggerBox& rhs)
 HRESULT CTriggerBox::TryScanArea(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+	if (false == m_bRender) {
+		m_bRender = true;
+		m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+	}
 #endif // _DEBUG
     m_vScanTimer.x += fTimeDelta;
     if (m_vScanTimer.x > m_vScanTimer.y) {
@@ -26,36 +29,42 @@ HRESULT CTriggerBox::TryScanArea(_float fTimeDelta)
 
 HRESULT CTriggerBox::Render()
 {
+#ifdef _DEBUG
 	m_Batch->Begin();
-	
+
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0f0f, CMyTools::Saturate(m_vScanTimer.x / m_vScanTimer.y + 0.1f));
-	m_pSubShape->Draw(XMMatrixTranslation(m_vPosition.x, m_vPosition.y, m_vPosition.z), ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	m_pSubShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
 
 	m_Batch->End();
+	m_bRender = false;
+#endif // _DEBUG
+
 	return S_OK;
 }
 
-#ifdef _DEBUG
-void CTriggerBox::Create_DebugShape(ID3D11DeviceContext* pContext)
-{
-	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_fRadius, 12, false, false));
-	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
-}
-#endif // _DEBUG
-
 HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 {
-    m_fRadius = pDesc->vPosition_Radius.w;
-    m_vPosition = { pDesc->vPosition_Radius.x, pDesc->vPosition_Radius.y, pDesc->vPosition_Radius.z, 1.f };
+	CTransform::TRANSFORM_DESC Desc{};
+	Desc.fRadius = pDesc->vPosition_Radius.w;
+	Desc.fRotationPerSec = 0;
+	Desc.fSpeedPerSec = 0;
+	if (FAILED(__super::Initialize(pDesc))) {
+		return E_FAIL;
+	}
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat4(&pDesc->vPosition_Radius), 1.f));
+
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_pTransformCom->Get_Radius(), 12, false, false));
+	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
     return S_OK;
 }
 
 HRESULT CTriggerBox::Scan()
 {
+	_float fRadius = m_pTransformCom->Get_Radius();
     PSX::PxSweepBuffer pxBuffer = {};
-	_bool bHit = m_pGameInstance->SphereCast(m_fRadius, XMLoadFloat4(&m_vPosition), XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.1f,
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, m_pTransformCom->Get_State(STATE::POSITION), XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.1f,
 		PSX::PxHitFlag::ePOSITION, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
 
 	const PSX::PxSweepHit & hit = pxBuffer.block;

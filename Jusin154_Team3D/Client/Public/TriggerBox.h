@@ -30,16 +30,12 @@ public:
 private:
 	HRESULT Initialize(TRIGGERBOX_DESC*);
 	HRESULT Scan();
-#ifdef _DEBUG
-	void Create_DebugShape(ID3D11DeviceContext* pContext);
-#endif // _DEBUG
 
 
 private:
-	_float4 m_vPosition = { };
-	_float	m_fRadius = {};
 	_float2 m_vScanTimer = { 0.f, 0.5f };
 #ifdef _DEBUG
+	_bool m_bRender = false;
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
 #endif // _DEBUG
