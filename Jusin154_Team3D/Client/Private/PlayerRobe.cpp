@@ -345,7 +345,7 @@ HRESULT CPlayerRobe::Update_RobeJoints()
 
 void CPlayerRobe::Describe_Entity()
 {
-	GUI::Begin("PhysX");
+	GUI::Begin("PhysX", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Robe")) {
 		for (_uint i = 0; i < ENUM_CLASS(PLAYER_JOINT_ORDER::END); ++i) {
 			_uint iActor0 = i;

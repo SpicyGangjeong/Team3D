@@ -30,7 +30,7 @@ HRESULT CRaceRing::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	
+
 	//m_iIndex = static_cast<RACERING_DESC*>(pArg)->iIndex;
 	//_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
 	//_float Y = m_pGameInstance->Real_Random_Float(15.f, 60.f);
@@ -59,6 +59,8 @@ void CRaceRing::Priority_Update(_float fTimeDelta)
 void CRaceRing::Update(_float fTimeDelta)
 {
 	m_pModelCom->Combined_BoneMatrix();
+
+	World_to_ScreenUI();
 }
 
 void CRaceRing::Late_Update(_float fTimeDelta)
@@ -97,6 +99,97 @@ HRESULT CRaceRing::Render()
 
 
 	return S_OK;
+}
+
+_bool CRaceRing::World_Screen(_float3 fWorld_Pos, _float2& fScreenPos, _float& fDepth)
+{
+	_matrix mView = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	_matrix mProj = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+	_matrix mVP = mView * mProj;
+
+	_vector	Pos = XMVectorSet(fWorld_Pos.x, fWorld_Pos.y, fWorld_Pos.z, 1.f);
+	Pos = XMVector4Transform(Pos, mVP);
+
+	_float w = XMVectorGetW(Pos);
+
+	_bool bBehind = (w <= 0.f);
+
+	_float NDCX = XMVectorGetX(Pos) / w;
+	_float NDCY = XMVectorGetY(Pos) / w;
+	_float NDCZ = XMVectorGetZ(Pos) / w;
+
+	if (bBehind)
+	{
+		fScreenPos.x = g_iWinSizeX * 0.5f;   // 중앙
+		fScreenPos.y = g_iWinSizeY + 100.f;  // 화면 아래
+		fDepth = -1.f;
+		return true;
+	}
+
+	fDepth = NDCZ;
+
+	fScreenPos.x = (NDCX + 1.f) * 0.5f * g_iWinSizeX;
+	fScreenPos.y = (1.f - NDCY) * 0.5f * g_iWinSizeY;
+
+	return true;
+}
+
+_bool CRaceRing::Screen(_float2& fWorld_Pos, _float Winx, _float Winy)
+{
+	return fWorld_Pos.x >= 0 && fWorld_Pos.x <= Winx &&
+		fWorld_Pos.y >= 0 && fWorld_Pos.y <= Winy;
+}
+
+_float2 CRaceRing::Get_EdgePosition(_float2& fWorld_Pos, _float Winx, _float Winy)
+{
+	_float2 center = _float2(Winx * 0.5f, Winy * 0.5f);
+	_float2 dir =  _float2(fWorld_Pos.x - center.x,	fWorld_Pos.y - center.y);
+
+	_float tX = FLT_MAX;
+	_float tY = FLT_MAX;
+
+	if (dir.x != 0.f)
+	{
+		tX = (dir.x > 0) ? (Winx - center.x) / dir.x	: (0.f - center.x) / dir.x;
+	}
+
+	if (dir.y != 0.f)
+	{
+		tY = (dir.y > 0) ? (Winy - center.y) / dir.y : (0.f - center.y) / dir.y;
+	}
+	
+	float t = min(tX, tY);
+
+	return _float2(center.x + dir.x * t, center.y + dir.y * t);
+}
+
+void CRaceRing::World_to_ScreenUI()
+{
+	_float2			fScreenPos{};
+	_float			fDepth{};
+	_float3			WorldPos{};
+
+	XMStoreFloat3(&WorldPos, m_pTransformCom->Get_State(STATE::POSITION));
+
+	if (!World_Screen(WorldPos, fScreenPos, fDepth))
+	{
+		return;
+	}
+
+	_float			fWinSizeX = static_cast<_float>(g_iWinSizeX);
+	_float			fWinSizeY = static_cast<_float>(g_iWinSizeY);
+
+	if (!Screen(fScreenPos, fWinSizeX, fWinSizeY))
+	{
+		fScreenPos = Get_EdgePosition(fScreenPos, fWinSizeX, fWinSizeY);
+		m_bShowOffScreenUI = true;
+	}
+	else
+	{
+		m_bShowOffScreenUI = false;
+	}
+
+	m_fScreenPos = fScreenPos;
 }
 
 HRESULT CRaceRing::Ready_Components()

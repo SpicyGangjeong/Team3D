@@ -63,6 +63,9 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
+
+	m_pInfoInstance->Load_CutScenes();
+
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
@@ -152,8 +155,6 @@ HRESULT CLevel_Field::Render()
 
 HRESULT CLevel_Field::Ready_Lights()
 {
-	CLight_Main* pLight = { nullptr };
-
 	LIGHT_DESC Desc = {};
 	if (m_isDay)
 	{
@@ -169,7 +170,7 @@ HRESULT CLevel_Field::Ready_Lights()
 	}
 
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc, nullptr, &pLight))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, &Desc, nullptr, &m_pLight))) {
 		return E_FAIL;
 	}
 
@@ -184,9 +185,7 @@ HRESULT CLevel_Field::Ready_Lights()
 #endif // gimch
 
 
-
-
-	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
 
 	return S_OK;
@@ -237,7 +236,7 @@ HRESULT CLevel_Field::Ready_Camera()
 		Camera_Desc.fNear = 0.1f;
 		Camera_Desc.fFar = 500.f;
 		Camera_Desc.pCameraKey = CAMERA_CINEMATIC;
-		Camera_Desc.iPriority = 65;
+		Camera_Desc.iPriority = 52;
 		Camera_Desc.bEnableTransitionLerp = false;
 		Camera_Desc.bEnableLookLerp = false;
 		Camera_Desc.bEnableFollowLerp = false;
@@ -367,6 +366,10 @@ HRESULT CLevel_Field::Reday_Layer_EffectPool()
 		return E_FAIL;
 	}
 	return S_OK;
+}
+
+void CLevel_Field::ResetLevel_Environment()
+{
 }
 
 pair<CLevel*, function<void()>> CLevel_Field::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg)

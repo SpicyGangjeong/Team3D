@@ -51,6 +51,7 @@ public:
 	_uint	Get_NextLevelID();
 	_bool	Check_LevelShouldChange();
 	void	Set_LevelToChange();
+	void	ResetLevel_Environment();
 #pragma endregion
 
 #pragma region PROTOTYPE_MANAGER

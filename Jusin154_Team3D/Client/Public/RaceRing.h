@@ -30,12 +30,20 @@ public:
 	void Set_Target(_bool bTarget){ m_bTarget = bTarget; }
 
 private:
+	_bool	World_Screen(_float3 fWorld_Pos, _float2& fScreenPos, _float& fDepth);
+	_bool	Screen(_float2& fWorld_Pos, _float Winx, _float Winy);
+	_float2 Get_EdgePosition(_float2& fWorld_Pos, _float Winx, _float Winy);
+	void	World_to_ScreenUI();
+
+private:
 	class CBroomRaceManager*	m_pBroomRaceManager = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
 	CModel*						m_pModelCom = { nullptr };
 	_bool						m_bTarget = { false };
 	_int						m_iIndex = {};
 
+	_bool						m_bShowOffScreenUI = { false };
+	_float2						m_fScreenPos{};
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

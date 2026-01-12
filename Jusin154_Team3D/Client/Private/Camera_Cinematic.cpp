@@ -49,10 +49,54 @@ void CCamera_Cinematic::Update(_float fTimeDelta)
 void CCamera_Cinematic::Late_Update(_float fTimeDelta)
 {
 	if (false == m_bActive) {
+#ifdef _DEBUG
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#endif // _DEBUG
 		return;
 	}
+	else {
+	}
 }
-HRESULT CCamera_Cinematic::Render() { return S_OK; }
+HRESULT CCamera_Cinematic::Render() {
+
+	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
+	if (RENDER::NONBLEND == eType) {
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+		for (_uint i = 0; i < iNumMeshes; i++)
+		{
+			if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::WIREFRAME)))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pModelCom->Render(i))) {
+				return E_FAIL;
+			}
+		}
+	}
+	else if (RENDER::NONLIGHT == eType) {
+#ifdef _DEBUG
+		m_Batch->Begin();
+
+		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+		_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+
+		_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x0000ff, 1.f);
+		m_pSubShape->Draw(m_pLookTargetPart->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f);
+		m_pSubShape->Draw(m_pFollowTargetPart->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
+
+		m_Batch->End();
+#endif // _DEBUG
+
+
+	}
+	return S_OK;
+}
 void CCamera_Cinematic::Active_Camera(pair<_float4, _float3>& pairTransitionInfo)
 {
 	if (true == m_bEnable_TransitionLerp) {
@@ -101,6 +145,13 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	case TIMESOCKET_FUNC::BIND_CAMERA:
 		m_pGameInstance->Bind_Camera(NEXT_LEVEL, pContents->wstrKeyName, true);
 		break;
+	case TIMESOCKET_FUNC::TELEPORTATION:
+	{
+		m_pTransformCom->Set_WorldMatrix(pContents->pxTransform);
+		m_pFollowTargetPart->Set_WorldPostion(m_pTransformCom->Get_State(STATE::POSITION));
+		m_pLookTargetPart->Set_WorldPostion(m_pTransformCom->Get_State(STATE::POSITION) + m_pTransformCom->Get_State(STATE::LOOK));
+		Clear_Lerp_Translation();
+	} break;
 	case TIMESOCKET_FUNC::TRANSLATION:
 	{
 		m_pFollowTargetPart->Set_WorldPostion(XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
@@ -123,13 +174,22 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	case TIMESOCKET_FUNC::LOOK_AT:
 	{
 		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
-		Set_LookTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str()));
-		//Set_LookTarget(pUnit, nullptr);
+		Set_LookTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str())); 
 	}break;
 	case TIMESOCKET_FUNC::DONT_LOOK_AT:
 	{
+		m_pLookTargetPart->Stop_Stalking(); 
+	}break;
+	case TIMESOCKET_FUNC::FOLLOW:
+	{
 		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
-		Set_FollowTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str()));
+		const _char* pName = pContents->vParam_12.c_str();
+		const _float4x4* pSocketMatrix = pUnit->Get_SocketMatrixPtr(pName);
+		Set_FollowTarget(pUnit, pSocketMatrix);
+	}break;
+	case TIMESOCKET_FUNC::DONT_FOLLOW:
+	{
+		m_pFollowTargetPart->Stop_Stalking();
 	}break;
 	case TIMESOCKET_FUNC::ZOOM_IN:
 	{
@@ -172,11 +232,26 @@ HRESULT CCamera_Cinematic::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
+#ifdef _DEBUG
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.25f, 12, false, false));
+#endif // _DEBUG
 	return S_OK;
 }
 HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Camera_Model"),
+		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
 
@@ -198,6 +273,18 @@ HRESULT CCamera_Cinematic::Ready_SubPart()
 
 HRESULT CCamera_Cinematic::Bind_ShaderResources()
 {
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 void CCamera_Cinematic::Lerp_Translation(_float fTimeDelta)
@@ -351,7 +438,10 @@ CGameObject* CCamera_Cinematic::Clone(void* pArg, CGameObject* pOwner)
 void CCamera_Cinematic::Free()
 {
 	__super::Free();
-
+#ifdef _DEBUG
+	SAFE_RELEASE(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+#endif // _DEBUG
 	SAFE_RELEASE(m_pLookTargetPart);
 	SAFE_RELEASE(m_pFollowTargetPart);
 }
@@ -364,6 +454,10 @@ void CCamera_Cinematic::Describe_Entity()
 	if (GUI::CollapsingHeader("Camera_Cinematic_Describe")) {
 		if (GUI::SmallButton("Trigger_RanrokIntro")) {
 			_string strCutSceneName = "RanrokIntro";
+			m_pInfoInstance->Active_Event(strCutSceneName);
+		}
+		if (GUI::SmallButton("Trigger_CarriageIntro")) {
+			_string strCutSceneName = "CarriageIntro";
 			m_pInfoInstance->Active_Event(strCutSceneName);
 		}
 		m_pTransformCom->Describe_Entity();

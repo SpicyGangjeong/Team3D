@@ -33,9 +33,11 @@ private:
 private:
 	_wstring	     m_wstrEffectName = {};
 	class CPlayer*	 m_pPlayer = {};
+
 	class CEditEffect* m_pRevelioPT_Y = { nullptr };
 	class CEditEffect* m_pRevelioPT_B = { nullptr };
 	class CEditEffect* m_pRevelioPT_R = { nullptr };
+	class CEditEffect* m_pWand_Light = { nullptr };
 
 public:
 	static CRevelio* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

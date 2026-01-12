@@ -31,6 +31,7 @@ private:
 	virtual HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Initialize() override;
 	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);
+	void ResetLevel_Environment() {};
 public:
 	static CLevel_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, LEVEL eNextLevelID);
 	virtual void Free() override;

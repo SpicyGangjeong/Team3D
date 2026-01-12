@@ -15,10 +15,10 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
+	class CLight_Main* m_pLight = { nullptr };
 
 	_bool m_isDay = { true };
 
@@ -49,6 +49,7 @@ private:
 	HRESULT Reday_Layer_EffectPool();
 	HRESULT Ready_Layer_Duelist();
 	HRESULT Ready_Layer_Npc();
+	void	ResetLevel_Environment();
 
 	HRESULT Bind_InstanceProp(map<_string, class CLand*>* Lands, class CInstancedProp* pInstnace, const _char* LandTag);
 public:

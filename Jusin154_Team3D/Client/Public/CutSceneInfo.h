@@ -19,7 +19,7 @@ private:
 
 public:
 	void Update(_float fTimeDelta);
-	void Change_Level();
+	void Load_CutScenes();
 
 public:
 	void		Active_Event(_string& strKey);

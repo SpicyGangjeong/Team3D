@@ -118,6 +118,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("NpcInteraction"), [this](void* p) {this->Set_Interaction(*reinterpret_cast<_bool*>(p)); });
 
 	m_bAI = false;
 
@@ -169,6 +170,7 @@ void CPlayer::Update(_float fTimeDelta)
 	{
 		if (m_bNpcInteraction == true)
 		{
+			m_bCurrentInteraction = true;
 			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bNpcInteraction);
 		}
 	}
@@ -366,7 +368,7 @@ HRESULT CPlayer::Update_RaycastElements()
 
 		else
 		{
-			if (m_pCurrentNpcInteraction)
+			if (m_pCurrentNpcInteraction && !m_bCurrentInteraction)
 			{
 				m_bNpcInteraction = false;
 				m_pCurrentNpcInteraction = nullptr;
@@ -377,7 +379,7 @@ HRESULT CPlayer::Update_RaycastElements()
 
 	else
 	{
-		if (m_pCurrentNpcInteraction)
+		if (m_pCurrentNpcInteraction && !m_bCurrentInteraction)
 		{
 			m_bNpcInteraction = false;
 			m_pCurrentNpcInteraction = nullptr;
@@ -385,6 +387,11 @@ HRESULT CPlayer::Update_RaycastElements()
 		}
 	}
 	return S_OK;
+}
+
+void CPlayer::Set_Interaction(_bool bInteraction)
+{
+	m_bCurrentInteraction = bInteraction;
 }
 
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
@@ -506,13 +513,28 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 		m_pCharacter_Controller->Set_Position(vNewPos);
 		m_pTransformCom->RotationQ(pContents->pxTransform.q);
 		m_pTransformCom->RewindMomentum();
-	}
-		break;
+	} break;
 	case TIMESOCKET_FUNC::TRANSLATION_LERP:
 	{
 
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
+	{
+	} break;
+	case TIMESOCKET_FUNC::SET_FSMSTATE:
+	{
+		if (pContents->vFlags.b[0]) {
+			m_pFSM->Change_State(FSMSTATE::CUTSCENE);
+		}
+		else if (pContents->vFlags.b[1]) {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+		}
+	} break;
+	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
+	{
+		
+	} break;
+	case TIMESOCKET_FUNC::UNBIND_SOCKET_MATRIX:
 	{
 
 	} break;
@@ -969,7 +991,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pRobePart);
+	//SAFE_RELEASE(m_pRobePart);
 	SAFE_RELEASE(m_pGrapInteractive);
 
 	if (nullptr != m_pInfoInstance) {
@@ -1148,12 +1170,9 @@ void CPlayer::Describe_Entity()
 
 
 		m_pLightCom->Describe_Entity();
-		for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
-		{
-			if (GUI::Button(m_pModelCom->Get_AnimList(i)))
-			{
-				m_pModelCom->Set_AnimationIndex(i);
-			}
+		if (GUI::TreeNode("PLAYER_ANIMLIST")) {
+			m_pModelCom->Describe_Entity();
+			GUI::TreePop();
 		}
 	}
 	GUI::End();
