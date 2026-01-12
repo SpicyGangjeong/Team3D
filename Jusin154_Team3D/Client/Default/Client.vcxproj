@@ -501,7 +501,6 @@ call Update_Resources.bat
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Duelist_JapSide.cpp" />
     <ClCompile Include="..\private\MapElement_Balloon.cpp" />
-    <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
     <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Protego_Hit.cpp" />

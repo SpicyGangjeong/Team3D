@@ -400,7 +400,6 @@
     <ClInclude Include="..\Public\Goblin_Mage.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Goblin.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
     </ClInclude>
@@ -439,9 +438,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Lake.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Goblin.h">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Protego.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego</Filter>
@@ -928,11 +924,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\AccioSide.h">
       <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
-	</ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-      </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h" />
+    </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClInclude>
@@ -1377,9 +1369,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Item\Goblin_Axe">
       <UniqueIdentifier>{e666a8b4-c92e-48ee-b63b-40d852b27b06}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Effect\Effects\WandEnd">
-      <UniqueIdentifier>{14ad0431-680b-4c8b-93d7-601aee5ce435}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.InfoInstance\03.InteractiveInfo">
       <UniqueIdentifier>{1d1dc743-5cf2-4b8f-a80e-16b16437c7aa}</UniqueIdentifier>
@@ -1932,7 +1921,7 @@
     </Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_Parry">
       <UniqueIdentifier>{b57b393b-0e6f-47ad-9301-46b8f725a452}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
       <UniqueIdentifier>{4a11eb4b-127e-41f2-8456-cae963c94a4c}</UniqueIdentifier>
     </Filter>
@@ -2803,16 +2792,17 @@
     <ClCompile Include="..\Private\State_Block.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
+    <ClCompile Include="..\Private\StupefySide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy\StupefySide</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\State_Parry.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AccioSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\MapElement_Balloon.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Balloon</Filter>
     </ClCompile>
@@ -2821,17 +2811,13 @@
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-         </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
+    </ClCompile>
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Goblin_States.cpp">
-    <ClCompile Include="..\Private\TriggerBox.cpp">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-    </ClCompile>
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin.cpp">

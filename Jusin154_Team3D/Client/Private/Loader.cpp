@@ -483,10 +483,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = false;
-	isLoad_Hogwart = false;
-	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_Background = true;
+	isLoad_Hogwart = true;
+	isLoad_UI_SEQUANTIAL = true;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -3896,23 +3896,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 #pragma region RECEIVE_THREAD
-	{
-		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
-		_uint iIndex = 0;
-		for (auto& JobMapShader : jobMapShaders)
-		{
-			pair<_wstring, CShader*>* pOut = JobMapShader.get();
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
-				return E_FAIL;
-			}
-			Safe_Delete(pOut);
-		}
-	}
-
-/* 쉐이더 로딩 종료 이후 로딩*/
-
-#pragma region RECEIVE_THREAD
-
 	{ // MapModels
 		m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 		_uint iIndex = 0;
@@ -3938,18 +3921,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 
-	{
-		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
-		_uint iIndex = 0;
-		for (auto& JobMapShader : jobMapShaders)
-		{
-			pair<_wstring, CShader*>* pOut = JobMapShader.get();
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
-				return E_FAIL;
-			}
-			Safe_Delete(pOut);
-		}
-	}
 
 #pragma endregion
 

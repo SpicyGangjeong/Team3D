@@ -332,9 +332,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -1026,7 +1026,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = true;
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = false;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 나
 
