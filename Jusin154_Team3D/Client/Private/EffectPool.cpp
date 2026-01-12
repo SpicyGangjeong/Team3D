@@ -112,7 +112,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 #endif // 
 #ifdef 나
 	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #endif
 	//// 디버그 모드가 아닐 때, 릴리즈모드에

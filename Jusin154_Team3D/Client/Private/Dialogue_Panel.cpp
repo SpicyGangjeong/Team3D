@@ -83,6 +83,10 @@ void CDialogue_Panel::Choice_Slot(CHOICEINFO Choice)
 {
 	switch (Choice.iType)
 	{
+	case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
+		m_pInfoInstance->Event_CallBack(TEXT("NPCNEXTTEXT"), &Choice);
+		break;
+
 	case ENUM_CLASS(NPCTEXTTYPE::NEXTTEXT):
 		m_pInfoInstance->Event_CallBack(TEXT("NPCNEXTTEXT"), &Choice);
 		break;

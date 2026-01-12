@@ -47,7 +47,8 @@ typedef struct tagSpellInfo
 	typedef struct DialogueInfo
 	{
 		_int						iLineID{};
-		_bool						bType{};
+		_bool						bTag{};
+		_int						iType{};
 		_wstring					pText;
 		_int						NextTextID{};
 		vector<DIALOGUECHOICEINFO>	ChoiceInfo;

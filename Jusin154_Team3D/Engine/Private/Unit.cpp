@@ -128,6 +128,10 @@ _int CUnit::Get_TextID()
     return _int();
 }
 
+void CUnit::Set_NextID(_int ID)
+{
+}
+
 HRESULT CUnit::Ready_Components(void *pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
