@@ -16,7 +16,7 @@
             <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod2</PrototypeTag>
             <Position x="0" y="0.5" z="0"/>
-            <RotationAngle RotationAngle="10"/>
+            <RotationAngle RotationAngle="70"/>
         </Lid>
     </Object>
     <Object Type="2" ID="2" Lod_Level="3">
@@ -35,7 +35,7 @@
             <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod2</PrototypeTag>
             <Position x="0" y="0.5" z="0"/>
-            <RotationAngle RotationAngle="10"/>
+            <RotationAngle RotationAngle="70"/>
         </Lid>
     </Object>
     <Object Type="2" ID="2" Lod_Level="3">
@@ -54,7 +54,7 @@
             <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod2</PrototypeTag>
             <Position x="0" y="0.5" z="0"/>
-            <RotationAngle RotationAngle="10"/>
+            <RotationAngle RotationAngle="70"/>
         </Lid>
     </Object>
 </Chests>

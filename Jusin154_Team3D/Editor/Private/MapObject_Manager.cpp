@@ -19,6 +19,7 @@
 #include "InstancedProp_Light.h"
 #include "EditEffect.h"
 #include "MapElement_Balloon.h"
+#include "DummyNPC.h"
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext), m_pInfoInstance{CInfoInstance::GetInstance()}
@@ -87,8 +88,8 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//	return E_FAIL;
 
 #pragma region HOGSMEADE
-	/*	if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
-			return E_FAIL;*/
+	if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region DUNGEON
@@ -99,10 +100,10 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 #pragma endregion
 
 #pragma region HOGWART
-	if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
-		return E_FAIL;
-	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
-		return E_FAIL;
+	//if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
+	//	return E_FAIL;
+	//if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
+	//	return E_FAIL;
 #pragma endregion
 
 #pragma region Light
@@ -129,8 +130,8 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	if (FAILED(Load_RaceRing("RaceRing_Data")))
 		return E_FAIL;
 
-	if (FAILED(Load_Balloons("Ballon_Data")))
-		return E_FAIL;
+	/*if (FAILED(Load_Balloons("Ballon_Data")))
+		return E_FAIL;*/
 #pragma endregion
 
 #pragma region EFFECT_PART
@@ -159,10 +160,8 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	//if (FAILED(Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
 	//	return E_FAIL;
 
-
 	//if (FAILED(Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
 	//	return E_FAIL;
-	
 #pragma endregion
 
 
@@ -278,9 +277,9 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	//Update_LightSpawer();
 	//Update_Decal();
 	//Update_RaceRing();
-	//Update_Balloon();
 	//Update_EffectParts();
 	//Update_Balloon();
+	Update_DummyNpc();
 
 	Update_Unified();
 
@@ -2102,7 +2101,6 @@ HRESULT CMapObject_Manager::Load_RaceRing(const _char* pFileName)
 			return E_FAIL;
 	}
 
-
 	return S_OK;
 }
 
@@ -2114,14 +2112,14 @@ HRESULT CMapObject_Manager::Save_Balloons(const _char* pFileName)
 		return S_OK;
 
 	tinyxml2::XMLDocument doc;
-	string strPath = "../Bin/Resources/Data/Map/Balloon/" + string(pFileName) + ".xml";
+	string strPath = "../Bin/Resources/Data/Map/NPC/" + string(pFileName) + ".xml";
 
 	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
 
 	doc.Clear();
 	doc.InsertFirstChild(doc.NewDeclaration());
 
-	tinyxml2::XMLElement* root = doc.NewElement("Balloon");
+	tinyxml2::XMLElement* root = doc.NewElement("NPC");
 	doc.InsertEndChild(root);
 
 	if (nullptr != pLayer)
@@ -2325,6 +2323,51 @@ HRESULT CMapObject_Manager::Load_EffectParts(const _char* pFileName, const _char
 		pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
 		pEffect->Load(pEffectrFilePath, LEVEL::MAP);
 		pEffect->Set_Visible(true);
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapObject_Manager::Save_DummyNpc(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Npc"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/NPC/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("NPC");
+	doc.InsertEndChild(root);
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CDummyNPC* pNpc = dynamic_cast<CDummyNPC*>(pGamObject);
+
+			if (nullptr == pNpc)
+				return E_FAIL;
+
+			if (FAILED(pNpc->Save_XML(doc, root)))
+				return E_FAIL;
+		}
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save CDummyNPC");
 	}
 
 	return S_OK;
@@ -2750,11 +2793,11 @@ void CMapObject_Manager::Update_Balloon()
 	GUI::Begin("Ballon Editor");
 	if (GUI::Button("Save Ballon"))
 	{
-		Save_Balloons("Ballon_Data");
+		Save_Balloons("DummyNPC_Data");
 	}
 	if (GUI::Button("Load Ballon"))
 	{
-		Load_Balloons("Ballon_Data");
+		Load_Balloons("DummyNPC_Data");
 	}
 	if (GUI::Button("Add Ballon"))
 	{
@@ -2765,6 +2808,42 @@ void CMapObject_Manager::Update_Balloon()
 
 	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
 	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Balloon"));
+
+	if (nullptr != pLayer)
+	{
+		_uint iIndex = {};
+		for (auto& pObject : *pLayer->Get_Objects())
+		{
+			if (m_iSelectedIndex == iIndex)
+				pObject->Describe_Entity();
+
+			++iIndex;
+		}
+	}
+
+	GUI::End();
+}
+
+void CMapObject_Manager::Update_DummyNpc()
+{
+	GUI::Begin("DummyNpc Editor");
+	if (GUI::Button("Save DummyNpc"))
+	{
+		Save_DummyNpc("DummyNPC_Data");
+	}
+	if (GUI::Button("Load DummyNpc"))
+	{
+		//Load_Balloons("DummyNPC_Data");
+	}
+	if (GUI::Button("Add DummyNpc"))
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummyNPC>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Npc"))))
+		{
+		}
+	}
+
+	GUI::InputInt("Index : ", (_int*)&m_iSelectedIndex);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Npc"));
 
 	if (nullptr != pLayer)
 	{
