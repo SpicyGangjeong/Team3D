@@ -7,6 +7,14 @@ NS_BEGIN(Editor)
 
 class CRaceRing final : public CGameObject
 {
+public:
+	typedef struct RaceRingDesc
+	{
+		_float3 vPosition{};
+		_float3 vRotation{};
+		_float3 vScale{};
+	}RACERING_DESC;
+
 private:
 	CRaceRing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CRaceRing(const CRaceRing& Prototype);

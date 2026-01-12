@@ -38,6 +38,7 @@ private:
 	CGameObject* m_pBroom_Record = { nullptr };
 	CGameObject* m_pBroom_Exit = { nullptr };
 	CGameObject* m_pBroom_Trophy = { nullptr };
+	CGameObject* m_pBroom_TargetGate2D = { nullptr };
 
 public:
 	static CBroom_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

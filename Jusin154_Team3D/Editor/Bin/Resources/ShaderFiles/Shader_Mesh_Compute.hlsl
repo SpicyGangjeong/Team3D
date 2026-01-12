@@ -43,6 +43,9 @@ cbuffer AnimCB : register(b0)
     float UpperBlend;
     int SecondAnimIndex;
     float SecondAnimTime;
+    
+    row_major float4x4 WorldMatrix;
+
 };
 
 [numthreads(256, 1, 1)]
@@ -53,20 +56,23 @@ void CS_MAIN(uint3 DTid : SV_DispatchThreadID)
         return;
 
     uint global = g_BoneRemap[local];
-
-   float4x4 combined = g_LocalMatIn[global];
+    
+    
+    float4x4 localMat = g_LocalMatIn[global];
+    float4x4 modelCombined = localMat;
 
     int p = g_ParentBuffer[global];
     while (p != -1)
     {
-        combined = mul(combined, g_LocalMatIn[p]);
+        modelCombined = mul(modelCombined, g_LocalMatIn[p]);
         p = g_ParentBuffer[p];
     }
 
-    combined = mul(combined, PreTransformMatrix);
-    
-    g_LocalPosOutput[local].Local = g_LocalMatIn[global];
-    g_LocalPosOutput[local].LocalCombined = combined;
-    g_LocalPosOutput[local].Combined = combined;
+    modelCombined = mul(modelCombined, PreTransformMatrix);
 
+    float4x4 worldCombined = mul(modelCombined, WorldMatrix);
+
+    g_LocalPosOutput[local].Local = localMat;
+    g_LocalPosOutput[local].LocalCombined = modelCombined;
+    g_LocalPosOutput[local].Combined = worldCombined;
 }

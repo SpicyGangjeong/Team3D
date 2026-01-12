@@ -172,6 +172,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Broom_Record.h" />
     <ClInclude Include="..\Public\Broom_Scoreboard.h" />
     <ClInclude Include="..\public\Broom_TargetGate.h" />
+    <ClInclude Include="..\Public\Broom_TargetGate2D.h" />
     <ClInclude Include="..\Public\Broom_Trophy.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h" />
@@ -194,6 +195,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Duelist_JapSide.h" />
     <ClInclude Include="..\Public\Duelist_ProtegoHit.h" />
     <ClInclude Include="..\Public\Goblin_ProtegoHit.h" />
+    <ClInclude Include="..\public\MapElement_Balloon.h" />
     <ClInclude Include="..\Public\Protego_Hit.h" />
     <ClInclude Include="..\Public\RandomNpc.h" />
     <ClInclude Include="..\Public\Ranrok_ENUM.h" />
@@ -476,6 +478,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Broom_Record.cpp" />
     <ClCompile Include="..\Private\Broom_Scoreboard.cpp" />
     <ClCompile Include="..\private\Broom_TargetGate.cpp" />
+    <ClCompile Include="..\Private\Broom_TargetGate2D.cpp" />
     <ClCompile Include="..\Private\Broom_Trophy.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp" />
@@ -498,6 +501,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Human_Duelist_States.cpp" />
     <ClCompile Include="..\private\InstancedProp_Light.cpp" />
     <ClCompile Include="..\Private\Duelist_JapSide.cpp" />
+    <ClCompile Include="..\private\MapElement_Balloon.cpp" />
     <ClCompile Include="..\Private\PlayerRobe_Initialize.cpp" />
     <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp" />
     <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp" />

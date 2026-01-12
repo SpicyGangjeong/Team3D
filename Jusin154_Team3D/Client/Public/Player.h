@@ -44,6 +44,7 @@ public:
 	void			Update_CameraShake(_float fTimeDelta);
 	HRESULT			Update_RaycastElements();
 	void			Set_Battle(_bool bBattle) { m_bDuel_ZOnlyMove = bBattle; }
+	void			Set_Interaction(_bool bInteraction);
 #ifdef _DEBUG
 	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -60,6 +61,7 @@ private:
 	_bool m_bCameraShake = { false };
 
 	_bool m_bNpcInteraction = { false };
+	_bool m_bCurrentInteraction = { false };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
@@ -107,6 +109,7 @@ private:
 	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
 	void Play_SpellHitAnim();
 	void Player_PixRot();
+	void Find_HiddenObjects();
 
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
 #ifdef _DEBUG
@@ -164,7 +167,6 @@ private:
 	_float			m_fMoveTime = {};
 	_float			m_fCross = 0.f;
 	_float			m_fabsDir = 0.f;
-	array<_float4x4, 256> SkinMatrices = {};
 	array<_int, 256> SecondMaskIndex = {};
 	_bool			m_bOpenDoor = { false };
 	_bool			m_bOpeningCutScene = { false };

@@ -39,6 +39,8 @@ public:
 		_float   UpperBlend;           
 		_int   SecondAnimIndex;
 		_float SecondAnimTime;
+
+		_float4x4 WorldMatrix;
 	}ANIMSTATE_DESC;
 
 	typedef struct tagBoneInsertionDesc {
@@ -78,7 +80,7 @@ public:
 	_bool			Play_Anim(_float fTimeDelta, CTransform* pTransform);
 	_bool			Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform);
 	_bool			IsBlending() const;
-	void			Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false, _float fAnimSpeed = 1.f, _bool bRootBone = true, _bool bQueuedAnim = false, _bool bInit = true);
+	void			Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false, _float fAnimSpeed = 1.f, _bool bRootBone = true, _bool bQueuedAnim = false);
 	void			Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLoop = false);
 	_bool			IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool			IsFinishedSecondAnim() const { return m_bIsSecondFinishedAnim; }

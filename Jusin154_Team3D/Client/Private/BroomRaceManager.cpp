@@ -3,11 +3,13 @@
 
 #include "GameInstance.h"
 #include "RaceRing.h"
+#include "MapElement_Balloon.h"
 #include "Layer.h"
 #include "BroomRacerAI.h"
 #include "Player.h"
 #include "Broom.h"
 #include "InfoInstance.h"
+#include "InstancedProp.h"
 
 CBroomRaceManager::CBroomRaceManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -44,43 +46,43 @@ void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
-		switch (m_eRaceState)
+	switch (m_eRaceState)
+	{
+	case ENUM_CLASS(RACE_STATE::COUNTDOWN):
+		Update_Countdown(fTimeDelta);
+		break;
+	case ENUM_CLASS(RACE_STATE::RACING):
+		Check_RingPassed();
+		break;
+	case ENUM_CLASS(RACE_STATE::FINISH):
+		break;
+	case ENUM_CLASS(RACE_STATE::END):
+	{
+		if (m_bCurrentRace == true)
 		{
-		case ENUM_CLASS(RACE_STATE::COUNTDOWN):
-			Update_Countdown(fTimeDelta);
-			break;
-		case ENUM_CLASS(RACE_STATE::RACING):
-			Check_RingPassed();
-			break;
-		case ENUM_CLASS(RACE_STATE::FINISH):
-			break;
-		case ENUM_CLASS(RACE_STATE::END):
-		{
-			if (m_bCurrentRace == true)
+			if (m_pGameInstance->Key_Down(DIK_ESCAPE))
 			{
-				if (m_pGameInstance->Key_Down(DIK_ESCAPE))
-				{
-					m_bRaceEnd = true;
-					_float Alpha = 2.f;
-					m_pInfoInstance->Event_CallBack(TEXT("UIFadeIn"), &Alpha);
-				}
-
-				for (auto& racer : m_Racers)
-				{
-					if (racer.pAI)
-					{
-						racer.pAI->Get_Broom()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
-					}
-					if (racer.pRacer)
-					{
-
-					}
-				}
+				m_bRaceEnd = true;
+				_float Alpha = 2.f;
+				m_pInfoInstance->Event_CallBack(TEXT("UIFadeIn"), &Alpha);
 			}
 
+			for (auto& racer : m_Racers)
+			{
+				if (racer.pAI)
+				{
+					racer.pAI->Get_Broom()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+				}
+				if (racer.pRacer)
+				{
+
+				}
+			}
 		}
-		break;
-		}
+
+	}
+	break;
+	}
 
 
 }
@@ -122,7 +124,7 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_bRaceEnd) 
+	if (m_bRaceEnd)
 	{
 		m_fDelay += fTimeDelta;
 		for (auto& racer : m_Racers) {
@@ -131,12 +133,10 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					racer.pRacer->Get_Broom()->Set_Ride(false);
 					racer.pRacer->Get_Broom()->Set_Move(true);
 
-					racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::IDLE);
-
 					CTransform* pTransform = racer.pRacer->Get_Component<CTransform>();
 					CCharacter_Controller* pCharacter = racer.pRacer->Get_Component<CCharacter_Controller>();
-					pCharacter->Set_Position(XMLoadFloat4(&m_OriginPos));
 					pTransform->Set_State(STATE::POSITION, XMLoadFloat4(&m_OriginPos));
+					pCharacter->Set_Position(XMLoadFloat4(&m_OriginPos));
 					m_bRaceEnd = false;
 					m_fDelay = 0.f;
 					m_bCurrentRace = false;
@@ -294,13 +294,6 @@ void CBroomRaceManager::Check_RingPassed()
 
 		_float Prev = XMVectorGetX(XMVector3Dot(prevPos - ringPos, ringFwd));
 		_float Curr = XMVectorGetX(XMVector3Dot(currPos - ringPos, ringFwd));
-#ifdef _DEBUG
-		GUI::Text("%s", racer.pAI ? "AI" : "Player");
-		GUI::SameLine();
-		GUI::Text("CurRing %d", racer.curRing);
-		GUI::Text("PrevSide %.2f", Prev);
-		GUI::Text("CurrSide %.2f", Curr);
-#endif // _DEBUG
 		if (Prev * Curr <= 0.f && fabs(Prev - Curr) > 1e-4f)
 		{
 			_float t = Prev / (Prev - Curr);
@@ -350,8 +343,6 @@ void CBroomRaceManager::Finish()
 
 void CBroomRaceManager::RaceReady()
 {
-	//if (GUI::Button("Race Start"))
-//{
 	m_bCurrentRace = true;
 	m_eRaceState = ENUM_CLASS(RACE_STATE::READY);
 	const _float SPAWN_DISTANCE = 30.f;
@@ -360,6 +351,26 @@ void CBroomRaceManager::RaceReady()
 	{
 		MSG_BOX("Failed Load RaceRing");
 	}
+
+	if (FAILED(Load_Balloons()))
+	{
+		MSG_BOX("Failed Load Balloons");
+	}
+
+	CInstancedProp::INSTANCE_PROP_DESC Instance_Desc = {};
+
+	/* InstanceProp RouteMarker*/
+	Instance_Desc.isShake = false;
+	Instance_Desc.eShaderPass = SHADER_PASS_WORLDMODLE_INSTANCE::NONCULL;
+	Instance_Desc.bEnableRigidbody = false;
+	Instance_Desc.vRadius = _float2(0.f, 0.f);
+	Instance_Desc.vSpeed = _float2(0.f, 0.f);
+	Instance_Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SK_BRR_RouteMarker";
+	Instance_Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/RouteMarker.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Instance_Desc))) {
+		return; 
+	}
+
 	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_RACERAI);
 
 	if (nullptr != pLayer)
@@ -369,7 +380,7 @@ void CBroomRaceManager::RaceReady()
 			dynamic_cast<CBroomRacerAI*>(pUnified)->Set_RaceInfo();
 		}
 	}
-
+	
 	m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Set_RaceInfo();
 
 	for (auto& racer : m_Racers)
@@ -406,22 +417,13 @@ void CBroomRaceManager::RaceReady()
 			pCharacter->Set_Position(spawnPos);
 			pTransform->Set_State(STATE::POSITION, spawnPos);
 			pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
-			racer.pRacer->Get_Component<CFSM>()->Change_State(FSMSTATE::BROOM_RIDE);
+			racer.pRacer->Get_Broom()->Set_Ride(true);
 			racer.pRacer->Get_Broom()->Set_Move(false);
 
 		}
 	}
 
 	m_bRaceReady = true;
-	//}
-	//if (m_eRaceState == ENUM_CLASS(RACE_STATE::READY))
-	//{
-	//	/*if (GUI::Button("Countdown"))
-	//	{*/
-	//	m_pInfoInstance->Event_CallBack(TEXT("Ready_Race"));
-	//	m_eRaceState = ENUM_CLASS(RACE_STATE::COUNTDOWN);
-	//	//}
-	//}
 }
 
 void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
@@ -491,33 +493,101 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 		return S_OK;
 	}
 
-	//for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
-	//{
-	auto* Object = root->FirstChildElement("Object");
-	CRaceRing::RACERING_DESC Desc = {};
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CRaceRing::RACERING_DESC Desc = {};
 
-	Desc.pBroomRaceManager = this;
+		Desc.pBroomRaceManager = this;
 
-	/* Transform */
-	auto* Rotation = Object->FirstChildElement("Scale");
-	Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
-	Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
-	Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Scale");
+		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
 
-	auto* Scale = Object->FirstChildElement("Rotation");
-	Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
-	Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
-	Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+		auto* Scale = Object->FirstChildElement("Rotation");
+		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
 
-	auto* Position = Object->FirstChildElement("Position");
-	Position->QueryFloatAttribute("x", &Desc.vPosition.x);
-	Position->QueryFloatAttribute("y", &Desc.vPosition.y);
-	Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CBroomRaceManager::Load_Balloons()
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Balloon/Ballon_Data.xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
 		return E_FAIL;
-	//}
 
+		Desc.pBroomRaceManager = this;
+
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Scale");
+		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Scale = Object->FirstChildElement("Rotation");
+		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
+			return E_FAIL;
+	}
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Balloon");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Balloon::BALLOON_DESC Desc = {};
+
+		auto* Value = Object->FirstChildElement("Value");
+		Value->QueryBoolAttribute("isFloating", &Desc.isFloating);
+		Value->QueryUnsignedAttribute("DiffuseIndex", &Desc.iDiffuseIndex);
+
+		/* Transform */
+		auto* Rotation = Object->FirstChildElement("Scale");
+		Rotation->QueryFloatAttribute("x", &Desc.vScale.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vScale.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Scale = Object->FirstChildElement("Rotation");
+		Scale->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Scale->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Scale->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Balloon>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

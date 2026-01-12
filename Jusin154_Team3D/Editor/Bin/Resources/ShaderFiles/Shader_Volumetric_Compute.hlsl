@@ -77,13 +77,13 @@ void CS_MAIN( uint3 DispatchThreadID : SV_DispatchThreadID)
     {
         float visibility = 1.f;
         
+        // Directional
         if (0.f < length(g_LightBuffer[i].vDirection))
         {
             lightDir = normalize(g_LightBuffer[i].vDirection);
             visibility = ComputeShadowVisibility(vWorldPosition);
-
         }
-        else
+        else // Point
         {
             lightDir = vWorldPosition - g_LightBuffer[i].vPosition.xyz;
             visibility = ComputePointLightVisible(lightDir, g_LightBuffer[i].fRange);

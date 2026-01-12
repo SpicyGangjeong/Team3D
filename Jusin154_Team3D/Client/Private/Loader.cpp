@@ -151,6 +151,7 @@
 #include "Broom_Record.h"
 #include "Broom_Exit.h"
 #include "Broom_Trophy.h"
+#include "Broom_TargetGate2D.h"
 
 #include "Ride_Panel.h"
 #include "Ride_Info_Key.h"
@@ -274,6 +275,7 @@
 #include "MapElement_Static.h"
 #include "WorldDecal.h"
 #include "PointLight.h"
+#include "MapElement_Balloon.h"
 
 #pragma endregion
 
@@ -472,8 +474,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
-	isLoad_DataClassroom = true;
+	isLoad_NPC = true;
+	isLoad_DataClassroom = false;
 #endif // gimch
 #ifdef 진우
 	isLoad_Background = false;
@@ -1807,6 +1809,25 @@ HRESULT CLoader::Loading_For_GamePlay()
 			TEXT("C:/MeshTable/Game/Environment/Hogsmeade/Common/Textures/LightPosts/T_HM_LampPost_Glass_Dark_D.png"), 0)))) {
 		return E_FAIL;
 	}
+
+	/* Balloon_Diffuse */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Balloon_Diffuse"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Balloon/T_FloatingBalloonTarget_D_%d.dds"), 4)))) {
+		return E_FAIL;
+	}
+
+	/* Balloon_Normal */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Balloon_Normal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Balloon/T_FloatingBalloonTarget_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	/* Balloon_MRO */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Balloon_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Balloon/T_FloatingBalloonTarget_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+
 #pragma endregion
 #pragma region LAKE_TEXTURE
 	/* For.Prototype_Component_Water_Noise_D */
@@ -3201,6 +3222,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_SpellLearn_Broom_TargetGate2D*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom_TargetGate2D>(g_iStaticLevel, CBroom_TargetGate2D::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_SpellLearn_Ride_Panel*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CRide_Panel>(g_iStaticLevel, CRide_Panel::Create(m_pDevice, m_pContext))))
@@ -3584,9 +3610,20 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
 			return E_FAIL;
 	}
+
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_SK_BRR_RouteMarker */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SK_BRR_RouteMarker"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SK_BRR_RouteMarker.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
 #pragma endregion
 
-	
+	/* For.Prototype_Component_FloatingBalloon */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_FloatingBalloon"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/RiggedObjects/Props/FloatingBalloonTarget/SK_FloatingBalloonTarget_.bin"))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_Hogwart_Lake"),
@@ -3799,6 +3836,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_RaceRing */
 	if (FAILED(m_pGameInstance->Add_Prototype<CRaceRing>(g_iStaticLevel, CRaceRing::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Balloon */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Balloon>(g_iStaticLevel, CMapElement_Balloon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Troll_Weapon */

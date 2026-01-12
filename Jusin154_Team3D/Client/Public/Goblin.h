@@ -91,6 +91,7 @@ private:
 	_float	m_fGravityAmount = {};
 	_float	m_fHitTimer = {};
 	_float	m_fTumbleTimer = {};
+	_bool	m_bCameraShake = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
@@ -140,6 +141,9 @@ private:
 
 	void Hit_Accio(_float fTimeDelta);
 	void Hit_Levioso(_float fTimeDelta);
+	void Hit_Jap();
+	void Descendo_Event();
+	void TumbleAnim(_float fTimeDelta);
 
 #pragma endregion
 

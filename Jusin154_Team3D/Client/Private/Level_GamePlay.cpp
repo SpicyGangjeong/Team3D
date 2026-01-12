@@ -66,7 +66,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #endif // 
 #endif // _DEBUG
 
-
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
 	}
@@ -83,9 +82,16 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Background())) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Land())) {
+
+	map<_string, CLand*> Lands = {};
+
+	if (FAILED(Ready_Land(&Lands))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(Ready_IntstanceProp(&Lands)))
+		return E_FAIL;
+
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}
@@ -126,7 +132,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_LayeR_Npc())) {
+	if (FAILED(Ready_Layer_Npc())) {
 		return E_FAIL;
 	}
 
@@ -350,7 +356,6 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #else
 	
 #endif
-
 		if (isReady_Hogsmeade)
 		{
 			if (FAILED(Ready_Layer_Hogsmeade()))
@@ -362,131 +367,144 @@ HRESULT CLevel_GamePlay::Ready_Background()
 			if (FAILED(Ready_Layer_Hogwart()))
 				return E_FAIL;
 		}
-		
-
-
-		if (FAILED(Ready_IntstanceProp()))
-			return E_FAIL;
 	}
 
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Land()
+HRESULT CLevel_GamePlay::Ready_Land(map<_string, CLand*>* Lands)
 {
+	CLand* pLand = { nullptr };
+
 	CLand::LAND_DESC Land_Desc = {};
 
-	/* South_Hogwart_Land */
+	/* HN_BC */
 	Land_Desc.vPosition = _float3(290.5f, 59.5f, -347.f);
 	Land_Desc.vScale = _float3(1.f, 1.25f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_South_Hogwart_Land_LOD1";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BC_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BC", pLand);
 
-	/* North_Hogwart_Land */
+	/* HN_AV */
 	Land_Desc.vPosition = _float3(-370.f, -37.5f, -21.4f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart_Land_LOD1";
 	Land_Desc.strAlphaMapTag = L"Land_HN_AV_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_AV", pLand);
 
-	/* North_Hogwart2_Land */
+
+	/* HN_AU */
 	Land_Desc.vPosition = _float3(-378.f, -17.5f, 285.6f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart2_Land_LOD1";
 	Land_Desc.strAlphaMapTag = L"Land_HN_AU_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_AU", pLand);
 
-	/* West_Hogwart_Land */
+	/* HN_AZ */
 	Land_Desc.vPosition = _float3(-653.f, 20.f, -327.4f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_West_Hogwart_Land_LOD1";
 	Land_Desc.strAlphaMapTag = L"Land_HN_AZ_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_AZ", pLand);
 
-	/* East_Hogsmeade_Land */
+	/* HN_AY */
 	Land_Desc.vPosition = _float3(436.f, 55.f, 60.3f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_East_Hogsmeade_Land_LOD1";
 	Land_Desc.strAlphaMapTag = L"Land_HN_AY_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+
+	Lands->emplace("HN_AY", pLand);
 
 	/* HN_BA */
 	Land_Desc.vPosition = _float3(-606.f, 70.f, -647.7f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BA";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BA_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BA", pLand);
 
 	/* HN_BD */
 	Land_Desc.vPosition = _float3(201.4f, -22.9f, -650.1f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BD";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BD_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BD", pLand);
 
 	/* HN_BG */
 	Land_Desc.vPosition = _float3(-377.8f, 5.f, -1038.49f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BG";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BG_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BG", pLand);
 
 	/* HN_BH */
 	Land_Desc.vPosition = _float3(80.1f, -63.f, -908.3f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BH";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BH_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BH", pLand);
 
 	/* HN_BE */
 	Land_Desc.vPosition = _float3(431.2f, 100.1f, -658.3f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BE";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BE_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BE", pLand);
 
 	/* HN_BF */
 	Land_Desc.vPosition = _float3(-688.9f, 170.7f, -1066.f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BF";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BF_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BF", pLand);
 
 	/* HN_BI */
 	Land_Desc.vPosition = _float3(82.7f, -61.f, -1141.6f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BI";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BI_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BI", pLand);
 
 	/* HN_BJ */
 	Land_Desc.vPosition = _float3(367.1f, 44.8f, -1016.f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_HN_BJ";
 	Land_Desc.strAlphaMapTag = L"Land_HN_BJ_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("HN_BJ", pLand);
 
 	/* TU_BB */
 	Land_Desc.vPosition = _float3(-829.5f, 58.3f, 112.9f);
 	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
 	Land_Desc.strModelComTag = L"Prototype_Component_Land_TU_BB";
 	Land_Desc.strAlphaMapTag = L"Land_TU_BB_AlphaMap";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc, nullptr, &pLand)))
 		return E_FAIL;
+	Lands->emplace("TU_BB", pLand);
 
 	return S_OK;
 }
@@ -510,9 +528,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogsmeade()
 	CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info", LAYER_HOGSMEADE);
 
 	/* Chests */
-	CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info", LAYER_HOGSMEADE);
+	CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info", LAYER_HIDDEN);
 
-	/* Hogwart Unified*/
+	/* Hogsmeade Unified*/
 	CUnified::UNIFIED_DESC Desc = {};
 	Desc.fLodSwitchDistnace = 500.f;
 	Desc.vUnifiedCenterPos = _float4(62.f, 10.f, 93.f, 1.f);
@@ -540,8 +558,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogwart()
 	CUnified::UNIFIED_DESC Desc = {};
 
 	/* Hogwart Unified*/
-	Desc.fLodSwitchDistnace = 400.f;
-	Desc.vUnifiedCenterPos = _float4(-250.2f, 17.2f, -500.7f, 1.f);
+	Desc.fLodSwitchDistnace = 500.f;
+	Desc.vUnifiedCenterPos = _float4(-291.2f, 17.2f, -500.7f, 1.f);
 	Desc.vPosition = _float3(-291.2f, 17.2f, -474.7f);
 	Desc.vRotation = _float3(0.f, 0.f, 0.f);
 	Desc.vScale = _float3(1.f, 1.f, 1.f);
@@ -554,25 +572,28 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogwart()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_IntstanceProp()
+HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 {
+	CInstancedProp* pInstancedProp = { nullptr };
 	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
 
 	/* InstanceProp Oak_Tree*/
 	Desc.isShake = true;
+	Desc.eShaderPass = SHADER_PASS_WORLDMODLE_INSTANCE::DEFAULT;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc))) {
 		return E_FAIL;
 	}
 	Desc.isShake = false;
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA_HN_BB.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc))) {
 		return E_FAIL;
 	}
+
 
 	/* BearBerry */
 	Desc.isShake = true;
@@ -581,7 +602,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.vSpeed = _float2(0.6f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc))) {
 		return E_FAIL;
 	}
 
@@ -696,7 +717,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 	Desc.isShake = false;
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BogMyrtle_A_HN_BB.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc)))
 		return E_FAIL;
 
 	/* Dogwood_B */
@@ -720,16 +741,16 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc)))
 		return E_FAIL;
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_BB_2.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc)))
 		return E_FAIL;
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AZ.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(Bind_InstanceProp(Lands, m_pGameInstance->Clone_Prototype<CInstancedProp>(g_iStaticLevel, &Desc), "HN_AZ")))
 		return E_FAIL;
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA_HN_AV.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(Bind_InstanceProp(Lands, m_pGameInstance->Clone_Prototype<CInstancedProp>(g_iStaticLevel, &Desc), "HN_AV")))
 		return E_FAIL;
 
 	/* StratifiedCliff_A1 */
@@ -740,19 +761,19 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1";
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_BC.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(Bind_InstanceProp(Lands, m_pGameInstance->Clone_Prototype<CInstancedProp>(g_iStaticLevel, &Desc), "HN_BC")))
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_BB.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc)))
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AZ.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(Bind_InstanceProp(Lands, m_pGameInstance->Clone_Prototype<CInstancedProp>(g_iStaticLevel, &Desc), "HN_AZ")))
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AV.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(Bind_InstanceProp(Lands, m_pGameInstance->Clone_Prototype<CInstancedProp>(g_iStaticLevel, &Desc), "HN_AV")))
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/CliffwallA_HN_AW.bin";
@@ -766,11 +787,11 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_BB.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc)))
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_AZ.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(Bind_InstanceProp(Lands, m_pGameInstance->Clone_Prototype<CInstancedProp>(g_iStaticLevel, &Desc), "HN_AZ")))
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_B_HN_AW.bin";
@@ -784,7 +805,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_D_B_HN_BB.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc)))
 		return E_FAIL;
 
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/StratifiedRock_D_B_BACK.bin";
@@ -1053,6 +1074,18 @@ HRESULT CLevel_GamePlay::Reday_Layer_EffectPool()
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Bind_InstanceProp(map<_string, class CLand*>* Lands, CInstancedProp* pInstnace, const _char* LandTag)
+{
+	auto iter = Lands->find(LandTag);
+
+	if (iter == Lands->end())
+		return E_FAIL;
+
+	iter->second->Add_InstanceProp(pInstnace);
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_Duelist()
 {
 
@@ -1065,7 +1098,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Duelist()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_LayeR_Npc()
+HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 {
 	_bool isLoad_NPC = { true };
 	_bool isLoad_RandomNPC = { true };

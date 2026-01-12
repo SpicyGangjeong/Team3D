@@ -64,6 +64,8 @@ cbuffer AnimCB : register(b0)
     float UpperBlend;
     int SecondAnimIndex;
     float SecondAnimTime;
+    
+    row_major float4x4 WorldMatrix;
 };
 
 static const float EPS = 1e-6f;
