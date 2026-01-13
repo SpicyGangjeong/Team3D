@@ -165,6 +165,7 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
 	_bool bStartCinematic = { true };
+	bStartCinematic = false;
 #ifdef _DEBUG
 #ifdef 기무리
 	bStartCinematic = false;
@@ -174,6 +175,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 #endif
 #endif // _DEBUG
+	bStartCinematic = false;
 
 	if (bStartCinematic && false == m_bIntroCinematic) {
 		m_bIntroCinematic = true;
