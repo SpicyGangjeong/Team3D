@@ -26,6 +26,7 @@ void CCutSceneInfo::Update(_float fTimeDelta)
 void CCutSceneInfo::Load_CutScenes()
 {
 	LEVEL eLevel = (LEVEL)m_pGameInstance->Get_NextLevelID();
+	Clear_AllEvents();
 	switch (eLevel)
 	{
 	case LEVEL::GAMEPLAY:
@@ -46,6 +47,7 @@ void CCutSceneInfo::Active_Event(_string& strKey)
 {
 	map<_string, TimeLine*>::iterator iter = m_funcWaitEvents.find(strKey);
 	if (iter != m_funcWaitEvents.end()) {
+		SAFE_RELEASE(iter->second->m_pTriggerBox);
 		m_funcActiveEvents.emplace(iter->first, iter->second);
 		m_funcWaitEvents.erase(iter);
 	}
@@ -101,6 +103,7 @@ void CCutSceneInfo::Update_ActiveEvents(_float fTimeDelta)
 			}
 		}
 		if (pSockets->empty()) {
+			SAFE_RELEASE(iter->second->m_pTriggerBox);
 			Safe_Delete((*iter).second);
 			iter = m_funcActiveEvents.erase(iter);
 		}
@@ -151,11 +154,11 @@ HRESULT CCutSceneInfo::Clear_Events(map<_string, TimeLine*>& Events)
 {
 	map<_string, TimeLine*>::iterator iter = Events.begin();
 	for (; iter != Events.end();) {
-
 		for (list<CTimeSocket*>::iterator socketIter = (*iter).second->m_Sockets.begin();
 			socketIter != (*iter).second->m_Sockets.end(); ++socketIter) {
 			SAFE_RELEASE((*socketIter));
 		}
+		SAFE_RELEASE(iter->second->m_pTriggerBox);
 		Safe_Delete((*iter).second);
 		iter = Events.erase(iter);
 	}
@@ -171,14 +174,14 @@ HRESULT CCutSceneInfo::Clear_AllEvents()
 HRESULT CCutSceneInfo::Ready_GameplayCutScenes()
 {
 	{
-		//Load_CutSceneXML("../Bin/Resources/Data/CutScene/CarriageIntro.xml");
+		Load_CutSceneXML("../Bin/Resources/Data/CutScene/CarriageIntro.xml");
 	}
 	return S_OK;
 }
 HRESULT CCutSceneInfo::Ready_FieldCutScenes()
 {
 	{
-		//Load_CutSceneXML("../Bin/Resources/Data/CutScene/RanrokCutScene.xml");
+		Load_CutSceneXML("../Bin/Resources/Data/CutScene/RanrokCutScene.xml");
 	}
 	return S_OK;
 }

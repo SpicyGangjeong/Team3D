@@ -64,7 +64,7 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_pInfoInstance->Load_CutScenes();
+	
 
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
@@ -387,7 +387,7 @@ pair<CLevel*, function<void()>> CLevel_Field::Create(ID3D11Device* pDevice, ID3D
 		SAFE_RELEASE(pInstance);
 	}
 
-	return { pInstance, [pInstance]() { pInstance->Ready_Layer_Camera(); pInstance->Ready_Layer_Sound(); } };
+	return { pInstance, [pInstance]() { pInstance->Ready_Layer_Camera(); pInstance->Ready_Layer_Sound(); pInstance->m_pInfoInstance->Load_CutScenes(); } };
 }
 
 void CLevel_Field::Free()
