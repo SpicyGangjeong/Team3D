@@ -70,6 +70,11 @@ void CElf::Update(_float fTimeDelta)
 
 	Set_Anim();
 
+	if (m_pGameInstance->Key_Up(DIK_U))
+	{
+		m_iCurrentFlow++;
+	}
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	__super::Update(fTimeDelta);

@@ -211,7 +211,16 @@ HRESULT CNPC_Ollivander::Bind_ShaderParameters(_uint iMeshOrder)
 			iColorMixerMethod = 1;
 		}
 		break;
+	case 25:
+	{
+		bUseColorMixer = true;
+		iColorParam = 0x2E2E2E;
+		fMixerFactor = 0.9f;
+		iColorMixerMethod = 1;
 	}
+	break;
+	}
+
 	if (true == bUseColorMixer) {
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_iPackedBlendColor", &iColorParam, sizeof(_uint)))) {
 			return E_FAIL;

@@ -258,9 +258,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 			m_bLoopRestarted = true;
 			m_vPrevRootPos = { 0,0,0 };
 		}
-		/*else {
+		else {
 			m_vPrevRootPos = { m_OutTranslation.x,m_OutTranslation.y,m_OutTranslation.z };
-		}*/
+		}
 	}
 
 

@@ -556,6 +556,7 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
+
 	} break;
 	case TIMESOCKET_FUNC::SET_FSMSTATE:
 	{
@@ -564,6 +565,10 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 		}
 		else if (pContents->vFlags.b[1]) {
 			m_pFSM->Change_State(FSMSTATE::IDLE);
+
+			if (pContents->vParam_11.x == 1.f) {
+				m_pModelCom->Set_AnimationIndex(m_Animation[STATEANIM::SPAWN].first, m_Animation[STATEANIM::SPAWN].second);
+			}
 		}
 	} break;
 	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
@@ -815,10 +820,6 @@ void CPlayer::CheckMouseInput()
 	{
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false;
-	}
-	if (m_pGameInstance->Key_Up(DIK_U))
-	{
-		m_pFSM->Change_State(FSMSTATE::CUTSCENE);
 	}
 }
 

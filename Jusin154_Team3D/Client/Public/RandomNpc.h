@@ -72,6 +72,8 @@ protected:
 	_bool									m_bBattle = {};
 	_int									m_eNpcState = ENUM_CLASS(NPC_STATE::END);
 	_bool									m_bBroomRacer = {};
+	_bool									m_bElf = {};
+
 	vector<_int>							m_Anims;
 
 protected:

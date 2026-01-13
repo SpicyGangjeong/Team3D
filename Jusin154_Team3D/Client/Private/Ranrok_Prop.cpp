@@ -84,7 +84,7 @@ void CRanrok_Prop::Update(_float fTimeDelta)
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 	Update_Event(fTimeDelta);
 
-
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
 	/* 시작 사이즈 러프 */
 	if (m_fSizeAccTime > XM_PIDIV2 && m_isSizeLerpEnd == false)
@@ -143,6 +143,9 @@ HRESULT CRanrok_Prop::Render()
 		m_pSubShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
 
 		m_Batch->End();
+		m_bRender = false;
+
+		m_pRigidBody->Render();
 #endif // _DEBUG
 	}
 	return S_OK;
@@ -212,7 +215,7 @@ HRESULT CRanrok_Prop::Ready_Components(void* pArg)
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK_PROP);
 
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROKPROP"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 

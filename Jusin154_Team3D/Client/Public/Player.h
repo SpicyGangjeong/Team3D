@@ -195,6 +195,7 @@ private:
 	_float 			m_fParryTimer = {};
 	_bool			m_bStartSpellAnim = {};
 	_float4			m_OriginPos = {};
+	_bool			m_bSpell_Learning_Success = {};
 		
 
 	/* 무적 불 변수*/
@@ -276,6 +277,10 @@ private:
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
+
+	void	Behavior_Spell_LearningEnter();
+	HRESULT Behavior_Spell_LearningExitCheck(_float fTimeDelta);
+	void	Behavior_Spell_LearningExit();
 
 	void	Behavior_Broom_RideEnter();
 	HRESULT Behavior_Broom_RideExitCheck(_float fTimeDelta);

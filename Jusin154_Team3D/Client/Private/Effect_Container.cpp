@@ -744,9 +744,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 					m_bHitShield = true;
 				}
 				break;
-				}
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
+				
 				case PXOBJECT::DUELIST_PROTEGO:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
