@@ -23,6 +23,18 @@ enum class SD_KIND {
 	SP_JAP_13,
 	SP_BLINK_2,
 #pragma endregion
+
+#pragma region VOICE
+	VOICE_AVADAKEDAVRA,
+	VOICE_BOMBARDA,
+	VOICE_DECENDO,
+	VOICE_LEVIOSO,
+	VOICE_LUMOS,
+	VOICE_PROTEGO,
+	VOICE_REPARO,
+	VOICE_REVELIO,
+	VOICE_STUPEFY,
+#pragma endregion
 	END,
 };
 

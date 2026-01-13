@@ -211,6 +211,8 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_fAngularSpeed = XM_2PI / m_fTimeRate; // 프레임마다 누적할 시간 
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_DECENDO, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	return S_OK;
 }
 
