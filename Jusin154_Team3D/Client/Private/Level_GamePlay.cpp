@@ -153,6 +153,8 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_0, SD_CHANNEL_GROUP::BGM, true, 0.6f);
+
 	return S_OK;
 }
 
@@ -171,6 +173,8 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	bStartCinematic = false;
 #elif 진우
 	bStartCinematic = true;
+#elif gimch
+	bStartCinematic = false;
 #else
 
 #endif
