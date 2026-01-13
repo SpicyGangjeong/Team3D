@@ -173,11 +173,32 @@ private:
 	void	Behavior_HitExit();
 
 	void	Behavior_Broom_RideEnter();
-	HRESULT Behavior_Broom_RideExitCheck();
+	HRESULT Behavior_Broom_RideExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_RideExit();
 
+	void	Behavior_Broom_Ride_MoveEnter();
+	HRESULT Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_Ride_MoveExit();
+
+	void	Behavior_Broom_HoverEnter();
+	HRESULT Behavior_Broom_HoverExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_HoverExit();
+
+	void	Behavior_Broom_FlyEnter();
+	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_FlyExit();
+
+	void	Behavior_Broom_TurboFlyEnter();
+	HRESULT Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_TurboFlyExit();
+
+	void	Behavior_Broom_DismountEnter();
+	HRESULT Behavior_Broom_DismountExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_DismountExit();
 
 	void Player_InterpTurn(_float fTimeDelta);
+	void Attach_Broom();
+	HRESULT InputBroom();
 
 #pragma endregion
 

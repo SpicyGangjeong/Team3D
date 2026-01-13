@@ -97,6 +97,11 @@ private:
 
 	BroomInput			m_Input;
 	class CEffectParts* m_pWindEffect = { nullptr };
+
+	class CEffectParts* m_pBoostScreenFX = { nullptr };
+	class CTrailObject* m_pBroomTrail = { nullptr };
+	const _float4x4* m_pBroom_TailMat = { nullptr };
+
 	_float m_fCameraOffset = { 10.f };
 
 private:
@@ -105,7 +110,7 @@ private:
 
 	void Update_CameraCoordinateSystem();
 	void PlayerInput(_float fTimeDelta);
-
+	void Boost_Effect_Visible(_bool isVisible);
 public:
 	static CBroom* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;

@@ -950,6 +950,9 @@
     <ClInclude Include="..\public\Enemy_SkillUI.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Reparo.h">
+      <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\State_Spell_Learning.h">
       <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
     </ClInclude>
@@ -1971,7 +1974,10 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI">
       <UniqueIdentifier>{b28b8285-3d1a-49cf-bde2-c7ebc18e6389}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Spell_Learning">
+    <Filter Include="02.GameObjects\Effect\Effects\Reparo">
+      <UniqueIdentifier>{88c3bc02-a51d-4cd8-87a2-197722d48f83}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="04.Mechanic\State\Focus\Spell_Learning">
       <UniqueIdentifier>{26d7f6f4-0b5f-4b9a-9cef-df91b8a485bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -2844,6 +2850,9 @@
     <ClCompile Include="..\private\MapElement_Cave.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Reparo.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\State_Spell_Learning.cpp">
       <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
     </ClCompile>

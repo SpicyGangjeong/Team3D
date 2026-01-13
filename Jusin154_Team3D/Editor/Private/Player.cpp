@@ -100,6 +100,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// UI 연동 추가
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
+	m_pBroomModel = m_pBroom->Get_Component<CModel>();
+	m_pBroomTransform = m_pBroom->Get_Component<CTransform>();
+	SAFE_ADDREF(m_pBroom);
+	SAFE_ADDREF(m_pBroomModel);
+	SAFE_ADDREF(m_pBroomTransform);
+
 #ifdef gimch	
 	m_pCharacter_Controller->Set_GravityAmount(0.f);
 #endif
@@ -344,6 +350,17 @@ void CPlayer::Update_CameraShake(_float fTimeDelta)
 	}
 }
 
+HRESULT CPlayer::InputBroom()
+{
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)
+		|| m_pGameInstance->Key_Pressing(DIK_SPACE))
+	{
+
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
 HRESULT CPlayer::Ready_Parts()
 {
 	CWand::WAND_DESC WandDesc{};
@@ -368,6 +385,11 @@ HRESULT CPlayer::Ready_Parts()
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
 		}
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, L"LAYER_ITEM", nullptr, this, &m_pBroom))) {
+		return E_FAIL;
 	}
 
 	return S_OK;
@@ -493,6 +515,8 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pBroom);
 }
 #ifdef _DEBUG
+
+
 
 void CPlayer::Describe_Entity()
 {

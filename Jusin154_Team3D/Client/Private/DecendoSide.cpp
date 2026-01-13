@@ -116,6 +116,7 @@ HRESULT CDecendoSide::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_isTrailEnd = false;
 	m_isParticleEnd = false;
+	m_pWandTrail->SetDissolve(false);
 
 	m_pWandLight->Set_Visible(true);
 	m_pWand_Fire->Set_Visible(true);
