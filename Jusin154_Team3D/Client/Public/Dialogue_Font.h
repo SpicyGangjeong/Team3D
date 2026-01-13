@@ -45,7 +45,7 @@ public:
 
 	void NextText();
 	void NextLevel(CHOICEINFO Choice);
-
+	void ENDText();
 private:
 	void NpcInfo(void* pArg);
 	void NpcInteract(_bool bInteract);
@@ -77,12 +77,14 @@ private:
 	_bool	m_bEndText = { false };
 	_bool	m_bNextText = { false };
 
+	CUnit*		m_pNpc = { nullptr };
 	_wstring	m_pNpcName;
 	_wstring	m_pName;
 	_int		m_iTextID{};
 	_int		m_iNextID{};
 	_int		m_iType{};
 
+	_bool		m_bTag{};
 	_bool		m_bChoiceText = { false };
 	_bool		m_bCurrentChoiceText = { false };
 	_bool		m_bRace = { false };

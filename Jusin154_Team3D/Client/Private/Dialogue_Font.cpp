@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Dialogue.h"
+#include "Unit.h"
 
 CDialogue_Font::CDialogue_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice, pContext)
@@ -65,6 +66,9 @@ void CDialogue_Font::Update(_float fTimeDelta)
 		{
 			switch (m_iType)
 			{
+			case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
+				ENDText();
+				break;
 			case ENUM_CLASS(NPCTEXTTYPE::NEXTTEXT):
 				NextText();
 				break;
@@ -104,6 +108,10 @@ void CDialogue_Font::Update(_float fTimeDelta)
 				{
 					switch (m_iType)
 					{
+					case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
+						m_fTime = 0.5f;
+						NextText();
+						break;
 					case ENUM_CLASS(NPCTEXTTYPE::NEXTTEXT):
 						m_fTime = 0.5f;
 						NextText();
@@ -241,6 +249,7 @@ void CDialogue_Font::Npc_Dialogue(DIALOGUEINFO Info)
 void CDialogue_Font::NpcInfo(void* pArg)
 {
 	NPCINTERACTIONINFO* Info = reinterpret_cast<NPCINTERACTIONINFO*>(pArg);
+	m_pNpc = static_cast<CUnit*>(Info->pOwner);
 	m_pNpcName = Info->pName;
 	m_pName = Info->pNPCName;
 	m_iTextID = Info->iTextID;
@@ -253,12 +262,22 @@ void CDialogue_Font::NpcInteract(_bool bInteract)
 
 void CDialogue_Font::NpcDialogue()
 {
-	auto Info = m_pInfoInstance->Get_Dialogue(m_pNpcName, m_iTextID);
-	m_Info.pName = m_pName;
+	auto Info = m_pInfoInstance->Get_Dialogue(m_pNpcName, m_iNextID);
+	m_bTag = Info.bTag;
+	if (m_bTag == false)
+	{
+		m_Info.pName = m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().pUnit_Name;
+	}
+	else
+	{
+		m_Info.pName = m_pName;
+	}
 	m_Info.pText = Info.pText;
 	m_Info.fTime = 99999.f;
-	m_iType = Info.bType;
+	m_iType = Info.iType;
 	m_iNextID = Info.NextTextID;
+	m_iTextID = Info.iLineID;
+	m_pNpc->Set_NextID(m_iNextID);
 	Npc_Dialogue(m_Info);
 }
 
@@ -268,14 +287,24 @@ void CDialogue_Font::NpcDialogue(CNPCStat* Stat)
 	m_Info.pName = Stat->Get_Stat().pNpc_Name;
 	m_Info.pText = Info.pText;
 	m_Info.fTime = 3.f;
-	m_iType = Info.bType;
+	m_iType = Info.iType;
 	m_iNextID = Info.NextTextID;
+	m_bTag = Info.bTag;
 	Npc_Dialogue(m_Info);
 }
 
 void CDialogue_Font::NpcNextText()
 {
 	auto Info = m_pInfoInstance->Get_Dialogue(m_pNpcName, m_iTextID);
+	m_bTag = Info.bTag;
+	if (m_bTag == false)
+	{
+		m_Info.pName = m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().pUnit_Name;
+	}
+	else
+	{
+		m_Info.pName = m_pName;
+	}
 	m_Info.pName = m_pName;
 	m_Info.pText = Info.pText;
 	m_Info.fTime = 99999.f;
@@ -338,28 +367,15 @@ void CDialogue_Font::ReSet()
 
 void CDialogue_Font::NextText()
 {
-	if (m_iNextID == -1)
+	m_pCurrentDialogue[0]->Visible(false);
+	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+	if (m_bChoiceText == true)
 	{
-		_bool Interact = false;
-		m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
-		m_pCurrentDialogue[0]->Set_Hover(Interact);
-		m_pCurrentDialogue[0]->Visible(Interact);
-		m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
-		m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
-		if (m_bChoiceText == true)
-		{
-			m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
-			ReSet();
-		}
+		m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
+		ReSet();
 	}
-	else
-	{
-		m_pCurrentDialogue[0]->Visible(false);
-		m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
-		m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
-		m_iTextID = m_iNextID;
-		NpcDialogue();
-	}
+	NpcDialogue();
 }
 
 void CDialogue_Font::NextLevel(CHOICEINFO Choice)
@@ -368,6 +384,20 @@ void CDialogue_Font::NextLevel(CHOICEINFO Choice)
 	m_iType = Choice.iType;
 	m_bChoiceText = true;
 	NpcNextText();
+}
+
+void CDialogue_Font::ENDText()
+{
+	
+	_bool Interact = false;
+	m_pNpc->Set_NextID(m_iTextID);
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_pCurrentDialogue[0]->Set_Hover(Interact);
+	m_pCurrentDialogue[0]->Visible(Interact);
+	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
+	ReSet();
 }
 
 CDialogue_Font* CDialogue_Font::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

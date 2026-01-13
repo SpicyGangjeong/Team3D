@@ -29,6 +29,7 @@ public:
 	virtual _wstring Get_NpcName() override;
 	void Set_TextID(_int ID) { m_iNpc_DialogueTextID = ID; }
 	virtual _int Get_TextID() override;
+	virtual void Set_NextID(_int ID) override;
 
 protected:
 	CInfoInstance*							m_pInfoInstance = { nullptr };
