@@ -668,6 +668,7 @@ _int CEffect_Container::CollisionCheck()
 			case PXOBJECT::GOBLIN_ASSASSIN:
 			case PXOBJECT::TROLL:
 			case PXOBJECT::RANROK:
+			case PXOBJECT::RANROK_BODY:
 			case PXOBJECT::WALL:
 			{
 				return i;
@@ -744,9 +745,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 					m_bHitShield = true;
 				}
 				break;
-				}
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
+				
 				case PXOBJECT::DUELIST_PROTEGO:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);
@@ -754,6 +753,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_fvector StartPos, _fvector End
 					m_bHitShield = true;
 				}
 				break;
+				case PXOBJECT::RANROK_BODY:
 				case PXOBJECT::RANROK_PROP:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);

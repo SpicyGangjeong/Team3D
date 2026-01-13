@@ -922,9 +922,6 @@
     <ClInclude Include="..\Public\AccioSide.h">
       <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\Broom_TargetGate2D.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
@@ -955,6 +952,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Reparo.h">
       <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\State_Spell_Learning.h">
+      <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h">
+      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1973,6 +1976,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Reparo">
       <UniqueIdentifier>{88c3bc02-a51d-4cd8-87a2-197722d48f83}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="04.Mechanic\State\Focus\Spell_Learning">
+      <UniqueIdentifier>{26d7f6f4-0b5f-4b9a-9cef-df91b8a485bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2846,6 +2852,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Reparo.cpp">
       <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\State_Spell_Learning.cpp">
+      <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp">
+      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2860,9 +2872,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Parry.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">

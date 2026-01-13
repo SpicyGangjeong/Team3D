@@ -66,6 +66,7 @@ public:
 	HRESULT Load_ReparoObjects(const _char* pFileName);
 	HRESULT Load_DADA_INT();
 	HRESULT Load_Npc();
+	HRESULT Load_Goblin();
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);

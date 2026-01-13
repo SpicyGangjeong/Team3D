@@ -20,6 +20,7 @@
 #include "Resource_Manager.h"
 #include "Font_Manager.h"
 #include "Volumetric.h"
+#include "Sound_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -130,6 +131,11 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+	m_pSound_Manager = CSound_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pSound_Manager) {
+		return E_FAIL;
+	}
+
 
 	m_vViewPortSize = _float2((_float)EngineDesc.iWinSizeX, (_float)EngineDesc.iWinSizeY);
 
@@ -143,7 +149,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
-	//m_pSound_Manager->Update();
+	m_pSound_Manager->Update();
 #ifdef _DEBUG
 	m_pResource_Manager->Describe_Entity();
 	m_pFog->Update_Fog();
@@ -1016,6 +1022,18 @@ void CGameInstance::Force_CamPosition(_fvector vPos)
 {
 	return m_pCamera_Manager->Force_CamPosition(vPos);
 }
+HRESULT CGameInstance::Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode)
+{
+	return m_pSound_Manager->Load_Sound(eKind, wstrSoundFilePath, eSoundMode);
+}
+void CGameInstance::Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume)
+{
+	m_pSound_Manager->Sound_Play(eSoundKind, eSoundChannel, bRepeat, fVolume);
+}
+void CGameInstance::Sound_StopAll()
+{
+	m_pSound_Manager->Sound_StopAll();
+}
 _bool CGameInstance::isPicking(_float3* pOut)
 {
 	return m_pPicking->isPicking(pOut);
@@ -1097,6 +1115,10 @@ _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir,
 _bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+_bool CGameInstance::Overlap(_float fRadius, _fvector vCenter, PSX::PxQueryFlags queryFlags, PSX::PxOverlapCallback& overlapBuffer, PSX::PxQueryFilterCallback* filterCallback)
+{
+	return m_pPhysX_Manager->Overlap(fRadius, vCenter, queryFlags, overlapBuffer, filterCallback);
 }
 _bool CGameInstance::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
 {
@@ -1401,6 +1423,7 @@ void CGameInstance::Release_Engine()
 
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pSound_Manager);
 	SAFE_RELEASE(m_pFont_Manager);
 	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);

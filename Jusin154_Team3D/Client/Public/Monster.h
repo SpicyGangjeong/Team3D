@@ -7,6 +7,11 @@ NS_BEGIN(Client)
 
 class CMonster abstract : public CUnit
 {
+public:
+	typedef struct tagMonsterInitDesc {
+		_float4 vPos;
+		_float4 vRotQ;
+	}MONSTERDESC;
 protected:
 	enum class HIT_STATE
 	{

@@ -61,7 +61,10 @@ HRESULT CRanrok_Prop::Initialize(void* pArg)
 	m_fDuration = 10000.f;
 
 	m_pInfoInstance->Regist_ActiveEffect(this);
-
+#ifdef _DEBUG
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 12, false, false));
+	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
+#endif // _DEBUG
 	return S_OK;
 }
 
@@ -76,12 +79,11 @@ void CRanrok_Prop::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-
 	__super::Update(fTimeDelta);
 
+	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
+
 	Update_Event(fTimeDelta);
-
-
 
 	/* 시작 사이즈 러프 */
 	if (m_fSizeAccTime > XM_PIDIV2 && m_isSizeLerpEnd == false)
@@ -119,8 +121,33 @@ void CRanrok_Prop::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 
 #if _DEBUG
-	m_pRigidBody->Render();
+	m_bRender = true;
+	if (m_bRender) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+	}
 #endif
+}
+
+HRESULT CRanrok_Prop::Render()
+{
+	if (RENDER::NONLIGHT == m_pGameInstance->Get_CurrentRenderPass()) {
+#ifdef _DEBUG
+		m_pRigidBody->Render();
+		m_Batch->Begin();
+
+		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+		_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+		_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0f0f, 1.f);
+		_matrix WorldMatrix = XMMatrixScaling(m_pRigidBody->Get_HalfGeometryInfo().x, m_pRigidBody->Get_HalfGeometryInfo().x, m_pRigidBody->Get_HalfGeometryInfo().x) * m_pTransformCom->Get_XMWorldMatrix();
+		m_pSubShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+
+		m_Batch->End();
+		m_bRender = false;
+
+		m_pRigidBody->Render();
+#endif // _DEBUG
+	}
+	return S_OK;
 }
 
 HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)
@@ -187,7 +214,7 @@ HRESULT CRanrok_Prop::Ready_Components(void* pArg)
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK_PROP);
 
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROKPROP"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 
@@ -284,7 +311,7 @@ void CRanrok_Prop::OnCollision(CGameObject* pOther, void* pDesc)
 		pBroken_PT->Set_Visible(true);
 		pBroken_PT2->Set_Visible(true);
 
-		m_fDuration = 2.f;
+		m_fDuration = 1.7f;
 		m_fAccTime = 0.f;
 	}
 

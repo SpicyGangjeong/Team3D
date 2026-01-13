@@ -154,6 +154,8 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_0, SD_CHANNEL_GROUP::BGM, true, 0.6f);
+
 	return S_OK;
 }
 
@@ -165,7 +167,27 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	_bool bStartCinematic = { true };
+	bStartCinematic = false;
+#ifdef _DEBUG
+#ifdef 기무리
+	bStartCinematic = false;
+#elif 진우
+	bStartCinematic = true;
+#elif Bin
+	bStartCinematic = false;
+#elif gimchi
+	bStartCinematic = false;
+#endif
+#endif // _DEBUG
+	bStartCinematic = false;
 
+	if (bStartCinematic && false == m_bIntroCinematic) {
+		m_bIntroCinematic = true;
+		bStartCinematic = false;
+		_string strCutSceneName = "CarriageIntro";
+		m_pInfoInstance->Active_Event(strCutSceneName);
+	}
 	if (m_pGameInstance->Key_Pressing(DIK_0)) {
 		if (m_pGameInstance->Key_Up(DIK_1))
 		{
@@ -336,6 +358,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = false;
 	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
+	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -353,8 +376,6 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #endif // _DEBUG
-
-
 
 	/* Map Containters */
 	if (false == isReady_Background)
@@ -700,6 +721,14 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 
+	/* TeaShop_Door_A */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_TeaShop_Door_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Teashop_Door.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
+		return E_FAIL;
+
 	/* OakTree_TallA */
 	Desc.isShake = false;
 	Desc.bEnableRigidbody = true;
@@ -920,7 +949,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 		Camera_Desc.fNear = 0.3f;
 		Camera_Desc.fFar = 500.f;
 		Camera_Desc.pCameraKey = CAMERA_CINEMATIC;
-		Camera_Desc.iPriority = 52;
+		Camera_Desc.iPriority = 54;
 		Camera_Desc.bEnableTransitionLerp = false;
 		Camera_Desc.bEnableLookLerp = false;
 		Camera_Desc.bEnableFollowLerp = false;
@@ -989,11 +1018,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
 {
-	//for (_uint i = 0; i < 1; ++i) {
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-	//		return E_FAIL;
-	//	}
-	//}
+	/*for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+			return E_FAIL;
+		}
+	}*/
 
 	return S_OK;
 }
@@ -1018,7 +1047,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = true;
 #endif // 
 #ifdef 기무리
-	isLoad_Monster = false;
+	isLoad_Monster = true;
 #endif // 
 #ifdef 나
 	isLoad_Monster = true;
@@ -1028,38 +1057,21 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
 
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
 
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Assassin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
+		m_pInfoInstance->Load_Goblin();
 
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 
-	/*	CRanrok::RANROKDESC RanrokDesc = {};
-		RanrokDesc.vPos = _float4(-44.704f, 6.860f, 16.071f, 1.f);
-		RanrokDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&RanrokDesc))) {
-			return E_FAIL;
-		}*/
+		//CRanrok::RANROKDESC RanrokDesc = {};
+		//RanrokDesc.vPos = _float4(-44.704f, 6.860f, 16.071f, 1.f);
+		//RanrokDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&RanrokDesc))) {
+		//	return E_FAIL;
+		//}
 
 
 
@@ -1119,7 +1131,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 {
 	_bool isLoad_NPC = { true };
 	_bool isLoad_RandomNPC = { true };
-	_bool isRandomPosition = { true };
+	_bool isRandomPosition = { false };
 #ifdef _DEBUG
 #ifdef gimch
 	isLoad_NPC = true;

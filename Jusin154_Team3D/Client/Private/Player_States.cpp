@@ -269,7 +269,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		}
 		return E_FAIL;
 	}
-	else {
+	else if(iCurrentAnimIndex != m_Animation[STATEANIM::SPAWN].first) {
 		if (SUCCEEDED(InputAim()))
 		{
 			if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON)) {
@@ -358,7 +358,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		return S_OK;
 	}
 
-	if (!SUCCEEDED(InputAim()))
+	if (!SUCCEEDED(InputAim()) && iCurrentAnimIndex != m_Animation[STATEANIM::SPAWN].first)
 	{
 		if (m_pModelCom->IsFinishedAnim())
 		{
@@ -394,7 +394,8 @@ HRESULT CPlayer::Behavior_CutSceneExitCheck(_float fTimeDelta)
 	{
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCarriage->Get_SocketWorldMatrix(CThestralCarriage::CARRIAGE_SOCKET::FRONT_RIGHT).r[3]);
 		m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
-		m_pTransformCom->RotationQ(XMQuaternionRotationAxis(XMVectorSet(0.f, -1.f, 0.f, 0.f), XMConvertToRadians(90.f)));
+		m_pTransformCom->RotationQ(XMQuaternionIdentity());
+		//m_pTransformCom->RotationQ(XMQuaternionRotationAxis(XMVectorSet(0.f, -1.f, 0.f, 0.f), XMConvertToRadians(90.f)));
 	}
 
 	return S_OK;
@@ -425,6 +426,7 @@ void CPlayer::Behavior_MoveEnter()
 				m_bWalkToggle = false;
 				pairAnimInfo = m_Animation[STATEANIM::SPRINT];
 				m_bRatio = true;
+				Get_PartObject<CWand>()->Set_Visible(false);
 			}
 			else if (true == m_bWalkToggle) {
 				m_pFSM->Enable_State(FSMSTATE::WALK);
@@ -469,6 +471,7 @@ void CPlayer::Behavior_MoveEnter()
 			m_pFSM->Enable_State(FSMSTATE::SPRINT);
 			m_bWalkToggle = false;
 			pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+			Get_PartObject<CWand>()->Set_Visible(false);
 
 		}
 		else if (true == m_bWalkToggle) {
@@ -548,6 +551,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 				m_pFSM->Enable_State(FSMSTATE::SPRINT);
 				m_pFSM->Disable_State(FSMSTATE::WALK);
 				pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+				Get_PartObject<CWand>()->Set_Visible(false);
 			}
 			else
 			{
@@ -649,6 +653,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 					else if (m_bSprintToggle)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+						Get_PartObject<CWand>()->Set_Visible(false);
 					}
 					else
 					{
@@ -689,6 +694,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		!SUCCEEDED(InputMove())) {
 		if (!m_pFSM->IsEnable(FSMSTATE::STOP))
 		{
+			Get_PartObject<CWand>()->Set_Visible(true);
 			m_pFSM->Enable_State(FSMSTATE::STOP);
 			if (m_pFSM->IsEnable(FSMSTATE::WALK) || m_fMoveTime <= 0.13f) { 
 				m_bWalkToggle = false;
@@ -746,11 +752,13 @@ void CPlayer::Behavior_MoveExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::MOVE | FSMSTATE::SPRINT | FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::STOP);
 	Reset_Event();
+	Get_PartObject<CWand>()->Set_Visible(true);
 }
 
 void CPlayer::Behavior_JumpEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
+	Get_PartObject<CWand>()->Set_Visible(false);
 	m_fOriginGravityAmount = m_pCharacter_Controller->Get_GravityAmount();
 	m_pFSM->Enable_State(FSMSTATE::JUMP);
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::WALK | FSMSTATE::JOG | FSMSTATE::SPRINT)) {
@@ -767,8 +775,8 @@ void CPlayer::Behavior_JumpEnter()
 			pairAnimInfo = m_Animation[STATEANIM::JUMP_JOG];
 		}
 	}
-	else {
-		// Drop?
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::SLIDE)) {
+		pairAnimInfo = m_Animation[STATEANIM::JUMP_JOG];
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -797,12 +805,14 @@ void CPlayer::Behavior_JumpExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::JUMP);
 	Reset_Event();
+	Get_PartObject<CWand>()->Set_Visible(true);
 }
 
 void CPlayer::Behavior_LandEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	m_pFSM->Enable_State(FSMSTATE::LAND);
+	Get_PartObject<CWand>()->Set_Visible(false);
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
 	if (iCurrAnim == m_Animation[STATEANIM::JUMP].first)
 	{
@@ -851,6 +861,7 @@ void CPlayer::Behavior_LandExit()
 	m_pCharacter_Controller->Set_GravityAmount(m_fOriginGravityAmount);
 	m_fGravityAmount = 0.f;
 	Reset_Event();
+	Get_PartObject<CWand>()->Set_Visible(true);
 }
 
 void CPlayer::Behavior_FallEnter()
@@ -980,8 +991,9 @@ void CPlayer::Behavior_SlideEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	m_pFSM->Enable_State(FSMSTATE::SLIDE);
+	Get_PartObject<CWand>()->Set_Visible(false);
 	pairAnimInfo = m_Animation[STATEANIM::SLIDE_START_R];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.2f);
 	Add_Event(pairAnimInfo.first,
 		[this]() {	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::SLIDE_LOOP_R];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second); },
@@ -1003,6 +1015,11 @@ HRESULT CPlayer::Behavior_SlideExitCheck(_float fTimeDelta)
 		_vector vPos = m_pCharacter_Controller->Get_Position();
 		_vector vNextPos = vPos + vLook * m_fSlideSpeed * fTimeDelta;
 		m_pCharacter_Controller->Set_Position(vNextPos);
+	}
+	if (m_pGameInstance->Key_Down(DIK_SPACE))
+	{
+		m_pFSM->Change_State(FSMSTATE::JUMP);
+		return E_FAIL;
 	}
 	if (m_pGameInstance->Key_Up(DIK_E))
 	{
@@ -1027,6 +1044,7 @@ void CPlayer::Behavior_SlideExit()
 	m_pFSM->Disable_State(FSMSTATE::SLIDE);
 	m_fSlideSpeed = 0.f;
 	Reset_Event();
+	Get_PartObject<CWand>()->Set_Visible(true);
 }
 
 void CPlayer::Behavior_CombatEnter()
@@ -2056,6 +2074,49 @@ void CPlayer::Behavior_HitExit()
 
 }
 
+void CPlayer::Behavior_Spell_LearningEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+
+	m_pFSM->Enable_State(FSMSTATE::SPELL_LEARNING);
+	m_bSpell_Learning_Success = false;
+
+	pairAnimInfo = m_Animation[STATEANIM::SPELL_LEARNING_START];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
+	Add_Event(pairAnimInfo.first,
+		[this]() {pair<_uint, _bool> pairAnimInfo;
+	pairAnimInfo = m_Animation[STATEANIM::SPELL_LEARNING_WANDWAVE]; },
+		0.95f);
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
+}
+
+HRESULT CPlayer::Behavior_Spell_LearningExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo;
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (m_bSpell_Learning_Success)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::SPELL_LEARNING_SUCCESS];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
+	}
+
+	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex != m_Animation[STATEANIM::SPELL_LEARNING_WANDWAVE].first)
+	{
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_Spell_LearningExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SPELL_LEARNING);
+	m_bSpell_Learning_Success = false;
+}
+
 void CPlayer::Behavior_Broom_RideEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::BROOM_RIDE);
@@ -2290,7 +2351,6 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pair<_uint, _bool> pairAnimInfo;
-
 	if (!m_pBroom->Get_Ride()) {
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;

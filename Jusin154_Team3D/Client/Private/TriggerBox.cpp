@@ -23,7 +23,7 @@ HRESULT CTriggerBox::TryScanArea(_float fTimeDelta)
 #endif // _DEBUG
     m_vScanTimer.x += fTimeDelta;
     if (m_vScanTimer.x > m_vScanTimer.y) {
-        m_vScanTimer.x = 0.f;
+        m_vScanTimer.x = m_vScanTimer.y;
 		return Scan();
     }
     return E_FAIL;
@@ -57,11 +57,15 @@ HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat4(&pDesc->vPosition_Radius), 1.f));
 
+#ifdef _DEBUG
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_pTransformCom->Get_Radius() * 2.f, 12, false, false));
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
+#endif // _DEBUG
 
+
+	_float3 vScale = { Desc.fRadius * 2.f, Desc.fRadius * 2.f, Desc.fRadius * 2.f };
+	m_pTransformCom->Set_Scale(vScale);
 	m_vScanTimer.y += m_pGameInstance->Real_Random_Float(0.f, 0.2f);
-
     return S_OK;
 }
 
@@ -69,21 +73,21 @@ HRESULT CTriggerBox::Scan()
 {
 	_float fRadius = m_pTransformCom->Get_Radius();
 
-	PSX::PxSweepHit hitBuffer[32];
-	PSX::PxSweepBuffer pxBuffer(hitBuffer, 32);
-	_bool bHit = m_pGameInstance->SphereCast(fRadius, m_pTransformCom->Get_State(STATE::POSITION), XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.1f,
-		PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+	PSX::PxOverlapBufferN<32> pxBuffer = {};
+	_bool bHit = m_pGameInstance->Overlap(fRadius, m_pTransformCom->Get_State(STATE::POSITION), 
+		PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eNO_BLOCK, pxBuffer);
 
-	const PSX::PxSweepHit & hit = pxBuffer.block;
+	
+	PSX::PxOverlapHit & hit = pxBuffer.block;
 	PSX::PxRigidActor* pActor = hit.actor;
-	_uint iHitCount = pxBuffer.getNbAnyHits();
+	_uint iHitCount = pxBuffer.getNbTouches();
 	HRESULT hr = E_FAIL;
 	if (bHit) {
-		hr = CheckPlayerHit(pActor);
+		hr = CheckPlayerHit(pActor, hit.shape);
 		if (FAILED(hr)) {
 			for (_uint i = 0; i < iHitCount; ++i) {
-				PSX::PxSweepHit* pHit = &pxBuffer.touches[i];
-				hr = CheckPlayerHit(pHit->actor);
+				PSX::PxOverlapHit* pHit = &pxBuffer.touches[i];
+				hr = CheckPlayerHit(pHit->actor, pHit->shape);
 				if (SUCCEEDED(hr)) {
 					break;
 				}
@@ -93,11 +97,14 @@ HRESULT CTriggerBox::Scan()
     return hr;
 }
 
-HRESULT CTriggerBox::CheckPlayerHit(PSX::PxActor* pActor)
+HRESULT CTriggerBox::CheckPlayerHit(PSX::PxActor* pActor, PSX::PxShape* pShape)
 {
-	if (nullptr != pActor && nullptr != pActor->userData)
+	if (nullptr != pActor && nullptr != pActor->userData ||  nullptr != pShape && nullptr != pShape->userData)
 	{
 		PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		if (nullptr == pUserData) {
+			pUserData = static_cast<PHYSX_USERDATA*>(pShape->userData);
+		}
 		switch (pUserData->eKind)
 		{
 		case PHYSX_KIND::BODY_DYNAMIC:
@@ -154,7 +161,10 @@ CGameObject* CTriggerBox::Clone(void* pArg, CGameObject* pOwner)
 {
 	return nullptr;
 }
-
+#ifdef _DEBUG
 void CTriggerBox::Describe_Entity()
 {
 }
+#endif // _DEBUG
+
+

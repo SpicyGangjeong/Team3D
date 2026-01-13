@@ -202,12 +202,12 @@ HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
 	return E_FAIL;
 }
 
+
 void CRigidBody_Dynamic::Detach_Actor(_uint iLevel)
 {
 	m_pGameInstance->Detach_Actor(*m_pRigidBody, iLevel); // 현재 액터 비활성화
 	m_bActive = false;
 }
-
 _vector CRigidBody_Dynamic::Get_Position()
 {
 	PSX::PxVec3 pxPos = m_pRigidBody->getGlobalPose().p;

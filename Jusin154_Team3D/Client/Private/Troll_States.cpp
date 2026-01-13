@@ -725,7 +725,7 @@ void CTroll::Behavior_HitEnter()
 	m_bLookAt = false;
 	if (iCurrAnimIndex == m_Animation[STATEANIM::SLAM].first)
 	{
-		if (fRatio <= 0.75f) {
+		if (fRatio >= 0.29f && fRatio <= 0.6f) {
 			pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
 			Add_Event(pairAnimInfo.first,
 				[this]() {
@@ -830,7 +830,8 @@ _bool CTroll::IsHitSpellDisabled()
 {
 	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC) ||
 		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW) ||
-		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA))
+		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA) ||
+		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::STUPEFY))
 	{
 		return true;
 	}

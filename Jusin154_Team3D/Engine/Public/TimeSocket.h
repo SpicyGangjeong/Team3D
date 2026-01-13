@@ -27,6 +27,7 @@ typedef enum class typeTimeSocket_Func {
 	TRANSLATION_LERP,
 	ROTATION,
 	ROTATION_LERP,
+	AFFINE_LERP,
 	TOGGLE_FLAGS,
 
 	// CAMERA
@@ -74,6 +75,7 @@ static constexpr pair<string_view, TIMESOCKET_FUNC> g_SocketFuncTypeTable[ENUM_C
 	{"TRANSLATION_LERP",	TIMESOCKET_FUNC::TRANSLATION_LERP},
 	{"ROTATION",			TIMESOCKET_FUNC::ROTATION},
 	{"ROTATION_LERP",		TIMESOCKET_FUNC::ROTATION_LERP},
+	{"AFFINE_LERP",			TIMESOCKET_FUNC::AFFINE_LERP},
 	{"TOGGLE_FLAGS",		TIMESOCKET_FUNC::TOGGLE_FLAGS},
 
 	// CAMERA
@@ -122,10 +124,8 @@ typedef struct tagSocketContents {
 	_wstring			wstrKeyName = {};
 	TIMESOCKET_PARAM	eTypeParam = {};
 	TIMESOCKET_FUNC		eTypeFunc = {};
-	union {
-		CGameObject*		pOtherTarget = { nullptr };
-		PSX::PxTransform	pxTransform;
-	};
+	CGameObject*		pOtherTarget = { nullptr };
+	PSX::PxTransform	pxTransform;
 	_boolean			vFlags = {};
 	_uint4				vParam_10 = {};
 	_float4				vParam_11 = {};

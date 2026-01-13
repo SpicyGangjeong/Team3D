@@ -69,18 +69,26 @@ void CRandomNpc::Priority_Update(_float fTimeDelta)
 
 void CRandomNpc::Update(_float fTimeDelta)
 {
+	BattleObserve_Anim();
+
 	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
 		return;
 	}
 
-	BattleObserve_Anim();
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		if (false == m_bBattle)
 		{
-			_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
-			m_pModelCom->Set_AnimationIndex(m_Anims[iRandom], false, 1.f, false, 1.f, false);
+			if (m_bElf)
+			{
+				m_pModelCom->Set_AnimationIndex(1, true, 1.f, false, 1.f, false);
+			}
+			else {
+				_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
+				m_pModelCom->Set_AnimationIndex(m_Anims[iRandom], false, 1.f, false, 1.f, false);
+			}
+		
 		}
 	}
 
@@ -110,9 +118,9 @@ void CRandomNpc::Update(_float fTimeDelta)
 
 void CRandomNpc::Late_Update(_float fTimeDelta)
 {
-	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
+	/*if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
 		return;
-	}
+	}*/
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
@@ -311,7 +319,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 
 	Desc.fSpeedPerSec = 10.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
-	Desc.fRadius = 10.f;
+	Desc.fRadius = 30.f;
 
 	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, &Desc))) {
 		return E_FAIL;
@@ -349,6 +357,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("KITCHENFEMALE"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
+		m_bElf = true;
 		break;
 	case 5:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_F_Student_Model");
@@ -447,28 +456,28 @@ void CRandomNpc::BattleObserve_Anim()
 {
 	if (m_eNpcState == ENUM_CLASS(NPC_STATE::OBSERVE))
 	{
-		_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
-		_float fRandX = 0.f;
-		if (iRand == 0)
-		{
-			fRandX = m_pGameInstance->Real_Random_Float(1003.f, 1005.f);
-		}
-		else {
-			fRandX = m_pGameInstance->Real_Random_Float(1009.f, 1011.f);
-		} 
+		static const float SlotX[4] = {
+			1003.f, 1003.f,
+			1011.f, 1011.f
+		};
 
-		_float fRandZ = m_pGameInstance->Real_Random_Float(1008.f, 1016.f);
+		static const float SlotZ[4] = {
+			1010.f, 1014.f,
+			1010.f, 1014.f
+		};
+
+		_int iSlot = m_pGameInstance->Real_Random_Int(0, 3);
+		_float fRandX = SlotX[m_iBattleIndex];
+		_float fRandZ = SlotZ[m_iBattleIndex];
 
 		m_pCharacter_Controller->Set_Position(XMVectorSet(fRandX, 2.f, fRandZ, 1.f));
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(fRandX, 2.f, fRandZ, 1.f));
 
 		_vector vPos = Get_WorldPostion();
-		_vector vForward = XMVectorZero();
-		if (fRandX <= 1007.f) {
-			vForward = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-		}
-		else {
-			vForward = XMVectorSet(-1.f, 0.f, 0.f, 0.f);
-		}
+
+		_vector vForward = (fRandX < 1007.f)
+			? XMVectorSet(1.f, 0.f, 0.f, 0.f)
+			: XMVectorSet(-1.f, 0.f, 0.f, 0.f);
 
 		_int iRandIndex = m_pGameInstance->Real_Random_Int(14, 21);
 		m_pModelCom->Set_AnimationIndex(iRandIndex, false, 1.f, false, 1.f, false);
@@ -478,8 +487,8 @@ void CRandomNpc::BattleObserve_Anim()
 		m_eNpcState = ENUM_CLASS(NPC_STATE::IDLE);
 	}
 
-	if (m_bBattleObserve_Npc && m_bBattle) {
-
+	if (m_bBattleObserve_Npc && m_bBattle)
+	{
 		if (m_pModelCom->IsFinishedAnim())
 		{
 			_int iRand = m_pGameInstance->Real_Random_Int(14, 21);
@@ -487,6 +496,7 @@ void CRandomNpc::BattleObserve_Anim()
 		}
 	}
 }
+
 
 void CRandomNpc::Load_AnimXML(const _char* pFilePath)
 {

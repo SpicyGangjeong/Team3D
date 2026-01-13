@@ -99,6 +99,11 @@ void CLevel_Field::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_pGameInstance->Key_Up(DIK_7))
+	{
+		_string strCutSceneName = "RanrokIntro";
+		m_pInfoInstance->Active_Event(strCutSceneName);
+	}
 
 	if (m_bLevel != m_bCurrentLevel)
 	{

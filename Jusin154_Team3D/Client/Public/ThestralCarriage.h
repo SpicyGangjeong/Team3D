@@ -43,9 +43,17 @@ public:
 	virtual _vector Get_WorldPostion()override;
 	_matrix Get_SeatMatrix();
 	_matrix Get_SocketWorldMatrix(CARRIAGE_SOCKET eSocket);
+	void Lerp_Stop();
+	void Lerp_Start(PSX::PxTransform pxTransform, _float fLerpTimer);
+	void Lerp_Transform(_float fTimeDelta);
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
+	_float4x4	m_LerpStartMatrix = { };
+	_float4x4	m_LerpEndMatrix = { };
+	_float2		m_vLerpTimer = { };
+	_bool		m_bLerp = { false };
+
 	_uint m_iAnimationIndex = 0;
 #ifdef _DEBUG
 	_bool m_bRender_WireFrame = { false };
