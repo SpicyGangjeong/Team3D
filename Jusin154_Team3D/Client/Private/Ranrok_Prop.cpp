@@ -61,7 +61,12 @@ HRESULT CRanrok_Prop::Initialize(void* pArg)
 	m_fDuration = 10000.f;
 
 	m_pInfoInstance->Regist_ActiveEffect(this);
+#ifdef _DEBUG
 
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 12, false, false));
+	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
+
+#endif // _DEBUG
 	return S_OK;
 }
 
@@ -119,8 +124,29 @@ void CRanrok_Prop::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 
 #if _DEBUG
-	m_pRigidBody->Render();
+	m_bRender = true;
+	if (m_bRender) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+	}
 #endif
+}
+
+HRESULT CRanrok_Prop::Render()
+{
+	if (RENDER::NONLIGHT == m_pGameInstance->Get_CurrentRenderPass()) {
+#ifdef _DEBUG
+		m_Batch->Begin();
+
+		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+		_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+		_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0f0f, 1.f);
+		m_pSubShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
+
+		m_Batch->End();
+		m_bRender = false;
+#endif // _DEBUG
+	}
+	return S_OK;
 }
 
 HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)

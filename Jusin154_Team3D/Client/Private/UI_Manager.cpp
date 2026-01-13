@@ -86,7 +86,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
-		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
+		//static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
 
 		break;
 
