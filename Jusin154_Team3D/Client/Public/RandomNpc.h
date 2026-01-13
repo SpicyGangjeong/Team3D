@@ -41,6 +41,7 @@ public:
 	_bool Get_BattleObserve_Npc() { return m_bBattleObserve_Npc; }
 	void Set_NpcState(_int iState) { m_eNpcState = iState; }
 	void Set_Target(CUnit& pTarget, CTransform& pTransform);
+	void Set_BattleIndex(_int iIndex) { m_iBattleIndex = iIndex; }
 protected:
 	CInfoInstance*							m_pInfoInstance = { nullptr };
 	CCharacter_Controller*					m_pCharacter_Controller = { nullptr };
@@ -73,6 +74,7 @@ protected:
 	_int									m_eNpcState = ENUM_CLASS(NPC_STATE::END);
 	_bool									m_bBroomRacer = {};
 	_bool									m_bElf = {};
+	_int									m_iBattleIndex = {};
 
 	vector<_int>							m_Anims;
 

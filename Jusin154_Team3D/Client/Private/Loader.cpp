@@ -1388,6 +1388,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_Dagger_Model")
 	));
+
+	//jobCharacterModels.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Goblin_Sword_Model")
+	//));
+
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword_L.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_Sword_L_Model")
@@ -1397,7 +1403,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		TEXT("Prototype_Component_Goblin_Sword_R_Model")
 	));
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin", XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin",/* XMMatrixRotationX(XMConvertToRadians(-90.f)) * */XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_BattleAxe_Model")
 	));
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
@@ -2562,7 +2568,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
-			Desc1.vhalfGeometryInfo = { 2.6f, 2.6f, 2.6f };
+			Desc1.vhalfGeometryInfo = { 4.f, 4.f, 4.f };
 			Desc1.fDensity = 1.f;
 			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc1.eLockFlag = {};

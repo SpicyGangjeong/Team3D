@@ -79,9 +79,10 @@ void CRanrok_Prop::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-
 	__super::Update(fTimeDelta);
+
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
+
 	Update_Event(fTimeDelta);
 
 	/* 시작 사이즈 러프 */
@@ -310,7 +311,7 @@ void CRanrok_Prop::OnCollision(CGameObject* pOther, void* pDesc)
 		pBroken_PT->Set_Visible(true);
 		pBroken_PT2->Set_Visible(true);
 
-		m_fDuration = 2.f;
+		m_fDuration = 1.7f;
 		m_fAccTime = 0.f;
 	}
 

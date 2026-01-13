@@ -219,6 +219,12 @@ void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 			m_bVisible = false;
 			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
+			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+			break;
 		}
 	}
 	else
