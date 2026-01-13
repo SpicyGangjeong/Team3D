@@ -110,6 +110,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
 	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 		return E_FAIL;
 	}

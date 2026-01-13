@@ -127,18 +127,14 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 	if (false == m_bVisible) {
 		return;
 	}
+
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
-		_vector vEndPos = m_pProjectile->Get_WorldPostion();
-
-		if (false == m_bHit) {
-			_vector vStartPos = XMLoadFloat4(&m_vStartPos);
-			_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-			if (false == XMVector3NearEqual(vEndPos, XMVectorZero(), XMVectorReplicate(FLT_EPSILON5)))
-			{
-				ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.02f);
-				OnCollision(this, &CollisionInfo);
-			}
+		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
+		if (false == XMVector3NearEqual(vEndPos, XMVectorZero(), XMVectorReplicate(FLT_EPSILON5)))
+		{
+			ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
+			OnCollision(this, &CollisionInfo);
 		}
 	}
 
@@ -182,7 +178,6 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 
 
 	{ /* 대상 위치 지정 */
-		m_bHit = false;
 		m_pInfoInstance->Get_LockOnInfo(m_Info);
 		if (nullptr != m_Info.pUnit || nullptr != m_Info.pEffect) {
 			XMStoreFloat4(&m_vTargetPos, Get_LockOnPos(m_Info));
@@ -329,6 +324,7 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 		m_pJapFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
 
 	}
+
 	m_bHitShield = false;
 }
 
