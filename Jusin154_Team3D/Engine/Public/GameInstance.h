@@ -209,6 +209,9 @@ public:
 	void Force_CamPosition(_fvector vPos);
 #pragma endregion
 #pragma region SOUND_MANAGER
+	HRESULT Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode);
+	void Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume);
+	void Sound_StopAll(); // 전체 정지
 #pragma endregion
 
 #pragma region PICKING
@@ -326,6 +329,7 @@ private:
 	class CResource_Manager*		m_pResource_Manager = { nullptr };
 	class CFont_Manager*			m_pFont_Manager = { nullptr };
 	class CVolumetric*				m_pVolumetric = { nullptr };
+	class CSound_Manager*			m_pSound_Manager = { nullptr };
 
 	mt19937 m_Rng{ random_device{}() };
 	_float2							m_vViewPortSize = {};
