@@ -84,8 +84,6 @@ void CRanrok_Prop::Update(_float fTimeDelta)
 	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 	Update_Event(fTimeDelta);
 
-	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
-
 	/* 시작 사이즈 러프 */
 	if (m_fSizeAccTime > XM_PIDIV2 && m_isSizeLerpEnd == false)
 	{
