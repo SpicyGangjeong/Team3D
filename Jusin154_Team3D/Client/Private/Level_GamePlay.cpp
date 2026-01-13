@@ -370,8 +370,6 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #endif // 
 #endif // _DEBUG
 
-
-
 	/* Map Containters */
 	if (false == isReady_Background)
 	{
@@ -713,6 +711,14 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 	Desc.bEnableRigidbody = true;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
+		return E_FAIL;
+
+	/* TeaShop_Door_A */
+	Desc.isShake = false;
+	Desc.bEnableRigidbody = true;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_TeaShop_Door_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Teashop_Door.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &Desc)))
 		return E_FAIL;
 

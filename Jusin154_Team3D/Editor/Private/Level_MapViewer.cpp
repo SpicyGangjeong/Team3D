@@ -139,8 +139,8 @@ HRESULT CLevel_MapViewer::Ready_Layer_Background(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -475,6 +475,14 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	Desc.bEditMode = false;
 	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* TeaShop_Door_A */
+	Desc.bEditMode = false;
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_TeaShop_Door_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
