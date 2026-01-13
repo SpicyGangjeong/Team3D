@@ -19,6 +19,7 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
+	virtual HRESULT Render() override;
 
 public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
@@ -47,6 +48,11 @@ private:
 
 	_float       m_fHp = { 3.f };
 	_bool		 m_isSizeLerpEnd = {};
+#ifdef _DEBUG
+	_bool m_bRender = false;
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
+#endif // _DEBUG
 private:
 	class  CInfoInstance* m_pInfoInstance = { nullptr };
 public:

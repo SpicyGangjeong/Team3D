@@ -124,10 +124,8 @@ typedef struct tagSocketContents {
 	_wstring			wstrKeyName = {};
 	TIMESOCKET_PARAM	eTypeParam = {};
 	TIMESOCKET_FUNC		eTypeFunc = {};
-	union {
-		CGameObject*		pOtherTarget = { nullptr };
-		PSX::PxTransform	pxTransform;
-	};
+	CGameObject*		pOtherTarget = { nullptr };
+	PSX::PxTransform	pxTransform;
 	_boolean			vFlags = {};
 	_uint4				vParam_10 = {};
 	_float4				vParam_11 = {};
