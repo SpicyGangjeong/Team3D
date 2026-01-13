@@ -566,6 +566,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // Bin
 #endif // _DEBUG
+#ifndef _DEBUG
+#ifdef gimch
+	isLoad_Background = true;
+	isLoad_Hogwart = false;
+	isLoad_UI_SEQUANTIAL = false;
+	isLoad_NPC = true;
+	isLoad_DataClassroom = false;
+#endif // gimch
+#endif // 
 
 #pragma region MAP_MODELS
 	vector<future<vector<FOLDER_LOAD*>*>> jobMapModels;
@@ -3556,6 +3565,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/InstanceProp/SM_HM_Door2b.bin", strMaterailPath.c_str());
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_TeaShop_Door_A*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_BLDG_TeaShop_Door_A.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_TeaShop_Door_A"),
 			pModel_Instance)))
 			return E_FAIL;
 

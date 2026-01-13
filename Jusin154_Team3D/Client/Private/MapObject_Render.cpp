@@ -62,6 +62,7 @@ HRESULT CMapObject_Render::Initialize(void* pArg)
 
 	ReadyForPhysX();
 	ConvertToPhysX();
+
 	return S_OK;
 }
 

@@ -3828,9 +3828,9 @@
         <Position x="0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
-        <MapContainerType type="0"/>
-        <BoundingBox_Min x="20.465057" y="1.3057871" z="30.564905"/>
-        <BoundingBox_Max x="134.30069" y="18.276127" z="138.82135"/>
+        <MapContainerType type="1"/>
+        <BoundingBox_Min x="-999" y="-999" z="-999"/>
+        <BoundingBox_Max x="999" y="999" z="999"/>
         <PartObject Lod_Level="2" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_Door</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_Door_Lod1</PrototypeTag>

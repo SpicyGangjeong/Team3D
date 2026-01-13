@@ -67,12 +67,12 @@ void CBuildingContainer::Late_Update(_float fTimeDelta)
 
     for (auto& pCollisiton : m_ColiisonPartObjects)
         pCollisiton->Late_Update(fTimeDelta);
-    if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vWorldExtentPosition), 1.f), m_fMaxRadius)) {
+   // if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vWorldExtentPosition), 1.f), m_fMaxRadius)) {
         if (m_bOcclusionPassed)
         {
             if (m_fCamDepth > 100.f)
             {
-                if (m_pOcclusionQueryCom->isDraw())
+               // if (m_pOcclusionQueryCom->isDraw())
                     __super::Late_Update(fTimeDelta);
             }
             else
@@ -85,7 +85,7 @@ void CBuildingContainer::Late_Update(_float fTimeDelta)
             __super::Late_Update(fTimeDelta);
         }
         m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-    }
+   // }
    
  
 }

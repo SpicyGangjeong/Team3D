@@ -65,7 +65,6 @@ HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 	_float3 vScale = { Desc.fRadius * 2.f, Desc.fRadius * 2.f, Desc.fRadius * 2.f };
 	m_pTransformCom->Set_Scale(vScale);
 	m_vScanTimer.y += m_pGameInstance->Real_Random_Float(0.f, 0.2f);
-
     return S_OK;
 }
 
