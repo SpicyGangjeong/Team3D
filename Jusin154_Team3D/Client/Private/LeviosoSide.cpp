@@ -107,6 +107,7 @@ HRESULT CLeviosoSide::Pre_Setting(CGameObject* pObject, void* pArg)
 
 
 	m_pWandLight->Set_Visible(true);
+	m_pWandTrail->SetDissolve(false);
 
 	/*트레일 초기화 */
 	m_pWandTrail->Set_Visible(true);

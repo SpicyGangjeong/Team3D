@@ -20,6 +20,7 @@
 #include "Terrain.h"
 #include "Troll.h"
 #include "Ranrok.h"
+#include "RaceRing.h"
 
 CLevel_EffectViewer::CLevel_EffectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -86,6 +87,17 @@ HRESULT CLevel_EffectViewer::Initialize()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky")))){
 		return E_FAIL;
 	}
+
+
+	CRaceRing::RACERING_DESC pDesc = {};
+
+	pDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	pDesc.vScale = _float3(1.f, 1.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky") , &pDesc))) {
+		return E_FAIL;
+	}
+	
 
 	//ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
 	//m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;

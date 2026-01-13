@@ -63,8 +63,8 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
-
-	m_pInfoInstance->Load_CutScenes();
+	ResetLevel_Environment();
+	
 
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
@@ -83,7 +83,6 @@ void CLevel_Field::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
 
 	if (m_pGameInstance->Key_Up(DIK_F1))
 	{
@@ -179,9 +178,13 @@ HRESULT CLevel_Field::Ready_Lights()
 		return E_FAIL;
 	}
 
-	_float4 vDiffuse = _float4(0.745f, 0.797f, 0.8f, 0.f);
-	_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
-	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+	// _float4 vDiffuse = _float4(0.745f, 0.797f, 0.8f, 0.f);
+	// _float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
+	// _float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+
+	_float4 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1E1C1B3C);
+	_float4 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1A191900);
+	_float4 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
 
 #if gimch || 진우
 	vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
@@ -189,10 +192,10 @@ HRESULT CLevel_Field::Ready_Lights()
 	vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 #endif // gimch
 
-
+	
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
-
-
+	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(-0.574f, -0.409f, 0.584f, -0.402f));
+	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	return S_OK;
 }
 
@@ -375,6 +378,15 @@ HRESULT CLevel_Field::Reday_Layer_EffectPool()
 
 void CLevel_Field::ResetLevel_Environment()
 {
+	_float4 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1E1C1B3C);
+	_float4 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1A191900);
+	_float4 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
+	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(-0.574f, -0.409f, 0.584f, -0.402f));
+	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Set_Environment(_float3(0.585f, 0.182f, 2.83f), _float(2.f), _float2(0.075f, 0.150f), _float2(2.300f, 10.000f), _float4(0.0360f, 0.0326f, 0.0057f, 0.0018f), _float4(2.0000f, 1.f, 1.f, 1.f), _float3(0.f, 0.f, -100.f), _float3(0.f, 0.f, 100.f));
+	m_pGameInstance->Setting_Volumetirc(1.743f, 0.0001f, 0.2000f, 1.050f, 0.04862f);
+	m_pLight->Capture_PreShadow();
 }
 
 pair<CLevel*, function<void()>> CLevel_Field::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg)
@@ -387,7 +399,7 @@ pair<CLevel*, function<void()>> CLevel_Field::Create(ID3D11Device* pDevice, ID3D
 		SAFE_RELEASE(pInstance);
 	}
 
-	return { pInstance, [pInstance]() { pInstance->Ready_Layer_Camera(); pInstance->Ready_Layer_Sound(); } };
+	return { pInstance, [pInstance]() { pInstance->Ready_Layer_Camera(); pInstance->Ready_Layer_Sound(); pInstance->m_pInfoInstance->Load_CutScenes(); } };
 }
 
 void CLevel_Field::Free()

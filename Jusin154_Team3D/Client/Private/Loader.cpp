@@ -191,6 +191,7 @@
 #include "AccioSide.h"
 #include "TransformationSide.h"
 #include "AvadakedavraSide.h"
+#include "Reparo.h"
 
 #include "Protego_Hit.h"
 #include "Goblin_ProtegoHit.h"
@@ -556,10 +557,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = false;
-	isLoad_Hogwart = false;
+	isLoad_Background = true;
+	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -1403,7 +1404,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		TEXT("Prototype_Component_Goblin_Sword_R_Model")
 	));
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin",/* XMMatrixRotationX(XMConvertToRadians(-90.f)) * */XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin", XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_BattleAxe_Model")
 	));
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
@@ -2206,6 +2207,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_Effect_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+
 #pragma region EFFECT
 
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Trails", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
@@ -2847,6 +2854,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(g_iStaticLevel, CStupefy::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CReparo>(g_iStaticLevel, CReparo::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

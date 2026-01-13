@@ -193,6 +193,8 @@ HRESULT CStupefy::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_pProjectile2->Get_Component<CTransform>()->Set_WorldMatrix(PJ_WorldMat);
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	return S_OK;
 }
 
