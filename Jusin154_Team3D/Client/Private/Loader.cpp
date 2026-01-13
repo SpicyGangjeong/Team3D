@@ -191,6 +191,7 @@
 #include "AccioSide.h"
 #include "TransformationSide.h"
 #include "AvadakedavraSide.h"
+#include "Reparo.h"
 
 #include "Protego_Hit.h"
 #include "Goblin_ProtegoHit.h"
@@ -556,10 +557,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = false;
-	isLoad_Hogwart = false;
+	isLoad_Background = true;
+	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -1388,6 +1389,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_Dagger_Model")
 	));
+
+	//jobCharacterModels.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Goblin_Sword_Model")
+	//));
+
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword_L.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_Sword_L_Model")
@@ -2200,6 +2207,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_Effect_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+
 #pragma region EFFECT
 
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Trails", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
@@ -2562,7 +2575,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
-			Desc1.vhalfGeometryInfo = { 2.6f, 2.6f, 2.6f };
+			Desc1.vhalfGeometryInfo = { 4.f, 4.f, 4.f };
 			Desc1.fDensity = 1.f;
 			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc1.eLockFlag = {};
@@ -2841,6 +2854,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(g_iStaticLevel, CStupefy::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CReparo>(g_iStaticLevel, CReparo::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

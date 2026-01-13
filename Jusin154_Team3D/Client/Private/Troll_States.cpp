@@ -725,7 +725,7 @@ void CTroll::Behavior_HitEnter()
 	m_bLookAt = false;
 	if (iCurrAnimIndex == m_Animation[STATEANIM::SLAM].first)
 	{
-		if (fRatio <= 0.75f) {
+		if (fRatio >= 0.29f && fRatio <= 0.6f) {
 			pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
 			Add_Event(pairAnimInfo.first,
 				[this]() {
@@ -797,6 +797,11 @@ void CTroll::Behavior_DeadEnter()
 	m_pRigidBody->SetActive(false);
 	m_pCharacter_Controller->SetActive(false);
 
+	m_pTroll_Particle->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
+	m_pTroll_Particle2->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
+
+	m_pLeft_Smoke->Set_Visible(false);
+	m_pRight_Smoke->Set_Visible(false);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {

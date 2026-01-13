@@ -13,6 +13,20 @@ CPipeLine::CPipeLine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	SAFE_ADDREF(m_pGameInstance);
 }
 
+void CPipeLine::Set_Environment(_float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax)
+{
+	m_fShadowNearBoxRatio = vNFBoxRatio.x;
+	m_fShadowFarBoxRatio = vNFBoxRatio.y;
+
+	m_fSafe_RadiusMultiplier = vSafeRadius.x;
+	m_fSafe_RadiusMargin = vSafeRadius.y;
+
+	m_vShadowBias = vShadowBias;
+	m_vShadowRadius = vShadowRadius;
+	m_vShadowBoxMarginMin = vShadowBoxMarginMin;
+	m_vShadowBoxMarginMax = vShadowBoxMarginMax;
+}
+
 void CPipeLine::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
 {
 	XMStoreFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(eState)], TransformStateMatrix);

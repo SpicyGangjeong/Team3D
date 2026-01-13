@@ -39,6 +39,7 @@ HRESULT CGoblin_Sword::Initialize(void* pArg)
 
 void CGoblin_Sword::Priority_Update(_float fTimeDelta)
 {
+	m_pModelCom->Combined_BoneMatrix();
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 
 
@@ -63,8 +64,6 @@ void CGoblin_Sword::Update(_float fTimeDelta)
 
 void CGoblin_Sword::Late_Update(_float fTimeDelta)
 {
-
-
 	_matrix socketMatrix = {};
 
 	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);

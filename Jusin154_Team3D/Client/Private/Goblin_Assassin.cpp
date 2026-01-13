@@ -57,8 +57,12 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, -2.f, -16.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, -2.f, -16.f, 1.f));
+	MONSTERDESC* pDesc = static_cast<MONSTERDESC*>(pArg);
+
+	_vector vPos = XMLoadFloat4(&pDesc->vPos);
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	m_pCharacter_Controller->Set_Position(vPos);
+	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotQ.x), XMConvertToRadians(pDesc->vRotQ.y), XMConvertToRadians(pDesc->vRotQ.z));
 
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
@@ -573,6 +577,7 @@ HRESULT CGoblin_Assassin::Ready_Parts()
 			return E_FAIL;
 		}
 	}
+
 
 	{
 		CGoblin_Sword::GOBLIN_SWORD_DESC Goblin_SwordDesc{};

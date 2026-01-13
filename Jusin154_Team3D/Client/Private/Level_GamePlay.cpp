@@ -110,6 +110,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
 	if (FAILED(Ready_Layer_ReparoObject(TEXT("Layer_ReparoObject")))) {
 		return E_FAIL;
 	}
@@ -125,7 +126,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	_bool bLoadNPC = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bLoadNPC = false;
+	bLoadNPC = true;
 #endif
 #endif // _DEBUG
 	if (true == bLoadNPC) {
@@ -167,19 +168,17 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
 	_bool bStartCinematic = { true };
-	bStartCinematic = false;
 #ifdef _DEBUG
 #ifdef 기무리
-	bStartCinematic = false;
+	bStartCinematic = true;
 #elif 진우
 	bStartCinematic = true;
-#elif gimch
+#elif Bin
 	bStartCinematic = false;
-#else
-
+#elif gimchi
+	bStartCinematic = false;
 #endif
 #endif // _DEBUG
-	bStartCinematic = false;
 
 	if (bStartCinematic && false == m_bIntroCinematic) {
 		m_bIntroCinematic = true;
@@ -365,9 +364,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -1056,38 +1055,21 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
 
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
 
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Assassin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
+		m_pInfoInstance->Load_Goblin();
 
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 
-	/*	CRanrok::RANROKDESC RanrokDesc = {};
-		RanrokDesc.vPos = _float4(-44.704f, 6.860f, 16.071f, 1.f);
-		RanrokDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&RanrokDesc))) {
-			return E_FAIL;
-		}*/
+		//CRanrok::RANROKDESC RanrokDesc = {};
+		//RanrokDesc.vPos = _float4(-44.704f, 6.860f, 16.071f, 1.f);
+		//RanrokDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&RanrokDesc))) {
+		//	return E_FAIL;
+		//}
 
 
 
@@ -1159,8 +1141,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;

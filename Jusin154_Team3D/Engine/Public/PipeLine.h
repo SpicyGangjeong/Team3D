@@ -24,6 +24,7 @@ private:
 	CPipeLine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPipeLine() = default;
 public:
+	void Set_Environment(_float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax);
 	void Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix);
 	const _float4x4* Get_Transform_Float4x4(D3DTS eState);
 	_matrix Get_Transform_Matrix(D3DTS eState);

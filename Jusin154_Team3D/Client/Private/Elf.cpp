@@ -330,12 +330,12 @@ void CElf::Set_Anim()
 		}
 	}
 
-	_bool bRootBone = true;
+	_bool bRootBone = false;
 
 	m_pairAnimInfo = m_Anims[m_iCurrentFlow];
-	if (m_pairAnimInfo.AnimIndex == 1)
+	if (m_pairAnimInfo.AnimIndex == 0)
 	{
-		bRootBone = false;
+		bRootBone = true;
 	}
 	m_pModelCom->Set_AnimationIndex(m_pairAnimInfo.AnimIndex, m_pairAnimInfo.Loop, 1.f, false, 1.f, bRootBone);
 }

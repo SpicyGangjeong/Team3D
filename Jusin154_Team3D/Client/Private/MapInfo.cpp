@@ -21,6 +21,9 @@
 #include "RandomNpc.h"
 #include "MapElement_Cave.h"
 #include "ReparoObject.h"
+#include "Goblin.h"
+#include "Goblin_Mage.h"
+#include "Goblin_Assassin.h"
 
 CMapInfo::CMapInfo()
 {
@@ -942,6 +945,74 @@ HRESULT CMapInfo::Load_Npc()
 
 	return S_OK;
 }
+
+HRESULT CMapInfo::Load_Goblin()
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Monster/Goblin_Data.xml";
+
+	if (tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str()))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("GOBLIN");
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return E_FAIL;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMonster::MONSTERDESC MonsterDesc{};
+
+		const char* pName = Object->Attribute("Name");
+		if (nullptr == pName)
+			continue;
+
+		string strName = pName;
+
+
+		if (auto* Rotation = Object->FirstChildElement("RotQ"))
+		{
+			Rotation->QueryFloatAttribute("X", &MonsterDesc.vRotQ.x);
+			Rotation->QueryFloatAttribute("Y", &MonsterDesc.vRotQ.y);
+			Rotation->QueryFloatAttribute("Z", &MonsterDesc.vRotQ.z);
+			MonsterDesc.vRotQ.w = 1.f;
+		}
+
+		if (auto* Position = Object->FirstChildElement("Trans"))
+		{
+			Position->QueryFloatAttribute("X", &MonsterDesc.vPos.x);
+			Position->QueryFloatAttribute("Y", &MonsterDesc.vPos.y);
+			Position->QueryFloatAttribute("Z", &MonsterDesc.vPos.z);
+			MonsterDesc.vPos.w = 1.f;
+		}
+
+
+		if (strName == "Goblin_Mage")
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(
+				g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &MonsterDesc)))
+				return E_FAIL;
+		}
+		else if (strName == "Goblin_Assassin")
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Assassin>(
+				g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &MonsterDesc)))
+				return E_FAIL;
+		}
+		else if (strName == "Goblin")
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(
+				g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &MonsterDesc)))
+				return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
 
 HRESULT CMapInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {

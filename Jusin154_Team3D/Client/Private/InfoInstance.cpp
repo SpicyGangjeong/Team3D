@@ -42,7 +42,7 @@ void CInfoInstance::Change_Level()
 	m_pInteractiveInfo->Change_Level();
 	m_pEffectInfo->Change_Level();
 //	UI_Event.clear();
-	m_pCutSceneInfo->Load_CutScenes();
+	m_pCutSceneInfo->Clear_AllEvents();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()
@@ -183,6 +183,11 @@ HRESULT CInfoInstance::Load_DADA_INT()
 HRESULT CInfoInstance::Load_Npc()
 {
 	return m_pMapInfo->Load_Npc();
+}
+
+HRESULT CInfoInstance::Load_Goblin()
+{
+	return m_pMapInfo->Load_Goblin();
 }
 #pragma endregion
 

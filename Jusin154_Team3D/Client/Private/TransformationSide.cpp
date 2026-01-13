@@ -120,6 +120,7 @@ HRESULT CTransformationSide::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_isParticleEnd = false; // 파티클이 일정시간이 되면 나오지 않게 하려고
 
 	m_pWandLight->Set_Visible(true);
+	m_pWandTrail->SetDissolve(false);
 
 	/*트레일 초기화 */
 	m_pWandTrail->Set_Visible(true);

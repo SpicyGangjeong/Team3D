@@ -135,32 +135,32 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 #pragma endregion
 
 #pragma region EFFECT_PART
-	//if (FAILED(Load_EffectParts("Goo0_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo0")))
+	//if (FAILED(Load_EditEffect("Goo0_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo0")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Goo1_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo1")))
+	//if (FAILED(Load_EditEffect("Goo1_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo1")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Ranrok_Goo2_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo2")))
+	//if (FAILED(Load_EditEffect("Ranrok_Goo2_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo2")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Ranrok_Goo3_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo3")))
+	//if (FAILED(Load_EditEffect("Ranrok_Goo3_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo3")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Ranrok_Goo4_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo4")))
+	//if (FAILED(Load_EditEffect("Ranrok_Goo4_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Goo4")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Ranrok_Decal_15_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_15")))
+	//if (FAILED(Load_EditEffect("Ranrok_Decal_15_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_15")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Rotate_Rock_Small_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Small")))
+	//if (FAILED(Load_EditEffect("Rotate_Rock_Small_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Small")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Ranrok_Particle_Black_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black")))
+	//if (FAILED(Load_EditEffect("Ranrok_Particle_Black_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Ranrok_Particle_Red_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Red")))
+	//if (FAILED(Load_EditEffect("Ranrok_Particle_Red_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Red")))
 	//	return E_FAIL;
-	////if (FAILED(Load_EffectParts("Ranrok_Decal_35_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_35")))
+	////if (FAILED(Load_EditEffect("Ranrok_Decal_35_Data", "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_35")))
 	//	//return E_FAIL;
-	//if (FAILED(Load_EffectParts("Rotate_Rock_Large1_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large1")))
+	//if (FAILED(Load_EditEffect("Rotate_Rock_Large1_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large1")))
 	//	return E_FAIL;
-	//if (FAILED(Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
+	//if (FAILED(Load_EditEffect("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
 	//	return E_FAIL;
 
-	//if (FAILED(Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
+	//if (FAILED(Load_EditEffect("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
 	//	return E_FAIL;
 #pragma endregion
 
@@ -277,7 +277,7 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	//Update_LightSpawer();
 	//Update_Decal();
 	//Update_RaceRing();
-	//Update_EffectParts();
+	//Update_EditEffect();
 	//Update_Balloon();
 	Update_DummyNpc();
 
@@ -2220,7 +2220,7 @@ HRESULT CMapObject_Manager::Load_DADA_INT()
 	return S_OK;
 }
 
-HRESULT CMapObject_Manager::Save_EffectParts(const _char* pFileName)
+HRESULT CMapObject_Manager::Save_EditEffect(const _char* pFileName)
 {
 	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Effect_EDIT"));
 
@@ -2235,7 +2235,7 @@ HRESULT CMapObject_Manager::Save_EffectParts(const _char* pFileName)
 	doc.Clear();
 	doc.InsertFirstChild(doc.NewDeclaration());
 
-	tinyxml2::XMLElement* root = doc.NewElement("EffectParts");
+	tinyxml2::XMLElement* root = doc.NewElement("EditEffect");
 	doc.InsertEndChild(root);
 
 	if (nullptr != pLayer)
@@ -2265,7 +2265,7 @@ HRESULT CMapObject_Manager::Save_EffectParts(const _char* pFileName)
 	return S_OK;
 }
 
-HRESULT CMapObject_Manager::Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath)
+HRESULT CMapObject_Manager::Load_EditEffect(const _char* pFileName, const _char* pEffectrFilePath)
 {
 	tinyxml2::XMLDocument xmlDoc;
 
@@ -2274,7 +2274,7 @@ HRESULT CMapObject_Manager::Load_EffectParts(const _char* pFileName, const _char
 	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
 		return E_FAIL;
 
-	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("EffectParts");
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("EditEffect");
 
 	if (nullptr == root)
 	{
@@ -2310,7 +2310,7 @@ HRESULT CMapObject_Manager::Load_EffectParts(const _char* pFileName, const _char
 
 		CEditEffect* pEffect = { nullptr };
 
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::MAP), NEXT_LEVEL, TEXT("Layer_EffectParts"), &PartsDesc, nullptr, &pEffect)))
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::MAP), NEXT_LEVEL, TEXT("Layer_EditEffect"), &PartsDesc, nullptr, &pEffect)))
 			return E_FAIL;
 
 		if (nullptr == pEffect)
@@ -2744,18 +2744,18 @@ void CMapObject_Manager::Update_RaceRing()
 	GUI::End();
 }
 
-void CMapObject_Manager::Update_EffectParts()
+void CMapObject_Manager::Update_EditEffect()
 {
-	GUI::Begin("EffectParts Editor");
+	GUI::Begin("EditEffect Editor");
 	GUI::InputText("MapFileName", m_szSaveFileName, MAX_PATH);
 	GUI::Spacing();
-	if (GUI::Button("Save EffectParts"))
+	if (GUI::Button("Save EditEffect"))
 	{
-		Save_EffectParts(m_szSaveFileName);
+		Save_EditEffect(m_szSaveFileName);
 	}
-	if (GUI::Button("Load EffectParts"))
+	if (GUI::Button("Load EditEffect"))
 	{
-		Load_EffectParts(m_szSaveFileName, "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black");
+		Load_EditEffect(m_szSaveFileName, "../Bin/Resources/Data/Effect/MapEffect/Ranrok_Particle_Black");
 	}
 	if (GUI::Button("Add Effect"))
 	{
