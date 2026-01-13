@@ -257,8 +257,8 @@ HRESULT CPlayer::Render()
 #ifdef _DEBUG
 #ifdef 기무리
 		//Render_CameraCoordinateSystem();
+		m_pCharacter_Controller->Render();
 #endif // 기무리
-		//m_pCharacter_Controller->Render();
 #endif // _DEBUG
 
 	}

@@ -208,6 +208,17 @@ void CRigidBody_Dynamic::Detach_Actor(_uint iLevel)
 	m_bActive = false;
 }
 
+void CRigidBody_Dynamic::SetActive(_bool bCondition)
+{
+	m_bActive = bCondition;
+	if (true == m_bActive) {
+		m_pGameInstance->Attach_Actor(*m_pRigidBody, m_pGameInstance->Get_NextLevelID());
+	}
+	else {
+		m_pGameInstance->Detach_Actor(*m_pRigidBody, m_pGameInstance->Get_NextLevelID());
+	}
+}
+
 _vector CRigidBody_Dynamic::Get_Position()
 {
 	PSX::PxVec3 pxPos = m_pRigidBody->getGlobalPose().p;

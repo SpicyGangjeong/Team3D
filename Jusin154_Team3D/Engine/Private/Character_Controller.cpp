@@ -375,8 +375,16 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 
 	PSX::PxRigidDynamic* pActor = m_pController->getActor();
 	pActor->userData = &m_tagData;
+	PSX::PxShape* shapes[8]{};
+	PSX::PxU32 count = pActor->getShapes(shapes, 8);
+	for (PSX::PxU32 i = 0; i < count; ++i)
+	{
+		shapes[i]->userData = &m_tagData;
+		shapes[i]->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	}
 	m_pGameInstance->ApplyFilterData(pActor);
 	m_pController->setStepOffset(pDesc->fStepOffset);
+
 
 	if (nullptr == m_pController) {
 		assert(false);

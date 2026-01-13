@@ -57,7 +57,7 @@ public:
 	HRESULT					ConvertToCCT(class CCharacter_Controller& CCTOriginal);
 	void					Detach_Actor(_uint iLevel);
 	_bool					IsActive() const { return m_bActive; }
-	void					SetActive(_bool bCondition) { m_bActive = bCondition; }
+	void					SetActive(_bool bCondition);
 
 	_vector					Get_Position();
 	void					Set_Position(_vector vPos, _bool bTeleport);
