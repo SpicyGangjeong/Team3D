@@ -18,7 +18,7 @@ public:
 	void	Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
 	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 	HRESULT Bind_PrevMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
-	void Set_Environment(_float3 vSSAO);
+	void Set_Environment(_float3 vSSAO, _float fExposure);
 
 #ifdef _DEBUG
 private:

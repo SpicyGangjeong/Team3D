@@ -135,11 +135,12 @@ HRESULT CRenderer::Bind_PrevMatrix(class CShader* pShader, const _char* pConstan
 	return S_OK;
 }
 
-void CRenderer::Set_Environment(_float3 vSSAO)
+void CRenderer::Set_Environment(_float3 vSSAO, _float fExposure)
 {
 	m_fSSAO_Radius = vSSAO.x;
 	m_fSSAO_BIAS = vSSAO.y;
 	m_fSSAOStrength = vSSAO.z;
+	m_fExposure = fExposure;
 	// m_fSSAO_Radius = 0.585f;
 	// m_fSSAO_BIAS = 0.182f;
 	// m_fSSAOStrength = 2.83f;

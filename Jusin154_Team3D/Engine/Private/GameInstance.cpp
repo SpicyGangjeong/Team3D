@@ -733,9 +733,9 @@ HRESULT CGameInstance::Bind_PrevMatrix(CShader* pShader, const _char* pConstants
 	return m_pRenderer->Bind_PrevMatrix(pShader, pConstants, eType);
 }
 
-void CGameInstance::Set_Environment(_float3 vSSAO, _float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax)
+void CGameInstance::Set_Environment(_float3 vSSAO, _float fExposure, _float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax)
 {
-	m_pRenderer->Set_Environment(vSSAO);
+	m_pRenderer->Set_Environment(vSSAO, fExposure);
 	m_pPipeLine->Set_Environment(vNFBoxRatio, vSafeRadius, vShadowBias, vShadowRadius, vShadowBoxMarginMin, vShadowBoxMarginMax);
 }
 
