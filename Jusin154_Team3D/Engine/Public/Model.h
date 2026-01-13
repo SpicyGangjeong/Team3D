@@ -93,8 +93,8 @@ public:
 	_float			Get_TrackProgressRatio(_uint iIndex);
 
 	size_t			Get_AnimSize() { return m_Animations.size(); }
-	void			Set_PlayAnim(_bool bPlayAnim) { m_bPlayAnim = bPlayAnim; }
-	_bool			Get_PlayAnim() const { return m_bPlayAnim; }
+	void			Set_PlayAnim(_bool bPlayAnim);
+	_bool			Get_PlayAnim();
 	_int			Get_AnimIndex() const { return m_iCurrentAnimIndex; }
 	_int			Get_SecondAnimIndex() const { return m_iCurrSecondAnimIndex; }
 	_float			Get_AnimSpeed();
@@ -201,7 +201,6 @@ private:
 	_bool						m_bIsLoop = { false };				// 루프애니메이션인지
 	_bool						m_bIsFinishedAnim = { false };			// 대상 애니메이션이 끝났는지
 	_bool						m_bIsFinishedLerp = { false };			// 럴프 애니메이션이 끝났는지
-	_bool						m_bPlayAnim = { true };
 
 	_int						m_iPreAnimIndex = { -1 };
 	_float						m_fBlendTime = { 0.f };

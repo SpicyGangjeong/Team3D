@@ -134,7 +134,7 @@
 	<Anim state="FLINCH_RIGHT" index="1077" loop="false"/>
 
 	<!-- KNOCKDOWN -->
-	<Anim state="KNOCKDOWN_BWD" index="1086" loop="false"/>
+	<Anim state="KNOCKDOWN_BWD" index="1085" loop="false"/>
 	<Anim state="KNOCKDOWN_FWD" index="1087" loop="false"/>
 	<Anim state="KNOCKDOWN_BWD_SPLT" index="1089" loop="false"/>
 	<Anim state="KNOCKDOWN_FWD_SPLT" index="1088" loop="false"/>
