@@ -2860,6 +2860,7 @@ void CMapObject_Manager::Update_DummyNpc()
 	GUI::End();
 }
 
+
 void CMapObject_Manager::Create_PartObject(_wstring& strPrototypeTag)
 {
 	vector<_uint> LodModelIndices;

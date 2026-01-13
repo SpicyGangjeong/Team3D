@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Land>
+    <Object Type="4" Lod_Level="3">
+        <PrototypeTag>Prototype_GameObject_SM_LLA_Cave</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_LLA_Cave_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_LLA_Cave_Lod2</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_LLA_Cave_Lod3</PrototypeTag>
+        <Position x="-637.9436" y="-27.070477" z="-295.71112"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="298" z="0"/>
+    </Object>
+</Land>

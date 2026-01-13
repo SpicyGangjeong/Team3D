@@ -119,7 +119,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 #endif // 
 #ifdef 나
 	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #endif
 	if (m_isActiveEffectCreate)

@@ -28,16 +28,20 @@ HRESULT CReparoObject::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	REPARO_OBJECT_DESC* pDesc = static_cast<REPARO_OBJECT_DESC*>(pArg);
+	m_iModelID = pDesc->iModelID;
+	m_fRadius = pDesc->fRadius;
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
+	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
 
-	m_pModelCom->Set_AnimationIndex(0);
-
-
+	// 되돌리기 전 Before
+	m_ePreState = m_eCurState = REPARO_OBJECT_STATE::SLEEP;
+	m_pModelCom->Set_AnimationIndex(2);
+	m_pInfoInstance->Deregist_PlayerAlly(this);
 
 	return S_OK;
 }
@@ -51,12 +55,32 @@ void CReparoObject::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
 
+	Change_State();
+
+	switch (m_eCurState)
+	{
+	case Client::CReparoObject::REPARO_OBJECT_STATE::SLEEP:
+		break;
+	case Client::CReparoObject::REPARO_OBJECT_STATE::BEFORE:
+		break;
+	case Client::CReparoObject::REPARO_OBJECT_STATE::PLAYANIM:
+		if (true == m_pModelCom->IsFinishedAnim())
+			m_eCurState = REPARO_OBJECT_STATE::AFTER;
+		break;
+
+	case Client::CReparoObject::REPARO_OBJECT_STATE::AFTER:
+		break;
+
+	default:
+		break;
+	}
+
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
 
 }
 
@@ -64,7 +88,8 @@ void CReparoObject::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
 
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	if(m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_fRadius))
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 }
 
@@ -116,6 +141,25 @@ HRESULT CReparoObject::Render()
 	}
 
 	return S_OK;
+}
+
+_bool CReparoObject::IsRepairable(_bool isAwake)
+{
+	if (isAwake && REPARO_OBJECT_STATE::SLEEP == m_eCurState)
+	{
+		m_eCurState = REPARO_OBJECT_STATE::BEFORE;
+		return false;
+	}
+	LOCKON_INFO info = {};
+	m_pInfoInstance->Get_LockOnInfo(info);
+	
+	if (info.pUnit == this && REPARO_OBJECT_STATE::BEFORE == m_eCurState)
+	{
+		m_eCurState = REPARO_OBJECT_STATE::PLAYANIM;
+		return true;
+	}
+
+	return false;
 }
 
 HRESULT CReparoObject::Render_OutLine()
@@ -186,6 +230,36 @@ HRESULT CReparoObject::Render_OutLine()
 	return S_OK;
 }
 
+void CReparoObject::Change_State()
+{
+	if (m_eCurState != m_ePreState)
+	{
+		switch (m_eCurState)
+		{
+		case Client::CReparoObject::REPARO_OBJECT_STATE::SLEEP:
+			break;
+
+		case Client::CReparoObject::REPARO_OBJECT_STATE::BEFORE:
+			m_pInfoInstance->Regist_PlayerAlly(this);
+			break;
+
+		case Client::CReparoObject::REPARO_OBJECT_STATE::PLAYANIM:
+			m_pModelCom->Set_AnimationIndex(0, false);
+			break;
+
+		case Client::CReparoObject::REPARO_OBJECT_STATE::AFTER:
+			m_pModelCom->Set_AnimationIndex(1);
+			m_pInfoInstance->Deregist_PlayerAlly(this);
+			break;
+
+		case Client::CReparoObject::REPARO_OBJECT_STATE::END:
+		default:
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
+}
+
 HRESULT CReparoObject::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -198,10 +272,21 @@ HRESULT CReparoObject::Ready_Components()
 		return E_FAIL;
 	}
 
-	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model"),
-		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
-		return E_FAIL;
+	if(0 == m_iModelID)
+	{
+		/* Com_Model */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model"),
+			reinterpret_cast<CComponent**>(&m_pModelCom)))) {
+			return E_FAIL;
+		}
+	}
+	else
+	{
+		/* Com_Model */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model"),
+			reinterpret_cast<CComponent**>(&m_pModelCom)))) {
+			return E_FAIL;
+		}
 	}
 
 	/* Com_Shader */

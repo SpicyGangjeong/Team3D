@@ -98,6 +98,13 @@ HRESULT CLand::Initialize(void* pArg)
 
 	m_fRaduis = 350.f;
 
+	LAND_DESC* pDesc = static_cast<LAND_DESC*>(pArg);
+
+	string RigidBodyTag = CMyTools::ToString(pDesc->strModelComTag) + "_RigidBody";
+
+	ReadyForPhysX(RigidBodyTag.c_str());
+	ConvertToPhysX(RigidBodyTag.c_str());
+
 	return S_OK;
 }
 
@@ -166,12 +173,15 @@ HRESULT CLand::Bind_ShaderResources()
 	if (FAILED(m_pDiffuseTextureCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTextures", 0, m_pDiffuseTextureCom->Get_Size()))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pNormalTextureCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTextures", 0, m_pNormalTextureCom->Get_Size()))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pMROTextureCom->Bind_ShaderResources(m_pShaderCom, "g_SurfaceParamsTextures", 0, m_pMROTextureCom->Get_Size()))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_SRV("g_MaskTexture", m_pMaskTextureCom->Get_SRV(0)))) {
 		return E_FAIL;
 	}
@@ -180,6 +190,28 @@ HRESULT CLand::Bind_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CLand::ReadyForPhysX(const _char* pName)
+{
+	_uint iLevel = NEXT_LEVEL;
+
+	if (FAILED(m_pModelCom->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel, pName))) {
+		assert(false);
+	}
+}
+
+void CLand::ConvertToPhysX(const _char* pName)
+{
+	_wstring wstrName = CMyTools::ToWstring(pName);
+
+	CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+	Desc.pMeshName = wstrName.c_str();
+	Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&m_RigidBody, &Desc))) {
+		assert(false);
+	}
 }
 
 CLand* CLand::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -217,6 +249,7 @@ void CLand::Free()
 	SAFE_RELEASE(m_pMaskTextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_RigidBody);
 	SAFE_RELEASE(m_pModelCom);
 
 	for (auto& pInstanceProp : m_InstanceProps)
