@@ -1,5 +1,5 @@
 <Material>
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "23" OutLineWrite="34">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "25" OutLineWrite="34">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_M_Hair_Ollivander_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -115,7 +115,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
     </MI_HUM_N_Heads_EyeOcclusion>
-	<MI_HUM_M_Facial_GerboldOllivander	ShaderIndex = "4" OutLineWrite="4">
+	<MI_HUM_M_Facial_GerboldOllivander	ShaderIndex = "23" OutLineWrite="4">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_HUM_M_Facial_Hair_Ollivander_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>

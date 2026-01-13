@@ -1141,7 +1141,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 {
 	_bool isLoad_NPC = { true };
 	_bool isLoad_RandomNPC = { true };
-	_bool isRandomPosition = { true };
+	_bool isRandomPosition = { false };
 #ifdef _DEBUG
 #ifdef gimch
 	isLoad_NPC = true;

@@ -26,6 +26,7 @@ public:
 	virtual HRESULT Render()override;
 	HRESULT Bind_ShaderResources() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
+
 #ifdef _DEBUG
 	void Describe_Entity() override;
 #endif // _DEBUG

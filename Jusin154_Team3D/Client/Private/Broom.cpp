@@ -234,10 +234,10 @@ HRESULT CBroom::Ready_Components()
 	switch (m_iIndex)
 	{
 	case 0:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_Broom_Model");
+		m_strModelPrototypeTag = TEXT("Prototype_Component_SK_MoonTrimmerBroom_Model");
 		break;
 	case 1:
-		m_strModelPrototypeTag = TEXT("Prototype_Component_SK_MoonTrimmerBroom_Model");
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Broom_Model");
 		break;
 	case 2:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_DarkWizardBroom_Model");

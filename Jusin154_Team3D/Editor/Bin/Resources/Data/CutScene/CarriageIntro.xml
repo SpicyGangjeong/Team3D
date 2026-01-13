@@ -1149,7 +1149,7 @@
 			<uint X="" Y="" Z="" W=""/>
 		</Param_10>
 		<Param_11>
-			<float X="" Y="" Z="" W=""/>
+			<float X="1.0" Y="" Z="" W=""/>
 		</Param_11>
 		<Param_12>
 			<string tag =""/>
@@ -1195,12 +1195,12 @@
 
 
 	<Socket fStartPosition = "16">
-		<Info strEventName = "TELEPORTATION" eTypeParam = "TRANSFORM" pTarget = "ACTOR_PLAYER" eTypeFunc="TELEPORTATION"/>
+		<Info strEventName = "TELEPORTATION" eTypeParam = "TRANSFORM" pTarget = "ACTOR_PLAYER" eTypeFunc="TRANSLATION"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="0.0" Y="0.0" Z="0.0" W="1.0"/>
-				<Trans X="-21.0" Y="0.0" Z="-14"/>
+				<RotQ X="0.000" Y="0.993" Z="0.000" W="-0.121"/>
+				<Trans X="-83.732" Y="-31.232" Z="-58.350"/>
 			</Transform>
 		</Param_0>
 		<vFlags>

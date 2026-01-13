@@ -79,8 +79,15 @@ void CRandomNpc::Update(_float fTimeDelta)
 	{
 		if (false == m_bBattle)
 		{
-			_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
-			m_pModelCom->Set_AnimationIndex(m_Anims[iRandom], false, 1.f, false, 1.f, false);
+			if (m_bElf)
+			{
+				m_pModelCom->Set_AnimationIndex(1, true, 1.f, false, 1.f, false);
+			}
+			else {
+				_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
+				m_pModelCom->Set_AnimationIndex(m_Anims[iRandom], false, 1.f, false, 1.f, false);
+			}
+		
 		}
 	}
 
@@ -349,6 +356,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("KITCHENFEMALE"), (CComponent**)&m_pNpcStat))) {
 			return E_FAIL;
 		}
+		m_bElf = true;
 		break;
 	case 5:
 		m_strModelPrototypeTag = TEXT("Prototype_Component_F_Student_Model");
