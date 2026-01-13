@@ -70,6 +70,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
+
 #pragma region MONSTER
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/SK_GOB_M_T4Melee_INST_A_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),

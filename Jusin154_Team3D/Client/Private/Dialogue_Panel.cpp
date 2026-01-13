@@ -169,7 +169,6 @@ void CDialogue_Panel::Change_Map()
 
 	}
 
-#ifdef Bin
 	CLayer* pNpcLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_NPC);
 	if (nullptr != pNpcLayer) {
 
@@ -184,7 +183,6 @@ void CDialogue_Panel::Change_Map()
 			dynamic_cast<CRandomNpc*>(pNpc)->Set_Battle(true);
 		}
 	}
-#endif // Bin
 }
 
 void CDialogue_Panel::Priority_Update(_float fTimeDelta)

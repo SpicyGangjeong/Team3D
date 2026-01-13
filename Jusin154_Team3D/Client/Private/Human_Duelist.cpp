@@ -93,6 +93,16 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta *m_fEasing, m_pTransformCom);
 
+	if (m_pGameInstance->Key_Down(DIK_O))
+	{
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
+
+		if (pPlayer == nullptr)
+			return;
+
+		pPlayer->ExitBattle();
+	}
+
 	Play_Event();
 
 	Check_BattleLose();
@@ -527,12 +537,6 @@ void CHuman_Duelist::Check_BattleLose()
 		{
 			m_pEffectPool->Use_Skill(SKILL_TYPE::BOX_SPLESH, this);
 			m_bBattle = false;
-			CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
-
-			if (pPlayer == nullptr)
-				return;
-
-			pPlayer->ExitBattle();
 		}
 	}
 }

@@ -84,7 +84,7 @@ void CRanrok_FireBall::Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = m_pFireBall->Get_WorldPostion();
-		ON_COLLISION_INFO CollisionInfo = MonsterSweepTarget(vStartPos, vEndPos, 0.2f, true);
+		ON_COLLISION_INFO CollisionInfo = MonsterSweepTarget(vStartPos, vEndPos, 0.02f, true);
 		OnCollision(this, &CollisionInfo);
 	}
 

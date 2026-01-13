@@ -1098,6 +1098,10 @@ _bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _gvector vDi
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
 }
+_bool CGameInstance::Overlap(_float fRadius, _fvector vCenter, PSX::PxQueryFlags queryFlags, PSX::PxOverlapCallback& overlapBuffer, PSX::PxQueryFilterCallback* filterCallback)
+{
+	return m_pPhysX_Manager->Overlap(fRadius, vCenter, queryFlags, overlapBuffer, filterCallback);
+}
 _bool CGameInstance::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
 {
 	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);

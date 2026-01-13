@@ -123,7 +123,7 @@ HRESULT CLightning::Pre_Setting(CGameObject* pObject, void* pArg)
 	{ /* 대상 위치 지정 */
 
 		m_pInfoInstance->Get_LockOnInfo(m_Info);
-		if (nullptr != m_Info.pUnit || nullptr != m_Info.pEffect) {
+		if (nullptr != m_Info.pUnit) {
 
 			_vector vLockOnPos = Get_LockOnPos(m_Info);
 

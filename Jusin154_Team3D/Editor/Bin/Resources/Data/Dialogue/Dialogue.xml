@@ -72,7 +72,7 @@
 	<Dialogue NpcName="DINAHHECAT" NpcID="11" NpcInrteract="1">
 		<Line ID="0" Tag="1" Type="1" Text="뭐? 대련을 하고 싶다고?" NextID="1"> </Line>
 		<Line ID="1" Tag="1" Type="2" Text="다시 한번 생각할 시간을 주겠네" NextID="0">
-			<Choice Tag="1" Type="6" Text="보내 돌라고 한다." NextID="0" />
+			<Choice Tag="1" Type="7" Text="보내 돌라고 한다." NextID="0" />
 			<Choice Tag="1" Type="0" Text="다시 한번 생각한다." NextID="0" />
 		</Line>
 	</Dialogue>

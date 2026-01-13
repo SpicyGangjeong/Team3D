@@ -20,6 +20,13 @@ enum class SHADOW : _ubyte {
 	,	END = 3 // 케스케이드 셰도우 한정
 };
 
+enum class SD_CHANNEL_GROUP {
+    BGM,
+    ENVIRONMENT,
+    EFFECT,
+    VOICE,
+    END
+};
 
 enum class TEXTURE_LOAD_TYPE { 
     SINGLE,  // original/diffuseddd.png
@@ -156,6 +163,7 @@ enum class PXOBJECT : _uint {
 	GOBLIN_PROTEGO,
 	RANROK_PROP,
 	DUELIST_PROTEGO,
+    RANROK_BODY,
 #pragma endregion
 #pragma region ALLY_HITBOX
 	ALLY_HITBOX = 200,

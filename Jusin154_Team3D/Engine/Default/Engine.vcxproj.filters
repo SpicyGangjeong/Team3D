@@ -615,6 +615,9 @@
     <ClCompile Include="..\Private\TimeSocket.cpp">
       <Filter>00.System\01.Timer\TimeSocket</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp">
+      <Filter>00.System\00.Device\Sound\00.Sound_Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -1273,6 +1276,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\TimeSocket.h">
       <Filter>00.System\01.Timer\TimeSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sound_Manager.h">
+      <Filter>00.System\00.Device\Sound\00.Sound_Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
