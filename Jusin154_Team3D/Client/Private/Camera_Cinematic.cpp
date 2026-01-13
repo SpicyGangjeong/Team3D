@@ -265,10 +265,14 @@ HRESULT CCamera_Cinematic::Ready_SubPart()
 	{
 		CCamPosition_Target::CAMERAPOSITION_TARGET_DESC Desc{};
 		Desc.pParentTransform = m_pTransformCom;
+		SAFE_RELEASE(m_pFollowTarget);
 		m_pFollowTarget = m_pFollowTargetPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
 		m_pFollowTargetPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -10.4f, 1.f));
+		SAFE_ADDREF(m_pFollowTarget);
+		SAFE_RELEASE(m_pLookTarget);
 		m_pLookTarget = m_pLookTargetPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
 		m_pLookTargetPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
+		SAFE_ADDREF(m_pLookTarget);
 	}
 	return S_OK;
 }

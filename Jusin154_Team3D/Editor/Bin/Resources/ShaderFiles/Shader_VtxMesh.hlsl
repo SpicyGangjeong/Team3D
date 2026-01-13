@@ -1117,7 +1117,7 @@ PS_OUT_DELCAL PS_MAIN_DECAL(PS_IN_DECAL In)
     
     vDiffuseColor /= fMaskWeight;
         
-    vDiffuseColor.a = max(0.001f, vDiffuseColor.a);
+    vDiffuseColor.a = saturate(max(0.001f, vDiffuseColor.a));
  
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     

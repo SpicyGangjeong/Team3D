@@ -56,10 +56,14 @@ HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 		return E_FAIL;
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat4(&pDesc->vPosition_Radius), 1.f));
+#ifdef _DEBUG
 
-	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_pTransformCom->Get_Radius() * 2.f, 12, false, false));
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 12, false, false));
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 
+#endif // _DEBUG
+	_float3 vScale = { Desc.fRadius, Desc.fRadius, Desc.fRadius };
+	m_pTransformCom->Set_Scale(vScale);
 	m_vScanTimer.y += m_pGameInstance->Real_Random_Float(0.f, 0.2f);
 
     return S_OK;
@@ -69,9 +73,8 @@ HRESULT CTriggerBox::Scan()
 {
 	_float fRadius = m_pTransformCom->Get_Radius();
 
-	PSX::PxSweepHit hitBuffer[32];
-	PSX::PxSweepBuffer pxBuffer(hitBuffer, 32);
-	_bool bHit = m_pGameInstance->SphereCast(fRadius, m_pTransformCom->Get_State(STATE::POSITION), XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.1f,
+	PSX::PxSweepBufferN<32> pxBuffer = {};
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, m_pTransformCom->Get_State(STATE::POSITION), XMVectorSet(0.f, 1.f, 0.f, 0.f), 1.1f,
 		PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
 
 	const PSX::PxSweepHit & hit = pxBuffer.block;
@@ -154,7 +157,10 @@ CGameObject* CTriggerBox::Clone(void* pArg, CGameObject* pOwner)
 {
 	return nullptr;
 }
+#ifdef _DEBUG
 
 void CTriggerBox::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

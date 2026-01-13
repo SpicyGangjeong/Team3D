@@ -250,6 +250,7 @@ void CMapElement_Cave::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pTriggerBox);
 
 	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
 		SAFE_RELEASE(m_RigidBodies[i]);

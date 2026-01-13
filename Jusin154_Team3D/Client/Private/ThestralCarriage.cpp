@@ -57,8 +57,6 @@ HRESULT CThestralCarriage::Initialize(void* pArg)
 
 	//for (auto& anim : chain)
 	//	m_pModelCom->Set_ChainAnimation(anim);
-	m_iAnimationIndex = 0;
-	m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
 	m_pModelCom->IsRootBone(false);
 	//
 	//m_pModelCom->Start_ChainAnimation();
@@ -69,6 +67,7 @@ HRESULT CThestralCarriage::Initialize(void* pArg)
 void CThestralCarriage::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
+	Lerp_Transform(fTimeDelta);
 }
 
 void CThestralCarriage::Update(_float fTimeDelta)
@@ -192,9 +191,9 @@ void CThestralCarriage::Trigger(CTimeSocket& Socket)
 	{
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
 	} break;
-	case TIMESOCKET_FUNC::TRANSLATION_LERP:
+	case TIMESOCKET_FUNC::AFFINE_LERP:
 	{
-
+		Lerp_Start(pContents->pxTransform, pContents->vParam_11.x);
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
@@ -266,6 +265,42 @@ _matrix CThestralCarriage::Get_SocketWorldMatrix(CARRIAGE_SOCKET eSocket)
 	default:
 		return XMMatrixIdentity();
 		break;
+	}
+}
+
+void CThestralCarriage::Lerp_Stop()
+{
+	m_LerpStartMatrix = { };
+	m_LerpEndMatrix = { };
+	m_vLerpTimer = { };
+	m_bLerp = { false };
+}
+
+void CThestralCarriage::Lerp_Start(PSX::PxTransform pxTransform, _float fLerpTimer)
+{
+	XMStoreFloat4x4(&m_LerpStartMatrix, m_pTransformCom->Get_XMWorldMatrix());
+	_float3 vScale = m_pTransformCom->Get_Scale();
+	XMStoreFloat4x4(&m_LerpEndMatrix, XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorZero(),
+		XMLoadFloat4((_float4*)&pxTransform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTransform.p), 1.f)));
+	m_vLerpTimer.x = 0;
+	m_vLerpTimer.y = fLerpTimer;
+	m_bLerp = true;
+}
+
+void CThestralCarriage::Lerp_Transform(_float fTimeDelta)
+{
+	if (true == m_bLerp) {
+		m_vLerpTimer.x += fTimeDelta;
+		_float4x4 vLerpResult = {};
+		if (m_vLerpTimer.x >= m_vLerpTimer.y) {
+			m_bLerp = false;
+			m_vLerpTimer.x = 0.f;
+			CMyTools::MatrixLerp(XMLoadFloat4x4(&m_LerpStartMatrix), XMLoadFloat4x4(&m_LerpEndMatrix), vLerpResult, 1.f);
+		}
+		else {
+			CMyTools::MatrixLerp(XMLoadFloat4x4(&m_LerpStartMatrix), XMLoadFloat4x4(&m_LerpEndMatrix), vLerpResult, m_vLerpTimer.x/m_vLerpTimer.y);
+		}
+		m_pTransformCom->Set_WorldMatrix(vLerpResult);
 	}
 }
 
@@ -375,7 +410,7 @@ void CThestralCarriage::Describe_Entity()
 		GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
 		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
 		_float3 Pos;
-		XMStoreFloat3(&Pos, Get_WorldPostion());
+		XMStoreFloat3(&Pos, m_pTransformCom->Get_State(STATE::POSITION));
 
 		float Pos3[3] = { Pos.x, Pos.y, Pos.z };
 		GUI::DragFloat3("Pos", Pos3);
@@ -384,7 +419,7 @@ void CThestralCarriage::Describe_Entity()
 
 		_float RotR, RotU, RotL;
 		RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
-		RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
+		RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP)); 
 		RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
 
 		float Rot3[3] = { RotR, RotU,RotL };

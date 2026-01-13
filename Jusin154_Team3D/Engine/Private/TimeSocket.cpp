@@ -34,40 +34,18 @@ HRESULT CTimeSocket::Initialize(void* pArg)
     m_Contents.vParam_11 = pDesc->vParam_11;
     m_Contents.funcEvent = pDesc->funcEvent;
     m_Contents.vParam_12 = pDesc->vParam_12;
+    m_Contents.pOtherTarget = pDesc->pOtherTarget;
+    m_Contents.pxTransform = pDesc->pxTransform;
 
-    switch (m_Contents.eTypeParam)
-    {
-    case TIMESOCKET_PARAM::TARGET:
-        m_Contents.pOtherTarget = pDesc->pOtherTarget;
-        break;
-    case TIMESOCKET_PARAM::TRANSFORM:
-        m_Contents.pxTransform = pDesc->pxTransform;
-        break;
-    case TIMESOCKET_PARAM::NOT_USE:
-        break;
-    default:
-        m_Contents.pOtherTarget = nullptr;
-        break;
-    }
-
+    SAFE_ADDREF(m_Contents.pOtherTarget);
     SAFE_ADDREF(m_Contents.pEventTarget);
-    if (m_Contents.eTypeParam == TIMESOCKET_PARAM::TARGET){
-        SAFE_ADDREF(m_Contents.pOtherTarget);
-    }
 
     return S_OK;
 }
 
 void CTimeSocket::Finalize()
 {
-	switch (m_Contents.eTypeParam)
-	{
-	case TIMESOCKET_PARAM::TARGET:
-		SAFE_RELEASE(m_Contents.pOtherTarget);
-		break;
-	default:
-		break;
-	}
+	SAFE_RELEASE(m_Contents.pOtherTarget);
 	SAFE_RELEASE(m_Contents.pEventTarget);
 }
 

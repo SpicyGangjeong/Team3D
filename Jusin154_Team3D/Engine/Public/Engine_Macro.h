@@ -35,7 +35,7 @@
 #undef ASSERT_NURI
 #define ASSERT_NURI(expression) assert(expression)
 #define MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK); assert(false); 
-//#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
 //#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
 //#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif 진우
