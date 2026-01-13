@@ -34,7 +34,7 @@ public:
 private:
 	HRESULT Initialize(TRIGGERBOX_DESC*);
 	HRESULT Scan();
-	HRESULT CheckPlayerHit(PSX::PxActor* pActor);
+	HRESULT CheckPlayerHit(PSX::PxActor* pActor, PSX::PxShape* pShape);
 
 
 private:

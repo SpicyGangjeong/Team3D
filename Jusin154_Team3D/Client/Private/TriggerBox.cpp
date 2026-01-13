@@ -23,7 +23,7 @@ HRESULT CTriggerBox::TryScanArea(_float fTimeDelta)
 #endif // _DEBUG
     m_vScanTimer.x += fTimeDelta;
     if (m_vScanTimer.x > m_vScanTimer.y) {
-        m_vScanTimer.x = 0.f;
+        m_vScanTimer.x = m_vScanTimer.y;
 		return Scan();
     }
     return E_FAIL;
@@ -83,11 +83,11 @@ HRESULT CTriggerBox::Scan()
 	_uint iHitCount = pxBuffer.getNbTouches();
 	HRESULT hr = E_FAIL;
 	if (bHit) {
-		hr = CheckPlayerHit(pActor);
+		hr = CheckPlayerHit(pActor, hit.shape);
 		if (FAILED(hr)) {
 			for (_uint i = 0; i < iHitCount; ++i) {
 				PSX::PxOverlapHit* pHit = &pxBuffer.touches[i];
-				hr = CheckPlayerHit(pHit->actor);
+				hr = CheckPlayerHit(pHit->actor, pHit->shape);
 				if (SUCCEEDED(hr)) {
 					break;
 				}
@@ -97,11 +97,14 @@ HRESULT CTriggerBox::Scan()
     return hr;
 }
 
-HRESULT CTriggerBox::CheckPlayerHit(PSX::PxActor* pActor)
+HRESULT CTriggerBox::CheckPlayerHit(PSX::PxActor* pActor, PSX::PxShape* pShape)
 {
-	if (nullptr != pActor && nullptr != pActor->userData)
+	if (nullptr != pActor && nullptr != pActor->userData ||  nullptr != pShape && nullptr != pShape->userData)
 	{
 		PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		if (nullptr == pUserData) {
+			pUserData = static_cast<PHYSX_USERDATA*>(pShape->userData);
+		}
 		switch (pUserData->eKind)
 		{
 		case PHYSX_KIND::BODY_DYNAMIC:

@@ -33,7 +33,7 @@ public:
                 case PXOBJECT::JOINT_ANCHOR:
                     return PSX::PxQueryHitType::eNONE;
                     break;
-                case PXOBJECT::RANROK_PROP:
+                case PXOBJECT::RANROK_BODY:
                     return PSX::PxQueryHitType::eNONE;
                     break;
                 case PXOBJECT::POTION:
