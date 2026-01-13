@@ -720,6 +720,11 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 	CloseHandle(hFile);
 
 
+	if (m_EffectInfo.isScreenFX == true)
+	{
+		XMStoreFloat4x4(&m_ScreenViewMatrix, XMMatrixIdentity());
+		XMStoreFloat4x4(&m_OrthographicMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+	}
 
 	return S_OK;
 }

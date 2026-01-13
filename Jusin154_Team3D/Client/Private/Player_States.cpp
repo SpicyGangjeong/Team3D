@@ -2645,6 +2645,43 @@ void CPlayer::Behavior_Broom_DismountExit()
 	m_bOnce = false;
 }
 
+
+void CPlayer::Attach_Broom()
+{
+	if (m_pBroom->Get_Ride()) {
+		_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
+		_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
+
+		_vector Scale, Rot, Trans;
+
+		XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
+
+		_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
+
+		m_OffsetPos = { 0.f,1.f,0.f };
+
+		_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
+			m_OffsetPos.y, m_OffsetPos.z);
+
+		_vector BS, BR, BT;
+		XMMatrixDecompose(&BS, &BR, &BT, BroomWorld);
+		_matrix BroomWorld_NoScale =
+			XMMatrixRotationQuaternion(BR) *
+			XMMatrixTranslationFromVector(BT);
+
+
+		_matrix SocketWorld = BoneNoScale * Offset * BroomWorld_NoScale;
+
+		_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
+
+		_matrix FinalWorld = FixRot * SocketWorld;
+
+		m_pTransformCom->Set_WorldMatrix(FinalWorld);
+		m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
+	}
+}
+
+
 void CPlayer::Player_InterpTurn(_float fTimeDelta)
 {
 	_uint iCurrIndex = m_pModelCom->Get_AnimIndex();
@@ -2710,6 +2747,8 @@ void CPlayer::Player_InterpTurn(_float fTimeDelta)
 	}
 }
 
+
+
 void CPlayer::Throwing_Interactive()
 {
 	if (nullptr == m_pGrapInteractive) {
@@ -2724,46 +2763,12 @@ void CPlayer::Throwing_Interactive()
 		vDir = m_pTransformCom->Get_State(STATE::LOOK);
 	}
 	m_pGrapInteractive->Set_KinematicFlag(false);
-	
+
 	pBody->Add_Force(pBody->Get_Mass() * vDir * (vDistance / 1.5f), PSX::PxForceMode::eIMPULSE);
 
 	SAFE_RELEASE(m_pGrapInteractive);
 }
 
-void CPlayer::Attach_Broom()
-{
-	if (m_pBroom->Get_Ride()) {
-		_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
-		_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
-
-		_vector Scale, Rot, Trans;
-
-		XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
-
-		_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
-
-		m_OffsetPos = { 0.f,1.f,0.f };
-
-		_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
-			m_OffsetPos.y, m_OffsetPos.z);
-
-		_vector BS, BR, BT;
-		XMMatrixDecompose(&BS, &BR, &BT, BroomWorld);
-		_matrix BroomWorld_NoScale =
-			XMMatrixRotationQuaternion(BR) *
-			XMMatrixTranslationFromVector(BT);
-
-
-		_matrix SocketWorld = BoneNoScale * Offset * BroomWorld_NoScale;
-
-		_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
-
-		_matrix FinalWorld = FixRot * SocketWorld;
-
-		m_pTransformCom->Set_WorldMatrix(FinalWorld);
-		m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
-	}
-}
 
 void CPlayer::ProcessHitBehavior()
 {
@@ -2967,6 +2972,8 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		pairAnimInfo = m_Animation[STATEANIM::REPARO_START];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 
+		m_pEffectPool->Use_Skill(SKILL_TYPE::REPARO, Get_PartObject<CWand>());
+
 		Add_Event(pairAnimInfo.first,
 			[this]() {		
 				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::REPARO_LOOP];
@@ -2976,7 +2983,9 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(m_Animation[STATEANIM::REPARO_LOOP].first,
 			[this]() {		
 				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::REPARO_END];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+			
+			},
 			0.95f);
 	}
 		break;

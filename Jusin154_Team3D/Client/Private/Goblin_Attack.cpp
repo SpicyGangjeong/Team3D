@@ -6,6 +6,7 @@
 #include "Wand.h"
 #include "Player.h"
 #include "Goblin_BattleAxe.h"
+#include "TrailObject.h"
 
 CGoblin_Attack::CGoblin_Attack(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -44,7 +45,11 @@ HRESULT CGoblin_Attack::Initialize(void* pArg)
 
 	m_pPT1 = Get_PartObject<CEffectParts>("Goblin_Particle");
 	m_pPT2 = Get_PartObject<CEffectParts>("Goblin_Particle2");
+	m_pAttack_Trail = Get_PartObject<CTrailObject>();
 
+	SAFE_ADDREF(m_pPT1);
+	SAFE_ADDREF(m_pPT2);
+	SAFE_ADDREF(m_pAttack_Trail);
 	m_fDuration = 2.f;
 
 	return S_OK;
@@ -66,9 +71,14 @@ void CGoblin_Attack::Update(_float fTimeDelta)
 	Update_Event(fTimeDelta);
 
 
-	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&m_vMat));
-	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&m_vMat));
+	_matrix WorldMat = m_pOwner->Get_Owner()->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
+	_matrix BoneMat = XMLoadFloat4x4(&m_vMat);
+
+	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(BoneMat /* * WorldMat*/);
+	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(BoneMat /* * WorldMat*/ );
+
+	m_pAttack_Trail->Trail_Update(BoneMat, fTimeDelta);
 
 }
 
@@ -96,12 +106,14 @@ HRESULT CGoblin_Attack::Pre_Setting(CGameObject* pObject, void* pArg)
 	 //m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
 	 //m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
 
-	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&m_vMat));
-	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&m_vMat));
+	_matrix BoneMat = XMLoadFloat4x4(&m_vMat);
+
+	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(BoneMat);
+	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(BoneMat);
 
 	m_pPT1->Set_Visible(true);
 	m_pPT2->Set_Visible(true);
-
+	m_pAttack_Trail->Set_Visible(true);
 	return S_OK;
 }
 
@@ -173,6 +185,10 @@ void CGoblin_Attack::OnCollision(CGameObject* pOther, void* pDesc)
 void CGoblin_Attack::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pPT1);
+	SAFE_RELEASE(m_pPT2);
+	SAFE_RELEASE(m_pAttack_Trail);
 
 }
 #ifdef _DEBUG

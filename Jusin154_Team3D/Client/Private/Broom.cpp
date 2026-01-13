@@ -6,6 +6,7 @@
 #include "Unit.h"
 #include "PartObject.h"
 #include "EffectParts.h"
+#include "TrailObject.h"
 
 CBroom::CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -103,15 +104,6 @@ void CBroom::Update(_float fTimeDelta)
 		m_bHoverToggle = true;
 		m_fSpeed = 0.f;
 
-		if (m_pWindEffect != nullptr)
-		{
-			if (m_pWindEffect->Get_Visible() == true) // 전 프레임에 트루였다면
-			{
-				m_pWindEffect->Set_Visible(false);
-				m_pWindEffect->Get_Effect_Info()->fSoftMask = 1.f;
-			}
-		}
-
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
@@ -125,20 +117,45 @@ void CBroom::Update(_float fTimeDelta)
 
 	/* 윈드 이펙트 */
 
+
+
 	if (m_bRide == true && m_pWindEffect != nullptr)
 	{
+		_matrix BroomTail_Mat = XMLoadFloat4x4(m_pBroom_TailMat);
+
+		for (int i = 0; i < 3; ++i) {
+			BroomTail_Mat.r[i] = XMVector3Normalize(BroomTail_Mat.r[i]);
+		}
+
+		m_pBroomTrail->Oneside_Rope_Trail_Update(BroomTail_Mat * m_pTransformCom->Get_XMWorldMatrix(), fTimeDelta);
+
 		if (m_fSpeed <= 5.f)
 		{
-			//m_pWindEffect->Set_Visible(false);
+			m_pWindEffect->Get_Component<CInstance_Model>()->Set_Loop(false);
+			m_pWindEffect->Get_Effect_Info()->isDissolve = true;
+			m_pWindEffect->Get_Effect_Info()->fSoftMask = 1.f;
+
+			m_pBroomTrail->SetDissolve(true);
+
 			return;
 		}
 
+
+
+		m_pBroomTrail->SetDissolve(false);
+		m_pBroomTrail->Set_Visible(true);
+
+		/* 윈드 이펙트 루프 돌리도록 */
+		m_pWindEffect->Get_Component<CInstance_Model>()->Set_Loop(true);
+		m_pWindEffect->Get_Effect_Info()->isDissolve = false;
 		m_pWindEffect->Set_Visible(true);
+
+		/* 윈드 이펙트 속도에 따라 강해지도록 */
 		m_pWindEffect->Get_Component<CInstance_Model>()->Set_TimeMult(0.5f + m_fSpeed / 20.f);
 		m_pWindEffect->Get_Effect_Info()->fBlurIntensity = m_fSpeed / 30.f;
 
-	}
 
+	}
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
@@ -217,6 +234,27 @@ HRESULT CBroom::Ready_Child()
 	}
 
 	m_pWindEffect->Load("../Bin/Resources/Data/Effect/ScreenFX/Wind", static_cast<LEVEL>(g_iStaticLevel));
+
+	///
+
+	if (FAILED(Add_PartObject<CEffectParts>("Boost_Screen", g_iStaticLevel, &m_pBoostScreenFX, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+	m_pBoostScreenFX->Load("../Bin/Resources/Data/Effect/BroomEffect/Booster_ScreenFX", static_cast<LEVEL>(g_iStaticLevel));
+
+
+	///
+
+	if (FAILED(Add_PartObject<CTrailObject>("Broom_Trail", g_iStaticLevel, &m_pBroomTrail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pBroomTrail->Load_Trail("../Bin/Resources/Data/Effect/BroomEffect/Broom_Trail", static_cast<LEVEL>(g_iStaticLevel));
+	m_pBroomTrail->Set_Visible(false);
+
+
+	m_pBroom_TailMat = m_pModelCom->Get_BoneMatrixPtr("thistleSocket");
 
 	return S_OK;
 }
@@ -300,6 +338,17 @@ void CBroom::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
+}
+
+void CBroom::Boost_Effect_Visible(_bool isVisible)
+{
+	m_pBoostScreenFX->Get_Component<CInstance_Model>()->Set_Loop(isVisible);
+
+	if (isVisible == true)
+	{
+
+		m_pBoostScreenFX->Set_Visible(true);
+	}
 }
 
 
@@ -391,7 +440,10 @@ void CBroom::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pWindEffect);
+	SAFE_RELEASE(m_pWindEffect);	
+	SAFE_RELEASE(m_pBroomTrail);
+	SAFE_RELEASE(m_pBoostScreenFX);
+
 }
 #ifdef _DEBUG
 

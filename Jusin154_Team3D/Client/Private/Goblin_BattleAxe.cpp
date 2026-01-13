@@ -44,6 +44,7 @@ HRESULT CGoblin_BattleAxe::Initialize(void* pArg)
 
 void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 {
+
 	if (m_bVisible) {
 		XMStoreFloat4(&m_vStartAxePos, Get_WorldPostion());
 		XMStoreFloat4(&m_vStartGripPos, Get_WorldPostion());
@@ -58,7 +59,14 @@ void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 	}
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
-	XMStoreFloat4x4(&m_vAxeMat, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Bone")) * m_pTransformCom->Get_XMWorldMatrix());
+
+	_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Bone"));
+
+	for (int i = 0; i < 3; ++i) {
+		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);
+	}
+
+	XMStoreFloat4x4(&m_vAxeMat, BoneMat * m_pTransformCom->Get_XMWorldMatrix());
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG

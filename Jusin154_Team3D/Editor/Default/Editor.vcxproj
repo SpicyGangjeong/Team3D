@@ -207,6 +207,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
     <ClInclude Include="..\public\NPCInteraction.h" />
+    <ClInclude Include="..\Public\BroomBoost.h" />
     <ClInclude Include="..\Public\Protego_Hit.h" />
     <ClInclude Include="..\Public\Ranrok_Prop.h" />
     <ClInclude Include="..\public\QuestInstance.h" />
@@ -256,6 +257,10 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\SpellLearn_Panel.h" />
     <ClInclude Include="..\public\SpellLearn_Slot.h" />
     <ClInclude Include="..\Public\State_Blink.h" />
+    <ClInclude Include="..\Public\State_Broom_Dismount.h" />
+    <ClInclude Include="..\Public\State_Broom_Ride.h" />
+    <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
+    <ClInclude Include="..\Public\State_Broom_TurboFly.h" />
     <ClInclude Include="..\Public\State_Dead.h" />
     <ClInclude Include="..\Public\State_FireBall.h" />
     <ClInclude Include="..\Public\State_FireBreath.h" />
@@ -476,6 +481,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Broom_Flag.cpp" />
     <ClCompile Include="..\private\Broom_Record.cpp" />
     <ClCompile Include="..\private\Broom_Scoreboard.cpp" />
+    <ClCompile Include="..\Private\Broom_States.cpp" />
     <ClCompile Include="..\private\Broom_TargetGate2D.cpp" />
     <ClCompile Include="..\private\Broom_Trophy.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
@@ -499,6 +505,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
     <ClCompile Include="..\private\NPCInteraction.cpp" />
+    <ClCompile Include="..\Private\BroomBoost.cpp" />
     <ClCompile Include="..\Private\Protego_Hit.cpp" />
     <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
     <ClCompile Include="..\private\QuestInstance.cpp" />
@@ -549,6 +556,10 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\SpellLearn_Panel.cpp" />
     <ClCompile Include="..\private\SpellLearn_Slot.cpp" />
     <ClCompile Include="..\Private\State_Blink.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Ride.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp" />
+    <ClCompile Include="..\Private\State_Broom_TurboFly.cpp" />
     <ClCompile Include="..\Private\State_Dead.cpp" />
     <ClCompile Include="..\Private\State_FireBall.cpp" />
     <ClCompile Include="..\Private\State_FireBreath.cpp" />
