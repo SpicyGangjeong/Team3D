@@ -75,17 +75,17 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 
 	/*if (FAILED(Load_LightObject("LightElement")))
 		return E_FAIL;*/
-	//
-	//if (FAILED(Load_InteractObject("E_INTER_Barrel")))
-	//	return E_FAIL;
-	//if (FAILED(Load_InteractObject("E_INTER_PostPackage_B")))
-	//	return E_FAIL;
-	//if (FAILED(Load_InteractObject("E_INTER_PostPackage_F")))
-	//	return E_FAIL;
-	//if (FAILED(Load_InteractObject("E_INTER_TeaShopTable")))
-	//	return E_FAIL;
-	//if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
-	//	return E_FAIL;
+	
+	if (FAILED(Load_InteractObject("E_INTER_Barrel")))
+		return E_FAIL;
+	if (FAILED(Load_InteractObject("E_INTER_PostPackage_B")))
+		return E_FAIL;
+	if (FAILED(Load_InteractObject("E_INTER_PostPackage_F")))
+		return E_FAIL;
+	if (FAILED(Load_InteractObject("E_INTER_TeaShopTable")))
+		return E_FAIL;
+	if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
+		return E_FAIL;
 
 #pragma region HOGSMEADE
 	if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))

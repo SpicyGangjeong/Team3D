@@ -40,7 +40,7 @@ private:
 	_float m_fMass = {};
 	_float3 m_vBoxSize = {};
 #endif // _DEBUG
-
+	_float4 m_vExtentPosition = {};
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

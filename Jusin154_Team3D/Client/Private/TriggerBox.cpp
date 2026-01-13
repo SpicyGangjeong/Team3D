@@ -62,10 +62,9 @@ HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 
 #endif // _DEBUG
-	_float3 vScale = { Desc.fRadius, Desc.fRadius, Desc.fRadius };
+	_float3 vScale = { Desc.fRadius * 2.f, Desc.fRadius * 2.f, Desc.fRadius * 2.f };
 	m_pTransformCom->Set_Scale(vScale);
 	m_vScanTimer.y += m_pGameInstance->Real_Random_Float(0.f, 0.2f);
-
     return S_OK;
 }
 
@@ -73,19 +72,20 @@ HRESULT CTriggerBox::Scan()
 {
 	_float fRadius = m_pTransformCom->Get_Radius();
 
-	PSX::PxSweepBufferN<32> pxBuffer = {};
-	_bool bHit = m_pGameInstance->SphereCast(fRadius, m_pTransformCom->Get_State(STATE::POSITION), XMVectorSet(0.f, 1.f, 0.f, 0.f), 1.1f,
-		PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+	PSX::PxOverlapBufferN<32> pxBuffer = {};
+	_bool bHit = m_pGameInstance->Overlap(fRadius, m_pTransformCom->Get_State(STATE::POSITION), 
+		PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eNO_BLOCK, pxBuffer);
 
-	const PSX::PxSweepHit & hit = pxBuffer.block;
+	
+	PSX::PxOverlapHit & hit = pxBuffer.block;
 	PSX::PxRigidActor* pActor = hit.actor;
-	_uint iHitCount = pxBuffer.getNbAnyHits();
+	_uint iHitCount = pxBuffer.getNbTouches();
 	HRESULT hr = E_FAIL;
 	if (bHit) {
 		hr = CheckPlayerHit(pActor);
 		if (FAILED(hr)) {
 			for (_uint i = 0; i < iHitCount; ++i) {
-				PSX::PxSweepHit* pHit = &pxBuffer.touches[i];
+				PSX::PxOverlapHit* pHit = &pxBuffer.touches[i];
 				hr = CheckPlayerHit(pHit->actor);
 				if (SUCCEEDED(hr)) {
 					break;

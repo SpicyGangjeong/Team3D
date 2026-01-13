@@ -103,7 +103,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
     _float      fTimeAcc = { };
-
+    const _float fMaxTimer = { 1.f / 60.f };
     while (true)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -134,7 +134,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             pMainApp->Update(1.f / 60.f);
 #endif // _DEBUG
 #ifndef _DEBUG
-            pMainApp->Update(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
+            _float fFrameTime = min(pGameInstance->Get_TimeDelta(TEXT("Timer_60")), fMaxTimer);
+            pMainApp->Update(fFrameTime);
 #endif
             pMainApp->Render();
 
