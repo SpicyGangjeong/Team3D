@@ -1,81 +1,87 @@
 ﻿<DialogueInfo>
 	<Dialogue NpcName="OLLIVENDER" NpcID="0" NpcInrteract ="1" >
-		<Line ID="0" Type="0" Text="반갑네 친구 나는 올리벤더 라고 하네" NextID="1"> </Line>
-		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextID="2"> </Line>
-		<Line ID="2" Type="1" Text="뭐 필요한게 있나?" NextID="-1">
-			<Choice Type="2" Text="상점 이용하기" NextID="-1" />
-			<Choice Type="3" Text="퀘스트 확인하기" NextID="-1" />
-			<Choice Type="0" Text="다른일 하러가기" NextID="-1" />
+		<Line ID="0" Tag="1" Type="1" Text="반갑네 친구 나는 올리벤더 라고 하네" NextID="1"> </Line>
+		<Line ID="1" Tag="1" Type="1" Text="나는 여기서 지팡이를 팔고있어" NextID="2"> </Line>
+		<Line ID="2" Tag="1" Type="2" Text="뭐 필요한게 있나?" NextID="0">
+			<Choice Type="3" Text="상점 이용하기" NextID="0" />
+			<Choice Type="4" Text="퀘스트 확인하기" NextID="0" />
+			<Choice Type="0" Text="다른일 하러가기" NextID="0" />
 		</Line>
 	</Dialogue>
 
 	<Dialogue NpcName="SATYAVATI" NpcID="1" NpcInrteract ="0">
-		<Line ID="0" Type="0" Text="사티아바티" NextID="-1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="사티아바티" NextID="0"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="MATILDAWEASELY" NpcID="2" NpcInrteract ="0">
-		<Line ID="0" Type="0" Text="마틸다 위즐리" NextID="1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="마틸다 위즐리" NextID="0"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="ELEAZARFIG" NpcID="3" NpcInrteract="1">
-		<Line ID="0" Type="0" Text="엘리아자르 피그" NextID="1" NpcInrteract ="1"> </Line>
-		<Line ID="1" Type="0" Text="나는 여기서 지팡이를 팔고있어" NextID="2"> </Line>
-		<Line ID="2" Type="1" Text="뭐 필요한게 있나?" NextID="-1">
-			<Choice Type="1" Text="상점 이용하기" NextID="-1" />
-			<Choice Type="2" Text="퀘스트 확인하기" NextID="-1" />
-			<Choice Type="0" Text="다른일 하러가기" NextID="-1" />
+		<Line ID="0" Tag="1" Type="1" Text="엘리아자르 피그" NextID="1" NpcInrteract ="1"> </Line>
+		<Line ID="1" Tag="1" Type="1" Text="나는 여기서 지팡이를 팔고있어" NextID="2"> </Line>
+		<Line ID="2" Tag="1" Type="2" Text="뭐 필요한게 있나?" NextID="0">
+			<Choice Type="2" Text="상점 이용하기" NextID="0" />
+			<Choice Type="3" Text="퀘스트 확인하기" NextID="0" />
+			<Choice Type="0" Text="다른일 하러가기" NextID="0" />
 		</Line>
 	</Dialogue>
 
 	<Dialogue NpcName="ELF" NpcID="4" NpcInrteract="1">
-		<Line ID="0" Type="0" Text="길을 가고 있었는데 고블린 무리가 저를 공격 했어요!" NextID="1"> </Line>
-		<Line ID="1" Type="1" Text="그 못된 친구들을 혼내주세요!" NextID="-1">
-			<Choice Type="3" Text="뭐? 어디야 당장 가자" NextID="0" />
-			<Choice Type="0" Text="흥! 너가 나약해서 그런거 아니야" NextID="-1" />
+		<Line ID="0" Tag="1" Type="1" Text="길을 가고 있었는데 고블린 무리가 저를 공격 했어요!" NextID="1"> </Line>
+		<Line ID="1" Tag="1" Type="2" Text="그 못된 친구들을 혼내주세요!" NextID="-1">
+			<Choice Type="3" Text="뭐? 어디야 당장 가자" NextID="-1" />
+			<Choice Type="1" Text="흥! 너가 나약해서 그런거 아니야" NextID="2" />
 		</Line>
+		<Line ID="2" Tag="0" Type="1" Text="너가 나약해 보여서 공격한거 아니야?" NextID="3"/>
+		<Line ID="3" Tag="1" Type="2" Text="그것도 맞지만 한번만 도와 주세요..." NextID="0">
+			<Choice Type="3" Text="그래 알겠어 가자" NextID="0" />
+			<Choice Type="0" Text="자기 일은 자기가 해결 하는거다." NextID="2" />
+		</Line>
+
 	</Dialogue>
 
 	<Dialogue NpcName="PEEVES" NpcID="5" NpcInrteract="1">
-		<Line ID="0" Type="0" Text="이번에 새로운 코스를 만들었는데" NextID="1"> </Line>
-		<Line ID="1" Type="1" Text="한번 도전 해볼래?" NextID="-1">
-			<Choice Type="5" Text="실력 한번 보여준다." NextID="-1" />
-			<Choice Type="0" Text="다시 연습 하고온다." NextID="-1" />
+		<Line ID="0" Tag="1" Type="1" Text="이번에 새로운 코스를 만들었는데" NextID="1"> </Line>
+		<Line ID="1" Tag="1" Type="2" Text="한번 도전 해볼래?" NextID="0">
+			<Choice Type="6" Text="실력 한번 보여준다." NextID="0" />
+			<Choice Type="0" Text="다시 연습 하고온다." NextID="0" />
 		</Line>
 	</Dialogue>
 
 	<Dialogue NpcName="PHINEASBLACK" NpcID="6" NpcInrteract="0">
-		<Line ID="0" Type="0" Text="올해 퀴디치 시즌은 취소 되었습니다." NextID="-1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="올해 퀴디치 시즌은 취소 되었습니다." NextID="0"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="F_STUDENT" NpcID="7" NpcInrteract="1">
-		<Line ID="0" Type="0" Text="혹시 그 소문 들었어?" NextID="-1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="혹시 그 소문 들었어?" NextID="0"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="M_STUDENT" NpcID="8" NpcInrteract="0">
-		<Line ID="0" Type="0" Text="테오도어 그레이브스" NextID="-1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="테오도어 그레이브스" NextID="0"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="BAIHOWIN" NpcID="9" NpcInrteract="0">
-		<Line ID="0" Type="0" Text="바이호윈" NextID="-1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="바이호윈" NextID="0"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="GEORGEOSRIC" NpcID="10" NpcInrteract="0">
-		<Line ID="0" Type="0" Text="조지오스릭" NextID="-1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="조지오스릭" NextID="0"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="DINAHHECAT" NpcID="11" NpcInrteract="1">
-		<Line ID="0" Type="0" Text="뭐? 대련을 하고 싶다고?" NextID="1"> </Line>
-		<Line ID="1" Type="1" Text="다시 한번 생각할 시간을 주겠네" NextID="-1">
-			<Choice Type="6" Text="보내 돌라고 한다." NextID="-1" />
-			<Choice Type="0" Text="다시 한번 생각한다." NextID="-1" />
+		<Line ID="0" Tag="1" Type="1" Text="뭐? 대련을 하고 싶다고?" NextID="1"> </Line>
+		<Line ID="1" Tag="1" Type="2" Text="다시 한번 생각할 시간을 주겠네" NextID="0">
+			<Choice Tag="1" Type="6" Text="보내 돌라고 한다." NextID="0" />
+			<Choice Tag="1" Type="0" Text="다시 한번 생각한다." NextID="0" />
 		</Line>
 	</Dialogue>
 
 	<Dialogue NpcName="MUDIWAONAI" NpcID="12" NpcInrteract="0">
-		<Line ID="0" Type="0" Text="무디아 오나이" NextID="-1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="무디아 오나이" NextID="0"> </Line>
 	</Dialogue>
 
 	<Dialogue NpcName="KITCHENFEMALE" NpcID="13" NpcInrteract="0">
-		<Line ID="0" Type="0" Text="주방 도비" NextID="-1"> </Line>
+		<Line ID="0" Tag="1" Type="0" Text="주방 도비" NextID="0"> </Line>
 	</Dialogue>
 </DialogueInfo>

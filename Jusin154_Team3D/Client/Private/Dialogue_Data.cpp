@@ -44,9 +44,11 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
             CURRENTDIALOGUEINFO line{};
             pLine->QueryIntAttribute("ID", &line.iLineID);
 
-            int type = 0;
-            pLine->QueryIntAttribute("Type", &type);
-            line.bType = (type == 1);
+            int Tag = 0;
+            pLine->QueryIntAttribute("Tag", &Tag);
+            line.bTag = (Tag == 1);
+
+            pLine->QueryIntAttribute("Type", &line.iType);
 
             const char* text = pLine->Attribute("Text");
             if (text) line.pText = CMyTools::ToWstring(text);

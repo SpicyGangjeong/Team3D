@@ -162,6 +162,11 @@ _int CNPC_Ollivander::Get_TextID()
 	return m_iNpc_DialogueTextID; 
 }
 
+void CNPC_Ollivander::Set_NextID(_int ID)
+{
+	m_iNpc_DialogueTextID = ID;
+}
+
 HRESULT CNPC_Ollivander::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {

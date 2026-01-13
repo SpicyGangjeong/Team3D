@@ -40,12 +40,13 @@ public:
 	virtual HRESULT Render() override;
 	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
 	_bool IsScannable(_fvector vPosition);
+	_bool Get_Chest() { return m_bChest; }
 
 private:
 	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END };
 	CHEST_STATE						m_ePreState = {};
 	CHEST_STATE						m_eCurState = {};
-
+	CInfoInstance*					m_pInfoInstance = { nullptr };
 	_uint							m_iShaderPass_Index = {};
 
 	_int							m_iEntered = { 0 };
@@ -56,6 +57,8 @@ private:
 	_float							m_fRimLightStrength = { 3.7f };
 	_float							m_fCurRimLightStrength = { 0.f };
 	_float4							m_vRimLightColor = { 0.71f, 0.39f, 0.02f, 1.f };
+
+	_bool							m_bChest = { false };
 
 	CTexture*						m_pNoiseTextureCom = { nullptr };
 	CRigidBody_Dynamic*				m_pRigidBody = { nullptr };

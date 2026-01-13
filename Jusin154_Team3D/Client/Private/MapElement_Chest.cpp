@@ -6,6 +6,7 @@
 #include "Layer.h"
 #include "MapElement_Chest_Lid.h"
 #include "Player.h"
+#include "InfoInstance.h"
 
 CMapElement_Chest::CMapElement_Chest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapElement{ pDevice, pContext }
@@ -13,7 +14,8 @@ CMapElement_Chest::CMapElement_Chest(ID3D11Device* pDevice, ID3D11DeviceContext*
 }
 
 CMapElement_Chest::CMapElement_Chest(const CMapElement_Chest& rhs)
-	: CMapElement(rhs)
+	: CMapElement(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -57,7 +59,7 @@ HRESULT CMapElement_Chest::Initialize(void* pArg)
 
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat3(&pDesc->vBoxLocalPosition));
-
+	m_bChest = true;
 	return S_OK;
 }
 
@@ -180,6 +182,7 @@ void CMapElement_Chest::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder,
 	}
 	if (fDistance < m_fEncounterDistance) {
 		m_iEntered = 4;
+		
 		if (m_pGameInstance->Key_Down(DIK_F) && m_eCurState != CHEST_STATE::OPENED)
 		{
 			m_eCurState = CHEST_STATE::OPENED;

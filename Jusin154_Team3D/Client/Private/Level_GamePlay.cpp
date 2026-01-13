@@ -335,6 +335,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = false;
 	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
+	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -988,11 +989,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_ReparoObject(const _wstring& strLayerTag)
 {
-	//for (_uint i = 0; i < 1; ++i) {
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-	//		return E_FAIL;
-	//	}
-	//}
+	/*for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+			return E_FAIL;
+		}
+	}*/
 
 	return S_OK;
 }
@@ -1020,7 +1021,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	isLoad_Monster = false;
 #endif // 
 #ifdef 나
-
+	isLoad_Monster = true;
 #endif // 
 #ifdef Bin
 	isLoad_Monster = true;

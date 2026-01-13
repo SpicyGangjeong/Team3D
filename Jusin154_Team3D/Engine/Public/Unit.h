@@ -57,6 +57,7 @@ public:
 	virtual _wstring Get_Name();
 	virtual _wstring Get_NpcName();
 	virtual _int Get_TextID();
+	virtual void Set_NextID(_int ID);
 #pragma endregion
 
 protected:
