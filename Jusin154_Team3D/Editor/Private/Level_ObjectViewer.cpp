@@ -331,6 +331,8 @@ void CLevel_ObjectViewer::Show_AnimList()
 					if (GUI::Button(pModel->Get_AnimList(i)))
 					{
 						pModel->Set_AnimationIndex(i);
+						m_iCurAnimIndex = i;
+						m_KeyFrames.clear();
 					}
 				}
 			}
@@ -407,7 +409,11 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		}
 
 		_float AnimRatio = pModel->Get_CurrentTrackProgressRatio();
-		GUI::DragFloat("AnimRatio", &AnimRatio);
+		if (GUI::DragFloat("AnimRatio", &AnimRatio, 0.001f))
+		{
+			pModel->Set_CurrentTrackProgressRatio(AnimRatio);
+		}
+	
 
 		_float AnimSpeed = pModel->Get_AnimSpeed();
 		GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
@@ -442,7 +448,7 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		{
 			if (pModel)
 			{
-				_float fKeyFrame = pModel->Get_CurrentTrackPosition();
+				_float fKeyFrame = pModel->Get_CurrentTrackProgressRatio();
 				m_KeyFrames.emplace(EventName, fKeyFrame);
 
 				Save_KeyFrame();
@@ -669,6 +675,8 @@ void CLevel_ObjectViewer::Find_Anim()
 			if (GUI::Button(pModel->Get_AnimList(m_iAnimIndex)))
 			{
 				pModel->Set_AnimationIndex(m_iAnimIndex);
+				m_iCurAnimIndex = m_iAnimIndex;
+				m_KeyFrames.clear();
 			}
 		}
 
@@ -683,6 +691,8 @@ void CLevel_ObjectViewer::Find_Anim()
 				if (GUI::Button(pModel->Get_AnimList(i)))
 				{
 					pModel->Set_AnimationIndex(i);
+					m_iCurAnimIndex = i;
+					m_KeyFrames.clear();
 				}
 			}
 		}
@@ -692,35 +702,65 @@ void CLevel_ObjectViewer::Find_Anim()
 
 void CLevel_ObjectViewer::Save_KeyFrame()
 {
+	_char szDrive[MAX_PATH] = {};
 	_char szDir[MAX_PATH] = {};
+	_splitpath_s(m_DummyPath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
 
-	_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+	_string Path = _string(szDrive) + szDir + "KeyFrame.xml";
 
-	_string szFile = "KeyFrame.bin";
-	_string Path = szDir + szFile;
+	tinyxml2::XMLDocument doc;
 
-	FILE* fp = nullptr;
-	fopen_s(&fp, Path.c_str(), "wb");
-	if (!fp) {
-		return;
+	tinyxml2::XMLElement* pRoot = nullptr;
+	if (doc.LoadFile(Path.c_str()) == tinyxml2::XML_SUCCESS)
+		pRoot = doc.FirstChildElement("KeyFrames");
+
+	if (!pRoot)
+	{
+		doc.Clear();
+		pRoot = doc.NewElement("KeyFrames");
+		doc.InsertFirstChild(pRoot);
 	}
 
-	_uint KeyFrameSize = (_uint)m_KeyFrames.size();
+	tinyxml2::XMLElement* pAnimNode = nullptr;
+	for (tinyxml2::XMLElement* pAnim = pRoot->FirstChildElement("Animation");
+		pAnim;
+		pAnim = pAnim->NextSiblingElement("Animation"))
+	{
+		_int idx = -1;
+		pAnim->QueryIntAttribute("Index", &idx);
 
-	fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
+		if (idx == m_iCurAnimIndex)
+		{
+			pAnimNode = pAnim;
+			break;
+		}
+	}
+
+	if (!pAnimNode)
+	{
+		pAnimNode = doc.NewElement("Animation");
+		pAnimNode->SetAttribute("Index", m_iCurAnimIndex);
+		pRoot->InsertEndChild(pAnimNode);
+	}
+
+	while (tinyxml2::XMLElement* pKey = pAnimNode->FirstChildElement("KeyFrame"))
+	{
+		pAnimNode->DeleteChild(pKey);
+	}
 
 	for (auto& iter : m_KeyFrames)
 	{
-		_uint EventSize = (_uint)iter.first.size();
-		fwrite(&iter.second, sizeof(_float), 1, fp);
-		fwrite(&EventSize, sizeof(_uint), 1, fp);
-		fwrite(iter.first.c_str(), sizeof(_char), EventSize, fp);
+		tinyxml2::XMLElement* pKey = doc.NewElement("KeyFrame");
+		pKey->SetAttribute("Event", iter.first.c_str());
+		char buf[32];
+		sprintf_s(buf, "%.3f", iter.second);
+		pKey->SetAttribute("Ratio", buf);
+		pKey->SetAttribute("Volume", m_fVolume);
+		pAnimNode->InsertEndChild(pKey);
 	}
 
-
-	fclose(fp);
+	doc.SaveFile(Path.c_str());
 }
-
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 {

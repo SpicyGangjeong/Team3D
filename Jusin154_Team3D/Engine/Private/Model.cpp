@@ -196,10 +196,6 @@ void CModel::Set_ChainAnimation(pair<_uint, _bool> chainAnim)
 
 _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
-	if (!m_bPlayAnim){
-		return false;
-	}
-
 	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations){
 		return false;
 	}
@@ -870,6 +866,16 @@ void CModel::Set_CurrentTrackProgressRatio(_float fRatio)
 _float CModel::Get_TrackProgressRatio(_uint iIndex)
 {
 	return m_Animations[iIndex]->Get_CurrentTrackProgressRatio();
+}
+
+void CModel::Set_PlayAnim(_bool bPlayAnim)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_PlayAnim(bPlayAnim);
+}
+
+_bool CModel::Get_PlayAnim()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_PlayAnim();
 }
 
 _float CModel::Get_AnimSpeed()

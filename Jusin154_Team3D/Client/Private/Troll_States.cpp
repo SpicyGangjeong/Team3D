@@ -825,7 +825,8 @@ _bool CTroll::IsHitSpellDisabled()
 {
 	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC) ||
 		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW) ||
-		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA))
+		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA) ||
+		m_eHitSpell == ENUM_CLASS(SKILL_TYPE::STUPEFY))
 	{
 		return true;
 	}

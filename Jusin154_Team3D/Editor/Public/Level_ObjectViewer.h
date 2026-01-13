@@ -59,6 +59,8 @@ private:
 	_char					m_FindAnimName[256] = {};
 	string					m_SelectedKey;
 	_int					m_iAnimIndex = {};
+	_int					m_iCurAnimIndex = {};
+	_float					m_fVolume = {0.f};
 
 	class CPlayer* m_Test = { nullptr };
 public:

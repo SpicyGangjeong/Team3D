@@ -36,9 +36,13 @@ CAnimation::CAnimation(const CAnimation& rhs)
 }
 _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex)
 {
-	m_fTempTrack += fTimeDelta * m_fAnimSpeed;
-	m_fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
-	m_fCurrentTrackPosition += m_fProgress;
+	if (m_bPlayAnim)
+	{
+		m_fTempTrack += fTimeDelta * m_fAnimSpeed;
+		m_fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
+		m_fCurrentTrackPosition += m_fProgress;
+	}
+
 
 	if (m_fCurrentTrackPosition >= m_fDuration) {
 		if (false == bIsLoop) {
@@ -345,8 +349,10 @@ void CAnimation::CreateGPUData(ID3D11Device* pDevice)
 void CAnimation::Set_CurrentTrackProgressRatio(_float fRatio)
 {
 	fRatio = clamp(fRatio, 0.f, 1.f);
-	m_fTempTrack = fRatio * m_fDurationSeconds;
+
+	m_fCurrentTrackPosition = m_fDuration * fRatio;
 }
+
 
 
 #ifdef EDITOR_PROJECT
