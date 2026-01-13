@@ -24,6 +24,7 @@ private:
 
 	_bool m_bLevel = { false };
 	_bool m_bCurrentLevel = { false };
+	_bool m_bIntroCinematic = { false };
 
 private:
 	virtual HRESULT Initialize() override;
