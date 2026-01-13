@@ -240,6 +240,11 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_fAccZigZagTime = 0.f;
 
+#pragma region SOUND_TEST
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_13, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+#pragma endregion
+
+
 	return S_OK;
 }
 

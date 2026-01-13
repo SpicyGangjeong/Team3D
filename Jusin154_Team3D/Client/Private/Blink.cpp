@@ -206,6 +206,8 @@ HRESULT CBlink::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_fSizeAccTime = 0.f;
 	m_fMoveAccTime = 0.f;
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BLINK_2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	return S_OK;
 }
 
