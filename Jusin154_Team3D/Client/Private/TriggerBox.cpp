@@ -23,7 +23,7 @@ HRESULT CTriggerBox::TryScanArea(_float fTimeDelta)
 #endif // _DEBUG
     m_vScanTimer.x += fTimeDelta;
     if (m_vScanTimer.x > m_vScanTimer.y) {
-        m_vScanTimer.x = 0.f;
+        m_vScanTimer.x = m_vScanTimer.y;
 		return Scan();
     }
     return E_FAIL;
@@ -57,10 +57,8 @@ HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat4(&pDesc->vPosition_Radius), 1.f));
 #ifdef _DEBUG
-
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 12, false, false));
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
-
 #endif // _DEBUG
 	_float3 vScale = { Desc.fRadius * 2.f, Desc.fRadius * 2.f, Desc.fRadius * 2.f };
 	m_pTransformCom->Set_Scale(vScale);
@@ -82,11 +80,11 @@ HRESULT CTriggerBox::Scan()
 	_uint iHitCount = pxBuffer.getNbTouches();
 	HRESULT hr = E_FAIL;
 	if (bHit) {
-		hr = CheckPlayerHit(pActor);
+		hr = CheckPlayerHit(pActor, hit.shape);
 		if (FAILED(hr)) {
 			for (_uint i = 0; i < iHitCount; ++i) {
 				PSX::PxOverlapHit* pHit = &pxBuffer.touches[i];
-				hr = CheckPlayerHit(pHit->actor);
+				hr = CheckPlayerHit(pHit->actor, pHit->shape);
 				if (SUCCEEDED(hr)) {
 					break;
 				}
@@ -96,11 +94,14 @@ HRESULT CTriggerBox::Scan()
     return hr;
 }
 
-HRESULT CTriggerBox::CheckPlayerHit(PSX::PxActor* pActor)
+HRESULT CTriggerBox::CheckPlayerHit(PSX::PxActor* pActor, PSX::PxShape* pShape)
 {
-	if (nullptr != pActor && nullptr != pActor->userData)
+	if (nullptr != pActor && nullptr != pActor->userData ||  nullptr != pShape && nullptr != pShape->userData)
 	{
 		PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		if (nullptr == pUserData) {
+			pUserData = static_cast<PHYSX_USERDATA*>(pShape->userData);
+		}
 		switch (pUserData->eKind)
 		{
 		case PHYSX_KIND::BODY_DYNAMIC:

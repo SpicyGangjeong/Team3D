@@ -549,8 +549,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
-	isLoad_UI_SEQUANTIAL = false;
+	isLoad_Hogwart = true;
+	isLoad_UI_SEQUANTIAL = true;
 	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
@@ -2533,7 +2533,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		{
 			Desc1.eType = ACTOR::SPHERE;
 			Desc1.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
-			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
@@ -2546,11 +2546,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC DESC_Ranrok_Body{};
+		{
+			DESC_Ranrok_Body.eType = ACTOR::SPHERE;
+			DESC_Ranrok_Body.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			DESC_Ranrok_Body.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			DESC_Ranrok_Body.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			DESC_Ranrok_Body.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			DESC_Ranrok_Body.fContactOffset = { 0.05f };
+			DESC_Ranrok_Body.vhalfGeometryInfo = { 1.1f, 1.1f, 1.1f };
+			DESC_Ranrok_Body.fDensity = 1.f;
+			DESC_Ranrok_Body.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			DESC_Ranrok_Body.eLockFlag = {};
+			DESC_Ranrok_Body.vAutoDamping = { 1.f, 1.f };
+			DESC_Ranrok_Body.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			DESC_Ranrok_Body.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC PotionDesc{};
 		{
 			PotionDesc.eType = ACTOR::SPHERE;
 			PotionDesc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
-			PotionDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			PotionDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			PotionDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			PotionDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			PotionDesc.fContactOffset = { 0.05f };
@@ -2588,6 +2605,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK_BODY"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, DESC_Ranrok_Body)))) {
 			return E_FAIL;
 		}
 

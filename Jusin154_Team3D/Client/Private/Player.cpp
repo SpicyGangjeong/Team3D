@@ -735,23 +735,6 @@ HRESULT CPlayer::Ready_Parts()
 		return E_FAIL;
 	}
 
-	//m_pModelCom->Play_Animation()
-	//XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("broomSocket"));
-#ifdef 기무리
-
-	//{
-	//	CPlayerRobe::PlayerRobe_DESC Desc{};
-	//	Desc.pModel = m_pModelCom;
-	//	Desc.pParentTransform = m_pTransformCom;
-	//	Desc.pSocketMatrix = m_pModelCom->Get_BoneMatrixPtr("Hips_Cloth");
-	//	if (FAILED(Add_PartObject<CPlayerRobe>("RobePart", g_iStaticLevel, &m_pRobePart, &Desc))) {
-	//		assert(false);
-	//	}
-	//}
-
-#endif // 기무리
-
-
 	return S_OK;
 }
 

@@ -700,9 +700,9 @@ HRESULT CRanrok::Ready_SubParts()
 
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 	Desc.bAutoOwnerTranslation = false;
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK_PROP);
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK_BODY);
 	for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pTargetableDO[i], &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK_BODY"), (CComponent**)&m_pTargetableDO[i], &Desc))) {
 			return E_FAIL;
 		}
 		m_pTargetableDO[i]->Set_Kinematic(true);
