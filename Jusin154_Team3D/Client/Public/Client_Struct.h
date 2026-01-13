@@ -47,7 +47,8 @@ typedef struct tagSpellInfo
 	typedef struct DialogueInfo
 	{
 		_int						iLineID{};
-		_bool						bType{};
+		_bool						bTag{};
+		_int						iType{};
 		_wstring					pText;
 		_int						NextTextID{};
 		vector<DIALOGUECHOICEINFO>	ChoiceInfo;
@@ -75,6 +76,13 @@ typedef struct tagSpellInfo
 		_float4			fNPCPosition{};
 		_int			iTextID{};
 	}NPCINTERACTIONINFO;
+
+	typedef struct tegBoxInteractionInfo
+	{
+		CGameObject* pOwner = { nullptr };
+		_wstring		pName;
+		_float4			fPosition{};
+	}BOXINTERACTIONINFO;
 
 	typedef struct Choice
 	{

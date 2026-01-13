@@ -43,7 +43,7 @@ protected:
 
 	virtual _bool Chack_Element(_float2 Position, _float2 Target, _float Scale, _float TargetScale);
 
-	_bool	World_Screen(_float3 fWorld_Pos, _float2& fScreenPos, _float& fDepth);
+	_bool	World_Screen(_float3 fWorld_Pos, _float2& fScreenPos, _float& fDepth, _bool& fFalse, _float& fOffSet);
 	_bool	Screen(_float2& fWorld_Pos, _float Winx, _float Winy);
 	_float2 Get_EdgePosition(_float2 fWorld_Pos, _float Winx, _float Winy, _float OffSetY);
 	_bool	World_to_ScreenUI(_float3 fWorld_Pos, _float2& fScreenPos, _float OffSetY);

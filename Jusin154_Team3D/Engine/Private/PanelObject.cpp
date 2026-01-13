@@ -261,35 +261,27 @@ _bool CPanelObject::Chack_Element(_float2 Position, _float2 Target, _float Scale
 	return false;
 }
 
-_bool CPanelObject::World_Screen(_float3 fWorld_Pos, _float2& fScreenPos, _float& fDepth)
+_bool CPanelObject::World_Screen(_float3 fWorld_Pos, _float2& fScreenPos, _float& fDepth, _bool& fFalse, _float& fOffSet)
 {
 	_matrix mView = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix mProj = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-	_matrix mVP = mView * mProj;
 
-	_vector	Pos = XMVectorSet(fWorld_Pos.x, fWorld_Pos.y, fWorld_Pos.z, 1.f);
-	Pos = XMVector4Transform(Pos, mVP);
+	_vector vWorld = XMVectorSet(fWorld_Pos.x, fWorld_Pos.y, fWorld_Pos.z, 1.f);
+	_vector vView = XMVector4Transform(vWorld, mView);
 
-	_float w = XMVectorGetW(Pos);
+	fFalse = XMVectorGetZ(vView) <= 0.f;
 
-	_bool bBehind = (w <= 0.f);
+	_vector vClip = XMVector4Transform(vView, mProj);
 
-	if (bBehind)
-	{
-		fDepth = -1.f;
+	float w = XMVectorGetW(vClip);
+	if (fabs(w) < 0.0001f)
 		return false;
-	}
 
-	_float NDCX = XMVectorGetX(Pos) / w;
-	_float NDCY = XMVectorGetY(Pos) / w;
-	_float NDCZ = XMVectorGetZ(Pos) / w;
+	float ndcX = XMVectorGetX(vClip) / w;
+	float ndcY = XMVectorGetY(vClip) / w;
 
-
-
-	fDepth = NDCZ;
-
-	fScreenPos.x = (NDCX + 1.f) * 0.5f * m_fWinSizeX;
-	fScreenPos.y = (1.f - NDCY) * 0.5f * m_fWinSizeY;
+	fScreenPos.x = (ndcX + 1.f) * 0.5f * m_fWinSizeX;
+	fScreenPos.y = (1.f - ndcY) * 0.5f * m_fWinSizeY;
 
 	return true;
 }
@@ -316,34 +308,34 @@ _float2 CPanelObject::Get_EdgePosition(_float2 fWorld_Pos, _float Winx, _float W
 
 	float t = min(tX, tY);
 
-	return _float2(dir.x * t,- dir.y * t - OffSetY);
+	return _float2(dir.x * t, -dir.y * t - OffSetY);
 }
 
 _bool CPanelObject::World_to_ScreenUI(_float3 fWorld_Pos, _float2& fUIScreenPos, _float OffSetY)
 {
-	_float2			fScreenPos{};
-	_float			fDepth{};
+	_float2 fScreenPos{};
+	_float  fDepth{};
+	_bool   bBehind = false;
+	_float	fOffSetX{};
 
-	if (!World_Screen(fWorld_Pos, fScreenPos, fDepth))
-	{
-		fUIScreenPos.x = m_fWinSizeX * 0.5f;
-		fUIScreenPos.y = m_fWinSizeY - OffSetY;
-		return true;
-	}
+	_float fWinSizeX = static_cast<_float>(m_fWinSizeX);
+	_float fWinSizeY = static_cast<_float>(m_fWinSizeY);
 
-	_float			fWinSizeX = static_cast<_float>(m_fWinSizeX);
-	_float			fWinSizeY = static_cast<_float>(m_fWinSizeY);
-
-	if(Screen(fScreenPos, fWinSizeX, fWinSizeY))
-	{
+	if (!World_Screen(fWorld_Pos, fScreenPos, fDepth, bBehind, fOffSetX))
 		return false;
-	}
-	else
+
+	if (bBehind)
 	{
-		fUIScreenPos = Get_EdgePosition(fScreenPos, fWinSizeX, fWinSizeY, OffSetY);
+		fUIScreenPos.x = fScreenPos.x;
+		fUIScreenPos.y = fWinSizeY - OffSetY;
 		return true;
 	}
 
+	if (Screen(fScreenPos, fWinSizeX, fWinSizeY))
+		return false;
+
+	fUIScreenPos = Get_EdgePosition(fScreenPos, fWinSizeX, fWinSizeY, OffSetY);
+	return true;
 }
 
 CGameObject* CPanelObject::Find_Element(const wstring& Name)

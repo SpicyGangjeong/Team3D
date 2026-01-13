@@ -923,6 +923,19 @@ HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix, _uint iLevel)
 	}
 	return S_OK;
 }
+HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix, _uint iLevel, const _char* pName)
+{
+	m_iNumPhysXMeshes = m_iNumMeshes;
+
+	m_TriMeshes.reserve(m_iNumMeshes);
+
+	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes, PreTransformMatrix);
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i) {
+		m_pGameInstance->RegistTriMesh(pName, m_TriMeshes[i], iLevel);
+	}
+	return S_OK;
+}
 #ifdef EDITOR_PROJECT
 
 HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)

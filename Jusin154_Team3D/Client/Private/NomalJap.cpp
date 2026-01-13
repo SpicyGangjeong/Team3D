@@ -130,12 +130,11 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
-		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-		if (false == XMVector3NearEqual(vEndPos, XMVectorZero(), XMVectorReplicate(FLT_EPSILON5)))
-		{
-			ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
-			OnCollision(this, &CollisionInfo);
-		}
+		_vector vEndPos = m_pProjectile->Get_WorldPostion();
+		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
+
+		OnCollision(this, &CollisionInfo);
+
 	}
 
 	__super::Late_Update(fTimeDelta);

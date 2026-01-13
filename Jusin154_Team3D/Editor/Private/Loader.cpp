@@ -2870,6 +2870,15 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
+	/* For. Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerA.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+	/* For. Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Reparo_Object/VFX_SK_OLI_TrollFight_BlockerB.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Camera_Gaze */
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Gaze>(g_iStaticLevel, CCamera_Gaze::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -3791,6 +3800,13 @@ if (bLoad_DADATower_INT)
 }
 
 #pragma endregion
+
+#pragma region CAVE
+if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Overland_Common/Meshes",
+	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+	return E_FAIL;
+#pragma endregion
+
 
 
 

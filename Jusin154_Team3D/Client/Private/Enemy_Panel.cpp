@@ -6,6 +6,7 @@
 #include "Boss_HpBar.h"
 #include "InfoInstance.h"
 #include "Monster.h"
+#include "Enemy_SkillUI.h"
 
 CEnemy_Panel::CEnemy_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CPanelObject(pDevice, pContext)
@@ -48,6 +49,19 @@ HRESULT CEnemy_Panel::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fCanvasAlpha = 1.f;
+	for (_int i = 0; i < 5; ++i)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_SkillUI>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_SkillUI**>(&m_pRanrokProp)))) {
+			return E_FAIL;
+		}
+
+		static_cast<CUIObject*>(m_pRanrokProp)->Visible(false);
+		m_Pos.Prop = m_pRanrokProp;
+		m_Pos.Position = _float4(0.f, 0.f, 0.f, 0.f);
+		m_RanrokProps.push_back(m_Pos);
+	}
+	m_pInfoInstance->Add_Event(TEXT("RANROKPROP"), [this](void* p) {this->RanRokPropCreate(*reinterpret_cast<_vector*>(p)); });
+
 	Visible(true);
 	ElementAllVisible(true);
 	return S_OK;
@@ -82,6 +96,31 @@ void CEnemy_Panel::Update_Target()
 	}
 }
 
+void CEnemy_Panel::RanRokPropCreate(_fvector Position)
+{
+	if (m_pCurrentRanrokProps.size() >= 5)
+	{
+		Pos old{};
+		old = m_pCurrentRanrokProps.back();
+		m_pCurrentRanrokProps.pop_back();
+		m_RanrokProps.push_back(old);
+	}
+
+	if (m_RanrokProps.empty() == true)
+		return;
+
+	Pos RanRokProp = m_RanrokProps.back();
+	m_RanrokProps.pop_back();
+
+	static_cast<CUIObject*>(RanRokProp.Prop)->Visible(true);
+	XMStoreFloat4(&RanRokProp.Position, Position);
+	XMStoreFloat3(&RanRokProp.TargetPos, Position);
+	//static_cast<CUIObject*>(RanRokProp)->Set_Time(Info.fTime);
+	static_cast<CUIObject*>(RanRokProp.Prop)->Set_Hover(true);
+
+	m_pCurrentRanrokProps.push_front(RanRokProp);
+}
+
 void CEnemy_Panel::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
@@ -98,6 +137,22 @@ void CEnemy_Panel::Update(_float fTimeDelta)
 		return;
 	}
 	Update_Target();
+
+	if (m_pCurrentRanrokProps.empty() == false)
+	{
+		for (auto& it : m_pCurrentRanrokProps)
+		{
+			_bool Screen = World_to_ScreenUI(it.TargetPos, it.UIScreenPos, 480.f);
+
+			static_cast<CEnemy_SkillUI*>(it.Prop)->Visible(Screen);
+
+			if (Screen == true)
+			{
+				static_cast<CEnemy_SkillUI*>(it.Prop)->Move(it.UIScreenPos.x, it.UIScreenPos.y);
+			}
+		}
+	}
+
 	__super::Update(fTimeDelta);
 }
 

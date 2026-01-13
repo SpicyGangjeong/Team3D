@@ -2,6 +2,7 @@
 #include "NPCInteraction.h"
 #include "GameInstance.h"
 #include "Unit.h"
+#include "MapElement_Chest.h"
 #include "InfoInstance.h"
 
 CNPCInteraction::CNPCInteraction(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -46,7 +47,9 @@ HRESULT CNPCInteraction::Initialize(void* pArg)
 	m_fFontSize = 0.f;
 	Set_ImageSizePosition();
 	m_pInfoInstance->Add_Event(TEXT("NPCInteractionOn"), [this](void* p) {this->NpcInfo(p); });
+	m_pInfoInstance->Add_Event(TEXT("BOXInteractionOn"), [this](void* p) {this->BoxInfo(p); });
 	m_pInfoInstance->Add_Event(TEXT("NPCInteractionOff"), [this](void* p) {this->ActiveOff(); });
+	m_pInfoInstance->Add_Event(TEXT("BOXInteractionOff"), [this](void* p) {this->BoxOff(); });
 	return S_OK;
 }
 
@@ -89,6 +92,11 @@ void CNPCInteraction::ActiveOff()
 	m_pInfo.pOwner = nullptr;
 }
 
+void CNPCInteraction::BoxOff()
+{
+	m_bBoxActive = false;
+}
+
 void CNPCInteraction::NpcInfo(void* pArg)
 {
 	NPCINTERACTIONINFO* Info = reinterpret_cast<NPCINTERACTIONINFO*>(pArg);
@@ -102,6 +110,21 @@ void CNPCInteraction::NpcInfo(void* pArg)
 	_vector MonsterPos = static_cast<CUnit*>(Info->pOwner)->Get_WorldPostion();
 	_vector HeadPos = MonsterPos + XMVectorSet(0.f, 2.f, 0.f, 0.f);
 	XMStoreFloat4(&m_pInfo.fNPCPosition, HeadPos);
+}
+
+void CNPCInteraction::BoxInfo(void* pArg)
+{
+	BOXINTERACTIONINFO* Info = reinterpret_cast<BOXINTERACTIONINFO*>(pArg);
+
+	m_bBoxActive = true;
+
+	m_pBoxInfo.pOwner = Info->pOwner;
+	m_pBoxInfo.pName = Info->pName;
+	m_pBoxInfo.fPosition = Info->fPosition;
+
+	_vector MonsterPos = static_cast<CMapElement_Chest*>(m_pBoxInfo.pOwner)->Get_WorldPostion();
+	_vector HeadPos = MonsterPos + XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	XMStoreFloat4(&m_pBoxInfo.fPosition, HeadPos);
 }
 
 void CNPCInteraction::Priority_Update(_float fTimeDelta)
@@ -140,6 +163,40 @@ void CNPCInteraction::Priority_Update(_float fTimeDelta)
 		m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_pInfo.fNPCPosition));
 	}
 
+	else if(m_pBoxInfo.pOwner != nullptr)
+	{
+		_vector MonsterPos = static_cast<CUnit*>(m_pBoxInfo.pOwner)->Get_WorldPostion();
+		_vector HeadPos = XMVectorAdd(MonsterPos, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+		XMStoreFloat4(&m_pBoxInfo.fPosition, HeadPos);
+
+		_vector ScreenPos = XMVector3Project(
+			HeadPos,
+			0.f, 0.f,
+			g_iWinSizeX, g_iWinSizeY,
+			0.f, 1.f,
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
+			XMMatrixIdentity()
+		);
+
+		ScreenPos = ScreenPos + XMVectorSet(m_fFontSize, -50.f, 0.f, 0.f);
+
+		_vector WorldOffsetPos = XMVector3Unproject(
+			ScreenPos,
+			0.f, 0.f,
+			g_iWinSizeX, g_iWinSizeY,
+			0.f, 1.f,
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
+			XMMatrixIdentity()
+		);
+
+		XMStoreFloat4(&m_vFontPosition, WorldOffsetPos);
+		m_fSize = _float3(m_fSize.x, m_fOrigin_Size.y, m_fOrigin_Size.z);
+		m_fFontSize = 0;
+		m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_pBoxInfo.fPosition));
+	}
+
 }
 
 void CNPCInteraction::Update(_float fTimeDelta)
@@ -153,7 +210,7 @@ void CNPCInteraction::Late_Update(_float fTimeDelta)
 	if (m_bVisible != true)
 		return;
 
-	if (m_bActive == true)
+	if (m_bActive == true || m_bBoxActive)
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 }
 
@@ -178,20 +235,41 @@ HRESULT CNPCInteraction::Render()
 	// 8글자 : 가나다라 마바사아 , 388
 	// 대충 44씩 늘어날듯
 
-	m_pGameInstance->Perspective_Render_Text(
-		m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
-		m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
-		TEXT("Font_size20"),
-		m_pInfo.pNPCName.c_str(),
-		XMLoadFloat4(&m_vFontPosition));
 
-	m_pGameInstance->Perspective_Render_Text(
-		m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
-		m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
-		TEXT("Font_size15"),
-		TEXT("대화하기"),
-		XMLoadFloat4(&m_pInfo.fNPCPosition));
 
+	if (m_bActive == true)
+	{
+		m_pGameInstance->Perspective_Render_Text(
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
+			TEXT("Font_size20"),
+			m_pInfo.pNPCName.c_str(),
+			XMLoadFloat4(&m_vFontPosition));
+
+		m_pGameInstance->Perspective_Render_Text(
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
+			TEXT("Font_size15"),
+			TEXT("대화하기"),
+			XMLoadFloat4(&m_pInfo.fNPCPosition));
+	}
+
+	else if (m_bBoxActive == true)
+	{
+		m_pGameInstance->Perspective_Render_Text(
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
+			TEXT("Font_size20"),
+			m_pBoxInfo.pName.c_str(),
+			XMLoadFloat4(&m_vFontPosition));
+
+		m_pGameInstance->Perspective_Render_Text(
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW),
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ),
+			TEXT("Font_size15"),
+			TEXT("열 기"),
+			XMLoadFloat4(&m_pBoxInfo.fPosition));
+	}
 
 	return S_OK;
 }

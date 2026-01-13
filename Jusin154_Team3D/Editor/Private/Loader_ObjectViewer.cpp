@@ -270,6 +270,16 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 #pragma region NPC
 
 	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+		TEXT("Prototype_Component_VictorRookWood_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/ChiyoKogawa/ChiyoKogawa.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+		TEXT("Prototype_Component_ChiyoKogawa_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
@@ -298,16 +308,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/PhineasBlack/PhineasBlack.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_PhineasBlack_Model")
-	));
-
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/VictorRookWood/VictorRookWood.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
-		TEXT("Prototype_Component_VictorRookWood_Model")
-	));
-
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/ChiyoKogawa/ChiyoKogawa.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_ChiyoKogawa_Model")
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(

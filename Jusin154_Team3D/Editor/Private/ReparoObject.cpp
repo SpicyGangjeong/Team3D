@@ -44,6 +44,8 @@ HRESULT CReparoObject::Initialize(void* pArg)
 void CReparoObject::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
+
+	Describe_Entity();
 }
 
 void CReparoObject::Update(_float fTimeDelta)
@@ -51,12 +53,6 @@ void CReparoObject::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
-
-#ifdef _DEBUG
-	Describe_Entity();
-#endif // _DEBUG
-
-
 }
 
 void CReparoObject::Late_Update(_float fTimeDelta)
@@ -197,8 +193,14 @@ HRESULT CReparoObject::Ready_Components()
 		return E_FAIL;
 	}
 
+	///* Com_Model */
+	//if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model"),
+	//	reinterpret_cast<CComponent**>(&m_pModelCom)))) {
+	//	return E_FAIL;
+	//}
+
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerA_Model"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VFX_SK_OLI_TrollFight_BlockerB_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
 	}
@@ -279,6 +281,16 @@ void CReparoObject::Describe_Entity()
 
 	if (m_pModelCom->Get_AnimSize() <= 0)
 		return;
+
+	m_pTransformCom->Describe_Entity();
+	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		_float3 vPosition = {};
+		if (m_pGameInstance->isPicking(&vPosition))
+		{
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+		}
+	}
 
 	if (GUI::BeginTabBar("Anim_List"))
 	{
