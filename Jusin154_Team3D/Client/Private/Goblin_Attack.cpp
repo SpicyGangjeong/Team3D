@@ -53,7 +53,7 @@ HRESULT CGoblin_Attack::Initialize(void* pArg)
 	m_fDuration = 2.f;
 
 
-	m_Events.emplace(1.3f, [&]() {
+	m_Events.emplace(1.2f, [&]() {
 
 		m_pAttack_Trail->SetDissolve(true);
 		
