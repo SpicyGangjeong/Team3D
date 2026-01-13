@@ -171,14 +171,14 @@ HRESULT CCutSceneInfo::Clear_AllEvents()
 HRESULT CCutSceneInfo::Ready_GameplayCutScenes()
 {
 	{
-		Load_CutSceneXML("../Bin/Resources/Data/CutScene/CarriageIntro.xml");
+		//Load_CutSceneXML("../Bin/Resources/Data/CutScene/CarriageIntro.xml");
 	}
 	return S_OK;
 }
 HRESULT CCutSceneInfo::Ready_FieldCutScenes()
 {
 	{
-		Load_CutSceneXML("../Bin/Resources/Data/CutScene/RanrokCutScene.xml");
+		//Load_CutSceneXML("../Bin/Resources/Data/CutScene/RanrokCutScene.xml");
 	}
 	return S_OK;
 }
