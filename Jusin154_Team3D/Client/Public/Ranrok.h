@@ -127,6 +127,7 @@ private:
 	_bool  m_bFireBurst = {true};
 	_int   m_iPropSize = {};
 	_int   m_iHoverDash = {  };
+	_bool  m_bChangePhase = {};
 
 	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 

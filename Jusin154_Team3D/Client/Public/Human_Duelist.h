@@ -80,6 +80,8 @@ private:
 	_bool			m_bBattle = {};
 	_bool			m_bCameraShake = { };
 	_float4			m_OriginPos = { };
+	_bool			m_bBattleEnd = {};
+	_float			m_fBattleEndTimer = {};
 
 
 	_float m_fSkillCoolTime[ENUM_CLASS(SKILL::END)] = {};

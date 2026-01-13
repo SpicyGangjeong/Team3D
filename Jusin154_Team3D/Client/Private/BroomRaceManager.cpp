@@ -383,8 +383,10 @@ void CBroomRaceManager::RaceReady()
 
 	m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Set_RaceInfo();
 
-	for (auto& racer : m_Racers)
+	for (size_t i = 0; i < (_uint)m_Racers.size(); i++)
 	{
+		auto& racer = m_Racers[i];
+	
 		CTransform* pRingTransform =
 			m_pRaceRings[0]->Get_Component<CTransform>();
 
@@ -398,9 +400,17 @@ void CBroomRaceManager::RaceReady()
 		{
 			CTransform* pTransform =
 				racer.pAI->Get_Broom()->Get_Component<CTransform>();
-			_float fSideRand = m_pGameInstance->Real_Random_Float(-10.f, 10.f);
 
-			_vector offset = XMVectorSet(0.f, 1.3f, 0.f, 0.f) + pTransform->Get_State(STATE::LOOK) * fSideRand;
+			const _float fSpacing = 3.0f;
+			const _float fJitter = 0.5f;    
+
+			_float lane = (_float)i - (_float)(m_Racers.size() - 1) * 0.5f;
+			_float side = lane * fSpacing;
+
+			side += m_pGameInstance->Real_Random_Float(-fJitter, fJitter);
+
+
+			_vector offset = XMVectorSet(0.f, 1.3f, 0.f, 0.f) + pTransform->Get_State(STATE::LOOK) * side;
 
 			spawnPos += offset;
 
