@@ -184,6 +184,11 @@ HRESULT CInfoInstance::Load_Npc()
 {
 	return m_pMapInfo->Load_Npc();
 }
+
+HRESULT CInfoInstance::Load_Goblin()
+{
+	return m_pMapInfo->Load_Goblin();
+}
 #pragma endregion
 
 #pragma region EFFECT_INFO

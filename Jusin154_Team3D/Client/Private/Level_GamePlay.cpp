@@ -153,6 +153,8 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_0, SD_CHANNEL_GROUP::BGM, true, 0.6f);
+
 	return S_OK;
 }
 
@@ -170,8 +172,10 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	bStartCinematic = true;
 #elif 진우
 	bStartCinematic = true;
-#else
-
+#elif Bin
+	bStartCinematic = false;
+#elif gimchi
+	bStartCinematic = false;
 #endif
 #endif // _DEBUG
 
@@ -1050,38 +1054,21 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 #endif // Bin
 #endif // _DEBUG
 	if (true == isLoad_Monster) {
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
 
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
 
-		for (_uint i = 0; i < 1; ++i)
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Assassin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-				return E_FAIL;
-			}
-		}
+		m_pInfoInstance->Load_Goblin();
 
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 
-	/*	CRanrok::RANROKDESC RanrokDesc = {};
-		RanrokDesc.vPos = _float4(-44.704f, 6.860f, 16.071f, 1.f);
-		RanrokDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&RanrokDesc))) {
-			return E_FAIL;
-		}*/
+		//CRanrok::RANROKDESC RanrokDesc = {};
+		//RanrokDesc.vPos = _float4(-44.704f, 6.860f, 16.071f, 1.f);
+		//RanrokDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+		//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&RanrokDesc))) {
+		//	return E_FAIL;
+		//}
 
 
 

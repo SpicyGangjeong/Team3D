@@ -43,7 +43,7 @@ HRESULT CSound_Manager::Update()
     return S_OK;
 }
 
-void CSound_Manager::Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _bool bIgnoreStackingSound, _float fVolume)
+void CSound_Manager::Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume)
 {
     _uint iIndexSound = ENUM_CLASS(eSoundKind);
     _uint iIndexGroup = ENUM_CLASS(eSoundChannel);
@@ -61,27 +61,6 @@ void CSound_Manager::Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSou
         }
         else {
             ++iter;
-        }
-    }
-
-    // 중복 재생 방지
-    if (!bIgnoreStackingSound)
-    {
-        for (Channel* pChannel : channelList)
-        {
-            if (!(pChannel)) {
-                continue;
-            }
-
-            bool bIsPlaying = false;
-            if (pChannel->isPlaying(&bIsPlaying) == FMOD_OK && bIsPlaying)
-            {
-                Sound* pCurrentSound = nullptr;
-                if (pChannel->getCurrentSound(&pCurrentSound) == FMOD_OK && pCurrentSound == pSound)
-                {
-                    return;
-                }
-            }
         }
     }
 
@@ -253,6 +232,27 @@ void CSound_Manager::Sound_Test()
     //    Sound_StopAll();
     //}
     //GUI::End();
+}
+
+HRESULT CSound_Manager::Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode)
+{
+    //const _tchar* pSoundFilePath = TEXT("../Bin/Resources/Sounds/");
+    //for (int iIndex = 0; iIndex < ENUM_CLASS(SOUND::SD_KIND::END); ++iIndex) {
+    //    if (FAILED(m_pGameInstance->Load_Sound((SOUND::SD_KIND)iIndex, (_wstring(pSoundFilePath) + SOUND::SD_PATH::SD_KIND_STRING[iIndex]).c_str()))) {
+    //        return E_FAIL;
+    //    }
+    //}
+
+    //// 사운드 생성, 파일 불러오기
+    FMOD_RESULT fr = CSound_Manager::s_pSystem->createSound(
+        CMyTools::ToString(wstrSoundFilePath).c_str(), // 대상 경로
+        eSoundMode, // 재생 모드
+        0,          // 인덱스?
+        &CSound_Manager::s_ArrSounds[ENUM_CLASS(eKind)]);   // 대상 사운드
+    if (fr == 0) {
+        return S_OK;
+    }
+    return E_FAIL;
 }
 
 HRESULT CSound_Manager::Initialize()

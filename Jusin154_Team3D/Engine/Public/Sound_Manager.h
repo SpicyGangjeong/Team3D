@@ -18,7 +18,7 @@ private:
 
 public:
     HRESULT Update();
-    void Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _bool bIgnoreStackingSound, _float fVolume);
+    void Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume);
     void Sound_Play_3DPos(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _float3& refSpeaker, _float fMin = 3.f, _float fMax = 20.f, _bool bRepeat = false);
 
     void Sound_Pause_Channel(SD_CHANNEL_GROUP eSoundChannel, bool bPause); // 채널 일시정지
@@ -30,6 +30,8 @@ public:
     void Sound_StopAll(); // 전체 정지
     void Sound_SetVolume(SD_CHANNEL_GROUP eSoundChannel, float fVolume);
     void Sound_Test();
+
+    HRESULT Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode);
 
 private:
     ID3D11Device* m_pDevice = { nullptr };

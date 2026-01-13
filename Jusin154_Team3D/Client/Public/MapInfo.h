@@ -34,6 +34,7 @@ public:
 
 	HRESULT Load_DADA_INT();
 	HRESULT Load_Npc();
+	HRESULT Load_Goblin();
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
