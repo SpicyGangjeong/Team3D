@@ -35,7 +35,11 @@ private:
 	class CEffectParts*					  m_pPT1 = { nullptr };
 	class CEffectParts*					  m_pPT2 = { nullptr };
 	class CTrailObject*					  m_pAttack_Trail = { nullptr };
-	_float4x4							  m_vMat = {};
+	const _float4x4*					  m_vMat = { nullptr };
+
+	_bool							  m_isTrailEnd = {};
+	_float4x4						  m_TrailStopMat = {};
+
 public:
 	static CGoblin_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

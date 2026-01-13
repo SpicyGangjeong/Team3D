@@ -1404,7 +1404,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		TEXT("Prototype_Component_Goblin_Sword_R_Model")
 	));
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin",/* XMMatrixRotationX(XMConvertToRadians(-90.f)) * */XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin", XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_BattleAxe_Model")
 	));
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(

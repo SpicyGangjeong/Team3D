@@ -49,6 +49,7 @@ void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 		XMStoreFloat4(&m_vStartAxePos, Get_WorldPostion());
 		XMStoreFloat4(&m_vStartGripPos, Get_WorldPostion());
 	}
+
 	m_pModelCom->Combined_BoneMatrix();
 	_matrix socketMatrix = {};
 
