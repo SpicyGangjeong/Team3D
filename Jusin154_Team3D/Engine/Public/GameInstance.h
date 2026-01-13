@@ -103,10 +103,11 @@ public:
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
-	void Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
-	RENDER Get_CurrentRenderPass();
+	void	Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
+	RENDER	Get_CurrentRenderPass();
 	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 	HRESULT Bind_PrevMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
+	void	Set_Environment(_float3 vSSAO, _float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax);
 #pragma endregion
 
 #pragma region KEY_MANAGER
