@@ -2529,6 +2529,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC ShieldDesc{};
+		{
+			ShieldDesc.eType = ACTOR::SPHERE;
+			ShieldDesc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			ShieldDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			ShieldDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			ShieldDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			ShieldDesc.fContactOffset = { 0.05f };
+			ShieldDesc.vhalfGeometryInfo = { 2.f, 2.f, 2.f };
+			ShieldDesc.fDensity = 1.f;
+			ShieldDesc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			ShieldDesc.eLockFlag = {};
+			ShieldDesc.vAutoDamping = { 1.f, 1.f };
+			ShieldDesc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			ShieldDesc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc1{};
 		{
 			Desc1.eType = ACTOR::SPHERE;
@@ -2537,7 +2554,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
-			Desc1.vhalfGeometryInfo = { 2.34f, 2.34f, 2.34f };
+			Desc1.vhalfGeometryInfo = { 2.6f, 2.6f, 2.6f };
 			Desc1.fDensity = 1.f;
 			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc1.eLockFlag = {};
@@ -2587,7 +2604,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, ShieldDesc)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROKPROP"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
 			return E_FAIL;
 		}
 

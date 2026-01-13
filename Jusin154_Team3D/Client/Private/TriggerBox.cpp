@@ -56,12 +56,13 @@ HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 		return E_FAIL;
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat4(&pDesc->vPosition_Radius), 1.f));
+
 #ifdef _DEBUG
-
-	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 12, false, false));
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_pTransformCom->Get_Radius() * 2.f, 12, false, false));
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
-
 #endif // _DEBUG
+
+
 	_float3 vScale = { Desc.fRadius * 2.f, Desc.fRadius * 2.f, Desc.fRadius * 2.f };
 	m_pTransformCom->Set_Scale(vScale);
 	m_vScanTimer.y += m_pGameInstance->Real_Random_Float(0.f, 0.2f);
@@ -158,9 +159,9 @@ CGameObject* CTriggerBox::Clone(void* pArg, CGameObject* pOwner)
 	return nullptr;
 }
 #ifdef _DEBUG
-
 void CTriggerBox::Describe_Entity()
 {
 }
-
 #endif // _DEBUG
+
+

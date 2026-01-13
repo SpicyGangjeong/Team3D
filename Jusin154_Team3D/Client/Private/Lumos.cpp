@@ -57,10 +57,6 @@ void CLumos::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 
 
-
-
-
-
 }
 
 void CLumos::Update(_float fTimeDelta)

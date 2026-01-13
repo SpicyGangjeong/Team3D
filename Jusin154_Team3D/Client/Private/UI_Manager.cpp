@@ -146,7 +146,6 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 	default:
 		return;
 	}
-	m_pInfoInstance->Event_CallBack(TEXT("Player_CanvasChange"), &m_eType);
 	m_pGameInstance->Toggle_MouseCenter();
 	m_pInfoInstance->Event_CallBack(TEXT("Player_CanvasChange"), &m_eType);
 }
