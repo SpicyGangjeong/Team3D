@@ -42,7 +42,7 @@ void CInfoInstance::Change_Level()
 	m_pInteractiveInfo->Change_Level();
 	m_pEffectInfo->Change_Level();
 //	UI_Event.clear();
-	m_pCutSceneInfo->Load_CutScenes();
+	m_pCutSceneInfo->Clear_AllEvents();
 }
 
 CStat* CInfoInstance::Get_PlayerStatPtr()

@@ -11,6 +11,7 @@
 #include "Intro_Image.h"
 #include "Intro_BG.h"
 #include "Loding_Panel.h"
+#include "InfoInstance.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -31,6 +32,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	}
 	m_bNextLevel = false;
 	m_fTimeDelta = 1.2f;
+
 	return S_OK;
 }
 
