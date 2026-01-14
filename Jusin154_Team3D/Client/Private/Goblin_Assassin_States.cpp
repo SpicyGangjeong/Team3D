@@ -247,23 +247,23 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 
 	if (m_fTargetDistance <= 4.f)
 	{
-		fDisAmount = 1.f;
+		fDisAmount = 1.3f;
 	}
 	else if (m_fTargetDistance <= 7.f)
 	{
-		fDisAmount = 1.5f;
+		fDisAmount = 1.8f;
 	}
 	else if (m_fTargetDistance <= 10.f)
 	{
-		fDisAmount = 2.f;
+		fDisAmount = 2.3f;
 	}
 	else if (m_fTargetDistance <= 13.f)
 	{
-		fDisAmount = 2.5f;
+		fDisAmount = 2.8f;
 	}
 	else if (m_fTargetDistance <= 16.f)
 	{
-		fDisAmount = 3.f;
+		fDisAmount = 3.3f;
 	}
 	pairAnimInfo = m_Animation[STATEANIM::SLASH];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, fDisAmount,false,1.3f);
@@ -379,9 +379,12 @@ void CGoblin_Assassin::Behavior_BlinkEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	m_bDisolve = true;
 
+
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBILN_TELEPORT, this);
+			Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_Visible(false);
+			Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_Visible(false);
 		}, 0.1f);
 }
 
@@ -392,6 +395,9 @@ HRESULT CGoblin_Assassin::Behavior_BlinkExitCheck(_float fTimeDelta)
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	if (m_fDisolveTime >= 0.8f && iCurrAnimIndex != m_Animation[STATEANIM::BLINK].first)
 	{
+
+		Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_Visible(true);
+		Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_Visible(true);
 		m_bDisolve = false;
 		m_fDisolveTime = 0.f;
 		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::TP)];
@@ -647,6 +653,9 @@ void CGoblin_Assassin::Behavior_DeadEnter()
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_Disolve(true);
+	Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_Disolve(true);
 }
 
 HRESULT CGoblin_Assassin::Behavior_DeadExitCheck(_float fTimeDelta)
