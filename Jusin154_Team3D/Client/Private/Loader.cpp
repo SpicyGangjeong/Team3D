@@ -566,7 +566,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
