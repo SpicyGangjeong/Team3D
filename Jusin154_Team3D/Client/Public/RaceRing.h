@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "PartObject.h"
+#include "ContainerObject.h"
 
 NS_BEGIN(Client)
 
-class CRaceRing final : public CGameObject
+class CRaceRing final : public CContainerObject
 {
 public:
 	typedef struct RaceRingDesc
@@ -37,6 +37,7 @@ private:
 
 private:
 	class CBroomRaceManager*	m_pBroomRaceManager = { nullptr };
+	class CEffectParts* m_pRingEffect = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
 	CModel*						m_pModelCom = { nullptr };
 	_bool						m_bTarget = { false };
@@ -47,6 +48,7 @@ private:
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	HRESULT Ready_Parts();
 
 public:
 	static CRaceRing* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

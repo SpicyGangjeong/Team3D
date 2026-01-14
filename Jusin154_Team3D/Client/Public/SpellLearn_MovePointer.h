@@ -41,6 +41,7 @@ public:
 	void Set_SpellLearn(_int Index);
 	_int Get_SpellTrail();
 	_bool Get_MoveStart();
+	void Set_ID(_int Index);
 private:
 	void Line(_float fTime, _float2 fMouse);
 
@@ -64,6 +65,7 @@ private:
 	_int	m_iCurrentLine{};
 	vector<_float4> m_MoveLine;
 	vector<_float4> m_Boosters;
+	_int	m_iSpellID{};
 
 public:
 	static CSpellLearn_MovePointer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

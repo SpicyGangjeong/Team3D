@@ -1,9 +1,9 @@
 ﻿#pragma once
 NS_BEGIN(Engine)
-	class CModel;
-	class CRigidBody_Static;
-	class CUnit;
-	class CTimeSocket;
+class CModel;
+class CRigidBody_Static;
+class CUnit;
+class CTimeSocket;
 NS_END
 
 NS_BEGIN(Client)
@@ -37,81 +37,89 @@ typedef struct tagSpellInfo
 	_float			fVidio{};
 }SPELL_INFO;
 
-	typedef struct DialogueChoice
-	{
-		_int		eType = { false };
-		_wstring	pText;
-		_int		NextTypeID{};
-	}DIALOGUECHOICEINFO;
+typedef struct DialogueChoice
+{
+	_int		eType = { false };
+	_wstring	pText;
+	_int		NextTypeID{};
+	_int		QuestID{};
+}DIALOGUECHOICEINFO;
 
-	typedef struct DialogueInfo
-	{
-		_int						iLineID{};
-		_bool						bTag{};
-		_int						iType{};
-		_wstring					pText;
-		_int						NextTextID{};
-		vector<DIALOGUECHOICEINFO>	ChoiceInfo;
-	}CURRENTDIALOGUEINFO;
+typedef struct DialogueInfo
+{
+	_int						iLineID{};
+	_bool						bTag{};
+	_int						iType{};
+	_wstring					pText;
+	_int						NextTextID{};
+	vector<DIALOGUECHOICEINFO>	ChoiceInfo;
+}CURRENTDIALOGUEINFO;
 
-	typedef struct NpcDialogue
-	{
-		_wstring					pNpcName;
-		_int						iNpcID{};
-		map<_int, CURRENTDIALOGUEINFO> Info;
-	}NPCDIALOGUEINFO;
+typedef struct NpcDialogue
+{
+	_wstring					pNpcName;
+	_int						iNpcID{};
+	map<_int, CURRENTDIALOGUEINFO> Info;
+}NPCDIALOGUEINFO;
 
-	typedef struct tagLockOnInfo {
-		CUnit* pUnit = { nullptr };
-		class CMapElement_Interactable* pInteractive = { nullptr };
-		class CMapElement_Chest* pChest = { nullptr };
-		class CEffect_Container* pEffect = { nullptr };
-	}LOCKON_INFO;
+typedef struct tagLockOnInfo {
+	CUnit* pUnit = { nullptr };
+	class CMapElement_Interactable* pInteractive = { nullptr };
+	class CMapElement_Chest* pChest = { nullptr };
+	class CEffect_Container* pEffect = { nullptr };
+}LOCKON_INFO;
 
-	typedef struct tegNPCInteractionInfo
-	{
-		CGameObject* pOwner = { nullptr };
-		_wstring		pNPCName;
-		_wstring		pName;
-		_float4			fNPCPosition{};
-		_int			iTextID{};
-	}NPCINTERACTIONINFO;
+typedef struct tegNPCInteractionInfo
+{
+	CGameObject* pOwner = { nullptr };
+	_wstring		pNPCName;
+	_wstring		pName;
+	_float4			fNPCPosition{};
+	_int			iTextID{};
+}NPCINTERACTIONINFO;
 
-	typedef struct tegBoxInteractionInfo
-	{
-		CGameObject* pOwner = { nullptr };
-		_wstring		pName;
-		_float4			fPosition{};
-	}BOXINTERACTIONINFO;
+typedef struct tegBoxInteractionInfo
+{
+	CGameObject* pOwner = { nullptr };
+	_wstring		pName;
+	_float4			fPosition{};
+}BOXINTERACTIONINFO;
 
-	typedef struct Choice
-	{
-		_int iChoice{};
-		_int iType{};
-	}CHOICEINFO;
+typedef struct Choice
+{
+	_int iChoice{};
+	_int iType{};
+	_int QuestID{};
+}CHOICEINFO;
 
-	typedef struct PropUI
-	{
-		_float4 vPosition{};
-		_int iIndex{};
-	}PROPUI;
+typedef struct PropUI
+{
+	_float4 vPosition{};
+	_int iIndex{};
+}PROPUI;
 
-	typedef struct tagUnitInfo
-	{
-		_wstring		pUnit_Name;
-		_float			fCurrentHp{};
-		_float			fMaxHp{};
-		_float			fTargetHp{};
-		_float			fMelee{};
-		_float			fMagic{};
-		_float			fDefense{};
-		_float			fSpeed{};
-		_float			fAgility{};
-		_int			iLevel{};
-		_float			fExprince{};
-		_float			fMaxExprience{};
-		_int			iGold{};
-	}UNITINFO;
+typedef struct tagUnitInfo
+{
+	_wstring		pUnit_Name;
+	_float			fCurrentHp{};
+	_float			fMaxHp{};
+	_float			fTargetHp{};
+	_float			fMelee{};
+	_float			fMagic{};
+	_float			fDefense{};
+	_float			fSpeed{};
+	_float			fAgility{};
+	_int			iLevel{};
+	_float			fExprince{};
+	_float			fMaxExprience{};
+	_int			iGold{};
+}UNITINFO;
+
+typedef struct tagNpcInteract
+{
+	_bool	bInteract{};
+	_float	fAlpha{};
+}NPCINTERACT;
 
 typedef struct tagDamageInfo
 {
@@ -312,15 +320,15 @@ typedef struct tagEffectInfo
 	_float4     vPadding4 = {};
 	_float4     vPadding5 = {};
 	_float4     vPadding6 = {};
-	}EFFECT_INFO;
+}EFFECT_INFO;
 
-	typedef struct tagTrailInfo
-	{
-		EFFECT_TYPE eEffectType = { EFFECT_TYPE::TRAIL };
-		/* 디퓨즈 */
-		_bool		isDiffuse = {};
-		_float		fDiffuseAlpha = { 1.f };
-		_float4		vColor = { 0.f ,0.f ,0.f ,1.f };
+typedef struct tagTrailInfo
+{
+	EFFECT_TYPE eEffectType = { EFFECT_TYPE::TRAIL };
+	/* 디퓨즈 */
+	_bool		isDiffuse = {};
+	_float		fDiffuseAlpha = { 1.f };
+	_float4		vColor = { 0.f ,0.f ,0.f ,1.f };
 
 	/* 마스크 */
 	_bool       isMask = {};
@@ -395,7 +403,7 @@ typedef struct tagEffectInfo
 struct TimeLine {
 	_float2				m_vTimer = {};
 	_uint				m_eTypeTimeLine = {};
-	class CTriggerBox*	m_pTriggerBox = { nullptr };
+	class CTriggerBox* m_pTriggerBox = { nullptr };
 	list<CTimeSocket*>	m_Sockets = {};
 };
 NS_END

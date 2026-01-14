@@ -289,6 +289,9 @@ void CAccio::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	if (m_bHit == false)
 		return;
+	m_pGameInstance->Sound_Stop(SOUND::SD_KIND::SP_ACCIO_15, SD_CHANNEL_GROUP::EFFECT);
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_ACCIO_15, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_SpellHit(true);
 
