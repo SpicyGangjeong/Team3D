@@ -46,7 +46,7 @@ private:
 	void Add_Canvas(_wstring Name, class CGameObject* pCanvas);
 	CGameObject* Find_Canvas(const _wstring& Name);
 
-	void NpcInteract(_bool bInteract);
+	void NpcInteract(void* pArg);
 
 	void Set_Fade();
 	void Change_Map();

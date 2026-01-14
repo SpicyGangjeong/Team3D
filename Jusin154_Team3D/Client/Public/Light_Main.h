@@ -29,6 +29,7 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources();
 	_matrix Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3>& WorldPositions);
+	void	Add_PreShadowRenderGroup(CLayer* pLayer);
 
 public:
 	static CLight_Main* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

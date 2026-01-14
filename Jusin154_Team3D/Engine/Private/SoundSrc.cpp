@@ -261,7 +261,16 @@ const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 	TEXT("Player/Broom/broom_ride.wav"),
 #pragma endregion
 
+#pragma region DOOR
+	TEXT("Interactive/Door/door_open.wav"),
+	TEXT("Interactive/Door/door_close.wav"),
+#pragma endregion
+
+#pragma region CHEST
+	TEXT("Interactive/Chest/chest_found.wav"),
+	TEXT("Interactive/Chest/chest_open.wav"),
+#pragma endregion
 };
 
-//static_assert(SD_KIND_COUNT == _countof(SD_PATH::SD_KIND_PATHS), 
-//	"SD_KIND and SD_PATH::SD_KIND_PATHS num is not match" "match same num");
+static_assert(SD_KIND_COUNT == _countof(SD_PATH::SD_KIND_PATHS), 
+	"SD_KIND and SD_PATH::SD_KIND_PATHS num is not match" "match same num");

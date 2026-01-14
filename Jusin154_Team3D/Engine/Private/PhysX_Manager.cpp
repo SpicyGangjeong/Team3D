@@ -69,80 +69,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 
 PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel)
 {
-	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
-	 PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScaleNoFlip(WorldMatrix);
-
-	// PxRigidStatic		씬의 정적 바디 인터페이스
-	PSX::PxRigidStatic* pActorStatic = m_pPhysics->createRigidStatic(pxWorldMatrix);
-	PSX::PxShape* pShape = { nullptr };
-	PSX::PxGeometry* pGeometry = { nullptr };
-
-	switch (RigidBody.Get_Type())
-	{
-	case ACTOR::PLANE:
-		break;
-	case ACTOR::TRIANGLEMESH:
-		{ // SetUp Geometry
-			PSX::PxTriangleMesh* pPxMesh = Find_TriangleMesh(RigidBody.Get_PxMeshKey(), iLevel);
-			PSX::PxTriangleMeshGeometry* pPxMeshGeometry = { nullptr };
-
-			_vector vPos, vRotq, vScale;
-			XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
-			vRotq = XMQuaternionNormalize(vRotq);
-
-			PSX::PxTransform out;
-			XMStoreFloat3((_float3*)&out.p, vPos);
-			XMStoreFloat4((_float4*)&out.q, vRotq);
-			PSX::PxMeshScale meshScale(
-				PSX::PxVec3(fabsf(vScale.m128_f32[0]), fabsf(vScale.m128_f32[1]), fabsf(vScale.m128_f32[2])),
-				PSX::PxQuat(PSX::PxIdentity) // 스케일 축은 로컬 기준
-			);
-			pPxMeshGeometry = new PSX::PxTriangleMeshGeometry(pPxMesh, meshScale);
-
-			// GeoFlag 중 더블사이드는 이제 지원 안함, 할거면 노말 뒤집어서 하라고 함
-			// pPxMeshGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
-			// 유효성 체크
-			PX_ASSERT(pPxMeshGeometry->isValid());
-			pGeometry = pPxMeshGeometry;
-			_bool bEmplaceSuccess = m_TriangleMeshGeometry[iLevel].emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry).second;
-			if (false == bEmplaceSuccess) {
-				Safe_Delete(pPxMeshGeometry);
-				pGeometry = (*m_TriangleMeshGeometry[iLevel].find(RigidBody.Get_PxMeshKey())).second;
-			}
-		}
-		break;
-	case ACTOR::HEIGHTFIELD:
-	{ // SetUp HeightField
-		PSX::PxHeightField* pHeightField = Find_HeightField(RigidBody.Get_PxMeshKey(), iLevel);
-		PSX::PxHeightFieldGeometry* pPxHeightGeometry = new PSX::PxHeightFieldGeometry(pHeightField);
-		pPxHeightGeometry->heightScale = 0.01f/* 기본 정밀도 100배 0.01 -> 1cm, 1 -> 1m */;
-
-		// 유효성 체크
-		PX_ASSERT(pPxHeightGeometry->isValid());
-		pGeometry = pPxHeightGeometry;
-		_bool bEmplaceSuccess = m_HeightFieldGeometry[iLevel].emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry).second;
-		if (false == bEmplaceSuccess) {
-			Safe_Delete(pPxHeightGeometry);
-			pGeometry = (*m_HeightFieldGeometry[iLevel].find(RigidBody.Get_PxMeshKey())).second;
-		}
-	}
-	break;
-	default:
-		assert(false);
-		break;
-	}
-
-	pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorStatic, *pGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
-
-	pShape->setFlags(RigidBody.Get_ShapeFlags());
-	pShape->setContactOffset(RigidBody.Get_ContactOffset());
-	pShape->setRestOffset(0.f);
-	
-	m_pRestBodies[iLevel].insert(pActorStatic);
-	ApplyFilterData(pActorStatic);
-	Attach_Actor(*pActorStatic, iLevel);
-
-	return pActorStatic;
+	return Add_StaticActor(RigidBody, iLevel, RigidBody.Get_TransformPtr()->Get_WorldMatrixPtr());
 }
 
 PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel, const _float4x4* pWorldMatrix)
@@ -153,6 +80,7 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 
 	// PxRigidStatic		씬의 정적 바디 인터페이스
 	PSX::PxRigidStatic* pActorStatic = m_pPhysics->createRigidStatic(pxWorldMatrix);
+	pActorStatic->userData = RigidBody.Get_UserDataPtr();
 	PSX::PxShape* pShape = { nullptr };
 	PSX::PxGeometry* pGeometry = { nullptr };
 
@@ -650,36 +578,14 @@ uint32_t CPhysX_Manager::ConvertPhysxKindToBit(const PHYSX_USERDATA& physxUserDa
 		return COLLISIONCATERGORY_BIT32::CharacterController;
 
 	if (physxUserData.eKind == PHYSX_KIND::BODY_DYNAMIC)
-	{
-		_bool isJointRelatedPart =
-			physxUserData.iSubKind == ENUM_CLASS(PXOBJECT::JOINT_ANCHOR) ||
-			physxUserData.iSubKind == ENUM_CLASS(PXOBJECT::JOINT_ROUTE);
-
-		if (true == isJointRelatedPart)
-			return COLLISIONCATERGORY_BIT32::JointedParts;
-
 		return COLLISIONCATERGORY_BIT32::WorldDynamic;
-	}
 
 	return 0u;
 }
 
 uint32_t CPhysX_Manager::BuildCollisionMaskFromCategoryBit(uint32_t iMyBit)
 {
-	if (iMyBit == COLLISIONCATERGORY_BIT32::CharacterController)
-	{
-		// CCT는 조인트 파츠 충돌x
-		return COLLISIONCATERGORY_BIT32::WorldStatic | COLLISIONCATERGORY_BIT32::WorldDynamic;
-	}
-
-	if (iMyBit == COLLISIONCATERGORY_BIT32::JointedParts)
-	{
-		// 조인트 파츠도 CCT 충돌x
-		return COLLISIONCATERGORY_BIT32::WorldStatic | COLLISIONCATERGORY_BIT32::WorldDynamic;
-	}
-
-	// 기본값
-	return COLLISIONCATERGORY_BIT32::WorldStatic | COLLISIONCATERGORY_BIT32::WorldDynamic | COLLISIONCATERGORY_BIT32::CharacterController | COLLISIONCATERGORY_BIT32::JointedParts;
+	return COLLISIONCATERGORY_BIT32::WorldStatic | COLLISIONCATERGORY_BIT32::WorldDynamic | COLLISIONCATERGORY_BIT32::CharacterController;
 }
 
 void CPhysX_Manager::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
@@ -693,8 +599,8 @@ void CPhysX_Manager::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
 		return;
 	}
 
-	const uint32_t CategoryBit = ConvertPhysxKindToBit(*physxUserData); // who am i
-	const uint32_t MaskBits = BuildCollisionMaskFromCategoryBit(CategoryBit); // for what
+	_uint CategoryBit = ConvertPhysxKindToBit(*physxUserData); // who am i
+	_uint MaskBits = BuildCollisionMaskFromCategoryBit(CategoryBit); // for what
 
 	PSX::PxFilterData DATAfilter = {};
 	DATAfilter.word0 = CategoryBit; // 나는 누구인가
@@ -717,7 +623,6 @@ void CPhysX_Manager::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
 		// 씬쿼리 대상 플래그 보장
 		shape->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 	}
-
 }
 
 PSX::PxFilterFlags CPhysX_Manager::SimulationFilterShader(PSX::PxFilterObjectAttributes pxAttributes0, PSX::PxFilterData pxFilterData0, PSX::PxFilterObjectAttributes pxAttributes1, PSX::PxFilterData pxFilterData1, PSX::PxPairFlags& pxPairFlags, const void* pConstantBlock, PSX::PxU32 iConstantBlockSize)

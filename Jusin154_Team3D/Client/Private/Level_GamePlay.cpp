@@ -149,7 +149,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 
 	if (FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
-
+	ResetLevel_Environment();
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
@@ -170,12 +170,14 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	_bool bStartCinematic = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bStartCinematic = true;
+	bStartCinematic = false;
 #elif 진우
 	bStartCinematic = true;
 #elif Bin
 	bStartCinematic = false;
 #elif gimch
+	bStartCinematic = false;
+#elif 나
 	bStartCinematic = false;
 #endif
 #endif // _DEBUG
@@ -1241,6 +1243,13 @@ void CLevel_GamePlay::ResetLevel_Environment()
 		vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+
+	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(0.581f, 0.239f, -0.183f, 0.757f));
+	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.700), _float2(0.075f, 0.150f),
+									_float2(2.300f, 10.000f), _float4(0.0047f, 0.0018f, 0.0018f, 0.0018f),
+									_float4(2.f, 1.f, 1.f, 1.f), _float3(-55.9f, -10.f, -50.f), _float3(50.f, 100.f, 100.f));
+	m_pLight->Capture_PreShadow();
 }
 
 pair<CLevel*, function<void()>> CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg)

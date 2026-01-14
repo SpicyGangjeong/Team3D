@@ -36,7 +36,7 @@ public:
 	const vector<QUESTINFO>& Get_AllQuest() const;
 	const vector<QUESTINFO>& Get_ClearQuest() const;
 	vector<QUESTINFO>& Get_AcceptQuest();
-	HRESULT Set_AcceptQuest(_int index);
+	_int Set_AcceptQuest(_int index);
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };

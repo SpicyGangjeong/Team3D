@@ -344,6 +344,11 @@ _int CInfoInstance::Get_SpellLearnIndex()
 	return m_pSpellLearn_Data->Get_Index();
 }
 
+void CInfoInstance::Spell_UnLock(_int SpellID)
+{
+	m_pSkillInfo->Spell_UnLock(SpellID);
+}
+
 //void CInfoInstance::Set_Font(void* pArg)
 //{
 //	m_pDialogue_Font->Add_Text(pArg);

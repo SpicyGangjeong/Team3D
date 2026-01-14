@@ -56,15 +56,12 @@ HRESULT CLight_Main::Render()
 
 HRESULT CLight_Main::Capture_PreShadow()
 {
-	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_BACKGROUND);
-	assert(nullptr != pLayer);
+	Add_PreShadowRenderGroup(m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_BACKGROUND));
+	Add_PreShadowRenderGroup(m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_UNIFIED));
+	Add_PreShadowRenderGroup(m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_HOGSMEADE));
+	Add_PreShadowRenderGroup(m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_HOGWART));
+	Add_PreShadowRenderGroup(m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_HOGWART));
 
-	const list<CGameObject*>* pObjects = pLayer->Get_Objects();
-	for (auto& pObject : *pObjects) {
-		if (FAILED(m_pGameInstance->Add_RenderGroup(RENDER::PRESHADOW, pObject))) {
-			assert(false);
-		}
-	}
 	vector<_float3> vNeededPos = {};
 	vNeededPos.reserve(12);
 	{ 
@@ -170,6 +167,19 @@ _matrix CLight_Main::Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3
 	fMinZ -= fShadowDepthMArgin;
 	fMaxZ += fShadowDepthMArgin;
 	return XMMatrixOrthographicOffCenterLH(fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ);
+}
+
+void CLight_Main::Add_PreShadowRenderGroup(CLayer* pLayer)
+{
+	if (nullptr == pLayer) {
+		return;
+	}
+	const list<CGameObject*>* pObjects = pLayer->Get_Objects();
+	for (auto& pObject : *pObjects) {
+		if (FAILED(m_pGameInstance->Add_RenderGroup(RENDER::PRESHADOW, pObject))) {
+			assert(false);
+		}
+	}
 }
 
 

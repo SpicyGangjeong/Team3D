@@ -25,6 +25,7 @@ enum class SD_CHANNEL_GROUP {
     ENVIRONMENT,
     EFFECT,
     VOICE,
+    OBJECT,
     END
 };
 

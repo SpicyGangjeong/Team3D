@@ -4,13 +4,6 @@ NS_BEGIN(Engine)
 NS_BEGIN(SOUND)
 
 
-enum class SD_CHANNEL_GROUP {
-	BGM,
-	ENVIRONMENT,
-	EFFECT,
-	VOICE,
-	END
-};
 
 enum class SD_KIND {
 #pragma region BGM
@@ -264,6 +257,17 @@ enum class SD_KIND {
 	BROOM_NORMAL,
 	BROOM_RIDE,
 #pragma endregion
+
+#pragma region DOOR
+	DOOR_OPEN,
+	DOOR_CLOSE,
+#pragma endregion
+
+#pragma region CHEST
+	CHEST_FOUND,
+	CHEST_OPEN,
+#pragma endregion
+
 	END,
 };
 

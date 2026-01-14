@@ -27,8 +27,10 @@ void CInstancedProp::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#ifdef Bin
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+#endif // Bin
 }
 
 HRESULT CInstancedProp::Render()

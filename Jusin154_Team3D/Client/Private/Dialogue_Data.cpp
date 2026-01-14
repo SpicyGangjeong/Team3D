@@ -67,6 +67,7 @@ HRESULT CDialogue_Data::Load_SpellInfo(const _char* pFilePath)
                 if (choiceText) choice.pText = CMyTools::ToWstring(choiceText);
 
                 pChoice->QueryIntAttribute("NextID", &choice.NextTypeID);
+                pChoice->QueryIntAttribute("QuestID", &choice.QuestID);
 
                 line.ChoiceInfo.push_back(choice);
                 pChoice = pChoice->NextSiblingElement("Choice");
