@@ -88,6 +88,8 @@ private:
 	HRESULT Update_CollidersPosition();
 	HRESULT Render_Nonblend();
 	HRESULT Render_Blend();
+	virtual HRESULT Render_Blur() override;
+	virtual HRESULT Render_Bloom() override;
 	void MoveTo(_float fTimeDelta);
 	HRESULT Load_RanrokPos(const _char* pFilePath);
 public:
@@ -258,6 +260,13 @@ private:
 
 	_bool Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo);
 
+#pragma region Ether
+	class CRanrok_EtherInfo* m_pEtherInfo[ENUM_CLASS(RANROK_MESH_ORDER::WINGS)] = {};
+	class CShader* m_pEther_Shader = { nullptr };
+
+	void Ether_Create();
+	void Ether_Update(_float fTimeDelata);
+#pragma endregion 
 };
 
 NS_END

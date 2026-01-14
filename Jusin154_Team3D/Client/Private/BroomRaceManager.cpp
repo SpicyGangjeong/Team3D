@@ -223,6 +223,7 @@ HRESULT CBroomRaceManager::Ready_Components()
 				return E_FAIL;
 			}
 
+			SAFE_ADDREF(m_pRaceEndEffects[i]);
 			m_pRaceEndEffects[i]->Load(EffectFinal.c_str(), static_cast<LEVEL>(g_iStaticLevel));
 			m_pRaceEndEffects[i]->Set_Visible(false);
 		}
@@ -276,6 +277,7 @@ void CBroomRaceManager::Free()
 		SAFE_RELEASE(Ring);
 	}
 	m_pRaceRings.clear();
+
 	for (auto& RaceEndEffects : m_pRaceEndEffects)
 	{
 		SAFE_RELEASE(RaceEndEffects);

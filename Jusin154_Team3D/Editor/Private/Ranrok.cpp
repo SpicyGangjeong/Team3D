@@ -13,6 +13,7 @@
 #include "Ranrok_Point.h"
 #include "EditEffect.h"
 #include "TrailObject.h"
+#include "Ranrok_EtherInfo.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -88,6 +89,12 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_fRimPower = 2.3f;
 	m_vRimColor = _float4(0.333f, 0.235f, 0.184f, 0.059f);
 
+	Ether_Create();
+
+#if 진우
+	m_pLeftEye_Trail->Set_Visible(false);
+	m_pRightEye_Trail->Set_Visible(false);
+#endif
 
 	return S_OK;
 }
@@ -122,6 +129,8 @@ void CRanrok::Update(_float fTimeDelta)
 
 	Play_Event();
 
+	Ether_Update(fTimeDelta);
+
 	if (true == m_pCharacter_Controller->IsActive()) {
 		{ // 세트
 			m_pCallBack_HitReport->BeginFrame();
@@ -145,6 +154,7 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 #ifdef _DEBUG
 	Describe_Entity();
+	Ether_GUI();
 #endif // _DEBUG
 
 
@@ -227,12 +237,16 @@ void CRanrok::Late_Update(_float fTimeDelta)
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
 
 HRESULT CRanrok::Render()
 {
-	if (!m_bVisible){
+	if (!m_bVisible) {
 		return S_OK;
 	}
 	if (FAILED(Bind_ShaderResources())) {
@@ -243,7 +257,7 @@ HRESULT CRanrok::Render()
 	if (RENDER::NONBLEND == eCurrentPass) {
 		hr = Render_Nonblend();
 	}
-	else if (RENDER::BLEND == eCurrentPass) {
+	else if (RENDER::BLEND == eCurrentPass || RENDER::EFFECT == eCurrentPass) {
 		hr = Render_Blend();
 		hr = S_OK;
 	}
@@ -431,6 +445,12 @@ HRESULT CRanrok::Ready_Components()
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_RANROK_ETHER,
+		reinterpret_cast<CComponent**>(&m_pEther_Shader)))) {
+		return E_FAIL;
+	}
+
 
 	m_strModelPrototypeTag = TEXT("Prototype_Component_Ranrok_Model");
 
@@ -665,28 +685,47 @@ HRESULT CRanrok::Render_Nonblend()
 }
 HRESULT CRanrok::Render_Blend()
 {
-	_float fDiffuseUVRatio = (m_vEtherealTimer.x / m_vEtherealTimer.y);
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEtherealRatio", &fDiffuseUVRatio, sizeof(_float)))) {
-		return E_FAIL;
-	}
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_HOT_SPINE); i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); ++i)
 	{
-		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",
+		RENDER eCurrentPass = m_pGameInstance->Get_CurrentRenderPass();
+
+		if (m_pEtherInfo[i]->Get_RenderOrder() != eCurrentPass)
+			continue;
+
+		if (FAILED(m_pEther_Shader->Bind_Matrices("g_OffsetMatrix",
 			m_pModelCom->Get_OffsetMatrix(i).data(),
 			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
 		{
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+		m_pEtherInfo[i]->Bind_Ether_ShaderResources(m_pEther_Shader);
+
+		_float4x4 WorldInv = {};
+
+		XMStoreFloat4x4(&WorldInv, m_pTransformCom->Get_WorldMatrixInv());
+
+		if (FAILED(m_pEther_Shader->Bind_Matrix("g_WorldMatrixInv", &WorldInv))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+
+		if (FAILED(m_pEther_Shader->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pEther_Shader, "g_WorldMatrix")))
+			return E_FAIL;
+
+	
+
+		if (FAILED(m_pEtherInfo[i]->Ether_Begin(m_pEther_Shader))) {
 			return E_FAIL;
 		}
 
 		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+
 
 		if (true == m_bDrawOutLine) {
 			m_pGameInstance->Begin_OutLine_Write(2);
@@ -710,6 +749,105 @@ HRESULT CRanrok::Render_Blend()
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CRanrok::Render_Blur()
+{
+
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_HOT_SPINE); i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); ++i)
+	{
+
+		if (m_pEtherInfo[i]->isBlur() == false)
+			continue;
+
+		if (FAILED(m_pEther_Shader->Bind_Matrices("g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
+		{
+			return E_FAIL;
+		}
+
+		m_pEtherInfo[i]->Bind_Ether_ShaderResources(m_pEther_Shader);
+
+		_float4x4 WorldInv = {};
+
+		XMStoreFloat4x4(&WorldInv, m_pTransformCom->Get_WorldMatrixInv());
+
+		if (FAILED(m_pEther_Shader->Bind_Matrix("g_WorldMatrixInv", &WorldInv))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pEther_Shader->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pEther_Shader, "g_WorldMatrix")))
+			return E_FAIL;
+
+
+
+		if (FAILED(m_pEther_Shader->Begin(ENUM_CLASS(SHADER_PASS_ETHER::BLUR)))) {
+			return E_FAIL;
+		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+
+	}
+
+	return S_OK;
+}
+
+HRESULT CRanrok::Render_Bloom()
+{
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_HOT_SPINE); i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); ++i)
+	{
+
+		if (m_pEtherInfo[i]->isBloom() == false)
+			continue;
+
+		if (FAILED(m_pEther_Shader->Bind_Matrices("g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size())))
+		{
+			return E_FAIL;
+		}
+
+		m_pEtherInfo[i]->Bind_Ether_ShaderResources(m_pEther_Shader);
+
+		_float4x4 WorldInv = {};
+
+		XMStoreFloat4x4(&WorldInv, m_pTransformCom->Get_WorldMatrixInv());
+
+		if (FAILED(m_pEther_Shader->Bind_Matrix("g_WorldMatrixInv", &WorldInv))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pEther_Shader->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pEther_Shader, "g_WorldMatrix")))
+			return E_FAIL;
+
+
+		if (FAILED(m_pEther_Shader->Begin(ENUM_CLASS(SHADER_PASS_ETHER::BLOOM)))) {
+			return E_FAIL;
+		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+
+	}
 	return S_OK;
 }
 
@@ -898,9 +1036,17 @@ void CRanrok::Free()
 	SAFE_RELEASE(m_pRightEye_Trail);
 	SAFE_RELEASE(m_pRightPt);
 	SAFE_RELEASE(m_pLeftPt);
+	SAFE_RELEASE(m_pEther_Shader);
+	SAFE_RELEASE(m_pMotionTrailCom);
 
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
+
+	for (size_t i = 0; i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i++)
+	{
+		SAFE_RELEASE(m_pEtherInfo[i]);
+	}
+
 }
 #ifdef _DEBUG
 
@@ -919,6 +1065,7 @@ void CRanrok::Describe_Entity()
 		SAFE_RELEASE(m_pRightPt);
 		SAFE_RELEASE(m_pLeftPt);
 		SAFE_RELEASE(m_pMotionTrailCom);
+
 
 		for (auto& pParts : m_PartObjects)
 		{
