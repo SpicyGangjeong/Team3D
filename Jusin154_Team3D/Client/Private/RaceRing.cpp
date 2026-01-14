@@ -3,14 +3,16 @@
 
 #include "BroomRaceManager.h"
 #include "GameInstance.h"
+#include "PartObject.h"
+#include "EffectParts.h"
 
 CRaceRing::CRaceRing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CContainerObject(pDevice, pContext)
 {
 }
 
 CRaceRing::CRaceRing(const CRaceRing& Prototype)
-	: CGameObject(Prototype)
+	: CContainerObject(Prototype)
 {
 }
 
@@ -27,6 +29,10 @@ HRESULT CRaceRing::Initialize(void* pArg)
 
 
 	if (FAILED(Ready_Components())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
 
@@ -54,6 +60,8 @@ void CRaceRing::Priority_Update(_float fTimeDelta)
 	Describe_Entity();
 
 #endif // _DEBUG
+
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CRaceRing::Update(_float fTimeDelta)
@@ -61,10 +69,22 @@ void CRaceRing::Update(_float fTimeDelta)
 	m_pModelCom->Combined_BoneMatrix();
 
 	World_to_ScreenUI();
+
+	__super::Update(fTimeDelta);
+
+	if (m_bTarget == true)
+	{
+		m_pRingEffect->Set_Visible(true);
+		m_pRingEffect->Get_Component<CTransform>()->Set_WorldMatrix(m_pTransformCom->Get_XMWorldMatrix());
+	}
+	else {
+		m_pRingEffect->Set_Visible(false);
+	}
 }
 
 void CRaceRing::Late_Update(_float fTimeDelta)
 {
+	__super::Late_Update(fTimeDelta);
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
@@ -238,6 +258,24 @@ HRESULT CRaceRing::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CRaceRing::Ready_Parts()
+{
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("Ring_Blur", g_iStaticLevel, &m_pRingEffect, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pRingEffect->Load("../Bin/Resources/Data/Effect/BroomRace/Ring_Blur", static_cast<LEVEL>(g_iStaticLevel));
+	m_pRingEffect->Set_Visible(false);
+
+	return S_OK;
+}
+
 
 
 CRaceRing* CRaceRing::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -272,6 +310,7 @@ void CRaceRing::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
+	SAFE_RELEASE(m_pRingEffect);
 
 }
 #ifdef _DEBUG

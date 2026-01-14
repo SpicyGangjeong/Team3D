@@ -160,7 +160,6 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 		}
 
 	}
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_LEVIOSO, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 
 	return S_OK;
 }
