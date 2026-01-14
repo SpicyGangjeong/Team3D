@@ -90,6 +90,12 @@ typedef struct tagSpellInfo
 		_int iType{};
 	}CHOICEINFO;
 
+	typedef struct PropUI
+	{
+		_float4 vPosition{};
+		_int iIndex{};
+	}PROPUI;
+
 	typedef struct tagUnitInfo
 	{
 		_wstring		pUnit_Name;

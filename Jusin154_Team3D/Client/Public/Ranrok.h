@@ -136,7 +136,7 @@ private:
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 	vector<class CEffect_Container*> m_pRanrok_Props;
 	_float					 m_fTuckedSpeed = { 80.f };
-
+	_int						m_iRanRok_PropIndex{};
 
 	class CEffectParts* m_pLeftSmoke = { nullptr };
 	class CEffectParts* m_pRightSmoke = { nullptr };

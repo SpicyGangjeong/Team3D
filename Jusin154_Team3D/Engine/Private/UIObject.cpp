@@ -211,7 +211,7 @@ _bool CUIObject::Chack_Visible()
 
 void CUIObject::Set_FadeIn()
 {
-	if (!m_bFadeIn && m_fAlpha < 1.f)
+	if (!m_bFadeIn && m_fAlpha <= 1.f)
 	{
 		m_bFadeIn = true;
 		m_bFadeOut = false;
@@ -220,7 +220,7 @@ void CUIObject::Set_FadeIn()
 
 void CUIObject::Set_FadeOut()
 {
-	if (!m_bFadeOut && m_fAlpha > 0.f)
+	if (!m_bFadeOut && m_fAlpha >= 0.f)
 	{
 		m_bFadeOut = true;
 		m_bFadeIn = false;

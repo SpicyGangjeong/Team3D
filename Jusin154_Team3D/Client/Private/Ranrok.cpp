@@ -13,6 +13,7 @@
 #include "TimeSocket.h"
 #include "Layer.h"
 
+#include "Ranrok_Prop.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -65,7 +66,7 @@ HRESULT CRanrok::Initialize(void* pArg)
 	}
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
-	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody,&m_bCollisionPlayer);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody, &m_bCollisionPlayer);
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -170,7 +171,7 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 
 
-	Update_Disolve(fTimeDelta,0.8f);
+	Update_Disolve(fTimeDelta, 0.8f);
 
 
 #pragma region TRAIL_UPDATE
@@ -208,7 +209,17 @@ void CRanrok::Update(_float fTimeDelta)
 			m_vCreatePropTime.x = 0.f;
 
 			if (nullptr != pEffect)
+			{
+				m_iRanRok_PropIndex++;
+				static_cast<CRanrok_Prop*>(pEffect)->Set_Index(m_iRanRok_PropIndex);
 				m_pRanrok_Props.push_back(pEffect);
+			}
+
+			PROPUI Prop{};
+			XMStoreFloat4(&Prop.vPosition, pEffect->Get_WorldPostion());
+			Prop.iIndex = m_iRanRok_PropIndex;
+			m_pInfoInstance->Event_CallBack(TEXT("RANROKPROP"), &Prop);
+
 		}
 
 
@@ -259,7 +270,7 @@ void CRanrok::Late_Update(_float fTimeDelta)
 		_vector vRight = m_pTransformCom->Get_State(STATE::RIGHT);
 
 		_float4 SetPos = {};
-		XMStoreFloat4(&SetPos,vPos + (vRight * (_float)m_iBreathRand));
+		XMStoreFloat4(&SetPos, vPos + (vRight * (_float)m_iBreathRand));
 
 		m_pModelCom->Set_TargetPos(SetPos);
 
@@ -366,7 +377,7 @@ HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 {
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
 	{
-		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix",m_pModelCom->Get_OffsetMatrix(i).data(),
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix", m_pModelCom->Get_OffsetMatrix(i).data(),
 			(_int)m_pModelCom->Get_OffsetMatrix(i).size()))) {
 			return E_FAIL;
 		}
@@ -399,7 +410,7 @@ _vector CRanrok::Get_LockOnPos()
 		for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
 			_vector vPosResult = m_pTargetableDO[i]->Get_Position();
 			vToMonsterDir = vPosResult - vCameraPos;
-			
+
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);
 
 			if (fMaxDot < fDotResult) {
@@ -419,7 +430,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_bDisolve)
 		return;
 
-	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED) || m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::HIT_BWD2].first)
+	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND | FSMSTATE::TUCKED) || m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::HIT_BWD2].first)
 		return;
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -687,19 +698,19 @@ HRESULT CRanrok::Ready_SubParts()
 	m_pLeftEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_left");
 	m_pRightEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_right");
 
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_WRIST)]	=	m_pRightWingWrist_BoneMat	= m_pModelCom->Get_BoneMatrixPtr("wrist_right");
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_TIP)]		=	m_pRightWingTip_BoneMat		= m_pModelCom->Get_BoneMatrixPtr("middle_05_right");
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_PINKY)]	=	m_pRightWingPinky_BoneMat	= m_pModelCom->Get_BoneMatrixPtr("pinkyelbowwing_04_right");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_WRIST)] = m_pRightWingWrist_BoneMat = m_pModelCom->Get_BoneMatrixPtr("wrist_right");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_TIP)] = m_pRightWingTip_BoneMat = m_pModelCom->Get_BoneMatrixPtr("middle_05_right");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::RIGHTWING_PINKY)] = m_pRightWingPinky_BoneMat = m_pModelCom->Get_BoneMatrixPtr("pinkyelbowwing_04_right");
 
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_WRIST)]		=	m_pLeftWingWrist_BoneMat	= m_pModelCom->Get_BoneMatrixPtr("wrist_left");
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_TIP)]		=	m_pLeftWingTip_BoneMat		= m_pModelCom->Get_BoneMatrixPtr("middle_05_left");
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_PINKY)]		=	m_pLeftWingPinky_BoneMat	= m_pModelCom->Get_BoneMatrixPtr("pinkyelbowwing_04_left");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_WRIST)] = m_pLeftWingWrist_BoneMat = m_pModelCom->Get_BoneMatrixPtr("wrist_left");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_TIP)] = m_pLeftWingTip_BoneMat = m_pModelCom->Get_BoneMatrixPtr("middle_05_left");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::LEFTWING_PINKY)] = m_pLeftWingPinky_BoneMat = m_pModelCom->Get_BoneMatrixPtr("pinkyelbowwing_04_left");
 
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::HEAD)]				=	m_pHead_BoneMat				= m_pModelCom->Get_BoneMatrixPtr("head");
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::BODY)]				=	m_pBody_BoneMat				= m_pModelCom->Get_BoneMatrixPtr("chest_Main");
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL0)]				=	m_pTail0_BoneMat			= m_pModelCom->Get_BoneMatrixPtr("tail_04");
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL1)]				=	m_pTail1_BoneMat			= m_pModelCom->Get_BoneMatrixPtr("tail_08");
-	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL2)]				=	m_pTail2_BoneMat			= m_pModelCom->Get_BoneMatrixPtr("tail_12");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::HEAD)] = m_pHead_BoneMat = m_pModelCom->Get_BoneMatrixPtr("head");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::BODY)] = m_pBody_BoneMat = m_pModelCom->Get_BoneMatrixPtr("chest_Main");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL0)] = m_pTail0_BoneMat = m_pModelCom->Get_BoneMatrixPtr("tail_04");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL1)] = m_pTail1_BoneMat = m_pModelCom->Get_BoneMatrixPtr("tail_08");
+	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL2)] = m_pTail2_BoneMat = m_pModelCom->Get_BoneMatrixPtr("tail_12");
 
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 	Desc.bAutoOwnerTranslation = false;
@@ -944,7 +955,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	if (m_iCurrentPoint + 1 < m_Points[m_iCurrentFlow].size() && fDist < 15.f)
 	{
-		 NextTarget = XMLoadFloat4(&m_Points[m_iCurrentFlow][m_iCurrentPoint + 1]);
+		NextTarget = XMLoadFloat4(&m_Points[m_iCurrentFlow][m_iCurrentPoint + 1]);
 	}
 	else {
 		NextTarget = Target;
@@ -972,7 +983,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 
 	_vector LerpTarget = XMVectorLerp(Target, NextTarget, 0.5f);
 
-	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,5.f);
+	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta, 5.f);
 
 	m_pCharacter_Controller->Set_Position(CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
 	m_pTransformCom->Set_State(STATE::POSITION, CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
