@@ -162,7 +162,7 @@ HRESULT CMapElement_Cave::Ready_TriggerBox()
 	CTriggerBox::TRIGGERBOX_DESC Desc = {};
 
 	XMStoreFloat4(&Desc.vPosition_Radius, m_pTransformCom->Get_State(STATE::POSITION));
-	Desc.vPosition_Radius.w = 10.f;
+	Desc.vPosition_Radius.w = 3.f;
 
 	m_pTriggerBox = CTriggerBox::Create(m_pDevice, m_pContext, &Desc);
 
