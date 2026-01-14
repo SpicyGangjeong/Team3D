@@ -58,6 +58,7 @@
 #include "PotionScreen.h"
 #include "HitScreen.h"
 #include "BroomRace_Bubble.h"
+#include "Ranrok_PropHit.h"
 
 #include "Goblin_ProtegoHit.h"
 #include "Duelist_ProtegoHit.h"
@@ -853,6 +854,17 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PROP_HIT, 10, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_PropHit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_PropHit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	
 	return S_OK;
 }
 

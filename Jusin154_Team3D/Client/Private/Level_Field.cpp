@@ -185,13 +185,6 @@ HRESULT CLevel_Field::Ready_Lights()
 	_float4 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1E1C1B3C);
 	_float4 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1A191900);
 	_float4 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
-
-#if gimch || 진우
-	vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
-	vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
-	vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
-#endif // gimch
-
 	
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(-0.574f, -0.409f, 0.584f, -0.402f));
@@ -202,8 +195,6 @@ HRESULT CLevel_Field::Ready_Lights()
 HRESULT CLevel_Field::Ready_Volumetric()
 {
 	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
-
-
 	return S_OK;
 }
 
@@ -273,8 +264,6 @@ HRESULT CLevel_Field::Ready_Layer_SkyBox()
 
 HRESULT CLevel_Field::Ready_Background()
 {
-	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
-
 	CInfoInstance::GetInstance()->Load_MapObjects("Dungeon_Map_Data", LAYER_BACKGROUND);
 	CInfoInstance::GetInstance()->Load_WorldDecal("Duengon_Decal_Data", LAYER_BACKGROUND);
 	CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data", LAYER_BACKGROUND);
