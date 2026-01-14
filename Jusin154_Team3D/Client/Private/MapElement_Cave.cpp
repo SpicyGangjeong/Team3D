@@ -72,6 +72,8 @@ void CMapElement_Cave::Late_Update(_float fTimeDelta)
 		if (m_bVisible)
 		{
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
 #ifdef _DEBUG
 			m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, m_pTriggerBox);
 #endif // _DEBUG

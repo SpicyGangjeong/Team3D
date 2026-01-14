@@ -253,18 +253,29 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 		{
 			return;
 		}
+		default:
+			break;
 		}
 	}
+	default:
+		break;
 	}
+	{
+		_vector vHeadPosition = pCCT->Get_HeadPosition();
+		m_pInfoInstance->ActiveAt_Interactive(XMVectorSetY(vHeadPosition, vCCTPos.y += pCCT->Get_Height()));
 
-	_vector vHeadPosition = pCCT->Get_HeadPosition();
-	m_pInfoInstance->ActiveAt_Interactive(XMVectorSetY(vHeadPosition, vCCTPos.y += pCCT->Get_Height()));
-
-	CollisionDesc.pObject->Set_Visible(false);
-	_float fMinusPosition = m_pGameInstance->Real_Random_Float(100, 900);
-	_vector vTempPos = XMVectorSet(0.f, -fMinusPosition, 0.f, 1.f);
-	CollisionDesc.pObject->Get_Component<CTransform>()->Set_State(STATE::POSITION, vTempPos);
-	pCCT->Set_Position(vTempPos);
+		_float fMinusPosition = m_pGameInstance->Real_Random_Float(100, 900);
+		_vector vTempPos = XMVectorSet(0.f, -fMinusPosition, 0.f, 1.f);
+		CollisionDesc.pObject->Get_Component<CTransform>()->Set_State(STATE::POSITION, vTempPos);
+		pCCT->Set_Position(vTempPos);
+		CFSM* pFSM = CollisionDesc.pObject->Get_Component<CFSM>();
+		if (nullptr != pFSM) {
+			CollisionDesc.pObject->Set_Dead();
+		}
+		else {
+			pFSM->Set_State(FSMSTATE::DEAD);
+		}
+	}
 	//m_pTransformCom->Set_WorldMatrix(CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>()->Get_Actor()->getGlobalPose());
 
 

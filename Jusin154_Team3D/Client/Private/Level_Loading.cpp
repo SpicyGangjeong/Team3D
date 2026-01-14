@@ -87,6 +87,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		case LEVEL::FIELD:
 		{
 			pairLevel = CLevel_Field::Create(m_pDevice, m_pContext, m_eNextLevelID, nullptr);
+			Capture_TerrainPreShadow();
 		} break;
 		case LEVEL::RESTART:
 		{

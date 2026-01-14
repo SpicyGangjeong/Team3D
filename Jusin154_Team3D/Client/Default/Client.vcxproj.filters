@@ -922,7 +922,6 @@
     <ClInclude Include="..\Public\AccioSide.h">
       <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\Broom_TargetGate2D.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
@@ -977,6 +976,7 @@
     <ClInclude Include="..\Public\Ranrok_PropHit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2904,9 +2904,7 @@
     <ClCompile Include="..\Private\Ranrok_PropHit.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp">
-      <Filter>04.Mechanic\20.TriggerBox</Filter>
-    </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\State_Parry.cpp">
