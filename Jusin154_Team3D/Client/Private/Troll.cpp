@@ -9,6 +9,7 @@
 #include "CallBack_Troll_HitReport.h"
 #include "EffectParts.h"
 #include "EffectPool.h"
+#include "TimeSocket.h"
 #include "Layer.h"
 #include "TrailObject.h"
 #include "MapElement_Interactable.h"
@@ -65,7 +66,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(96.927f, 15.f, 129.544f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(96.927f, -15.f, 129.544f, 1.f));
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -436,6 +437,39 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
+}
+
+void CTroll::Trigger(CTimeSocket& Socket)
+{
+
+	SOCKETCONTENTS* pContents = &Socket.m_Contents;
+	switch (pContents->eTypeFunc)
+	{
+	case TIMESOCKET_FUNC::TELEPORTATION:
+	{
+		m_pTransformCom->Set_WorldMatrix(pContents->pxTransform);
+		m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
+	} break;
+	case TIMESOCKET_FUNC::SET_FSMSTATE:
+	{
+		if (pContents->vFlags.b[0]){
+			m_pFSM->Change_State(FSMSTATE::RUSH);
+		}
+	} break;
+	case TIMESOCKET_FUNC::SET_ANIMSTATE:
+	{
+		if (pContents->vFlags.b[0]){
+			auto& pairAnimation = m_Animation[STATEANIM::RUSH_LOOP];
+			m_pModelCom->Set_AnimationIndex(pairAnimation.first, pairAnimation.second);
+		}
+	} break;
+	case TIMESOCKET_FUNC::END_CINEMATIC:
+	{
+		m_pGameInstance->Bind_Camera(CURRENT_LEVEL, Socket.m_Contents.wstrKeyName, true);
+	}break;
+	default:
+		break;
+	}
 }
 
 HRESULT CTroll::Ready_Components()
