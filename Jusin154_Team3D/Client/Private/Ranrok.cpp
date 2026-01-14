@@ -86,7 +86,7 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 	m_fRimStrength = 2.3f;
 	m_fRimPower = 2.3f;
-	m_vRimColor = _float4(0.333, 0.235, 0.184, 0.059);
+	m_vRimColor = _float4(0.333f, 0.235f, 0.184f, 0.059f);
 
 
 	return S_OK;
@@ -299,7 +299,7 @@ HRESULT CRanrok::Render()
 		hr = Render_Nonblend();
 	}
 	else if (RENDER::BLEND == eCurrentPass) {
-		//hr = Render_Blend();
+		hr = Render_Blend();
 		hr = S_OK;
 	}
 #ifdef _DEBUG
@@ -382,6 +382,16 @@ void CRanrok::Trigger(CTimeSocket& Socket)
 HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 {
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimStrength", &m_fRimStrength, sizeof(_float))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4))))
+		return E_FAIL;
 
 
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
@@ -861,6 +871,7 @@ HRESULT CRanrok::Render_Blend()
 	}
 
 	if (m_bMotionTrail) {
+
 		if (FAILED(Bind_ShaderResources())) {
 			return E_FAIL;
 		}
@@ -1131,6 +1142,14 @@ void CRanrok::Describe_Entity()
 
 		GUI::Text("Degree %.2f", m_fDegree);
 		GUI::Text("CurrFlow %d", m_iCurrentFlow);
+
+
+		GUI::DragFloat("RimStrength", &m_fRimStrength, 0.01f);
+		GUI::DragFloat("RimPower", &m_fRimPower, 0.01f);
+		GUI::ColorEdit4("RimColor", (_float*)(&m_vRimColor));
+		GUI::DragFloat("MotionTrailTime", &m_vCaptureTimer.y);
+
+		m_pMotionTrailCom->Describe_Entity();
 
 		_float3 Pos;
 		XMStoreFloat3(&Pos, Get_WorldPostion());

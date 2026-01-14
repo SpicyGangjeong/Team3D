@@ -86,7 +86,7 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 	m_fRimStrength = 2.3f;
 	m_fRimPower = 2.3f;
-	m_vRimColor = _float4(0.333, 0.235, 0.184, 0.059);
+	m_vRimColor = _float4(0.333f, 0.235f, 0.184f, 0.059f);
 
 
 	return S_OK;

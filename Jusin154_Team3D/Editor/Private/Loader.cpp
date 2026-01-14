@@ -2206,6 +2206,7 @@ HRESULT CLoader::Loading_For_Effect()
 	Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
 		return E_FAIL;
+	}
 
 	if (isLoad_Map)
 	{
