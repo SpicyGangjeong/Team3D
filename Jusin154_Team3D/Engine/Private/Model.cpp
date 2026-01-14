@@ -194,6 +194,13 @@ void CModel::Set_ChainAnimation(pair<_uint, _bool> chainAnim)
 }
 
 
+void CModel::Clear_QueuedAnim()
+{
+	m_bQueuedAnim = false;
+	m_iQueuedAnimIndex = -1;
+}
+
+
 _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
 	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations){
@@ -292,7 +299,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		{
 			fRatio = 1.f;
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
-			m_fBlendTime = 0.f;
 
 			if (m_iQueuedAnimIndex != -1)
 			{
@@ -300,7 +306,7 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 				_bool loop = m_bQueuedLoop;
 				m_iQueuedAnimIndex = -1;
 
-				Set_AnimationIndex(next, loop,m_fAmount,m_bRatio,1.f,false);
+				Set_AnimationIndex(next, loop,m_fQueuedAmount,m_bQueuedRatio,m_fQueuedSpeed,m_bQueuedRootBone);
 			}
 		}
 	}
@@ -447,6 +453,13 @@ _bool CModel::IsBlending() const
 
 void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone,_bool bQueuedAnim)
 {
+
+	if (!bQueuedAnim)
+	{
+		m_bQueuedAnim = false;
+		m_iQueuedAnimIndex = -1;
+	}
+
 	m_bQueuedAnim = bQueuedAnim;
 	if (m_iCurrentAnimIndex == iIndex)
 		return;
@@ -456,6 +469,11 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		{
 			m_iQueuedAnimIndex = iIndex;
 			m_bQueuedLoop = isLoop;
+			m_fQueuedAmount = fAmount;
+			m_bQueuedRatio = bRatio;
+			m_fQueuedSpeed = fAnimSpeed;
+			m_bQueuedRootBone = bRootBone;
+
 			return;
 		}
 	}
@@ -479,6 +497,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
+		m_bIsFinishedAnim = false;
 
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 		m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fAnimSpeed);

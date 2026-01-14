@@ -30,7 +30,7 @@ HRESULT CMapObject_Render::Initialize(void* pArg)
 
 	//m_Type = static_cast<MAPOBJECT_RENDER_TYPE>(pDesc->iRenderType);
 	m_iMaxLodLevel = pDesc->iMaxLodLevel;
-
+	m_hasCollisionMesh = pDesc->hasCollisionMesh;
 	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
 	{
 		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
@@ -60,8 +60,11 @@ HRESULT CMapObject_Render::Initialize(void* pArg)
 	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
 	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
 
-	ReadyForPhysX();
-	ConvertToPhysX();
+	if(false == m_hasCollisionMesh)
+	{
+		ReadyForPhysX();
+		ConvertToPhysX();
+	}
 
 	return S_OK;
 }
@@ -86,6 +89,10 @@ void CMapObject_Render::Late_Update(_float fTimeDelta)
 		m_iNumMeshe = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
 
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+//#ifdef Bin
+//		m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+//		m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+//#endif // Bin
 	}
 }
 

@@ -202,16 +202,37 @@ void CDuelist_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 		switch (iSkillType)
 		{
 		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+			if (iRand == 0) {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_17, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			else {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
 			m_pOwner->OnCollision(pOther, CollisionDesc);
 			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
 			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		}
 			break;
 		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+			if (iRand == 0) {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_17, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			else {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
 			m_pOwner->OnCollision(pOther, CollisionDesc);
 			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
 			m_bVisible = false;
 			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		}
+			break;
+		default:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_12, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 			break;
 		}
 	}

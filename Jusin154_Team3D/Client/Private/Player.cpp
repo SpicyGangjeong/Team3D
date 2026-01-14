@@ -58,6 +58,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 #if 진우
 	m_isDebugMode = false; // 디버그 무적 모드
 #endif
+
+#if 기무리
+	m_isDebugMode = true; // 디버그 무적 모드
+#endif
 #if 나
 	m_isDebugMode = true; // 디버그 무적 모드
 #endif
@@ -119,6 +123,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteraction"), [this](void* p) {this->Set_Interaction(*reinterpret_cast<_bool*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("SpellLearningSuccess"), [this](void* p) {this->Set_Spell_Learning_Success(); });
 
 	m_bAI = false;
 
@@ -171,8 +176,11 @@ void CPlayer::Update(_float fTimeDelta)
 	{
 		if (m_bNpcInteraction == true)
 		{
+			NPCINTERACT Interact{};
 			m_bCurrentInteraction = true;
-			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bNpcInteraction);
+			Interact.bInteract = true;
+			Interact.fAlpha = 0.f;
+			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
 		}
 	}
 	if (m_bGuarding) {
@@ -437,6 +445,11 @@ void CPlayer::ExitBattle()
 {
 	m_bDuel_ZOnlyMove = false;
 	m_pCharacter_Controller->Set_Position(XMLoadFloat4(&m_OriginPos));
+}
+
+void CPlayer::Add_TurboBoost(_float fAmount)
+{
+	m_pBroom->Add_TurboBoost(fAmount);
 }
 
 HRESULT CPlayer::Render_Shadow(SHADOW eType)

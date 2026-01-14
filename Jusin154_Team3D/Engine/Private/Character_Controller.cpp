@@ -147,6 +147,26 @@ _float3 CCharacter_Controller::Get_Volume()
 	}
 }
 
+_float CCharacter_Controller::Get_Height()
+{
+	switch (m_eBodyType)
+	{
+	case Engine::ACTOR::BOX:
+	{
+		PSX::PxBoxController* pBox = static_cast<PSX::PxBoxController*>(m_pController);
+		return pBox->getHalfHeight() * 2.f;
+	} break;
+	case Engine::ACTOR::CAPSULE:
+	{
+		PSX::PxCapsuleController* pCapsule = static_cast<PSX::PxCapsuleController*>(m_pController);
+		return (pCapsule->getRadius() + pCapsule->getHeight()) * 2.f;
+	} break;
+	default:
+		return 2.f;
+		break;
+	}
+}
+
 HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 {
 	PSX::PxRigidDynamic* pDOActor = BodyOriginal.Get_Actor();

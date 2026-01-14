@@ -75,6 +75,9 @@ void CBroom::Behavior_IdleEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	pair<_uint, _bool> pairAnimInfo;
+	if (m_pParentUnit->IsAI() == false) {
+		m_pBroomTrail->Get_Component<CTrail>()->Reset_Trail();
+	}
 
 	pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE_B];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
@@ -366,10 +369,10 @@ void CBroom::Behavior_Broom_FlyEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::FLY);
-	m_pModelCom->Set_BlendDuration(0.8f);
+	m_pModelCom->Set_BlendDuration(0.5f);
 	m_bHoverToggle = false;
 	pairAnimInfo = pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
 }
 
 HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
@@ -386,11 +389,19 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	_bool bShift = m_Input.bHoverToggle;
 	_bool bTurbo = m_Input.bTurbo;
 
+	_bool bHasInput = (bLeft || bRight || bUp || bDown);
+
+	if (bHasInput)
+		m_fInputHoldTime += fTimeDelta;
+	else
+		m_fInputHoldTime = 0.f;
+
+	_bool bAllowAnimChange = (m_fInputHoldTime >= m_fHoldThreshold);
+
 	if (!m_bHoverToggle) {
 
 		if (SUCCEEDED(InputAction()) || SUCCEEDED(InputMove()))
 		{
-		
 			if (bFwd) {
 				m_fTargetSpeed = m_fFlyMaxSpeed;
 			}
@@ -494,9 +505,12 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 				}
 			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+			if (bAllowAnimChange || pairAnimInfo.first == m_Animation[STATEANIM::BROOM_FLY_B].first) {
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
+			}
 		}
 		else {
+			m_fInputHoldTime = 0.f;
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 		}
@@ -549,10 +563,10 @@ void CBroom::Behavior_Broom_TurboFlyEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::TURBOFLY);
 	m_bTurbo = true;
-	m_pModelCom->Set_BlendDuration(0.8f);
+	m_pModelCom->Set_BlendDuration(0.5f);
 	m_bHoverToggle = false;
 	pairAnimInfo = pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
 
 	Boost_Effect_Visible(true);
 }
@@ -570,6 +584,15 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 	_bool bDown = m_Input.Y < 0.f;
 	_bool bShift = m_Input.bHoverToggle;
 	_bool bTurbo = m_Input.bTurbo;
+
+	_bool bHasInput = (bLeft || bRight || bUp || bDown);
+
+	if (bHasInput)
+		m_fInputHoldTime += fTimeDelta;
+	else
+		m_fInputHoldTime = 0.f;
+
+	_bool bAllowAnimChange = (m_fInputHoldTime >= m_fHoldThreshold);
 
 	if (!m_bHoverToggle)
 	{
@@ -658,7 +681,7 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
 				else
 					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+
 			}
 			else if (ax >= az)
 			{
@@ -678,7 +701,6 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 						pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 					}
 				}
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 			}
 			else
 			{
@@ -689,10 +711,13 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 				}
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+			}
+			if (bAllowAnimChange || pairAnimInfo.first == m_Animation[STATEANIM::BROOM_FLY_B].first) {
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
 			}
 		}
 		else {
+			m_fInputHoldTime = 0.f;
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 		}

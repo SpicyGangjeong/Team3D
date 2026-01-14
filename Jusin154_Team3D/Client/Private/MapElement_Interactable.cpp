@@ -50,8 +50,8 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 
 	// RIGID_BODY
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);//pPhysXDummyDesc->iSubKind;
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), (CComponent**)&m_pRigidBody, &Desc))) {
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_THROWABLE_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 		return E_FAIL;
 	}
 
@@ -61,15 +61,15 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat3(&pDesc->vBoxLocalPosition));
 	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(false);
 
-	if (false == m_isPooled)
-	{
-		m_bVisible = true;
-		m_pInfoInstance->Regist_ActiveInteractive(this);
-	}
-	else
+	if (true == m_isPooled)
 	{
 		m_bVisible = false;
 		static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(true);
+	}
+	else
+	{
+		m_bVisible = true;
+		m_pInfoInstance->Regist_ActiveInteractive(this);
 	}
 
 

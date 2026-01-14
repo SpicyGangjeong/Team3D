@@ -575,7 +575,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
+	isLoad_NPC = false;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -1352,7 +1352,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			TEXT("Prototype_Component_Troll_Model")
 		));
 		jobCharacterModels.emplace_back(Deferred_ModelLoad(
-			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 			TEXT("Prototype_Component_Ranrok_Model")
 		));
 	}
@@ -2562,10 +2562,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 	}
 	{ // LIGHT PHYSX DYNAMIC
-		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
+			CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 			Desc.eType = ACTOR::BOX;
-			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxRigidBodyFlags = { };
 			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
@@ -2577,6 +2577,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.vAutoDamping = { 1.f, 1.f };
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_THROWABLE_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
 		}
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC ShieldDesc{};
@@ -2665,12 +2674,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 			RanrokDesc.vLocalTranslation = { 0.f, 5.f, 0.f };
 		}
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
-			return E_FAIL;
-		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, ShieldDesc)))) {
 			return E_FAIL;
 		}
@@ -2686,10 +2689,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, RanrokDesc)))) {
-			return E_FAIL;
-		}
-		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
 	}

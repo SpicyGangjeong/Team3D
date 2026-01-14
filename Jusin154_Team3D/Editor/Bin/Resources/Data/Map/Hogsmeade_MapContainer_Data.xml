@@ -2683,7 +2683,7 @@
         <Position x="115.97964" y="15.399979" z="127.5776"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
-        <MapContainerType type="0"/>
+        <MapContainerType type="2"/>
         <BoundingBox_Min x="-5.1330199" y="-0.31850505" z="-3.73068"/>
         <BoundingBox_Max x="3.1891599" y="12.063789" z="5.5602298"/>
         <PartObject Lod_Level="3" Key_Index="0">

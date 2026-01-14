@@ -45,17 +45,6 @@ HRESULT CBroom::Initialize(void* pArg)
 
 	Load_AnimXML("../Bin/Resources/Data/AnimList/Broom.xml");
 
-	{
-		CFSM::FSM_DESC FSMDesc{};
-		FSMDesc.pStates = &m_States;
-		FSMDesc.pStateMask = &m_iStateMask;
-
-		m_pFSM->Bind_States(FSMDesc);
-		m_pFSM->Change_State(FSMSTATE::IDLE);
-	}
-
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -100.f, 0.f, 1.f));
-
 	m_pParentUnit = dynamic_cast<CUnit*>(m_pOwner);
 
 	if (m_pParentUnit->IsAI() == false)
@@ -71,6 +60,17 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_fAICondition = 1.f;
 	}
 
+
+	{
+		CFSM::FSM_DESC FSMDesc{};
+		FSMDesc.pStates = &m_States;
+		FSMDesc.pStateMask = &m_iStateMask;
+
+		m_pFSM->Bind_States(FSMDesc);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -100.f, 0.f, 1.f));
 
 	return S_OK;
 }
@@ -103,7 +103,8 @@ void CBroom::Update(_float fTimeDelta)
 	{
 		m_bHoverToggle = true;
 		m_fSpeed = 0.f;
-
+		m_fVerticalSpeed = 0.f;
+		m_pBroomTrail->Get_Component<CTrail>()->Reset_Trail();
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
@@ -219,6 +220,12 @@ HRESULT CBroom::Render()
 	}
 
 	return S_OK;
+}
+
+void CBroom::Add_TurboBoost(_float fAmount)
+{
+	m_fTurboBoost += fAmount;
+	m_fTurboBoost = clamp(m_fTurboBoost, 0.f, 5.f);
 }
 
 HRESULT CBroom::Ready_Child()

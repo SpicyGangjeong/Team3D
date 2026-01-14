@@ -14,6 +14,7 @@ class CMapPartObject abstract : public CPartObject
 {
 public:
 	typedef struct tagMapObject_Desc {
+		_bool					hasCollisionMesh{};
 		_uint					iRenderType{};
 		CTransform*				pParentTransform = { nullptr };
 		_float3					vScale;

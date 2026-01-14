@@ -81,6 +81,7 @@ public:
 	_float Get_Spell_Damage(_int Index);
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
+
 #pragma endregion
 #pragma region QuestINFO
 	QUESTINFO Get_Quest(_int QuestType, _int QuestID);
@@ -93,6 +94,7 @@ public:
 #pragma region SpellLearn_Data
 	const SPELLLEARNINFO& Get_SpellLearn(_int Index) const;
 	_int Get_SpellLearnIndex();
+	void Spell_UnLock(_int SpellID);
 #pragma endregion
 #pragma region Dialogue_Font
 	//void Set_Font(void* pArg);

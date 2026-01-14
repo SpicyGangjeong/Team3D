@@ -76,11 +76,67 @@ void CBroomRace_Bubble::Late_Update(_float fTimeDelta)
 	CEffectParts* pBubble = Get_PartObject<CEffectParts>("Bubble");
 
 	if (false == m_bHit) {
-		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
-		_vector vEndPos = pBubble->Get_WorldPostion();
-		ON_COLLISION_INFO CollisionInfo = MonsterSweepTarget(vStartPos, vEndPos, 0.002f);
+		_vector vTop = XMLoadFloat4(&m_vStartPos) + XMVectorSet(0.f, 5.f, 0.f, 0.f);
 
-		OnCollision(this, &CollisionInfo);
+		_vector vBottom = pBubble->Get_WorldPostion() - XMVectorSet(0.f, 5.f, 0.f, 0.f);
+
+		CollisionCheck(vTop, vBottom, 5.f);
+
+		OnCollision(this);
+	}
+}
+
+void CBroomRace_Bubble::CollisionCheck(_fvector vStartPos, _fvector vEndPos, _float fRadius)
+{
+
+	_vector vDir = { vEndPos - vStartPos };
+
+	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
+
+	PSX::PxSweepBuffer pxBuffer = {};
+
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+
+	const PSX::PxSweepHit& hit = pxBuffer.block;
+	PSX::PxRigidActor* pActor = hit.actor;
+	PSX::PxShape* pShape = hit.shape;
+	ON_COLLISION_INFO tagCollInfo = {};
+
+	tagCollInfo.vWorldPos.w = 1.f;
+
+	if (bHit) {
+
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+
+
+		if (nullptr != pActor && nullptr != pActor->userData)
+		{
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+			tagCollInfo.pObject = pUserData->pOwner;
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::CCTActor:
+			{
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+
+				case PXOBJECT::PLAYER:
+				{
+					dynamic_cast<CPlayer*>(pUserData->pOwner)->Add_TurboBoost(1.f);
+					m_bHit = true;
+				}
+				break;
+
+				}
+			}
+			}
+		}
+
 
 	}
 }
@@ -156,6 +212,8 @@ void CBroomRace_Bubble::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	if (m_bHit == false)
 		return;
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BROOM_GET_ITEM, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 
 
 	CEffectParts* pBubble = Get_PartObject<CEffectParts>("Bubble");
