@@ -60,7 +60,8 @@ HRESULT CEnemy_Panel::Initialize(void* pArg)
 		m_Pos.Position = _float4(0.f, 0.f, 0.f, 0.f);
 		m_RanrokProps.push_back(m_Pos);
 	}
-	m_pInfoInstance->Add_Event(TEXT("RANROKPROP"), [this](void* p) {this->RanRokPropCreate(*reinterpret_cast<_vector*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("RANROKPROP"), [this](void* p) {this->RanRokPropCreate(p); });
+	m_pInfoInstance->Add_Event(TEXT("RANROKPROPBREAK"), [this](void* p) {this->RanRokPropBreak(*reinterpret_cast<_int*>(p)); });
 
 	Visible(true);
 	ElementAllVisible(true);
@@ -96,8 +97,10 @@ void CEnemy_Panel::Update_Target()
 	}
 }
 
-void CEnemy_Panel::RanRokPropCreate(_fvector Position)
+void CEnemy_Panel::RanRokPropCreate(void* pArg)
 {
+	PROPUI Prop = *reinterpret_cast<PROPUI*>(pArg);
+
 	if (m_pCurrentRanrokProps.size() >= 5)
 	{
 		Pos old{};
@@ -113,12 +116,29 @@ void CEnemy_Panel::RanRokPropCreate(_fvector Position)
 	m_RanrokProps.pop_back();
 
 	static_cast<CUIObject*>(RanRokProp.Prop)->Visible(true);
-	XMStoreFloat4(&RanRokProp.Position, Position);
-	XMStoreFloat3(&RanRokProp.TargetPos, Position);
+	RanRokProp.Position = Prop.vPosition;
+	RanRokProp.TargetPos =_float3(Prop.vPosition.x, Prop.vPosition.y, Prop.vPosition.z);
 	//static_cast<CUIObject*>(RanRokProp)->Set_Time(Info.fTime);
 	static_cast<CUIObject*>(RanRokProp.Prop)->Set_Hover(true);
-
+	RanRokProp.iIndex = Prop.iIndex;
 	m_pCurrentRanrokProps.push_front(RanRokProp);
+}
+
+void CEnemy_Panel::RanRokPropBreak(_int Index)
+{
+	for (auto it = m_pCurrentRanrokProps.begin();it != m_pCurrentRanrokProps.end();	++it)
+	{
+		if (it->iIndex == Index)
+		{
+			static_cast<CUIObject*>(it->Prop)->Visible(false);
+			static_cast<CUIObject*>(it->Prop)->Set_Hover(false);
+
+			m_RanrokProps.push_back(*it);
+
+			m_pCurrentRanrokProps.erase(it);
+			break;
+		}
+	}
 }
 
 void CEnemy_Panel::Priority_Update(_float fTimeDelta)

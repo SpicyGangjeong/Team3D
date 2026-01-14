@@ -573,7 +573,7 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
 	{
-		
+
 	} break;
 	case TIMESOCKET_FUNC::UNBIND_SOCKET_MATRIX:
 	{
@@ -810,6 +810,7 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 	}
 	return S_OK;
 }
+
 
 void CPlayer::CheckMouseInput()
 {
