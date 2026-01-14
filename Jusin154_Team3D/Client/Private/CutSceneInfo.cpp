@@ -580,6 +580,7 @@ void CCutSceneInfo::Set_AllActiveEventsExit()
 {
 	map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.begin();
 	for (; iter != m_funcActiveEvents.end();++iter) {
+		iter->second->m_vTimer.x = 1.f - FLT_EPSILON;
 		for (list<CTimeSocket*>::iterator socketIter = (*iter).second->m_Sockets.begin();
 			socketIter != (*iter).second->m_Sockets.end(); ++socketIter) {
 			(*socketIter)->Trigger(1.f - FLT_EPSILON);
