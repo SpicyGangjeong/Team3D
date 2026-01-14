@@ -46,8 +46,8 @@ HRESULT CGoblin_Assassin_Spector::Initialize(void* pArg)
 
 	m_vOriginScale = m_pTransformCom->Get_Scale();
 
-	m_pLeftHand_BoneMat = Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Get_Component<CModel>()->Get_BoneMatrixPtr("Bone");
-	m_pRightHand_BoneMat = Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Get_Component<CModel>()->Get_BoneMatrixPtr("Bone");
+	m_pLeftHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
 
 	m_pModelCom->Set_AnimationIndex(5);
 	m_pModelCom->Play_Animation(0, m_pTransformCom);

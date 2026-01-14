@@ -344,19 +344,18 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	_bool isReady_Background = { true };
 	_bool isReady_Hogsmeade = { true };
 	_bool isReady_Hogwart = { true };
+	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #ifdef _DEBUG
 
 #ifdef gimch
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
 	isReady_Hogwart = false;
-	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #endif // gimch
 #ifdef Bin
 	isReady_Background = false;
 	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
-	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -796,7 +795,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* StratifiedCliff_A1 */
 	Desc.isShake = false;
-	Desc.bEnableRigidbody = true;
+	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.f, 0.f);
 	Desc.vSpeed = _float2(0.f, 0.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedCliff_A1";
@@ -823,7 +822,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* StratifiedRock_B */
 	Desc.isShake = false;
-	Desc.bEnableRigidbody = true;
+	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.f, 0.f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_B";
@@ -841,7 +840,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* StratifiedRock_D_B */
 	Desc.isShake = false;
-	Desc.bEnableRigidbody = true;
+	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.f, 0.f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_StratifiedRock_D_B";

@@ -61,7 +61,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_ClothSim>
-	<MI_HouseElf_KitchenElfF_Body	ShaderIndex = "7" OutLineWrite="7">
+	<MI_HouseElf_KitchenElfF_Body	ShaderIndex = "6" OutLineWrite="7">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Elf_KitchenElf_F_Body_D" Extension=".png"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>

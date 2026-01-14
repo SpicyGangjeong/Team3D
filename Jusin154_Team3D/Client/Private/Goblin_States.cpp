@@ -627,10 +627,18 @@ void CGoblin::Behavior_DeadEnter()
 
 HRESULT CGoblin::Behavior_DeadExitCheck(_float fTimeDelta)
 {
-	if (FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-		return E_PENDING;
+	if (fRatio >= 0.8f)
+	{
+		m_fDeadRatio += fTimeDelta / 3.f;
+		m_fDeadRatio = min(1.f, m_fDeadRatio);
 	}
+	else
+	{
+		m_fDeadRatio = 0.f;
+	}
+
 	return S_OK;
 }
 
@@ -883,6 +891,7 @@ void CGoblin::HitState_Behavior(_float fTimeDelta)
 			m_pCharacter_Controller->SetGravity(true);
 			pairAnimInfo = m_Animation[STATEANIM::LAND];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			m_eHitState = ENUM_CLASS(HIT_STATE::END);
 		}
 	}
 	if (m_eHitState == ENUM_CLASS(HIT_STATE::DESCENDO))
@@ -1035,8 +1044,8 @@ void CGoblin::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
-			m_fDeadRatio = fDeadRatio;
-			if (m_fDeadRatio > 1.f) {
+			//m_fDeadRatio = fDeadRatio;
+			if (m_fDeadRatio >= 1.f) {
 				PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 				PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
 				m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));

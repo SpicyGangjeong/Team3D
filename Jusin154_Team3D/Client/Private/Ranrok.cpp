@@ -490,7 +490,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	Update_BehaviorByHPRatio(CollisionDesc);
+	if (Update_BehaviorByHPRatio(CollisionDesc))
+		return;
 
 	if (!IsHitStateDisabled() || IsHitSpellDisabled()) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
@@ -974,6 +975,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	m_pTransformCom->LookAt_Lerp(LerpTarget, fTimeDelta,5.f);
 
 	m_pCharacter_Controller->Set_Position(CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
+	m_pTransformCom->Set_State(STATE::POSITION, CurPos + vLook * m_fTuckedSpeed * fTimeDelta);
 }
 
 HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)

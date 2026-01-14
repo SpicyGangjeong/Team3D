@@ -92,6 +92,7 @@ private:
 	_float	m_fHitTimer = {};
 	_float	m_fTumbleTimer = {};
 	_bool	m_bCameraShake = {};
+	_bool	m_bMotionTrail = {};
 
 	_float	m_fMoveDecisionTime = 0.f;
 	_float	m_fMoveDecisionLimit = 1.2f;
