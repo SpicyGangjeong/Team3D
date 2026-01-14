@@ -89,10 +89,10 @@ void CMapObject_Render::Late_Update(_float fTimeDelta)
 		m_iNumMeshe = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
 
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-#ifdef Bin
-		m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
-		m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
-#endif // Bin
+//#ifdef Bin
+//		m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+//		m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+//#endif // Bin
 	}
 }
 

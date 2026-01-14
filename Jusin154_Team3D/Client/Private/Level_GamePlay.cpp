@@ -126,7 +126,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	_bool bLoadNPC = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bLoadNPC = true;
+	bLoadNPC = false;
 #endif
 #endif // _DEBUG
 	if (true == bLoadNPC) {
@@ -1160,8 +1160,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
