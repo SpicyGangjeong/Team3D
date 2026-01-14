@@ -196,7 +196,6 @@ void CNPCInteraction::Priority_Update(_float fTimeDelta)
 		m_fFontSize = 0;
 		m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_pBoxInfo.fPosition));
 	}
-
 }
 
 void CNPCInteraction::Update(_float fTimeDelta)
