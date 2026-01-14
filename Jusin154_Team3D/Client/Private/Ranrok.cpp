@@ -84,6 +84,11 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_pTransformCom->Compress_WorldMatrix(m_vInitialTrans, m_vInitialRotQ);
 #endif // _DEBUG
 
+	m_fRimStrength = 2.3f;
+	m_fRimPower = 2.3f;
+	m_vRimColor = _float4(0.333, 0.235, 0.184, 0.059);
+
+
 	return S_OK;
 }
 
@@ -117,6 +122,7 @@ void CRanrok::Update(_float fTimeDelta)
 
 	m_pFSM->Update_State(fTimeDelta);
 	Update_CollidersPosition();
+
 	if (m_bMotionTrail) {
 		m_vCaptureTimer.x += fTimeDelta;
 		if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
@@ -172,7 +178,7 @@ void CRanrok::Update(_float fTimeDelta)
 
 
 	Update_Disolve(fTimeDelta, 0.8f);
-
+	m_pMotionTrailCom->Update_Capture(fTimeDelta);
 
 #pragma region TRAIL_UPDATE
 
@@ -375,6 +381,9 @@ void CRanrok::Trigger(CTimeSocket& Socket)
 
 HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 {
+
+
+
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
 	{
 		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix", m_pModelCom->Get_OffsetMatrix(i).data(),
@@ -387,6 +396,7 @@ HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
+
 
 		m_pContext->VSSetShaderResources(26, 1, &pSRV);
 
@@ -809,13 +819,6 @@ HRESULT CRanrok::Render_Nonblend()
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 
-#ifndef 진우
-	if (m_bMotionTrail) {
-		if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
-			return E_FAIL;
-		}
-	}
-#endif
 	return S_OK;
 }
 
@@ -856,6 +859,17 @@ HRESULT CRanrok::Render_Blend()
 			return E_FAIL;
 		}
 	}
+
+	if (m_bMotionTrail) {
+		if (FAILED(Bind_ShaderResources())) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+			return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 HRESULT CRanrok::Render_OutLine()

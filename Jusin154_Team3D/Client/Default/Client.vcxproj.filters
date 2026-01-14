@@ -970,9 +970,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\BroomRace_Bubble.h">
       <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\CamPosition_WorldLook.h">
       <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_PropHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2009,9 +2012,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\BroomRace\Bubble">
       <UniqueIdentifier>{ce57978a-c208-4fe6-bbfd-8f582c20ff07}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook">
       <UniqueIdentifier>{b3924c52-0c0d-4cd1-94f4-1eb61d2c6c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit">
+      <UniqueIdentifier>{06672a35-4ed9-4c17-aa7f-bb249190a1ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2906,6 +2912,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BroomRace_Bubble.cpp">
       <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_PropHit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

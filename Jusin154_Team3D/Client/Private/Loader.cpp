@@ -244,6 +244,7 @@
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
 #include "Ranrok_Prop.h"
+#include "Ranrok_PropHit.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -2966,10 +2967,20 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_PropHit>(g_iStaticLevel, CRanrok_PropHit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	
+
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_WorldLook>(g_iStaticLevel, CCamPosition_WorldLook::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}

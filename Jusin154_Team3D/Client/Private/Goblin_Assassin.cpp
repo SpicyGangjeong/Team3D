@@ -178,19 +178,22 @@ HRESULT CGoblin_Assassin::Render()
 {
 	RENDER ePass = m_pGameInstance->Get_CurrentRenderPass();
 
-	if(ePass == RENDER::BLEND)
-	{
-		if (FAILED(Bind_ShaderResources())) {
-			return E_FAIL;
+	if (m_bMotionTrail) {
+		if (ePass == RENDER::BLEND)
+		{
+			if (FAILED(Bind_ShaderResources())) {
+				return E_FAIL;
+			}
+
+
+			if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
 		}
-
-
-		if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
-			return E_FAIL;
-		}
-
-		return S_OK;
 	}
+
 
 
 	if (m_bVisible == false)
