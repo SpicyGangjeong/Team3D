@@ -48,7 +48,7 @@ public:
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
-
+	array<class CEffectParts*, 3>		m_pRaceEndEffects = { nullptr, nullptr, nullptr };
 	vector<class CRaceRing*>			m_pRaceRings = {};
 	vector<RacerInfo>					m_Racers = {};
 	_float								m_fCountTimer = {};
