@@ -13,7 +13,10 @@ CMotion_Trail::CMotion_Trail(const CMotion_Trail& rhs)
 	: CComponent(rhs),
 	m_pClearBuffer(rhs.m_pClearBuffer),
 	m_CaptureInfos(rhs.m_CaptureInfos),
-	m_RemainingInfos(rhs.m_RemainingInfos)
+	m_RemainingInfos(rhs.m_RemainingInfos),
+	m_fMaxCaptureLifeTime(rhs.m_fMaxCaptureLifeTime),
+	m_iMaximumCapture(rhs.m_iMaximumCapture),
+	m_iNumBones(rhs.m_iMaximumCapture)
 {
 }
 
@@ -66,6 +69,12 @@ HRESULT CMotion_Trail::Render(CShader* pShader)
 		if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &pInfo->WorldMatrix))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(pShader->Bind_RawValue("g_vMotionTrail_LifeTime", &pInfo->vCaptureLifeTime , sizeof(_float2))))
+		{
+			return E_FAIL;
+		}
+
 		//if (FAILED(pShader->Bind_RawValue("g_LifeTime", &fRatio, sizeof(_float)))) {
 		//	return E_FAIL;
 		//}
@@ -229,6 +238,21 @@ void CMotion_Trail::Free()
 #ifdef _DEBUG
 void CMotion_Trail::Describe_Entity()
 {
+
+	if (GUI::TreeNode("Motion Trail"))
+	{
+
+		GUI::DragFloat("m_fMaxCaptureLifeTime", &m_fMaxCaptureLifeTime);
+
+		_int iMaximumCapture = m_iMaximumCapture;
+		if (GUI::DragInt("m_iMaximumCapture", &iMaximumCapture))
+		{
+			m_iMaximumCapture = iMaximumCapture;
+		}
+
+
+		GUI::TreePop();
+	}
 }
 #endif // _DEBUG
 

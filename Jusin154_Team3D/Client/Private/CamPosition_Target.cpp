@@ -47,7 +47,7 @@ _bool CCamPosition_Target::IsStalking()
 	return nullptr != m_pStalkingTarget;
 }
 
-void CCamPosition_Target::Stalking_Target(CUnit* pStalkingTarget, const _float4x4* pTargetSocketMatrix)
+void CCamPosition_Target::Stalking_Target(CGameObject* pStalkingTarget, const _float4x4* pTargetSocketMatrix)
 {
 	SAFE_RELEASE(m_pStalkingTarget);
 	m_pStalkingTarget = pStalkingTarget;

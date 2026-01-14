@@ -58,26 +58,13 @@ void CReparoObject::Update(_float fTimeDelta)
 
 	Change_State();
 
-	switch (m_eCurState)
-	{
-	case Client::CReparoObject::REPARO_OBJECT_STATE::SLEEP:
-		break;
-	case Client::CReparoObject::REPARO_OBJECT_STATE::BEFORE:
-		break;
-	case Client::CReparoObject::REPARO_OBJECT_STATE::PLAYANIM:
-		//if (true == m_pModelCom->IsFinishedAnim())
-		//	m_eCurState = REPARO_OBJECT_STATE::AFTER;
-		break;
-
-	case Client::CReparoObject::REPARO_OBJECT_STATE::AFTER:
-		break;
-
-	default:
-		break;
-	}
-
-
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	if (m_pModelCom->Get_AnimIndex() == 0)
+	{
+		if (true == m_pModelCom->IsFinishedAnim())
+			m_eCurState = REPARO_OBJECT_STATE::AFTER;
+	}
 
 #ifdef _DEBUG
 	Describe_Entity();
@@ -230,7 +217,6 @@ HRESULT CReparoObject::Render_OutLine()
 	}
 	return S_OK;
 }
-
 void CReparoObject::Change_State()
 {
 	if (m_eCurState != m_ePreState)

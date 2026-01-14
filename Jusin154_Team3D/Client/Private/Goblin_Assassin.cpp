@@ -84,6 +84,10 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
+	m_fRimStrength = 2.3f;
+	m_fRimPower = 2.3f;
+	m_vRimColor = _float4(0.f , 0.f , 0.f , 0.5f);
+
 	return S_OK;
 }
 
@@ -144,6 +148,8 @@ void CGoblin_Assassin::Update(_float fTimeDelta)
 	//m_pDetection->Set_Active(m_bDetection);
 
 	Update_Disolve(fTimeDelta, 0.8f);
+
+	m_pMotionTrailCom->Update_Capture(fTimeDelta);
 }
 
 void CGoblin_Assassin::Late_Update(_float fTimeDelta)
@@ -163,12 +169,30 @@ void CGoblin_Assassin::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
 
 HRESULT CGoblin_Assassin::Render()
 {
+	RENDER ePass = m_pGameInstance->Get_CurrentRenderPass();
+
+	if(ePass == RENDER::BLEND)
+	{
+		if (FAILED(Bind_ShaderResources())) {
+			return E_FAIL;
+		}
+
+
+		if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+	}
+
+
 	if (m_bVisible == false)
 		return S_OK;
 
@@ -235,10 +259,6 @@ HRESULT CGoblin_Assassin::Render()
 		_float zero = 0.f;
 		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
-	}
-
-	if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
-		return E_FAIL;
 	}
 
 	return S_OK;
@@ -350,6 +370,17 @@ HRESULT CGoblin_Assassin::Render_Shadow(SHADOW eType)
 HRESULT CGoblin_Assassin::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 {
 
+	if(FAILED(m_pShaderCom->Bind_RawValue("g_fRimStrength" , &m_fRimLightStrength , sizeof(_float))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4))))
+		return E_FAIL;
+
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
@@ -362,7 +393,7 @@ HRESULT CGoblin_Assassin::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom)))
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::RIMLIGHT))))
 			return E_FAIL;
 
 		m_pContext->VSSetShaderResources(26, 1, &pSRV);
@@ -411,11 +442,7 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		_uint iSkillType = pEffect_Container->Get_SkillType();
 
-#ifndef Bin
 		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
-#endif // !Bin
-
-
 
 		switch (iSkillType)
 		{
@@ -462,7 +489,6 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 		}
 	}
 
-#ifndef Bin
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
@@ -471,7 +497,6 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
 	}
-#endif // !Bin
 
 	m_pFSM->Change_State(FSMSTATE::HIT);
 	
@@ -724,7 +749,7 @@ void CGoblin_Assassin::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
-	if (GUI::CollapsingHeader("Goblin")) {
+	if (GUI::CollapsingHeader("Goblin_Assassin")) {
 		GUI::Checkbox("LookAt", &m_bLookAt);
 
 		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
@@ -748,6 +773,15 @@ void CGoblin_Assassin::Describe_Entity()
 		GUI::Text("Length %.2f", m_fLength);
 
 		GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
+
+
+		GUI::DragFloat("RimStrength", &m_fRimStrength , 0.01f);
+		GUI::DragFloat("RimPower", &m_fRimPower, 0.01f);
+		GUI::ColorEdit4("RimColor", (_float*)(&m_vRimColor));
+		GUI::DragFloat("MotionTrailTime", &m_vCaptureTimer.y);
+
+		m_pMotionTrailCom->Describe_Entity();
+		
 	}
 	GUI::End();
 }

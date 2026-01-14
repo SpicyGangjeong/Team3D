@@ -952,12 +952,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Reparo.h">
       <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\State_Spell_Learning.h">
       <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PotionScreen.h">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PotionBroken.h">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionBroken</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitScreen.h">
+      <Filter>02.GameObjects\Effect\Effects\HitScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRace_Bubble.h">
+      <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\CamPosition_WorldLook.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1965,9 +1980,6 @@
     <Filter Include="02.GameObjects\NPC\Ally\Elf">
       <UniqueIdentifier>{9263815e-9651-4ba2-813f-c2a7f207522d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.InfoInstance\NewFilter1">
-      <UniqueIdentifier>{44a8eee1-6b7f-4c9a-bf92-21f6b90e84c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Cave">
       <UniqueIdentifier>{5599bbbd-12f7-4b40-8e3d-24f869cce464}</UniqueIdentifier>
     </Filter>
@@ -1976,9 +1988,30 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Reparo">
       <UniqueIdentifier>{88c3bc02-a51d-4cd8-87a2-197722d48f83}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="04.Mechanic\State\Focus\Spell_Learning">
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Spell_Learning">
       <UniqueIdentifier>{26d7f6f4-0b5f-4b9a-9cef-df91b8a485bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion">
+      <UniqueIdentifier>{1f2c5d56-c8a8-458e-a48c-444d7c885cf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion\PotionBroken">
+      <UniqueIdentifier>{3f02d29d-759e-4572-9439-ec79909273e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion\PotionScreen">
+      <UniqueIdentifier>{6fa4085d-e9eb-47c3-b384-2aa92baf1d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\HitScreen">
+      <UniqueIdentifier>{8c62c8f3-d8ba-4a6d-99bd-6270333ea0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\BroomRace">
+      <UniqueIdentifier>{67efb2e4-26f6-41b5-a754-eddf91f1d528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\BroomRace\Bubble">
+      <UniqueIdentifier>{ce57978a-c208-4fe6-bbfd-8f582c20ff07}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook">
+      <UniqueIdentifier>{b3924c52-0c0d-4cd1-94f4-1eb61d2c6c99}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2852,12 +2885,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Reparo.cpp">
       <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\State_Spell_Learning.cpp">
       <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_WorldLook.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PotionScreen.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PotionBroken.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionBroken</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitScreen.cpp">
+      <Filter>02.GameObjects\Effect\Effects\HitScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRace_Bubble.cpp">
+      <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

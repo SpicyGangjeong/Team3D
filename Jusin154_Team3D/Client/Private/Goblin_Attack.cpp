@@ -50,7 +50,7 @@ HRESULT CGoblin_Attack::Initialize(void* pArg)
 	SAFE_ADDREF(m_pPT1);
 	SAFE_ADDREF(m_pPT2);
 	SAFE_ADDREF(m_pAttack_Trail);
-	m_fDuration = 2.f;
+	m_fDuration = 4.f;
 
 
 	m_Events.emplace(1.2f, [&]() {
@@ -87,6 +87,7 @@ void CGoblin_Attack::Update(_float fTimeDelta)
 
 	m_pAttack_Trail->Trail_Update(BoneMat, fTimeDelta);
 
+
 }
 
 void CGoblin_Attack::Late_Update(_float fTimeDelta)
@@ -122,6 +123,8 @@ HRESULT CGoblin_Attack::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pPT2->Set_Visible(true);
 	m_pAttack_Trail->Set_Visible(true);
 	m_pAttack_Trail->SetDissolve(false);
+	m_pAttack_Trail->Get_Component<CTrail>()->Reset_Trail();
+
 	return S_OK;
 }
 

@@ -797,9 +797,8 @@ void CTroll::Behavior_DeadEnter()
 	m_pRigidBody->SetActive(false);
 	m_pCharacter_Controller->SetActive(false);
 
-	m_pTroll_Particle->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
-	m_pTroll_Particle2->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
-
+	m_pTroll_Particle->Set_Visible(false);
+	m_pTroll_Particle2->Set_Visible(false);
 	m_pLeft_Smoke->Set_Visible(false);
 	m_pRight_Smoke->Set_Visible(false);
 
@@ -809,14 +808,20 @@ void CTroll::Behavior_DeadEnter()
 			m_pDead_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pTransformCom->Get_State(STATE::POSITION));
 		}, 0.55f);
 
+	Get_PartObject<CTroll_Weapon>()->Set_Disolve(true);
+
 }
 
 HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
 {
-	if (FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-		return E_PENDING;
+	if (fRatio >= 0.8f)
+	{
+		m_fDeadRatio += fTimeDelta / 3.f;
+		m_fDeadRatio = min(1.f, m_fDeadRatio);
 	}
+
 	return S_OK;
 }
 
@@ -971,8 +976,8 @@ void CTroll::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
-			m_fDeadRatio = fDeadRatio;
-			if (m_fDeadRatio > 1.f) {
+			//m_fDeadRatio = fDeadRatio;
+			if (m_fDeadRatio >= 1.f) {
 				CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_REPARO);
 
 				if (nullptr != pLayer)

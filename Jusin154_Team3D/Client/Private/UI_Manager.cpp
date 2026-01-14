@@ -85,11 +85,15 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
-		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
-		
-		//static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
-
-
+		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
+		if (m_bRace == false)
+		{
+			static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
+		}
+		else
+		{
+			static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
+		}
 		break;
 
 	case UI_STATE::SPELL:
@@ -147,7 +151,6 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		return;
 	}
 	m_pGameInstance->Toggle_MouseCenter();
-	m_pInfoInstance->Event_CallBack(TEXT("Player_CanvasChange"), &m_eType);
 }
 
 void CUI_Manager::Clear_Canvas()
@@ -456,7 +459,7 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	}
 	Add_Canvas(TEXT("NPCInteraction"), m_pNPCInteraction);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_TargetGate>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_TargetGate**>(&m_pBroom_TargetGate))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_TargetGate>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CBroom_TargetGate**>(&m_pBroom_TargetGate))))
 	{
 		return E_FAIL;
 	}

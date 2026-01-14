@@ -34,6 +34,7 @@ public:
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	virtual void Trigger(CTimeSocket& Socket)override;
 private:
 	void    Troll_Trail_Visible(_bool isTrailVisible);
 

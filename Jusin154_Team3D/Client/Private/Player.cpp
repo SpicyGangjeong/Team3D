@@ -56,7 +56,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 
 #if 진우
-	m_isDebugMode = true; // 디버그 무적 모드
+	m_isDebugMode = false; // 디버그 무적 모드
 #endif
 #if 나
 	m_isDebugMode = true; // 디버그 무적 모드
@@ -542,6 +542,11 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 	SOCKETCONTENTS* pContents = &Socket.m_Contents;
 	switch (pContents->eTypeFunc)
 	{
+	case TIMESOCKET_FUNC::TELEPORTATION:
+	{
+		m_pTransformCom->Set_WorldMatrix(pContents->pxTransform);
+		m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
+	} break;
 	case TIMESOCKET_FUNC::TRANSLATION:
 	{
 		_vector vNewPos = XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f);
@@ -573,7 +578,7 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
 	{
-		
+
 	} break;
 	case TIMESOCKET_FUNC::UNBIND_SOCKET_MATRIX:
 	{
@@ -810,6 +815,7 @@ HRESULT CPlayer::Bind_ShaderParameters(_uint iMeshOrder)
 	}
 	return S_OK;
 }
+
 
 void CPlayer::CheckMouseInput()
 {

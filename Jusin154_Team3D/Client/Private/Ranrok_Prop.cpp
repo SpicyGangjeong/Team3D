@@ -199,7 +199,6 @@ HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_fHp = 3.f;
 	m_fDuration = 10000.f;
-	m_pInfoInstance->Event_CallBack(TEXT("RANROKPROP"), &vPos);
 
 	return S_OK;
 }
@@ -313,6 +312,7 @@ void CRanrok_Prop::OnCollision(CGameObject* pOther, void* pDesc)
 
 		m_fDuration = 1.7f;
 		m_fAccTime = 0.f;
+		m_pInfoInstance->Event_CallBack(TEXT("RANROKPROPBREAK"), &m_iIndex);
 	}
 
 

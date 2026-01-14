@@ -73,7 +73,15 @@ void CTroll_Weapon::Priority_Update(_float fTimeDelta)
 
 void CTroll_Weapon::Update(_float fTimeDelta)
 {
-
+	if (m_bDisolve) {
+		m_fDisolveTime += fTimeDelta*0.2f;
+		if (m_fDisolveTime >= 1.f)
+		{
+			/*m_fDisolveTime = 0.f;*/
+			m_bDisolve = false;
+			m_bVisible = false;
+		}
+	}
 }
 
 void CTroll_Weapon::Late_Update(_float fTimeDelta)
@@ -88,6 +96,10 @@ HRESULT CTroll_Weapon::Render()
 	}
 
 	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Render_Disolve())) {
 		return E_FAIL;
 	}
 
@@ -113,6 +125,14 @@ HRESULT CTroll_Weapon::Render()
 	m_pGripShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Green, nullptr, true);
 	m_pSubShape->Draw(XMLoadFloat4x4(&m_HammerMatrix), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Purple, nullptr, true);
 #endif // _DEBUG
+
+	{
+		_bool bDisolve = false;
+		_float zero = 0.f;
+		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
+	}
+
 	return S_OK;
 }
 
@@ -129,6 +149,33 @@ _matrix CTroll_Weapon::Get_WorldMatrix()
 const _float4* CTroll_Weapon::Get_HammerPosition()
 {
 	return (_float4*)&m_HammerMatrix.m[3][0];
+}
+
+HRESULT CTroll_Weapon::Render_Disolve()
+{
+	if (FLT_EPSILON3 * 10 < m_fDisolveTime)
+	{
+		_bool bDisolve = true;
+		_float fDisolveAmount = 0.1f;
+		_float fDisolveEdgeWidth = 0.1f;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &m_fDisolveTime, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveAmount", &fDisolveAmount, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveEdgeWidth", &fDisolveEdgeWidth, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_NOISE_05"), "g_DeadDisolveTexture"))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
 }
 
 HRESULT CTroll_Weapon::Ready_Components()

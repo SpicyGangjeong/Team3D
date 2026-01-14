@@ -18,6 +18,34 @@ CNPC_EleazarFig::CNPC_EleazarFig(const CNPC_EleazarFig& Prototype)
 {
 }
 
+HRESULT CNPC_EleazarFig::Initialize_Prototype()
+{
+	return S_OK;
+}
+
+HRESULT CNPC_EleazarFig::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg))) {
+		return E_FAIL;
+	}
+	if (FAILED(Ready_Components(pArg))) {
+		return E_FAIL;
+	}
+	NPCDESC* pDesc = static_cast<NPCDESC*>(pArg);
+
+	_vector vPos = XMLoadFloat4(&pDesc->vPos);
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	m_pCharacter_Controller->Set_Position(vPos);
+	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
+
+	m_pModelCom->Set_AnimationIndex(0, true);
+	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
+	m_bNpc = true;
+	return S_OK;
+}
+
+
 void CNPC_EleazarFig::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->RewindMomentum();
@@ -31,6 +59,13 @@ void CNPC_EleazarFig::Priority_Update(_float fTimeDelta)
 void CNPC_EleazarFig::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
+		m_pModelCom->Set_AnimationIndex(iRandom, false, 1.f, false, 1.f, false);
+	}
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
@@ -74,6 +109,9 @@ HRESULT CNPC_EleazarFig::Render()
 		}
 
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(Bind_ShaderParameters(i))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
@@ -155,6 +193,41 @@ HRESULT CNPC_EleazarFig::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CNPC_EleazarFig::Bind_ShaderParameters(_uint iMeshOrder)
+{
+	_bool bUseColorMixer = false;
+
+	_uint iColorParam = { UINT_MAX };
+	_float fMixerFactor = { FLT_MAX };
+	_uint iColorMixerMethod = { 0 };
+
+	switch (m_pModelCom->Get_UsingPass(iMeshOrder, m_pShaderCom))
+	{
+	case 23:
+	{
+		bUseColorMixer = true;
+		iColorParam = 0x2E2E2E;
+		fMixerFactor = 0.9f;
+		iColorMixerMethod = 1;
+	}
+	break;
+	}
+	if (true == bUseColorMixer) {
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iPackedBlendColor", &iColorParam, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fMixerFactor", &fMixerFactor, sizeof(_float)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMixerMethod", &iColorMixerMethod, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
 void CNPC_EleazarFig::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
@@ -175,32 +248,6 @@ void CNPC_EleazarFig::Set_Pos(_vector vPos)
 	m_pCharacter_Controller->Set_Position(vPos);
 }
 
-HRESULT CNPC_EleazarFig::Initialize_Prototype()
-{
-	return S_OK;
-}
-
-HRESULT CNPC_EleazarFig::Initialize(void* pArg)
-{
-	if (FAILED(__super::Initialize(pArg))) {
-		return E_FAIL;
-	}
-	if (FAILED(Ready_Components(pArg))) {
-		return E_FAIL;
-	}
-	NPCDESC* pDesc = static_cast<NPCDESC*>(pArg);
-	
-	_vector vPos = XMLoadFloat4(&pDesc->vPos);
-	m_pTransformCom->Set_State(STATE::POSITION, vPos);
-	m_pCharacter_Controller->Set_Position(vPos);
-	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
-
-	m_pModelCom->Set_AnimationIndex(0, true);
-	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
-	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
-	m_bNpc = true;
-	return S_OK;
-}
 
 HRESULT CNPC_EleazarFig::Ready_Components(void* pArg)
 {
@@ -253,6 +300,10 @@ HRESULT CNPC_EleazarFig::Ready_Components(void* pArg)
 		}
 	}
 
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("ELEAZARFIG"), (CComponent**)&m_pNpcStat))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -286,6 +337,8 @@ void CNPC_EleazarFig::Free()
 
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pNpcStat);
+
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

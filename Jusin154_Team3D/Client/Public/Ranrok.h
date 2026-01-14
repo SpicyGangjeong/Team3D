@@ -128,13 +128,15 @@ private:
 	_int   m_iPropSize = {};
 	_int   m_iHoverDash = {  };
 	_bool  m_bChangePhase = {};
+	_int m_iHpPhase = { 0 };
+
 
 	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 	vector<class CEffect_Container*> m_pRanrok_Props;
 	_float					 m_fTuckedSpeed = { 80.f };
-
+	_int						m_iRanRok_PropIndex{};
 
 	class CEffectParts* m_pLeftSmoke = { nullptr };
 	class CEffectParts* m_pRightSmoke = { nullptr };
@@ -250,7 +252,7 @@ private:
 	virtual _bool IsHitStateDisabled() override;
 	virtual _bool IsHitSpellDisabled() override;
 
-	void Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo);
+	_bool Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo);
 
 };
 

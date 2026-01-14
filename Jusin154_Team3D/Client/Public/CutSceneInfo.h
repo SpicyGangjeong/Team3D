@@ -25,6 +25,7 @@ public:
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair<_string, TimeLine*>& pairTimeLine);
+	HRESULT		Clear_AllEvents();
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
@@ -46,7 +47,7 @@ public:
 #endif // _DEBUG
 	HRESULT Clear_ActiveEvents();
 	HRESULT Clear_Events(map<_string, TimeLine*>&Events);
-	HRESULT Clear_AllEvents();
+
 
 	HRESULT Ready_GameplayCutScenes();
 	HRESULT Ready_FieldCutScenes();
