@@ -150,6 +150,7 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 		m_pTransformCom->Set_WorldMatrix(pContents->pxTransform);
 		m_pFollowTargetPart->Set_WorldPostion(m_pTransformCom->Get_State(STATE::POSITION));
 		m_pLookTargetPart->Set_WorldPostion(m_pTransformCom->Get_State(STATE::POSITION) + m_pTransformCom->Get_State(STATE::LOOK));
+		Clear_Lerp_Rotation();
 		Clear_Lerp_Translation();
 	} break;
 	case TIMESOCKET_FUNC::TRANSLATION:
