@@ -126,6 +126,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fRayDistance = 5.f;
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
+	Ready_Sound_Events("../Bin/Resources/Models/Human/PlayableCharacter/KeyFrame.xml");
+
 	return S_OK;
 }
 

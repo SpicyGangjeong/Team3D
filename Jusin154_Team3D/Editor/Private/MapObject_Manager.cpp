@@ -76,7 +76,7 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	/*if (FAILED(Load_LightObject("LightElement")))
 		return E_FAIL;*/
 	
-	if (FAILED(Load_InteractObject("E_INTER_Barrel")))
+	/*if (FAILED(Load_InteractObject("E_INTER_Barrel")))
 		return E_FAIL;
 	if (FAILED(Load_InteractObject("E_INTER_PostPackage_B")))
 		return E_FAIL;
@@ -85,11 +85,11 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	if (FAILED(Load_InteractObject("E_INTER_TeaShopTable")))
 		return E_FAIL;
 	if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
-		return E_FAIL;
+		return E_FAIL;*/
 
 #pragma region HOGSMEADE
-	if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
-		return E_FAIL;
+	//if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE)))
+	//	return E_FAIL;
 #pragma endregion
 
 #pragma region DUNGEON
@@ -100,10 +100,10 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 #pragma endregion
 
 #pragma region HOGWART
-	//if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
-	//	return E_FAIL;
-	//if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
-	//	return E_FAIL;
+	if (FAILED(Load_MapData("Hogwart_MapContainer_Data", LAYER_HOGWART)))
+		return E_FAIL;
+	if (FAILED(Load_MapData("HogwartMap1221", LAYER_HOGWART)))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region Light
@@ -277,9 +277,9 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	//Update_LightSpawer();
 	//Update_Decal();
 	//Update_RaceRing();
-	//Update_EditEffect();
+	Update_EditEffect();
 	//Update_Balloon();
-	Update_DummyNpc();
+	//Update_DummyNpc();
 
 	Update_Unified();
 
@@ -2766,7 +2766,7 @@ void CMapObject_Manager::Update_EditEffect()
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::MAP), NEXT_LEVEL, TEXT("Layer_Effect_EDIT"), &PartsDesc, nullptr, &pEffect)))
 			return;
 	
-		pEffect->Load("../Bin/Resources/Data/Effect/MapEffect/Ranrok_Decal_35",LEVEL::MAP);
+		pEffect->Load("../Bin/Resources/Data/Effect/BroomRace/Bubble",LEVEL::MAP);
 		pEffect->Set_Visible(true);
 	}
 
