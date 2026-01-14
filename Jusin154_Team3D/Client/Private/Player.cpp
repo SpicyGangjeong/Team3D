@@ -146,7 +146,6 @@ void CPlayer::Update(_float fTimeDelta)
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
 	Update_RaycastElements();
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();

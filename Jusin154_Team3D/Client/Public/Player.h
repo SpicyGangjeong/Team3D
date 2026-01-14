@@ -318,7 +318,7 @@ private:
 	void Hit_Levioso(_float fTimeDelta);
 
 #pragma endregion
-
+	_bool IsInputLocked();
 
 private:
 	class CEffectPool* m_pEffectPool = nullptr;

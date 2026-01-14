@@ -39,6 +39,8 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	}
 
 	m_iIndex = static_cast<RacerDesc*>(pArg)->iIndex;
+	m_bAI = true;
+
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
@@ -73,7 +75,6 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
 
 
-	m_bAI = true;
 
 
 #ifdef _DEBUG
