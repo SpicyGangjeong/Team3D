@@ -101,8 +101,6 @@ void CGoblin_Assassin::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-	m_pFSM->Update_State(fTimeDelta);
-
 	m_vCaptureTimer.x += fTimeDelta;
 	if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
 		m_vCaptureTimer.x = 0.f;
@@ -110,6 +108,8 @@ void CGoblin_Assassin::Update(_float fTimeDelta)
 			assert(false);
 		}
 	}
+
+	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta * m_fEasing, m_pTransformCom);
 

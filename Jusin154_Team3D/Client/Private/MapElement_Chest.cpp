@@ -59,6 +59,7 @@ HRESULT CMapElement_Chest::Initialize(void* pArg)
 
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat3(&pDesc->vBoxLocalPosition));
+	m_pRigidBody->Set_Kinematic(true);
 	m_bChest = true;
 	return S_OK;
 }
@@ -235,7 +236,8 @@ HRESULT CMapElement_Chest::Ready_Components(void* pArg)
 	// RIGID_BODY
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), (CComponent**)&m_pRigidBody, &Desc))) {
+	Desc.bAutoOwnerTranslation = false;
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_THROWABLE_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 		return E_FAIL;
 	}
 

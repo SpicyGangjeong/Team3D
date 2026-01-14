@@ -40,7 +40,7 @@ public:
 	void Set_AISpeed(_float speedMul, _float accelMul);
 	void Set_Move(_bool bMove) { m_bMove = bMove; }	
 	_bool Get_Move() { return m_bMove; }
-	void Add_TurboBoost(_float fAmount) { m_fTurboBoost += fAmount; }
+	void Add_TurboBoost(_float fAmount);
 	_float Get_TurboBoost() { return m_fTurboBoost; }
 	HRESULT         Ready_Child();
 
@@ -69,6 +69,9 @@ private:
 	_float m_fVerticalSpeed = 0.f;
 	_float m_fTurboBoost = {5.f};
 	_float m_fTurboBoostChargeDelay = {};
+	_float m_fInputHoldTime = 0.f;
+	_float m_fHoldThreshold = 0.5f;
+
 
 	_float m_fFlyAccel = 1.f;
 	_float m_fFlyDecel = 1.f;

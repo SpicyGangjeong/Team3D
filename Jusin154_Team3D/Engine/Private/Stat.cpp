@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Stat.h"
 #include "StatEvent.h"
+#include "GameInstance.h"
 
 CStat::CStat(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -185,6 +186,8 @@ void CStat::Add_Hp(_float iAmount)
 pair<_float, _float> CStat::Get_Damage(_float fDamage)
 {
 	_float FinalDamage = Compute_Damage(fDamage);
+	_int iRand = m_pGameInstance->Real_Random_Int(-5, 5);
+	FinalDamage += (_float)iRand;
 	_float fCurHp = Get_Stat().fCurrentHp - FinalDamage;
 	Add_Stat(ENUM_CLASS(STAT::TARGETHP), -FinalDamage);
 	if (fCurHp <= 0) { fCurHp = 0;}
