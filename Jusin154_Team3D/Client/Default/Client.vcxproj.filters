@@ -1032,18 +1032,6 @@
     <Filter Include="02.GameObjects\Cameras\Debug">
       <UniqueIdentifier>{8d89a59c-fbd2-4a4a-ab01-a70abb80cc49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Environment\Plane">
-      <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop">
-      <UniqueIdentifier>{2814c935-13d9-4b9a-94ba-c9e470219a18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop\SkyBox">
-      <UniqueIdentifier>{19ee2ea4-2d79-46bd-b857-c759e3ec6cf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop\SkyBox\TriggerBox">
-      <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition">
       <UniqueIdentifier>{25ad4a41-5b06-4659-bd29-c0c4265a3277}</UniqueIdentifier>
     </Filter>
@@ -2013,6 +2001,9 @@
     <Filter Include="02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook">
       <UniqueIdentifier>{b3924c52-0c0d-4cd1-94f4-1eb61d2c6c99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\20.TriggerBox">
+      <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2905,7 +2896,7 @@
       <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+      <Filter>04.Mechanic\20.TriggerBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
