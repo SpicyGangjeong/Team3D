@@ -18,6 +18,7 @@ class CEnemy_Panel final : public CPanelObject
 		_float3			TargetPos{};
 		_float2			UIScreenPos{};
 		_float4			Position{};
+		_int			iIndex{};
 	};
 private:
 	CEnemy_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -40,8 +41,8 @@ private:
 
 private:
 	void Update_Target();
-	void RanRokPropCreate(_fvector Position);
-
+	void RanRokPropCreate(void* pArg);
+	void RanRokPropBreak(_int Index);
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 

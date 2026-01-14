@@ -10,6 +10,7 @@ NS_BEGIN(Client)
 
 class CRanrok_Prop final : public CEffect_Container
 {
+
 private:
 	CRanrok_Prop(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CRanrok_Prop(const CRanrok_Prop& rhs);
@@ -23,7 +24,7 @@ public:
 
 public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
-
+	void Set_Index(_int Index) { m_iIndex = Index; }
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -48,6 +49,9 @@ private:
 
 	_float       m_fHp = { 3.f };
 	_bool		 m_isSizeLerpEnd = {};
+
+	_int		 m_iIndex{};
+
 #ifdef _DEBUG
 	_bool m_bRender = false;
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };

@@ -132,6 +132,15 @@ void CUnit::Set_NextID(_int ID)
 {
 }
 
+void CUnit::Set_Flow(_int Index)
+{
+}
+
+_int CUnit::Get_Flow()
+{
+    return _int();
+}
+
 HRESULT CUnit::Ready_Components(void *pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {

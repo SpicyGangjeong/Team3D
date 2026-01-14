@@ -762,6 +762,11 @@ void CTroll::Describe_Entity()
 	if (GUI::CollapsingHeader("Troll")) {
 		__super::Describe_Entity();
 
+		if (GUI::Button("Dead"))
+		{
+			m_pFSM->Change_State(FSMSTATE::DEAD);
+		}
+
 		_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
 
 		_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
