@@ -365,6 +365,7 @@ void CBroom::Behavior_Broom_FlyEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::FLY);
+	m_pModelCom->Set_BlendDuration(0.8f);
 	m_bHoverToggle = false;
 	pairAnimInfo = pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
@@ -555,6 +556,7 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 void CBroom::Behavior_Broom_FlyExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FLY);
+	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
 void CBroom::Behavior_Broom_TurboFlyEnter()
@@ -562,6 +564,7 @@ void CBroom::Behavior_Broom_TurboFlyEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::TURBOFLY);
 	m_bTurbo = true;
+	m_pModelCom->Set_BlendDuration(0.8f);
 	m_bHoverToggle = false;
 	pairAnimInfo = pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
@@ -752,7 +755,7 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 void CBroom::Behavior_Broom_TurboFlyExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::TURBOFLY);
-
+	m_pModelCom->Set_BlendDuration(0.3f);
 	Boost_Effect_Visible(false);
 }
 

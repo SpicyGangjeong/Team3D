@@ -822,10 +822,6 @@ HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
 		m_fDeadRatio += fTimeDelta / 3.f;
 		m_fDeadRatio = min(1.f, m_fDeadRatio);
 	}
-	else
-	{
-		m_fDeadRatio = 0.f;
-	}
 
 	return S_OK;
 }

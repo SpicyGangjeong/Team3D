@@ -125,6 +125,14 @@ HRESULT CTroll_Weapon::Render()
 	m_pGripShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Green, nullptr, true);
 	m_pSubShape->Draw(XMLoadFloat4x4(&m_HammerMatrix), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Purple, nullptr, true);
 #endif // _DEBUG
+
+	{
+		_bool bDisolve = false;
+		_float zero = 0.f;
+		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
+	}
+
 	return S_OK;
 }
 
