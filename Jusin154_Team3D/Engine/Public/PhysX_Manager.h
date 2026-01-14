@@ -17,9 +17,8 @@ private:
 	enum COLLISIONCATERGORY_BIT32 : uint32_t 
 	{
 			CharacterController		= 1u << 0
-		,	JointedParts			= 1u << 1
-		,	WorldStatic				= 1u << 2
-		,	WorldDynamic			= 1u << 3
+		,	WorldStatic				= 1u << 1
+		,	WorldDynamic			= 1u << 2
 	};
 private:
 	CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

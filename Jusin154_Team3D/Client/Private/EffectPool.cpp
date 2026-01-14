@@ -54,6 +54,11 @@
 #include "Transformation.h"
 #include "Avadakedavra.h"
 #include "Reparo.h"
+#include "PotionBroken.h"
+#include "PotionScreen.h"
+#include "HitScreen.h"
+#include "BroomRace_Bubble.h"
+#include "Ranrok_PropHit.h"
 
 #include "Goblin_ProtegoHit.h"
 #include "Duelist_ProtegoHit.h"
@@ -115,7 +120,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 기무리
-	m_isActiveEffectCreate = false;
+	m_isActiveEffectCreate = true;
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
 #ifdef 나
@@ -522,6 +527,42 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::POTION_BROKEN, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CPotionBroken* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CPotionBroken>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::SCREEN_POTION, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CPotionScreen* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CPotionScreen>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::SCREEN_HIT, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CHitScreen* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CHitScreen>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::BROOM_RACE_BUBBLE, 20, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CBroomRace_Bubble* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CBroomRace_Bubble>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 
 	return S_OK;
 }
@@ -813,6 +854,17 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PROP_HIT, 10, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_PropHit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_PropHit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	
 	return S_OK;
 }
 

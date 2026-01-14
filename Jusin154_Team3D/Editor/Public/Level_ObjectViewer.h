@@ -47,6 +47,8 @@ private:
 	vector<CGameObject*>	m_Objects;
 	vector<CGameObject*>	m_PartsObjects;
 	class CRootModelPart*	m_HumanRoot = { nullptr };
+
+	_bool					m_isUpdateEvent = { true };
 	_int					m_iObjectIndex = { 0 };
 	_int					m_iPartsObjectIndex = { 0 };
 	_float					m_fKeyFrame = {};

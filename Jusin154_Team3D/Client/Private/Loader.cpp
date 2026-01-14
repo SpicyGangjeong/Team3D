@@ -211,6 +211,10 @@
 #include "Avadakedavra.h"
 #include "Goblin_Teleport.h"
 
+#include "PotionBroken.h"
+#include "PotionScreen.h"
+#include "HitScreen.h"
+#include "BroomRace_Bubble.h"
 
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
@@ -240,6 +244,7 @@
 #include "Ranrok_DeadSplash.h"
 #include "Ranrok_DeadImpact.h"
 #include "Ranrok_Prop.h"
+#include "Ranrok_PropHit.h"
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
@@ -559,9 +564,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
-	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_Hogwart = true;
+	isLoad_UI_SEQUANTIAL = true;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -2534,10 +2539,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 	}
 	{ // LIGHT PHYSX DYNAMIC
-		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
+			CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 			Desc.eType = ACTOR::BOX;
-			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxRigidBodyFlags = { };
 			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
@@ -2549,6 +2554,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.vAutoDamping = { 1.f, 1.f };
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_THROWABLE_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
 		}
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC ShieldDesc{};
@@ -2637,12 +2651,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 			RanrokDesc.vLocalTranslation = { 0.f, 5.f, 0.f };
 		}
 
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
-			return E_FAIL;
-		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, ShieldDesc)))) {
 			return E_FAIL;
 		}
@@ -2658,10 +2666,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, RanrokDesc)))) {
-			return E_FAIL;
-		}
-		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
 	}
@@ -2947,11 +2951,35 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CScreen_Wind>(g_iStaticLevel, CScreen_Wind::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CPotionBroken>(g_iStaticLevel, CPotionBroken::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CPotionScreen>(g_iStaticLevel, CPotionScreen::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CHitScreen>(g_iStaticLevel, CHitScreen::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroomRace_Bubble>(g_iStaticLevel, CBroomRace_Bubble::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRanrok_PropHit>(g_iStaticLevel, CRanrok_PropHit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	
+
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_WorldLook>(g_iStaticLevel, CCamPosition_WorldLook::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -4117,8 +4145,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		{
 			CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_Model"));
 			CMotion_Trail::MODELCAPTURE_DESC Desc{};
-			Desc.fMaxCaptureLifeTime = 2.f;
-			Desc.iMaximumCapture = 4;
+			Desc.fMaxCaptureLifeTime = 0.3f;
+			Desc.iMaximumCapture = 16;
 			Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
 			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Ranrok_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
 				return E_FAIL;
@@ -4128,8 +4156,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		{
 			CModel* pModelOriginal = (CModel*)m_pGameInstance->Find_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_Model"));
 			CMotion_Trail::MODELCAPTURE_DESC Desc{};
-			Desc.fMaxCaptureLifeTime = 2.f;
-			Desc.iMaximumCapture = 4;
+			Desc.fMaxCaptureLifeTime = 0.7f;
+			Desc.iMaximumCapture = 16;
 			Desc.iNumBones = pModelOriginal->Get_BoneAbsoluteCount();
 			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Assassin_MotionTrail"), CMotion_Trail::Create(m_pDevice, m_pContext, &Desc)))) {
 				return E_FAIL;

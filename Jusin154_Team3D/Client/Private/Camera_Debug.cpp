@@ -24,7 +24,8 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_DEBUG))) {
 		return;
 	}
-	Transition(fTimeDelta);
+	const _float fFixedDebugTimeDelta = 1.f / 60.f;
+	Transition(fFixedDebugTimeDelta);
 	_float3 vCamPos = {};
 	_float3 vSetPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
@@ -39,22 +40,22 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 #pragma region Position
 		_float fSpeed = 5.f;
 		if (m_pGameInstance->Key_Pressing(DIK_W)) {
-			m_pTransformCom->Go_Straight(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Straight(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_A)) {
-			m_pTransformCom->Go_Left(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Left(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_S)) {
-			m_pTransformCom->Go_Backward(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Backward(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_D)) {
-			m_pTransformCom->Go_Right(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Right(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_SPACE)) {
-			m_pTransformCom->Go_Up(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Up(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_C)) {
-			m_pTransformCom->Go_Down(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Down(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_TAB)) {
 			Set_InitialPos();
@@ -81,8 +82,8 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 #pragma region Angle
 
 		_float3	fMove = m_pGameInstance->Get_MouseMove();
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * fMove.x * m_fMouseSensor);
-		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fTimeDelta * fMove.y * m_fMouseSensor);
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fFixedDebugTimeDelta * fMove.x * m_fMouseSensor);
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fFixedDebugTimeDelta * fMove.y * m_fMouseSensor);
 
 #pragma endregion
 

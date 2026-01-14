@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GOBLIN>
 	<Object Name="Goblin">
-			<RotQ X="-0.000" Y="-0.657" Z="-0.000" W="0.754"/>
-			<Trans X="-29.049" Y="-23.982" Z="-55.791"/>
+		<RotQ X="0.000" Y="0.955" Z="0.000" W="0.298"/>
+		<Trans X="-24.541" Y="-23.196" Z="-58.537"/>
 	</Object>
 	<Object Name="Goblin_Mage">
-			<RotQ X="0.000" Y="0.955" Z="0.000" W="0.298"/>
-			<Trans X="-24.541" Y="-23.196" Z="-58.537"/>
+		<RotQ X="0.000" Y="0.760" Z="0.000" W="-0.650"/>
+		<Trans X="-32.229" Y="-24.335" Z="-51.151"/>
 	</Object>
 	<Object Name="Goblin_Assassin">
 		<RotQ X="-0.000" Y="-0.186" Z="-0.000" W="0.983"/>

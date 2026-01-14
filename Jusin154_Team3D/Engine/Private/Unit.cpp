@@ -186,6 +186,37 @@ void CUnit::Play_Event()
 
         ++iter;
     }
+
+    /* Sound */
+    for (auto iter = m_SoundEvents.begin(); iter != m_SoundEvents.end(); )
+    {
+        _float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+        _uint curAnim = m_pModelCom->Get_AnimIndex();
+
+        _float prevRatio = iter->PrevRatio;
+
+        if (curAnim == iter->AnimIndex)
+        {
+            if (prevRatio <= iter->fRatio && ratio >= iter->fRatio)
+            {
+                iter->Callback();
+
+                if (!iter->bKeep)
+                {
+                    iter = m_SoundEvents.erase(iter);
+                    continue;
+                }
+            }
+
+            iter->PrevRatio = ratio;
+        }
+        else
+        {
+            iter->PrevRatio = 0.f;
+        }
+
+        ++iter;
+    }
 }
 
 void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,_bool bKeep)
@@ -196,6 +227,21 @@ void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,
 	Desc.Callback = Callback;
 	Desc.bKeep = bKeep;
 	m_PendingEvents.push_back(Desc);
+}
+
+void CUnit::Add_Sound_Event(_uint AnimIndex, function<void()> Callback, _float fRatio, _bool bKeep)
+{
+    PendingEvent Desc;
+    Desc.AnimIndex = AnimIndex;
+    Desc.fRatio = fRatio;
+    Desc.Callback = Callback;
+    Desc.bKeep = bKeep;
+    m_SoundEvents.push_back(Desc);
+}
+
+void CUnit::Reset_SoundEvent()
+{
+    m_SoundEvents.clear();
 }
 
 void CUnit::Reset_Event()
@@ -584,6 +630,48 @@ STATEANIM::ESTATE CUnit::StringToStateAnim(const string& s)
     return it->second;
 }
 
+HRESULT CUnit::Ready_Sound_Events(const _char* pFilePath)
+{
+    tinyxml2::XMLDocument xmlDoc;
+
+    if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(pFilePath)))
+        return E_FAIL;
+
+    tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("KeyFrames");
+
+    if (nullptr == root)
+    {
+        MSG_BOX("Failed to Find root");
+        return S_OK;
+    }
+
+    for (auto* Animation = root->FirstChildElement("Animation"); Animation; Animation = Animation->NextSiblingElement("Animation"))
+    {
+        _uint iAnimationIndex = {};
+
+        Animation->QueryUnsignedAttribute("Index", &iAnimationIndex);
+
+
+        for (auto* KeyFrame = Animation->FirstChildElement("KeyFrame"); KeyFrame; KeyFrame = KeyFrame->NextSiblingElement("KeyFrame"))
+        {
+            _float fVolume = {};
+            _float fRatio = {};
+            const _char* pPath = {};
+
+            KeyFrame->QueryStringAttribute("Event", &pPath);
+            KeyFrame->QueryFloatAttribute("Ratio", &fRatio);
+            KeyFrame->QueryFloatAttribute("Volume", &fVolume);
+
+            SOUND::SD_KIND eSoundKind = m_pGameInstance->Find_Sound(CMyTools::ToWstring(pPath));
+
+            Add_Sound_Event(iAnimationIndex,
+                [this, eSoundKind, fVolume]() { m_pGameInstance->Sound_Play(eSoundKind, SD_CHANNEL_GROUP::EFFECT, false, fVolume); },
+                fRatio, true);
+        }
+    }
+    
+    return S_OK;
+}
 
 void CUnit::Free()
 {

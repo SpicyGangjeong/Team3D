@@ -79,6 +79,11 @@ matrix g_BoneMatrices[256];
 matrix g_PrevBoneMatrices[256];
 int g_RobeBoneMask[256];
 
+float g_fRimStrength;
+float g_fRimPower;
+float4 g_vRimColor;
+float2 g_vMotionTrail_LifeTime;
+
 struct VS_IN_MESH
 {
     float3 vPosition : POSITION;
@@ -1387,6 +1392,21 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
     return Out;
 }
 
+PS_OUT_BLEND PS_RIMLIGHT(PS_IN In)
+{
+    PS_OUT_BLEND Out = (PS_OUT_BLEND) 0;
+    
+ 
+    float4 vRimColor = float4(g_vRimColor.xyz * GetRimLight(g_vCamPosition.xyz, In.vPosition.xyz, In.vNormal, g_fRimPower, g_fRimStrength), g_vRimColor.a);
+
+    vRimColor.a *= g_vMotionTrail_LifeTime.x / g_vMotionTrail_LifeTime.y;
+    
+    Out.vAlbedo = vRimColor;
+    
+    return Out;
+}
+
+
 technique11 DefaultTechnique
 {
     pass EYELASH_DAOTHV_ToSRO // 0
@@ -1659,5 +1679,14 @@ technique11 DefaultTechnique
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_SHADOW_LEGACY();
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
+    }
+
+    pass RimLight // 30
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_RIMLIGHT();
     }
 }

@@ -57,23 +57,21 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
-	Describe_Entity();
-#endif // _DEBUG
-
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
 {
 	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#ifdef Bin
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+#endif // Bin
 	//}
 }
 
 HRESULT CTerrain::Render()
 {
-	if (false == m_bVisible)
-		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -101,8 +99,6 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::Render_Shadow(SHADOW eType)
 {
-	if (false == m_bVisible)
-		return S_OK;
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
@@ -252,24 +248,24 @@ void CTerrain::Free()
 #ifdef _DEBUG
 void CTerrain::Describe_Entity()
 {
-	GUI::Begin("Renderer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
-	size_t iIndex = (size_t)this;
+	//GUI::Begin("Renderer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	//GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
+	//size_t iIndex = (size_t)this;
 
-	
-	_string strTag = "Terrain_" + to_string((size_t)iIndex);
-	if (GUI::CollapsingHeader(strTag.c_str()))
-	{
-		static _int iTuningValue = 16;
-		GUI::DragInt("DSN1", (_int*)&iTuningValue, 1, 1024);
-		GUI::DragInt("DSN2", (_int*)&iTuningValue, 1, 1024);
-		GUI::DragInt("DSN3", (_int*)&iTuningValue, 1, 1024);
-		m_vDRN.x = 1.f / (_float)iTuningValue;
-		m_vDRN.y = 1.f / (_float)iTuningValue;
-		m_vDRN.z = 1.f / (_float)iTuningValue;
-		GUI::PopItemWidth();
-		GUI::Checkbox("Visible", &m_bVisible);
-	}
-	GUI::End();
+	//
+	//_string strTag = "Terrain_" + to_string((size_t)iIndex);
+	//if (GUI::CollapsingHeader(strTag.c_str()))
+	//{
+	//	static _int iTuningValue = 16;
+	//	GUI::DragInt("DSN1", (_int*)&iTuningValue, 1, 1024);
+	//	GUI::DragInt("DSN2", (_int*)&iTuningValue, 1, 1024);
+	//	GUI::DragInt("DSN3", (_int*)&iTuningValue, 1, 1024);
+	//	m_vDRN.x = 1.f / (_float)iTuningValue;
+	//	m_vDRN.y = 1.f / (_float)iTuningValue;
+	//	m_vDRN.z = 1.f / (_float)iTuningValue;
+	//	GUI::PopItemWidth();
+	//	GUI::Checkbox("Visible", &m_bVisible);
+	//}
+	//GUI::End();
 }
 #endif // _DEBUG

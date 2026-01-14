@@ -50,6 +50,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	HRESULT Render_MotionTrail(ID3D11ShaderResourceView* pSRV);
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -128,8 +129,14 @@ private:
 	_float m_fTuckedSpeed = { 75.f};
 
 	_float2 m_vCreatePropTime = {0.f , 60.f};
-
+	_bool  m_bMotionTrail = {};
 	_float3 m_vCCTPos = {};
+
+	_float2 m_vCaptureTimer = { 0.f, 0.05f };
+
+	_float  m_fRimStrength = { 1.f };
+	_float  m_fRimPower = { 0.f };
+	_float4 m_vRimColor = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

@@ -20,7 +20,7 @@ public:
 
 public:
 	HRESULT Load_MapObjects(const _char* pFilePath, const _wchar* pLayerTag);
-	HRESULT Load_MapRenderObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject, const _wchar* pLayerTag);
+	HRESULT Load_MapRenderObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject, const _wchar* pLayerTag, _bool hasCollisionMesh);
 
 	HRESULT Load_LightElements(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_InteractableElements(const _char* pFileName, const _wchar* pLayerTag);

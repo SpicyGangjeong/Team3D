@@ -160,8 +160,6 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 		}
 	}
 
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_BOMBARDA, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
-
 	return S_OK;
 }
 
@@ -210,6 +208,21 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	if (m_bHit == false)
 		return;
+
+	_int iRand = m_pGameInstance->Random_Int(0, 2);
+	switch (iRand)
+	{
+	case 0:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_23, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 1:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_32, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 2:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_39, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	}
+
 
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 

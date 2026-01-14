@@ -84,8 +84,8 @@ private:
 	_float	m_fMoveTime = {};
 	_bool	m_bFirstMove = {};
 	_bool	m_bPos = {};
-	_float	m_fAccel = { 3.f};
-	_float	m_fTargetSpeed = {60.f};
+	_float	m_fAccel = { 3.f };
+	_float	m_fTargetSpeed = { 60.f };
 	_float	m_fSpeed = {};
 	_bool	m_bAir = {};
 	_float	m_fGravityAmount = {};
@@ -98,7 +98,11 @@ private:
 	_float	m_fMoveDecisionLimit = 1.2f;
 
 	_float4 m_vDashDir = {};
-	_float2 m_vCaptureTimer = { 0.f, 0.1f };
+	_float2 m_vCaptureTimer = { 0.f, 0.01f };
+
+	_float  m_fRimStrength = { 1.f};
+	_float  m_fRimPower = { 0.f };
+	_float4 m_vRimColor = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

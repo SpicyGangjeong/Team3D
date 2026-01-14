@@ -79,7 +79,15 @@ HRESULT CRanrok::Initialize(void* pArg)
 	m_pCharacter_Controller->SetGravity(false);
 #endif
 
+	m_pModelCom->Set_DisableRootMotionScale(true);
+
 	Load_RanrokPos("../Bin/Resources/Data/RanrokPos/RanrokPos.xml");
+
+
+	m_fRimStrength = 2.3f;
+	m_fRimPower = 2.3f;
+	m_vRimColor = _float4(0.333f, 0.235f, 0.184f, 0.059f);
+
 
 	return S_OK;
 }
@@ -151,6 +159,17 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 
 
+	if (m_bMotionTrail) {
+		m_vCaptureTimer.x += fTimeDelta;
+		if (m_vCaptureTimer.y < m_vCaptureTimer.x) {
+			m_vCaptureTimer.x = 0.f;
+			if (FAILED(m_pModelCom->Capture_BoneBuffer(m_pMotionTrailCom, *m_pTransformCom->Get_WorldMatrixPtr()))) {
+				assert(false);
+			}
+		}
+	}
+
+
 #pragma region TRAIL_UPDATE
 
 	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
@@ -182,6 +201,8 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 
 #pragma endregion
+
+	m_pMotionTrailCom->Update_Capture(fTimeDelta);
 }
 
 void CRanrok::Late_Update(_float fTimeDelta)
@@ -223,7 +244,7 @@ HRESULT CRanrok::Render()
 		hr = Render_Nonblend();
 	}
 	else if (RENDER::BLEND == eCurrentPass) {
-		//hr = Render_Blend();
+		hr = Render_Blend();
 		hr = S_OK;
 	}
 	return hr;
@@ -529,6 +550,12 @@ HRESULT CRanrok::Ready_Parts()
 	m_pRightEye_BoneMat = m_pModelCom->Get_BoneMatrixPtr("eye_right");
 	  
 #pragma endregion
+	
+	CMotion_Trail::MOTIONTRAIL_RENDERFUNC funcDesc{};
+	funcDesc.funcRenderCall = [this](ID3D11ShaderResourceView* pSRV) { Render_MotionTrail(pSRV); };
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Ranrok_MotionTrail"), (CComponent**)&m_pMotionTrailCom, &funcDesc))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -673,6 +700,52 @@ HRESULT CRanrok::Render_Blend()
 		}
 	}
 
+	if (m_bMotionTrail) {
+		if (FAILED(Bind_ShaderResources())) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
+{
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimStrength", &m_fRimLightStrength, sizeof(_float))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4))))
+		return E_FAIL;
+
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
+	{
+		if (FAILED(m_pShaderCom->Bind_Matrices("g_OffsetMatrix", m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::RIMLIGHT))))
+			return E_FAIL;
+
+		m_pContext->VSSetShaderResources(26, 1, &pSRV);
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -845,6 +918,7 @@ void CRanrok::Describe_Entity()
 		SAFE_RELEASE(m_pRightEye_Trail);
 		SAFE_RELEASE(m_pRightPt);
 		SAFE_RELEASE(m_pLeftPt);
+		SAFE_RELEASE(m_pMotionTrailCom);
 
 		for (auto& pParts : m_PartObjects)
 		{
@@ -855,6 +929,14 @@ void CRanrok::Describe_Entity()
 
 		Ready_Parts();
 	}
+
+
+	GUI::DragFloat("RimStrength", &m_fRimStrength, 0.01f);
+	GUI::DragFloat("RimPower", &m_fRimPower, 0.01f);
+	GUI::ColorEdit4("RimColor", (_float*)(&m_vRimColor));
+	GUI::DragFloat("MotionTrailTime", &m_vCaptureTimer.y);
+
+	m_pMotionTrailCom->Describe_Entity();
 
 	if (GUI::Button("Create Prop"))
 	{
@@ -867,52 +949,52 @@ void CRanrok::Describe_Entity()
 		m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
 	}
 
-	GUI::DragFloat("Tucked Speed", &m_fTuckedSpeed);
+	//GUI::DragFloat("Tucked Speed", &m_fTuckedSpeed);
 
-	for (_uint i = 0; i < m_Points.size(); ++i)
-	{
-		GUI::Separator();
+	//for (_uint i = 0; i < m_Points.size(); ++i)
+	//{
+	//	GUI::Separator();
 
-		if (GUI::TreeNode(("Points " + to_string(i)).c_str()))
-		{
-			GUI::Text("Points[%d] Count : %d", i, (_int)m_Points[i].size());
+	//	if (GUI::TreeNode(("Points " + to_string(i)).c_str()))
+	//	{
+	//		GUI::Text("Points[%d] Count : %d", i, (_int)m_Points[i].size());
 
-			for (_uint j = 0; j < m_Points[i].size(); )
-			{
-				_float3 p = { m_Points[i][j].x,m_Points[i][j].y,m_Points[i][j].z };
+	//		for (_uint j = 0; j < m_Points[i].size(); )
+	//		{
+	//			_float3 p = { m_Points[i][j].x,m_Points[i][j].y,m_Points[i][j].z };
 
-				GUI::PushID((int)(i * 10000 + j));
+	//			GUI::PushID((int)(i * 10000 + j));
 
-				GUI::Text("[%d] (%.2f, %.2f, %.2f)", j, p.x, p.y, p.z);
-				GUI::SameLine();
+	//			GUI::Text("[%d] (%.2f, %.2f, %.2f)", j, p.x, p.y, p.z);
+	//			GUI::SameLine();
 
-				if (GUI::SmallButton("Move"))
-				{
-					m_pCharacter_Controller->Set_Position(
-						XMVectorSet(p.x, p.y, p.z, 1.f));
-				}
+	//			if (GUI::SmallButton("Move"))
+	//			{
+	//				m_pCharacter_Controller->Set_Position(
+	//					XMVectorSet(p.x, p.y, p.z, 1.f));
+	//			}
 
-				GUI::SameLine();
+	//			GUI::SameLine();
 
-				if (GUI::SmallButton("X"))
-				{
-					m_Points[i].erase(m_Points[i].begin() + j);
-					GUI::PopID();
-					continue;
-				}
+	//			if (GUI::SmallButton("X"))
+	//			{
+	//				m_Points[i].erase(m_Points[i].begin() + j);
+	//				GUI::PopID();
+	//				continue;
+	//			}
 
-				GUI::PopID();
-				++j;
-			}
+	//			GUI::PopID();
+	//			++j;
+	//		}
 
-			if (GUI::SmallButton(("Clear##" + to_string(i)).c_str()))
-			{
-				m_Points[i].clear();
-			}
-			GUI::TreePop();
-		}
+	//		if (GUI::SmallButton(("Clear##" + to_string(i)).c_str()))
+	//		{
+	//			m_Points[i].clear();
+	//		}
+	//		GUI::TreePop();
+	//	}
 
-	}     
+	//}     
 	if (GUI::DragFloat3("Change CCT Pos" , (_float*)& m_vCCTPos))
 	{
 		_vector vPos = XMLoadFloat3(&m_vCCTPos);

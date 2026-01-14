@@ -126,7 +126,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	_bool bLoadNPC = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bLoadNPC = false;
+	bLoadNPC = true;
 #endif
 #endif // _DEBUG
 	if (true == bLoadNPC) {
@@ -149,12 +149,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 
 	if (FAILED(m_pInfoInstance->Late_Initialize()))
 		return E_FAIL;
-
+	ResetLevel_Environment();
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
 
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_0, SD_CHANNEL_GROUP::BGM, true, 0.6f);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_0, SD_CHANNEL_GROUP::BGM, true, 0.6f);
 
 	return S_OK;
 }
@@ -170,12 +170,12 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	_bool bStartCinematic = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bStartCinematic = true;
+	bStartCinematic = false;
 #elif 진우
 	bStartCinematic = true;
 #elif Bin
 	bStartCinematic = false;
-#elif gimchi
+#elif gimch
 	bStartCinematic = false;
 #elif 나
 	bStartCinematic = false;
@@ -367,7 +367,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef 기무리
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
-	isReady_Hogwart = false;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -613,6 +613,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* InstanceProp Oak_Tree*/
 	Desc.isShake = true;
+	Desc.isTree = true;
 	Desc.eShaderPass = SHADER_PASS_WORLDMODLE_INSTANCE::DEFAULT;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
@@ -631,6 +632,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* BearBerry */
 	Desc.isShake = true;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.6f, 1.f);
@@ -642,6 +644,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* SM_HM_OwlPost_Window_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
@@ -650,6 +653,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	///* WA_Rectangle_Double_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
@@ -658,6 +662,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	///* WC_Retangle_Double_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
@@ -666,6 +671,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	///* WA_Square_Double_C */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
@@ -674,6 +680,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* Quid_Window_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
@@ -682,6 +689,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* Ollivanders_Box_Window */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
@@ -690,6 +698,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* WC_L_DoubleS_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
@@ -698,6 +707,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* WC_Round_Double_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
@@ -706,6 +716,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* SM_HM_Door1a */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = true;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
@@ -714,6 +725,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* SM_HM_Door2b */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = true;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
@@ -730,6 +742,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* OakTree_TallA */
 	Desc.isShake = false;
+	Desc.isTree = true;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.016f);
 	Desc.vSpeed = _float2(0.01f, 0.1f);
@@ -740,6 +753,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* Shrub_B */
 	Desc.isShake = true;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.04f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
@@ -750,6 +764,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* BogMyrtle_A */
 	Desc.isShake = true;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.04f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
@@ -764,6 +779,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* Dogwood_B */
 	Desc.isShake = true;
+	Desc.isTree = true;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
@@ -774,6 +790,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* ScotsPine_LargeA */
 	Desc.isShake = false;
+	Desc.isTree = true;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
@@ -797,6 +814,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* StratifiedCliff_A1 */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.f, 0.f);
 	Desc.vSpeed = _float2(0.f, 0.f);
@@ -1142,8 +1160,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -1166,8 +1184,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 		}
 		{
 			CNPC_EleazarFig::NPCDESC NPCDesc{};
-			NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
-			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+			NPCDesc.vPos = _float4(96.311f, 4.676f, 77.116f, 1.f);
+			NPCDesc.vRotQ = _float4(0.f, 0.691f, 0.f, 0.723f);
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &NPCDesc))) {
 				return E_FAIL;
 			}
@@ -1225,6 +1243,13 @@ void CLevel_GamePlay::ResetLevel_Environment()
 		vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+
+	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(0.581f, 0.239f, -0.183f, 0.757f));
+	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.700), _float2(0.075f, 0.150f),
+									_float2(2.300f, 10.000f), _float4(0.0047f, 0.0018f, 0.0018f, 0.0018f),
+									_float4(2.f, 1.f, 1.f, 1.f), _float3(-55.9f, -10.f, -50.f), _float3(50.f, 100.f, 100.f));
+	m_pLight->Capture_PreShadow();
 }
 
 pair<CLevel*, function<void()>> CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg)

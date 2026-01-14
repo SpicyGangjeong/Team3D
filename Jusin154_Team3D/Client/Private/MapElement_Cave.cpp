@@ -72,6 +72,10 @@ void CMapElement_Cave::Late_Update(_float fTimeDelta)
 		if (m_bVisible)
 		{
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#ifdef Bin
+			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+#endif // Bin
 #ifdef _DEBUG
 			m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, m_pTriggerBox);
 #endif // _DEBUG
@@ -162,7 +166,7 @@ HRESULT CMapElement_Cave::Ready_TriggerBox()
 	CTriggerBox::TRIGGERBOX_DESC Desc = {};
 
 	XMStoreFloat4(&Desc.vPosition_Radius, m_pTransformCom->Get_State(STATE::POSITION));
-	Desc.vPosition_Radius.w = 10.f;
+	Desc.vPosition_Radius.w = 3.f;
 
 	m_pTriggerBox = CTriggerBox::Create(m_pDevice, m_pContext, &Desc);
 

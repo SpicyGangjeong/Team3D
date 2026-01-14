@@ -50,8 +50,8 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 
 	// RIGID_BODY
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);//pPhysXDummyDesc->iSubKind;
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), (CComponent**)&m_pRigidBody, &Desc))) {
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_THROWABLE_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 		return E_FAIL;
 	}
 
@@ -61,15 +61,15 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat3(&pDesc->vBoxLocalPosition));
 	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(false);
 
-	if (false == m_isPooled)
-	{
-		m_bVisible = true;
-		m_pInfoInstance->Regist_ActiveInteractive(this);
-	}
-	else
+	if (true == m_isPooled)
 	{
 		m_bVisible = false;
 		static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(true);
+	}
+	else
+	{
+		m_bVisible = true;
+		m_pInfoInstance->Regist_ActiveInteractive(this);
 	}
 
 
@@ -99,7 +99,7 @@ void CMapElement_Interactable::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible)
 	{
-		if (m_isGraped == true)
+		if (m_bThrow == true)
 		{
 			_float fRadius = m_pModelComs[0]->Get_Radius();
 
@@ -344,121 +344,75 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 
 	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
 
-	PSX::PxSweepBuffer pxBuffer = {};
+	PSX::PxSweepBufferN<12> pxBuffer = {};
 
-	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
-
-	const PSX::PxSweepHit& hit = pxBuffer.block;
-	PSX::PxRigidActor* pActor = hit.actor;
-	PSX::PxShape* pShape = hit.shape;
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC | PSX::PxQueryFlag::eNO_BLOCK, pxBuffer);
 	ON_COLLISION_INFO tagCollInfo = {};
-
+	XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
 	tagCollInfo.vWorldPos.w = 1.f;
-
 	if (bHit) {
-
-		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-
-		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-		tagCollInfo.fLength = fDistance;
-
-
-		if (nullptr != pActor && nullptr != pActor->userData)
-		{
-			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
-			tagCollInfo.pObject = pUserData->pOwner;
-
-			switch (pUserData->eKind)
-			{
-			case PHYSX_KIND::CCTActor:
-			{
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::MONSTER:
+		HRESULT hr = CheckHit(&pxBuffer.block, tagCollInfo);
+		if (FAILED(hr)) {
+			PSX::PxSweepHit* hits = pxBuffer.touches;
+			_uint iHitCount = pxBuffer.getNbTouches();
+			for (_uint i = 0; i < iHitCount; ++i) {
+				PSX::PxSweepHit* pHit = &pxBuffer.touches[i];
+				hr = CheckHit(pHit, tagCollInfo);
+				if (SUCCEEDED(hr)) {
 					break;
-				case PXOBJECT::GOBLIN_WARRIOR:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
 				}
-				break;
-				case PXOBJECT::GOBLIN_MAGICIAN:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				case PXOBJECT::GOBLIN_ASSASSIN:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				case PXOBJECT::TROLL:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				case PXOBJECT::RANROK_BODY:
-				case PXOBJECT::RANROK:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				}
-			}
 			}
 		}
 	}
-
-	if (bHit == false)
-	{
-		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-		tagCollInfo.fLength = fDistance;
-		tagCollInfo.pObject = this;
-
-		bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
-
-		const PSX::PxSweepHit& hit = pxBuffer.block;
-		PSX::PxRigidActor* pActor = hit.actor;
-		PSX::PxShape* pShape = hit.shape;
-
-		tagCollInfo.vWorldPos.w = 1.f;
-
-		if (bHit)
-		{
-			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-			tagCollInfo.fLength = fDistance;
-
-			if (nullptr != pActor && nullptr != pActor->userData)
-			{
-				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
-				tagCollInfo.pObject = pUserData->pOwner;
-
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::TERRAIN:
-				{
-					/* TODO, 터레인 안됨 */
-					m_bHit = true;
-					break;
-				}
-				}
-
-			}
-		}
-
-
-	}
-
 	return tagCollInfo;
+}
+
+HRESULT CMapElement_Interactable::CheckHit(PSX::PxSweepHit* pHit, ON_COLLISION_INFO& Info)
+{
+	HRESULT hr = E_FAIL;
+	PSX::PxActor* pActor = pHit->actor;
+	PSX::PxShape* pShape = pHit->shape;
+	PHYSX_USERDATA* pUserData = { nullptr };
+	CGameObject* pTarget = { nullptr };
+	if (nullptr != pActor && nullptr != pActor->userData || nullptr != pShape && nullptr != pShape->userData) {
+		pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		if (nullptr == pUserData) {
+			pUserData = static_cast<PHYSX_USERDATA*>(pShape->userData);
+		}
+		switch (pUserData->eKind)
+		{
+		case PHYSX_KIND::BODY_STATIC:
+		case PHYSX_KIND::CCTActor:
+		{
+			switch (PXOBJECT(pUserData->iSubKind))
+			{
+			case PXOBJECT::TERRAIN:
+			case PXOBJECT::GOBLIN_WARRIOR:
+			case PXOBJECT::GOBLIN_MAGICIAN:
+			case PXOBJECT::GOBLIN_ASSASSIN:
+			case PXOBJECT::TROLL:
+			case PXOBJECT::RANROK_BODY:
+			case PXOBJECT::RANROK:
+			{
+				hr = S_OK;
+				m_bHit = true;
+			} break;
+			default:
+				break;
+			}
+		} break;
+		default:
+			break;
+		}
+	}
+	if (SUCCEEDED(hr)) {
+		memcpy_s(&Info.vWorldPos, sizeof(Info.vWorldPos), &pHit->position, sizeof(pHit->position));
+		memcpy_s(&Info.vWorldNomal, sizeof(Info.vWorldNomal), &pHit->normal, sizeof(pHit->normal));
+		Info.fLength = pHit->distance;
+		Info.pObject = pUserData->pOwner;
+		Info.pObject->OnCollision(this, &Info);
+	}
+	return hr;
 }
 
 CMapElement_Interactable* CMapElement_Interactable::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

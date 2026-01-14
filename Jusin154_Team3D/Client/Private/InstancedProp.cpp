@@ -27,8 +27,10 @@ void CInstancedProp::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#ifdef Bin
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+#endif // Bin
 }
 
 HRESULT CInstancedProp::Render()
@@ -102,6 +104,9 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 
 	INSTANCE_PROP_DESC* pDesc = static_cast<INSTANCE_PROP_DESC*>(pArg);
 
+	m_isShake = pDesc->isShake;
+	m_isTree = pDesc->isTree;
+
 	/* Com_VIBuffer_Instance_Model */
 	if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, pDesc->strPrototypeTag,
 		reinterpret_cast<CComponent**>(&m_pVIBufferInstanceCom))))
@@ -119,7 +124,6 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 	if(FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str(), pDesc)))
 		return E_FAIL;
 
-	m_isShake = pDesc->isShake;
 	if (m_isShake)
 		m_pVIBufferInstanceCom->Set_Shake_Value(pDesc->vRadius, pDesc->vSpeed);
 
@@ -204,6 +208,8 @@ HRESULT CInstancedProp::Load_InstancedProp(const _char* pFilePath, INSTANCE_PROP
 		{
 			for (_uint i = 0; i < m_iNumMesh; ++i)
 			{
+				if (true == m_isTree && 0 == i)
+					continue;
 				CRigidBody_Static* pRigidBody = { nullptr };
 				CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
 				Desc.pMeshName = RigidBodyTags[i].c_str();

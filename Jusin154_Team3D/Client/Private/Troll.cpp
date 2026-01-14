@@ -454,6 +454,10 @@ void CTroll::Trigger(CTimeSocket& Socket)
 	{
 		if (pContents->vFlags.b[0]){
 			m_pFSM->Change_State(FSMSTATE::RUSH);
+		} else if (pContents->vFlags.b[1]) {
+			m_pFSM->Change_State(FSMSTATE::SLAM);
+		}else if (pContents->vFlags.b[2]) {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
 		}
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
@@ -461,6 +465,21 @@ void CTroll::Trigger(CTimeSocket& Socket)
 		if (pContents->vFlags.b[0]){
 			auto& pairAnimation = m_Animation[STATEANIM::RUSH_LOOP];
 			m_pModelCom->Set_AnimationIndex(pairAnimation.first, pairAnimation.second);
+		} else if (pContents->vFlags.b[1]) {
+			auto& pairAnimation = m_Animation[STATEANIM::SLAM];
+			m_pModelCom->Set_AnimationIndex(pairAnimation.first, pairAnimation.second);
+		} else if (pContents->vFlags.b[2]) {
+			auto& pairAnimation = m_Animation[STATEANIM::IDLE];
+			m_pModelCom->Set_AnimationIndex(pairAnimation.first, pairAnimation.second);
+		}
+	} break;
+	case TIMESOCKET_FUNC::LOOK_AT:
+	{
+		if (pContents->vFlags.b[0]) {
+			m_pTransformCom->LookAt_Horizontal(XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
+		}
+		else {
+			m_pTransformCom->LookAt_Horizontal(pContents->pOtherTarget->Get_WorldPostion());
 		}
 	} break;
 	case TIMESOCKET_FUNC::END_CINEMATIC:
@@ -742,6 +761,11 @@ void CTroll::Describe_Entity()
 
 	if (GUI::CollapsingHeader("Troll")) {
 		__super::Describe_Entity();
+
+		if (GUI::Button("Dead"))
+		{
+			m_pFSM->Change_State(FSMSTATE::DEAD);
+		}
 
 		_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
 

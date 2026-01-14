@@ -922,7 +922,6 @@
     <ClInclude Include="..\Public\AccioSide.h">
       <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\Broom_TargetGate2D.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClInclude>
@@ -959,9 +958,25 @@
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PotionScreen.h">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PotionBroken.h">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionBroken</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitScreen.h">
+      <Filter>02.GameObjects\Effect\Effects\HitScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRace_Bubble.h">
+      <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\CamPosition_WorldLook.h">
       <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_PropHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1019,18 +1034,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Cameras\Debug">
       <UniqueIdentifier>{8d89a59c-fbd2-4a4a-ab01-a70abb80cc49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Plane">
-      <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop">
-      <UniqueIdentifier>{2814c935-13d9-4b9a-94ba-c9e470219a18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop\SkyBox">
-      <UniqueIdentifier>{19ee2ea4-2d79-46bd-b857-c759e3ec6cf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop\SkyBox\TriggerBox">
-      <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition">
       <UniqueIdentifier>{25ad4a41-5b06-4659-bd29-c0c4265a3277}</UniqueIdentifier>
@@ -1980,8 +1983,32 @@
     <Filter Include="04.Mechanic\State\Focus\Spell_Learning">
       <UniqueIdentifier>{26d7f6f4-0b5f-4b9a-9cef-df91b8a485bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion">
+      <UniqueIdentifier>{1f2c5d56-c8a8-458e-a48c-444d7c885cf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion\PotionBroken">
+      <UniqueIdentifier>{3f02d29d-759e-4572-9439-ec79909273e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion\PotionScreen">
+      <UniqueIdentifier>{6fa4085d-e9eb-47c3-b384-2aa92baf1d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\HitScreen">
+      <UniqueIdentifier>{8c62c8f3-d8ba-4a6d-99bd-6270333ea0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\BroomRace">
+      <UniqueIdentifier>{67efb2e4-26f6-41b5-a754-eddf91f1d528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\BroomRace\Bubble">
+      <UniqueIdentifier>{ce57978a-c208-4fe6-bbfd-8f582c20ff07}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook">
       <UniqueIdentifier>{b3924c52-0c0d-4cd1-94f4-1eb61d2c6c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit">
+      <UniqueIdentifier>{06672a35-4ed9-4c17-aa7f-bb249190a1ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\20.TriggerBox">
+      <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2862,9 +2889,22 @@
     <ClCompile Include="..\Private\CamPosition_WorldLook.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+    <ClCompile Include="..\Private\PotionScreen.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionScreen</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PotionBroken.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionBroken</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitScreen.cpp">
+      <Filter>02.GameObjects\Effect\Effects\HitScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRace_Bubble.cpp">
+      <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_PropHit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\State_Parry.cpp">

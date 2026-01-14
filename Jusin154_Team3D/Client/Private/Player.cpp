@@ -56,7 +56,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 
 #if 진우
-	m_isDebugMode = true; // 디버그 무적 모드
+	m_isDebugMode = false; // 디버그 무적 모드
 #endif
 #if 나
 	m_isDebugMode = true; // 디버그 무적 모드
@@ -127,6 +127,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fRayDistance = 5.f;
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
+	Ready_Sound_Events("../Bin/Resources/Models/Human/PlayableCharacter/KeyFrame.xml");
+
 	return S_OK;
 }
 
@@ -145,7 +147,6 @@ void CPlayer::Update(_float fTimeDelta)
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
 	Update_RaycastElements();
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();
@@ -442,6 +443,11 @@ void CPlayer::ExitBattle()
 	m_pCharacter_Controller->Set_Position(XMLoadFloat4(&m_OriginPos));
 }
 
+void CPlayer::Add_TurboBoost(_float fAmount)
+{
+	m_pBroom->Add_TurboBoost(fAmount);
+}
+
 HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
@@ -578,6 +584,9 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 			if (pContents->vParam_11.x == 1.f) {
 				m_pModelCom->Set_AnimationIndex(m_Animation[STATEANIM::SPAWN].first, m_Animation[STATEANIM::SPAWN].second);
 			}
+		}
+		else if (pContents->vFlags.b[2]) {
+			m_pFSM->Change_State(FSMSTATE::DODGE);
 		}
 	} break;
 	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
