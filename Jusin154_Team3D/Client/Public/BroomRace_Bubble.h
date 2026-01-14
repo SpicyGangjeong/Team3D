@@ -20,6 +20,8 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 
+	void CollisionCheck(_fvector StartPos, _fvector EndPos, _float fRadius);
+
 public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
 

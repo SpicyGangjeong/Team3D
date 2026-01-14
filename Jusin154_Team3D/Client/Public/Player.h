@@ -59,6 +59,7 @@ public:
 	void			Set_Interaction(_bool bInteraction);
 	void			ExitBattle();
 	void			Set_OriginPos(_vector vPos) { XMStoreFloat4(&m_OriginPos, vPos); }
+	void			Add_TurboBoost(_float fAmount);
 #ifdef _DEBUG
 	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG

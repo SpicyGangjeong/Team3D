@@ -139,6 +139,11 @@ void CSpell_Overlay::Use_Spell()
 			m_pInfoInstance->Event_CallBack(TEXT("UseSpell"), &Spell);
 		}
 	}
+	else
+	{
+		_int Spell = 0;
+		m_pInfoInstance->Event_CallBack(TEXT("UseSpell"), &Spell);
+	}
 }
 
 

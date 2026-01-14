@@ -110,6 +110,7 @@ public:
 	void			Update_ChainAnimation();
 	void			Set_ChainAnimation(pair<_uint, _bool> chainAnim);
 	void			IsRootBone(_bool bRootBone) { m_bRootBone = bRootBone; }
+	void			Clear_QueuedAnim();
 #pragma endregion
 #pragma region Mesh
 	const _char*		Get_MeshName(_uint iIndex);
@@ -264,6 +265,10 @@ private:
 	_int						m_iQueuedAnimIndex = -1;
 	_bool						m_bQueuedLoop = false;
 	_bool						m_bQueuedAnim = { false };
+	_float						m_fQueuedAmount = {};
+	_bool						m_bQueuedRatio = {};
+	_float						m_fQueuedSpeed = {};
+	_bool						m_bQueuedRootBone = {};
 	_float4						m_RootBoneMomentum = {};
 	_bool						m_IsSkip = {false};
 	_bool						m_bSecondAnim = { false };
