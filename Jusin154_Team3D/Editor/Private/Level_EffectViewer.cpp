@@ -99,11 +99,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 	}
 	
 
-	//ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
-	//m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	//m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+	ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
+	m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 
-	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
+	m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
 
 /* 호그 스미드 */
