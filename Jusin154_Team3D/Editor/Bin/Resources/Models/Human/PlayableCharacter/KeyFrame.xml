@@ -15,4 +15,19 @@
         <KeyFrame Event="Player/spells_avada_kedavra_akb/avada_kedavra_4.wav" Ratio="0.296" Volume="0.80000001"/>
         <KeyFrame Event="Player/spells_avada_kedavra_akb/avada_kedavra_9.wav" Ratio="0.154" Volume="0.80000001"/>
     </Animation>
+    <Animation Index="1002">
+        <KeyFrame Event="Player/spells_finisher_am_lightningstrike_akb/lightnig_2.wav" Ratio="0.15" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="760">
+        <KeyFrame Event="Player/spells_accio_akb/accio_12.wav" Ratio="0.020" Volume="0.80000001"/>
+        <KeyFrame Event="Player/spells_accio_akb/accio_3.wav" Ratio="0.031" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="759">
+        <KeyFrame Event="Player/Voice/reparo_voice.wav" Ratio="0.356" Volume="1"/>
+        <KeyFrame Event="Player/spells_reparo_akb/reparo_0.wav" Ratio="0.400" Volume="0.5"/>
+        <KeyFrame Event="Player/spells_reparo_akb/reparo_21.wav" Ratio="0.900" Volume="0.1"/>
+    </Animation>
+    <Animation Index="757">
+        <KeyFrame Event="Player/spells_reparo_akb/reparo_11.wav" Ratio="0.026" Volume="0.5"/>
+    </Animation>
 </KeyFrames>
