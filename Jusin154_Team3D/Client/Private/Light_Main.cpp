@@ -171,7 +171,9 @@ _matrix CLight_Main::Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3
 
 void CLight_Main::Add_PreShadowRenderGroup(CLayer* pLayer)
 {
-	assert(nullptr != pLayer);
+	if (nullptr == pLayer) {
+		return;
+	}
 	const list<CGameObject*>* pObjects = pLayer->Get_Objects();
 	for (auto& pObject : *pObjects) {
 		if (FAILED(m_pGameInstance->Add_RenderGroup(RENDER::PRESHADOW, pObject))) {

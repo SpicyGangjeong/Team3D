@@ -1242,7 +1242,7 @@ void CLevel_GamePlay::ResetLevel_Environment()
 	}
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
-	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(0.581, 0.239f, -0.183f, 0.757f));
+	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(0.581f, 0.239f, -0.183f, 0.757f));
 	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.700), _float2(0.075f, 0.150f),
 									_float2(2.300f, 10.000f), _float4(0.0047f, 0.0018f, 0.0018f, 0.0018f),

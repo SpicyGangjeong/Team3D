@@ -32,8 +32,10 @@ void CLand::Late_Update(_float fTimeDelta)
 	if (m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_fRaduis))
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+#ifdef Bin
 		m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
 		m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+#endif // Bin
 		for (auto& pInstanceProp : m_InstanceProps){
 			pInstanceProp->Late_Update(fTimeDelta);
 		}
