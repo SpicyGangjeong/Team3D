@@ -32,7 +32,7 @@ protected:
 	class CCallBack_NonPlayable_Behavior* m_pCallBack_Behavior = { nullptr };
 	class CCallBack_NonPlayable_HitReport* m_pCallBack_HitReport = { nullptr };
 	CUnit* m_pPlayerAllyUnit = { nullptr };
-
+	CNPCStat* m_pNpcStat = { nullptr };
 
 	_int				m_iEntered = { 0 };
 	_float2				m_vEnteringTimer = { 0.f, 1.f };
@@ -42,6 +42,7 @@ protected:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources() override;
+	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
 
 public:
 	static CNPC_EleazarFig* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

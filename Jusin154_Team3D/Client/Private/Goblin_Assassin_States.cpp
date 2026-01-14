@@ -247,23 +247,23 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 
 	if (m_fTargetDistance <= 4.f)
 	{
-		fDisAmount = 1.f;
+		fDisAmount = 1.3f;
 	}
 	else if (m_fTargetDistance <= 7.f)
 	{
-		fDisAmount = 1.5f;
+		fDisAmount = 1.8f;
 	}
 	else if (m_fTargetDistance <= 10.f)
 	{
-		fDisAmount = 2.f;
+		fDisAmount = 2.3f;
 	}
 	else if (m_fTargetDistance <= 13.f)
 	{
-		fDisAmount = 2.5f;
+		fDisAmount = 2.8f;
 	}
 	else if (m_fTargetDistance <= 16.f)
 	{
-		fDisAmount = 3.f;
+		fDisAmount = 3.3f;
 	}
 	pairAnimInfo = m_Animation[STATEANIM::SLASH];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, fDisAmount,false,1.3f);
@@ -288,11 +288,11 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 			m_pGoblinSpector->Set_Disolve(true); },
 			0.28f);
 
-	Add_Event(pairAnimInfo.first,
-		[this]() {
-			m_bLookAt = true;
-		},
-		0.7f);
+	//Add_Event(pairAnimInfo.first,
+	//	[this]() {
+	//		m_bLookAt = true;
+	//	},
+	//	0.8f);
 
 	Set_Easing(pairAnimInfo.first, 0.01f, 0.15f, 0.8f);
 
@@ -320,6 +320,7 @@ HRESULT CGoblin_Assassin::Behavior_SlashExitCheck(_float fTimeDelta)
 void CGoblin_Assassin::Behavior_SlashExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SLASH);
+	m_bMotionTrail = false;
 	m_bLookAt = true;
 }
 
@@ -327,6 +328,7 @@ void CGoblin_Assassin::Behavior_DashEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::DASH);
+	m_bMotionTrail = true;
 
 	pairAnimInfo = m_Animation[STATEANIM::DASH];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.f,false);
@@ -381,9 +383,12 @@ void CGoblin_Assassin::Behavior_BlinkEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	m_bDisolve = true;
 
+
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBILN_TELEPORT, this);
+			Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_Visible(false);
+			Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_Visible(false);
 		}, 0.1f);
 }
 
@@ -394,6 +399,9 @@ HRESULT CGoblin_Assassin::Behavior_BlinkExitCheck(_float fTimeDelta)
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	if (m_fDisolveTime >= 0.8f && iCurrAnimIndex != m_Animation[STATEANIM::BLINK].first)
 	{
+
+		Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_Visible(true);
+		Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_Visible(true);
 		m_bDisolve = false;
 		m_fDisolveTime = 0.f;
 		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_ASSASSIN_SKILL::TP)];
@@ -649,14 +657,25 @@ void CGoblin_Assassin::Behavior_DeadEnter()
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_Disolve(true);
+	Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_Disolve(true);
 }
 
 HRESULT CGoblin_Assassin::Behavior_DeadExitCheck(_float fTimeDelta)
 {
-	if (FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-		return E_PENDING;
+	if (fRatio >= 0.8f)
+	{
+		m_fDeadRatio += fTimeDelta / 3.f;
+		m_fDeadRatio = min(1.f, m_fDeadRatio);
 	}
+	else
+	{
+		m_fDeadRatio = 0.f;
+	}
+
 	return S_OK;
 }
 
@@ -820,6 +839,7 @@ void CGoblin_Assassin::Descendo_Event()
 	Add_Event(m_Animation[STATEANIM::GETUP_BWD].first,
 		[this]() {m_bLookAt = true; },
 		0.7f);
+
 }
 
 void CGoblin_Assassin::TumbleAnim(_float fTimeDelta)
@@ -908,6 +928,7 @@ void CGoblin_Assassin::HitState_Behavior(_float fTimeDelta)
 			m_pCharacter_Controller->SetGravity(true);
 			pairAnimInfo = m_Animation[STATEANIM::LAND];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			m_eHitState = ENUM_CLASS(HIT_STATE::END);
 		}
 	}
 	if (m_eHitState == ENUM_CLASS(HIT_STATE::DESCENDO))
@@ -1062,8 +1083,8 @@ void CGoblin_Assassin::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
-			m_fDeadRatio = fDeadRatio;
-			if (m_fDeadRatio > 1.f) {
+			//m_fDeadRatio = fDeadRatio;
+			if (m_fDeadRatio >= 1.f) {
 				PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 				PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
 				m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));

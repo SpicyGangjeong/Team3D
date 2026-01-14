@@ -50,6 +50,7 @@ HRESULT CElf::Initialize(void* pArg)
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
+	m_bNpc = true;
 
 	return S_OK;
 }
@@ -224,6 +225,16 @@ void CElf::Set_Target(CUnit& pTarget, CTransform& pTransform)
 	XMStoreFloat4(&m_vTargetPos, vTargetPos);
 	XMStoreFloat3(&m_vToTargetDir, XMVector3Normalize(vToTargetDir));
 	m_fTargetDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
+}
+
+void CElf::Set_Flow(_int Index)
+{
+	m_iCurrentFlow = Index;
+}
+
+_int CElf::Get_Flow()
+{
+	return m_iCurrentFlow;
 }
 
 
@@ -461,8 +472,8 @@ HRESULT CElf::Ready_Components(void* pArg)
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.0001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
-		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.02f };
+		Desc.bAutoStepping = { true };
+		Desc.fStepOffset = { 0.08f };
 		Desc.fRadius = 0.2f;
 		Desc.fHeight = 0.3f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();

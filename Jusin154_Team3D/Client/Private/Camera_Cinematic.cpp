@@ -114,8 +114,8 @@ void CCamera_Cinematic::Active_Camera(pair<_float4, _float3>& pairTransitionInfo
 
 void CCamera_Cinematic::Update_LerpTimer(_float fTimeDelta)
 {
-	Lerp_Translation(fTimeDelta);
 	Lerp_Rotation(fTimeDelta);
+	Lerp_Translation(fTimeDelta);
 	Lerp_FovY(fTimeDelta);
 	if (false == m_bActive) {
 		return;
@@ -127,12 +127,12 @@ void CCamera_Cinematic::Set_Priority(_uint iPriority)
 	m_iPriority = iPriority;
 }
 
-void CCamera_Cinematic::Set_LookTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix)
+void CCamera_Cinematic::Set_LookTarget(CGameObject* pTarget, const _float4x4* pTargetSocketMatrix)
 {
 	m_pLookTargetPart->Stalking_Target(pTarget, pTargetSocketMatrix);
 }
 
-void CCamera_Cinematic::Set_FollowTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix)
+void CCamera_Cinematic::Set_FollowTarget(CGameObject* pTarget, const _float4x4* pTargetSocketMatrix)
 {
 	m_pFollowTargetPart->Stalking_Target(pTarget, pTargetSocketMatrix);
 }
@@ -173,11 +173,22 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::LOOK_AT:
 	{
+		SAFE_RELEASE(m_pWORLD_LOCK_TargetPart);
 		CUnit* pUnit = (CUnit*)pContents->pOtherTarget;
 		Set_LookTarget(pUnit, pUnit->Get_SocketMatrixPtr(pContents->vParam_12.c_str())); 
 	}break;
+	case TIMESOCKET_FUNC::SET_WORLD_LOCKPOSITION:
+	{
+		SAFE_RELEASE(m_pWORLD_LOCK_TargetPart);
+		CCamPosition_WorldLook::CameraWorldLook_DESC Desc{};
+		Desc.pParentTransform = m_pTransformCom;
+		Desc.vPosition = pContents->pxTransform.p;
+		m_pWORLD_LOCK_TargetPart = m_pGameInstance->Clone_Prototype<CCamPosition_WorldLook>(g_iStaticLevel, &Desc, this);
+		Set_LookTarget(m_pWORLD_LOCK_TargetPart, nullptr);
+	}break;
 	case TIMESOCKET_FUNC::DONT_LOOK_AT:
 	{
+		SAFE_RELEASE(m_pWORLD_LOCK_TargetPart);
 		m_pLookTargetPart->Stop_Stalking(); 
 	}break;
 	case TIMESOCKET_FUNC::FOLLOW:
@@ -451,6 +462,7 @@ void CCamera_Cinematic::Free()
 	SAFE_RELEASE(m_pModelCom);
 	SAFE_RELEASE(m_pShaderCom);
 #endif // _DEBUG
+	SAFE_RELEASE(m_pWORLD_LOCK_TargetPart);
 	SAFE_RELEASE(m_pLookTargetPart);
 	SAFE_RELEASE(m_pFollowTargetPart);
 }

@@ -101,6 +101,8 @@ HRESULT CLumos::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_isLoop = true;
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_LUMOS, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	return S_OK;
 }
 

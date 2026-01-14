@@ -1,5 +1,5 @@
 <Material>
-	<MI_Professor_EleazarFig_Hair	ShaderIndex = "5" OutLineWrite="5">
+	<MI_Professor_EleazarFig_Hair	ShaderIndex = "23" OutLineWrite="5">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Old_M_Hair_Fig_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
@@ -57,7 +57,7 @@
 		<aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
 		<aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
 	</MI_HUM_N_Heads_Eye>
-	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "5" OutLineWrite="5">
+	<MI_HUM_N_Heads_Eyelash	ShaderIndex = "25" OutLineWrite="5">
 		<aiTextureType_NONE                    Index="0"  Filename="" Extension=""/>
 		<aiTextureType_DIFFUSE                 Index="1"  Filename="T_Old_M_Hair_Fig_DAO_MSK" Extension=".dds"/>
 		<aiTextureType_SPECULAR                Index="2"  Filename="" Extension=""/>
