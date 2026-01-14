@@ -62,7 +62,7 @@ HRESULT CUI_Manager::Initialize(void* pArg)
 	m_bActive = false;
 	m_pInfoInstance->Set_UISTATE(m_eType);
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Canvas_Change(*reinterpret_cast<UI_STATE*>(p)); });
-	m_pInfoInstance->Add_Event(TEXT("NpcInteract"), [this](void* p) {this->NpcInteract(*reinterpret_cast<_bool*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("NpcInteract"), [this](void* p) {this->NpcInteract(p); });
 	m_pInfoInstance->Add_Event(TEXT("UIManagerFadeIn"), [this](void* p) {this->Set_Fade(); });
 	m_pInfoInstance->Add_Event(TEXT("UIFadeIn"), [this](void* p) {this->FadeIn(*reinterpret_cast<_float*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("RACEREADY"), [this](void* p) {this->Set_Race(*reinterpret_cast<_bool*>(p)); });
@@ -205,19 +205,19 @@ void CUI_Manager::Update(_float fTimeDelta)
 			if (m_pGameInstance->Key_Down(DIK_TAB))
 			{
 				m_fAlphaVelue = 1.f;
+				if (m_eType == UI_STATE::GAMEPLAYER)
+				{
+					m_eType = UI_STATE::QUEST;
+
+				}
+				else if (m_eType == UI_STATE::QUEST)
+				{
+					m_eType = UI_STATE::GAMEPLAYER;
+				}
 				if (m_bActive == false)
 				{
 					m_bActive = true;
 					m_bAlphaZero = true;
-					if (m_eType == UI_STATE::GAMEPLAYER)
-					{
-						m_eType = UI_STATE::QUEST;
-
-					}
-					else if (m_eType == UI_STATE::QUEST)
-					{
-						m_eType = UI_STATE::GAMEPLAYER;
-					}
 				}
 			}
 		}
@@ -227,18 +227,18 @@ void CUI_Manager::Update(_float fTimeDelta)
 			if (m_pGameInstance->Key_Down(DIK_ESCAPE))
 			{
 				m_fAlphaVelue = 1.f;
+				if (m_eType == UI_STATE::GAMEPLAYER)
+				{
+					m_eType = UI_STATE::SPELLLNEARN;
+				}
+				else if (m_eType == UI_STATE::SPELLLNEARN)
+				{
+					m_eType = UI_STATE::GAMEPLAYER;
+				}
 				if (m_bActive == false)
 				{
 					m_bActive = true;
 					m_bAlphaZero = true;
-					if (m_eType == UI_STATE::GAMEPLAYER)
-					{
-						m_eType = UI_STATE::SPELLLNEARN;
-					}
-					else if (m_eType == UI_STATE::SPELLLNEARN)
-					{
-						m_eType = UI_STATE::GAMEPLAYER;
-					}
 				}
 			}
 		}
@@ -279,7 +279,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
 		}
 
-		if (m_fAlpha > m_fAlphaVelue && m_bAlphaZero == true)
+		if (m_fAlpha >= m_fAlphaVelue && m_bAlphaZero == true)
 		{
 			m_bAlphaZero = false;
 			m_fAlpha = 1.f;
@@ -495,11 +495,14 @@ CGameObject* CUI_Manager::Find_Canvas(const _wstring& Name)
 	return iter->second;
 }
 
-void CUI_Manager::NpcInteract(_bool bInteract)
+void CUI_Manager::NpcInteract(void* pArg)
 {
-	m_bNPCInteract = bInteract;
-	m_bHover = bInteract;
-	m_bActive = bInteract;
+	NPCINTERACT Interact = *reinterpret_cast<NPCINTERACT*>(pArg);
+
+	m_bNPCInteract = Interact.bInteract;
+	m_bHover = Interact.bInteract;
+	m_bActive = Interact.bInteract;
+	m_fAlpha= Interact.fAlpha;
 	m_bAlphaZero = true;
 }
 

@@ -92,6 +92,9 @@ void CSpellLearn_MovePointer::Line(_float fTime, _float2 fMouse)
 			m_bMoveStart = false;
 			Set_FadeOut();
 			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("LearnClear"));
+			m_pInfoInstance->Spell_UnLock(m_iSpellID);
+			m_pInfoInstance->Event_CallBack(TEXT("SpellLearningSuccess"));
+			
 		}
 	}
 }
@@ -102,6 +105,11 @@ void CSpellLearn_MovePointer::Set_Booster(void* pArg)
 	m_Booster.iBoosterIndex = Info->iBoosterIndex;
 	m_Booster.bBoosterOn = Info->bBoosterOn;
 	m_bBooster = m_Booster.bBoosterOn;
+}
+
+void CSpellLearn_MovePointer::Set_ID(_int Index)
+{
+	m_iSpellID = Index;
 }
 
 void CSpellLearn_MovePointer::Priority_Update(_float fTimeDelta)

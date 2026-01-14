@@ -71,7 +71,7 @@ void CElf::Update(_float fTimeDelta)
 
 	Set_Anim();
 
-	if (m_pGameInstance->Key_Up(DIK_U))
+	if (m_pGameInstance->Key_Down(DIK_U))
 	{
 		m_iCurrentFlow++;
 	}
@@ -472,14 +472,14 @@ HRESULT CElf::Ready_Components(void* pArg)
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.0001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
-		Desc.bAutoStepping = { true };
-		Desc.fStepOffset = { 0.08f };
-		Desc.fRadius = 0.2f;
-		Desc.fHeight = 0.3f;
+		Desc.bAutoStepping = { false };
+		Desc.fStepOffset = { 0.02f };
+		Desc.fRadius = 0.225f;
+		Desc.fHeight = 0.35f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_NonPlayable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
-		Desc.fWalkableSlope = 45.f;
+		Desc.fWalkableSlope = 80.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}

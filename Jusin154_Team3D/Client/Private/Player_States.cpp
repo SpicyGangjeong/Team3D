@@ -49,6 +49,11 @@
 
 #pragma region States
 
+void CPlayer::Set_Spell_Learning_Success()
+{
+	m_bSpell_Learning_Success = true;
+}
+
 // UI 연동 추가
 void CPlayer::Get_Spell(_int SkillIndex)
 {

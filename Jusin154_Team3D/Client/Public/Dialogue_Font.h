@@ -46,6 +46,8 @@ public:
 	void NextText();
 	void NextLevel(CHOICEINFO Choice);
 	void ENDText();
+	void NextText(_int Index);
+	void NpcDialogue(_int Index);
 private:
 	void NpcInfo(void* pArg);
 	void NpcInteract(_bool bInteract);
@@ -82,6 +84,7 @@ private:
 	_wstring	m_pName;
 	_int		m_iTextID{};
 	_int		m_iNextID{};
+	_int		m_iQuestID{};
 	_int		m_iType{};
 
 	_bool		m_bTag{};
