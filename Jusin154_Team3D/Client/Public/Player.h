@@ -147,7 +147,7 @@ public:
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
-
+	void Set_Spell_Learning_Success();
 private:
 	// UI 연동 추가
 	void Get_Spell(_int SkillIndex);

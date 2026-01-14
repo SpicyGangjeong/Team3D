@@ -75,6 +75,7 @@ HRESULT CSpellLearn_Panel::Initialize(void* pArg)
 void CSpellLearn_Panel::Set_Learn(_int Index)
 {
 	m_fTime = 0.f;
+	static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer)->Set_ID(m_pInfoInstance->Get_SpellLearn(Index).iSpellID);
 	static_cast<CSpellLearn*>(m_pSpellLearn)->Change_Image(Index);
 	static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer)->Set_SpellLearn(Index);
 	static_cast<CSpellLearn_ChaserPointer*>(m_pSpellLearn_ChaserPointer)->Set_SpellLearn(Index);
