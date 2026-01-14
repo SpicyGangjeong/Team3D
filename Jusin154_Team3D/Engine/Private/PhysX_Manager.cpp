@@ -477,11 +477,11 @@ HRESULT CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangle
 void CPhysX_Manager::Add_Editor_Plane(PHYSX_USERDATA& PlaneData)
 {
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 14.210f), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_EDITPLANE");
 	m_pScene->addActor(*pGroundPlane);

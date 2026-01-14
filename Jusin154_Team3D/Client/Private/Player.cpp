@@ -576,6 +576,9 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 				m_pModelCom->Set_AnimationIndex(m_Animation[STATEANIM::SPAWN].first, m_Animation[STATEANIM::SPAWN].second);
 			}
 		}
+		else if (pContents->vFlags.b[2]) {
+			m_pFSM->Change_State(FSMSTATE::DODGE);
+		}
 	} break;
 	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
 	{

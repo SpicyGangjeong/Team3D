@@ -23,6 +23,45 @@ enum class SD_KIND {
 	SP_JAP_13,
 	SP_BLINK_2,
 #pragma endregion
+#pragma region AVADA_KEDAVRA
+	S_AVADA_KEDAVRA_0,
+	S_AVADA_KEDAVRA_1,
+	S_AVADA_KEDAVRA_2,
+	S_AVADA_KEDAVRA_3,
+	S_AVADA_KEDAVRA_4,
+	S_AVADA_KEDAVRA_5,
+	S_AVADA_KEDAVRA_6,
+	S_AVADA_KEDAVRA_7,
+	S_AVADA_KEDAVRA_8,
+	S_AVADA_KEDAVRA_9,
+	S_AVADA_KEDAVRA_10,
+	S_AVADA_KEDAVRA_11,
+	S_AVADA_KEDAVRA_12,
+#pragma endregion
+
+#pragma region ANCIENT_LIGHTNING
+	SP_LIGHTNING_0,
+	SP_LIGHTNING_1,
+	SP_LIGHTNING_2,
+	SP_LIGHTNING_3,
+#pragma endregion
+
+#pragma region ACCIO
+	SP_ACCIO_0,
+	SP_ACCIO_1,
+	SP_ACCIO_2,
+	SP_ACCIO_3,
+	SP_ACCIO_4,
+	SP_ACCIO_5,
+	SP_ACCIO_6,
+#pragma endregion
+
+#pragma region REPARO
+	SP_REPARO_0,
+	SP_REPARO_1,
+	SP_REPARO_2,
+#pragma endregion
+
 
 #pragma region VOICE
 	VOICE_AVADAKEDAVRA,

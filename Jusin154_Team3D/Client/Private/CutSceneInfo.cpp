@@ -17,6 +17,9 @@ CCutSceneInfo::CCutSceneInfo()
 }
 void CCutSceneInfo::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Pressing(DIK_LSHIFT)&& m_pGameInstance->Key_Pressing(DIK_RSHIFT) && m_pGameInstance->Key_Pressing(DIK_LALT) && m_pGameInstance->Key_Pressing(DIK_RALT)) {
+		Set_AllActiveEventsExit();
+	}
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -571,4 +574,16 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 		});
 	pair<_string, TimeLine*> pairResult = { _string(pContentsNode->Name()), pTimeLine };
 	m_pInfoInstance->Load_Events(pairResult);
+}
+
+void CCutSceneInfo::Set_AllActiveEventsExit()
+{
+	map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.begin();
+	for (; iter != m_funcActiveEvents.end();++iter) {
+		iter->second->m_vTimer.x = 1.f - FLT_EPSILON;
+		for (list<CTimeSocket*>::iterator socketIter = (*iter).second->m_Sockets.begin();
+			socketIter != (*iter).second->m_Sockets.end(); ++socketIter) {
+			(*socketIter)->Trigger(1.f - FLT_EPSILON);
+		}
+	}
 }

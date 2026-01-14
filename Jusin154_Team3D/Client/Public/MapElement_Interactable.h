@@ -62,6 +62,7 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Bind_ShaderResources() override;
+	HRESULT CheckHit(PSX::PxSweepHit* pHit, ON_COLLISION_INFO& Info);
 
 public:
 	static CMapElement_Interactable* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

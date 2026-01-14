@@ -58,6 +58,9 @@ HRESULT CMapElement_Static::Initialize(void* pArg)
 	XMStoreFloat3(&m_vWorldCenterPosition, XMVector3TransformCoord(XMLoadFloat3(&vOffset), m_pTransformCom->Get_XMWorldMatrix()));
 #endif // _DEBUG
 
+	ReadyForPhysX();
+	ConvertToPhysX();
+
 	return S_OK;
 }
 
@@ -157,6 +160,38 @@ HRESULT CMapElement_Static::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CMapElement_Static::ReadyForPhysX()
+{
+	_uint iLevel = NEXT_LEVEL;
+
+	CModel* pModel = m_pModelComs[0];
+
+	if (FAILED(pModel->Ready_PhysXMeshes(XMMatrixIdentity(), iLevel))) {
+		assert(false);
+	}
+}
+
+void CMapElement_Static::ConvertToPhysX()
+{
+	CModel* pModel = m_pModelComs[0];
+
+	_uint iNumMeshes = pModel->Get_NumMeshes();
+
+	for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
+	{
+		_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+		CRigidBody_Static* pRigidBody = { nullptr };
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pMeshName = wstrName.c_str();
+		Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+			assert(false);
+		}
+		m_RigidBodies.push_back(pRigidBody);
+	}
+}
+
 CMapElement_Static* CMapElement_Static::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CMapElement_Static* pInstance = new CMapElement_Static(pDevice, pContext);
@@ -188,6 +223,10 @@ void CMapElement_Static::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pShaderCom);
+
+	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
+		SAFE_RELEASE(m_RigidBodies[i]);
+	} m_RigidBodies.clear();
 	for (auto& pModel : m_pModelComs)
 		SAFE_RELEASE(pModel);
 }
@@ -196,6 +235,11 @@ void CMapElement_Static::Describe_Entity()
 {
 	if (m_bDead)
 		return;
+
+	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
+		SAFE_RELEASE(m_RigidBodies[i]);
+	} m_RigidBodies.clear();
+
 	if (nullptr == m_pGameInstance)
 		return;
 
