@@ -472,8 +472,8 @@ HRESULT CElf::Ready_Components(void* pArg)
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.0001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
-		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.02f };
+		Desc.bAutoStepping = { true };
+		Desc.fStepOffset = { 0.08f };
 		Desc.fRadius = 0.2f;
 		Desc.fHeight = 0.3f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();
