@@ -977,6 +977,9 @@
     <ClInclude Include="..\Public\Ranrok_PropHit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_EtherInfo.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2010,6 +2013,9 @@
     <Filter Include="04.Mechanic\20.TriggerBox">
       <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether">
+      <UniqueIdentifier>{b31f467c-d66f-4da4-bddb-a55ec8f2bcbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2906,6 +2912,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp">
       <Filter>04.Mechanic\20.TriggerBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Ether.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_EtherInfo.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

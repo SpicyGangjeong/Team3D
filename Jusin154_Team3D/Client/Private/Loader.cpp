@@ -455,6 +455,12 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_RANROK_ETHER,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxRanrokEther.hlsl"),
+			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
+		return E_FAIL;
+	}
+
 #endif // 기무리
 
 #if 진우
@@ -492,6 +498,9 @@ HRESULT CLoader::Loading_For_Logo()
 		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
 			FX_VTXPOS,
 			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_RANROK_ETHER,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxRanrokEther.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
 	}
 
 	for (auto& JobMapShader : jobMapShaders)
@@ -1913,6 +1922,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		});
 
 
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
 		return E_FAIL;
@@ -2344,7 +2354,20 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/RanrokEther", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+		});
 
 #pragma endregion
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
