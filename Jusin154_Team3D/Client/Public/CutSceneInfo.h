@@ -25,7 +25,7 @@ public:
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair<_string, TimeLine*>& pairTimeLine);
-	HRESULT Clear_AllEvents();
+	HRESULT		Clear_AllEvents();
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 	class CInfoInstance*	m_pInfoInstance = { nullptr };
@@ -40,6 +40,7 @@ private:
 	void Update_WaitEvents(_float fTimeDelta);
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	void Load_CutSceneXML(const string& path);
+	void Set_AllActiveEventsExit();
 
 #ifdef _DEBUG
 public:
