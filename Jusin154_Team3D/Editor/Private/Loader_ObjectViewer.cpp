@@ -134,11 +134,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	TEXT("Prototype_Component_ConjuredDragon_Model")
 	//));
 
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin",XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Professor_EleazarFig_Model")
-	));
-
 #pragma endregion
 
 #pragma region ITEM
@@ -289,7 +284,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin",XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Professor_EleazarFig_Model")
 	));
 

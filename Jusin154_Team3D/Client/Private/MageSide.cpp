@@ -48,6 +48,7 @@ HRESULT CMageSide::Initialize(void* pArg)
 
 
 	SAFE_ADDREF(m_pMage_PT);
+	SAFE_ADDREF(m_pMage_Fire);
 	SAFE_ADDREF(m_pMage_Trail);
 
 	m_fDuration = 5.f;
