@@ -73,6 +73,10 @@ private:
 
 	_float2 m_vMoveLerpPositions = { };
 	_float2 m_vMoveLerpTimer = { 0.f, TIMER_SHORT_LERP };
+
+	//_int	m_iSpellFovLerp = { 0 };
+	//_float3 m_vSpellFovLerpTimer	= { 0.f, 1.f, 2.f };
+	//_float3 m_vSpellFovLerpDegree	= { 60.f, 30.f, 60.f };
 #pragma endregion
 	_float2 m_vCameraShakeTimer = { 0.f, 0.3f };
 

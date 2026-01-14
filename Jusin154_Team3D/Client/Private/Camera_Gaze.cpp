@@ -254,6 +254,10 @@ void CCamera_Gaze::Describe_Entity()
 		m_iPriority = iPriority;
 	}
 	if (GUI::CollapsingHeader("Camera_Gaze_Describe")) {
+		_float fFovYDegree = XMConvertToDegrees(m_fFovy);
+		if (GUI::SliderFloat("FOV", &fFovYDegree, 0.01f, 89.f, "%.2f")) {
+			m_fFovy = XMConvertToRadians(fFovYDegree);
+		}
 		m_pTransformCom->Describe_Entity();
 		GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);
 		GUI::Text("LOOK_DST %.2f, %.2f, %.2f", m_vLookPos_Dest.x, m_vLookPos_Dest.y, m_vLookPos_Dest.z);

@@ -170,7 +170,7 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	case TIMESOCKET_FUNC::ROTATION_LERP:
 	{
 		Clear_Lerp_Rotation();
-		Start_Lerp_Rotation(pContents->vParam_11.x, pContents->pxTransform);
+		Start_Lerp_Rotation(pContents->vParam_11.x, pContents->pxTransform, pContents->vFlags.b[0]);
 	} break;
 	case TIMESOCKET_FUNC::LOOK_AT:
 	{
@@ -352,17 +352,21 @@ void CCamera_Cinematic::Lerp_Rotation(_float fTimeDelta)
 		Rotation(vRotQ);
 	}
 }
-void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform)
+void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform, _bool bMainTainDistance)
 {
 	_float4 vRotQ = { pxTransform.q.x, pxTransform.q.y, pxTransform.q.z, pxTransform.q.w };
-	Start_Lerp_Rotation(fTimeMaximum, vRotQ);
+	Start_Lerp_Rotation(fTimeMaximum, vRotQ, bMainTainDistance);
+
 }
-void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ)
+void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ, _bool bMainTainDistance)
 {
 	m_bLerpRotiation = { fTimeMaximum != 0 };
 	m_vLerpRotiationTimer = { 0.f, fTimeMaximum };
 	XMStoreFloat4(&m_vLerpRotQStart, m_pTransformCom->Get_QuarternionVector());
 	m_vLerpRotQEnd = vRotQ;
+	_vector vPos = m_pFollowTargetPart->Get_WorldPostion();
+	_vector vLookPos = m_pLookTargetPart->Get_WorldPostion();
+	m_fMaintainingDistance = XMVectorGetX(XMVector3Length(vLookPos - vPos));
 }
 void CCamera_Cinematic::Clear_Lerp_Rotation()
 {
@@ -370,6 +374,7 @@ void CCamera_Cinematic::Clear_Lerp_Rotation()
 	m_vLerpRotiationTimer = {};
 	m_vLerpRotQStart = {};
 	m_vLerpRotQEnd = {};
+	m_fMaintainingDistance = {};
 }
 void CCamera_Cinematic::Lerp_FovY(_float fTimeDelta)
 {
@@ -427,6 +432,9 @@ void CCamera_Cinematic::Rotation(_fvector vRotQ)
 	_vector vLookDir = XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotQ);
 
 	if (true == m_pLookTargetPart->IsStalking()) { // 스토킹 중이면 팔로우가 움직이고 아니면 룩타겟이 움직임
+		if (true == m_bLerpRotiation) {
+			fDistance = m_fMaintainingDistance;
+		}
 		m_pFollowTargetPart->Set_WorldPostion(XMVectorSetW(vLookPos - (fDistance * vLookDir), 1.f));
 	}
 	else {

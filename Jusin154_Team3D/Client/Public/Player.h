@@ -294,7 +294,7 @@ private:
 	void	Behavior_Broom_HoverEnter();
 	HRESULT Behavior_Broom_HoverExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_HoverExit();
-						   
+
 	void	Behavior_Broom_FlyEnter();
 	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_FlyExit();

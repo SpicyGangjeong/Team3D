@@ -307,6 +307,7 @@ _vector CGoblin_Mage::Get_LockOnPos()
 
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	return;
 	if (true == m_bDead) {
 		return;
 	}

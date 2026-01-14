@@ -201,21 +201,21 @@ void CThestralCarriage::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::SET_FSMSTATE:
 	{
-	//	if (pContents->vFlags.b[0]) {
-	//		m_iAnimationIndex = 0;
-	//		m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
-	//		m_pModelCom->IsRootBone(false);
-	//	}
-	//	else if (pContents->vFlags.b[1]) {
-	//		m_iAnimationIndex = 1;
-	//		m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
-	//		m_pModelCom->IsRootBone(false);
-	//	}
-	//	else if (pContents->vFlags.b[2]) {
-	//		m_iAnimationIndex = 2;
-	//		m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
-	//		m_pModelCom->IsRootBone(false);
-	//	}
+		if (pContents->vFlags.b[0]) {
+			m_iAnimationIndex = 0;
+			m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
+			m_pModelCom->IsRootBone(false);
+		}
+		else if (pContents->vFlags.b[1]) {
+			m_iAnimationIndex = 1;
+			m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
+			m_pModelCom->IsRootBone(false);
+		}
+		else if (pContents->vFlags.b[2]) {
+			m_iAnimationIndex = 2;
+			m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
+			m_pModelCom->IsRootBone(false);
+		}
 	} break;
 	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
 	{

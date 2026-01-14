@@ -58,6 +58,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 #if 진우
 	m_isDebugMode = false; // 디버그 무적 모드
 #endif
+
+#if 기무리
+	m_isDebugMode = true; // 디버그 무적 모드
+#endif
 #if 나
 	m_isDebugMode = true; // 디버그 무적 모드
 #endif
