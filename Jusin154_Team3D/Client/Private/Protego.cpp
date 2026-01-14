@@ -198,6 +198,8 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_12, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>()
 		->Use_Skill(SKILL_TYPE::PROTEGO_HIT, m_pOwner, &CollisionDesc->vWorldPos);
 

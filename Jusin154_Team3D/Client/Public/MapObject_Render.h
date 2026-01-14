@@ -32,6 +32,7 @@ public:
 	HRESULT Add_LodModel(const _tchar* pModelPrototypeTag);
 
 private:
+	_bool								m_hasCollisionMesh = {};
 	_bool								m_bReadyToCreatePhysX = { false };
 	_bool								m_bConverted = { false };
 

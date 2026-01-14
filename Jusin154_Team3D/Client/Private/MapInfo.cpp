@@ -92,6 +92,7 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTa
 	/* Container */
 	for (auto* Container = root->FirstChildElement("Container"); Container; Container = Container->NextSiblingElement("Container"))
 	{
+		_bool hasCollisionMesh = false;
 		const _char* pName = {};
 		_uint iMapContainerType = {};
 		Container->QueryUnsignedAttribute("MapContainerType", &iMapContainerType);
@@ -108,11 +109,16 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTa
 		{
 			Load_StreetContainer(Container, &pContainerObject, pLayerTag);
 		}
+		else if (2 == iMapContainerType)
+		{
+			hasCollisionMesh = true;
+			Load_BuildingContainer(Container, &pContainerObject, pLayerTag);
+		}
 		else {
 			return E_FAIL;
 		}
 
-		if (FAILED(Load_MapRenderObjects(Container, pContainerObject, pLayerTag))){
+		if (FAILED(Load_MapRenderObjects(Container, pContainerObject, pLayerTag, hasCollisionMesh))){
 			return E_FAIL;
 		}
 
@@ -172,7 +178,7 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName, const _wchar* pLayerTa
 	return S_OK;
 }
 
-HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject, const _wchar* pLayerTag)
+HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapContainer* pContainerObject, const _wchar* pLayerTag, _bool hasCollisionMesh)
 {
 #pragma region ADD_PARTOBJECT
 	for (auto* PartObject = Container->FirstChildElement("PartObject"); PartObject; PartObject = PartObject->NextSiblingElement("PartObject"))
@@ -192,7 +198,7 @@ HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapCon
 
 			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
 		}
-
+		Desc.hasCollisionMesh = hasCollisionMesh;
 		Desc.iMaxLodLevel = iLodLevel;
 		Desc.pParentTransform = pContainerObject->Get_Component<CTransform>();
 		const string strKey = CMyTools::ToString(Desc.ModelPrototypeTags.front()) + to_string(iKeyIndex);
