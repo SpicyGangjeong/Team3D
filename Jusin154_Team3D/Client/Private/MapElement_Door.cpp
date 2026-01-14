@@ -65,6 +65,9 @@ void CMapElement_Door::ActingIdle()
 			m_bDrive = true;
 			m_pJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
 			m_pJoint->setDriveForceLimit(120.f);
+			
+			// close
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::DOOR_CLOSE, SD_CHANNEL_GROUP::OBJECT, false, 0.8f);
 		}
 		if (true == m_bDrive) { // 드라이브 중이면
 			if (fCurrentDegree > 0.f) {
@@ -138,7 +141,8 @@ void CMapElement_Door::OnCollision(CGameObject* pOther, void* pDesc)
 		m_vKinematicTimer.x = FLT_EPSILON3;
 		return;
 	}
-	
+	// open
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::DOOR_OPEN, SD_CHANNEL_GROUP::OBJECT, false, 0.8f);
 	m_vKinematicTimer.x = FLT_EPSILON3;
 }
 

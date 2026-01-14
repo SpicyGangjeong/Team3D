@@ -309,10 +309,12 @@ void CMapElement_Chest::Chage_State()
 
 		case CMapElement_Chest::CHEST_STATE::FOUND:
 			m_iShaderPass_Index = 21; //ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::CHEST_FOUND, SD_CHANNEL_GROUP::OBJECT, false, 0.8f);
 			break;
 
 		case CMapElement_Chest::CHEST_STATE::OPENED:
 			m_iShaderPass_Index = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::CHEST_OPEN, SD_CHANNEL_GROUP::OBJECT, false, 0.8f);
 			m_pLid->Open();
 			break;
 
