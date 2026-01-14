@@ -219,12 +219,12 @@ void CRanrok::Update(_float fTimeDelta)
 				m_iRanRok_PropIndex++;
 				static_cast<CRanrok_Prop*>(pEffect)->Set_Index(m_iRanRok_PropIndex);
 				m_pRanrok_Props.push_back(pEffect);
-			}
 
-			PROPUI Prop{};
-			XMStoreFloat4(&Prop.vPosition, pEffect->Get_WorldPostion());
-			Prop.iIndex = m_iRanRok_PropIndex;
-			m_pInfoInstance->Event_CallBack(TEXT("RANROKPROP"), &Prop);
+				PROPUI Prop{};
+				XMStoreFloat4(&Prop.vPosition, pEffect->Get_WorldPostion());
+				Prop.iIndex = m_iRanRok_PropIndex;
+				m_pInfoInstance->Event_CallBack(TEXT("RANROKPROP"), &Prop);
+			}
 
 		}
 
@@ -403,9 +403,9 @@ HRESULT CRanrok::Render_MotionTrail(ID3D11ShaderResourceView* pSRV)
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::RIMLIGHT))))
 			return E_FAIL;
-		}
 
 
 		m_pContext->VSSetShaderResources(26, 1, &pSRV);
