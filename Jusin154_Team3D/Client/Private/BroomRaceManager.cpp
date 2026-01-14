@@ -68,21 +68,16 @@ void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 				m_bRaceEnd = true;
 				_float Alpha = 2.f;
 				m_pInfoInstance->Event_CallBack(TEXT("UIFadeIn"), &Alpha);
-			}
 
-			for (auto& racer : m_Racers)
-			{
-				if (racer.pAI)
+				for (auto& racer : m_Racers)
 				{
-					racer.pAI->Get_Broom()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
-				}
-				if (racer.pRacer)
-				{
-
+					if (racer.pAI)
+					{
+						racer.pAI->Get_Broom()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+					}
 				}
 			}
 		}
-
 	}
 	break;
 	}

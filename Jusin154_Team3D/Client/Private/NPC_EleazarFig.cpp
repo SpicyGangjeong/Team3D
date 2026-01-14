@@ -38,7 +38,9 @@ HRESULT CNPC_EleazarFig::Initialize(void* pArg)
 	m_pCharacter_Controller->Set_Position(vPos);
 	m_pTransformCom->Rotation(XMLoadFloat4(&pDesc->vRotQ));
 
-	m_pModelCom->Set_AnimationIndex(0, true);
+	_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
+	m_pModelCom->Set_AnimationIndex(iRandom, false, 1.f, false, 1.f, false);
+
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	m_bNpc = true;
@@ -58,8 +60,6 @@ void CNPC_EleazarFig::Priority_Update(_float fTimeDelta)
 
 void CNPC_EleazarFig::Update(_float fTimeDelta)
 {
-	m_pFSM->Update_State(fTimeDelta);
-
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
@@ -356,6 +356,7 @@ void CNPC_EleazarFig::Free()
 
 void CNPC_EleazarFig::Describe_Entity()
 {
+	m_pTransformCom->Describe_Entity();
 }
 
 #endif // _DEBUG
