@@ -6,6 +6,7 @@
 #include "TriggerBox.h"
 #include "Layer.h"
 #include "Player.h"
+#include "Troll.h"
 #include "TimeSocket.h"
 #include "Camera_Cinematic.h"
 #include "Ranrok.h"
@@ -175,6 +176,7 @@ HRESULT CCutSceneInfo::Ready_GameplayCutScenes()
 {
 	{
 		Load_CutSceneXML("../Bin/Resources/Data/CutScene/CarriageIntro.xml");
+		Load_CutSceneXML("../Bin/Resources/Data/CutScene/TrollIntroCutScene.xml");
 	}
 	return S_OK;
 }
@@ -437,6 +439,12 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 					SocketContents.pEventTarget = pEventTarget;
 					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
 				}
+				else if (strcmp(pTargetText, "ACTOR_TROLL") == 0)
+				{
+					CTroll* pEventTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_MONSTER)->Get_Object<CTroll>();
+					SocketContents.pEventTarget = pEventTarget;
+					SocketContents.funcEvent = [pEventTarget](CTimeSocket& Socket) { pEventTarget->Trigger(Socket); };
+				}
 				else if (strcmp(pTargetText, "SYSTEM") == 0)
 				{
 					bUseSystem = true;
@@ -480,6 +488,10 @@ void CCutSceneInfo::Load_CutSceneXML(const string& path)
 				else if (string_view(pTypeIdText) == "ACTOR_PLAYER")
 				{
 					SocketContents.pOtherTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, SocketContents.wstrLayerName)->Get_Object<CPlayer>();
+				}
+				else if (string_view(pTypeIdText) == "ACTOR_TROLL")
+				{
+					SocketContents.pOtherTarget = m_pGameInstance->Get_Layer(NEXT_LEVEL, SocketContents.wstrLayerName)->Get_Object<CTroll>();
 				}
 				else if (string_view(pTypeIdText) == "ACTOR_CARRIAGE")
 				{

@@ -952,12 +952,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Reparo.h">
       <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\State_Spell_Learning.h">
       <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_WorldLook.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1965,9 +1968,6 @@
     <Filter Include="02.GameObjects\NPC\Ally\Elf">
       <UniqueIdentifier>{9263815e-9651-4ba2-813f-c2a7f207522d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.InfoInstance\NewFilter1">
-      <UniqueIdentifier>{44a8eee1-6b7f-4c9a-bf92-21f6b90e84c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Cave">
       <UniqueIdentifier>{5599bbbd-12f7-4b40-8e3d-24f869cce464}</UniqueIdentifier>
     </Filter>
@@ -1976,9 +1976,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Reparo">
       <UniqueIdentifier>{88c3bc02-a51d-4cd8-87a2-197722d48f83}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="04.Mechanic\State\Focus\Spell_Learning">
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Spell_Learning">
       <UniqueIdentifier>{26d7f6f4-0b5f-4b9a-9cef-df91b8a485bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook">
+      <UniqueIdentifier>{b3924c52-0c0d-4cd1-94f4-1eb61d2c6c99}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2852,9 +2855,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Reparo.cpp">
       <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\State_Spell_Learning.cpp">
       <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_WorldLook.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp">
       <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>

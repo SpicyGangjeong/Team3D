@@ -598,6 +598,48 @@ void CTransform::Free()
 }
 #ifdef _DEBUG
 
+void TransformXMLInput(CTransform* pTransform)
+{
+	static _char szInput[256] = "";
+
+	GUI::TextUnformatted("Transform XML:");
+	GUI::InputTextMultiline("##TransformXml", szInput, IM_ARRAYSIZE(szInput), ImVec2(-1.0f, 140.0f));
+
+	GUI::SameLine();
+	GUI::Separator();
+	if (GUI::Button("Parse"))
+	{
+		_string strInput = szInput;
+		string wrapped;
+		wrapped.reserve(strInput.size() + 32);
+		wrapped += "<Root>";
+		wrapped += strInput;
+		wrapped += "</Root>";
+
+		tinyxml2::XMLDocument doc;
+		doc.Parse(wrapped.c_str());
+		tinyxml2::XMLElement* root = doc.FirstChildElement("Root");
+
+		tinyxml2::XMLElement* transformNode = root->FirstChildElement("Transform");
+
+		tinyxml2::XMLElement* rotNode = transformNode->FirstChildElement("RotQ");
+		tinyxml2::XMLElement* transNode = transformNode->FirstChildElement("Trans");
+
+		_float qx, qy, qz, qw;
+		_float tx, ty, tz;
+		rotNode->QueryFloatAttribute("X", &qx);
+		rotNode->QueryFloatAttribute("Y", &qy);
+		rotNode->QueryFloatAttribute("Z", &qz);
+		rotNode->QueryFloatAttribute("W", &qw);
+		transNode->QueryFloatAttribute("X", &tx);
+		transNode->QueryFloatAttribute("Y", &ty);
+		transNode->QueryFloatAttribute("Z", &tz);
+
+		pTransform->Set_State(STATE::POSITION, XMVectorSet(tx, ty, tz, 1.f));
+		pTransform->RotationQ(XMQuaternionNormalize(XMVectorSet(qx, qy, qz, qw)));
+	}
+}
+
 void CTransform::Describe_Entity()
 {
 //#ifdef 기무리
@@ -609,6 +651,7 @@ void CTransform::Describe_Entity()
 			XMStoreFloat4(&scale, vScale);
 			XMStoreFloat4(&rotQ, vRotQ);
 			XMStoreFloat4(&trans, vTrans);
+			TransformXMLInput(this);
 			if (GUI::SmallButton("Copy")) {
 				_char buf[512] = {};
 				sprintf_s(

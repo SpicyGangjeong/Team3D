@@ -2,6 +2,7 @@
 
 #include "Client_Define.h"
 #include "Camera.h"
+#include "CamPosition_WorldLook.h"
 
 NS_BEGIN(Engine)
 class CUnit;
@@ -32,8 +33,8 @@ public:
 	virtual void Active_Camera(pair<_float4, _float3>& pairTransitionInfo)override;
 	void Update_LerpTimer(_float fTimeDelta);
 	void Set_Priority(_uint iPriority);
-	void Set_LookTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix);
-	void Set_FollowTarget(CUnit* pTarget, const _float4x4* pTargetSocketMatrix);
+	void Set_LookTarget(CGameObject* pTarget, const _float4x4* pTargetSocketMatrix);
+	void Set_FollowTarget(CGameObject* pTarget, const _float4x4* pTargetSocketMatrix);
 
 
 private:
@@ -65,8 +66,7 @@ private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CCamPosition_Target* m_pLookTargetPart = { nullptr };
 	CCamPosition_Target* m_pFollowTargetPart = { nullptr };
-
-
+	CCamPosition_WorldLook* m_pWORLD_LOCK_TargetPart = { nullptr };
 
 	_bool	m_bLerpTranslation = { false };
 	_float2 m_vLerpTranslationTimer = {};
@@ -84,7 +84,7 @@ private:
 	_float2 m_vLerpFovYTimer = { };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
+	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch = { nullptr };
 	class CModel* m_pModelCom = { nullptr };
 	class CShader* m_pShaderCom = { nullptr };
 #endif // _DEBUG

@@ -6,6 +6,7 @@
 #include "Light_Main.h"
 #include "Loader.h"
 #include "MainApp.h"
+#include "CamPosition_WorldLook.h"
 #include "Model.h"
 
 #include "Broom.h"
@@ -558,9 +559,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = true;
+	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
+	isLoad_NPC = false;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -2948,6 +2949,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_WorldLook>(g_iStaticLevel, CCamPosition_WorldLook::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
