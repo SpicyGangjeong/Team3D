@@ -185,22 +185,22 @@ void CRanrok::Update(_float fTimeDelta)
 
 #pragma region TRAIL_UPDATE
 
-	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
+	//_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
 
-	_matrix LeftEyeMatrix = {};
-	_matrix RightEyeMatrix = {};
+	//_matrix LeftEyeMatrix = {};
+	//_matrix RightEyeMatrix = {};
 
-	LeftEyeMatrix = XMLoadFloat4x4(m_pLeftEye_BoneMat);
-	RightEyeMatrix = XMLoadFloat4x4(m_pRightEye_BoneMat);
+	//LeftEyeMatrix = XMLoadFloat4x4(m_pLeftEye_BoneMat);
+	//RightEyeMatrix = XMLoadFloat4x4(m_pRightEye_BoneMat);
 
 
-	for (int i = 0; i < 3; ++i) {
-		LeftEyeMatrix.r[i] = XMVector3Normalize(LeftEyeMatrix.r[i]);
-		RightEyeMatrix.r[i] = XMVector3Normalize(RightEyeMatrix.r[i]);
-	}
+	//for (int i = 0; i < 3; ++i) {
+	//	LeftEyeMatrix.r[i] = XMVector3Normalize(LeftEyeMatrix.r[i]);
+	//	RightEyeMatrix.r[i] = XMVector3Normalize(RightEyeMatrix.r[i]);
+	//}
 
-	m_pLeftEye_Trail->Trail_Update(LeftEyeMatrix * WorldMat, fTimeDelta);
-	m_pRightEye_Trail->Trail_Update(RightEyeMatrix * WorldMat, fTimeDelta);
+	//m_pLeftEye_Trail->Trail_Update(LeftEyeMatrix * WorldMat, fTimeDelta);
+	//m_pRightEye_Trail->Trail_Update(RightEyeMatrix * WorldMat, fTimeDelta);
 
 #pragma endregion
 
