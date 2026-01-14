@@ -28,16 +28,18 @@
 	</Dialogue>
 
 	<Dialogue NpcName="ELF" NpcID="4" NpcInrteract="1">
-		<Line ID="0" Tag="1" Type="1" Text="길을 가고 있었는데 고블린 무리가 저를 공격 했어요!" NextID="1"> </Line>
-		<Line ID="1" Tag="1" Type="2" Text="그 못된 친구들을 혼내주세요!" NextID="-1">
-			<Choice Type="3" Text="뭐? 어디야 당장 가자" NextID="-1" />
-			<Choice Type="1" Text="흥! 너가 나약해서 그런거 아니야" NextID="2" />
+		<Line ID="0" Tag="1" Type="1" Text="어? 인간이네. 여기서 눈 뜬 건 처음 봐" NextID="1"/>
+		<Line ID="1" Tag="1" Type="1" Text="여긴 위험해. 도비 마을을 보여줄게" NextID="2"/>
+		<Line ID="2" Tag="1" Type="2" Text="도비 따라올래?" NextID="2">
+			<Choice Type="1" Text="안내해줘." NextID="3" />
+			<Choice Type="0" Text="혼자 갈게." NextID="3" />
 		</Line>
-		<Line ID="2" Tag="0" Type="1" Text="너가 나약해 보여서 공격한거 아니야?" NextID="3"/>
-		<Line ID="3" Tag="1" Type="2" Text="그것도 맞지만 한번만 도와 주세요..." NextID="0">
-			<Choice Type="3" Text="그래 알겠어 가자" NextID="0" />
-			<Choice Type="0" Text="자기 일은 자기가 해결 하는거다." NextID="2" />
+		<Line ID="3" Tag="1" Type="1" Text="잠깐... 고블린이 있어." NextID="4"/>
+		<Line ID="4" Tag="1" Type="2" Text="부탁이야. 저 고블린들 좀 잡아줘." NextID="4">
+			<Choice Type="3" Text="알겠어. 맡겨." NextID="6" />
+			<Choice Type="0" Text="왜 내가?" NextID="5" />
 		</Line>
+		<Line ID="5" Tag="1" Type="0" Text="도비는 싸울 수 없어..." NextID="4"/>
 
 	</Dialogue>
 

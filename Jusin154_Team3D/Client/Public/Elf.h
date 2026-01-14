@@ -56,6 +56,8 @@ public:
 	virtual _wstring Get_NpcName() override;
 	void Set_NpcState(_int iState) { m_eNpcState = iState; }
 	void Set_Target(CUnit& pTarget, CTransform& pTransform);
+	virtual void Set_Flow(_int Index);
+	virtual _int Get_Flow();
 protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
@@ -84,8 +86,6 @@ protected:
 
 
 	unordered_map<_int, DialogueAnim>		m_Anims;
-
-	_int									m_iCurrentFlow = 0;
 
 	DialogueAnim							m_pairAnimInfo;
 

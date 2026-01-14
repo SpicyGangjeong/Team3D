@@ -58,6 +58,9 @@ public:
 	virtual _wstring Get_NpcName();
 	virtual _int Get_TextID();
 	virtual void Set_NextID(_int ID);
+
+	virtual void Set_Flow(_int Index);
+	virtual _int Get_Flow();
 #pragma endregion
 
 protected:
@@ -90,6 +93,8 @@ protected:
 	_float m_fHitDegree = {};
 	_float m_fHitCross = {};
 	_int	m_eHitType = {};
+
+	_int	m_iCurrentFlow = 0;
 
 private:
 	virtual void Add_FSM() {};

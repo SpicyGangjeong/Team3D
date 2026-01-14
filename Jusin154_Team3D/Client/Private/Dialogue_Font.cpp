@@ -88,13 +88,13 @@ void CDialogue_Font::Update(_float fTimeDelta)
 			case ENUM_CLASS(NPCTEXTTYPE::BROOM):
 				m_bRace = true;
 				m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bRace);
-				NextText();
+				ReSet();
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BATTLE):
 				m_bBattle = true;
 				m_pInfoInstance->Event_CallBack(TEXT("BATTLE"), &m_bBattle);
-				NextText();
+				ReSet();
 				break;
 			default:
 				break;
@@ -110,7 +110,7 @@ void CDialogue_Font::Update(_float fTimeDelta)
 					{
 					case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
 						m_fTime = 0.5f;
-						NextText();
+						ReSet();
 						break;
 					case ENUM_CLASS(NPCTEXTTYPE::NEXTTEXT):
 						m_fTime = 0.5f;
@@ -349,6 +349,7 @@ void CDialogue_Font::Quest()
 
 void CDialogue_Font::ReSet()
 {
+	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
 	m_bChoiceText = false;
 	m_bCurrentChoiceText = false;
 	m_bRace = false;
@@ -362,7 +363,7 @@ void CDialogue_Font::ReSet()
 		m_DialoguInfo.push_back((*it));
 		it = m_pCurrentDialogue.erase(it);
 	}
-	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &m_bChoiceText);
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bChoiceText);
 }
 
 void CDialogue_Font::NextText()
@@ -372,7 +373,6 @@ void CDialogue_Font::NextText()
 	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
 	if (m_bChoiceText == true)
 	{
-		m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
 		ReSet();
 	}
 	NpcDialogue();
@@ -383,12 +383,12 @@ void CDialogue_Font::NextLevel(CHOICEINFO Choice)
 	m_iNextID = m_NextLevel[Choice.iChoice];
 	m_iType = Choice.iType;
 	m_bChoiceText = true;
+	m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1);
 	NpcNextText();
 }
 
 void CDialogue_Font::ENDText()
 {
-	
 	_bool Interact = false;
 	m_pNpc->Set_NextID(m_iTextID);
 	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);

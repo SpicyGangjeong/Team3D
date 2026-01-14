@@ -50,6 +50,7 @@ HRESULT CElf::Initialize(void* pArg)
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
+	m_bNpc = true;
 
 	return S_OK;
 }
@@ -224,6 +225,16 @@ void CElf::Set_Target(CUnit& pTarget, CTransform& pTransform)
 	XMStoreFloat4(&m_vTargetPos, vTargetPos);
 	XMStoreFloat3(&m_vToTargetDir, XMVector3Normalize(vToTargetDir));
 	m_fTargetDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
+}
+
+void CElf::Set_Flow(_int Index)
+{
+	m_iCurrentFlow = Index;
+}
+
+_int CElf::Get_Flow()
+{
+	return m_iCurrentFlow;
 }
 
 
