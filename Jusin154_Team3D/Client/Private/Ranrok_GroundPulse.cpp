@@ -106,7 +106,7 @@ HRESULT CRanrok_GroundPulse::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	 /* 초기 객체 위치 초기화*/
 
-	_vector vOwnerPos = m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position();
+	_vector vOwnerPos = m_pOwner->Get_Component<CCharacter_Controller>()->Get_HeadPosition();
 
 	pRed_Sphere->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 	pRed_Sphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, vOwnerPos);
