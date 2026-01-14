@@ -93,9 +93,25 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta *m_fEasing, m_pTransformCom);
 
-	Play_Event();
-
 	Check_BattleLose();
+
+	if (m_bBattleEnd)
+	{
+		m_fBattleEndTimer += fTimeDelta;
+		if (m_fBattleEndTimer >= 3.f)
+		{
+			m_fBattleEndTimer = 0.f;
+			CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
+
+			if (pPlayer == nullptr)
+				return;
+
+			pPlayer->ExitBattle();
+
+			m_bBattleEnd = false;
+		}
+	}
+	Play_Event();
 
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
@@ -527,12 +543,8 @@ void CHuman_Duelist::Check_BattleLose()
 		{
 			m_pEffectPool->Use_Skill(SKILL_TYPE::BOX_SPLESH, this);
 			m_bBattle = false;
-			CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
 
-			if (pPlayer == nullptr)
-				return;
-
-			pPlayer->ExitBattle();
+			m_bBattleEnd = true;
 		}
 	}
 }

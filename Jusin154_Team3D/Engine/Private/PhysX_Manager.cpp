@@ -347,6 +347,24 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _gvector _
 	return bHit;
 }
 
+_bool CPhysX_Manager::Overlap(_float fRadius, _fvector vCenter, PSX::PxQueryFlags queryFlags, PSX::PxOverlapCallback& overlapBuffer, PSX::PxQueryFilterCallback* filterCallback)
+{
+	const PSX::PxSphereGeometry sphereGeometry(fRadius);
+	PSX::PxVec3 pxCenter = {};
+	XMStoreFloat3((_float3*)&pxCenter, vCenter);
+	const PSX::PxTransform spherePose(pxCenter);
+
+	PSX::PxQueryFilterData filterData;
+	filterData.flags = queryFlags;
+
+	if (filterCallback != nullptr)
+		filterData.flags |= PSX::PxQueryFlag::ePREFILTER;
+
+	_bool hit = m_pScene->overlap( sphereGeometry, spherePose, overlapBuffer, filterData, filterCallback );
+
+	return hit ? true : false;
+}
+
 _bool CPhysX_Manager::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
 {
 	return RayCast(XMLoadFloat3(&_vStartPos), XMLoadFloat3(&_vDir), fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
@@ -680,7 +698,7 @@ void CPhysX_Manager::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
 
 	PSX::PxFilterData DATAfilter = {};
 	DATAfilter.word0 = CategoryBit; // 나는 누구인가
-	DATAfilter.word1 = MaskBits;    // 누구와 부딪힐 것인가
+	DATAfilter.word1 = MaskBits;    // 누구와 상호작용(충돌/쿼리)할 것인가
 
 	const PSX::PxU32 shapeCount = pRigidActor->getNbShapes();
 	vector<PSX::PxShape*> shapes(shapeCount);
@@ -688,8 +706,18 @@ void CPhysX_Manager::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
 
 	for (PSX::PxShape* shape : shapes)
 	{
+		if (!shape) continue;
+
+		// 시뮬레이션 필터
 		shape->setSimulationFilterData(DATAfilter);
+
+		// 씬쿼리(Overlap/Sweep/Raycast) 필터
+		shape->setQueryFilterData(DATAfilter);
+
+		// 씬쿼리 대상 플래그 보장
+		shape->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 	}
+
 }
 
 PSX::PxFilterFlags CPhysX_Manager::SimulationFilterShader(PSX::PxFilterObjectAttributes pxAttributes0, PSX::PxFilterData pxFilterData0, PSX::PxFilterObjectAttributes pxAttributes1, PSX::PxFilterData pxFilterData1, PSX::PxPairFlags& pxPairFlags, const void* pConstantBlock, PSX::PxU32 iConstantBlockSize)

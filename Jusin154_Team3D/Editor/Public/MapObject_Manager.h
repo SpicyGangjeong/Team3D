@@ -93,8 +93,8 @@ private:
 
 	HRESULT     Load_DADA_INT();
 
-	HRESULT		Save_EffectParts(const _char* pFileName);
-	HRESULT		Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath);
+	HRESULT		Save_EditEffect(const _char* pFileName);
+	HRESULT		Load_EditEffect(const _char* pFileName, const _char* pEffectrFilePath);
 
 	HRESULT		Save_DummyNpc(const _char* pFileName);
 #pragma endregion
@@ -107,7 +107,7 @@ private:
 	void 		Update_LightSpawer();
 	void 		Update_Decal();
 	void 		Update_RaceRing();
-	void		Update_EffectParts();
+	void		Update_EditEffect();
 	void		Update_Balloon();
 	void		Update_DummyNpc();
 

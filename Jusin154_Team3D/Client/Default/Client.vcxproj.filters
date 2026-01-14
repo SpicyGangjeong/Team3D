@@ -922,9 +922,6 @@
     <ClInclude Include="..\Public\AccioSide.h">
       <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\Broom_TargetGate2D.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
@@ -937,7 +934,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Self_Hit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Duelist_ProtegoHit.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
     </ClInclude>
@@ -949,9 +946,18 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Cave.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
-      </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\Enemy_SkillUI.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Reparo.h">
+      <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\State_Spell_Learning.h">
+      <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h">
+      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1955,7 +1961,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit">
       <UniqueIdentifier>{c276c050-7000-441e-bb53-30ec3c20c6f5}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\Elf">
       <UniqueIdentifier>{9263815e-9651-4ba2-813f-c2a7f207522d}</UniqueIdentifier>
     </Filter>
@@ -1964,9 +1970,15 @@
     </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Cave">
       <UniqueIdentifier>{5599bbbd-12f7-4b40-8e3d-24f869cce464}</UniqueIdentifier>
-         </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI">
       <UniqueIdentifier>{b28b8285-3d1a-49cf-bde2-c7ebc18e6389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Reparo">
+      <UniqueIdentifier>{88c3bc02-a51d-4cd8-87a2-197722d48f83}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="04.Mechanic\State\Focus\Spell_Learning">
+      <UniqueIdentifier>{26d7f6f4-0b5f-4b9a-9cef-df91b8a485bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2838,6 +2850,15 @@
     <ClCompile Include="..\private\MapElement_Cave.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Reparo.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\State_Spell_Learning.cpp">
+      <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp">
+      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\State_Parry.cpp">
@@ -2852,9 +2873,6 @@
     <ClCompile Include="..\Private\State_Parry.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
@@ -2867,13 +2885,13 @@
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Self_Hit.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Elf.cpp">
       <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
-       </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Enemy_SkillUI.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
     </ClCompile>

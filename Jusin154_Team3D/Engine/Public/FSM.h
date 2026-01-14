@@ -58,6 +58,7 @@ enum ESTATE : _u64Flag
     FEAR                        = 1ULL << 51,
     CUTSCENE                    = 1ULL << 52,
     BLOCK                       = 1ULL << 53,
+    SPELL_LEARNING              = 1ULL << 54,
     END
 };
 NS_END

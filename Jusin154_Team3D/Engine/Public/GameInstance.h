@@ -103,10 +103,11 @@ public:
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
-	void Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
-	RENDER Get_CurrentRenderPass();
+	void	Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
+	RENDER	Get_CurrentRenderPass();
 	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 	HRESULT Bind_PrevMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
+	void	Set_Environment(_float3 vSSAO, _float fExposure, _float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax);
 #pragma endregion
 
 #pragma region KEY_MANAGER
@@ -209,6 +210,9 @@ public:
 	void Force_CamPosition(_fvector vPos);
 #pragma endregion
 #pragma region SOUND_MANAGER
+	HRESULT Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode);
+	void Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume);
+	void Sound_StopAll(); // 전체 정지
 #pragma endregion
 
 #pragma region PICKING
@@ -227,6 +231,7 @@ public:
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 	_bool SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+	_bool Overlap(_float fRadius, _fvector vCenter, PSX::PxQueryFlags queryFlags, PSX::PxOverlapCallback& overlapBuffer, PSX::PxQueryFilterCallback* filterCallback = nullptr);
 	_bool RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
 	_bool RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
 
@@ -325,6 +330,7 @@ private:
 	class CResource_Manager*		m_pResource_Manager = { nullptr };
 	class CFont_Manager*			m_pFont_Manager = { nullptr };
 	class CVolumetric*				m_pVolumetric = { nullptr };
+	class CSound_Manager*			m_pSound_Manager = { nullptr };
 
 	mt19937 m_Rng{ random_device{}() };
 	_float2							m_vViewPortSize = {};

@@ -32,7 +32,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fUsingSurfaceParams = 15.f / 27.f;
+	m_fUsingSurfaceParams = SRO_PARAMETER;
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 
 	{

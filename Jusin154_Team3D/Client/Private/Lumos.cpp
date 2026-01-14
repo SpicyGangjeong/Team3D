@@ -57,10 +57,6 @@ void CLumos::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 
 
-
-
-
-
 }
 
 void CLumos::Update(_float fTimeDelta)
@@ -104,6 +100,8 @@ HRESULT CLumos::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	m_isLoop = true;
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_LUMOS, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 
 	return S_OK;
 }

@@ -70,6 +70,11 @@ void CElf::Update(_float fTimeDelta)
 
 	Set_Anim();
 
+	if (m_pGameInstance->Key_Up(DIK_U))
+	{
+		m_iCurrentFlow++;
+	}
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	__super::Update(fTimeDelta);
@@ -325,12 +330,12 @@ void CElf::Set_Anim()
 		}
 	}
 
-	_bool bRootBone = true;
+	_bool bRootBone = false;
 
 	m_pairAnimInfo = m_Anims[m_iCurrentFlow];
-	if (m_pairAnimInfo.AnimIndex == 1)
+	if (m_pairAnimInfo.AnimIndex == 0)
 	{
-		bRootBone = false;
+		bRootBone = true;
 	}
 	m_pModelCom->Set_AnimationIndex(m_pairAnimInfo.AnimIndex, m_pairAnimInfo.Loop, 1.f, false, 1.f, bRootBone);
 }

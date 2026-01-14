@@ -600,7 +600,7 @@ void CTransform::Free()
 
 void CTransform::Describe_Entity()
 {
-#ifdef 기무리
+//#ifdef 기무리
 	if (GUI::TreeNode("NuriDebug")) {
 		{
 			_vector vScale, vRotQ, vTrans;
@@ -628,7 +628,7 @@ void CTransform::Describe_Entity()
 		}
 		GUI::TreePop();
 	}
-#endif // 기무리
+//#endif // 기무리
 	if (GUI::TreeNode("Transform")) {
 		GUI::Text("----- Gizmo ----");
 		_float3 vMove = {};

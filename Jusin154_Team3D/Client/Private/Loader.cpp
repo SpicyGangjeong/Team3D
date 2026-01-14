@@ -191,6 +191,7 @@
 #include "AccioSide.h"
 #include "TransformationSide.h"
 #include "AvadakedavraSide.h"
+#include "Reparo.h"
 
 #include "Protego_Hit.h"
 #include "Goblin_ProtegoHit.h"
@@ -374,9 +375,82 @@ HRESULT CLoader::Loading_For_Logo()
 
 	m_strMessage = TEXT("사운드를(을) 로딩 중 입니다.");
 
+	const _tchar* pSoundFilePath = TEXT("../Bin/Resources/Sounds/");
+
+	 for (int iIndex = 0; iIndex < ENUM_CLASS(SOUND::SD_KIND::END); ++iIndex) {
+		 if (FAILED(m_pGameInstance->Load_Sound((SOUND::SD_KIND)iIndex, (_wstring(pSoundFilePath) + SOUND::SD_PATH::SD_KIND_PATHS[iIndex]).c_str(), FMOD_DEFAULT))) {
+			 return E_FAIL;
+		 }
+	 }
+
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+
+#ifdef 기무리
+	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIINSTANCE,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"),
+			VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_MODEL,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxModelInstance.hlsl"),
+			VTX_MODEL_INSTANCE_PARTICLE::Elements, VTX_MODEL_INSTANCE_PARTICLE::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"),
+			VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_VTXPOS,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"),
+			VTXPOS::Elements, VTXPOS::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NPC_PBR_ANIM,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"),
+			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_MESH,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxMesh.hlsl"),
+			VTXMESH::Elements, VTXMESH::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_ANIMMESH,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxAnimMesh.hlsl"),
+			VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_POSTEX,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPosTex.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NORTEX,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxNorTex.hlsl"),
+			VTXNORTEX::Elements, VTXNORTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
+#endif // 기무리
+
 #if 진우
 #pragma region SHADER
 	vector<future<pair<_wstring, CShader*>*>> jobMapShaders;
@@ -484,9 +558,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
+	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -501,6 +575,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // Bin
 #endif // _DEBUG
+#ifndef _DEBUG
+#ifdef gimch
+	isLoad_Background = true;
+	isLoad_Hogwart = false;
+	isLoad_UI_SEQUANTIAL = false;
+	isLoad_NPC = true;
+	isLoad_DataClassroom = false;
+#endif // gimch
+#endif // 
 
 #pragma region MAP_MODELS
 	vector<future<vector<FOLDER_LOAD*>*>> jobMapModels;
@@ -844,7 +927,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 
 		/* ------------------------------------ HOGWART ------------------------------- */
-		if(true == isLoad_Hogwart)
+		if (true == isLoad_Hogwart)
 		{
 			/* QuidditchPitch */
 			jobMapModels.emplace_back(Deferred_FolderLoad(
@@ -855,7 +938,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_QuidditchPitch/Static_Mesh/Collisions",
 				".bin", false
 			));
-			
+
 			/* Greenhouse */
 			jobMapModels.emplace_back(Deferred_FolderLoad(
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/SUB_Greenhouses/Static_Mesh/Kit_EXT",
@@ -1144,14 +1227,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
-		MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixIdentity(),
+		MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Box")
 	));
 
 #pragma region ACTOR
 
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/PlayableCharacter/Playable.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Playable_Model")
 	));
 	if (true == isLoad_NPC) {
@@ -1224,11 +1307,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 			TEXT("Prototype_Component_MudiwaOnai_Model")
 		));
 		jobCharacterModels.emplace_back(Deferred_ModelLoad(
-			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixRotationZ(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 			TEXT("Prototype_Component_GerboldOlivander_Model")
 		));
 		jobCharacterModels.emplace_back(Deferred_ModelLoad(
-			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 			TEXT("Prototype_Component_Professor_EleazarFig_Model")
 		));
 	}
@@ -1306,6 +1389,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_Dagger_Model")
 	));
+
+	//jobCharacterModels.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_Goblin_Sword_Model")
+	//));
+
 	jobCharacterModels.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Sword/SK_WPN_GOB_SmallSword_L.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_Sword_L_Model")
@@ -1336,53 +1425,58 @@ HRESULT CLoader::Loading_For_GamePlay()
 	));
 
 #pragma endregion
-
+	_bool bLoadShaderAsThread = true;
+#ifdef 기무리
+	bLoadShaderAsThread = false;
+#endif
 #ifndef 진우
 #pragma region SHADER
-
+	if (true == bLoadShaderAsThread)
 	{
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_UIEDITOR,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_UIINSTANCE,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"), VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_INSTANCE_MODEL,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxModelInstance.hlsl"), VTX_MODEL_INSTANCE_PARTICLE::Elements, VTX_MODEL_INSTANCE_PARTICLE::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_INSTANCE_PROP_MODEL,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"), VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_NPC_PBR_ANIM,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_ANIMMESH,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_POSTEX,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_NORTEX,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_MESH,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements));
-		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
-			FX_VTXPOS,
-			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
-	}
-
-	{
-		m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
-		_uint iIndex = 0;
-		for (auto& JobMapShader : jobMapShaders)
 		{
-			pair<_wstring, CShader*>* pOut = JobMapShader.get();
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
-				return E_FAIL;
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_UIEDITOR,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_UIINSTANCE,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"), VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_INSTANCE_MODEL,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxModelInstance.hlsl"), VTX_MODEL_INSTANCE_PARTICLE::Elements, VTX_MODEL_INSTANCE_PARTICLE::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_INSTANCE_PROP_MODEL,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"), VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_NPC_PBR_ANIM,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_NPC_PBR_Anim.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_ANIMMESH,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_POSTEX,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_NORTEX,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_MESH,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_VTXPOS,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
+		}
+
+		{
+			m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+			_uint iIndex = 0;
+			for (auto& JobMapShader : jobMapShaders)
+			{
+				pair<_wstring, CShader*>* pOut = JobMapShader.get();
+				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pOut->first, pOut->second))) {
+					return E_FAIL;
+				}
+				Safe_Delete(pOut);
 			}
-			Safe_Delete(pOut);
 		}
 	}
 #pragma endregion
@@ -2113,6 +2207,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Base_Effect_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("C:/MeshTable/Game/Environment//MasterMaterials/BaseTextures/T_Base011_MRO.dds"), 0)))) {
+		return E_FAIL;
+	}
+
 #pragma region EFFECT
 
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Trails", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
@@ -2450,15 +2550,32 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC ShieldDesc{};
+		{
+			ShieldDesc.eType = ACTOR::SPHERE;
+			ShieldDesc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			ShieldDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			ShieldDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			ShieldDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			ShieldDesc.fContactOffset = { 0.05f };
+			ShieldDesc.vhalfGeometryInfo = { 2.f, 2.f, 2.f };
+			ShieldDesc.fDensity = 1.f;
+			ShieldDesc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			ShieldDesc.eLockFlag = {};
+			ShieldDesc.vAutoDamping = { 1.f, 1.f };
+			ShieldDesc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			ShieldDesc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc1{};
 		{
 			Desc1.eType = ACTOR::SPHERE;
 			Desc1.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
-			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc1.fContactOffset = { 0.05f };
-			Desc1.vhalfGeometryInfo = { 2.34f, 2.34f, 2.34f };
+			Desc1.vhalfGeometryInfo = { 4.f, 4.f, 4.f };
 			Desc1.fDensity = 1.f;
 			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc1.eLockFlag = {};
@@ -2467,11 +2584,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC DESC_Ranrok_Body{};
+		{
+			DESC_Ranrok_Body.eType = ACTOR::SPHERE;
+			DESC_Ranrok_Body.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			DESC_Ranrok_Body.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			DESC_Ranrok_Body.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			DESC_Ranrok_Body.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			DESC_Ranrok_Body.fContactOffset = { 0.05f };
+			DESC_Ranrok_Body.vhalfGeometryInfo = { 1.1f, 1.1f, 1.1f };
+			DESC_Ranrok_Body.fDensity = 1.f;
+			DESC_Ranrok_Body.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			DESC_Ranrok_Body.eLockFlag = {};
+			DESC_Ranrok_Body.vAutoDamping = { 1.f, 1.f };
+			DESC_Ranrok_Body.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			DESC_Ranrok_Body.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC PotionDesc{};
 		{
 			PotionDesc.eType = ACTOR::SPHERE;
 			PotionDesc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
-			PotionDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			PotionDesc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			PotionDesc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			PotionDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			PotionDesc.fContactOffset = { 0.05f };
@@ -2508,7 +2642,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, ShieldDesc)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROKPROP"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK_BODY"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, DESC_Ranrok_Body)))) {
 			return E_FAIL;
 		}
 
@@ -2714,6 +2854,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CStupefy>(g_iStaticLevel, CStupefy::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CReparo>(g_iStaticLevel, CReparo::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -3486,6 +3630,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/InstanceProp/SM_HM_Door2b.bin", strMaterailPath.c_str());
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b"),
+			pModel_Instance)))
+			return E_FAIL;
+
+		if (FAILED(Ready_RigidBody_Static(pModel_Instance)))
+			return E_FAIL;
+	}
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_TeaShop_Door_A*/
+	{
+		CVIBuffer_Model_Instance* pModel_Instance = CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_HM_BLDG_TeaShop_Door_A.bin", strMaterailPath.c_str());
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, TEXT("Prototype_Component_VIBuffer_Model_Instancel_TeaShop_Door_A"),
 			pModel_Instance)))
 			return E_FAIL;
 

@@ -312,4 +312,24 @@
             <Surface>MRO</Surface>
         </Mesh>
    </SK_BRR_RouteMarker>
+   <SM_HM_BLDG_TeaShop_Door_A mesh="3">
+        <Mesh>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_D</Material>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_N</Material>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_D</Material>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_N</Material>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_HM_BLDG_TeaShop_Door_A_D</Material>
+            <Material>T_HM_BLDG_TeaShop_Door_A_N</Material>
+            <Material>T_HM_BLDG_TeaShop_Door_A_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SM_HM_BLDG_TeaShop_Door_A>
 </Instance>

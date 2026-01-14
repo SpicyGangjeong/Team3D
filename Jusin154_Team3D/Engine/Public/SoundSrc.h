@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 NS_BEGIN(Engine)
 NS_BEGIN(SOUND)
@@ -13,13 +13,27 @@ enum class SD_CHANNEL_GROUP {
 };
 
 enum class SD_KIND {
-#pragma region KIND_A
-	A_HIT00,
-	A_HIT01,
+#pragma region BGM
+	BGM_0,
+	BGM_1,
 #pragma endregion
-#pragma region KIND_B
-	B_HIT00,
-	B_HIT01,
+#pragma region SPELL
+	SP_JAP_0,
+	SP_JAP_1,
+	SP_JAP_13,
+	SP_BLINK_2,
+#pragma endregion
+
+#pragma region VOICE
+	VOICE_AVADAKEDAVRA,
+	VOICE_BOMBARDA,
+	VOICE_DECENDO,
+	VOICE_LEVIOSO,
+	VOICE_LUMOS,
+	VOICE_PROTEGO,
+	VOICE_REPARO,
+	VOICE_REVELIO,
+	VOICE_STUPEFY,
 #pragma endregion
 	END,
 };

@@ -205,6 +205,10 @@ void CCamera_Debug::Describe_Entity()
 	}
 	if (GUI::CollapsingHeader("DebugCamera")){
 		m_pTransformCom->Describe_Entity();
+		_float fFovYDegree = XMConvertToDegrees(m_fFovy);
+		if (GUI::SliderFloat("FOV", &fFovYDegree, 0.01f, 89.f, "%.2f")) {
+			m_fFovy = XMConvertToRadians(fFovYDegree);
+		}
 	}
 	GUI::End();
 }

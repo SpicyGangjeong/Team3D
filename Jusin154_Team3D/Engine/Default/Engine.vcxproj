@@ -303,6 +303,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\RigidBody_Static.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\SoundSrc.cpp" />
+    <ClCompile Include="..\Private\Sound_Manager.cpp" />
     <ClCompile Include="..\Private\Stat.cpp" />
     <ClCompile Include="..\Private\State.cpp" />
     <ClCompile Include="..\Private\StatEvent.cpp" />
@@ -544,6 +545,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\RigidBody_Static.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\SoundSrc.h" />
+    <ClInclude Include="..\Public\Sound_Manager.h" />
     <ClInclude Include="..\Public\Stat.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\StatEvent.h" />

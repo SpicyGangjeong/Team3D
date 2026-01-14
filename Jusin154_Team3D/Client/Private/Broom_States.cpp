@@ -2,6 +2,7 @@
 #include "Broom.h"
 
 #include "GameInstance.h"
+#include "TrailObject.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -119,6 +120,10 @@ void CBroom::Behavior_MoveEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
+
+
+	m_pBroomTrail->SetDissolve(false);
+	m_pBroomTrail->Get_Component<CTrail>()->Reset_Trail();
 }
 
 HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
@@ -500,11 +505,11 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 				}
 			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,0.1f);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 		}
 		else {
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 		}
 	}
 
@@ -563,6 +568,8 @@ void CBroom::Behavior_Broom_TurboFlyEnter()
 	m_bHoverToggle = false;
 	pairAnimInfo = pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+
+	Boost_Effect_Visible(true);
 }
 
 HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
@@ -749,6 +756,8 @@ void CBroom::Behavior_Broom_TurboFlyExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::TURBOFLY);
 	m_pModelCom->Set_BlendDuration(0.3f);
+
+	Boost_Effect_Visible(false);
 }
 
 

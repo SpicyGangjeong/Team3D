@@ -41,8 +41,9 @@ HRESULT CReparoObject::Initialize(void* pArg)
 	// 되돌리기 전 Before
 	m_ePreState = m_eCurState = REPARO_OBJECT_STATE::SLEEP;
 	m_pModelCom->Set_AnimationIndex(2);
-	m_pInfoInstance->Deregist_PlayerAlly(this);
-
+	//m_pInfoInstance->Deregist_PlayerAlly(this);
+	
+	m_pInfoInstance->Deregist_ActiveMonster(this);
 	return S_OK;
 }
 
@@ -64,8 +65,8 @@ void CReparoObject::Update(_float fTimeDelta)
 	case Client::CReparoObject::REPARO_OBJECT_STATE::BEFORE:
 		break;
 	case Client::CReparoObject::REPARO_OBJECT_STATE::PLAYANIM:
-		if (true == m_pModelCom->IsFinishedAnim())
-			m_eCurState = REPARO_OBJECT_STATE::AFTER;
+		//if (true == m_pModelCom->IsFinishedAnim())
+		//	m_eCurState = REPARO_OBJECT_STATE::AFTER;
 		break;
 
 	case Client::CReparoObject::REPARO_OBJECT_STATE::AFTER:
@@ -240,7 +241,7 @@ void CReparoObject::Change_State()
 			break;
 
 		case Client::CReparoObject::REPARO_OBJECT_STATE::BEFORE:
-			m_pInfoInstance->Regist_PlayerAlly(this);
+			m_pInfoInstance->Regist_ActiveMonster(this);
 			break;
 
 		case Client::CReparoObject::REPARO_OBJECT_STATE::PLAYANIM:
@@ -249,7 +250,7 @@ void CReparoObject::Change_State()
 
 		case Client::CReparoObject::REPARO_OBJECT_STATE::AFTER:
 			m_pModelCom->Set_AnimationIndex(1);
-			m_pInfoInstance->Deregist_PlayerAlly(this);
+			m_pInfoInstance->Deregist_ActiveMonster(this);
 			break;
 
 		case Client::CReparoObject::REPARO_OBJECT_STATE::END:

@@ -17,11 +17,18 @@
 #pragma region STATE
 #include "State_Idle.h"
 #include "State_Dodge.h"
+#include "State_Blink.h"
 #include "State_Jump.h"
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
-#include "State_Blink.h"
+#include "State_Hit.h"
+#include "State_Broom_Ride.h"
+#include "State_Broom_Ride_Move.h"
+#include "State_Hover.h"
+#include "State_Fly.h"
+#include "State_Broom_TurboFly.h"
+#include "State_Broom_Dismount.h"
 #pragma endregion
 
 #include "EffectPool.h"
@@ -446,7 +453,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
-//			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_LSHIFT)) {
 			m_bSprintToggle = !m_bSprintToggle;
@@ -1101,20 +1108,629 @@ void CPlayer::Behavior_HitExit()
 
 void CPlayer::Behavior_Broom_RideEnter()
 {
-	
+	m_pFSM->Enable_State(FSMSTATE::BROOM_RIDE);
+	m_pBroom->Set_Ride(true);
+	pair<_uint, _bool> pairAnimInfo;
+	pairAnimInfo = m_Animation[STATEANIM::BROOM_MOUNT];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
-HRESULT CPlayer::Behavior_Broom_RideExitCheck()
+HRESULT CPlayer::Behavior_Broom_RideExitCheck(_float fTimeDelta)
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-	
-	return E_FAIL;
+	pair<_uint, _bool> pairAnimInfo;
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_MOUNT].first)
+	{
+		if (m_pModelCom->IsFinishedAnim()) {
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_MOUNT_END];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, true);
+		}
+		return S_OK;
+	}
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_N))
+	{
+		auto flags = m_pCharacter_Controller->Get_CollisionFlags();
+		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
+		{
+			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
 }
 
 void CPlayer::Behavior_Broom_RideExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::BROOM_RIDE | FSMSTATE::DISMOUNT);
+	m_pFSM->Disable_State(FSMSTATE::BROOM_RIDE);
+	Reset_Event();
 }
+
+void CPlayer::Behavior_Broom_Ride_MoveEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::BROOM_RIDE_MOVE);
+}
+
+HRESULT CPlayer::Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta)
+{
+	if (m_pBroom->Get_Hover())
+	{
+		m_pFSM->Change_State(FSMSTATE::HOVER);
+		return E_FAIL;
+	}
+	else if (m_pBroom->Get_Turbo()) {
+		m_pFSM->Change_State(FSMSTATE::TURBOFLY);
+		return E_FAIL;
+	}
+	else {
+		m_pFSM->Change_State(FSMSTATE::FLY);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CPlayer::Behavior_Broom_Ride_MoveExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::BROOM_RIDE_MOVE);
+	Reset_Event();
+}
+
+void CPlayer::Behavior_Broom_HoverEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::HOVER);
+}
+
+HRESULT CPlayer::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
+{
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+
+	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
+	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
+	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
+	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
+	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
+
+	if (m_pBroom->Get_Hover() && iCurrAnimIndex != m_Animation[STATEANIM::BROOM_HOVER_REVELIO].first)
+	{
+		if (SUCCEEDED(InputBroom()) || SUCCEEDED(InputMove()))
+		{
+			_float3 vInput = { 0.f, 0.f, 0.f };
+
+			if (bFwd)  vInput.z += 1.f;
+			if (bLft)  vInput.x -= 1.f;
+			if (bRht)  vInput.x += 1.f;
+			if (bUp)   vInput.y += 1.f;
+			if (bDown) vInput.y -= 1.f;
+
+			_bool bHasInput = !(vInput.x == 0 && vInput.y == 0 && vInput.z == 0);
+			_vector vDir = XMVector3Normalize(XMLoadFloat3(&vInput));
+
+			if (bUp || bDown)
+			{
+				if (bUp)
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				}
+				else
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				}
+			}
+
+			_float ax = fabsf(vInput.x);
+			_float ay = fabsf(vInput.y);
+			_float az = fabsf(vInput.z);
+
+			if (ay > ax && ay > az)
+			{
+				if (vInput.y > 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				else
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+			}
+			else if (ax >= az)
+			{
+				if (ay >= ax)
+				{
+					if (vInput.y > 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+					else
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				}
+				else {
+					if (vInput.x < 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_LEFT];
+					else if (vInput.x > 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_RIGHT];
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_FWD];
+					}
+				}
+			}
+			else
+			{
+				if (vInput.y > 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				else if (vInput.y < 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_FWD];
+				}
+			}
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_R))
+		{
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_REVELIO);
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
+				}, 0.2f);
+		}
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	}
+
+
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_REVELIO].first)
+	{
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_FWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_N))
+	{
+		auto flags = m_pCharacter_Controller->Get_CollisionFlags();
+		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
+		{
+			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+			return E_FAIL;
+		}
+	}
+
+	if (!m_pBroom->Get_Hover())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
+	}
+
+	if (m_pBroom->Get_Turbo())
+	{
+		m_pFSM->Change_State(FSMSTATE::TURBOFLY);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CPlayer::Behavior_Broom_HoverExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::HOVER);
+}
+
+void CPlayer::Behavior_Broom_FlyEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::FLY);
+	Reset_Event();
+}
+
+HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
+{
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+
+	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
+	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
+	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
+	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
+	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
+
+	if (!m_pBroom->Get_Hover() && iCurrAnimIndex != m_Animation[STATEANIM::BROOM_REVELIO].first)
+	{
+		if (SUCCEEDED(InputBroom()) || SUCCEEDED(InputMove()))
+		{
+			_float3 vInput = { 0.f, 0.f, 0.f };
+
+			if (bFwd)  vInput.z += 1.f;
+			if (bLft)  vInput.x -= 1.f;
+			if (bRht)  vInput.x += 1.f;
+			if (bUp)   vInput.y += 1.f;
+			if (bDown) vInput.y -= 1.f;
+
+			_bool bHasInput = !(vInput.x == 0 && vInput.y == 0 && vInput.z == 0);
+			_vector vDir = XMVector3Normalize(XMLoadFloat3(&vInput));
+
+			if (bUp || bDown)
+			{
+				if (bUp)
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
+				}
+				else
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+				}
+			}
+
+			_float ax = fabsf(vInput.x);
+			_float ay = fabsf(vInput.y);
+			_float az = fabsf(vInput.z);
+
+			if (ay > ax && ay > az)
+			{
+				if (vInput.y > 0) {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
+
+				}
+				else if (vInput.y < 0) {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+				}
+			}
+			else if (ax >= az)
+			{
+				if (ay >= ax)
+				{
+					if (vInput.y > 0) {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
+
+					}
+					else if (vInput.y < 0) {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+
+					}
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_IDLE];
+					}
+				}
+				else {
+					if (vInput.x < 0) {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_LEFT];
+
+					}
+					else if (vInput.x > 0) {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_RIGHT];
+
+					}
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_IDLE];
+					}
+				}
+			}
+			else
+			{
+				if (vInput.y > 0) {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
+
+				}
+				else if (vInput.y < 0) {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+
+				}
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
+				}
+			}
+
+			if (iCurrAnimIndex != pairAnimInfo.first)
+			{
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
+			}
+		}
+		else {
+
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_IDLE);
+
+			if (iCurrAnimIndex != pairAnimInfo.first)
+			{
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
+			}
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_R))
+		{
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_REVELIO);
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
+				}, 0.2f);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+	}
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_REVELIO].first)
+	{
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_N))
+	{
+		auto flags = m_pCharacter_Controller->Get_CollisionFlags();
+		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
+		{
+			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+			return E_FAIL;
+		}
+	}
+
+	if (m_pBroom->Get_Hover())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
+	}
+
+	if (m_pBroom->Get_Turbo())
+	{
+		m_pFSM->Change_State(FSMSTATE::TURBOFLY);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CPlayer::Behavior_Broom_FlyExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::FLY);
+	Reset_Event();
+}
+
+void CPlayer::Behavior_Broom_TurboFlyEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::TURBOFLY);
+}
+
+HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
+{
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	if (!m_pBroom->Get_Ride()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+
+	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
+	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
+	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
+	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
+	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
+
+	if (!m_pBroom->Get_Hover() && m_pBroom->Get_Turbo())
+	{
+		if (SUCCEEDED(InputBroom()) || SUCCEEDED(InputMove()))
+		{
+			_float3 vInput = { 0.f, 0.f, 0.f };
+
+			if (bFwd)  vInput.z += 1.f;
+			if (bLft)  vInput.x -= 1.f;
+			if (bRht)  vInput.x += 1.f;
+			if (bUp)   vInput.y += 1.f;
+			if (bDown) vInput.y -= 1.f;
+
+			_bool bHasInput = !(vInput.x == 0 && vInput.y == 0 && vInput.z == 0);
+			_vector vDir = XMVector3Normalize(XMLoadFloat3(&vInput));
+
+			if (bUp || bDown)
+			{
+				if (bUp)
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
+				}
+				else
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+				}
+			}
+
+			_float ax = fabsf(vInput.x);
+			_float ay = fabsf(vInput.y);
+			_float az = fabsf(vInput.z);
+
+			if (ay > ax && ay > az)
+			{
+				if (vInput.y > 0.f)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
+				else if (vInput.y < 0.f)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+			}
+			else if (ax >= az)
+			{
+				if (ay >= ax)
+				{
+					if (vInput.y > 0.f)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
+					else if (vInput.y < 0.f)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_FWD];
+					}
+				}
+				else {
+					if (vInput.x < 0.f)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_LEFT];
+					else if (vInput.x > 0.f)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_RIGHT];
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_FWD];
+					}
+				}
+			}
+			else
+			{
+				if (vInput.y > 0.f)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
+				else if (vInput.y < 0.f)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_FWD];
+				}
+			}
+
+			if (iCurrAnimIndex != pairAnimInfo.first)
+			{
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
+			}
+		}
+		else {
+
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_TURBO_FWD);
+
+			if (iCurrAnimIndex != pairAnimInfo.first)
+			{
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false, true);
+			}
+		}
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_N))
+	{
+		auto flags = m_pCharacter_Controller->Get_CollisionFlags();
+		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
+		{
+			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+			return E_FAIL;
+		}
+	}
+
+	if (m_pBroom->Get_Hover())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
+	}
+
+	if (!m_pBroom->Get_Turbo())
+	{
+		m_pFSM->Change_State(FSMSTATE::FLY);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CPlayer::Behavior_Broom_TurboFlyExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::TURBOFLY);
+	Reset_Event();
+}
+
+void CPlayer::Behavior_Broom_DismountEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+	m_bOnce = false;
+	//m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
+	pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_DISMOUNT);
+	m_pFSM->Enable_State(FSMSTATE::BROOM_DISMOUNT);
+	m_pBroom->Set_Ride(false);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.6f);
+}
+
+HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
+{
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_DISMOUNT].first)
+	{
+		m_BroomScale.x -= (m_TargetScale.x - m_BroomScale.x) * fTimeDelta * m_fScaleSmoothSpeed;
+		m_BroomScale.y -= (m_TargetScale.y - m_BroomScale.y) * fTimeDelta * m_fScaleSmoothSpeed;
+		m_BroomScale.z -= (m_TargetScale.z - m_BroomScale.z) * fTimeDelta * m_fScaleSmoothSpeed;
+		if (m_BroomScale.x >= 0.1f)
+		{
+			m_pBroomTransform->Set_Scale(m_BroomScale);
+		}
+		if (fRatio >= 0.5f) {
+			m_BroomScale = { 0.f,0.f,0.f };
+			m_pBroomTransform->Set_State(STATE::POSITION, XMVectorSet(XMVectorGetX(m_pTransformCom->Get_State(STATE::POSITION)),
+				200.f,
+				XMVectorGetZ(m_pTransformCom->Get_State(STATE::POSITION)), 1.f));
+			if (SUCCEEDED(InputMove()))
+			{
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
+			else {
+				m_pFSM->Change_State(FSMSTATE::IDLE);
+				return E_FAIL;
+			}
+		}
+	}
+
+	return S_OK;
+}
+
+void CPlayer::Behavior_Broom_DismountExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::BROOM_DISMOUNT);
+	Reset_Event();
+	m_bOnce = false;
+}
+
+
+void CPlayer::Attach_Broom()
+{
+	if (m_pBroom->Get_Ride()) {
+		_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
+		_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
+
+		_vector Scale, Rot, Trans;
+
+		XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
+
+		_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
+
+		m_OffsetPos = { 0.f,1.f,0.f };
+
+		_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
+			m_OffsetPos.y, m_OffsetPos.z);
+
+		_vector BS, BR, BT;
+		XMMatrixDecompose(&BS, &BR, &BT, BroomWorld);
+		_matrix BroomWorld_NoScale =
+			XMMatrixRotationQuaternion(BR) *
+			XMMatrixTranslationFromVector(BT);
+
+
+		_matrix SocketWorld = BoneNoScale * Offset * BroomWorld_NoScale;
+
+		_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
+
+		_matrix FinalWorld = FixRot * SocketWorld;
+
+		m_pTransformCom->Set_WorldMatrix(FinalWorld);
+		m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
+	}
+}
+
 
 void CPlayer::Player_InterpTurn(_float fTimeDelta)
 {
@@ -1328,8 +1944,113 @@ void CPlayer::Add_FSM()
 #pragma endregion
 
 #pragma region Behavior_Broom_Ride
-	
+	{
+		CState_Broom_Ride::STATE_BROOM_RIDE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_RideEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_RideExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_RideExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+			if (!m_bOnce) {
+				m_pBroomTransform->Set_State(
+					STATE::POSITION,
+					m_pTransformCom->Get_State(STATE::POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f)
+				);
+
+				m_pBroomTransform->Set_State(STATE::LOOK, m_pTransformCom->Get_State(STATE::LOOK));
+				m_pBroomTransform->Set_State(STATE::UP, m_pTransformCom->Get_State(STATE::UP));
+				m_pBroomTransform->Set_State(STATE::RIGHT, m_pTransformCom->Get_State(STATE::RIGHT));
+
+				_float3 vScale = { 0.3f,0.3f,0.3f };
+				m_pBroomTransform->Set_Scale(vScale);
+				m_bOnce = true;
+				//m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
+			}
+			m_BroomScale.x += (m_TargetScale.x - m_BroomScale.x) * fTimeDelta * m_fScaleSmoothSpeed;
+			m_BroomScale.y += (m_TargetScale.y - m_BroomScale.y) * fTimeDelta * m_fScaleSmoothSpeed;
+			m_BroomScale.z += (m_TargetScale.z - m_BroomScale.z) * fTimeDelta * m_fScaleSmoothSpeed;
+			if (m_BroomScale.x <= 1.f)
+			{
+				m_pBroomTransform->Set_Scale(m_BroomScale);
+			}
+
+
+			Attach_Broom();
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::BROOM_RIDE, CState_Broom_Ride::Create(&Desc));
+	}
+
+	{
+		CState_Broom_Ride_Move::STATE_BROOM_RIDE_MOVE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_Ride_MoveEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_Ride_MoveExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_Ride_MoveExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+			Attach_Broom();
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::BROOM_RIDE_MOVE, CState_Broom_Ride_Move::Create(&Desc));
+	}
+
+	{
+		CState_Hover::STATE_HOVER_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_HoverEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_HoverExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_HoverExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+			Attach_Broom();
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::HOVER, CState_Hover::Create(&Desc));
+	}
+
+	{
+		CState_Fly::STATE_FLY_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_FlyEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_FlyExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_FlyExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+			Attach_Broom();
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::FLY, CState_Fly::Create(&Desc));
+	}
+
+	{
+		CState_Broom_TurboFly::STATE_BROOM_TURBOFLY_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_TurboFlyEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_TurboFlyExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_TurboFlyExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+			Attach_Broom();
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::TURBOFLY, CState_Broom_TurboFly::Create(&Desc));
+	}
+
+	{
+		CState_Broom_Dismount::STATE_BROOM_DISMOUNT_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_DismountEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_DismountExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_DismountExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::BROOM_DISMOUNT, CState_Broom_Dismount::Create(&Desc));
+	}
+
 #pragma endregion
+
 
 }
 

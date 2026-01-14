@@ -306,7 +306,7 @@ HRESULT CRanrok::Render_Shadow(SHADOW eType)
 		return E_FAIL;
 	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	for (_uint i = 0; i < iNumMeshes; i++)
+	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i < ENUM_CLASS(RANROK_MESH_ORDER::END); ++i)
 	{
 		if (FAILED(m_pShaderCom->Bind_Matrices(
 			"g_OffsetMatrix",
@@ -416,6 +416,8 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+	if (m_bDisolve)
+		return;
 
 	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND|FSMSTATE::TUCKED) || m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::HIT_BWD2].first)
 		return;
@@ -700,9 +702,9 @@ HRESULT CRanrok::Ready_SubParts()
 
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 	Desc.bAutoOwnerTranslation = false;
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK_PROP);
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK_BODY);
 	for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pTargetableDO[i], &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK_BODY"), (CComponent**)&m_pTargetableDO[i], &Desc))) {
 			return E_FAIL;
 		}
 		m_pTargetableDO[i]->Set_Kinematic(true);
@@ -769,16 +771,16 @@ HRESULT CRanrok::Render_Nonblend()
 	}*/
 
 #ifdef _DEBUG
-	if (true == m_pCharacter_Controller->IsActive()) {
-		if (FAILED(m_pCharacter_Controller->Render())) {
-			return E_FAIL;
-		}
-	}
-	else if (true == m_pRigidBody->IsActive()) {
-		if (FAILED(m_pRigidBody->Render())) {
-			return E_FAIL;
-		}
-	}
+	//if (true == m_pCharacter_Controller->IsActive()) {
+	//	if (FAILED(m_pCharacter_Controller->Render())) {
+	//		return E_FAIL;
+	//	}
+	//}
+	//else if (true == m_pRigidBody->IsActive()) {
+	//	if (FAILED(m_pRigidBody->Render())) {
+	//		return E_FAIL;
+	//	}
+	//}
 #endif
 
 	if (0.f < m_fDeadRatio) {

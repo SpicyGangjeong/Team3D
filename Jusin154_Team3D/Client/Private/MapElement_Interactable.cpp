@@ -401,6 +401,7 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 					m_bHit = true;
 				}
 				break;
+				case PXOBJECT::RANROK_BODY:
 				case PXOBJECT::RANROK:
 				{
 					pUserData->pOwner->OnCollision(this, &tagCollInfo);

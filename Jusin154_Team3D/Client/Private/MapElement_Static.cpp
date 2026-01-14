@@ -69,6 +69,7 @@ void CMapElement_Static::Late_Update(_float fTimeDelta)
 		if(m_bVisible)
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(XMLoadFloat3(&m_vWorldCenterPosition), m_fRadius));
 }
 
 HRESULT CMapElement_Static::Render()
@@ -96,6 +97,32 @@ HRESULT CMapElement_Static::Render()
 	return S_OK;
 }
 
+HRESULT CMapElement_Static::Render_Shadow(SHADOW eType)
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
+		return E_FAIL;
+	}
+	_uint		iNumMeshes = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SHADOW)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelComs[m_iLodIndex]->Render(i))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
 HRESULT CMapElement_Static::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {

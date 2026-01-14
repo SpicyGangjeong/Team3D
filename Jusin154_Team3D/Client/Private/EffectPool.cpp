@@ -53,6 +53,7 @@
 #include "Blink.h"
 #include "Transformation.h"
 #include "Avadakedavra.h"
+#include "Reparo.h"
 
 #include "Goblin_ProtegoHit.h"
 #include "Duelist_ProtegoHit.h"
@@ -511,6 +512,16 @@ HRESULT CEffectPool::Ready_Effect()
 
 		return pEffect; }
 	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::REPARO, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CReparo* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CReparo>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 
 	return S_OK;
 }

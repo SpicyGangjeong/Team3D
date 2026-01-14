@@ -70,20 +70,18 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
+
+
+
 #pragma region MONSTER
-#ifndef 기무리
-	/* For.Prototype_Component_Hogsmead_NorthLakeShallow */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\VFX\\Meshes\\Animated\\HM_Troll_OLI_Reparo\\VFX_SK_OLI_TrollFight_BlockerA\\VFX_SK_OLI_TrollFight_BlockerA.fbx", XMMatrixIdentity()))))
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "C:\\MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Goblins\\SK_WPN_GOB_BattleAxe01.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Hogsmead_NorthLakeShallow */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\VFX\\Meshes\\Animated\\HM_Troll_OLI_Reparo\\VFX_SK_OLI_TrollFight_BlockerB\\VFX_SK_OLI_TrollFight_BlockerB.fbx", XMMatrixIdentity()))))
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "C:\\MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Goblins\\SK_WPN_GOB_SmallSword.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
-#endif // 기무리
-
-
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/SK_GOB_M_T4Melee_INST_A_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
@@ -136,10 +134,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	TEXT("Prototype_Component_ConjuredDragon_Model")
 	//));
 
-	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_Professor_EleazarFig_Model")
-	//));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin",XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Professor_EleazarFig_Model")
+	));
 
 #pragma endregion
 

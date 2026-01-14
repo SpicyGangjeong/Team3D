@@ -340,9 +340,9 @@ void CInstancedProp::Describe_Entity()
 	m_iInstanceIndex = min(m_iInstanceIndex, m_iNumInstanceIndex);
 
 	GUI::Text("----- Transfrom ----");
-	GUI::InputFloat("Right", &vMove.x, 0.1f, 5.f);
-	GUI::InputFloat("Up", &vMove.y, 0.1f, 5.f);
-	GUI::InputFloat("Look", &vMove.z, 0.1f, 5.f);
+	GUI::InputFloat("Right", &vMove.x, 0.01f, 1.f);
+	GUI::InputFloat("Up", &vMove.y, 0.01f, 1.f);
+	GUI::InputFloat("Look", &vMove.z, 0.01f, 1.f);
 
 	m_pTransformCom->Move_Right(vMove.x);
 	m_pTransformCom->Move_Up(vMove.y);

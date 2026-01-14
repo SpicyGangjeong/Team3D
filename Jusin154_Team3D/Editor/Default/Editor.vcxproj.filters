@@ -801,12 +801,18 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush">
       <UniqueIdentifier>{9b246a74-cf6e-4f02-86fb-0a499cb39d4e}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyNPC">
       <UniqueIdentifier>{aa6ef154-b82d-42eb-82a7-f8b7f6631a1e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\ReparoObject">
       <UniqueIdentifier>{29bd6d08-5bfd-48ca-bd32-40824c276032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Broom\BroomState">
+      <UniqueIdentifier>{8c55a8be-b0bf-4d8b-ab30-7b7c883f9bd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor\Effect\12.BroomBoost">
+      <UniqueIdentifier>{e0803999-ff32-4356-8a06-2b5a3bc7d49b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1628,12 +1634,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Rush.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\DummyNPC.h">
       <Filter>02.GameObjects\Dummys\DummyNPC</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ReparoObject.h">
       <Filter>02.GameObjects\ReparoObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Dismount.h">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Ride.h">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_TurboFly.h">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Ride_Move.h">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomBoost.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\12.BroomBoost</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2463,12 +2484,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Rush.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\Monster_Effect\Troll_Rush</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\DummyNPC.cpp">
       <Filter>02.GameObjects\Dummys\DummyNPC</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ReparoObject.cpp">
       <Filter>02.GameObjects\ReparoObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Dismount.cpp">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_TurboFly.cpp">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Ride.cpp">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_States.cpp">
+      <Filter>02.GameObjects\Broom\BroomState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomBoost.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\12.BroomBoost</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
