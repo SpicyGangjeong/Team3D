@@ -54,6 +54,10 @@
 #include "Transformation.h"
 #include "Avadakedavra.h"
 #include "Reparo.h"
+#include "PotionBroken.h"
+#include "PotionScreen.h"
+#include "HitScreen.h"
+#include "BroomRace_Bubble.h"
 
 #include "Goblin_ProtegoHit.h"
 #include "Duelist_ProtegoHit.h"
@@ -518,6 +522,42 @@ HRESULT CEffectPool::Ready_Effect()
 		CReparo* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CReparo>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::POTION_BROKEN, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CPotionBroken* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CPotionBroken>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::SCREEN_POTION, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CPotionScreen* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CPotionScreen>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::SCREEN_HIT, 3, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CHitScreen* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CHitScreen>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::BROOM_RACE_BUBBLE, 20, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CBroomRace_Bubble* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CBroomRace_Bubble>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

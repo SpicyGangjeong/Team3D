@@ -248,6 +248,9 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
+
+
+
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
 			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
@@ -1940,7 +1943,7 @@ void CPlayer::Behavior_ParryEnter()
 	}
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY_SIDE, Get_PartObject<CWand>()); },
 		0.01f);
 
 
@@ -2011,6 +2014,8 @@ void CPlayer::Behavior_HitEnter()
 		}
 
 	}
+
+	m_pEffectPool->Use_Skill(SKILL_TYPE::SCREEN_HIT, this);
 
 	ProcessHitBehavior();
 }

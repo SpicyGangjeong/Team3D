@@ -61,15 +61,22 @@ void CItem_Potion::Late_Update(_float fTimeDelta)
 	if (m_bVisible)
 	{
 		m_fTimer += fTimeDelta;
+		if (m_fTimer >= 1.f && m_bOnce == false) {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::SCREEN_POTION , this);
+			m_bOnce = true;
+		}
 		if (m_fTimer >= 1.6f) {
 			m_bAttach = false;
 		}
+
 		if (m_fTimer >= 3.f) {
 			m_fTimer = 0.f;
 			m_bVisible = false;
 			m_bAttach = true;
+			m_bOnce = false;
 		}
 	}
+
 	if (m_bAttach)
 	{
 		m_bHit = false;
@@ -189,12 +196,21 @@ void CItem_Potion::Check_GroundCollision()
 
 void CItem_Potion::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_bHit = false;
+	m_pEffectPool->Use_Skill(SKILL_TYPE::POTION_BROKEN, this);
+	m_fTimer = 0.f;
+	m_bVisible = false;
+	m_bAttach = true;
+	m_bOnce = false;
 }
 
 void CItem_Potion::Set_Attach(_bool Attach)
 {
 	m_bAttach = Attach;
+
 }
 
 

@@ -131,10 +131,13 @@ HRESULT CStupefySide::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (pWand == nullptr)
 		return E_FAIL;
 
+	class CEffectParts* pBlurMesh = Get_PartObject<CEffectParts>("BlurMesh");
+
 	m_pWandParticle->Set_Visible(true);
 	m_isParticleEnd = false; // 파티클이 일정시간이 되면 나오지 않게 하려고
 
 	m_pWandLight->Set_Visible(true);
+	pBlurMesh->Set_Visible(true);
 
 	/*트레일 초기화 */
 	m_pWandTrail->Set_Visible(true);
@@ -144,6 +147,7 @@ HRESULT CStupefySide::Pre_Setting(CGameObject* pObject, void* pArg)
 	/*_vector pPos = pPlayer->Get_WandPos().r[3];*/
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	pBlurMesh->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_Owner()->Get_Component<CTransform>()->Get_State(STATE::POSITION));
 
 	m_pWandTrail->SetDissolve(false);
 

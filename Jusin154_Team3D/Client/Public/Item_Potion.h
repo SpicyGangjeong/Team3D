@@ -45,6 +45,7 @@ private:
 	_bool				 m_bAttach = { true };
 	_float				 m_fTimer = {};
 	_bool				 m_bHit = {};
+	_bool				 m_bOnce = {};
 
 private:
 	HRESULT Ready_Components();
