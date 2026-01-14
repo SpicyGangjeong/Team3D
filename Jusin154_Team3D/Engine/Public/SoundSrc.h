@@ -14,8 +14,14 @@ enum class SD_CHANNEL_GROUP {
 
 enum class SD_KIND {
 #pragma region BGM
-	BGM_0,
-	BGM_1,
+	BGM_Battle_0,
+	BGM_Battle_1,
+	BGM_Land_DAY,
+	BGM_Land_NIGHT,
+	BGM_HOGWART_0,
+	BGM_HOGWART_1,
+	BGM_HOGWART_INT,
+	BGM_RANROK_0,
 #pragma endregion
 #pragma region SPELL
 	SP_JAP_0,
