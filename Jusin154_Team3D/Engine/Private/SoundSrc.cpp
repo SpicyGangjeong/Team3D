@@ -7,7 +7,13 @@ using namespace Engine::SOUND;
 
 const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 #pragma region BGM
-	TEXT("BGM/Hogwart_BGM_0.wav"),
+	TEXT("BGM/battle_BGM_0.wav"),
+	TEXT("BGM/battle_BGM_1.wav"),
+	TEXT("BGM/grassland_day.wav"),
+	TEXT("BGM/grassland_night.wav"),
+	TEXT("BGM/hogwart_BGM_0.wav"),
+	TEXT("BGM/hogwart_BGM_1.wav"),
+	TEXT("BGM/hogwart_BGM_int.wav"),
 	TEXT("BGM/Ranrok_BGM.wav"),
 #pragma endregion
 
