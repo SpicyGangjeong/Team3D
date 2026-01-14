@@ -10,6 +10,7 @@
 #include "Broom.h"
 #include "InfoInstance.h"
 #include "InstancedProp.h"
+#include "EffectPool.h"
 
 CBroomRaceManager::CBroomRaceManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -38,6 +39,8 @@ HRESULT CBroomRaceManager::Initialize(void* pArg)
 	}
 
 	m_pInfoInstance->Add_Event(TEXT("BROOMRACENPCINTERACT"), [this](void* p) {this->RaceReady(); });
+
+
 
 	return S_OK;
 }
@@ -357,6 +360,11 @@ void CBroomRaceManager::RaceReady()
 		MSG_BOX("Failed Load Balloons");
 	}
 
+	if (FAILED(Load_Broomrace_Effect()))
+	{
+		MSG_BOX("Failed Load Broomrace_Effect");
+	}
+
 	CInstancedProp::INSTANCE_PROP_DESC Instance_Desc = {};
 
 	/* InstanceProp RouteMarker*/
@@ -576,6 +584,48 @@ HRESULT CBroomRaceManager::Load_Balloons()
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Balloon>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 			return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CBroomRaceManager::Load_Broomrace_Effect()
+{
+	CEffectPool* pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+
+	if (nullptr == pEffectPool)
+		return E_FAIL;
+
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/EffectPart/Bubble_Data.xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("EffectParts");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		_float4 vPosition = {};
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &vPosition.x);
+		Position->QueryFloatAttribute("y", &vPosition.y);
+		Position->QueryFloatAttribute("z", &vPosition.z);
+		vPosition.w = 1.f;
+
+		pEffectPool->Use_Skill(SKILL_TYPE::BROOM_RACE_BUBBLE, this, &vPosition);
+	}
+
+
+	
 
 	return S_OK;
 }

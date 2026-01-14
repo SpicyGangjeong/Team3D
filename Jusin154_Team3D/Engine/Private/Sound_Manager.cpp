@@ -7,7 +7,7 @@ System* CSound_Manager::s_pSystem = { nullptr };
 _string CSound_Manager::s_ArrChannelName[ENUM_CLASS(SD_CHANNEL_GROUP::END)] = { "BGM", "ENVIRONMENT", "EFFECT", "VOICE" };
 list<Channel*> CSound_Manager::s_listChannel[ENUM_CLASS(SD_CHANNEL_GROUP::END)] = {};
 Sound* CSound_Manager::s_ArrSounds[ENUM_CLASS(SOUND::SD_KIND::END)] = {};
-
+map<_wstring, SOUND::SD_KIND > CSound_Manager::s_SoundMap = {};
 
 CSound_Manager::CSound_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : m_pDevice(pDevice),
@@ -38,7 +38,6 @@ HRESULT CSound_Manager::Update()
             }
         }
     }
-    Sound_Test();
 
     return S_OK;
 }
@@ -204,45 +203,8 @@ void CSound_Manager::Sound_SetVolume(SD_CHANNEL_GROUP eSoundChannel, float fVolu
     }
 }
 
-void CSound_Manager::Sound_Test()
-{
-    //GUI::Begin("Music_Player");
-    //static int item_selected_CHANNEL = 0;
-    //static int item_selected_SD_KIND = 0;
-
-    //GUI::BeginChild("##ITEMs", ImVec2(350.f, 175.f), true, ImGuiWindowFlags_HorizontalScrollbar);
-    //for (int iIndex = 0; iIndex < SOUND::SD_KIND::END; ++iIndex) {
-    //    if (GUI::Button(CMyTools::ToString(SOUND::SD_PATH::SD_KIND_STRING[iIndex]).c_str())) {
-    //        item_selected_SD_KIND = iIndex;
-    //    }
-    //}
-    //GUI::EndChild();
-    //GUI::BeginChild("##Channels", ImVec2(350.f, 175.f), true, ImGuiWindowFlags_HorizontalScrollbar);
-    //for (int iIndex = 0; iIndex < ENUM_CLASS(SD_CHANNEL_GROUP::END); ++iIndex) {
-    //    if (GUI::Button(s_ArrChannelName[iIndex].c_str())) {
-    //        item_selected_CHANNEL = iIndex;
-    //    }
-    //}
-    //GUI::EndChild();
-
-    //if (GUI::Button("Play_Sound", { 50, 50 })) {
-    //    Sound_Play(static_cast<SOUND::SD_KIND>(item_selected_SD_KIND), static_cast<SD_CHANNEL_GROUP>(item_selected_CHANNEL), false, false, 1.f);
-    //} GUI::SameLine();
-    //if (GUI::Button("Sound_STOP", { 50, 50 })) {
-    //    Sound_StopAll();
-    //}
-    //GUI::End();
-}
-
 HRESULT CSound_Manager::Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode)
 {
-    //const _tchar* pSoundFilePath = TEXT("../Bin/Resources/Sounds/");
-    //for (int iIndex = 0; iIndex < ENUM_CLASS(SOUND::SD_KIND::END); ++iIndex) {
-    //    if (FAILED(m_pGameInstance->Load_Sound((SOUND::SD_KIND)iIndex, (_wstring(pSoundFilePath) + SOUND::SD_PATH::SD_KIND_STRING[iIndex]).c_str()))) {
-    //        return E_FAIL;
-    //    }
-    //}
-
     //// 사운드 생성, 파일 불러오기
     FMOD_RESULT fr = CSound_Manager::s_pSystem->createSound(
         CMyTools::ToString(wstrSoundFilePath).c_str(), // 대상 경로
@@ -253,6 +215,16 @@ HRESULT CSound_Manager::Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSound
         return S_OK;
     }
     return E_FAIL;
+}
+
+SOUND::SD_KIND CSound_Manager::Find_Sound(const _wstring wstrFilePath)
+{
+    auto iter = s_SoundMap.find(wstrFilePath);
+
+    if (iter == s_SoundMap.end())
+        return SOUND::SD_KIND::END;
+
+    return iter->second;
 }
 
 HRESULT CSound_Manager::Initialize()
@@ -275,8 +247,21 @@ HRESULT CSound_Manager::Initialize()
         s_pSystem->init(512, FMOD_INIT_NORMAL, nullptr);
     }
 
+    Ready_SoundMap();
+
     return S_OK;
 }
+
+void CSound_Manager::Ready_SoundMap()
+{
+    _uint iNumSound = ENUM_CLASS(SOUND::SD_KIND::END);
+    for (_uint i = 0; i < iNumSound; ++i)
+    {
+        s_SoundMap.emplace(SOUND::SD_PATH::SD_KIND_PATHS[i], static_cast<SOUND::SD_KIND>(i));
+    }
+}
+
+
 
 CSound_Manager* CSound_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
