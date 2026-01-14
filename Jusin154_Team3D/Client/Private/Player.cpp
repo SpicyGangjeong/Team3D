@@ -126,6 +126,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fRayDistance = 5.f;
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
+	Ready_Sound_Events("../Bin/Resources/Models/Human/PlayableCharacter/KeyFrame.xml");
+
 	return S_OK;
 }
 
@@ -144,7 +146,6 @@ void CPlayer::Update(_float fTimeDelta)
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
 	Update_RaycastElements();
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();

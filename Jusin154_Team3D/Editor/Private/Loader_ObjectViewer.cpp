@@ -75,14 +75,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 #pragma region MONSTER
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "C:\\MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Goblins\\SK_WPN_GOB_BattleAxe01.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "C:\\MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Goblins\\SK_WPN_GOB_SmallSword.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
-		return E_FAIL;
-
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/SK_GOB_M_T4Melee_INST_A_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_SK_GOB_M_T4Melee_INST_A_Master_Model")

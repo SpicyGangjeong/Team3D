@@ -62,10 +62,7 @@ void CPlayer::Get_UIState(_int UIState)
 
 HRESULT CPlayer::InputAction()
 {
-	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) && 
-		m_eUIState !=ENUM_CLASS(UI_STATE::QUEST) && 
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) && 
-		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+	if (IsInputLocked())
 	{
 		if (
 			m_pGameInstance->Key_Down(DIK_SPACE) 
@@ -111,11 +108,7 @@ HRESULT CPlayer::InputAction()
 
 HRESULT CPlayer::InputMove()
 {
-	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
-		!m_bDuel_ZOnlyMove && 
-     m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+	if (IsInputLocked() && !m_bDuel_ZOnlyMove)
   {
 		if (m_pGameInstance->Key_Pressing(DIK_W)
 			|| m_pGameInstance->Key_Pressing(DIK_A)
@@ -131,11 +124,7 @@ HRESULT CPlayer::InputMove()
 
 HRESULT CPlayer::InputKeyUpMove()
 {
-	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
-		!m_bDuel_ZOnlyMove && 
-     m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+	if (IsInputLocked() && !m_bDuel_ZOnlyMove)
     {
 		if (m_pGameInstance->Key_Up(DIK_W)
 			|| m_pGameInstance->Key_Up(DIK_A)
@@ -150,10 +139,7 @@ HRESULT CPlayer::InputKeyUpMove()
 
 HRESULT CPlayer::InputSpell()
 {
-	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT)) {
+	if (IsInputLocked()) {
 		if (
 			m_pGameInstance->Key_Down(DIK_1)
 			|| m_pGameInstance->Key_Down(DIK_2)
@@ -175,10 +161,7 @@ HRESULT CPlayer::InputSpell()
 
 HRESULT CPlayer::InputAim()
 {
-	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT)) {
+	if (IsInputLocked()) {
 		if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON) ||
 			m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 		{
@@ -1298,6 +1281,13 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo;
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (m_pBroom->Get_Ride())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+		return E_FAIL;
+	}
+
 	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON))
 	{
 		_uint iCurr = m_pModelCom->Get_AnimIndex();
@@ -2093,10 +2083,9 @@ void CPlayer::Behavior_Spell_LearningEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
 	Add_Event(pairAnimInfo.first,
 		[this]() {pair<_uint, _bool> pairAnimInfo;
-	pairAnimInfo = m_Animation[STATEANIM::SPELL_LEARNING_WANDWAVE]; },
+	pairAnimInfo = m_Animation[STATEANIM::SPELL_LEARNING_WANDWAVE];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false); },
 		0.95f);
-
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f, false);
 }
 
 HRESULT CPlayer::Behavior_Spell_LearningExitCheck(_float fTimeDelta)
@@ -3179,6 +3168,14 @@ void CPlayer::Hit_Levioso(_float fTimeDelta)
 			m_pCharacter_Controller->SetGravity(true);
 		}
 	}
+}
+
+_bool CPlayer::IsInputLocked()
+{
+	return m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT);
 }
 
 void CPlayer::Add_FSM()

@@ -121,9 +121,10 @@ void CBroom::Behavior_MoveEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 
-
-	m_pBroomTrail->SetDissolve(false);
-	m_pBroomTrail->Get_Component<CTrail>()->Reset_Trail();
+	if (m_pParentUnit->IsAI() == false) {
+		m_pBroomTrail->SetDissolve(false);
+		m_pBroomTrail->Get_Component<CTrail>()->Reset_Trail();
+	}
 }
 
 HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
@@ -449,23 +450,11 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 
 			if (vInput.x < 0.f)
 			{
-				/*if (vInput.z <= 0.f)
-				{
-					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.4f);
-				}
-				else {*/
 					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.3f);
-				//}
 			}
 			else if (vInput.x > 0.f)
 			{
-				/*if (vInput.z <= 0.f)
-				{
-					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.4f);
-				}
-				else {*/
 					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.3f);
-				//}
 			}
 
 
@@ -524,10 +513,6 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 		pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
 
-		/*if (bShift && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)
-		{
-			m_bHoverToggle = false;
-		}*/
 		if (SUCCEEDED(InputAction()) || SUCCEEDED(InputMove()))
 		{
 			if (fRatio >= 0.5f && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)

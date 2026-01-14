@@ -44,6 +44,7 @@ public:
 
 	HRESULT Load_RaceRing();
 	HRESULT	Load_Balloons();
+	HRESULT Load_Broomrace_Effect();
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };

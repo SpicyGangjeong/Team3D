@@ -211,8 +211,14 @@ public:
 #pragma endregion
 #pragma region SOUND_MANAGER
 	HRESULT Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode);
+	SOUND::SD_KIND Find_Sound(const _wstring wstrFilePath);
 	void Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume);
-	void Sound_StopAll(); // 전체 정지
+	void Sound_Play_3DPos(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _float3& refSpeaker, _float fMin = 3.f, _float fMax = 20.f, _bool bRepeat = false);
+	void Sound_Pause_Channel(SD_CHANNEL_GROUP eSoundChannel, bool bPause); 
+	void Sound_Set3DListenerPos(class CTransform* pTransform);
+	void Sound_StopChannel(SD_CHANNEL_GROUP eSoundChannel); 
+	void Sound_Stop(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel); 
+	void Sound_StopAll(); 
 #pragma endregion
 
 #pragma region PICKING
