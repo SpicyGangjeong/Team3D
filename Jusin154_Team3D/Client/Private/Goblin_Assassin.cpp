@@ -178,6 +178,7 @@ HRESULT CGoblin_Assassin::Render()
 {
 	RENDER ePass = m_pGameInstance->Get_CurrentRenderPass();
 
+
 	if (m_bMotionTrail)
 	{
 		if (ePass == RENDER::BLEND)

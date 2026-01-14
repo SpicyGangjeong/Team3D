@@ -42,10 +42,7 @@ HRESULT CLevel_EffectViewer::Initialize()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Background"))))
-	{
-		return E_FAIL;
-	}
+
 
 	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
 	{
@@ -78,11 +75,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 /*	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 		return E_FAIL;*/	
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
-		return E_FAIL;
-
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 	//	return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky")))){
 		return E_FAIL;
@@ -97,7 +94,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky") , &pDesc))) {
 		return E_FAIL;
 	}
-	
+
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Background"))))
+	{
+		return E_FAIL;
+	}
 
 	ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
 	m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
@@ -108,15 +109,16 @@ HRESULT CLevel_EffectViewer::Initialize()
 
 /* 호그 스미드 */
 	
-	m_pGameInstance->Setting_Volumetirc(
-		1.251f,                         // 밀도
-		0.0253f,                          // 빛 강도
-		0.9f,                          // 산란 계수
-		1.78f,                           // 깊이 분포 계수
-		0.f);
+	//m_pGameInstance->Setting_Volumetirc(
+	//	1.251f,                         // 밀도
+	//	0.0253f,                          // 빛 강도
+	//	0.9f,                          // 산란 계수
+	//	1.78f,                           // 깊이 분포 계수
+	//	0.f);
 
 /* 란록 맵*/
-	//m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+
+	//pLight->Capture_PreShadow();
 
 
 	return S_OK;
@@ -166,29 +168,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 HRESULT CLevel_EffectViewer::Ready_Layer_Light()
 {
 
-	CMainLight* pLight = { nullptr };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMainLight>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, nullptr, nullptr, &pLight))) {
-		return E_FAIL;
-	}
-
-	//_float4 vDiffuse = _float4(0.607f, 0.658f, 0.698f, 0.f);
-	//_float4 vAmbient = _float4(0.1f, 0.13f, 0.13f, 0.f);
-	//_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
-	
-	/* 란록맵 */
-	//_float4 vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
-	//_float4 vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
-	//_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
-
-	/* 호그스미드 */
-	_float4 vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
-	_float4 vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
-	_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
-
-
-
-	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
 	return S_OK;
 }
@@ -243,9 +223,31 @@ HRESULT CLevel_EffectViewer::Ready_Layer_PhysX(const _wstring& strLayerTag)
 
 HRESULT CLevel_EffectViewer::Ready_Layer_BackGround(const _wstring& strLayerTag)
 {
+	CMainLight* pLight = { nullptr };
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMainLight>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT, nullptr, nullptr, &pLight))) {
+		return E_FAIL;
+	}
 
 
-	CTerrain::TERRAIN_DESC Desc = {};
+	_float4 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1E1C1B3C);
+	_float4 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1A191900);
+	_float4 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
+
+	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+	pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(-0.574f, -0.409f, 0.584f, -0.402f));
+	pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+
+	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+
+	 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1E1C1B3C);
+	 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1A191900);
+	 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
+	pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+	pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(-0.574f, -0.409f, 0.584f, -0.402f));
+	pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Set_Environment(_float3(0.585f, 0.182f, 2.83f), _float(2.f), _float2(0.075f, 0.150f), _float2(2.300f, 10.000f), _float4(0.0360f, 0.0326f, 0.0057f, 0.0018f), _float4(2.0000f, 1.f, 1.f, 1.f), _float3(0.f, 0.f, -100.f), _float3(0.f, 0.f, 100.f));
+	m_pGameInstance->Setting_Volumetirc(1.743f, 0.0001f, 0.2000f, 1.050f, 0.04862f);
 	/* Hogsmeade */
 
 	//Desc.isEdit = false;
@@ -258,6 +260,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_BackGround(const _wstring& strLayerTag)
 
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Terrain"), &Desc)))
 	//	return E_FAIL;
+
 
 	_float4 vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	m_pGameInstance->Set_FogColor(vColor);

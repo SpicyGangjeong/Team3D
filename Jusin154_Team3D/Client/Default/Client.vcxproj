@@ -168,6 +168,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\PotionScreen.h" />
     <ClInclude Include="..\Public\PotionBroken.h" />
     <ClInclude Include="..\Public\CamPosition_WorldLook.h" />
+    <ClInclude Include="..\Public\Ranrok_PropHit.h" />
     <ClInclude Include="..\Public\Reparo.h" />
     <ClInclude Include="..\Public\Elf.h" />
     <ClInclude Include="..\public\MapElement_Cave.h" />
@@ -485,6 +486,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\PotionScreen.cpp" />
     <ClCompile Include="..\Private\PotionBroken.cpp" />
     <ClCompile Include="..\Private\CamPosition_WorldLook.cpp" />
+    <ClCompile Include="..\Private\Ranrok_PropHit.cpp" />
     <ClCompile Include="..\Private\Reparo.cpp" />
     <ClCompile Include="..\Private\Elf.cpp" />
     <ClCompile Include="..\private\MapElement_Cave.cpp" />

@@ -5,6 +5,8 @@
 #include "EffectParts.h"
 #include "InfoInstance.h"
 #include "Player.h"
+#include "EffectPool.h"
+#include "Layer.h"
 
 CRanrok_Prop::CRanrok_Prop(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -44,7 +46,6 @@ HRESULT CRanrok_Prop::Initialize(void* pArg)
 	m_pSphere = Get_PartObject<CEffectParts>("Sphere");
 	m_pSphereLay = Get_PartObject<CEffectParts>("Sphere_Noise");
 	m_pSphereHitLay = Get_PartObject<CEffectParts>("HitLay");
-
 	m_pRing = Get_PartObject<CEffectParts>("Ring");
 
 	SAFE_ADDREF(m_pSphere);
@@ -182,6 +183,7 @@ HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pSphere->Set_Visible(true);
 	m_pSphereLay->Set_Visible(true);
 	m_pRing->Set_Visible(true);
+
 	pAppear_PT->Set_Visible(true);
 	pSpline->Set_Visible(true);
 	
@@ -269,23 +271,16 @@ void CRanrok_Prop::OnCollision(CGameObject* pOther, void* pDesc)
 
 	if (m_fHp > 0)
 	{
-		CEffectParts* pHitLay = Get_PartObject<CEffectParts>("HitLay");
-		CEffectParts* pHit_PT = Get_PartObject<CEffectParts>("Hit_PT");
-		CEffectParts* pPulse_Purple = Get_PartObject<CEffectParts>("Pulse_Purple");
-		
 
-		pHitLay->Set_Visible(true);
-		pHit_PT->Set_Visible(true);
-		pPulse_Purple->Set_Visible(true);
-
-		pHitLay->Get_Component<CInstance_Model>()->Instane_Buffer_ReStruct();
-		pHit_PT->Get_Component<CInstance_Model>()->Instane_Buffer_ReStruct();
-		pPulse_Purple->Get_Component<CInstance_Model>()->Instane_Buffer_ReStruct();
+		m_pSphereHitLay->Set_Visible(true);
+		m_pSphereHitLay->Get_Component<CInstance_Model>()->Instane_Buffer_ReStruct();
 
 		if (CollisionDesc != nullptr)
 		{
 			_vector vHitPos = XMLoadFloat4(&CollisionDesc->vWorldPos);
-			pHit_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vHitPos);
+
+			CEffectPool* pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+			pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP_HIT, this, &CollisionDesc->vWorldPos);
 		}
 
 	}
@@ -325,6 +320,8 @@ void CRanrok_Prop::Free()
 
 	SAFE_RELEASE(m_pSphere);
 	SAFE_RELEASE(m_pSphereLay);
+
+
 
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;

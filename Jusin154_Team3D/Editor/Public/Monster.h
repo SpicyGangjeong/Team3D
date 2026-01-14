@@ -25,6 +25,7 @@ public:
 
 protected:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
+	CMotion_Trail* m_pMotionTrailCom = { nullptr };
 	CUnit*			m_pTarget = { nullptr };
 	CStat*			m_pStat = { nullptr };
 	_float4			m_vTargetPos = { };

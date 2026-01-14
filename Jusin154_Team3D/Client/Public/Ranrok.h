@@ -131,7 +131,11 @@ private:
 	_int m_iHpPhase = { 0 };
 
 
-	_float2 m_vCaptureTimer = { 0.f, 0.1f };
+	_float2 m_vCaptureTimer = { 0.f, 0.05f };
+
+	_float  m_fRimStrength = { 1.f };
+	_float  m_fRimPower = { 0.f };
+	_float4 m_vRimColor = {};
 
 	class CEffect_Container* m_pRanrok_Point = { nullptr };
 	vector<class CEffect_Container*> m_pRanrok_Props;

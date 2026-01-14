@@ -567,9 +567,15 @@ void CRanrok::Behavior_SwipeEnter()
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
+			m_bMotionTrail = true;
 			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_SWIPE , this);
 		}, 0.3f);
 
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_bMotionTrail = false;
+		},
+		0.5f);
 }
 
 HRESULT CRanrok::Behavior_SwipeExitCheck(_float fTimeDelta)
