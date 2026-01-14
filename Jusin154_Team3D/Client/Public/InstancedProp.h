@@ -19,6 +19,7 @@ public:
 		SHADER_PASS_WORLDMODLE_INSTANCE eShaderPass;
 		_bool							isShake;
 		_bool							bEnableRigidbody;
+		_bool							isTree;
 		_float2							vRadius;
 		_float2							vSpeed;
 		_wstring 						strPrototypeTag;
@@ -38,6 +39,7 @@ public:
 
 private:
 	_bool								m_isShake = {};
+	_bool								m_isTree = {};
 	_uint								m_iNumMesh = {};
 	_uint								m_iNumInstacne = {};
 	SHADER_PASS_WORLDMODLE_INSTANCE		m_eShaderPass = {};

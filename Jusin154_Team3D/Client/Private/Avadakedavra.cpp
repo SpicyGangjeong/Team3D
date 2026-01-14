@@ -189,8 +189,6 @@ HRESULT CAvadakedavra::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	static_cast<CPlayer*>(m_pOwner)->Start_CameraShake(0.5f, 1.2f);
 
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_AVADAKEDAVRA, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
-
 	return S_OK;
 }
 
