@@ -797,9 +797,8 @@ void CTroll::Behavior_DeadEnter()
 	m_pRigidBody->SetActive(false);
 	m_pCharacter_Controller->SetActive(false);
 
-	m_pTroll_Particle->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
-	m_pTroll_Particle2->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
-
+	m_pTroll_Particle->Set_Visible(false);
+	m_pTroll_Particle2->Set_Visible(false);
 	m_pLeft_Smoke->Set_Visible(false);
 	m_pRight_Smoke->Set_Visible(false);
 
