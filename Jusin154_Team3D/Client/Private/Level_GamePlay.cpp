@@ -611,6 +611,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* InstanceProp Oak_Tree*/
 	Desc.isShake = true;
+	Desc.isTree = true;
 	Desc.eShaderPass = SHADER_PASS_WORLDMODLE_INSTANCE::DEFAULT;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
@@ -629,6 +630,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* BearBerry */
 	Desc.isShake = true;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.6f, 1.f);
@@ -640,6 +642,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* SM_HM_OwlPost_Window_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
@@ -648,6 +651,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	///* WA_Rectangle_Double_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
@@ -656,6 +660,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	///* WC_Retangle_Double_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
@@ -664,6 +669,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	///* WA_Square_Double_C */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
@@ -672,6 +678,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* Quid_Window_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
@@ -680,6 +687,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* Ollivanders_Box_Window */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
@@ -688,6 +696,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* WC_L_DoubleS_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
@@ -696,6 +705,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* WC_Round_Double_A */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
@@ -704,6 +714,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* SM_HM_Door1a */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = true;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
@@ -712,6 +723,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* SM_HM_Door2b */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = true;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
@@ -728,6 +740,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* OakTree_TallA */
 	Desc.isShake = false;
+	Desc.isTree = true;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.016f);
 	Desc.vSpeed = _float2(0.01f, 0.1f);
@@ -738,6 +751,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* Shrub_B */
 	Desc.isShake = true;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.04f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
@@ -748,6 +762,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* BogMyrtle_A */
 	Desc.isShake = true;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.015f, 0.04f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
@@ -762,6 +777,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* Dogwood_B */
 	Desc.isShake = true;
+	Desc.isTree = true;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
@@ -772,6 +788,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* ScotsPine_LargeA */
 	Desc.isShake = false;
+	Desc.isTree = true;
 	Desc.bEnableRigidbody = true;
 	Desc.vRadius = _float2(0.015f, 0.02f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
@@ -795,6 +812,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 
 	/* StratifiedCliff_A1 */
 	Desc.isShake = false;
+	Desc.isTree = false;
 	Desc.bEnableRigidbody = false;
 	Desc.vRadius = _float2(0.f, 0.f);
 	Desc.vSpeed = _float2(0.f, 0.f);
