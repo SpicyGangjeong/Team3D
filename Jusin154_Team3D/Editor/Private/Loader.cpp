@@ -1821,62 +1821,123 @@ HRESULT CLoader::Loading_For_Effect()
 #pragma region DUNGEON_MAP
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
-	/* Cave Wall */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Wall",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Props */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Props",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* ArenaFloor */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/ArenaFloor",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_Center_Structure_AnteChamber */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Center_Structure/AnteChamber",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_Center_Structure_Core */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Center_Structure/Core",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_ConjuredDragonAttackZones */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/ConjuredDragonAttackZones",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_Rock_Barriers */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Rock_Barriers",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_Rock_SM_Repository_FloatingGround */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/SM_Repository_FloatingGround",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_Rock_SM_Repository_Stage3MoveableRocks */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Stage3MoveableRocks",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_Rock_Interactables */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/BreakingRocks/LG_E",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_Rock_Main */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Sanctum_Dungeon_Rock_Main */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Interactables",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	/* Cavern_Dungeon_Rocks */
-	if (FAILED(MapFolderLoad("../Bin/Resources/Models/MapMesh/Game/Environment/Cavern_Dungeon/Mesh/Rocks",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
+
+	vector<future<void>> jobFutures;
+
+	_uint iLoadCount = 13;
+	vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
+
+	_bool isLoad_Map = { true };
+	if (isLoad_Map)
+	{
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Wall",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Props",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/ArenaFloor",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Center_Structure/AnteChamber",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Center_Structure/Core",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/ConjuredDragonAttackZones",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Rock_Barriers",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/SM_Repository_FloatingGround",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/Stage3MoveableRocks",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository/BreakingRocks/LG_E",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Meshes/Repository",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Sanctum_Dungeon/Interactables",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Cavern_Dungeon/Mesh/Rocks",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
 #pragma endregion
 
+	if (isLoad_Map)
+	{
+		for (auto& jobFuture : jobFutures)
+		{
+			jobFuture.get();
+		}
 
+		for (_uint i = 0; i < Contents.size(); ++i) {
+			for (_uint j = 0; j < (Contents[i])->size(); ++j) {
+				FOLDER_LOAD* pContents = (*Contents[i])[j];
+				if (true == pContents->bLoadTags) {
+					ModelPrototypeTags.push_back(pContents->pModelTag);
+					ModelPrototypePath.push_back(pContents->pathModel);
+				}
 
+				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pModelTag, pContents->pLoadedModel))) {
+					return E_FAIL;
+				}
+
+				for (_uint k = 0; k < pContents->pRigidBodyTags.size(); ++k) {
+					if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pRigidBodyTags[k], pContents->LoadedRigidBody[k]))) {
+						return E_FAIL;
+					}
+				}
+
+			}
+		}
+	}
 
 
 	m_strMessage = TEXT("Shader Loading..");
@@ -2139,6 +2200,15 @@ HRESULT CLoader::Loading_For_Effect()
 
 
 
+	if (isLoad_Map)
+	{
+		for (_uint i = 0; i < Contents.size(); ++i) {
+			for (_uint j = 0; j < (Contents[i])->size(); ++j) {
+				Safe_Delete((*Contents[i])[j]);
+			}
+			Safe_Delete(Contents[i]);
+		}
+	}
 
 	m_strMessage = TEXT("Loading Success!");
 

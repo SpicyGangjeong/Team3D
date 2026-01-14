@@ -63,8 +63,11 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 
 	Find_Anim();
 
-	for(auto& pObject : m_Objects)
-		dynamic_cast<CUnit*>(pObject)->Play_Event();
+	if(m_isUpdateEvent)
+	{
+		for (auto& pObject : m_Objects)
+			dynamic_cast<CUnit*>(pObject)->Play_Event();
+	}
 }
 
 HRESULT CLevel_ObjectViewer::Render()
@@ -471,6 +474,7 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 				EventName[0] = '\0';
 			}
 		}
+		GUI::Checkbox("isUpdateEvent", &m_isUpdateEvent);
 		GUI::InputFloat("Volume", &m_fVolume);
 		static _char SoundFilter[256] = {};
 
