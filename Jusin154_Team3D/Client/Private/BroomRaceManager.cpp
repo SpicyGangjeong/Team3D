@@ -426,7 +426,7 @@ void CBroomRaceManager::RaceReady()
 			CTransform* pTransform =
 				racer.pRacer->Get_Component<CTransform>();
 			CCharacter_Controller* pCharacter = racer.pRacer->Get_Component<CCharacter_Controller>();
-			XMStoreFloat4(&m_OriginPos, racer.pRacer->Get_WorldPostion());
+			XMStoreFloat4(&m_OriginPos, XMVectorSet(-552.794f, -27.676f, -396.840f, 1.f));
 			pCharacter->Set_Position(spawnPos);
 			pTransform->Set_State(STATE::POSITION, spawnPos);
 			pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));

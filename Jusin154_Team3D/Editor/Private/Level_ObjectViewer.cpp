@@ -496,6 +496,9 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 						strcpy_s(EventName, CMyTools::ToString(Name).c_str());
 						m_pGameInstance->Sound_Play(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT, false, m_fVolume);
 					}
+					GUI::SameLine();
+					if (GUI::SmallButton(("Stop Sound##" + to_string(i)).c_str()))
+						m_pGameInstance->Sound_Stop(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT);
 				}
 			}
 		}

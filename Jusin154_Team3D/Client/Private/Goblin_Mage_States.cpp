@@ -5,6 +5,7 @@
 #include "EffectPool.h"
 #include "Player.h"
 #include "EffectParts.h"
+#include "InfoInstance.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -510,6 +511,7 @@ void CGoblin_Mage::Behavior_DeadEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::DEAD);
 	m_pCharacter_Controller->SetGravity(true);
+	m_pInfoInstance->Deregist_ActiveMonster(this);
 
 	_bool bStrongerKnockDown = { false };
 
@@ -665,7 +667,7 @@ void CGoblin_Mage::Descendo_Event()
 	m_fAirTime = 0.f;
 
 	pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 5.f);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 3.f);
 
 	Add_Event(m_Animation[STATEANIM::KNOCKDOWN_BWD].first,
 		[this]() {			pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT];

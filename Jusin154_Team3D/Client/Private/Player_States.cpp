@@ -922,6 +922,14 @@ void CPlayer::Behavior_BlinkEnter()
 			m_pEffectPool->Use_Skill(SKILL_TYPE::BLINK, this);
 		},
 		0.1f);
+
+	Add_Sound_Event(m_Animation[STATEANIM::DODGE].first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BLINK_2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		},
+		0.01f);
+
+	
 }
 
 HRESULT CPlayer::Behavior_BlinkExitCheck(_float fTimeDelta)
@@ -1344,16 +1352,15 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
-
-	if (SUCCEEDED(InputSpell()))
+	if (fRatio >= 0.1f)
 	{
-		if (fRatio >= 0.1f)
+		if (SUCCEEDED(InputSpell()))
 		{
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 			return E_FAIL;
+
 		}
 	}
-
 	if (iCurrAnimIndex == m_Animation[STATEANIM::LIGHT_ATTACK].first+3)
 	{
 		if (SUCCEEDED(InputAction()))
@@ -1629,6 +1636,7 @@ void CPlayer::Behavior_SpellExit()
 	m_pInfoInstance->Set_SearchLockOnFlag(true);
 	m_pModelCom->Set_BlendDuration(0.3f);
 	Reset_Event();
+	m_pGameInstance->Sound_Stop(SOUND::SD_KIND::SP_BOMBARD_36, SD_CHANNEL_GROUP::EFFECT);
 	m_bLookAt = false;
 	m_bSpellHit = false;
 	m_bStartSpellAnim = false;
@@ -1702,6 +1710,34 @@ void CPlayer::Behavior_ShieldEnter()
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
+		0.1f);
+
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_PROTEGO, SD_CHANNEL_GROUP::VOICE, false, 0.7f); },
+		0.01f);
+
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 4);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_4, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_8, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_13, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 3:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_22, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 4:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_30, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			}
+			 },
 		0.1f);
 }
 
@@ -1933,11 +1969,13 @@ void CPlayer::Behavior_ParryEnter()
 	}
 
 	Add_Event(pairAnimInfo.first,
-
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY_SIDE, Get_PartObject<CWand>());
 			m_pGameInstance->SlowMotion(0.4f, 0.2f); },
 		0.01f);
 
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);},
+		0.01f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
@@ -2117,6 +2155,7 @@ void CPlayer::Behavior_Broom_RideEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::BROOM_RIDE);
 	m_pBroom->Set_Ride(true);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BROOM_RIDE, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 	pair<_uint, _bool> pairAnimInfo;
 	pairAnimInfo = m_Animation[STATEANIM::BROOM_MOUNT];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -2340,6 +2379,7 @@ void CPlayer::Behavior_Broom_HoverExit()
 void CPlayer::Behavior_Broom_FlyEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::FLY);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BROOM_NORMAL, SD_CHANNEL_GROUP::EFFECT, true, 0.7f);
 	Reset_Event();
 }
 
@@ -2513,6 +2553,8 @@ void CPlayer::Behavior_Broom_FlyExit()
 void CPlayer::Behavior_Broom_TurboFlyEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::TURBOFLY);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BROOM_BOOST, SD_CHANNEL_GROUP::EFFECT, true, 0.7f);
+
 }
 
 HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
@@ -2646,6 +2688,7 @@ HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 void CPlayer::Behavior_Broom_TurboFlyExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::TURBOFLY);
+	m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_BOOST, SD_CHANNEL_GROUP::EFFECT);
 	Reset_Event();
 }
 
@@ -2653,6 +2696,7 @@ void CPlayer::Behavior_Broom_DismountEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	m_bOnce = false;
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BROOM_DOWN, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 	m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bOnce);
 	pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_DISMOUNT);
 	m_pFSM->Enable_State(FSMSTATE::BROOM_DISMOUNT);
@@ -2948,6 +2992,19 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
 			0.f);
+
+		Add_Sound_Event(AnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_BOMBARDA, SD_CHANNEL_GROUP::VOICE, false, 0.7f);
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_36, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);},
+			0.01f);
+
+		Add_Sound_Event(AnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_9, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
+			0.3f);
+
+
 		Info.pText = TEXT("봄바르다!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
@@ -2960,6 +3017,16 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
 			0.f);
+
+		Add_Sound_Event(AnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_DECENDO, SD_CHANNEL_GROUP::VOICE, false, 0.7f);
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_DECENDO_0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_DECENDO_5, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_DECENDO_6, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
+			0.01f);
+
+
 		Info.pText = TEXT("디센도!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
@@ -2972,6 +3039,13 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 			0.f);
+
+		Add_Sound_Event(AnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_LEVIOSO, SD_CHANNEL_GROUP::VOICE, false, 0.7f);
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LEVIOSA_12, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
+			0.01f);
+
 		Info.pText = TEXT("레비오소!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
@@ -2985,6 +3059,17 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Event(AnimIndex,
 			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO_SIDE, Get_PartObject<CWand>()); },
 			0.f);
+
+		Add_Sound_Event(AnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_ACCIO_12, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
+			0.01f);
+
+		Add_Sound_Event(AnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_ACCIO_15, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
+				0.26f);
+
 		Info.pText = TEXT("아씨오!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 		break;
@@ -3068,6 +3153,13 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
 				0.f);
+
+			Add_Sound_Event(pairAnimInfo.first,
+				[this]() {
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_LUMOS, SD_CHANNEL_GROUP::VOICE, false, 0.7f);
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LUMOS_0, SD_CHANNEL_GROUP::EFFECT, false, 0.1f); },
+				0.01f);
+			
 			Info.pText = TEXT("루모스!");
 			m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
@@ -3120,6 +3212,7 @@ void CPlayer::Play_SpellHitAnim()
 			case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.5f);
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_DECENDO_7, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 				break;
 			}
 			m_pFSM->Change_State(FSMSTATE::SPELL);
@@ -3172,10 +3265,15 @@ void CPlayer::Hit_Levioso(_float fTimeDelta)
 
 _bool CPlayer::IsInputLocked()
 {
-	return m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
+	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
 		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
 		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT);
+		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void CPlayer::Add_FSM()
