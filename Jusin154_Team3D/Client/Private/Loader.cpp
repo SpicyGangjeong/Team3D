@@ -1352,7 +1352,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			TEXT("Prototype_Component_Troll_Model")
 		));
 		jobCharacterModels.emplace_back(Deferred_ModelLoad(
-			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 			TEXT("Prototype_Component_Ranrok_Model")
 		));
 	}
