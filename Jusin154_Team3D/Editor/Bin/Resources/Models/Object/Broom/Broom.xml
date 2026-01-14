@@ -1,12 +1,12 @@
 <Material>
-	<MI_FlyingClassBroom_01	ShaderIndex = "10" OutLineWrite="10">
+	<MI_FlyingClassBroom_01	ShaderIndex = "8" OutLineWrite="10">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
-        <aiTextureType_DIFFUSE                 Index="1" Filename="T_FlightClassBroom_01_D" Extension=".png"/>
+        <aiTextureType_DIFFUSE                 Index="1" Filename="T_FlightClassBroom_01_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
         <aiTextureType_AMBIENT                 Index="3" Filename="" Extension=""/>
-        <aiTextureType_EMISSIVE                Index="4" Filename="T_FlightClassBroom_01_E" Extension=".png"/>
+        <aiTextureType_EMISSIVE                Index="4" Filename="T_FlightClassBroom_01_E" Extension=".dds"/>
         <aiTextureType_HEIGHT                  Index="5" Filename="" Extension=""/>
-        <aiTextureType_NORMALS                 Index="6" Filename="T_FlightClassBroom_01_N" Extension=".png"/>
+        <aiTextureType_NORMALS                 Index="6" Filename="T_FlightClassBroom_01_N" Extension=".dds"/>
         <aiTextureType_SHININESS               Index="7" Filename="" Extension=""/>
         <aiTextureType_OPACITY                 Index="8" Filename="" Extension=""/>
         <aiTextureType_DISPLACEMENT            Index="9" Filename="" Extension=""/>
@@ -15,7 +15,7 @@
         <aiTextureType_BASE_COLOR              Index="12" Filename="" Extension=""/>
         <aiTextureType_NORMAL_CAMERA           Index="13" Filename="" Extension=""/>
         <aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
-        <aiTextureType_METALNESS               Index="15" Filename="T_FlightClassBroom_01_MRO" Extension=".png"/>
+        <aiTextureType_METALNESS               Index="15" Filename="T_FlightClassBroom_01_MRO" Extension=".dds"/>
         <aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
         <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
         <aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>

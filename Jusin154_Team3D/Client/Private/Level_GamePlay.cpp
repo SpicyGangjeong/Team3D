@@ -126,7 +126,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	_bool bLoadNPC = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bLoadNPC = false;
+	bLoadNPC = true;
 #endif
 #endif // _DEBUG
 	if (true == bLoadNPC) {
@@ -175,7 +175,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	bStartCinematic = true;
 #elif Bin
 	bStartCinematic = false;
-#elif gimchi
+#elif gimch
 	bStartCinematic = false;
 #endif
 #endif // _DEBUG
@@ -365,7 +365,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 #ifdef 기무리
 	isReady_Background = true;
 	isReady_Hogsmeade = true;
-	isReady_Hogwart = false;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -1140,8 +1140,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -1164,8 +1164,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 		}
 		{
 			CNPC_EleazarFig::NPCDESC NPCDesc{};
-			NPCDesc.vPos = _float4(101.f, 14.f, 100.f, 1.f);
-			NPCDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+			NPCDesc.vPos = _float4(96.311f, 4.676f, 77.116f, 1.f);
+			NPCDesc.vRotQ = _float4(0.f, 0.691f, 0.f, 0.723f);
 			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_EleazarFig>(g_iStaticLevel, NEXT_LEVEL, LAYER_NPC, &NPCDesc))) {
 				return E_FAIL;
 			}

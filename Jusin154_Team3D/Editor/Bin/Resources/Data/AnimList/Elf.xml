@@ -4,7 +4,7 @@
 		<Anim state="BROWSE_START" index="51" loop="false"/>
 	</Name>
 	
-	<Name Flow="1" Trigger="DIALOGUE_END">
+	<Name Flow="1" Trigger="ANIM_END">
 		<Anim state="BROWSE_END" index="50" loop="false"/>
 	</Name>
 

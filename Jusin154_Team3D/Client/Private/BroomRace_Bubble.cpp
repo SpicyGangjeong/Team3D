@@ -78,7 +78,7 @@ void CBroomRace_Bubble::Late_Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = pBubble->Get_WorldPostion();
-		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
+		ON_COLLISION_INFO CollisionInfo = MonsterSweepTarget(vStartPos, vEndPos, 0.002f);
 
 		OnCollision(this, &CollisionInfo);
 

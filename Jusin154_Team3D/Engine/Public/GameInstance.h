@@ -211,8 +211,14 @@ public:
 #pragma endregion
 #pragma region SOUND_MANAGER
 	HRESULT Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode);
+	SOUND::SD_KIND Find_Sound(const _wstring wstrFilePath);
 	void Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume);
-	void Sound_StopAll(); // 전체 정지
+	void Sound_Play_3DPos(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _float3& refSpeaker, _float fMin = 3.f, _float fMax = 20.f, _bool bRepeat = false);
+	void Sound_Pause_Channel(SD_CHANNEL_GROUP eSoundChannel, bool bPause); 
+	void Sound_Set3DListenerPos(class CTransform* pTransform);
+	void Sound_StopChannel(SD_CHANNEL_GROUP eSoundChannel); 
+	void Sound_Stop(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel); 
+	void Sound_StopAll(); 
 #pragma endregion
 
 #pragma region PICKING
@@ -245,10 +251,10 @@ public:
 	void				ApplyFilterData(PSX::PxRigidActor* pRigidActor);
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 #ifdef EDITOR_PROJECT
+	void Add_Editor_Plane(PHYSX_USERDATA& PlaneData);
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
-	void Add_Editor_Plane(PHYSX_USERDATA& PlaneData);
 #pragma endregion
 #pragma region THREADHOLDER
 	template<class Function, class... Args>

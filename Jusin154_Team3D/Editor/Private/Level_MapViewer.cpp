@@ -806,9 +806,9 @@ HRESULT CLevel_MapViewer::Ready_Layer_MapObjectManager(const _wstring& strLayerT
 
 HRESULT CLevel_MapViewer::Ready_Layer_Player_And_Ranrok()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER))) {
+	//	return E_FAIL;
+	//}
 
 
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRanrok>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))

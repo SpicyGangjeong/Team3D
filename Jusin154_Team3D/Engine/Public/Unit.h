@@ -36,6 +36,9 @@ public:
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 	_bool IsAI() { return m_bAI; }
 
+	HRESULT Ready_Sound_Events(const _char* pFilePath);
+	void Add_Sound_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bKeep = false);
+	void Reset_SoundEvent();
 #ifdef _DEBUG
 	void Load_KeyFrame();
 #endif // _DEBUG
@@ -89,6 +92,7 @@ protected:
 	_float m_fHitRadius = {};
 
 	vector<PendingEvent> m_PendingEvents;
+	vector<PendingEvent> m_SoundEvents = {};
 
 	_float m_fHitDegree = {};
 	_float m_fHitCross = {};
@@ -105,12 +109,17 @@ private:
 
 protected:
 	HRESULT Ready_Components(void*pArg);
+#ifdef _DEBUG
+public:
+#endif // _DEBUG
 	void Play_Event();
+protected:
 	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bKeep = false);
 	void Reset_Event();
 	void Check_HitAngle(_vector ProjectileDir);
 	virtual void Load_AnimXML(const string& path);
 	STATEANIM::ESTATE StringToStateAnim(const string& s);
+
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;

@@ -100,11 +100,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	//ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
-	//m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	//m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+	ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
+	m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 
-	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
+	m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
 
 /* 호그 스미드 */
@@ -261,6 +261,10 @@ HRESULT CLevel_EffectViewer::Ready_Layer_BackGround(const _wstring& strLayerTag)
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Terrain"), &Desc)))
 	//	return E_FAIL;
 
+
+	_float4 vColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	m_pGameInstance->Set_FogColor(vColor);
+	m_pGameInstance->Set_Fog(10.f, 5.f);
 	m_pInfoInstance->Load_MapObjects("Dungeon_Map_Data");
 
 	CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data");

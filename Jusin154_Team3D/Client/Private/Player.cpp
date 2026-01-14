@@ -126,6 +126,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fRayDistance = 5.f;
 	m_pModelCom->Set_DisableRootMotionScale(true);
 
+	Ready_Sound_Events("../Bin/Resources/Models/Human/PlayableCharacter/KeyFrame.xml");
+
 	return S_OK;
 }
 
@@ -144,7 +146,6 @@ void CPlayer::Update(_float fTimeDelta)
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
 	Update_RaycastElements();
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	Play_SpellHitAnim();
@@ -574,6 +575,9 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 			if (pContents->vParam_11.x == 1.f) {
 				m_pModelCom->Set_AnimationIndex(m_Animation[STATEANIM::SPAWN].first, m_Animation[STATEANIM::SPAWN].second);
 			}
+		}
+		else if (pContents->vFlags.b[2]) {
+			m_pFSM->Change_State(FSMSTATE::DODGE);
 		}
 	} break;
 	case TIMESOCKET_FUNC::BIND_SOCKET_MATRIX:
