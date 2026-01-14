@@ -26,6 +26,8 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	HRESULT Capture_PreShadow();
+	_matrix Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3>& WorldPositions);
 
 private:
 	CLight*				m_pLightCom = { nullptr };

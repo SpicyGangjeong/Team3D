@@ -662,7 +662,7 @@ void CRanrok::Behavior_SwipeEnter()
 		[this]() {
 			m_bMotionTrail = false;
 		},
-		0.6f);
+		0.5f);
 
 	m_fSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)] = m_fMaxSkillCoolTime[ENUM_CLASS(RANROK_SKILL::SWIPE)];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
