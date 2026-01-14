@@ -14,8 +14,14 @@ enum class SD_CHANNEL_GROUP {
 
 enum class SD_KIND {
 #pragma region BGM
-	BGM_0,
-	BGM_1,
+	BGM_Battle_0,
+	BGM_Battle_1,
+	BGM_Land_DAY,
+	BGM_Land_NIGHT,
+	BGM_HOGWART_0,
+	BGM_HOGWART_1,
+	BGM_HOGWART_INT,
+	BGM_RANROK_0,
 #pragma endregion
 #pragma region SPELL
 	SP_JAP_0,
@@ -38,6 +44,14 @@ enum class SD_KIND {
 	S_AVADA_KEDAVRA_11,
 	S_AVADA_KEDAVRA_12,
 #pragma endregion
+
+#pragma region ANCIENT_LIGHTNING
+	SP_LIGHTNING_0,
+	SP_LIGHTNING_1,
+	SP_LIGHTNING_2,
+	SP_LIGHTNING_3,
+#pragma endregion
+
 #pragma region ACCIO
 	SP_ACCIO_0,
 	SP_ACCIO_1,
@@ -46,6 +60,12 @@ enum class SD_KIND {
 	SP_ACCIO_4,
 	SP_ACCIO_5,
 	SP_ACCIO_6,
+#pragma endregion
+
+#pragma region REPARO
+	SP_REPARO_0,
+	SP_REPARO_1,
+	SP_REPARO_2,
 #pragma endregion
 
 
