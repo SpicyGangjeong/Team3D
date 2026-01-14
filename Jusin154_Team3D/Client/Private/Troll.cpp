@@ -75,8 +75,6 @@ HRESULT CTroll::Initialize(void* pArg)
 	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("RightHand");
 	m_pWeapon_BoneMat = Get_PartObject<CTroll_Weapon>()->Get_Component<CModel>()->Get_BoneMatrixPtr("Bone");
 
-	m_pModelCom->Set_DisableRootMotionScale(true);
-
 	return S_OK;
 }
 
@@ -257,7 +255,7 @@ HRESULT CTroll::Render_OutLine()
 	Compute_Depth();
 	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
 	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
-	m_fOutLineThickness = CMyTools::Lerp_f1D(0.024f, 0.5f, fRatio);
+	m_fOutLineThickness = CMyTools::Lerp_f1D(5.f, 10.f, fRatio);
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
 		return E_FAIL;
 	}

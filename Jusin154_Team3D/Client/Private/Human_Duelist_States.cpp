@@ -276,7 +276,7 @@ void CHuman_Duelist::Behavior_HitEnter()
 			return;
 		}
 		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.1f);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
@@ -284,7 +284,7 @@ void CHuman_Duelist::Behavior_HitEnter()
 		break;
 	case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 		pairAnimInfo = m_Animation[STATEANIM::DAZED_START];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.3f);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.1f);
 		Add_Event(pairAnimInfo.first,
 			[this]() {
 				pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::DAZED_LOOP];

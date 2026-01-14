@@ -91,7 +91,6 @@ void CTrailObject::Late_Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-
 	if (m_TrailInfo.isBloom == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);

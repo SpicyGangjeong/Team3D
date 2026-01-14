@@ -1248,7 +1248,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			TEXT("Prototype_Component_GerboldOlivander_Model")
 		));
 		jobCharacterModels.emplace_back(Deferred_ModelLoad(
-			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/EleazarFig/Professor_EleazarFig.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 			TEXT("Prototype_Component_Professor_EleazarFig_Model")
 		));
 		jobCharacterModels.emplace_back(Deferred_ModelLoad(

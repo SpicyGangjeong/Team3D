@@ -237,8 +237,10 @@ HRESULT CGoblin_Assassin::Render()
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 
-	if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
-		return E_FAIL;
+	if (m_bMotionTrail) {
+		if (FAILED(m_pMotionTrailCom->Render(m_pShaderCom))) {
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -411,11 +413,7 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		_uint iSkillType = pEffect_Container->Get_SkillType();
 
-#ifndef Bin
 		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
-#endif // !Bin
-
-
 
 		switch (iSkillType)
 		{
@@ -462,7 +460,6 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 		}
 	}
 
-#ifndef Bin
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
@@ -471,7 +468,6 @@ void CGoblin_Assassin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
 	}
-#endif // !Bin
 
 	m_pFSM->Change_State(FSMSTATE::HIT);
 	
