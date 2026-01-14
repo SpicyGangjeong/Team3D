@@ -188,6 +188,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Broom_TargetGate2D.h" />
     <ClInclude Include="..\public\Broom_Trophy.h" />
     <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
+    <ClInclude Include="..\public\Ranrok_EtherInfo.h" />
     <ClInclude Include="..\public\Dialogue_Canvas.h" />
     <ClInclude Include="..\public\Dialogue_Choice.h" />
     <ClInclude Include="..\public\Dialogue_Panel.h" />
@@ -484,6 +485,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Broom_States.cpp" />
     <ClCompile Include="..\private\Broom_TargetGate2D.cpp" />
     <ClCompile Include="..\private\Broom_Trophy.cpp" />
+    <ClCompile Include="..\private\Ranrok_EtherInfo.cpp" />
     <ClCompile Include="..\private\Dialogue.cpp" />
     <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
     <ClCompile Include="..\private\Dialogue_Canvas.cpp" />
@@ -507,6 +509,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\NPCInteraction.cpp" />
     <ClCompile Include="..\Private\BroomBoost.cpp" />
     <ClCompile Include="..\Private\Protego_Hit.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Ether.cpp" />
     <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
     <ClCompile Include="..\private\QuestInstance.cpp" />
     <ClCompile Include="..\private\Quest_Canvas.cpp" />
@@ -802,6 +805,7 @@ call Update_Shaders.bat
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxRanrokEther.hlsl" />
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>

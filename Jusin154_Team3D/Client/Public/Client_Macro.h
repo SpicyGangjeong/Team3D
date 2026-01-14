@@ -20,6 +20,7 @@ namespace Client {
 #define FX_UIINSTANCE			TEXT("FX_UIINSTANCE")
 #define FX_VTXPOS				TEXT("FX_VTXPOS")
 #define FX_NPC_PBR_ANIM			TEXT("FX_NPC_PBR_ANIM")
+#define FX_RANROK_ETHER			TEXT("FX_RANROK_ETHER")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
