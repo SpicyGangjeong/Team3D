@@ -20,6 +20,8 @@
 #include "Goblin.h"
 #include "Broom.h"
 #include "ReparoObject.h"
+#include "Sound_Manager.h"
+#include "Unit.h"
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
@@ -42,6 +44,7 @@ HRESULT CLevel_ObjectViewer::Initialize()
 		return E_FAIL;
 	}
 
+	m_fVolume = 0.8f;
 
 	return S_OK;
 }
@@ -59,6 +62,9 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 	Parts_Object_Setting();
 
 	Find_Anim();
+
+	for(auto& pObject : m_Objects)
+		dynamic_cast<CUnit*>(pObject)->Play_Event();
 }
 
 HRESULT CLevel_ObjectViewer::Render()
@@ -362,6 +368,7 @@ void CLevel_ObjectViewer::Show_AnimList()
 	GUI::End();
 }
 
+
 void CLevel_ObjectViewer::Show_ObjectList()
 {
 	for (size_t i = 0; i < m_Objects.size(); i++)
@@ -428,6 +435,7 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		_int iIndex = pModel->Get_AnimIndex();
 		if (GUI::InputInt("Anim Index", &iIndex))
 		{
+			m_iCurAnimIndex = iIndex;
 			pModel->Set_AnimationIndex(iIndex);
 		}
 
@@ -438,8 +446,15 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 			Load_KeyFrame(szName);
 		}
-
-		static _char EventName[64] = {};
+		if(GUI::Button("Load KeyFrame_"))
+		{
+			for (auto& pObject : m_Objects)
+			{
+				dynamic_cast<CUnit*>(pObject)->Reset_SoundEvent();
+				dynamic_cast<CUnit*>(m_Objects[m_iObjectIndex])->Ready_Sound_Events("../Bin/Resources/Models/Human/PlayableCharacter/KeyFrame.xml");
+			}
+		}
+		static _char EventName[256] = {};
 
 		GUI::InputText("EventName", EventName, sizeof(EventName));
 		GUI::SameLine();
@@ -456,6 +471,31 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 				EventName[0] = '\0';
 			}
 		}
+		GUI::InputFloat("Volume", &m_fVolume);
+		static _char SoundFilter[256] = {};
+
+		if (GUI::Button("Stop Sound"))
+			m_pGameInstance->Sound_StopAll();
+
+		if (GUI::CollapsingHeader("Sound list"))
+		{
+			GUI::InputText("Filter", SoundFilter, sizeof(SoundFilter));
+
+			_wstring soudnfilter = CMyTools::ToWstring(SoundFilter);
+			for (_uint i = 0; i < ENUM_CLASS(SOUND::SD_KIND::END); ++i)
+			{
+				_wstring Name = SOUND::SD_PATH::SD_KIND_PATHS[i];
+				if (string::npos != Name.find(soudnfilter))
+				{
+					if (GUI::Button(("S_" + CMyTools::ToString(Name)).c_str()))
+					{
+						strcpy_s(EventName, CMyTools::ToString(Name).c_str());
+						m_pGameInstance->Sound_Play(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT, false, m_fVolume);
+					}
+				}
+			}
+		}
+		
 
 
 		for (auto& iter : m_KeyFrames)
@@ -702,6 +742,7 @@ void CLevel_ObjectViewer::Find_Anim()
 
 void CLevel_ObjectViewer::Save_KeyFrame()
 {
+
 	_char szDrive[MAX_PATH] = {};
 	_char szDir[MAX_PATH] = {};
 	_splitpath_s(m_DummyPath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
@@ -736,17 +777,17 @@ void CLevel_ObjectViewer::Save_KeyFrame()
 		}
 	}
 
-	if (!pAnimNode)
+	if (nullptr == pAnimNode)
 	{
 		pAnimNode = doc.NewElement("Animation");
 		pAnimNode->SetAttribute("Index", m_iCurAnimIndex);
 		pRoot->InsertEndChild(pAnimNode);
 	}
 
-	while (tinyxml2::XMLElement* pKey = pAnimNode->FirstChildElement("KeyFrame"))
-	{
-		pAnimNode->DeleteChild(pKey);
-	}
+	//while (tinyxml2::XMLElement* pKey = pAnimNode->FirstChildElement("KeyFrame"))
+	//{
+	//	pAnimNode->DeleteChild(pKey);
+	//}
 
 	for (auto& iter : m_KeyFrames)
 	{
@@ -757,9 +798,20 @@ void CLevel_ObjectViewer::Save_KeyFrame()
 		pKey->SetAttribute("Ratio", buf);
 		pKey->SetAttribute("Volume", m_fVolume);
 		pAnimNode->InsertEndChild(pKey);
+
+		SOUND::SD_KIND eSoundKind = m_pGameInstance->Find_Sound(CMyTools::ToWstring(Path));
+
+		if(nullptr != m_Objects[m_iObjectIndex])
+		{
+			dynamic_cast<CUnit*>(m_Objects[m_iObjectIndex])->Add_Sound_Event(m_iCurAnimIndex,
+				[this, eSoundKind, iter]() { m_pGameInstance->Sound_Play(eSoundKind, SD_CHANNEL_GROUP::EFFECT, false, m_fVolume); },
+				iter.second, true);
+		}
 	}
+	m_KeyFrames.clear();
 
 	doc.SaveFile(Path.c_str());
+	
 }
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)

@@ -25,7 +25,8 @@ public:
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair<_string, TimeLine*>& pairTimeLine);
-	HRESULT Clear_AllEvents();
+	HRESULT		Clear_AllEvents();
+
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 	class CInfoInstance*	m_pInfoInstance = { nullptr };

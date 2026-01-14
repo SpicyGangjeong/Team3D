@@ -1,0 +1,8 @@
+<KeyFrames>
+    <Animation Index="206">
+        <KeyFrame Event="Player/Voice/avadakedavra_voice.wav" Ratio="0.265" Volume="0.8"/>
+    </Animation>
+    <Animation Index="858">
+        <KeyFrame Event="Player/Voice/decendo_voice.wav" Ratio="0.022" Volume="1"/>
+    </Animation>
+</KeyFrames>

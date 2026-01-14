@@ -302,8 +302,12 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 HRESULT CGoblin_Assassin::Behavior_SlashExitCheck(_float fTimeDelta)
 {
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+
+
 	if (fRatio >= 0.8f)
 	{
+		m_pGoblinSpector->Spector_Trail_Visible(false);
 		Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_CanTakeDamage(false);
 		Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_CanTakeDamage(false);
 		m_pFSM->Change_State(FSMSTATE::COMBAT);

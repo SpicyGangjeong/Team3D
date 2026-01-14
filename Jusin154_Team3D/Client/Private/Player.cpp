@@ -56,7 +56,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 
 #if 진우
-	m_isDebugMode = true; // 디버그 무적 모드
+	m_isDebugMode = false; // 디버그 무적 모드
 #endif
 #if 나
 	m_isDebugMode = true; // 디버그 무적 모드
@@ -125,6 +125,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 	m_fRayDistance = 5.f;
 	m_pModelCom->Set_DisableRootMotionScale(true);
+
+	Ready_Sound_Events("../Bin/Resources/Models/Human/PlayableCharacter/KeyFrame.xml");
 
 	return S_OK;
 }

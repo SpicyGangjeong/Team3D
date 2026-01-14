@@ -11,6 +11,7 @@ public:
     static  _string s_ArrChannelName[ENUM_CLASS(SD_CHANNEL_GROUP::END)];
     static  list<Channel*> s_listChannel[ENUM_CLASS(SD_CHANNEL_GROUP::END)];
     static  Sound* s_ArrSounds[ENUM_CLASS(SOUND::SD_KIND::END)];
+    static map<_wstring, SOUND::SD_KIND> s_SoundMap;
 
 private:
     CSound_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -29,9 +30,9 @@ public:
     void Sound_Stop(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel); // 특정 사운드 정지
     void Sound_StopAll(); // 전체 정지
     void Sound_SetVolume(SD_CHANNEL_GROUP eSoundChannel, float fVolume);
-    void Sound_Test();
 
     HRESULT Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode);
+    SOUND::SD_KIND Find_Sound(const _wstring wstrFilePath);
 
 private:
     ID3D11Device* m_pDevice = { nullptr };
@@ -41,6 +42,7 @@ private:
 
 private:
     HRESULT Initialize();
+    void Ready_SoundMap();
 
 public:
     static CSound_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

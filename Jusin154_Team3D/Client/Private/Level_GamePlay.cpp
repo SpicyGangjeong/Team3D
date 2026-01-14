@@ -175,7 +175,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	bStartCinematic = true;
 #elif Bin
 	bStartCinematic = false;
-#elif gimchi
+#elif gimch
 	bStartCinematic = false;
 #endif
 #endif // _DEBUG

@@ -1032,9 +1032,33 @@ HRESULT CGameInstance::Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundF
 {
 	return m_pSound_Manager->Load_Sound(eKind, wstrSoundFilePath, eSoundMode);
 }
+SOUND::SD_KIND CGameInstance::Find_Sound(const _wstring wstrFilePath)
+{
+	return m_pSound_Manager->Find_Sound(wstrFilePath);
+}
 void CGameInstance::Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume)
 {
 	m_pSound_Manager->Sound_Play(eSoundKind, eSoundChannel, bRepeat, fVolume);
+}
+void CGameInstance::Sound_Play_3DPos(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _float3& refSpeaker, _float fMin, _float fMax, _bool bRepeat)
+{
+	m_pSound_Manager->Sound_Play_3DPos(eSoundKind, eSoundChannel, refSpeaker, fMin, fMax, bRepeat);
+}
+void CGameInstance::Sound_Pause_Channel(SD_CHANNEL_GROUP eSoundChannel, bool bPause)
+{
+	m_pSound_Manager->Sound_Pause_Channel(eSoundChannel, bPause);
+}
+void CGameInstance::Sound_Set3DListenerPos(CTransform* pTransform)
+{
+	m_pSound_Manager->Sound_Set3DListenerPos(pTransform);
+}
+void CGameInstance::Sound_StopChannel(SD_CHANNEL_GROUP eSoundChannel)
+{
+	m_pSound_Manager->Sound_StopChannel(eSoundChannel);
+}
+void CGameInstance::Sound_Stop(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel)
+{
+	m_pSound_Manager->Sound_Stop(eSoundKind, eSoundChannel);
 }
 void CGameInstance::Sound_StopAll()
 {
