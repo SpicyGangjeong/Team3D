@@ -67,6 +67,7 @@ public:
 	void			Resize_Volume(_float fHeight);	// 높이를 수정하고 바닥에 붙임
 	void			Modify_Volume(_float3 fVolume); // 높이 수정하고 바닥에 붙든 말든 상관안함
 	_float3			Get_Volume();
+	_float			Get_Height();
 
 	HRESULT			ConvertToDO(class CRigidBody_Dynamic& BodyOriginal);
 	_float3			Get_LastSlopeNormal() { return m_vLastClimbNormal; };

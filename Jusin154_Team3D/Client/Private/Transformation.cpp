@@ -257,9 +257,14 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 	}
 
-	m_pInfoInstance->ActiveAt_Interactive(XMLoadFloat4(&vCCTPos));
+	_vector vHeadPosition = pCCT->Get_HeadPosition();
+	m_pInfoInstance->ActiveAt_Interactive(XMVectorSetY(vHeadPosition, vCCTPos.y += pCCT->Get_Height()));
 
 	CollisionDesc.pObject->Set_Visible(false);
+	_float fMinusPosition = m_pGameInstance->Real_Random_Float(100, 900);
+	_vector vTempPos = XMVectorSet(0.f, -fMinusPosition, 0.f, 1.f);
+	CollisionDesc.pObject->Get_Component<CTransform>()->Set_State(STATE::POSITION, vTempPos);
+	pCCT->Set_Position(vTempPos);
 	//m_pTransformCom->Set_WorldMatrix(CollisionDesc.pObject->Get_Component<CRigidBody_Dynamic>()->Get_Actor()->getGlobalPose());
 
 
