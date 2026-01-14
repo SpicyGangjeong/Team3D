@@ -52,7 +52,7 @@ void CGoblin_Sword::Priority_Update(_float fTimeDelta)
 void CGoblin_Sword::Update(_float fTimeDelta)
 {
 	if (m_bDisolve) {
-		m_fDisolveTime += fTimeDelta;
+		m_fDisolveTime += fTimeDelta * 0.2f;
 		if (m_fDisolveTime >= 1.f)
 		{
 			m_fDisolveTime = 0.f;

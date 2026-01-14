@@ -542,6 +542,11 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 	SOCKETCONTENTS* pContents = &Socket.m_Contents;
 	switch (pContents->eTypeFunc)
 	{
+	case TIMESOCKET_FUNC::TELEPORTATION:
+	{
+		m_pTransformCom->Set_WorldMatrix(pContents->pxTransform);
+		m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
+	} break;
 	case TIMESOCKET_FUNC::TRANSLATION:
 	{
 		_vector vNewPos = XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f);

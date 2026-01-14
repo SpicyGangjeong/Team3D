@@ -26,7 +26,7 @@ public:
 	virtual _vector Get_WorldPostion() override;
 	virtual void Set_WorldPostion(_vector vPos);
 	virtual _bool IsStalking();
-	virtual void Stalking_Target(CUnit* pStalkingTarget, const _float4x4* pTargetSocketMatrix);
+	virtual void Stalking_Target(CGameObject* pStalkingTarget, const _float4x4* pTargetSocketMatrix);
 	virtual void Stop_Stalking();
 
 	_matrix Get_XMWorldMatrix();
@@ -37,7 +37,7 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources() override;
 
-	CUnit* m_pStalkingTarget = { nullptr };
+	CGameObject* m_pStalkingTarget = { nullptr };
 	const _float4x4* m_pTargetSocketMatrix = { nullptr };
 public:
 	static CCamPosition_Target* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -128,6 +128,8 @@ private:
 	_int   m_iPropSize = {};
 	_int   m_iHoverDash = {  };
 	_bool  m_bChangePhase = {};
+	_int m_iHpPhase = { 0 };
+
 
 	_float2 m_vCaptureTimer = { 0.f, 0.1f };
 
@@ -250,7 +252,7 @@ private:
 	virtual _bool IsHitStateDisabled() override;
 	virtual _bool IsHitSpellDisabled() override;
 
-	void Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo);
+	_bool Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo);
 
 };
 

@@ -58,12 +58,12 @@ HRESULT CTriggerBox::Initialize(TRIGGERBOX_DESC* pDesc)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat4(&pDesc->vPosition_Radius), 1.f));
 
 #ifdef _DEBUG
-	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_pTransformCom->Get_Radius() * 2.f, 12, false, false));
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_pTransformCom->Get_Radius(), 3, false, false));
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 
 
-	_float3 vScale = { Desc.fRadius * 2.f, Desc.fRadius * 2.f, Desc.fRadius * 2.f };
+	_float3 vScale = { Desc.fRadius * 0.5f, Desc.fRadius * 0.5f, Desc.fRadius * 0.5f };
 	m_pTransformCom->Set_Scale(vScale);
 	m_vScanTimer.y += m_pGameInstance->Real_Random_Float(0.f, 0.2f);
     return S_OK;
@@ -74,7 +74,7 @@ HRESULT CTriggerBox::Scan()
 	_float fRadius = m_pTransformCom->Get_Radius();
 
 	PSX::PxOverlapBufferN<32> pxBuffer = {};
-	_bool bHit = m_pGameInstance->Overlap(fRadius, m_pTransformCom->Get_State(STATE::POSITION), 
+	_bool bHit = m_pGameInstance->Overlap(fRadius * 2.f, m_pTransformCom->Get_State(STATE::POSITION), 
 		PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eNO_BLOCK, pxBuffer);
 
 	

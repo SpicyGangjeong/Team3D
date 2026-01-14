@@ -1940,7 +1940,8 @@ void CPlayer::Behavior_ParryEnter()
 	}
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>());
+	m_pGameInstance->SlowMotion(0.4f, 0.2f); },
 		0.01f);
 
 

@@ -901,13 +901,13 @@ void CRanrok::Behavior_TuckedEnter()
 	m_bDisolve = true;
 	pairAnimInfo = m_Animation[STATEANIM::TUCKED];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_POINT, this, nullptr, &m_pRanrok_Point);
 
 			m_pLeftEye_Trail->Set_Visible(false);
 			m_pRightEye_Trail->Set_Visible(false);
+			
 
 		}, 0.05f);
 
@@ -952,8 +952,13 @@ void CRanrok::Behavior_TuckedExit()
 		SAFE_RELEASE(m_pRanrok_Point);
 	}
 
+
+	m_pLeftEye_Trail->Get_Component<CTrail>()->Reset_Trail();
+	m_pRightEye_Trail->Get_Component<CTrail>()->Reset_Trail();
+
 	m_pLeftEye_Trail->Set_Visible(true);
 	m_pRightEye_Trail->Set_Visible(true);
+
 
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;
@@ -999,6 +1004,7 @@ void CRanrok::Behavior_LandExit()
 void CRanrok::Behavior_HitEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::HIT);
 
 	m_bLookAt = false;
 
@@ -1028,6 +1034,8 @@ HRESULT CRanrok::Behavior_HitExitCheck(_float fTimeDelta)
 
 void CRanrok::Behavior_HitExit()
 {
+	m_pFSM->Disable_State(FSMSTATE::HIT);
+
 	m_bLookAt = true;
 }
 
@@ -1151,63 +1159,44 @@ _bool CRanrok::IsHitSpellDisabled()
 	return false;
 }
 
-void CRanrok::Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo)
+_bool CRanrok::Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo)
 {
 	_float curr = Get_HpRatio();
-	pair<_uint, _bool> pairAnimInfo = {};
-	if (m_fPrevHpRatio > 0.85f && curr <= 0.85f)
+
+	static const _float Thresholds[] = { 0.85f, 0.7f, 0.5f };
+
+	if (m_iHpPhase < 3 && curr <= Thresholds[m_iHpPhase])
 	{
-		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
+		pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
+
+		if (m_iHpPhase == 2)
+			m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
+
+		m_pEffectPool->Use_Skill(
+			SKILL_TYPE::RANROK_IMPACT,
+			this,
+			&CollisionInfo->vWorldPos
+		);
+
+		Add_Event(pairAnimInfo.first,
+			[this]() { m_bDisolve = true; },
+			0.25f);
+
+		Add_Event(pairAnimInfo.first,
+			[this]() { m_pFSM->Change_State(FSMSTATE::TUCKED); },
+			0.55f);
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+		++m_iHpPhase;
 		m_fPrevHpRatio = curr;
 
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionInfo->vWorldPos);
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bDisolve = true; },
-			0.25f);
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.55f);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return;
+		return true;
 	}
-	else if (m_fPrevHpRatio > 0.7f && curr <= 0.7f)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
-		m_fPrevHpRatio = curr;
 
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionInfo->vWorldPos);
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bDisolve = true; },
-			0.25f);
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.55f);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return;
-	}
-	else if (m_fPrevHpRatio > 0.5f && curr <= 0.5f)
-	{
-		pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
-		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
-		m_fPrevHpRatio = curr;
-
-		m_pEffectPool->Use_Skill(SKILL_TYPE::RANROK_IMPACT, this, &CollisionInfo->vWorldPos);
-
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bDisolve = true; },
-			0.25f);
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.55f);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return;
-	}
 	m_fPrevHpRatio = curr;
-
+	return false;
 }
-
 
 void CRanrok::Add_FSM()
 {
