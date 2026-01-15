@@ -212,13 +212,13 @@ HRESULT CCutSceneInfo::Ready_Events()
 	m_CutScene_StartEvents.emplace("RanrokIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RANROK_0, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RANROK_0, SD_CHANNEL_GROUP::BGM, false, 0.5f);
 		});
 
 	m_CutScene_StartEvents.emplace("TrollIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_0, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_0, SD_CHANNEL_GROUP::BGM, false, 0.5f);
 		});
 #pragma endregion
 
@@ -231,13 +231,13 @@ HRESULT CCutSceneInfo::Ready_Events()
 	m_CutScene_EndEvents.emplace("RanrokIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_1, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_1, SD_CHANNEL_GROUP::BGM, false, 0.5f);
 		});
 
 	m_CutScene_EndEvents.emplace("CarriageIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, false, 0.5f);
 		});
 #pragma endregion
 

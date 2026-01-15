@@ -1016,6 +1016,9 @@ RANROK_FOOTSTEP_21,
 #pragma endregion
 
 
+#pragma region UI
+	LOGO_INTRO,
+#pragma endregion
 
 
 #pragma region DOBI

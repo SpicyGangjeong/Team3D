@@ -22,6 +22,7 @@
 #include "ThestralCarriage.h"
 #include "MapElement_Chest.h"
 #include "ReparoObject.h"
+#include "RandomNpc.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)

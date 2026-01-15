@@ -1014,7 +1014,9 @@ TEXT("Broom/broom_up_8.wav"),
 
 #pragma endregion
 
-
+#pragma region UI
+	TEXT("UI/Logo_Intro.wav"),
+#pragma endregion
 
 #pragma region DOBI
 	TEXT("Dobi/dobi_voice.wav"),
