@@ -38,12 +38,12 @@
 		<Line ID="4" Tag="1" Type="1" Text="저기 앞에 고블린이 있어." NextID="5"/>
 		<Line ID="5" Tag="1" Type="2" Text="부탁이야. 저 고블린들 좀 잡아줘." NextID="5">
 			<Choice Type="4" Text="알겠어. 맡겨." NextID="7" QuestID="0" />
-			<Choice Type="0" Text="왜 내가?" NextID="6" QuestID="-1" />
+			<Choice Type="1" Text="왜 내가?" NextID="6" QuestID="-1" />
 		</Line>
 		<Line ID="6" Tag="1" Type="0" Text="도비는 싸울 수 없어..." NextID="4"/>
 		<Line ID="7" Tag="1" Type="2" Text="다 잡았어?" NextID="8">
 			<Choice Type="4" Text="다 잡았다." NextID="8" QuestID="0" />
-			<Choice Type="0" Text="아직" NextID="7" QuestID="-1" />
+			<Choice Type="4" Text="아직" NextID="7" QuestID="0" />
 			</Line>
 		<Line ID="8" Tag="1" Type="0" Text="고마워... 이제 마을로 가자." NextID="9"/>
 		<Line ID="9" Tag="1" Type="1" Text="어...? 저기 숨어있는 건...." NextID="10"/>
@@ -53,12 +53,8 @@
 		<Line ID="13" Tag="1" Type="1" Text="아직 근처에 고블린이 남아 있어." NextID="14"/>
 		<Line ID="14" Tag="1" Type="2" Text="한 번만 더 도와줄래?" NextID="-1">
 			<Choice Type="4" Text="알겠어." NextID="-1"/>
-			<Choice Type="0" Text="여기까지만 할게." NextID="13"/>
+			<Choice Type="0" Text="여기까지만 할게." NextID="14"/>
 		</Line>
-
-		<Line ID="13" Tag="1" Type="1"
-			  Text="…여기서 기다릴게."
-			  NextID="-1"/>
 		<Line ID="999" Tag="1" Type="0" Text="아직 덜 잡았네" NextID="7"/>
 	</Dialogue>
 

@@ -976,8 +976,6 @@
     <ClInclude Include="..\Public\Ranrok_EtherInfo.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h" />
-    <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\CutScene_Lightning.h">
       <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
     </ClInclude>
@@ -989,6 +987,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CutScene_Shout.h">
       <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Shout</Filter>
+       </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h">
+      <Filter>04.Mechanic\20.TriggerBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2945,6 +2946,7 @@
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp" />
+        </ClCompile>
     <ClCompile Include="..\Private\CutScene_Lightning.cpp">
       <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
     </ClCompile>

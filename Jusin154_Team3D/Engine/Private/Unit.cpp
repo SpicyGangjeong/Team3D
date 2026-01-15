@@ -125,14 +125,14 @@ _wstring CUnit::Get_NpcName()
 
 _int CUnit::Get_TextID()
 {
-    return _int();
+    return m_iCurrentFlow;
 }
 
 void CUnit::Set_NextID(_int ID)
 {
 }
 
-void CUnit::Set_Flow(_int Index)
+void CUnit::Set_Flow(_int Index, _float fTime)
 {
 }
 
