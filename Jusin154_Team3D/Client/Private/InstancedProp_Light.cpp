@@ -99,6 +99,11 @@ HRESULT CInstancedProp_Light::Render_Bloom()
 	return S_OK;
 }
 
+void CInstancedProp_Light::Toggle_Light()
+{
+	m_bLightOn = !m_bLightOn;
+}
+
 HRESULT CInstancedProp_Light::Initialize_Prototype()
 {
 	return S_OK;
@@ -113,6 +118,7 @@ HRESULT CInstancedProp_Light::Initialize(void* pArg)
 
 	m_bEnableRigidbody = pDesc->bEnableRigidbody;
 	m_iGlassMeshIndex = pDesc->iGlassMeshIndex;
+	m_bLightOn = false;
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;

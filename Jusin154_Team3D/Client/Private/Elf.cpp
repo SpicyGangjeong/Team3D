@@ -327,7 +327,7 @@ void CElf::MoveTo(_float fTimeDelta)
 
 	_vector CurPos = m_pCharacter_Controller->Get_Position();
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
-
+	//m_pGameInstance->Sound_Play(SOUND::SD_KIND::DOBI_0, SD_CHANNEL_GROUP::VOICE, false, 0.7f);
 
 	_vector toTarget = Target - CurPos;
 	_float fDist = XMVectorGetX(XMVector3Length(toTarget));
@@ -337,6 +337,7 @@ void CElf::MoveTo(_float fTimeDelta)
 		if (m_iCurrentFlow + 1 < m_Points.size())
 		{
 			if (m_pModelCom->IsFinishedAnim() && m_Anims[m_iCurrentFlow].Trigger == ENUM_CLASS(FLOW_TRIGGER::ARRIVE_POS)) {
+				
 				m_iCurrentFlow++;
 			}
 		}
