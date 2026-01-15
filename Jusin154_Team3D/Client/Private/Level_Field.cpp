@@ -342,6 +342,7 @@ HRESULT CLevel_Field::Ready_Layer_Effect(const _wstring& strLayerTag)
 	if (FAILED(m_pInfoInstance->Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
