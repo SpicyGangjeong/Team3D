@@ -303,7 +303,6 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
 }
-
 unsigned int APIENTRY LoadingMain(void* pArg)
 {
 	CLoader* pLoader = static_cast<CLoader*>(pArg);
@@ -316,7 +315,6 @@ unsigned int APIENTRY LoadingMain(void* pArg)
 
 	return 0;
 }
-
 HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 {
 	m_eNextLevelID = eNextLevelID;
@@ -325,7 +323,6 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 
 	return S_OK;
 }
-
 HRESULT CLoader::Loading()
 {
 
@@ -361,12 +358,10 @@ HRESULT CLoader::Loading()
 
 	return S_OK;
 }
-
 void CLoader::Output()
 {
 	SetWindowText(g_hWnd, m_strMessage.c_str());
 }
-
 HRESULT CLoader::Loading_For_Logo()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
@@ -579,10 +574,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_UI_SEQUANTIAL = false;
 #endif // 
 #ifdef 기무리
-	isLoad_Background = true;
-	isLoad_Hogwart = true;
+	isLoad_Background = false;
+	isLoad_Hogwart = false;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = true;
+	isLoad_NPC = false;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -2156,7 +2151,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_Component_LightPost_Base */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("LightPost_Base"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
-			TEXT("C:/MeshTable/Game/Environment/Hogsmeade/Common/Textures/LightPosts/T_HM_LampPost_Glass_Dark_D.png"), 0)))) {
+			TEXT("C:/MeshTable/Game/Environment/Hogsmeade/Common/Textures/LightPosts/T_HM_LampPost_Glass_Dark_D.dds"), 0)))) {
 		return E_FAIL;
 	}
 
@@ -2631,22 +2626,26 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc1.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
-
-		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC DESC_Ranrok_Body{};
 		{
-			DESC_Ranrok_Body.eType = ACTOR::SPHERE;
-			DESC_Ranrok_Body.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
-			DESC_Ranrok_Body.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-			DESC_Ranrok_Body.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
-			DESC_Ranrok_Body.vMatInfo = { 0.5f, 0.5f, 0.6f };
-			DESC_Ranrok_Body.fContactOffset = { 0.05f };
-			DESC_Ranrok_Body.vhalfGeometryInfo = { 1.1f, 1.1f, 1.1f };
-			DESC_Ranrok_Body.fDensity = 1.f;
-			DESC_Ranrok_Body.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
-			DESC_Ranrok_Body.eLockFlag = {};
-			DESC_Ranrok_Body.vAutoDamping = { 1.f, 1.f };
-			DESC_Ranrok_Body.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
-			DESC_Ranrok_Body.vLocalTranslation = { 0.f, 0.f, 0.f };
+			CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC DESC_Ranrok_Body{};
+			{
+				DESC_Ranrok_Body.eType = ACTOR::SPHERE;
+				DESC_Ranrok_Body.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+				DESC_Ranrok_Body.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+				DESC_Ranrok_Body.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+				DESC_Ranrok_Body.vMatInfo = { 0.5f, 0.5f, 0.6f };
+				DESC_Ranrok_Body.fContactOffset = { 0.05f };
+				DESC_Ranrok_Body.vhalfGeometryInfo = { 2.1f, 2.1f, 2.1f };
+				DESC_Ranrok_Body.fDensity = 1.f;
+				DESC_Ranrok_Body.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+				DESC_Ranrok_Body.eLockFlag = {};
+				DESC_Ranrok_Body.vAutoDamping = { 1.f, 1.f };
+				DESC_Ranrok_Body.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+				DESC_Ranrok_Body.vLocalTranslation = { 0.f, 0.f, 0.f };
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK_BODY"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, DESC_Ranrok_Body)))) {
+				return E_FAIL;
+			}
 		}
 
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC PotionDesc{};
@@ -2688,9 +2687,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROKPROP"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK_BODY"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, DESC_Ranrok_Body)))) {
 			return E_FAIL;
 		}
 

@@ -236,7 +236,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
-
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::POTION, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 
 
 		}
@@ -529,6 +529,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::POTION, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 		}
 
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
@@ -2053,6 +2054,8 @@ void CPlayer::Behavior_HitEnter()
 			pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			Add_Sound_Event(pairAnimInfo.first,
+				[this]() {	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LEVIOSA_27, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 			return;
 		}
 			break;

@@ -118,6 +118,11 @@ void CInfoInstance::Get_LockOnInfo(LOCKON_INFO& Info)
 	Info.pEffect = m_pEffectInfo->Get_LockOnEffect();
 }
 
+void CInfoInstance::Get_LockOnInfoOnlyUnit(CUnit* pUnit)
+{
+	pUnit = m_pMonsterInfo->Get_LockOnUnit();
+}
+
 void CInfoInstance::Set_SearchLockOnFlag(_bool bLockOn)
 {
 	m_bSearchLockOnTarget = bLockOn;
@@ -418,6 +423,11 @@ HRESULT CInfoInstance::DeActive_ActiveEvent(_string& strKey)
 void CInfoInstance::Load_Events(pair<_string, TimeLine*>& pairTimeLine)
 {
 	m_pCutSceneInfo->Load_Events(pairTimeLine);
+}
+
+_bool CInfoInstance::IsActiveCutScene()
+{
+	return m_pCutSceneInfo->IsActiveCutScene();
 }
 
 #pragma endregion

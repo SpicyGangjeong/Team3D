@@ -36,6 +36,7 @@ public:
 	void				Set_KinematicFlag(_bool bFlag);
 	void				ActivateAt(_fvector vPos); // 풀링 꺼내기, 위치 지정
 	void				Set_Throw(_bool bThrow) { m_bThrow = bThrow; }
+	_bool				Is_Throwing() { return m_bThrow; }
 
 private:
 	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END };

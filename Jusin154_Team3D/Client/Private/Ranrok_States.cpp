@@ -971,8 +971,9 @@ void CRanrok::Behavior_TuckedExit()
 
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;
-
-	m_vCreatePropTime.x = m_vCreatePropTime.y;
+	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR)) {
+		m_vCreatePropTime.x = m_vCreatePropTime.y;
+	}
 }
 
 void CRanrok::Behavior_LandEnter()

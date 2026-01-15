@@ -232,6 +232,15 @@ void CReparoObject::Change_State()
 
 		case Client::CReparoObject::REPARO_OBJECT_STATE::PLAYANIM:
 			m_pModelCom->Set_AnimationIndex(0, false);
+			if (m_iModelID == 0)
+			{
+				Add_Sound_Event(0,
+					[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_FIGHT_OBJECT_REPAIR_A2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
+			}
+			else {
+				Add_Sound_Event(0,
+					[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_FIGHT_OBJECT_REPAIR_B, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
+			}
 			break;
 
 		case Client::CReparoObject::REPARO_OBJECT_STATE::AFTER:

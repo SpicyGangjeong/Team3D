@@ -26,6 +26,7 @@ public:
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair<_string, TimeLine*>& pairTimeLine);
 	HRESULT		Clear_AllEvents();
+	_bool		IsActiveCutScene() { return m_bIsActiveCutScene; }
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 	class CInfoInstance*	m_pInfoInstance = { nullptr };
@@ -34,6 +35,10 @@ private:
 
 	map<_string, TimeLine*> m_funcActiveEvents = {};
 	map<_string, TimeLine*> m_funcWaitEvents = {};
+	_bool					m_bIsActiveCutScene = { false };
+
+	map<_string, function<void()>> m_CutScene_StartEvents = {};
+	map<_string, function<void()>> m_CutScene_EndEvents = {};
 
 private:
 	void Update_ActiveEvents(_float fTimeDelta);
@@ -41,7 +46,8 @@ private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	void Load_CutSceneXML(const string& path);
 	void Set_AllActiveEventsExit();
-
+	void Update_Start_Event(const _char* pEventKey);
+	void Update_End_Event(const _char* pEventKey);
 #ifdef _DEBUG
 public:
 #endif // _DEBUG
@@ -51,6 +57,8 @@ public:
 
 	HRESULT Ready_GameplayCutScenes();
 	HRESULT Ready_FieldCutScenes();
+	HRESULT Ready_Events();
+	
 
 public:
 	static CCutSceneInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);

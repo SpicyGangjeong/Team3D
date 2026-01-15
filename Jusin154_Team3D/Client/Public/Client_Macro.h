@@ -73,7 +73,7 @@ namespace Client {
 #define LAYER_DUELIST		TEXT("Layer_Duelist")
 #define LAYER_NPC			TEXT("Layer_Npc")
 #define LAYER_REPARO		TEXT("Layer_Reparo")
-
+#define LAYER_LIGHTELMENT	TEXT("Layer_LightElement")
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 

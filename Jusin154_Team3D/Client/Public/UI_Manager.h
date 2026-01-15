@@ -41,6 +41,11 @@ public:
 
 	void Add_Manager_Event(_wstring Name, function<void(void*)> Event);
 	void Event_Callback(_wstring Name, void* pArg = nullptr);
+
+#pragma region ENVIROMENT
+	void Set_Enviroment();
+#pragma endregion
+
 private:
 	void Add_Canvas(_wstring Name, class CGameObject* pCanvas);
 	CGameObject* Find_Canvas(const _wstring& Name);
@@ -73,6 +78,7 @@ private:
 	_bool			m_bCanvas_Change = { false };
 
 	UI_STATE	m_eType{};
+	TIME_OF_DAY m_eDay = { TIME_OF_DAY::DAY };
 
 	_float		m_fAlphaVelue{};
 

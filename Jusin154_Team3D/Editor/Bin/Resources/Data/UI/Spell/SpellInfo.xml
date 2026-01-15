@@ -134,7 +134,7 @@
 		Spell_Damage="10" Spell_Cooltime="0" Duration="0" AnimNum="235" SpellInfo="마법 동물을 구출하거나 잡을 수 있는 마법 자루입니다." Spell_Lock="0"
 		Equip_Spell="0" Use_Skill="1" Preview="0" Vidio="0" />
 	<Spell Spell_ID="26" Spell_Name="기본 주문" Image_Name="Basic_Cast" Spell_Type="6" Type_Name="필수" Skill_Type="26"
-		Spell_Damage="10000" Spell_Cooltime="0" Duration="0" AnimNum="308" SpellInfo="적과 사물에게 가벼운 대미지를 줍니다. 시전하려면
+		Spell_Damage="10" Spell_Cooltime="0" Duration="0" AnimNum="308" SpellInfo="적과 사물에게 가벼운 대미지를 줍니다. 시전하려면
 을 탭하세요." Spell_Lock="0"
 		Equip_Spell="0" Use_Skill="1" Preview="0" Vidio="0" />
 	<Spell Spell_ID="27" Spell_Name="레벨리오" Image_Name="Revelio" Spell_Type="6" Type_Name="필수" Skill_Type="27"

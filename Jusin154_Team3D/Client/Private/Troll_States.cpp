@@ -531,7 +531,8 @@ void CTroll::Behavior_SwingEnter()
 		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)];
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_bLookAt = false; },
+		[this]() {m_bLookAt = false;
+	m_bIsHit = true; },
 		0.2f);
 
 	Troll_Trail_Visible(true);
@@ -542,6 +543,7 @@ void CTroll::Behavior_SwingEnter()
 		[this]() {
 			Troll_Trail_Visible(false);
 			m_pWeaponTrail->Set_Visible(false);
+			m_bIsHit = false;
 		},
 		0.6f);
 
@@ -598,7 +600,12 @@ void CTroll::Behavior_SlamEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
 		Troll_Trail_Visible(false);
 		m_pWeaponTrail->Set_Visible(false);
+		m_bIsHit = true;
 		}, 0.3f);
+
+	Add_Event(m_Animation[STATEANIM::SLAM].first, [this]() {
+		m_bIsHit = false;
+		}, 0.6f);
 
 	Set_Easing(pairAnimInfo.first, 0.2f, 0.42f, 1.5f);
 
@@ -648,15 +655,18 @@ void CTroll::Behavior_BackHandSwingEnter()
 		[this]() {
 			Troll_Trail_Visible(true);
 			m_pWeaponTrail->Set_Visible(true);
-			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail(); },
+			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
+			m_bIsHit = true; },
 		0.4f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			Troll_Trail_Visible(false);
 			m_pWeaponTrail->Set_Visible(false);
+			m_bIsHit = false;
 		},
 		0.66f);
+
 
 	Set_Easing(pairAnimInfo.first, 0.1f, 0.45f, 1.8f);
 	Set_Easing(pairAnimInfo.first, 0.65f, 0.7f, 0.5f);
@@ -1018,6 +1028,8 @@ void CTroll::Add_FSM()
 
 void CTroll::SwingHit(_bool& bPlayerHit)
 {
+	if (!m_bIsHit)
+		return;
 	vector<PSX::PxSweepHit> pxHits;
 	_uint iHitCount = 0;
 	CheckHammerHits(iHitCount, pxHits);
@@ -1077,6 +1089,8 @@ void CTroll::SwingHit(_bool& bPlayerHit)
 
 void CTroll::SlamHit(_bool& bPlayerHit)
 {
+	if (!m_bIsHit)
+		return;
 	vector<PSX::PxSweepHit> pxHits;
 	_uint iHitCount = 0;
 	CheckHammerHits(iHitCount, pxHits);

@@ -17,6 +17,7 @@ CCutSceneInfo::CCutSceneInfo()
 }
 void CCutSceneInfo::Update(_float fTimeDelta)
 {
+	m_bIsActiveCutScene = false;
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Pressing(DIK_LSHIFT)&& m_pGameInstance->Key_Pressing(DIK_RSHIFT) && m_pGameInstance->Key_Pressing(DIK_LALT) && m_pGameInstance->Key_Pressing(DIK_RALT)) {
 		Set_AllActiveEventsExit();
 	}
@@ -51,6 +52,7 @@ void CCutSceneInfo::Active_Event(_string& strKey)
 {
 	map<_string, TimeLine*>::iterator iter = m_funcWaitEvents.find(strKey);
 	if (iter != m_funcWaitEvents.end()) {
+		Update_Start_Event(iter->first.c_str());
 		SAFE_RELEASE(iter->second->m_pTriggerBox);
 		m_funcActiveEvents.emplace(iter->first, iter->second);
 		m_funcWaitEvents.erase(iter);
@@ -81,7 +83,11 @@ void CCutSceneInfo::Load_Events(pair<_string, TimeLine*>& pairTimeLine)
 void CCutSceneInfo::Update_ActiveEvents(_float fTimeDelta)
 {
 	_float fRatio = 0.f;
-	for (map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.begin(); iter != m_funcActiveEvents.end();) {
+	map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.begin();
+	if (iter != m_funcActiveEvents.end()) {
+		m_bIsActiveCutScene = true;
+	}
+	for (; iter != m_funcActiveEvents.end();) {
 		list<CTimeSocket*>* pSockets = &iter->second->m_Sockets;
 		iter->second->m_vTimer.x += fTimeDelta;
 		fRatio = CMyTools::Saturate(iter->second->m_vTimer.x / iter->second->m_vTimer.y);
@@ -107,6 +113,7 @@ void CCutSceneInfo::Update_ActiveEvents(_float fTimeDelta)
 			}
 		}
 		if (pSockets->empty()) {
+			Update_End_Event((iter->first).c_str());
 			SAFE_RELEASE(iter->second->m_pTriggerBox);
 			Safe_Delete((*iter).second);
 			iter = m_funcActiveEvents.erase(iter);
@@ -114,6 +121,11 @@ void CCutSceneInfo::Update_ActiveEvents(_float fTimeDelta)
 		else {
 			iter++;
 		}
+	}
+
+	iter = m_funcActiveEvents.begin();
+	if (iter != m_funcActiveEvents.end()) {
+		m_bIsActiveCutScene = true;
 	}
 }
 
@@ -147,6 +159,9 @@ HRESULT CCutSceneInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 	SAFE_ADDREF(m_pInfoInstance);
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
+
+	if (FAILED(Ready_Events()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -190,6 +205,47 @@ HRESULT CCutSceneInfo::Ready_FieldCutScenes()
 	}
 	return S_OK;
 }
+
+HRESULT CCutSceneInfo::Ready_Events()
+{
+#pragma region START
+	m_CutScene_StartEvents.emplace("RanrokIntro",
+		[this]() {
+			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RANROK_0, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+		});
+
+	m_CutScene_StartEvents.emplace("TrollIntro",
+		[this]() {
+			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_0, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+		});
+#pragma endregion
+
+#pragma region END
+	m_CutScene_EndEvents.emplace("TrollIntro",
+		[this]() {
+			m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
+		});
+
+	m_CutScene_EndEvents.emplace("RanrokIntro",
+		[this]() {
+			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_1, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+		});
+
+	m_CutScene_EndEvents.emplace("CarriageIntro",
+		[this]() {
+			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+		});
+#pragma endregion
+
+
+
+	return S_OK;
+}
+
 CCutSceneInfo* CCutSceneInfo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
 	CCutSceneInfo* pInstance = new CCutSceneInfo();
@@ -586,4 +642,20 @@ void CCutSceneInfo::Set_AllActiveEventsExit()
 			(*socketIter)->Trigger(1.f - FLT_EPSILON);
 		}
 	}
+}
+
+void CCutSceneInfo::Update_Start_Event(const _char* pEventKey)
+{
+	auto iter = m_CutScene_StartEvents.find(pEventKey);
+
+	if (iter != m_CutScene_StartEvents.end())
+		iter->second();
+}
+
+void CCutSceneInfo::Update_End_Event(const _char* pEventKey)
+{
+	auto iter = m_CutScene_EndEvents.find(pEventKey);
+
+	if (iter != m_CutScene_EndEvents.end())
+		iter->second();
 }
