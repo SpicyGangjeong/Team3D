@@ -486,6 +486,7 @@ void CEditEffect::Describe_Entity()
 		
 	}
 
+
 	if (GUI::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);

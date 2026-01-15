@@ -82,6 +82,7 @@ private:
 	_bool	m_bLerpFovY = { false };
 	_float2 m_vFovYLerp = { 60.f, 60.f };
 	_float2 m_vLerpFovYTimer = { };
+	_bool	m_bMainTainDistance = { false };
 	_float m_fMaintainingDistance = { };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };

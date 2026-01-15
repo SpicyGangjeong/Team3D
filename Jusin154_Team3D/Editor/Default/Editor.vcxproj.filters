@@ -1656,6 +1656,9 @@
     <ClInclude Include="..\Public\BroomBoost.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\12.BroomBoost</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Ranrok_EtherInfo.h">
+      <Filter>02.GameObjects\Monster\Ranrok</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -2509,6 +2512,12 @@
     <ClCompile Include="..\Private\BroomBoost.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor\Effect\12.BroomBoost</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Ether.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ranrok_EtherInfo.cpp">
+      <Filter>02.GameObjects\Monster\Ranrok</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
@@ -2544,6 +2553,9 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_NPC_PBR_Anim.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxRanrokEther.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

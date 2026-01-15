@@ -661,7 +661,9 @@ void CRenderer::Render_Effect()
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_WB")))) {
 		return;
 	}
+
 	m_eType = RENDER::EFFECT;
+
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
 	{
 		if (nullptr != pRenderObject)

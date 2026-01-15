@@ -366,11 +366,16 @@ void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ,
 	m_vLerpRotQEnd = vRotQ;
 	_vector vPos = m_pFollowTargetPart->Get_WorldPostion();
 	_vector vLookPos = m_pLookTargetPart->Get_WorldPostion();
-	m_fMaintainingDistance = XMVectorGetX(XMVector3Length(vLookPos - vPos));
+
+	m_bMainTainDistance = bMainTainDistance;
+	if (m_bMainTainDistance) {
+		m_fMaintainingDistance = XMVectorGetX(XMVector3Length(vLookPos - vPos));
+	}
 }
 void CCamera_Cinematic::Clear_Lerp_Rotation()
 {
 	m_bLerpRotiation = { false };
+	m_bMainTainDistance = { false };
 	m_vLerpRotiationTimer = {};
 	m_vLerpRotQStart = {};
 	m_vLerpRotQEnd = {};
@@ -432,7 +437,7 @@ void CCamera_Cinematic::Rotation(_fvector vRotQ)
 	_vector vLookDir = XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotQ);
 
 	if (true == m_pLookTargetPart->IsStalking()) { // 스토킹 중이면 팔로우가 움직이고 아니면 룩타겟이 움직임
-		if (true == m_bLerpRotiation) {
+		if (true == m_bLerpRotiation && true == m_bMainTainDistance) {
 			fDistance = m_fMaintainingDistance;
 		}
 		m_pFollowTargetPart->Set_WorldPostion(XMVectorSetW(vLookPos - (fDistance * vLookDir), 1.f));

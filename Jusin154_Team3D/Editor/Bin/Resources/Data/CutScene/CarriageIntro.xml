@@ -110,6 +110,117 @@
 			<string tag =""/>
 		</Param_12>
 	</Socket>
+	<Socket fStartPosition = "0" >
+		<Info strEventName = "SET_ANIMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_ANIMSTATE"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "0" >
+		<Info strEventName = "SET_FSMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_FSMSTATE"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">true</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "0" >
+		<Info strEventName = "SET_FSMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_FSMSTATE"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">true</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
 	<Socket fStartPosition = "0">
 		<Info strEventName = "Set_Volumetric" eTypeParam = "NOT_USE" pTarget = "SYSTEM" eTypeFunc="SET_VOLUMETRIC"/>
 		<Param_0>
@@ -152,8 +263,8 @@
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="0.161" Y="0.309" Z="-0.053" W="0.936"/>
-				<Trans X="-467.392" Y="117.974" Z="-536.846"/>
+				<RotQ X="0.078" Y="0.315" Z="-0.026" W="0.945"/>
+				<Trans X="-479.874" Y="201.809" Z="-445.694"/>
 			</Transform>
 		</Param_0>
 		<vFlags>
@@ -226,8 +337,8 @@
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="0.161" Y="0.309" Z="-0.053" W="0.936"/>
-				<Trans X="-467.392" Y="117.974" Z="-536.846"/>
+				<RotQ X="0.150" Y="0.799" Z="-0.223" W="0.537"/>
+				<Trans X="-480.036" Y="200.166" Z="-436.154"/>
 			</Transform>
 		</Param_0>
 		<vFlags>
@@ -263,8 +374,8 @@
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="0.161" Y="0.309" Z="-0.053" W="0.936"/>
-				<Trans X="-467.392" Y="117.974" Z="-536.846"/>
+				<RotQ X="0" Y="0" Z="0" W="1"/>
+				<Trans X="-480.036" Y="200.166" Z="-436.154"/>
 			</Transform>
 		</Param_0>
 		<vFlags>
@@ -333,80 +444,6 @@
 		</Param_12>
 	</Socket>
 	<Socket fStartPosition = "0">
-		<Info strEventName = "SET_FSMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_FSMSTATE"/>
-		<Param_0>
-			<OtherTarget Layer = "" TypeID = ""/>
-			<Transform>
-				<RotQ X="" Y="" Z="" W=""/>
-				<Trans X="" Y="" Z=""/>
-			</Transform>
-		</Param_0>
-		<vFlags>
-			<Flag id ="0">true</Flag>
-			<Flag id ="1">false</Flag>
-			<Flag id ="2">false</Flag>
-			<Flag id ="3">false</Flag>
-			<Flag id ="4">false</Flag>
-			<Flag id ="5">false</Flag>
-			<Flag id ="6">false</Flag>
-			<Flag id ="7">false</Flag>
-			<Flag id ="8">false</Flag>
-			<Flag id ="9">false</Flag>
-			<Flag id ="10">false</Flag>
-			<Flag id ="11">false</Flag>
-			<Flag id ="12">false</Flag>
-			<Flag id ="13">false</Flag>
-			<Flag id ="14">false</Flag>
-			<Flag id ="15">false</Flag>
-		</vFlags>
-		<Param_10>
-			<uint X="" Y="" Z="" W=""/>
-		</Param_10>
-		<Param_11>
-			<float X="" Y="" Z="" W=""/>
-		</Param_11>
-		<Param_12>
-			<string tag =""/>
-		</Param_12>
-	</Socket>
-	<Socket fStartPosition = "0">
-		<Info strEventName = "SET_FSMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_FSMSTATE"/>
-		<Param_0>
-			<OtherTarget Layer = "" TypeID = ""/>
-			<Transform>
-				<RotQ X="" Y="" Z="" W=""/>
-				<Trans X="" Y="" Z=""/>
-			</Transform>
-		</Param_0>
-		<vFlags>
-			<Flag id ="0">false</Flag>
-			<Flag id ="1">false</Flag>
-			<Flag id ="2">true</Flag>
-			<Flag id ="3">false</Flag>
-			<Flag id ="4">false</Flag>
-			<Flag id ="5">false</Flag>
-			<Flag id ="6">false</Flag>
-			<Flag id ="7">false</Flag>
-			<Flag id ="8">false</Flag>
-			<Flag id ="9">false</Flag>
-			<Flag id ="10">false</Flag>
-			<Flag id ="11">false</Flag>
-			<Flag id ="12">false</Flag>
-			<Flag id ="13">false</Flag>
-			<Flag id ="14">false</Flag>
-			<Flag id ="15">false</Flag>
-		</vFlags>
-		<Param_10>
-			<uint X="" Y="" Z="" W=""/>
-		</Param_10>
-		<Param_11>
-			<float X="" Y="" Z="" W=""/>
-		</Param_11>
-		<Param_12>
-			<string tag =""/>
-		</Param_12>
-	</Socket>
-	<Socket fStartPosition = "0">
 		<Info strEventName = "LOOK_PLAYER" eTypeParam = "TARGET" pTarget = "CAMERA_CINEMATIC" eTypeFunc="LOOK_AT"/>
 		<Param_0>
 			<OtherTarget Layer = "Layer__Player" TypeID = "ACTOR_PLAYER"/>
@@ -440,16 +477,16 @@
 			<float X="" Y="" Z="" W=""/>
 		</Param_11>
 		<Param_12>
-			<string tag ="Spine3"/>
+			<string tag ="Head"/>
 		</Param_12>
 	</Socket>
 	<Socket fStartPosition = "0">
-		<Info strEventName = "AFFINE_LERP" eTypeParam = "TRANSFORM" pTarget = "ACTOR_CARRIAGE" eTypeFunc=" "/>
+		<Info strEventName = "ROT_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ROTATION_LERP"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="0.191" Y="0.385" Z="-0.082" W="0.899"/>
-				<Trans X="-141.073" Y="50.121" Z="-138.679"/>
+				<RotQ X="0.099" Y="0.249" Z="-0.025" W="0.963"/>
+				<Trans X="-479.037" Y="201.306" Z="-439.576"/>
 			</Transform>
 		</Param_0>
 		<vFlags>
@@ -474,23 +511,23 @@
 			<uint X="" Y="" Z="" W=""/>
 		</Param_10>
 		<Param_11>
-			<float X="16" Y="0" Z="0" W=""/>
+			<float X="4" Y="0" Z="0" W=""/>
 		</Param_11>
 		<Param_12>
 			<string tag =""/>
 		</Param_12>
 	</Socket>
 	<Socket fStartPosition = "0">
-		<Info strEventName = "ROTATION_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ROTATION_LERP"/>
+		<Info strEventName = "TRANSLATION_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TRANSLATION_LERP"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="-0.012" Y="0.986" Z="-0.146" W="-0.082"/>
-				<Trans X="-141.073" Y="50.121" Z="-138.679"/>
+				<RotQ X="0.099" Y="0.249" Z="-0.025" W="0.963"/>
+				<Trans X="-479.037" Y="201.306" Z="-439.576"/>
 			</Transform>
 		</Param_0>
 		<vFlags>
-			<Flag id ="0">true</Flag>
+			<Flag id ="0">false</Flag>
 			<Flag id ="1">false</Flag>
 			<Flag id ="2">false</Flag>
 			<Flag id ="3">false</Flag>
@@ -511,18 +548,88 @@
 			<uint X="" Y="" Z="" W=""/>
 		</Param_10>
 		<Param_11>
-			<float X="16" Y="" Z="" W=""/>
+			<float X="4" Y="0" Z="0" W=""/>
 		</Param_11>
 		<Param_12>
 			<string tag =""/>
 		</Param_12>
 	</Socket>
-
-	<!-- 페이드인 페이드 아웃 -->-->
-
-
-	<Socket fStartPosition = "16" >
-		<Info strEventName = "SET_FSMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_FSMSTATE"/>
+	<Socket fStartPosition = "4">
+		<Info strEventName = "ROT_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ROTATION_LERP"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="-0.008" Y="-0.637" Z="-0.005" W="0.770"/>
+				<Trans X="-477.426" Y="201.361" Z="-436.560"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="4" Y="0" Z="0" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "4">
+		<Info strEventName = "TRANS_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TRANSLATION_LERP"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="-0.008" Y="-0.637" Z="-0.005" W="0.770"/>
+				<Trans X="-477.426" Y="201.361" Z="-436.560"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="4" Y="0" Z="0" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "6">
+		<Info strEventName = "Set_Initial_Zoom" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="ZOOM_LERP"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
@@ -533,7 +640,44 @@
 		<vFlags>
 			<Flag id ="0">false</Flag>
 			<Flag id ="1">false</Flag>
-			<Flag id ="2">true</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="60" Y="20" Z="2" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "6">
+		<Info strEventName = "SET_ANIMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_ANIMSTATE"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">true</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
 			<Flag id ="3">false</Flag>
 			<Flag id ="4">false</Flag>
 			<Flag id ="5">false</Flag>
@@ -559,19 +703,307 @@
 		</Param_12>
 	</Socket>
 
-	<Socket fStartPosition = "16">
-		<Info strEventName = "TELEPORTATION_CARR" eTypeParam = "TRANSFORM" pTarget = "ACTOR_CARRIAGE" eTypeFunc="TELEPORTATION"/>
+	
+	
+	<!--낙뢰 8초쯤 -플레이어 뚝배기에-->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 페이드인 페이드 아웃- 추락 -->
+	
+	<Socket fStartPosition = "10">
+		<Info strEventName = "DONT_LOOK_AT" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="DONT_LOOK_AT"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
 			<Transform>
-				<RotQ X="0.161" Y="0.309" Z="-0.053" W="0.936"/>
-				<Trans X="-467.392" Y="117.974" Z="-536.846"/>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
 			</Transform>
 		</Param_0>
 		<vFlags>
 			<Flag id ="0">false</Flag>
 			<Flag id ="1">false</Flag>
-			<Flag id ="2">true</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "10">
+		<Info strEventName = "DONT_FOLLOW" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="DONT_FOLLOW"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "10">
+		<Info strEventName = "TELEPORTATION" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TELEPORTATION"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="0.290" Y="0.499" Z="-0.182" W="0.796"/>
+				<Trans X="-190.477" Y="113.047" Z="-142.300"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+
+
+	<Socket fStartPosition = "10">
+		<Info strEventName = "SET_ANIMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_ANIMSTATE"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">true</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "10">
+		<Info strEventName = "TELEPORTATION" eTypeParam = "TRANSFORM" pTarget = "ACTOR_CARRIAGE" eTypeFunc="TELEPORTATION"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="0.313" Y="0.424" Z="-0.159" W="0.835"/>
+				<Trans X="-188.160" Y="112.821" Z="-151.565"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "10">
+		<Info strEventName = "TELEPORTATION" eTypeParam = "TRANSFORM" pTarget = "ACTOR_PLAYER" eTypeFunc="TELEPORTATION"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="0.313" Y="0.424" Z="-0.159" W="0.835"/>
+				<Trans X="-188.160" Y="112.821" Z="-151.565"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "16" >
+		<Info strEventName = "SET_FSMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_FSMSTATE"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">true</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
 			<Flag id ="3">false</Flag>
 			<Flag id ="4">false</Flag>
 			<Flag id ="5">false</Flag>
@@ -708,6 +1140,80 @@
 		</Param_12>
 	</Socket>
 
+	<Socket fStartPosition = "16">
+		<Info strEventName = "SET_ANIMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_CARRIAGE" eTypeFunc="SET_ANIMSTATE"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "16">
+		<Info strEventName = "DONT_LOOK_AT" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="DONT_LOOK_AT"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
 	<Socket fStartPosition = "16">
 		<Info strEventName = "TELEPORTATION" eTypeParam = "TRANSFORM" pTarget = "ACTOR_PLAYER" eTypeFunc="TRANSLATION"/>
 		<Param_0>

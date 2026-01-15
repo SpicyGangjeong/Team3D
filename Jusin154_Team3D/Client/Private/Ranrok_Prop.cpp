@@ -82,7 +82,7 @@ void CRanrok_Prop::Update(_float fTimeDelta)
 
 	__super::Update(fTimeDelta);
 
-	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
+	//m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
 
 	Update_Event(fTimeDelta);
 
