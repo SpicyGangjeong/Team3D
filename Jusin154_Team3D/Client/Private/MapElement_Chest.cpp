@@ -236,11 +236,12 @@ HRESULT CMapElement_Chest::Ready_Components(void* pArg)
 	// RIGID_BODY
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
-	Desc.bAutoOwnerTranslation = false;
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_THROWABLE_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+	Desc.bAutoOwnerTranslation = true;
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HIDDEN_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 		return E_FAIL;
 	}
 
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 
 	return S_OK;
 }
