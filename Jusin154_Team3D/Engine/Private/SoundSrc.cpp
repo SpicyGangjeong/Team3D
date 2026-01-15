@@ -15,6 +15,8 @@ const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 	TEXT("BGM/hogwart_BGM_1.wav"), 
 	TEXT("BGM/hogwart_BGM_int.wav"), 
 	TEXT("BGM/Ranrok_BGM.wav"), 
+	TEXT("BGM/InsideBGM.wav"),
+	TEXT("BGM/RaceBGM.wav"),
 #pragma endregion
 
 #pragma region FOOTSTEP
@@ -1002,6 +1004,8 @@ TEXT("Broom/broom_up_8.wav"),
 
 #pragma endregion
 
+
+
 #pragma region FX
 	TEXT("FX/fx_sound_0.wav"),
 	TEXT("FX/fx_sound_1.wav"),
@@ -1022,10 +1026,24 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("FX/fireworks-402788.wav"),
 	TEXT("FX/CountDown.wav"),
 #pragma endregion
+#pragma region PROP_BROKEN
+	TEXT("Prop/Wood0.wav"),
+	TEXT("Prop/Wood1.wav"),
+	TEXT("Prop/Wood2.wav"),
+	TEXT("Prop/Barrel0.wav"),
+	TEXT("Prop/Barrel1.wav"),
+	TEXT("Prop/Barrel2.wav"),
+	TEXT("Prop/paper0.wav"),
+	TEXT("Prop/paper1.wav"),
+	TEXT("Prop/paper2.wav"),
+	TEXT("Prop/Box0.wav"),
+	TEXT("Prop/Box1.wav"),
+#pragma endregion
 
 #pragma region UI
 	TEXT("UI/Logo_Intro.wav"),
 #pragma endregion
+
 
 #pragma region DOBI
 	TEXT("Dobi/dobi_voice.wav"),

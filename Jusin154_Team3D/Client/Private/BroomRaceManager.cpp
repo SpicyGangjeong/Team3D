@@ -142,6 +142,9 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 				m_iCount = 3;
 				m_bRaceStart = false;
 				m_eRaceState = ENUM_CLASS(RACE_STATE::END);
+
+
+
 			}
 		}
 	}
@@ -167,6 +170,8 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bCurrentRace);
 					m_pRaceRings[m_pRaceRings.size() - 1]->Set_Target(false);
 
+					m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_0, SD_CHANNEL_GROUP::BGM, false, 0.8f);
 				}
 			}
 		}
@@ -516,6 +521,10 @@ void CBroomRaceManager::RaceReady()
 	}
 
 	m_bRaceReady = true;
+
+	m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RACE, SD_CHANNEL_GROUP::BGM, false, 0.8f);
+
 }
 
 void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
