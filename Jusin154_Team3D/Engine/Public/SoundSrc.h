@@ -1021,6 +1021,7 @@ RANROK_FOOTSTEP_21,
 	FX_SOUND_15,
 	FX_SOUND_16,
 	FX_FIREWORKS,
+	FX_COUNTDOWN,
 #pragma endregion
 
 
@@ -1032,6 +1033,15 @@ RANROK_FOOTSTEP_21,
 #pragma region DOBI
 	DOBI_0,
 #pragma endregion
+
+
+#pragma region PLAYERHIT
+	PLAYERHIT0,
+	PLAYERHIT1,
+	PLAYERHIT2,
+	PLAYERHIT3,
+#pragma endregion
+
 	END,
 };
 
