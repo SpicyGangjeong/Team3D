@@ -32,7 +32,7 @@ HRESULT CInteraction_Key::Initialize(void* pArg)
 	}
 
 	m_fSize = _float3(1.f, 1.f, 1.f);
-	m_fAlpha = 1.f;] 
+	m_fAlpha = 1.f;
 	m_vUV = ComputeUV('Z');
 	m_fViewPort = _float2(_float(g_iWinSizeX), _float(g_iWinSizeY));
 	return S_OK;
