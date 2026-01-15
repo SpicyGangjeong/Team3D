@@ -49,7 +49,7 @@
 	<Anim state="PULSE" index="33" loop="false"/>
 
 	<Anim state="TUCKED" index="21" loop="true"/>
-	<Anim state="FLY_TO_HOVER" index="22" loop="false"/>
+	<Anim state="FLY_TO_HOVER" index="20" loop="false"/>
 	<Anim state="FLY" index="18" loop="true"/>
 
 	<Anim state="LAND" index="32" loop="false"/>

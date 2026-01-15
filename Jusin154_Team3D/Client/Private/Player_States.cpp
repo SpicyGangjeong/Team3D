@@ -1567,7 +1567,8 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 				if (iCurr != iStart + 2)
 				{
 					Add_Event(pairAnimInfo.first,
-						[this]() {m_bLookAt = true;
+						[this]() {
+							m_bLookAt = true;
 						},
 						0.01f);
 				
@@ -1661,6 +1662,12 @@ void CPlayer::Behavior_AncientSpellEnter()
 	m_pInfoInstance->Set_SearchLockOnFlag(false);
 	if (m_LockOnInfo.pUnit)
 		m_pTransformCom->LookAt(m_LockOnInfo.pUnit->Get_WorldPostion());
+
+	if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
+	{
+		Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
+		m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+	}
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -3122,7 +3129,11 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Info.pText = TEXT("아바다 케다브라!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 
-		Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
+		if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
+		{
+			Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
+			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+		}
 
 		break;
 	case ENUM_CLASS(SKILL_TYPE::REPARO):

@@ -55,4 +55,7 @@
     <Animation Index="104">
         <KeyFrame Event="Troll/troll_foot_impact_4.wav" Ratio="0.564" Volume="0.80000001"/>
     </Animation>
+    <Animation Index="165">
+        <KeyFrame Event="Troll/troll_92.wav" Ratio="0.437" Volume="0.80000001"/>
+    </Animation>
 </KeyFrames>

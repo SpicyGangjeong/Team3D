@@ -266,6 +266,10 @@ const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 	TEXT("Player/Voice/revelio.voice.wav"),
 	TEXT("Player/Voice/stupefy_voice.wav"),
 	TEXT("Troll/troll_voice.wav"),
+	TEXT("Troll/troll_voice_2.wav"),
+	TEXT("Troll/troll_voice_3.wav"),
+	TEXT("Troll/troll_voice_4.wav"),
+	
 #pragma endregion
 
 #pragma region BROOM
@@ -657,6 +661,23 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("Ranrok/ranrok_37.wav"),
 	TEXT("Ranrok/ranrok_38.wav"),
 	TEXT("Ranrok/ranrok_39.wav"),
+	TEXT("Ranrok/ranrok_40.wav"),
+	TEXT("Ranrok/ranrok_41.wav"),
+	TEXT("Ranrok/ranrok_42.wav"),
+	TEXT("Ranrok/ranrok_43.wav"),
+	TEXT("Ranrok/ranrok_44.wav"),
+	TEXT("Ranrok/ranrok_45.wav"),
+	TEXT("Ranrok/ranrok_46.wav"),
+	TEXT("Ranrok/ranrok_47.wav"),
+	TEXT("Ranrok/ranrok_48.wav"),
+	TEXT("Ranrok/ranrok_49.wav"),
+	TEXT("Ranrok/ranrok_50.wav"),
+	TEXT("Ranrok/ranrok_51.wav"),
+	TEXT("Ranrok/ranrok_52.wav"),
+	TEXT("Ranrok/ranrok_53.wav"),
+	TEXT("Ranrok/ranrok_54.wav"),
+	TEXT("Ranrok/ranrok_55.wav"),
+	TEXT("Ranrok/ranrok_56.wav"),
 	TEXT("Ranrok/ranrok_yell.wav"),
 	TEXT("Ranrok/ranrock_dragon_burst_wave_rock_loop_Play.wav"),
 	TEXT("Ranrok/ranrock_dragon_burst_wave_rock_loop_Stop.wav"),
@@ -676,6 +697,31 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("Ranrok/ranrok_dragon_uppugno_rock_grab_Play.wav"),
 	TEXT("Ranrok/ranrok_dragon_uppugno_rock_impact_Play.wav"),
 
+#pragma endregion
+
+#pragma region RANROK_FOOTSTEP
+	TEXT("Ranrok/ranrok_Foot_0.wav"),
+	TEXT("Ranrok/ranrok_Foot_1.wav"),
+	TEXT("Ranrok/ranrok_Foot_2.wav"),
+	TEXT("Ranrok/ranrok_Foot_3.wav"),
+	TEXT("Ranrok/ranrok_Foot_4.wav"),
+	TEXT("Ranrok/ranrok_Foot_5.wav"),
+	TEXT("Ranrok/ranrok_Foot_6.wav"),
+	TEXT("Ranrok/ranrok_Foot_7.wav"),
+	TEXT("Ranrok/ranrok_Foot_8.wav"),
+	TEXT("Ranrok/ranrok_Foot_9.wav"),
+	TEXT("Ranrok/ranrok_Foot_10.wav"),
+	TEXT("Ranrok/ranrok_Foot_11.wav"),
+	TEXT("Ranrok/ranrok_Foot_12.wav"),
+	TEXT("Ranrok/ranrok_Foot_13.wav"),
+	TEXT("Ranrok/ranrok_Foot_14.wav"),
+	TEXT("Ranrok/ranrok_Foot_15.wav"),
+	TEXT("Ranrok/ranrok_Foot_16.wav"),
+	TEXT("Ranrok/ranrok_Foot_17.wav"),
+	TEXT("Ranrok/ranrok_Foot_18.wav"),
+	TEXT("Ranrok/ranrok_Foot_19.wav"),
+	TEXT("Ranrok/ranrok_Foot_20.wav"),
+	TEXT("Ranrok/ranrok_Foot_21.wav"),
 #pragma endregion
 
 #pragma region TROLL
@@ -969,6 +1015,7 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("FX/fx_sound_14.wav"),
 	TEXT("FX/fx_sound_15.wav"),
 	TEXT("FX/fx_sound_16.wav"),
+	TEXT("FX/fireworks-402788.wav"),
 
 #pragma endregion
 

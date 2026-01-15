@@ -145,6 +145,7 @@ void CTroll_Rock::RockHit()
 							break;
 						}
 						m_bVisible = false;
+
 						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}
 					break;
@@ -160,8 +161,14 @@ void CTroll_Rock::RockHit()
 							break;
 						}
 						m_bVisible = false;
+
+						_float4 vPos = {};
+						XMStoreFloat4(&vPos , pUserData->pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
+						m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, m_pOwner , &vPos);
+
 						m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_ATTACK_ROCKTHROW_HITACTOR, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 						m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, m_pOwner , &tagCollInfo.vWorldPos);
+
 						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}
 					break;
