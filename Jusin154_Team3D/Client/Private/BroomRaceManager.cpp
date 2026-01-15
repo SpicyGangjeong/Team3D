@@ -160,6 +160,8 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					m_bRaceEnd = false;
 					m_fDelay = 0.f;
 					m_bCurrentRace = false;
+					m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_BOOST, SD_CHANNEL_GROUP::EFFECT);
+					m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_NORMAL, SD_CHANNEL_GROUP::EFFECT);
 				}
 			}
 		}

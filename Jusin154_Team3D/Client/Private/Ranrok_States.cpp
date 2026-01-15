@@ -963,6 +963,7 @@ void CRanrok::Behavior_TuckedExit()
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;
 
+	m_vCreatePropTime.x = m_vCreatePropTime.y;
 }
 
 void CRanrok::Behavior_LandEnter()
