@@ -98,8 +98,6 @@ HRESULT CRanrok_PropHit::Pre_Setting(CGameObject* pObject, void* pArg)
 	Hit_PT->Set_Visible(true);
 	pPulse_Purple->Set_Visible(true);
 
-
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::RANROK_28, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
 	 /* 초기 객체 위치 초기화*/
 
 	_vector vHittingPos = XMLoadFloat4(&vHitPos);
