@@ -53,8 +53,10 @@ private:
 	_float4x4	m_LerpEndMatrix = { };
 	_float2		m_vLerpTimer = { };
 	_bool		m_bLerp = { false };
+	_uint		m_iBehavior = { 0 };
 
 	_uint m_iAnimationIndex = 0;
+	_uint m_iStraight = { 0 };
 #ifdef _DEBUG
 	_bool m_bRender_WireFrame = { false };
 	ID3D11RasterizerState* m_pRSS = { nullptr };

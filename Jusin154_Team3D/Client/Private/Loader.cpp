@@ -580,7 +580,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
-	isLoad_NPC = false;
+	isLoad_NPC = true;
 	isLoad_Monster = true;
 #endif // 
 #ifdef 나
@@ -1357,7 +1357,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			TEXT("Prototype_Component_Troll_Model")
 		));
 		jobCharacterModels.emplace_back(Deferred_ModelLoad(
-			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+			MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/ConjuredDragon/ConjuredDragon.bin",XMMatrixScaling(0.01f,0.01f,0.01f) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 			TEXT("Prototype_Component_Ranrok_Model")
 		));
 	}

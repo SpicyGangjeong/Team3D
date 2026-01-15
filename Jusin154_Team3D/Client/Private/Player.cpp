@@ -60,7 +60,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 #endif
 
 #if 기무리
-	m_isDebugMode = true; // 디버그 무적 모드
+	m_isDebugMode = false; // 디버그 무적 모드
 #endif
 #if 나
 	m_isDebugMode = true; // 디버그 무적 모드
@@ -958,6 +958,85 @@ void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 	Update_CameraShake(fTimeDelta);
 }
+
+void CPlayer::UpdateFootStepSound()
+{
+	_uint AnimIndex = m_pModelCom->Get_AnimIndex();
+	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (!m_pFSM->IsEnable(FSMSTATE::WALK | FSMSTATE::JOG | FSMSTATE::SPRINT))
+		return;
+
+	auto timings = GetFootStepTiming(AnimIndex);
+	if (timings.empty())
+		return;
+
+	if (m_iPrevAnimIndex != AnimIndex)
+	{
+		m_iFootStepIndex = 0;
+		m_iFootStepIndex++;
+		m_fPrevMoveRatio = ratio;
+		m_iPrevAnimIndex = AnimIndex;
+		return;
+	}
+
+	_bool bWrapped = (ratio < m_fPrevMoveRatio);
+
+	if (bWrapped)
+		m_iFootStepIndex = 0;
+
+	while (m_iFootStepIndex < timings.size() && ratio >= timings[m_iFootStepIndex])
+	{
+		PlayFootStepSound();
+		m_iFootStepIndex++;
+	}
+
+	m_fPrevMoveRatio = ratio;
+	m_iPrevAnimIndex = AnimIndex;
+}
+
+
+
+vector<_float> CPlayer::GetFootStepTiming(_uint AnimIndex)
+{
+	{
+		if (AnimIndex == m_Animation[STATEANIM::WALK_FWD].first)
+			return { 0.15f, 0.65f };
+
+		if (AnimIndex == m_Animation[STATEANIM::JOG_FWD].first)
+			return { 0.01f, 0.17f, 0.33f,0.49f,0.66f,0.84f };
+
+		if (AnimIndex == m_Animation[STATEANIM::SPRINT].first)
+			return { 0.01f, 0.17f, 0.33f,0.49f,0.66f,0.84f };
+
+		return { 0.12f, 0.62f };
+	}
+}
+
+void CPlayer::PlayFootStepSound()
+{
+	if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
+	{
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::STEP_TERRAIN, SD_CHANNEL_GROUP::EFFECT, false, 0.3f);
+	}
+	else if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::FIELD))
+	{
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::STEP_ROCK, SD_CHANNEL_GROUP::EFFECT, false, 0.3f);
+	}
+}
+
+void CPlayer::StopFootStepSound()
+{
+	if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
+	{
+		m_pGameInstance->Sound_Stop(SOUND::SD_KIND::STEP_TERRAIN, SD_CHANNEL_GROUP::EFFECT);
+	}
+	else if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::FIELD))
+	{
+		m_pGameInstance->Sound_Stop(SOUND::SD_KIND::STEP_ROCK, SD_CHANNEL_GROUP::EFFECT);
+	}
+}
+
 
 _matrix CPlayer::Get_WandPos()
 {
