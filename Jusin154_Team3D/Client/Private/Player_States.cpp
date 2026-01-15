@@ -1982,13 +1982,16 @@ void CPlayer::Behavior_ParryEnter()
 			m_pGameInstance->SlowMotion(0.4f, 0.2f); },
 		0.01f);
 
-	Add_Sound_Event(pairAnimInfo.first,
-		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);},
-		0.01f);
-
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
 		fEventRatio);
+
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
+		0.01f);
+
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_24, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 
 	m_bShield = false;
 	

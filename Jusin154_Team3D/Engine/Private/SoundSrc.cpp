@@ -429,6 +429,27 @@ const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 
 #pragma endregion
 
+#pragma region FX
+	TEXT("FX/fx_sound_0.wav"),
+	TEXT("FX/fx_sound_1.wav"),
+	TEXT("FX/fx_sound_2.wav"),
+	TEXT("FX/fx_sound_3.wav"),
+	TEXT("FX/fx_sound_4.wav"),
+	TEXT("FX/fx_sound_6.wav"),
+	TEXT("FX/fx_sound_7.wav"),
+	TEXT("FX/fx_sound_8.wav"),
+	TEXT("FX/fx_sound_9.wav"),
+	TEXT("FX/fx_sound_10.wav"),
+	TEXT("FX/fx_sound_11.wav"),
+	TEXT("FX/fx_sound_12.wav"),
+	TEXT("FX/fx_sound_13.wav"),
+	TEXT("FX/fx_sound_14.wav"),
+	TEXT("FX/fx_sound_15.wav"),
+	TEXT("FX/fx_sound_16.wav"),
+
+#pragma endregion
+
+
 };
 
 static_assert(SD_KIND_COUNT == _countof(SD_PATH::SD_KIND_PATHS), 

@@ -242,6 +242,8 @@ void CStupefy::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_bHit == false)
 		return;
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_46, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
@@ -257,7 +259,6 @@ void CStupefy::OnCollision(CGameObject* pOther, void* pDesc)
 	pStupefy_Circle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	pHitFlare->Set_Visible(true);
 	pHitFlare->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
-
 
 	
 	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));

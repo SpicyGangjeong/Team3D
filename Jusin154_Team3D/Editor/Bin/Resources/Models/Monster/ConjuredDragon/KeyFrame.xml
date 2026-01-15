@@ -1,7 +1,40 @@
 <KeyFrames>
     <Animation Index="33">
-        <KeyFrame Event="Ranrok/ranrok_25.wav" Ratio="0.399" Volume="0.80000001"/>
-        <KeyFrame Event="Ranrok/ranrok_24.wav" Ratio="0.130" Volume="0.80000001"/>
-        <KeyFrame Event="Ranrok/ranrok_25.wav" Ratio="0.400" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_24.wav" Ratio="0.070" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_15.wav" Ratio="0.380" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="37">
+        <KeyFrame Event="Ranrok/ranrok_4.wav" Ratio="0.162" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="34">
+        <KeyFrame Event="Ranrok/ranrok_1.wav" Ratio="0.787" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_22.wav" Ratio="0.167" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_22.wav" Ratio="0.300" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_22.wav" Ratio="0.408" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_22.wav" Ratio="0.561" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="0">
+        <KeyFrame Event="Ranrok/ranrok_7.wav" Ratio="0.250" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="1">
+        <KeyFrame Event="Ranrok/ranrok_13.wav" Ratio="0.38" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="2">
+        <KeyFrame Event="Ranrok/ranrok_26.wav" Ratio="0.320" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="5">
+        <KeyFrame Event="Ranrok/ranrok_16.wav" Ratio="0.367" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="32">
+        <KeyFrame Event="Ranrok/ranrok_32.wav" Ratio="0.436" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="11">
+        <KeyFrame Event="Ranrok/ranrok_11.wav" Ratio="0.26" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="17">
+        <KeyFrame Event="Ranrok/ranrok_3.wav" Ratio="0.35" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="15">
+        <KeyFrame Event="Ranrok/ranrok_12.wav" Ratio="0.030" Volume="0.80000001"/>
     </Animation>
 </KeyFrames>
