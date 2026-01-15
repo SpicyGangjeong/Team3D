@@ -185,7 +185,7 @@ void CQuest_Data::Set_ClearQuest(_int Index)
 		return;
 
 	QuestInfos[Index].iAcceptState = ENUM_CLASS(QUESTSTATE::CLEARED);
-	m_QuestEndInfos.push_back(QuestInfos[Index]);
+	m_QuestEndInfos.push_back(m_QuestAcceptedInfos[Index].QeustInfo);
 	m_iClearQeustCount++;
 	if (m_iAcceptQeustCount >= 0)
 		m_iAcceptQeustCount--;
@@ -198,22 +198,26 @@ void CQuest_Data::Update_AcceptQuest(_int MonsterID)
 		auto* quest = static_cast<CQuestInstance*>(it->QeustData);
 		auto& info = it->QeustInfo;
 
-		_bool QuestClear = static_cast<CQuestInstance*>(quest)->Update_Objective(MonsterID);
+		for (auto& obj : info.ObjectiveInfo)
+		{
+			if (obj.iTargetID != MonsterID)
+				continue;
 
-		if (QuestClear == true)
+			if (obj.iCurrentCount < obj.iRequiredCount)
+			{
+				obj.iCurrentCount++;
+			}
+		}
+
+		_bool QuestClear = quest->Update_Objective(MonsterID);
+
+		if (QuestClear)
 		{
 			Set_ClearQuest(quest->Get_QuestID());
 			it = m_QuestAcceptedInfos.erase(it);
 		}
 		else
 		{
-			for (auto& obj : info.ObjectiveInfo)
-			{
-				if (obj.iTargetID == MonsterID)
-				{
-					obj.iCurrentCount++;
-				}
-			}
 			++it;
 		}
 	}
