@@ -38,6 +38,7 @@ private:
 
 	_bool m_bActive = { false };
 	_bool m_bAtteckTrigger = { false };
+	_bool m_bCurrentTarget = { false };
 
 	_float3 m_fSize{};
 	_float m_fAlpha{};
