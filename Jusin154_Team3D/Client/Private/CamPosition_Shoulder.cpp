@@ -31,6 +31,10 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 
 	CAMERA_SHOULDER_DESC* pDesc = static_cast<CAMERA_SHOULDER_DESC*>(pArg);
 	{
+		_uint iLevel = NEXT_LEVEL;
+		if (iLevel == ENUM_CLASS(LEVEL::FIELD)) {
+			m_vAccRotDegrees.y = 90.f;
+		}
 		m_pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
 		m_pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
 		m_pParentPos = m_pParentTransformCom->Get_StatePtr(STATE::POSITION);
@@ -43,6 +47,8 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 		_vector vLookTargetPos = Calc_LookTargetPos();
 		m_pLookTransform->Set_State(STATE::POSITION, vLookTargetPos);
 		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos) + XMVectorSet(0.f, 0.f, 1.f, 0.f));
+
+		
 	}
 	m_bDampingParentPos = true;
 
