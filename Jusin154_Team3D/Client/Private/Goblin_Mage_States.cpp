@@ -486,6 +486,19 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first)
 	{
 		if (true == m_pCharacter_Controller->IsOnGround() && m_bCameraShake) {
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_14, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_15, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_20, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			}
 			CameraShake(10.f, 1.f, 2.f, 0.3f);
 			m_bCameraShake = false;
 		}

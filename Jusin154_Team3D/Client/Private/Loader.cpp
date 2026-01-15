@@ -1484,6 +1484,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
 				FX_VTXPOS,
 				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
+			jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+				FX_RANROK_ETHER,
+				TEXT("../Bin/Resources/ShaderFiles/Shader_VtxRanrokEther.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
 		}
 
 		{
