@@ -21,6 +21,7 @@ public:
 	//virtual void Mouse_Render();
 
 	_bool	Toggle_MouseCenter() { return m_bLockMouseToCenter = !m_bLockMouseToCenter; }
+	_bool	Toggle_MouseCenter(_bool Toggle) { return m_bLockMouseToCenter = Toggle; }
 
 private:
 	HWND					m_ghWnd = {};

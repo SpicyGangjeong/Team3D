@@ -59,9 +59,9 @@ public:
 	virtual _bool Get_Npc() { return m_bNpc; }
 	virtual _wstring Get_Name();
 	virtual _wstring Get_NpcName();
+	virtual _int Get_NpcID();
 	virtual _int Get_TextID();
 	virtual void Set_NextID(_int ID);
-
 	virtual void Set_Flow(_int Index, _float fTime);
 	virtual _int Get_Flow();
 #pragma endregion

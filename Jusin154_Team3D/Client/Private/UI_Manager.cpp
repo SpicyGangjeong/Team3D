@@ -64,6 +64,7 @@ HRESULT CUI_Manager::Initialize(void* pArg)
 	m_bActive = false;
 	m_pInfoInstance->Set_UISTATE(m_eType);
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Canvas_Change(*reinterpret_cast<UI_STATE*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("Change"), [this](void* p) {this->Chage(); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteract"), [this](void* p) {this->NpcInteract(p); });
 	m_pInfoInstance->Add_Event(TEXT("UIManagerFadeIn"), [this](void* p) {this->Set_Fade(); });
 	m_pInfoInstance->Add_Event(TEXT("UIFadeIn"), [this](void* p) {this->FadeIn(*reinterpret_cast<_float*>(p)); });
@@ -96,6 +97,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		{
 			static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
 		}
+		m_pGameInstance->Toggle_MouseCenter(true);
 		break;
 
 	case UI_STATE::SPELL:
@@ -103,6 +105,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		m_pCamera_LockOn->Set_Visible(false);
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(true);
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
+		m_pGameInstance->Toggle_MouseCenter(false);
 		break;
 
 	case UI_STATE::QUEST:
@@ -110,6 +113,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		m_pCamera_LockOn->Set_Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(true);
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
+		m_pGameInstance->Toggle_MouseCenter(false);
 		break;
 
 	case UI_STATE::INVENTORY:
@@ -120,6 +124,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		m_pCamera_LockOn->Set_Visible(false);
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(true);
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
+		m_pGameInstance->Toggle_MouseCenter(false);
 		break;
 
 	case UI_STATE::NPC_INTERACT:
@@ -134,6 +139,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
 		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
 		static_cast<CGameObject*>(m_pDamage_Font)->Set_Visible(false);
+		m_pGameInstance->Toggle_MouseCenter(false);
 		break;
 
 	case UI_STATE::LEVELCHANGE:
@@ -149,12 +155,13 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CGameObject*>(m_pDamage_Font)->Set_Visible(false);
 		m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
 		m_pInfoInstance->Event_CallBack(TEXT("BOXInteractionOff"));
+		m_pGameInstance->Toggle_MouseCenter(false);
 		break;
 
 	default:
 		return;
 	}
-	m_pGameInstance->Toggle_MouseCenter();
+	m_pInfoInstance->Event_CallBack(TEXT("Player_CanvasChange"), &m_eType);
 }
 
 void CUI_Manager::Clear_Canvas()
@@ -200,7 +207,6 @@ void CUI_Manager::Update(_float fTimeDelta)
 		else if (m_eType == UI_STATE::SPELL)
 			Canvas_Change(UI_STATE::GAMEPLAYER);
 	}
-
 
 	if (m_bRace == false && m_bCurrentNPCInteract == false)
 	{
@@ -262,7 +268,6 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_bCurrentNPCInteract == true && m_bNPCInteract == false)
 	{
-		m_fAlphaVelue = 1.f;
 		m_bCurrentNPCInteract = m_bNPCInteract;
 
 		if (m_bActive == false)
@@ -579,6 +584,17 @@ void CUI_Manager::NpcInteract(void* pArg)
 	m_bActive = Interact.bInteract;
 	m_fAlpha= Interact.fAlpha;
 	m_bAlphaZero = true;
+	m_fAlphaVelue = 1.f;
+}
+
+void CUI_Manager::Chage()
+{
+	m_bHover = false;
+	m_bActive = false;
+	m_bCurrentNPCInteract = false;
+	m_bNPCInteract = false;
+	m_eType = UI_STATE::GAMEPLAYER;
+	Canvas_Change(m_eType);
 }
 
 void CUI_Manager::Set_Fade()

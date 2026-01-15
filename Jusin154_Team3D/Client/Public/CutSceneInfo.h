@@ -39,7 +39,7 @@ private:
 
 	map<_string, function<void()>> m_CutScene_StartEvents = {};
 	map<_string, function<void()>> m_CutScene_EndEvents = {};
-
+	CEffect_Container* pSmokeEffect = { nullptr };
 private:
 	void Update_ActiveEvents(_float fTimeDelta);
 	void Update_WaitEvents(_float fTimeDelta);

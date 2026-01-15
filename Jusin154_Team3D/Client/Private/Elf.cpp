@@ -239,6 +239,11 @@ void CElf::Set_Target(CUnit& pTarget, CTransform& pTransform)
 	m_fTargetDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
 }
 
+_int CElf::Get_NpcID()
+{
+	return m_pNpcStat->Get_Stat().iID;
+}
+
 void CElf::Set_Flow(_int Index, _float fTime)
 {
 	m_iFlowIndex = Index;

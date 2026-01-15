@@ -40,10 +40,11 @@ HRESULT CNPC_EleazarFig::Initialize(void* pArg)
 
 	_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);
 	m_pModelCom->Set_AnimationIndex(iRandom, false, 1.f, false, 1.f, false);
-
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller);
 	m_bNpc = true;
+
+
 	return S_OK;
 }
 
@@ -248,6 +249,15 @@ void CNPC_EleazarFig::Set_Pos(_vector vPos)
 	m_pCharacter_Controller->Set_Position(vPos);
 }
 
+_wstring CNPC_EleazarFig::Get_Name()
+{
+	return m_pNpcStat->Get_Stat().pNpc_Name;
+}
+
+_wstring CNPC_EleazarFig::Get_NpcName()
+{
+	return m_pNpcStat->Get_Stat().pName;
+}
 
 HRESULT CNPC_EleazarFig::Ready_Components(void* pArg)
 {

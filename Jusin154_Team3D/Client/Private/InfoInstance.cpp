@@ -235,7 +235,7 @@ _float CInfoInstance::Get_CoolTime(_int SpellID)
 
 void CInfoInstance::Change_Canvas()
 {
-
+	
 }
 
 void CInfoInstance::Key_Input(_uint Input)
