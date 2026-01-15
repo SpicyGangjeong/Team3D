@@ -5,6 +5,7 @@
     </Animation>
     <Animation Index="37">
         <KeyFrame Event="Ranrok/ranrok_4.wav" Ratio="0.162" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_26.wav" Ratio="0.020" Volume="0.69999999"/>
     </Animation>
     <Animation Index="34">
         <KeyFrame Event="Ranrok/ranrok_1.wav" Ratio="0.787" Volume="0.80000001"/>
@@ -15,18 +16,22 @@
     </Animation>
     <Animation Index="0">
         <KeyFrame Event="Ranrok/ranrok_7.wav" Ratio="0.250" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_6.wav" Ratio="0.01" Volume="0.69999999"/>
     </Animation>
     <Animation Index="1">
         <KeyFrame Event="Ranrok/ranrok_13.wav" Ratio="0.38" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_0.wav" Ratio="0.01" Volume="0.60000002"/>
     </Animation>
     <Animation Index="2">
         <KeyFrame Event="Ranrok/ranrok_26.wav" Ratio="0.320" Volume="0.80000001"/>
     </Animation>
     <Animation Index="5">
         <KeyFrame Event="Ranrok/ranrok_16.wav" Ratio="0.367" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_34.wav" Ratio="0.25" Volume="0.89999998"/>
+        <KeyFrame Event="Troll/troll_101.wav" Ratio="0.733" Volume="0.89999998"/>
     </Animation>
     <Animation Index="32">
-        <KeyFrame Event="Ranrok/ranrok_32.wav" Ratio="0.436" Volume="0.80000001"/>
+        <KeyFrame Event="Troll/troll_44.wav" Ratio="0.436" Volume="0.69999999"/>
     </Animation>
     <Animation Index="11">
         <KeyFrame Event="Ranrok/ranrok_11.wav" Ratio="0.26" Volume="0.80000001"/>
@@ -36,5 +41,102 @@
     </Animation>
     <Animation Index="15">
         <KeyFrame Event="Ranrok/ranrok_12.wav" Ratio="0.030" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="3">
+        <KeyFrame Event="Ranrok/ranrok_39.wav" Ratio="0.311" Volume="1"/>
+    </Animation>
+    <Animation Index="4">
+        <KeyFrame Event="Ranrok/ranrok_39.wav" Ratio="0.28" Volume="0.89999998"/>
+        <KeyFrame Event="Ranrok/ranrok_19.wav" Ratio="0.176" Volume="0.7"/>
+    </Animation>
+    <Animation Index="6">
+        <KeyFrame Event="Ranrok/ranrok_46.wav" Ratio="0.180" Volume="0.8"/>
+        <KeyFrame Event="Ranrok/ranrok_12.wav" Ratio="0.2" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="7">
+        <KeyFrame Event="Ranrok/ranrok_46.wav" Ratio="0.185" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_12.wav" Ratio="0.2" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="10">
+        <KeyFrame Event="Ranrok/ranrok_10.wav" Ratio="0.2" Volume="0.40000001"/>
+    </Animation>
+    <Animation Index="12">
+        <KeyFrame Event="Ranrok/ranrok_34.wav" Ratio="0.095" Volume="0.69999999"/>
+    </Animation>
+    <Animation Index="13">
+        <KeyFrame Event="Ranrok/ranrok_56.wav" Ratio="0.05" Volume="0.69999999"/>
+    </Animation>
+    <Animation Index="20">
+        <KeyFrame Event="Ranrok/ranrok_9.wav" Ratio="0.170" Volume="0.39999999"/>
+        <KeyFrame Event="Ranrok/ranrok_26.wav" Ratio="0.500" Volume="0.39999999"/>
+    </Animation>
+    <Animation Index="22">
+        <KeyFrame Event="Ranrok/ranrok_0.wav" Ratio="0.350" Volume="0.49999999"/>
+    </Animation>
+    <Animation Index="23">
+        <KeyFrame Event="Ranrok/ranrok_9.wav" Ratio="0.399" Volume="0.39999999"/>
+    </Animation>
+    <Animation Index="25">
+        <KeyFrame Event="Ranrok/ranrok_26.wav" Ratio="0.250" Volume="0.39999999"/>
+        <KeyFrame Event="Ranrok/ranrok_39.wav" Ratio="0.702" Volume="0.39999999"/>
+    </Animation>
+    <Animation Index="26">
+        <KeyFrame Event="Ranrok/ranrok_9.wav" Ratio="0.251" Volume="0.39999999"/>
+        <KeyFrame Event="Ranrok/ranrok_26.wav" Ratio="0.703" Volume="0.39999999"/>
+    </Animation>
+    <Animation Index="35">
+        <KeyFrame Event="Ranrok/ranrok_19.wav" Ratio="0.081" Volume="0.69999999"/>
+        <KeyFrame Event="Ranrok/ranrok_13.wav" Ratio="0.002" Volume="0.69999999"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_2.wav" Ratio="0.39" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_3.wav" Ratio="0.436" Volume="1.0000000"/>
+    </Animation>
+    <Animation Index="85">
+        <KeyFrame Event="Ranrok/ranrok_19.wav" Ratio="0.39" Volume="0.69999999"/>
+    </Animation>
+    <Animation Index="86">
+        <KeyFrame Event="Ranrok/ranrok_53.wav" Ratio="0.35" Volume="0.69999999"/>
+    </Animation>
+    <Animation Index="91">
+        <KeyFrame Event="Ranrok/ranrok_Foot_10.wav" Ratio="0.506" Volume="1.0"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_11.wav" Ratio="0.839" Volume="1.0"/>
+    </Animation>
+    <Animation Index="106">
+        <KeyFrame Event="Troll/troll_87.wav" Ratio="0.152" Volume="0.5"/>
+        <KeyFrame Event="Troll/troll_101.wav" Ratio="0.2" Volume="0.69999999"/>
+    </Animation>
+    <Animation Index="120">
+        <KeyFrame Event="Ranrok/ranrok_Foot_0.wav" Ratio="0.198" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_1.wav" Ratio="0.250" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_2.wav" Ratio="0.390" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_3.wav" Ratio="0.471" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_4.wav" Ratio="0.637" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_5.wav" Ratio="0.791" Volume="1.000000"/>
+    </Animation>
+    <Animation Index="121">
+        <KeyFrame Event="Ranrok/ranrok_Foot_2.wav" Ratio="0.191" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_4.wav" Ratio="0.404" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_6.wav" Ratio="0.470" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_11.wav" Ratio="0.627" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_2.wav" Ratio="0.792" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_12.wav" Ratio="0.908" Volume="1.0000001"/>
+    </Animation>
+    <Animation Index="122">
+        <KeyFrame Event="Ranrok/ranrok_Foot_0.wav" Ratio="0.570" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_1.wav" Ratio="0.693" Volume="1.000000"/>
+    </Animation>
+    <Animation Index="123">
+        <KeyFrame Event="Ranrok/ranrok_Foot_8.wav" Ratio="0.603" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_10.wav" Ratio="0.703" Volume="1.000000"/>
+    </Animation>
+    <Animation Index="124">
+        <KeyFrame Event="Ranrok/ranrok_Foot_14.wav" Ratio="0.606" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_15.wav" Ratio="0.724" Volume="1.000000"/>
+    </Animation>
+    <Animation Index="125">
+        <KeyFrame Event="Ranrok/ranrok_Foot_6.wav" Ratio="0.600" Volume="1.000000"/>
+        <KeyFrame Event="Ranrok/ranrok_Foot_9.wav" Ratio="0.723" Volume="1.000000"/>
+    </Animation>
+    <Animation Index="36">
+        <KeyFrame Event="Ranrok/ranrok_54.wav" Ratio="0.101" Volume="0.80000001"/>
     </Animation>
 </KeyFrames>

@@ -428,11 +428,11 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
-			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+
 			break;
 		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
-			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+
 			break;
 		}
 	}

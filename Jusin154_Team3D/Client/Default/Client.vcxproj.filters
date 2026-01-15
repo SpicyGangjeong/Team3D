@@ -991,6 +991,12 @@
     <ClInclude Include="..\Public\TriggerBox.h">
       <Filter>04.Mechanic\20.TriggerBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Troll_Throw.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Throw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Attack.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Attack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2042,6 +2048,12 @@
     <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Shout">
       <UniqueIdentifier>{abf505b2-d91f-4ab1-ad69-ff571a74c035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Throw">
+      <UniqueIdentifier>{8300a5c5-8e4f-4d4c-957b-ccc99c5cbc3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Attack">
+      <UniqueIdentifier>{e1af9a18-369a-4168-8d6e-c98c951ecb39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2956,6 +2968,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CutScene_Shout.cpp">
       <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Shout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Attack.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Throw.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Throw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
