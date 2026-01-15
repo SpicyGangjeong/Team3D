@@ -69,6 +69,7 @@ private:
 
 	_bool								m_bReturnPosition = { false };
 	_bool								m_bCurrentRace = { false };
+	_bool								m_bCountDown = { false };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
