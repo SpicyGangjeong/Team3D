@@ -236,17 +236,14 @@ void CDialogue_Panel::Update(_float fTimeDelta)
 		m_fTime += fTimeDelta;
 	}
 
-	if (m_fTime >= 1.5f)
+
+	if (m_fTime >= 0.8f)
 	{
 		if (m_bBroomRace == true)
 		{
 			m_bBroomRace = false;
 			m_pInfoInstance->Event_CallBack(TEXT("BROOMRACENPCINTERACT"));
 		}
-	}
-
-	if (m_fTime >= 0.8f)
-	{
 		if (m_bBttle == true)
 		{
 			m_bBttle = false;
