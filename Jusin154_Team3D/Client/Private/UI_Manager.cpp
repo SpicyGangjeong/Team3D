@@ -14,8 +14,10 @@
 #include "Interaction_Key.h"
 #include "NPCInteraction.h"
 #include "Broom_TargetGate.h"
-
-
+#include "Light_Main.h"
+#include "Layer.h"
+#include "MapElement_Light.h"
+#include "InstancedProp_Light.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -335,6 +337,9 @@ void CUI_Manager::Update(_float fTimeDelta)
 			Change_Map();
 	}
 
+	if (m_pGameInstance->Key_Down(DIK_M) && m_pGameInstance->Key_Pressing(DIK_L))
+		Set_Enviroment();
+
 
 	__super::Update(fTimeDelta);
 }
@@ -474,6 +479,74 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	Add_Canvas(TEXT("Broom_TargetGate"), m_pBroom_TargetGate);
 
 	return S_OK;
+}
+
+void CUI_Manager::Set_Enviroment()
+{
+	Set_Fade();
+
+	if (TIME_OF_DAY::DAY == m_eDay)
+	{
+		m_eDay = TIME_OF_DAY::NIGHT;
+		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.9f);
+		m_pGameInstance->Setting_Volumetirc(1.28f, 0.001f, 0.2f, 1.f, 0.f);
+		CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_LIGHT);
+		assert(nullptr != pLayer);
+		CLight_Main* pLight = pLayer->Get_Object<CLight_Main>();
+
+		_float4 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x2E343AFF);
+		_float4 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x3D3D3DFF);
+		_float4 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
+
+		pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+
+		pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_LIGHTELMENT);
+		assert(nullptr != pLayer);
+		for (auto& pObject : *pLayer->Get_Objects())
+		{
+			CMapElement_Light* pLightElement = dynamic_cast<CMapElement_Light*>(pObject);
+			if (nullptr != pLightElement)
+				pLightElement->Toggle_Light();
+
+			CInstancedProp_Light* pInstancedProp_Light = dynamic_cast<CInstancedProp_Light*>(pObject);
+			if (nullptr != pInstancedProp_Light)
+				pInstancedProp_Light->Toggle_Light();
+		}
+	}
+	else
+	{
+		m_eDay = TIME_OF_DAY::DAY;
+
+		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.8f);
+
+		m_pGameInstance->Setting_Volumetirc(0.5f, 0.003f, 0.4f, 2.f, 0.f);
+		CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_LIGHT);
+		assert(nullptr != pLayer);
+		CLight_Main* pLight = pLayer->Get_Object<CLight_Main>();
+
+		_float4 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1E1C1B3C);
+		_float4 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1A191900);
+		_float4 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
+
+		pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
+
+		pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_LIGHTELMENT);
+		assert(nullptr != pLayer);
+		for (auto& pObject : *pLayer->Get_Objects())
+		{
+			CMapElement_Light* pLightElement = dynamic_cast<CMapElement_Light*>(pObject);
+			if (nullptr != pLightElement)
+				pLightElement->Toggle_Light();
+
+			CInstancedProp_Light* pInstancedProp_Light = dynamic_cast<CInstancedProp_Light*>(pObject);
+			if (nullptr != pInstancedProp_Light)
+				pInstancedProp_Light->Toggle_Light();
+		}
+	}
+
+	
 }
 
 void CUI_Manager::Add_Canvas(_wstring Name, CGameObject* pCanvas)

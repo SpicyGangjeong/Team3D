@@ -347,6 +347,8 @@ call Update_Resources.bat
     <ClInclude Include="..\public\MiniMap_Camera.h" />
     <ClInclude Include="..\Public\Goblin_Teleport.h" />
     <ClInclude Include="..\Public\TriggerBox.h" />
+    <ClInclude Include="..\Public\Troll_Throw.h" />
+    <ClInclude Include="..\Public\Troll_Attack.h" />
     <ClInclude Include="..\Public\Troll_Rush.h" />
     <ClInclude Include="..\Public\Troll_Self_Hit.h" />
     <ClInclude Include="..\Public\Troll_Shout.h" />
@@ -677,6 +679,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\StunEffect.cpp" />
     <ClCompile Include="..\Private\Goblin_Teleport.cpp" />
     <ClCompile Include="..\Private\TriggerBox.cpp" />
+    <ClCompile Include="..\Private\Troll_Throw.cpp" />
+    <ClCompile Include="..\Private\Troll_Attack.cpp" />
     <ClCompile Include="..\Private\Troll_Rush.cpp" />
     <ClCompile Include="..\Private\Troll_Self_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_Shout.cpp" />

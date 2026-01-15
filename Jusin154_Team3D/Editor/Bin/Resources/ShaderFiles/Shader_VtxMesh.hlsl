@@ -562,7 +562,9 @@ PS_OUT PS_GLASS(PS_IN In)
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     
-    Out.vAlbedo = lerp(vGlassDiffuse, vMtrlDiffuse, g_fGlassRatio);
+    vector vColor = float4(lerp(vGlassDiffuse, vMtrlDiffuse, g_fGlassRatio).xyz, 1.f);
+    
+    Out.vAlbedo = vColor;
     Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
     Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);

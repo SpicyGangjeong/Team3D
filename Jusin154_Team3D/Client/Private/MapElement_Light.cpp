@@ -26,6 +26,8 @@ HRESULT CMapElement_Light::Initialize(void* pArg)
 {
 	MAPELEMENT_LIGHT_DESC* pDesc = static_cast<MAPELEMENT_LIGHT_DESC*>(pArg);
 
+	m_isLightOn = false;
+	m_fGlassRatio = 1.f;
 	m_iMaxLodLevel = pDesc->iMaxLodLevel;
 	m_fBloomStrength = pDesc->fBloomStregth;
 	m_iGlassMeshIndex = pDesc->iGlassMeshIndex;
@@ -55,42 +57,42 @@ void CMapElement_Light::Priority_Update(_float fTimeDelta)
 
 void CMapElement_Light::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_O))
+		m_fGlassRatio -= 0.1f;
+	if (m_pGameInstance->Key_Down(DIK_I))
+		m_fGlassRatio += 0.1f;
 }
 
 void CMapElement_Light::Late_Update(_float fTimeDelta)
 {
-	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius()))
-	//{
-	//	if (m_isLightOn)
-	//	{
-	//		_float fDistance = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
-	//		if (m_LightAdded_Distance > fDistance) // 카메라 범위 안
-	//		{
-	//			if (!m_isLightAdded)
-	//			{
-	//				m_isLightAdded = true;
-	//				m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
-	//			}
-	//		}
-	//		else
-	//		{
-	//			if (m_isLightAdded)
-	//			{
-	//				m_isLightAdded = false;
-	//				m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
-	//			}
-	//		}
-
-	//		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
-	//	}
-
-	//	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	//}
+	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius()))
+	{
+		if (m_isLightOn)
+		{
+			_float fDistance = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
+			if (m_LightAdded_Distance > fDistance) // 카메라 범위 안
+			{
+				if (!m_isLightAdded)
+				{
+					m_isLightAdded = true;
+					m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+				}
+			}
+			else
+			{
+				if (m_isLightAdded)
+				{
+					m_isLightAdded = false;
+					m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+				}
+			}
+		}
+	}
 }
 
 HRESULT CMapElement_Light::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
+	/*if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
@@ -136,7 +138,7 @@ HRESULT CMapElement_Light::Render()
 		if (FAILED(m_pModelComs[m_iLodIndex]->Render(i))) {
 			return E_FAIL;
 		}
-	}
+	}*/
 
 	return S_OK;
 }
@@ -228,7 +230,7 @@ HRESULT CMapElement_Light::Bind_ShaderResources()
 
 HRESULT CMapElement_Light::Render_Bloom()
 {
-	if (FAILED(Bind_ShaderResources()))
+	/*if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_fBloomStrength, sizeof(_float))))
@@ -245,7 +247,7 @@ HRESULT CMapElement_Light::Render_Bloom()
 
 	if (FAILED(m_pModelComs[m_iLodIndex]->Render(m_iGlassMeshIndex))) {
 		return E_FAIL;
-	}
+	}*/
 
 	return S_OK;
 }
@@ -253,7 +255,9 @@ HRESULT CMapElement_Light::Render_Bloom()
 void CMapElement_Light::Toggle_Light()
 {
 	if (m_isLightOn)
+	{
 		m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+	}
 	else
 		m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
 
@@ -296,6 +300,7 @@ void CMapElement_Light::Free()
 	SAFE_RELEASE(m_pGlassTextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
+
 	for (auto& pModel : m_pModelComs)
 		SAFE_RELEASE(pModel);
 }

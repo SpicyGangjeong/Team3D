@@ -43,6 +43,8 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Ready_SubPart();
 	HRESULT Bind_ShaderResources() override;
+	void			Update_CameraShake(_float fTimeDelta);
+	void			Start_CameraShake(_float fTime, _float fIntense);
 
 	void Lerp_Translation(_float fTimeDelta);
 	void Start_Lerp_Translation(_float fTimeMaximum, PSX::PxTransform pxTransform);
@@ -84,6 +86,11 @@ private:
 	_float2 m_vLerpFovYTimer = { };
 	_bool	m_bMainTainDistance = { false };
 	_float m_fMaintainingDistance = { };
+	_bool m_bCameraShake = { false };
+	_float2	m_vAccRealRadians = { 0.f, 0.f };
+	_float2 m_vCameraShakeTimer = { 0.f, TIMER_SHORT_LERP };
+	_float m_fCameraShakeTime = TIMER_SHORT_LERP;
+	_float m_fCameraShakeIntense = 5.f;
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch = { nullptr };

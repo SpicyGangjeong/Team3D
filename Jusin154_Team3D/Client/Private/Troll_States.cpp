@@ -445,6 +445,20 @@ void CTroll::Behavior_ThrowEnter()
 		},
 		0.95f);
 
+	//Add_Event(pairAnimInfo.first,
+	//	[this]() {
+	//		_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand"));
+
+	//		HandMat *= m_pTransformCom->Get_XMWorldMatrix();
+
+	//		_float4 vPos = {};
+
+	//		XMStoreFloat4(&vPos, HandMat.r[3]);
+
+	//		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_THROW, this, &vPos);
+	//	},
+	//	0.95f);
+
 	Set_Easing(m_Animation[STATEANIM::THROW_ROCK].first, 0.1f, 0.47f, 1.5f);
 	Set_Easing(m_Animation[STATEANIM::THROW_ROCK].first, 0.47f, 0.5f, 0.5f);
 }
@@ -517,8 +531,16 @@ void CTroll::Behavior_SwingEnter()
 		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)];
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_bLookAt = false; },
+		[this]() {m_bLookAt = false;},
 		0.2f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() { m_bIsHit = true; },
+		0.375f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() { m_bIsHit = false; },
+		0.45f);
 
 	Troll_Trail_Visible(true);
 	m_pWeaponTrail->Set_Visible(true);
@@ -584,7 +606,12 @@ void CTroll::Behavior_SlamEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
 		Troll_Trail_Visible(false);
 		m_pWeaponTrail->Set_Visible(false);
+		m_bIsHit = true;
 		}, 0.3f);
+
+	Add_Event(m_Animation[STATEANIM::SLAM].first, [this]() {
+		m_bIsHit = false;
+		}, 0.6f);
 
 	Set_Easing(pairAnimInfo.first, 0.2f, 0.42f, 1.5f);
 
@@ -634,8 +661,18 @@ void CTroll::Behavior_BackHandSwingEnter()
 		[this]() {
 			Troll_Trail_Visible(true);
 			m_pWeaponTrail->Set_Visible(true);
-			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail(); },
+			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();},
 		0.4f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_bIsHit = true; },
+		0.52f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_bIsHit = false; },
+			0.6f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -643,6 +680,7 @@ void CTroll::Behavior_BackHandSwingEnter()
 			m_pWeaponTrail->Set_Visible(false);
 		},
 		0.66f);
+
 
 	Set_Easing(pairAnimInfo.first, 0.1f, 0.45f, 1.8f);
 	Set_Easing(pairAnimInfo.first, 0.65f, 0.7f, 0.5f);
@@ -725,7 +763,7 @@ void CTroll::Behavior_HitEnter()
 	m_bLookAt = false;
 	if (iCurrAnimIndex == m_Animation[STATEANIM::SLAM].first)
 	{
-		if (fRatio >= 0.29f && fRatio <= 0.6f) {
+		if (fRatio >= 0.29f && fRatio <= 0.7f) {
 			pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
 			Add_Event(pairAnimInfo.first,
 				[this]() {
@@ -1004,6 +1042,8 @@ void CTroll::Add_FSM()
 
 void CTroll::SwingHit(_bool& bPlayerHit)
 {
+	if (!m_bIsHit)
+		return;
 	vector<PSX::PxSweepHit> pxHits;
 	_uint iHitCount = 0;
 	CheckHammerHits(iHitCount, pxHits);
@@ -1032,6 +1072,14 @@ void CTroll::SwingHit(_bool& bPlayerHit)
 					if (true == bPlayerHit) {
 						continue;
 					}
+
+					_vector vPos = pUserData->pOwner->Get_Component<CCharacter_Controller>()->Get_Position();
+					_float4 vPosfloat4 = {};
+
+					XMStoreFloat4(&vPosfloat4, vPos);
+
+					m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK_HIT, this, &vPosfloat4);
+
 					bPlayerHit = true;
 					pUserData->pOwner->OnCollision(this,&tagCollInfo);
 				} break;
@@ -1055,6 +1103,8 @@ void CTroll::SwingHit(_bool& bPlayerHit)
 
 void CTroll::SlamHit(_bool& bPlayerHit)
 {
+	if (!m_bIsHit)
+		return;
 	vector<PSX::PxSweepHit> pxHits;
 	_uint iHitCount = 0;
 	CheckHammerHits(iHitCount, pxHits);
@@ -1084,6 +1134,12 @@ void CTroll::SlamHit(_bool& bPlayerHit)
 					if (true == bPlayerHit) {
 						continue;
 					}
+					_vector vPos = pUserData->pOwner->Get_Component<CCharacter_Controller>()->Get_Position();
+					_float4 vPosfloat4 = {};
+
+					XMStoreFloat4(&vPosfloat4, vPos);
+
+					m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK_HIT, this, &vPosfloat4);
 					bPlayerHit = true;
 					pUserData->pOwner->OnCollision(this,&tagCollInfo);
 				} break;

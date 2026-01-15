@@ -37,6 +37,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Bloom() override;
 
+	void Toggle_Light();
+
 private:
 	_bool						m_bLightOn = { true };
 	_bool						m_bEnableRigidbody = { };

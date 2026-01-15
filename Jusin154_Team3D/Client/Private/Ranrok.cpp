@@ -374,6 +374,14 @@ void CRanrok::Trigger(CTimeSocket& Socket)
 	}break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
+		pair<_uint, _bool> pairAnimInfo = {};
+		if (Socket.m_Contents.vFlags.b[0]) {
+			pairAnimInfo = m_Animation[STATEANIM::PULSE];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+		else if (Socket.m_Contents.vFlags.b[1]) {
+			//m_pModelCom->Set_AnimationIndex();
+		}
 	}break;
 	case TIMESOCKET_FUNC::SET_FSMSTATE:
 	{

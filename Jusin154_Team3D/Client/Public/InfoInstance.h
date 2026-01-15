@@ -14,6 +14,7 @@ class CUIObject;
 NS_END
 
 NS_BEGIN(Client)
+class CEffect_Container;
 
 class CInfoInstance final : public CBase
 {
@@ -49,6 +50,7 @@ public:
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
 	void Get_LockOnInfo(LOCKON_INFO& Info);
+	void Get_LockOnInfoOnlyUnit(CUnit* pUnit);
 	void Set_SearchLockOnFlag(_bool bLockOn);
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 	class CMonster* Get_TargetMonster();
@@ -116,6 +118,7 @@ public:
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair< _string, struct TimeLine*>& pairTimeLine);
+	_bool		IsActiveCutScene();
 #pragma endregion
 #pragma region Effect
 

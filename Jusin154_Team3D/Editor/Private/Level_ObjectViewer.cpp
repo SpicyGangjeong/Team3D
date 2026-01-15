@@ -453,10 +453,14 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		}
 		if(GUI::Button("Load KeyFrame_"))
 		{
+			_char szDir[MAX_PATH] = {};
+			_string Path = {};
 			for (auto& pObject : m_Objects)
 			{
 				dynamic_cast<CUnit*>(pObject)->Reset_SoundEvent();
-				dynamic_cast<CUnit*>(m_Objects[m_iObjectIndex])->Ready_Sound_Events("../Bin/Resources/Models/Human/PlayableCharacter/KeyFrame.xml");
+				_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+				Path = _string(szDir) + "KeyFrame.xml";
+				dynamic_cast<CUnit*>(m_Objects[m_iObjectIndex])->Ready_Sound_Events(Path.c_str());
 			}
 		}
 		static _char EventName[256] = {};
@@ -710,6 +714,9 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 
 void CLevel_ObjectViewer::Find_Anim()
 {
+	if (GUI::Button("Stop Sound"))
+		m_pGameInstance->Sound_StopAll();
+
 	if (!m_Objects.empty())
 	{
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();

@@ -852,7 +852,7 @@ PS_OUT PS_GLASSES_DSRON_ToSRO(PS_IN In)
     float4 vSRO_Mask = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
     float fAlpha = 1.f - vSRO_Mask.b - 0.3f;
 
-    Out.vAlbedo = vDiffuse.rgba;
+    Out.vAlbedo = vDiffuse.rrra;
     Out.vAlbedo.a = vSRO_Mask.b;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w),

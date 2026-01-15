@@ -12,11 +12,15 @@ CCamera_Cinematic::CCamera_Cinematic(const CCamera_Cinematic& rhs) : CCamera(rhs
 
 void CCamera_Cinematic::Priority_Update(_float fTimeDelta)
 {
+	Update_CameraShake(fTimeDelta);
 	if (false == m_bIsCurrentTransition) {
 		m_pLookTargetPart->Priority_Update(fTimeDelta);
 		m_pFollowTargetPart->Priority_Update(fTimeDelta);
 		m_pTransformCom->Set_State(STATE::POSITION, m_pFollowTargetPart->Get_WorldPostion());
 		m_pTransformCom->LookAt(m_pLookTargetPart->Get_WorldPostion());
+		_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
+		vRPY += XMLoadFloat2(&m_vAccRealRadians);
+		m_pTransformCom->Rotation(vRPY);
 	}
 	else {
 		Transition(fTimeDelta);
@@ -216,6 +220,10 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 		Start_Lerp_FovY(pContents->vParam_11.z, { pContents->vParam_11.x, pContents->vParam_11.y });
 		Set_Fov(XMConvertToRadians(pContents->vParam_11.x));
 	}break;
+	case TIMESOCKET_FUNC::SHAKE:
+	{
+		Start_CameraShake(pContents->vParam_11.x, pContents->vParam_11.y);
+	}break;
 	case TIMESOCKET_FUNC::END_CINEMATIC:
 	{
 		m_pGameInstance->Bind_Camera(CURRENT_LEVEL, Socket.m_Contents.wstrKeyName, true);
@@ -307,6 +315,32 @@ HRESULT CCamera_Cinematic::Bind_ShaderResources()
 #endif // _DEBUG
 	return S_OK;
 
+}
+void CCamera_Cinematic::Update_CameraShake(_float fTimeDelta)
+{
+	if (true == m_bCameraShake) {
+		m_vCameraShakeTimer.x += fTimeDelta;
+		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) {
+			m_vCameraShakeTimer.x = 0.f;
+			m_vAccRealRadians = { 0.f, 0.f };
+			m_bCameraShake = false;
+		}
+		else {
+			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
+			fIntense *= fIntense;
+			m_vAccRealRadians = _float2(
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense)
+			);
+		}
+	}
+}
+void CCamera_Cinematic::Start_CameraShake(_float fTime, _float fIntense)
+{
+	m_bCameraShake = true;
+	m_vCameraShakeTimer.x = 0.f;
+	m_vCameraShakeTimer.y = fTime;
+	m_fCameraShakeIntense = XMConvertToRadians(fIntense);
 }
 void CCamera_Cinematic::Lerp_Translation(_float fTimeDelta)
 {

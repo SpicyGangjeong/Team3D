@@ -201,6 +201,7 @@ void CItem_Potion::OnCollision(CGameObject* pOther, void* pDesc)
 
 	m_bHit = false;
 	m_pEffectPool->Use_Skill(SKILL_TYPE::POTION_BROKEN, this);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::POTION_BROKEN, SD_CHANNEL_GROUP::EFFECT, false, 0.3f);
 	m_fTimer = 0.f;
 	m_bVisible = false;
 	m_bAttach = true;

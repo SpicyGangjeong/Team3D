@@ -8,6 +8,7 @@
 #include "EffectParts.h"
 #include "TrailObject.h"
 #include "Ranrok_Breath.h"
+#include "Ranrok_EtherInfo.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -909,6 +910,11 @@ void CRanrok::Behavior_TuckedEnter()
 			m_pRightEye_Trail->Set_Visible(false);
 			
 
+			m_pEtherInfo[ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_AURA)]->Set_Visible(false);
+			m_pEtherInfo[ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_EYES)]->Set_Visible(false);
+			m_pEtherInfo[ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_WINGS)]->Set_Visible(false);
+
+
 		}, 0.05f);
 
 }
@@ -959,11 +965,15 @@ void CRanrok::Behavior_TuckedExit()
 	m_pLeftEye_Trail->Set_Visible(true);
 	m_pRightEye_Trail->Set_Visible(true);
 
+	m_pEtherInfo[ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_AURA)]->Set_Visible(true);
+	m_pEtherInfo[ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_EYES)]->Set_Visible(true);
+	m_pEtherInfo[ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_WINGS)]->Set_Visible(true);
 
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;
-
-	m_vCreatePropTime.x = m_vCreatePropTime.y;
+	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR)) {
+		m_vCreatePropTime.x = m_vCreatePropTime.y;
+	}
 }
 
 void CRanrok::Behavior_LandEnter()
@@ -1057,6 +1067,12 @@ void CRanrok::Behavior_DeadEnter()
 	m_pRightSmoke->Set_Visible(false);
 	m_pLeftPt->Set_Visible(false);
 	m_pRightPt->Set_Visible(false);
+
+	for (size_t i = 0; i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i++)
+	{
+		m_pEtherInfo[i]->Set_Visible(false);
+	}
+
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {

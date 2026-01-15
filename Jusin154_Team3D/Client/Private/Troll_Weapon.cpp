@@ -74,10 +74,9 @@ void CTroll_Weapon::Priority_Update(_float fTimeDelta)
 void CTroll_Weapon::Update(_float fTimeDelta)
 {
 	if (m_bDisolve) {
-		m_fDisolveTime += fTimeDelta*0.2f;
+		m_fDisolveTime += fTimeDelta*0.5f;
 		if (m_fDisolveTime >= 1.f)
 		{
-			/*m_fDisolveTime = 0.f;*/
 			m_bDisolve = false;
 			m_bVisible = false;
 		}

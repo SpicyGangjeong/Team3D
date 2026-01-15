@@ -288,6 +288,19 @@ void CGoblin_Assassin::Behavior_SlashEnter()
 			m_pGoblinSpector->Set_Disolve(true); },
 			0.28f);
 
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_118, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+			0.12f);
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_GOBLIN_6, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+			0.12f);
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_116, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+			0.19f);
+
 	//Add_Event(pairAnimInfo.first,
 	//	[this]() {
 	//		m_bLookAt = true;
@@ -350,6 +363,8 @@ void CGoblin_Assassin::Behavior_DashEnter()
 	_vector vDash = XMVector3Normalize(vRight * dir.x + vLook * dir.y);
 
 	XMStoreFloat4(&m_vDashDir, vDash);
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_86, SD_CHANNEL_GROUP::ENEMY, false, 0.3f);
 }
 
 HRESULT CGoblin_Assassin::Behavior_DashExitCheck(_float fTimeDelta)
@@ -383,6 +398,11 @@ void CGoblin_Assassin::Behavior_BlinkEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	m_bDisolve = true;
 
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_104, SD_CHANNEL_GROUP::ENEMY, false, 0.3f);
+		}, 0.64f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -556,6 +576,8 @@ void CGoblin_Assassin::Behavior_HitEnter()
 		}
 		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, fAnimSpeed);
+		Add_Sound_Event(pairAnimInfo.first,
+			[this]() {	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LEVIOSA_27, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::ACCIO):
 		if (m_eHitState != ENUM_CLASS(HIT_STATE::AIR_LEVIOSO)) {
@@ -574,6 +596,22 @@ void CGoblin_Assassin::Behavior_HitEnter()
 		break;
 	}
 
+	_uint iAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (0 == m_pGameInstance->Random_Int(0, 1))
+	{
+		Add_Event(iAnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_GOBLIN_3, SD_CHANNEL_GROUP::ENEMY, false, 0.6f);
+			}, 0.1f);
+	}
+	else
+	{
+		Add_Event(iAnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_GOBLIN_7, SD_CHANNEL_GROUP::ENEMY, false, 0.6f);
+			}, 0.1f);
+	}
 
 }
 
@@ -609,6 +647,19 @@ HRESULT CGoblin_Assassin::Behavior_HitExitCheck(_float fTimeDelta)
 	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first)
 	{
 		if (true == m_pCharacter_Controller->IsOnGround() && m_bCameraShake) {
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_14, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_15, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_20, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			}
 			CameraShake(10.f, 1.f, 2.f, 0.3f);
 			m_bCameraShake = false;
 		}
@@ -658,6 +709,11 @@ void CGoblin_Assassin::Behavior_DeadEnter()
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_GOBLIN_1, SD_CHANNEL_GROUP::ENEMY, false, 0.4f);
+		}, 0.1f);
 
 	Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_Disolve(true);
 	Get_PartObject<CGoblin_Sword>("Goblin_Sword_R")->Set_Disolve(true);

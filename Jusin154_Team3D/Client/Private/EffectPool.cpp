@@ -34,6 +34,8 @@
 #include "Troll_Rush.h"
 #include "Troll_Shout.h"
 #include "Troll_Self_Hit.h"
+#include "Troll_Attack.h"
+#include "Troll_Throw.h"
 
 #include "Goblin_Protego.h"
 #include "Goblin_Attack.h"
@@ -905,6 +907,25 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		CRanrok_PropHit* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_PropHit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_ATTACK_HIT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Attack* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Attack>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_THROW, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Throw* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Throw>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

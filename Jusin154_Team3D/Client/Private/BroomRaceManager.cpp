@@ -135,7 +135,9 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					_vector spawnPos = LastRingPos - ringRIght * 27.f;
 
 					RaceEnd->Get_Component<CTransform>()->Set_WorldMatrix(XMMatrixTranslationFromVector(spawnPos));
+
 				}	
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::FX_FIREWORKS, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 				m_pInfoInstance->Event_CallBack(TEXT("RaceEnd"));
 				m_iCount = 3;
 				m_bRaceStart = false;
