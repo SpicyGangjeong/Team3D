@@ -8,6 +8,7 @@
 #include "TrailObject.h"
 #include "EditEffect.h"
 #include "Ranrok_Breath.h"
+#include "Ranrok_EtherInfo.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -906,6 +907,11 @@ void CRanrok::Behavior_DeadEnter()
 	m_pBottomSmoke->Set_Visible(false);
 	m_pLeftSmoke->Set_Visible(false);
 	m_pRightSmoke->Set_Visible(false);
+
+	for (size_t i = 0; i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); i++)
+	{
+		m_pEtherInfo[i]->Set_Visible(false);
+	}
 
 	Add_Event(pairAnimInfo.first,
 		[&]() { 

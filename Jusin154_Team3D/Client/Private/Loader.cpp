@@ -222,6 +222,8 @@
 #include "Troll_Rush.h"
 #include "Troll_Shout.h"
 #include "Troll_Self_Hit.h"
+#include "Troll_Attack.h"
+#include "Troll_Throw.h"
 
 #include "WandEnd.h"
 #include "Goblin_Protego.h"
@@ -2836,6 +2838,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Self_Hit>(g_iStaticLevel, CTroll_Self_Hit::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Attack>(g_iStaticLevel, CTroll_Attack::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Throw>(g_iStaticLevel, CTroll_Throw::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(g_iStaticLevel, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
