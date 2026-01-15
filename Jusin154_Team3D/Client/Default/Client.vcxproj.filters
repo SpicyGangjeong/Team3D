@@ -2945,8 +2945,6 @@
     <ClCompile Include="..\Private\Ranrok_EtherInfo.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
-        </ClCompile>
     <ClCompile Include="..\Private\CutScene_Lightning.cpp">
       <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
     </ClCompile>
@@ -2973,7 +2971,6 @@
     <ClCompile Include="..\Private\State_Parry.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>
