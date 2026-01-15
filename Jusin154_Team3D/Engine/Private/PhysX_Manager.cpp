@@ -319,7 +319,7 @@ bool CPhysX_Manager::RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistan
 
 	PSX::PxRaycastBuffer raycastBuffer(pRayHitArray, iMaxHitCapacity);
 
-	const PSX::PxHitFlags hitFlags = PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL;
+	const PSX::PxHitFlags hitFlags = PSX::PxHitFlag::eDEFAULT;
 
 	PSX::PxQueryFilterData queryFilterData;
 	queryFilterData.flags = PSX::PxQueryFlag::eSTATIC | PSX::PxQueryFlag::eDYNAMIC;

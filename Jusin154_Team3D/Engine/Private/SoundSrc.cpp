@@ -30,8 +30,12 @@ const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 	TEXT("Potion/Potion.wav"),
 	TEXT("Potion/Potion_broken.wav"),
 #pragma endregion
-
-
+#pragma region ZAP
+		TEXT("Player/Zap/ZapHit0.wav"),
+		TEXT("Player/Zap/ZapHit1.wav"),
+		TEXT("Player/Zap/ZapHit2.wav"),
+		TEXT("Player/Zap/ZapHit3.wav"),
+#pragma endregion
 
 #pragma region SPELL
 	TEXT("Player/spells_jap_akb/jap_0.wav"), 
@@ -599,6 +603,8 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("Goblin/goblin_148.wav"),
 	TEXT("Goblin/goblin_149.wav"),
 	TEXT("Goblin/goblin_150.wav"),
+	TEXT("Goblin/Goblin_Mage_Hit.wav"),
+	
 #pragma endregion
 
 #pragma region GOBLIN_VOICE
