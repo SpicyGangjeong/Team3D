@@ -19,7 +19,7 @@ CCutSceneInfo::CCutSceneInfo()
 void CCutSceneInfo::Update(_float fTimeDelta)
 {
 	m_bIsActiveCutScene = false;
-	if (m_pGameInstance->Key_Pressing(DIK_ESCAPE)) {
+	if (m_pGameInstance->Key_Pressing(DIK_LBRACKET) && m_pGameInstance->Key_Pressing(DIK_RBRACKET)) {
 		Set_AllActiveEventsExit();
 	}
 #ifdef _DEBUG
