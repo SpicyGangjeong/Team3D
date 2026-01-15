@@ -306,8 +306,8 @@ HRESULT CLevel_Field::Ready_Markers()
 HRESULT CLevel_Field::Ready_Layer_Player(const _wstring& strLayerTag)
 {
 	CPlayer::PLAYERDESC playerDesc = {};
-	playerDesc.vPos = _float4(-17.96f, 18.74f, 9.11f, 1.f);
-	playerDesc.vRotQ = _float4(0.f, 0.f, 0.f, 1.f);
+	playerDesc.vPos = _float4(-11.23f, 12.6f, 12.75f, 1.f);
+	playerDesc.vRotQ = _float4(0.f, -0.52694778f, 0.f, 0.84989766f);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &playerDesc))) {
 		return E_FAIL;
 	}
@@ -341,6 +341,7 @@ HRESULT CLevel_Field::Ready_Layer_Effect(const _wstring& strLayerTag)
 		return E_FAIL;
 	if (FAILED(m_pInfoInstance->Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
 		return E_FAIL;
+
 
 	return S_OK;
 }

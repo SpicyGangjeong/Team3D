@@ -53,6 +53,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
+
 #ifdef _DEBUG
 	Load_KeyFrame();
 

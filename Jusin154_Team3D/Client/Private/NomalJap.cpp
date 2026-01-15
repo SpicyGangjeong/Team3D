@@ -347,6 +347,8 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 
 	}
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::ZAP_HIT0, SD_CHANNEL_GROUP::EFFECT, false, 0.5f);
+
 	m_bHitShield = false;
 }
 

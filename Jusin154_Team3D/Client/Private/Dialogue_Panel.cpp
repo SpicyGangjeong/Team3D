@@ -149,6 +149,9 @@ void CDialogue_Panel::Change_Map()
 	);
 	_vector vPlayerOriginPos = XMVectorZero();
 
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
+		return;
+
 	CLayer* pDuelistLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_DUELIST);
 	if (nullptr != pDuelistLayer) {
 		CHuman_Duelist* pDuelist = pDuelistLayer->Get_Object<CHuman_Duelist>();
@@ -208,7 +211,7 @@ void CDialogue_Panel::Change_Map()
 
 	m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
 	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_INSIDE, SD_CHANNEL_GROUP::BGM, false, 0.8f);
-
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_INT, SD_CHANNEL_GROUP::BGM, false, 1.f);
 }
 
 void CDialogue_Panel::Priority_Update(_float fTimeDelta)

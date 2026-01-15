@@ -343,7 +343,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	// 맵 로드할지 안할지 bool 설정
 	// ---------------------------------
 	_bool isReady_Background = { true };
-	_bool isReady_Hogsmeade = { false };
+	_bool isReady_Hogsmeade = { true };
 	_bool isReady_Hogwart = { true };
 #ifdef _DEBUG
 
