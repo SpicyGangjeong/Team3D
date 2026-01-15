@@ -1024,10 +1024,9 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("FX/fx_sound_15.wav"),
 	TEXT("FX/fx_sound_16.wav"),
 	TEXT("FX/fireworks-402788.wav"),
-
+	TEXT("FX/CountDown.wav"),
 #pragma endregion
 #pragma region PROP_BROKEN
-
 	TEXT("Prop/Wood0.wav"),
 	TEXT("Prop/Wood1.wav"),
 	TEXT("Prop/Wood2.wav"),
@@ -1040,9 +1039,22 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("Prop/Box0.wav"),
 	TEXT("Prop/Box1.wav"),
 #pragma endregion
+
+#pragma region UI
+	TEXT("UI/Logo_Intro.wav"),
+#pragma endregion
+
+
 #pragma region DOBI
 	TEXT("Dobi/dobi_voice.wav"),
 #pragma endregion
+#pragma region PLAYERHIT
+	TEXT("Player/Hit/PlayerHit0.wav"),
+	TEXT("Player/Hit/PlayerHit1.wav"),
+	TEXT("Player/Hit/PlayerHit2.wav"),
+	TEXT("Player/Hit/PlayerHit3.wav"),
+#pragma endregion
+
 
 };
 

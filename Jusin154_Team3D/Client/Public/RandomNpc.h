@@ -42,6 +42,8 @@ public:
 	void Set_NpcState(_int iState) { m_eNpcState = iState; }
 	void Set_Target(CUnit& pTarget, CTransform& pTransform);
 	void Set_BattleIndex(_int iIndex) { m_iBattleIndex = iIndex; }
+	void Play_Voice();
+
 protected:
 	CInfoInstance*							m_pInfoInstance = { nullptr };
 	CCharacter_Controller*					m_pCharacter_Controller = { nullptr };

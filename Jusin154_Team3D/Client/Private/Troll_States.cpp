@@ -66,6 +66,7 @@ void CTroll::Behavior_IdleBreakEnter()
 	switch (RandIndex)
 	{
 	case 0: //땅 두번구르기 왼발 오른발
+	{
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
 
 		Add_Event(pairAnimInfo.first, [this]() {
@@ -88,8 +89,24 @@ void CTroll::Behavior_IdleBreakEnter()
 			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
 			}, 0.7f);
 
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+		switch (iRand)
+		{
+		case 0:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		case 1:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		case 2:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		}
+
+	}
 		break;
 	case 1:// 방망이
+	{
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
 
 		Add_Event(pairAnimInfo.first, [this]() {
@@ -99,9 +116,24 @@ void CTroll::Behavior_IdleBreakEnter()
 			_float4 vPosition = {};
 			XMStoreFloat4(&vPosition, WeaponMat.r[3]);
 
+
 			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
 			}, 0.7f);
 
+		_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+		switch (iRand)
+		{
+		case 0:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		case 1:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		case 2:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		}
+	}
 		break;
 	case 2: // 발구르기
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
@@ -112,6 +144,10 @@ void CTroll::Behavior_IdleBreakEnter()
 
 			_float4 vPosition = {};
 			XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_SHOUT, this, &vPosition);
+
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE, SD_CHANNEL_GROUP::EFFECT, false, 5.f);
 
 			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
 			}, 0.2f);
@@ -372,6 +408,7 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 		{
 			if (m_pModelCom->IsFinishedAnim())
 			{
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE, SD_CHANNEL_GROUP::EFFECT, false, 5.f);
 				m_bLookAt = false;
 				pairAnimInfo = m_Animation[STATEANIM::RUSH_LOOP];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -413,6 +450,22 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_bLookAt = true; },
 				0.3f);
+
+			Add_Sound_Event(pairAnimInfo.first,
+				[this]() {_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			}; }, 0.2f);
+			
 		}
 	}
 
@@ -553,7 +606,7 @@ void CTroll::Behavior_SwingEnter()
 		},
 		0.6f);
 
-
+	
 	Set_Easing(pairAnimInfo.first, 0.1f, 0.47f, 1.8f);
 	Set_Easing(pairAnimInfo.first, 0.47f, 0.5f, 0.5f);
 }
@@ -612,6 +665,20 @@ void CTroll::Behavior_SlamEnter()
 	Add_Event(m_Animation[STATEANIM::SLAM].first, [this]() {
 		m_bIsHit = false;
 		}, 0.6f);
+
+	_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+	switch (iRand)
+	{
+	case 0:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 1:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 2:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	}
 
 	Set_Easing(pairAnimInfo.first, 0.2f, 0.42f, 1.5f);
 
@@ -680,7 +747,6 @@ void CTroll::Behavior_BackHandSwingEnter()
 			m_pWeaponTrail->Set_Visible(false);
 		},
 		0.66f);
-
 
 	Set_Easing(pairAnimInfo.first, 0.1f, 0.45f, 1.8f);
 	Set_Easing(pairAnimInfo.first, 0.65f, 0.7f, 0.5f);
@@ -789,6 +855,21 @@ void CTroll::Behavior_HitEnter()
 			break;
 		}
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+		Add_Sound_Event(pairAnimInfo.first,
+			[this]() {_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+		switch (iRand)
+		{
+		case 0:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		case 1:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		case 2:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+			break;
+		}; }, 0.2f);
 	}
 
 }

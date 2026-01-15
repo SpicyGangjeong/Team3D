@@ -175,7 +175,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 #elif Bin
 	bStartCinematic = false;
 #elif gimch
-	bStartCinematic = false;
+	bStartCinematic = true;
 #elif 나
 	bStartCinematic = false;
 #endif
@@ -343,13 +343,13 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	// 맵 로드할지 안할지 bool 설정
 	// ---------------------------------
 	_bool isReady_Background = { true };
-	_bool isReady_Hogsmeade = { true };
+	_bool isReady_Hogsmeade = { false };
 	_bool isReady_Hogwart = { true };
 #ifdef _DEBUG
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = true;
+	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
@@ -626,7 +626,6 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc))) {
 		return E_FAIL;
 	}
-
 
 	/* BearBerry */
 	Desc.isShake = true;
