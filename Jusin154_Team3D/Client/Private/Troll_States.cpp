@@ -531,9 +531,16 @@ void CTroll::Behavior_SwingEnter()
 		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)];
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_bLookAt = false;
-	m_bIsHit = true; },
+		[this]() {m_bLookAt = false;},
 		0.2f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() { m_bIsHit = true; },
+		0.375f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() { m_bIsHit = false; },
+		0.45f);
 
 	Troll_Trail_Visible(true);
 	m_pWeaponTrail->Set_Visible(true);
@@ -543,7 +550,6 @@ void CTroll::Behavior_SwingEnter()
 		[this]() {
 			Troll_Trail_Visible(false);
 			m_pWeaponTrail->Set_Visible(false);
-			m_bIsHit = false;
 		},
 		0.6f);
 
@@ -655,15 +661,23 @@ void CTroll::Behavior_BackHandSwingEnter()
 		[this]() {
 			Troll_Trail_Visible(true);
 			m_pWeaponTrail->Set_Visible(true);
-			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
-			m_bIsHit = true; },
+			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();},
 		0.4f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_bIsHit = true; },
+		0.52f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_bIsHit = false; },
+			0.6f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			Troll_Trail_Visible(false);
 			m_pWeaponTrail->Set_Visible(false);
-			m_bIsHit = false;
 		},
 		0.66f);
 

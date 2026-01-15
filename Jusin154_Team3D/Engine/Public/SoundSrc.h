@@ -262,6 +262,9 @@ enum class SD_KIND {
 	VOICE_REVELIO,
 	VOICE_STUPEFY,
 	TROLL_VOICE,
+	TROLL_VOICE2,
+	TROLL_VOICE3,
+	TROLL_VOICE4,
 #pragma endregion
 
 #pragma region BROOM
@@ -1013,6 +1016,7 @@ RANROK_FOOTSTEP_21,
 	FX_SOUND_14,
 	FX_SOUND_15,
 	FX_SOUND_16,
+	FX_FIREWORKS,
 #pragma endregion
 
 
