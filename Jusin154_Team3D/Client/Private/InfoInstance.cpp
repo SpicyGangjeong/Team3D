@@ -210,6 +210,7 @@ HRESULT CInfoInstance::Deregist_ActiveEffect(CEffect_Container* pEffect)
 	}
 	return m_pEffectInfo->Deregist_ActiveEffect(pEffect);
 }
+
 #pragma endregion
 
 

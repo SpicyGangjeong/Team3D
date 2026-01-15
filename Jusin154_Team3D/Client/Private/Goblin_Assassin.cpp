@@ -68,19 +68,19 @@ HRESULT CGoblin_Assassin::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	m_pInfoInstance->Add_Event(TEXT("Goblin_Fear"),
-		[this](void* p)
-		{
-			CGameObject* pSender = static_cast<CGameObject*>(p);
+	//m_pInfoInstance->Add_Event(TEXT("Goblin_Fear"),
+	//	[this](void* p)
+	//	{
+	//		CGameObject* pSender = static_cast<CGameObject*>(p);
 
-			if (pSender == this)
-				return;
+	//		if (pSender == this)
+	//			return;
 
-			if (isDead())
-				return;
+	//		if (isDead())
+	//			return;
 
-			m_pFSM->Change_State(FSMSTATE::FEAR);
-		});
+	//		m_pFSM->Change_State(FSMSTATE::FEAR);
+	//	});
 
 	m_pModelCom->Set_DisableRootMotionScale(true);
 

@@ -73,19 +73,19 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 	m_pCharacter_Controller->Set_Position(vPos);
 	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotQ.x), XMConvertToRadians(pDesc->vRotQ.y), XMConvertToRadians(pDesc->vRotQ.z));
 
-	m_pInfoInstance->Add_Event(TEXT("Goblin_Fear"),
-		[this](void* p)
-		{
-			CGameObject* pSender = static_cast<CGameObject*>(p);
+	//m_pInfoInstance->Add_Event(TEXT("Goblin_Fear"),
+	//	[this](void* p)
+	//	{
+	//		CGameObject* pSender = static_cast<CGameObject*>(p);
 
-			if (pSender == this)
-				return;
+	//		if (pSender == this)
+	//			return;
 
-			if (isDead())
-				return;
+	//		if (isDead())
+	//			return;
 
-			m_pFSM->Change_State(FSMSTATE::FEAR);
-		});
+	//		m_pFSM->Change_State(FSMSTATE::FEAR);
+	//	});
 
 #ifdef _DEBUG
 #if 진우

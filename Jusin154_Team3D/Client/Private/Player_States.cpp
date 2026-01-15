@@ -1666,7 +1666,7 @@ void CPlayer::Behavior_AncientSpellEnter()
 	if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
 	{
 		Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
-		m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+		/*m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));*/
 	}
 
 	Add_Event(pairAnimInfo.first,
@@ -3194,7 +3194,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
 		{
 			Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
-			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+			/*m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));*/
 		}
 
 		break;

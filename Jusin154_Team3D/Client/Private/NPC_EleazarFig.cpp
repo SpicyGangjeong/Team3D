@@ -241,12 +241,12 @@ void CNPC_EleazarFig::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _
 }
 void CNPC_EleazarFig::Set_Pos(_vector vPos)
 {
-	_float fRandX = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
+	/*_float fRandX = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
 	_float fRandY= m_pGameInstance->Real_Random_Float(-3.f, 3.f);
 
 	_vector Offset = XMVectorSet(fRandX, 0.f, fRandY, 0.f);
 	vPos += Offset;
-	m_pCharacter_Controller->Set_Position(vPos);
+	m_pCharacter_Controller->Set_Position(vPos);*/
 }
 
 _wstring CNPC_EleazarFig::Get_Name()

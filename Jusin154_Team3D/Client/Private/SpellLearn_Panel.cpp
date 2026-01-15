@@ -51,6 +51,8 @@ HRESULT CSpellLearn_Panel::Initialize(void* pArg)
 	m_fCanvasAlpha = 1.f;
 	m_fSortZ = 0.05f;
 	m_fDelayTime = 1.f;
+	Index = 0;
+	Set_Learn(Index);
 	static_cast<CSpellLearn*>(m_pSpellLearn)->Set_Pointer(
 		static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer),
 		static_cast<CSpellLearn_ChaserPointer*>(m_pSpellLearn_ChaserPointer));
@@ -72,21 +74,21 @@ HRESULT CSpellLearn_Panel::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CSpellLearn_Panel::Set_Learn(_int Index)
+void CSpellLearn_Panel::Set_Learn(_int iIndex)
 {
 	m_fTime = 0.f;
-	static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer)->Set_ID(m_pInfoInstance->Get_SpellLearn(Index).iSpellID);
-	static_cast<CSpellLearn*>(m_pSpellLearn)->Change_Image(Index);
-	static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer)->Set_SpellLearn(Index);
-	static_cast<CSpellLearn_ChaserPointer*>(m_pSpellLearn_ChaserPointer)->Set_SpellLearn(Index);
-	static_cast<CSpellLearn_Name*>(m_pSpellLearn_Name)->Set_Name(Index);
-	static_cast<CSpellLearn_Overlay*>(m_pSpellLearn_Overlay)->Set_SpellLearn(Index);
-	static_cast<CSpellLearn_Slot*>(m_pSpellLearn_Slot)->Set_SpellLearn(Index);
+	static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer)->Set_ID(m_pInfoInstance->Get_SpellLearn(iIndex).iSpellID);
+	static_cast<CSpellLearn*>(m_pSpellLearn)->Change_Image(iIndex);
+	static_cast<CSpellLearn_MovePointer*>(m_pSpellLearn_MovePointer)->Set_SpellLearn(iIndex);
+	static_cast<CSpellLearn_ChaserPointer*>(m_pSpellLearn_ChaserPointer)->Set_SpellLearn(iIndex);
+	static_cast<CSpellLearn_Name*>(m_pSpellLearn_Name)->Set_Name(iIndex);
+	static_cast<CSpellLearn_Overlay*>(m_pSpellLearn_Overlay)->Set_SpellLearn(iIndex);
+	static_cast<CSpellLearn_Slot*>(m_pSpellLearn_Slot)->Set_SpellLearn(iIndex);
 	for (size_t i = 0; i < m_pBooster.size(); ++i)
 	{
 		static_cast<CSpellLearn_Booster*>(m_pBooster[i])->Move(
-			m_pInfoInstance->Get_SpellLearn(Index).Booster[i].x,
-			m_pInfoInstance->Get_SpellLearn(Index).Booster[i].y);
+			m_pInfoInstance->Get_SpellLearn(iIndex).Booster[i].x,
+			m_pInfoInstance->Get_SpellLearn(iIndex).Booster[i].y);
 		static_cast<CSpellLearn_Booster*>(m_pBooster[i])->Reset();
 	}
 }

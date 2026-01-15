@@ -78,7 +78,8 @@ void CMageSide::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-
+	if (m_pOwner->isDead())
+		return;
 	_matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("RightHand"));
 
 	for (int i = 0; i < 3; ++i) {

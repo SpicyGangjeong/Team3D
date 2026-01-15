@@ -82,6 +82,7 @@ public:
 	UI_STATE Get_UISTATE();
 	_float Get_Spell_Damage(_int Index);
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
+	void Clear_Event();
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 
 #pragma endregion
@@ -127,6 +128,7 @@ public:
 	HRESULT Regist_ActiveEffect(CEffect_Container* pEffect);
 	HRESULT Deregist_ActiveEffect(CEffect_Container* pEffect);
 #pragma endregion
+
 
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };

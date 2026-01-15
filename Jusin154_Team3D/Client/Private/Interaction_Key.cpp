@@ -44,7 +44,8 @@ void CInteraction_Key::Priority_Update(_float fTimeDelta)
 
 void CInteraction_Key::Update(_float fTimeDelta)
 {
-	ReLockOnTarget();
+	if (m_pInfoInstance->IsActiveCutScene() == false)
+		ReLockOnTarget();
 }
 
 void CInteraction_Key::Late_Update(_float fTimeDelta)

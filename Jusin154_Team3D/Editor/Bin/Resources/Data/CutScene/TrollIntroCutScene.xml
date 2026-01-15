@@ -1867,5 +1867,5 @@
 			<string tag =""/>
 		</Param_12>
 	</Socket>
-	<Trigger X="110.012" Y="16.785" Z="131.700" W="10.0"/>
+	<Trigger X="110.012" Y="16.785" Z="131.700" W="0.1"/>
 </TrollIntro>
