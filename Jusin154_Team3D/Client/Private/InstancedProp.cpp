@@ -27,10 +27,17 @@ void CInstancedProp::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-//#ifdef Bin
-//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
-//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
-//#endif // Bin
+	
+#ifdef 기무리
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+#endif // 기무리
+#ifndef _DEBUG
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+#endif // !_DEBUG
+
+
 }
 
 HRESULT CInstancedProp::Render()

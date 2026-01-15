@@ -15,6 +15,8 @@ enum class SD_KIND {
 	BGM_HOGWART_1,
 	BGM_HOGWART_INT,
 	BGM_RANROK_0,
+	BGM_INSIDE,
+	BGM_RACE,
 #pragma endregion
 #pragma region FOOTSTEP
 	STEP_INT,
@@ -1023,11 +1025,27 @@ RANROK_FOOTSTEP_21,
 	FX_FIREWORKS,
 	FX_COUNTDOWN,
 #pragma endregion
+#pragma region PROP BROKEN
 
+	PROP_WOOD0,
+	PROP_WOOD1,
+	PROP_WOOD2,
+	BARREL0,
+	BARREL1,
+	BARREL2,
+	PAPER0,
+	PAPER1,
+	PAPER2,
+	BOX0,
+	BOX1,
+
+
+#pragma endregion
 
 #pragma region UI
 	LOGO_INTRO,
 #pragma endregion
+
 
 
 #pragma region DOBI

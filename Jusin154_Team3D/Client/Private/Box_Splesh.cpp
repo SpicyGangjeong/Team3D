@@ -95,6 +95,9 @@ HRESULT CBox_Splesh::Pre_Setting(CGameObject* pObject, void* pArg)
 	pSmoke->Set_Visible(true);
 
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::PAPER0, SD_CHANNEL_GROUP::EFFECT, false, 0.8f);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BOX0, SD_CHANNEL_GROUP::EFFECT, false, 0.8f);
+
 
 	return S_OK;
 }
