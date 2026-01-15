@@ -60,7 +60,7 @@ void CPlayer::Get_Spell(_int SkillIndex)
 	m_eSpell = SkillIndex;
 }
 
-void CPlayer::Get_UIState(_int UIState)
+void CPlayer::Get_UIState(UI_STATE UIState)
 {
 	m_eUIState = UIState;
 }
@@ -1663,7 +1663,11 @@ void CPlayer::Behavior_AncientSpellEnter()
 	if (m_LockOnInfo.pUnit)
 		m_pTransformCom->LookAt(m_LockOnInfo.pUnit->Get_WorldPostion());
 
-	m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+	if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
+	{
+		Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
+		m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+	}
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -3125,8 +3129,11 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Info.pText = TEXT("아바다 케다브라!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 
-		Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
-		m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+		if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
+		{
+			Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
+			m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
+		}
 
 		break;
 	case ENUM_CLASS(SKILL_TYPE::REPARO):
@@ -3287,10 +3294,10 @@ void CPlayer::Hit_Levioso(_float fTimeDelta)
 
 _bool CPlayer::IsInputLocked()
 {
-	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+	if (m_eUIState != UI_STATE::SPELL &&
+		m_eUIState != UI_STATE::QUEST &&
+		m_eUIState != UI_STATE::SPELLLNEARN &&
+		m_eUIState != UI_STATE::NPC_INTERACT)
 	{
 		return true;
 	}
@@ -3335,7 +3342,7 @@ void CPlayer::Add_FSM()
 		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			{
-				if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+				if ((m_eUIState != UI_STATE::SPELL)) {
 					if (!m_pFSM->IsEnable(FSMSTATE::STOP))
 					{
 						_float3	fMove = m_pGameInstance->Get_MouseMove();

@@ -54,6 +54,8 @@ private:
 	_float2		m_vLerpTimer = { };
 	_bool		m_bLerp = { false };
 	_uint		m_iBehavior = { 0 };
+	class CEffectPool* m_pEffectPool = nullptr;
+	CEffect_Container* m_pSmokeEffect = { nullptr };
 
 	_uint m_iAnimationIndex = 0;
 	_uint m_iStraight = { 0 };

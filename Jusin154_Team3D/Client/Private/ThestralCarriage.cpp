@@ -1,8 +1,11 @@
 ﻿#include "pch.h"
 #include "ThestralCarriage.h"
-
 #include "GameInstance.h"
+
+#include "Layer.h"
 #include "InfoInstance.h"
+#include "EffectPool.h"
+#include "CutScene_Lightning.h"
 
 CThestralCarriage::CThestralCarriage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -45,6 +48,8 @@ HRESULT CThestralCarriage::Initialize(void* pArg)
 
 #endif // _DEBUG
 
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
 
 	m_iAnimationIndex = 2;
 	m_pModelCom->Set_AnimationIndex(m_iAnimationIndex);
@@ -196,6 +201,18 @@ void CThestralCarriage::Trigger(CTimeSocket& Socket)
 	case TIMESOCKET_FUNC::AFFINE_LERP:
 	{
 		Lerp_Start(pContents->pxTransform, pContents->vParam_11.x);
+	} break;
+	case TIMESOCKET_FUNC::INTRO_LIGHTNING:
+	{
+		_vector vHitPosition = Get_SocketWorldMatrix(CARRIAGE_SOCKET::BACK_LEFT).r[3];
+		CEffect_Container* pEffect = { nullptr };
+		m_pEffectPool->Use_Skill(SKILL_TYPE::CUTSCENE_LIGHTNING, this, (void*)&vHitPosition, (CEffect_Container**)&pEffect);
+		SAFE_RELEASE(pEffect);
+	} break;
+	case TIMESOCKET_FUNC::INTRO_SMOKE:
+	{
+		_vector vHitPosition = Get_SocketWorldMatrix(CARRIAGE_SOCKET::BACK).r[3];
+		m_pEffectPool->Use_Skill(SKILL_TYPE::CUTSCENE_SMOKE, this, (void*)&vHitPosition, (CEffect_Container**)&m_pSmokeEffect);
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
@@ -405,6 +422,8 @@ void CThestralCarriage::Free()
 #endif // _DEBUG
 	SAFE_RELEASE(m_pModelCom);
 	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pSmokeEffect);
+	SAFE_RELEASE(m_pEffectPool);
 }
 #ifdef _DEBUG
 

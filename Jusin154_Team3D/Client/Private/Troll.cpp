@@ -473,6 +473,8 @@ void CTroll::Trigger(CTimeSocket& Socket)
 		} else if (pContents->vFlags.b[2]) {
 			auto& pairAnimation = m_Animation[STATEANIM::IDLE];
 			m_pModelCom->Set_AnimationIndex(pairAnimation.first, pairAnimation.second);
+		} else if (pContents->vFlags.b[3]) {
+			m_pModelCom->Set_AnimationIndex(143, false);
 		}
 	} break;
 	case TIMESOCKET_FUNC::LOOK_AT:
