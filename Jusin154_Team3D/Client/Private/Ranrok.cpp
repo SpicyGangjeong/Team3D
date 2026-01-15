@@ -1064,7 +1064,6 @@ HRESULT CRanrok::Render_Bloom()
 {
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_HOT_SPINE); i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); ++i)
 	{
-
 		if (m_pEtherInfo[i]->isBloom() == false)
 			continue;
 

@@ -204,6 +204,10 @@ void CDialogue_Panel::Change_Map()
 		}
 	}
 
+
+	m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_INSIDE, SD_CHANNEL_GROUP::BGM, false, 0.8f);
+
 }
 
 void CDialogue_Panel::Priority_Update(_float fTimeDelta)
