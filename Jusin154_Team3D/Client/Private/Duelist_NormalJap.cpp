@@ -326,7 +326,7 @@ void CDuelist_NormalJap::OnCollision(CGameObject* pOther, void* pDesc)
 
 		XMStoreFloat3(&m_vCameraLook, vFinal);
 
-
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::ZAP_HIT0, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
 		m_fLinearSpeed = 30.f;
 	}
 	else {
@@ -336,6 +336,7 @@ void CDuelist_NormalJap::OnCollision(CGameObject* pOther, void* pDesc)
 		m_pProjectile->Set_Visible(false);
 
 		m_pJapFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::ZAP_HIT0, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
 	}
 
 	m_bHitShield = false;

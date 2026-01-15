@@ -18,6 +18,7 @@ enum class SD_KIND {
 	BGM_INSIDE,
 	BGM_RACE,
 #pragma endregion
+
 #pragma region FOOTSTEP
 	STEP_INT,
 	STEP_ROAD,
@@ -30,7 +31,12 @@ enum class SD_KIND {
 	POTION_BROKEN,
 #pragma endregion
 
-
+#pragma region ZAP
+	ZAP_HIT0,
+	ZAP_HIT1,
+	ZAP_HIT2,
+	ZAP_HIT3,
+#pragma endregion
 #pragma region SPELL
 	SP_JAP_0,
 	SP_JAP_1,
@@ -41,6 +47,7 @@ enum class SD_KIND {
 	SP_JAP_37,
 	SP_BLINK_2,
 #pragma endregion
+
 #pragma region AVADA_KEDAVRA
 	S_AVADA_KEDAVRA_0,
 	S_AVADA_KEDAVRA_1,
@@ -597,6 +604,7 @@ enum class SD_KIND {
 		GOBLIN_148,
 		GOBLIN_149,
 		GOBLIN_150,
+		GOBLIN_MAGE_HIT,
 #pragma endregion
 
 #pragma region GOBLIN_VOICE
@@ -1025,8 +1033,8 @@ RANROK_FOOTSTEP_21,
 	FX_FIREWORKS,
 	FX_COUNTDOWN,
 #pragma endregion
-#pragma region PROP BROKEN
 
+#pragma region PROP BROKEN
 	PROP_WOOD0,
 	PROP_WOOD1,
 	PROP_WOOD2,
@@ -1038,8 +1046,6 @@ RANROK_FOOTSTEP_21,
 	PAPER2,
 	BOX0,
 	BOX1,
-
-
 #pragma endregion
 
 #pragma region UI
