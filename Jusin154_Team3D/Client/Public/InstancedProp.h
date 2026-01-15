@@ -40,6 +40,7 @@ public:
 private:
 	_bool								m_isShake = {};
 	_bool								m_isTree = {};
+	_bool								m_bEnableRigidbody = {};
 	_uint								m_iNumMesh = {};
 	_uint								m_iNumInstacne = {};
 	SHADER_PASS_WORLDMODLE_INSTANCE		m_eShaderPass = {};
