@@ -152,6 +152,8 @@ _int CQuest_Data::Get_Count(_int Index)
 
 _int CQuest_Data::Set_AcceptQuest(_int Index)
 {
+	if (Index == -1)
+		return -1;
 	if (QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::ACCEPTED))
 	{
 		return 1;
