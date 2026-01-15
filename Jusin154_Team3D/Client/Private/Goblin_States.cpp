@@ -279,6 +279,19 @@ void CGoblin::Behavior_SwingEnter()
 	m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
 
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_21, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+			0.22f);
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_GOBLIN_2, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+			0.17f);
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_84, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+			0.01f);
+
 	Set_Easing(pairAnimInfo.first, 0.01f, 0.15f, 0.8f);
 
 	Set_Easing(pairAnimInfo.first, 0.15f, 0.4f, 1.4f);
@@ -324,7 +337,9 @@ void CGoblin::Behavior_ThrowEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			Get_PartObject<CGoblin_Dagger>()->Set_Visible(true);
-			Get_PartObject<CGoblin_Dagger>()->Set_Attach(false); },
+			Get_PartObject<CGoblin_Dagger>()->Set_Attach(false);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_30, SD_CHANNEL_GROUP::ENEMY, false, 0.8f);
+		},
 		0.3f);
 }
 
@@ -360,6 +375,11 @@ void CGoblin::Behavior_BlinkEnter()
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBILN_TELEPORT, this);
 		}, 0.1f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_39, SD_CHANNEL_GROUP::ENEMY, false, 0.7f);
+		}, 0.5f);
 }
 
 HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
@@ -391,6 +411,11 @@ HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
 
 		pairAnimInfo = m_Animation[STATEANIM::BLINK];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_8, SD_CHANNEL_GROUP::ENEMY, false, 0.3f);
+			}, 0.64f);
 	}
 
 	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::BLINK].first)
@@ -539,8 +564,22 @@ void CGoblin::Behavior_HitEnter()
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, fAnimSpeed);
 		break;
 	}
+	_uint iAnimIndex = m_pModelCom->Get_AnimIndex();
 
-
+	if(0 == m_pGameInstance->Real_Random_Int(0,1))
+	{
+		Add_Event(iAnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_GOBLIN_3, SD_CHANNEL_GROUP::ENEMY, false, 0.6f);
+			}, 0.1f);
+	}
+	else
+	{
+		Add_Event(iAnimIndex,
+			[this]() {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_GOBLIN_7, SD_CHANNEL_GROUP::ENEMY, false, 0.6f);
+			}, 0.1f);
+	}
 }
 
 HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
@@ -637,6 +676,11 @@ void CGoblin::Behavior_DeadEnter()
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_GOBLIN_1, SD_CHANNEL_GROUP::ENEMY, false, 0.4f);
+		}, 0.1f);
 }
 
 HRESULT CGoblin::Behavior_DeadExitCheck(_float fTimeDelta)

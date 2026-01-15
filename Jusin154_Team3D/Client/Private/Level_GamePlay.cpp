@@ -50,7 +50,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 #ifdef _DEBUG
 	// 낮, 밤 설정
 #ifdef gimch
-	m_isDay = false;
+	m_isDay = true;
 #endif // gimch
 #ifdef Bin
 	m_isDay = true;
@@ -345,7 +345,6 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	_bool isReady_Background = { true };
 	_bool isReady_Hogsmeade = { true };
 	_bool isReady_Hogwart = { true };
-	m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
 #ifdef _DEBUG
 
 #ifdef gimch
@@ -547,7 +546,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Hogsmeade()
 	CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data", LAYER_HOGSMEADE);
 
 	/* 조명 오브젝트 */
-	CInfoInstance::GetInstance()->Load_LightElements("LightElement", LAYER_HOGSMEADE);
+	CInfoInstance::GetInstance()->Load_LightElements("LightElement", LAYER_LIGHTELMENT);
 
 	/* 상호작용 오브젝트 */
 	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel", LAYER_HOGSMEADE);
@@ -903,7 +902,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 	LightDesc.vSpeed = _float2(0.f, 0.f);
 	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_LightPost";
 	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/LightPost.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &LightDesc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_LIGHTELMENT, &LightDesc)))
 		return E_FAIL;
 
 	/* LightPost_Floating */
@@ -914,7 +913,7 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 	LightDesc.vSpeed = _float2(0.f, 0.f);
 	LightDesc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Light_Post_Floating";
 	LightDesc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Light_Post_Floating.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGSMEADE, &LightDesc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp_Light>(g_iStaticLevel, NEXT_LEVEL, LAYER_LIGHTELMENT, &LightDesc)))
 		return E_FAIL;
 
 	return S_OK;
