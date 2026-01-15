@@ -464,6 +464,8 @@ void CGoblin_Mage::Behavior_HitEnter()
 		}
 		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, fAnimSpeed);
+		Add_Sound_Event(pairAnimInfo.first,
+			[this]() {	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LEVIOSA_27, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::ACCIO):
 		if (m_eHitState != ENUM_CLASS(HIT_STATE::AIR_LEVIOSO)) {

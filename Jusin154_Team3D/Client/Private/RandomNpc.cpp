@@ -82,7 +82,7 @@ void CRandomNpc::Update(_float fTimeDelta)
 		{
 			if (m_bElf)
 			{
-				m_pModelCom->Set_AnimationIndex(1, true, 1.f, false, 1.f, false);
+				m_pModelCom->Set_AnimationIndex(21, true, 1.f, false, 1.f, false);
 			}
 			else {
 				_int iRandom = m_pGameInstance->Real_Random_Int(0, 12);

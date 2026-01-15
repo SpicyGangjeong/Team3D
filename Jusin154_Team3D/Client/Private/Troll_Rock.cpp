@@ -160,8 +160,7 @@ void CTroll_Rock::RockHit()
 							break;
 						}
 						m_bVisible = false;
-
-
+						m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_ATTACK_ROCKTHROW_HITACTOR, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 						m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, m_pOwner , &tagCollInfo.vWorldPos);
 						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}

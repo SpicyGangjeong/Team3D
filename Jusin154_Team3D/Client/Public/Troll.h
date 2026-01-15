@@ -100,6 +100,7 @@ private:
 
 	_float m_fRushTime = {};
 	_float m_fAttackDelay = {};
+	_bool	m_bIsHit = { false };
 
 	class   CEffect_Container* m_pRushEffect = nullptr;
 
