@@ -89,15 +89,11 @@ void CDialogue_Font::Update(_float fTimeDelta)
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BROOM):
-				m_bRace = true;
-				m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bRace);
-				ReSet();
+				MapMove();
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BATTLE):
-				m_bBattle = true;
-				m_pInfoInstance->Event_CallBack(TEXT("BATTLE"), &m_bBattle);
-				ReSet();
+				MapMove();
 				break;
 
 			default:
@@ -436,7 +432,45 @@ void CDialogue_Font::ReSet()
 		m_DialoguInfo.push_back((*it));
 		it = m_pCurrentDialogue.erase(it);
 	}
-	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bChoiceText);
+	if (m_pNpc->Get_NpcID() == 4)
+	{
+		m_pInfoInstance->Event_CallBack(TEXT("Change"));
+		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, 0.f);
+		m_bCurrentInteract = false;
+		m_bNpcInteract = false;
+	}
+	else
+	{
+		NPCINTERACT Interact{};
+		Interact.bInteract = false;
+		Interact.fAlpha = 1.f;
+		m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
+	}
+}
+
+void CDialogue_Font::MapMove()
+{
+	m_pNpc->Set_NextID(m_iTextID);
+	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
+	m_bChoiceText = false;
+	m_bCurrentChoiceText = false;
+	m_bRace = false;
+	m_bBattle = false;
+	vector<_int> Dummy;
+	m_NextLevel.swap(Dummy);
+	for (auto it = m_pCurrentDialogue.begin(); it != m_pCurrentDialogue.end();)
+	{
+		(*it)->Set_Hover(false);
+		(*it)->Visible(false);
+		m_DialoguInfo.push_back((*it));
+		it = m_pCurrentDialogue.erase(it);
+	}
+	NPCINTERACT Interact{};
+	Interact.bInteract = false;
+	Interact.fAlpha = 1.5f;
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
 }
 
 void CDialogue_Font::Quest_Complete()
@@ -449,11 +483,6 @@ void CDialogue_Font::NextText()
 	m_pCurrentDialogue[0]->Visible(false);
 	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
 	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
-	if (m_bChoiceText == true)
-	{
-		ReSet();
-	}
-	
 	NpcDialogue();
 }
 

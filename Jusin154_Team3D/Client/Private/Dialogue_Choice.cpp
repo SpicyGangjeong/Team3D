@@ -83,10 +83,11 @@ void CDialogue_Choice::Text(_wstring pText)
 	m_pText = pText;
 }
 
-void CDialogue_Choice::Type(_int Index, _int Type)
+void CDialogue_Choice::Type(_int Index, _int Type, _int QeustID)
 {
 	m_ChoiceInfo.iChoice = Index;
 	m_ChoiceInfo.iType = Type;
+	m_ChoiceInfo.QuestID = QeustID;
 }
 
 void CDialogue_Choice::Reset()

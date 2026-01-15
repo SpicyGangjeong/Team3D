@@ -63,7 +63,7 @@ private:
 	void SpellLearn();
 	void Quest();
 	void ReSet();
-
+	void MapMove();
 	void Quest_Complete();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
@@ -96,7 +96,6 @@ private:
 	_bool		m_bBattle = { false };
 
 	_float		m_fTime{};
-
 public:
 	static CDialogue_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

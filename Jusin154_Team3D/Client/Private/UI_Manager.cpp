@@ -86,7 +86,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
-		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(true);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
 		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
 		if (m_bRace == false)
@@ -331,11 +331,6 @@ void CUI_Manager::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_bBattle == true)
-	{
-		if (m_fAlpha >= 1.f)
-			Change_Map();
-	}
 
 	if (m_pGameInstance->Key_Down(DIK_M) && m_pGameInstance->Key_Pressing(DIK_L))
 		Set_Enviroment();
