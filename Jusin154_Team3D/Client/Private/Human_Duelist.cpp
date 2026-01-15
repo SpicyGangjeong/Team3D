@@ -541,9 +541,21 @@ void CHuman_Duelist::Check_BattleLose()
 	{
 		if (true == m_pCharacter_Controller->IsOnGround())
 		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_14, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_15, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_20, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			}
 			m_pEffectPool->Use_Skill(SKILL_TYPE::BOX_SPLESH, this);
 			m_bBattle = false;
-
 			m_bBattleEnd = true;
 		}
 	}

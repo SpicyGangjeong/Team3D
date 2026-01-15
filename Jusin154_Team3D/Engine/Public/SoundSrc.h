@@ -425,6 +425,26 @@ enum class SD_KIND {
 
 #pragma endregion
 
+#pragma region FX
+	FX_SOUND_0,
+	FX_SOUND_1,
+	FX_SOUND_2,
+	FX_SOUND_3,
+	FX_SOUND_4,
+	FX_SOUND_6,
+	FX_SOUND_7,
+	FX_SOUND_8,
+	FX_SOUND_9,
+	FX_SOUND_10,
+	FX_SOUND_11,
+	FX_SOUND_12,
+	FX_SOUND_13,
+	FX_SOUND_14,
+	FX_SOUND_15,
+	FX_SOUND_16,
+#pragma endregion
+
+
 
 
 	END,
