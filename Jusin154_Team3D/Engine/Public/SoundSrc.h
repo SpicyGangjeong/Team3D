@@ -1107,6 +1107,30 @@ RANROK_FOOTSTEP_21,
 	TUCKED_SWAM37,
 #pragma endregion
 
+#pragma region FlameThrower
+	FlameThrower0,
+	FlameThrower1,
+	FlameThrower2,
+	FlameThrower3,
+	FlameThrower4,
+	FlameThrower5,
+	FlameThrower6,
+#pragma endregion
+
+#pragma region ROCK_COLLIDE
+	ROCK_COLLIDE0,
+	ROCK_COLLIDE1,
+	ROCK_COLLIDE2,
+	ROCK_COLLIDE3,
+	ROCK_COLLIDE4,
+	ROCK_COLLIDE5,
+	ROCK_COLLIDE6,
+	ROCK_COLLIDE7,
+	ROCK_COLLIDE8,
+	ROCK_COLLIDE9,
+	ROCK_COLLIDE10,
+	ROCK_COLLIDE11,
+#pragma endregion
 	END,
 };
 

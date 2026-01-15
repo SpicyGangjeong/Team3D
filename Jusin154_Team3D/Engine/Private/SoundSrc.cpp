@@ -1102,6 +1102,29 @@ TEXT("Broom/broom_up_8.wav"),
 		TEXT("Player/spells_wand_doppler_akb/wand_doppler36.wav"),
 		TEXT("Player/spells_wand_doppler_akb/wand_doppler37.wav"),
 #pragma endregion
+#pragma region FlameThrower
+		TEXT("Player/FlameThrower/FlameThrower0.wav"),
+		TEXT("Player/FlameThrower/FlameThrower1.wav"),
+		TEXT("Player/FlameThrower/FlameThrower2.wav"),
+		TEXT("Player/FlameThrower/FlameThrower3.wav"),
+		TEXT("Player/FlameThrower/FlameThrower4.wav"),
+		TEXT("Player/FlameThrower/FlameThrower5.wav"),
+		TEXT("Player/FlameThrower/FlameThrower6.wav"),
+#pragma endregion
+#pragma region ROCK_COLLIDE
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE0.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE1.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE2.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE3.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE4.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE5.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE6.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE7.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE8.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE9.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE10.wav"),
+		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE11.wav"),
+#pragma endregion
 };
 
 static_assert(SD_KIND_COUNT == _countof(SD_PATH::SD_KIND_PATHS),

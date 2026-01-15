@@ -28,7 +28,7 @@ HRESULT CState_Tucked::Update(_float fTimeDelta)
 	if (m_vTuckedSoundTimer.x >= m_vTuckedSoundTimer.y) {
 		m_vTuckedSoundTimer.x = 0.f;
 		_uint iSwamSound = ENUM_CLASS(SOUND::SD_KIND::TUCKED_SWAM0) + m_pGameInstance->Random_Int(0, ENUM_CLASS(SOUND::SD_KIND::TUCKED_SWAM37) - ENUM_CLASS(SOUND::SD_KIND::TUCKED_SWAM0));
-		m_pGameInstance->Sound_Play_3DPos((SOUND::SD_KIND)iSwamSound, SD_CHANNEL_GROUP::EFFECT, m_vSoundPos, 1.f, 10.f, false);
+		m_pGameInstance->Sound_Play_3DPos((SOUND::SD_KIND)iSwamSound, SD_CHANNEL_GROUP::EFFECT, m_vSoundPos, 10.f, 200.f, false);
 	}
 
 	if (nullptr != m_funcLateUpdate) {
