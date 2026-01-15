@@ -118,6 +118,11 @@ void CInfoInstance::Get_LockOnInfo(LOCKON_INFO& Info)
 	Info.pEffect = m_pEffectInfo->Get_LockOnEffect();
 }
 
+void CInfoInstance::Get_LockOnInfoOnlyUnit(CUnit* pUnit)
+{
+	pUnit = m_pMonsterInfo->Get_LockOnUnit();
+}
+
 void CInfoInstance::Set_SearchLockOnFlag(_bool bLockOn)
 {
 	m_bSearchLockOnTarget = bLockOn;

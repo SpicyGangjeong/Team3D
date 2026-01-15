@@ -860,8 +860,11 @@ void CPlayer::ReLockOnTarget()
 		m_LockOnInfo.pUnit = nullptr;
 		return;
 	}
-
-	// 락온조건2. 던지는중일때 추가 락온 비화성화
+	//// 락온조건2. 던지는중일때나 집어들었을 땐 몬스터 락온만 가능
+	//if (m_pGrapInteractive && m_pGrapInteractive->Is_Throwing()) {
+	//	m_pInfoInstance->Get_LockOnInfoOnlyUnit(m_LockOnInfo.pUnit);
+	//	return;
+	//}
 	m_pInfoInstance->Get_LockOnInfo(m_LockOnInfo);
 	if (nullptr != m_LockOnInfo.pUnit) {
 		if (true == m_LockOnInfo.pUnit->isDead()) {

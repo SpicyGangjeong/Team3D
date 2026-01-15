@@ -50,6 +50,7 @@ public:
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
 	void Get_LockOnInfo(LOCKON_INFO& Info);
+	void Get_LockOnInfoOnlyUnit(CUnit* pUnit);
 	void Set_SearchLockOnFlag(_bool bLockOn);
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 	class CMonster* Get_TargetMonster();
