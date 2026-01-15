@@ -127,15 +127,15 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
-#ifndef _DEBUG
-	if (dynamic_cast<CPlayer*>(m_pOwner)->Get_UIState() == ENUM_CLASS(UI_STATE::GAMEPLAYER))
+	if (dynamic_cast<CPlayer*>(m_pOwner)->Get_UIState() == UI_STATE::GAMEPLAYER)
 	{
 		m_bMovable = true;
 	}
 	else {
 		m_bMovable = false;
 	}
-#endif
+
+
 	if (m_pGameInstance->Key_Up(DIK_PGDN)) {
 		m_bDampingParentPos = !m_bDampingParentPos;
 	}

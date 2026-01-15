@@ -122,7 +122,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
-	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<UI_STATE*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteraction"), [this](void* p) {this->Set_Interaction(*reinterpret_cast<_bool*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("SpellLearningSuccess"), [this](void* p) {this->Set_Spell_Learning_Success(); });
 

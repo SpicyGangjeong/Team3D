@@ -25,6 +25,8 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)override;
 	void Set_Pos(_vector vPos);
+	virtual _wstring Get_Name() override;
+	virtual _wstring Get_NpcName() override;
 protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };

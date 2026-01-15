@@ -18,12 +18,34 @@
 	</Dialogue>
 
 	<Dialogue NpcName="ELEAZARFIG" NpcID="3" NpcInrteract="1">
-		<Line ID="0" Tag="1" Type="1" Text="엘리아자르 피그" NextID="1" NpcInrteract ="1"> </Line>
-		<Line ID="1" Tag="1" Type="1" Text="나는 여기서 지팡이를 팔고있어" NextID="2"> </Line>
-		<Line ID="2" Tag="1" Type="2" Text="뭐 필요한게 있나?" NextID="0">
-			<Choice Type="2" Text="상점 이용하기" NextID="0" QuestID="-1" />
-			<Choice Type="3" Text="퀘스트 확인하기" NextID="0" QuestID="-1" />
-			<Choice Type="0" Text="다른일 하러가기" NextID="0" QuestID="-1" />
+		<Line ID="0" Tag="1" Type="1" Text="자네... 무사해서 다행이네." NextID="1"/>
+		<Line ID="1" Tag="1" Type="1" Text="방금 결투는 훌륭했어. 하지만 안심하긴 이르지." NextID="2"/>
+		<Line ID="2" Tag="1" Type="1" Text="란록이 움직이고 있어. 시간이 우리 편이 아니네." NextID="3"/>
+		<Line ID="3" Tag="1" Type="2" Text="자네, 지금 바로 란록을 추적하겠나?" NextID="3">
+			<Choice Type="3" Text="바로 가죠. 끝내겠습니다." NextID="4" QuestID="6"/>
+			<Choice Type="1" Text="잠깐만요. 란록에 대해 더 알려주세요." NextID="10" QuestID="-1"/>
+			<Choice Type="0" Text="지금은 위험해요. 준비가 더 필요해요." NextID="20" QuestID="-1"/>
+		</Line>
+		<Line ID="4" Tag="1" Type="1" Text="좋아. 그 결심이면 충분하네." NextID="5"/>
+		<Line ID="5" Tag="1" Type="1" Text="하지만 명심하게. 용과의 싸움은 결투와 다르네." NextID="6"/>
+		<Line ID="6" Tag="1" Type="1" Text="한 번의 실수로 모든 것이 끝날 수도 있어." NextID="7"/>
+		<Line ID="7" Tag="1" Type="1" Text="숨을 고르고… 마음을 다잡게." NextID="8"/>
+		<Line ID="8" Tag="1" Type="1" Text="자, 출발하세. 란록을 막아야 하네." NextID="-1"/>
+		<Line ID="10" Tag="1" Type="1" Text="좋은 판단이네. 무작정 돌진하는 건 어리석지." NextID="11"/>
+		<Line ID="11" Tag="1" Type="1" Text="란록은 단순히 거대한 용이 아니야." NextID="12"/>
+		<Line ID="12" Tag="1" Type="1" Text="그 존재 자체가, 주변의 마법을 뒤틀어버려." NextID="13"/>
+		<Line ID="13" Tag="1" Type="1" Text="특히 분노할수록 더 거칠어지고... 그 힘은 폭주하지." NextID="14"/>
+		<Line ID="14" Tag="1" Type="1" Text="그러니 가까이 붙기보단, 타이밍을 노려야 하네." NextID="15"/>
+		<Line ID="15" Tag="1" Type="2" Text="이제 준비가 됐나?" NextID="15">
+			<Choice Type="4" Text="네. 이제 갑시다." NextID="4" QuestID="6"/>
+			<Choice Type="0" Text="조금만 더 생각할게요." NextID="3" QuestID="-1"/>
+		</Line>
+		<Line ID="20" Tag="1" Type="1" Text="…두려움을 느끼는 건 정상일세." NextID="21"/>
+		<Line ID="21" Tag="1" Type="1" Text="하지만 란록은 기다려주지 않아." NextID="22"/>
+		<Line ID="22" Tag="1" Type="1" Text="시간이 지날수록, 상황은 더 나빠질 걸세." NextID="23"/>
+		<Line ID="23" Tag="1" Type="2" Text="그래도 떠나기 전에 정비하겠나?" NextID="23">
+			<Choice Type="2" Text="좋아요. 잠깐만 정비하고 올게요." NextID="-1"  QuestID="-1"/>
+			<Choice Type="4" Text="아니요. 지금 가야겠어요." NextID="4"  QuestID="6"/>
 		</Line>
 	</Dialogue>
 
@@ -33,17 +55,17 @@
 		<Line ID="2" Tag="1" Type="2" Text="도비 따라올래?" NextID="2">
 			<Choice Type="0" Text="안내해줘." NextID="3" QuestID="-1" />
 			<Choice Type="0" Text="혼자 갈게." NextID="3" QuestID="-1" />
-		</Line>
+		</Line>   
 		<Line ID="3" Tag="0" Type="1" Text="왜 멈춘거야?" NextID="4"/>
 		<Line ID="4" Tag="1" Type="1" Text="저기 앞에 고블린이 있어." NextID="5"/>
 		<Line ID="5" Tag="1" Type="2" Text="부탁이야. 저 고블린들 좀 잡아줘." NextID="5">
-			<Choice Type="4" Text="알겠어. 맡겨." NextID="7" QuestID="0" />
+			<Choice Type="0" Text="알겠어. 맡겨." NextID="7" QuestID="-1" />
 			<Choice Type="1" Text="왜 내가?" NextID="6" QuestID="-1" />
 		</Line>
 		<Line ID="6" Tag="1" Type="0" Text="도비는 싸울 수 없어..." NextID="4"/>
 		<Line ID="7" Tag="1" Type="2" Text="다 잡았어?" NextID="8">
-			<Choice Type="4" Text="다 잡았다." NextID="8" QuestID="0" />
-			<Choice Type="4" Text="아직" NextID="7" QuestID="0" />
+			<Choice Type="1" Text="다 잡았다." NextID="8" QuestID="-1" />
+			<Choice Type="0" Text="아직" NextID="7" QuestID="0" />
 			</Line>
 		<Line ID="8" Tag="1" Type="0" Text="고마워... 이제 마을로 가자." NextID="9"/>
 		<Line ID="9" Tag="1" Type="1" Text="어...? 저기 숨어있는 건...." NextID="10"/>
@@ -52,8 +74,8 @@
 		<Line ID="12" Tag="1" Type="1" Text="아, 맞다." NextID="13"/>
 		<Line ID="13" Tag="1" Type="1" Text="아직 근처에 고블린이 남아 있어." NextID="14"/>
 		<Line ID="14" Tag="1" Type="2" Text="한 번만 더 도와줄래?" NextID="-1">
-			<Choice Type="4" Text="알겠어." NextID="-1"/>
-			<Choice Type="0" Text="여기까지만 할게." NextID="14"/>
+			<Choice Type="4" Text="알겠어." NextID="-1" QuestID="0" />
+			<Choice Type="0" Text="여기까지만 할게." NextID="-1" QuestID="-1" />
 		</Line>
 		<Line ID="999" Tag="1" Type="0" Text="아직 덜 잡았네" NextID="7"/>
 	</Dialogue>
