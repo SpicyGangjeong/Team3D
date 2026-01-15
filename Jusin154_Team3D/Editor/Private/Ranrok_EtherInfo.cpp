@@ -28,7 +28,7 @@ HRESULT CRanrok_EtherInfo::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_Ether_Info.eRenderOrder == RENDER::BLEND;
+	m_Ether_Info.eRenderOrder = RENDER::BLEND;
 
 	return S_OK;
 }

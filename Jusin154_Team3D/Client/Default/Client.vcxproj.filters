@@ -955,9 +955,6 @@
     <ClInclude Include="..\Public\State_Spell_Learning.h">
       <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h">
-      <Filter>02.GameObjects\Environment\Prop\SkyBox\TriggerBox</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PotionScreen.h">
       <Filter>02.GameObjects\Effect\Effects\Potion\PotionScreen</Filter>
     </ClInclude>
@@ -980,6 +977,19 @@
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TriggerBox.h" />
+    <ClInclude Include="..\Public\TriggerBox.h" />
+    <ClInclude Include="..\Public\CutScene_Lightning.h">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene_Fire.h">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene_Smoke.h">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Smoke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene_Shout.h">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Shout</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2016,6 +2026,21 @@
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether">
       <UniqueIdentifier>{b31f467c-d66f-4da4-bddb-a55ec8f2bcbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect">
+      <UniqueIdentifier>{9db6926a-d4a6-4ed3-a5d8-67aaf5cbdb5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning">
+      <UniqueIdentifier>{a3530fbc-6ba9-433d-9d8d-0090bf8b3367}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Fire">
+      <UniqueIdentifier>{79c6e3f5-c4f3-4e81-8444-f3b7a2f9287d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Smoke">
+      <UniqueIdentifier>{6997eb06-b74d-42e1-b68a-5072f677fefd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Shout">
+      <UniqueIdentifier>{abf505b2-d91f-4ab1-ad69-ff571a74c035}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2920,6 +2945,18 @@
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TriggerBox.cpp" />
+    <ClCompile Include="..\Private\CutScene_Lightning.cpp">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene_Fire.cpp">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene_Smoke.cpp">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Smoke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene_Shout.cpp">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Shout</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\State_Parry.cpp">

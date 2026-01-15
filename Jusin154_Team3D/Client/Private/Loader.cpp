@@ -257,6 +257,11 @@
 #include "LightningSide.h"
 #include "Transformation.h"
 
+#include "CutScene_Fire.h"
+#include "CutScene_Lightning.h"
+#include "CutScene_Shout.h"
+#include "CutScene_Smoke.h"
+
 #pragma endregion
 
 #pragma region MAP
@@ -2994,8 +2999,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CCutScene_Fire>(g_iStaticLevel, CCutScene_Fire::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
-	
+	if (FAILED(m_pGameInstance->Add_Prototype<CCutScene_Lightning>(g_iStaticLevel, CCutScene_Lightning::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CCutScene_Shout>(g_iStaticLevel, CCutScene_Shout::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CCutScene_Smoke>(g_iStaticLevel, CCutScene_Smoke::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
