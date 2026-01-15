@@ -331,6 +331,12 @@ void CUI_Manager::Update(_float fTimeDelta)
 	}
 
 
+	if (m_bRace == true || m_bBattle == true || m_pInfoInstance->IsActiveCutScene())
+	{
+		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(false);
+		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
+	}
+
 	if (m_pGameInstance->Key_Down(DIK_M) && m_pGameInstance->Key_Pressing(DIK_L))
 		Set_Enviroment();
 

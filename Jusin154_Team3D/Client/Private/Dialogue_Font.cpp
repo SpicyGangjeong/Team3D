@@ -89,10 +89,12 @@ void CDialogue_Font::Update(_float fTimeDelta)
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BROOM):
+				m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bChoiceText);
 				MapMove();
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BATTLE):
+				m_pInfoInstance->Event_CallBack(TEXT("BATTLE"), &m_bChoiceText);
 				MapMove();
 				break;
 
@@ -109,7 +111,7 @@ void CDialogue_Font::Update(_float fTimeDelta)
 					switch (m_iType)
 					{
 					case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
-						m_fTime = 0.5f;
+						m_fTime = 0.f;
 						ENDText();
 						break;
 					case ENUM_CLASS(NPCTEXTTYPE::NEXTTEXT):
@@ -129,22 +131,7 @@ void CDialogue_Font::Update(_float fTimeDelta)
 		}
 	}
 
-	if (!m_pCurrentDialogue.empty())
-	{
-		for (auto it = m_pCurrentDialogue.begin(); it != m_pCurrentDialogue.end();)
-		{
-			if ((*it)->Get_Hover() == false)
-			{
-				(*it)->Visible(false);
-				m_DialoguInfo.push_back((*it));
-				it = m_pCurrentDialogue.erase(it);
-			}
-			else
-			{
-				it++;
-			}
-		}
-	}
+
 
 	if (m_fTime >= 0.f)
 	{
@@ -160,18 +147,34 @@ void CDialogue_Font::Late_Update(_float fTimeDelta)
 {
 	if (!m_pCurrentDialogue.empty())
 	{
+		if (!m_pCurrentDialogue.empty())
+		{
+			for (auto it = m_pCurrentDialogue.begin(); it != m_pCurrentDialogue.end();)
+			{
+				if ((*it)->Get_Hover() == false)
+				{
+					(*it)->Visible(false);
+					m_DialoguInfo.push_back((*it));
+					it = m_pCurrentDialogue.erase(it);
+				}
+				else
+				{
+					it++;
+				}
+			}
+		}
+	}
+	if (!m_pCurrentDialogue.empty())
+	{
 		m_pGameInstance->Add_RenderGroup(RENDER::UI_OVERLAY, this);
 	}
 }
 
 HRESULT CDialogue_Font::Render()
 {
-	if (!m_pCurrentDialogue.empty())
+	for (auto it : m_pCurrentDialogue)
 	{
-		for (auto it : m_pCurrentDialogue)
-		{
-			it->Render();
-		}
+		it->Render();
 	}
 
 	return S_OK;
@@ -346,18 +349,9 @@ void CDialogue_Font::Quest()
 		if (m_bChoiceText == true)
 		{
 			m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
-			if (m_pNpc->Get_NpcID() == 4)
-			{
-				m_pInfoInstance->Event_CallBack(TEXT("Change"));
-				m_bCurrentInteract = false;
-				m_bNpcInteract = false;
-				ENDText();
-			}
-			else
-			{
-				m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
-				ReSet();
-			}
+
+			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+			ENDText();
 		}
 		break;
 
@@ -378,11 +372,12 @@ void CDialogue_Font::Quest()
 void CDialogue_Font::ENDText()
 {
 	_bool bInteract = false;
+	NPCINTERACT Interact{};
+	Interact.bInteract = bInteract;
+	Interact.fAlpha = 1.f;
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
 	m_pNpc->Set_NextID(m_iNextID);
-	m_pCurrentDialogue[0]->Set_Hover(bInteract);
-	m_pCurrentDialogue[0]->Visible(bInteract);
-	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
-	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
 	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &bInteract);
 	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
 	m_bChoiceText = false;
@@ -398,25 +393,16 @@ void CDialogue_Font::ENDText()
 		m_DialoguInfo.push_back((*it));
 		it = m_pCurrentDialogue.erase(it);
 	}
-	if (m_pNpc->Get_NpcID() == 4)
-	{
-		m_pInfoInstance->Event_CallBack(TEXT("Change"));
-		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, 0.f);
-		m_bCurrentInteract = false;
-		m_bNpcInteract = false;
-	}
-	else
-	{
-		NPCINTERACT Interact{};
-		Interact.bInteract = bInteract;
-		Interact.fAlpha = 1.f;
-		m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
-		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
-	}
+
 }
 
 void CDialogue_Font::ReSet()
 {
+	NPCINTERACT Interact{};
+	Interact.bInteract = false;
+	Interact.fAlpha = 1.f;
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
 	m_pNpc->Set_NextID(m_iTextID);
 	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
 	m_bChoiceText = false;
@@ -431,21 +417,6 @@ void CDialogue_Font::ReSet()
 		(*it)->Visible(false);
 		m_DialoguInfo.push_back((*it));
 		it = m_pCurrentDialogue.erase(it);
-	}
-	if (m_pNpc->Get_NpcID() == 4)
-	{
-		m_pInfoInstance->Event_CallBack(TEXT("Change"));
-		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, 0.f);
-		m_bCurrentInteract = false;
-		m_bNpcInteract = false;
-	}
-	else
-	{
-		NPCINTERACT Interact{};
-		Interact.bInteract = false;
-		Interact.fAlpha = 1.f;
-		m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
-		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
 	}
 }
 
@@ -502,7 +473,7 @@ void CDialogue_Font::NextText(_int Index)
 	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
 	if (m_bChoiceText == true)
 	{
-		ReSet();
+		ENDText();
 	}
 	NpcDialogue(Index);
 }

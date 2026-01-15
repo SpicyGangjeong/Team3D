@@ -74,10 +74,9 @@
 		<Line ID="12" Tag="1" Type="1" Text="아, 맞다." NextID="13"/>
 		<Line ID="13" Tag="1" Type="1" Text="아직 근처에 고블린이 남아 있어." NextID="14"/>
 		<Line ID="14" Tag="1" Type="2" Text="한 번만 더 도와줄래?" NextID="-1">
-			<Choice Type="4" Text="알겠어." NextID="-1" QuestID="0" />
-			<Choice Type="0" Text="여기까지만 할게." NextID="-1" QuestID="-1" />
+			<Choice Type="4" Text="알겠어." NextID="0" QuestID="0" />
+			<Choice Type="0" Text="여기까지만 할게." NextID="0" QuestID="-1" />
 		</Line>
-		<Line ID="999" Tag="1" Type="0" Text="아직 덜 잡았네" NextID="7"/>
 	</Dialogue>
 
 	<Dialogue NpcName="PEEVES" NpcID="5" NpcInrteract="1">

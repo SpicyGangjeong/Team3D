@@ -105,25 +105,7 @@ void CEnemy_HpBar::Update(_float fTimeDelta)
 
 	m_fHpBar = m_fCurrentHp / m_fMaxHp;
 
-	if (m_fCurrentHp <= 0.f)
-	{
-		m_bAnimation = true;
-	}
 
-	if (m_bAnimation == true)
-	{
-		m_fTime += fTimeDelta * m_fTimeMult;
-		m_fSizeX += 3.f;
-		m_fSizeY += 3.f;
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Enemy_HpDie"));
-	}
-	if (m_fTime >= 0.9f)
-	{
-		SizeUpdate(m_fLerpX, m_fLerpY);
-		m_bAnimation = false;
-		m_bHover = false;
-		m_fTime = 0.f;
-	}
 	__super::Update(fTimeDelta);
 }
 
