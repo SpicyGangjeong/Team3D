@@ -689,7 +689,7 @@ HRESULT CRanrok::Render_Blend()
 	{
 		RENDER eCurrentPass = m_pGameInstance->Get_CurrentRenderPass();
 
-		if (m_pEtherInfo[i]->Get_RenderOrder() != eCurrentPass)
+		if (m_pEtherInfo[i]->Get_RenderOrder() != eCurrentPass || m_pEtherInfo[i]->Get_Visible() == false)
 			continue;
 
 		if (FAILED(m_pEther_Shader->Bind_Matrices("g_OffsetMatrix",

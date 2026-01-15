@@ -1,0 +1,5 @@
+<KeyFrames>
+    <Animation Index="759">
+        <KeyFrame Event="Troll/Troll_Fight_object_repair_A2.wav" Ratio="0.092" Volume="0.80000001"/>
+    </Animation>
+</KeyFrames>

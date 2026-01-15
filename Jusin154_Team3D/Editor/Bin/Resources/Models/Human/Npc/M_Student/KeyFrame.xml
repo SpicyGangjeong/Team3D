@@ -1,0 +1,5 @@
+<KeyFrames>
+    <Animation Index="240">
+        <KeyFrame Event="Player/spells_protego_akb/protego_13.wav" Ratio="0.100" Volume="0.80000001"/>
+    </Animation>
+</KeyFrames>

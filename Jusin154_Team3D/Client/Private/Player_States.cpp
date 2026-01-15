@@ -236,7 +236,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
-
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::POTION, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 
 
 		}
@@ -529,6 +529,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			Get_PartObject<CItem_Potion>()->Set_Visible(true);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::POTION, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 		}
 
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
@@ -1566,7 +1567,8 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 				if (iCurr != iStart + 2)
 				{
 					Add_Event(pairAnimInfo.first,
-						[this]() {m_bLookAt = true;
+						[this]() {
+							m_bLookAt = true;
 						},
 						0.01f);
 				
@@ -1660,6 +1662,8 @@ void CPlayer::Behavior_AncientSpellEnter()
 	m_pInfoInstance->Set_SearchLockOnFlag(false);
 	if (m_LockOnInfo.pUnit)
 		m_pTransformCom->LookAt(m_LockOnInfo.pUnit->Get_WorldPostion());
+
+	m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -2050,6 +2054,8 @@ void CPlayer::Behavior_HitEnter()
 			pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			Add_Sound_Event(pairAnimInfo.first,
+				[this]() {	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LEVIOSA_27, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 			return;
 		}
 			break;
@@ -3120,6 +3126,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 
 		Get_PartObject<CCamPosition_Shoulder>()->Set_CameraAnim(6);
+		m_pInfoInstance->Event_CallBack(TEXT("Goblin_Fear"));
 
 		break;
 	case ENUM_CLASS(SKILL_TYPE::REPARO):

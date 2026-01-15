@@ -118,6 +118,8 @@ HRESULT CDuelist_Levioso::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (pDuelist == nullptr)
 		return E_FAIL;
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LEVIOSA_27, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	_vector WandPos = pDuelist->Get_WandPos().r[3];
 
 	CEffectParts* pWandSmoke = Get_PartObject<CEffectParts>("Wand_Smoke");
