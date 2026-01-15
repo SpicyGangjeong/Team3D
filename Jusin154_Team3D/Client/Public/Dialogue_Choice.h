@@ -36,7 +36,7 @@ public:
 	void Mouse_Hover();
 	void Up();
 	void Text(_wstring pText);
-	void Type(_int Index, _int Type);
+	void Type(_int Index, _int Type, _int QeustID);
 	void Reset();
 
 private:

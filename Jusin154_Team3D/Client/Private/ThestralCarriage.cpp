@@ -90,10 +90,12 @@ void CThestralCarriage::Update(_float fTimeDelta)
 
 void CThestralCarriage::Late_Update(_float fTimeDelta)
 {
-	__super::Late_Update(fTimeDelta);
+	if (m_bVisible) {
+		__super::Late_Update(fTimeDelta);
 
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	}
 }
 
 HRESULT CThestralCarriage::Render()
@@ -204,15 +206,15 @@ void CThestralCarriage::Trigger(CTimeSocket& Socket)
 	} break;
 	case TIMESOCKET_FUNC::INTRO_LIGHTNING:
 	{
-		_vector vHitPosition = Get_SocketWorldMatrix(CARRIAGE_SOCKET::BACK_LEFT).r[3];
-		CEffect_Container* pEffect = { nullptr };
-		m_pEffectPool->Use_Skill(SKILL_TYPE::CUTSCENE_LIGHTNING, this, (void*)&vHitPosition, (CEffect_Container**)&pEffect);
-		SAFE_RELEASE(pEffect);
+		//_vector vHitPosition = Get_SocketWorldMatrix(CARRIAGE_SOCKET::BACK_LEFT).r[3];
+		//CEffect_Container* pEffect = { nullptr };
+		//m_pEffectPool->Use_Skill(SKILL_TYPE::CUTSCENE_LIGHTNING, this, (void*)&vHitPosition, (CEffect_Container**)&pEffect);
+		//SAFE_RELEASE(pEffect);
 	} break;
 	case TIMESOCKET_FUNC::INTRO_SMOKE:
 	{
-		_vector vHitPosition = Get_SocketWorldMatrix(CARRIAGE_SOCKET::BACK).r[3];
-		m_pEffectPool->Use_Skill(SKILL_TYPE::CUTSCENE_SMOKE, this, (void*)&vHitPosition, (CEffect_Container**)&m_pSmokeEffect);
+		//_vector vHitPosition = Get_SocketWorldMatrix(CARRIAGE_SOCKET::BACK).r[3];
+		//m_pEffectPool->Use_Skill(SKILL_TYPE::CUTSCENE_SMOKE, this, (void*)&vHitPosition, (CEffect_Container**)&m_pSmokeEffect);
 	} break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
@@ -221,6 +223,9 @@ void CThestralCarriage::Trigger(CTimeSocket& Socket)
 		}
 		else if (pContents->vFlags.b[1]) {
 			m_iStraight = 3;
+		}
+		else if (pContents->vFlags.b[6]) {
+			m_bVisible = false;
 		}
 		else {
 			m_iStraight = 0;

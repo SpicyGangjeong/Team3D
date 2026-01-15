@@ -43,7 +43,7 @@ HRESULT CUI_Manager::Initialize(void* pArg)
 	Desc.fY = 540.f;
 	Desc.fSizeX = g_iWinSizeX;
 	Desc.fSizeY = g_iWinSizeY;
-
+	m_eDay = TIME_OF_DAY::DAY;
 	if (FAILED(__super::Initialize(&Desc)))
 	{
 		return E_FAIL;
@@ -86,7 +86,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
-		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(true);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
 		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
 		if (m_bRace == false)
@@ -330,11 +330,6 @@ void CUI_Manager::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_bBattle == true)
-	{
-		if (m_fAlpha >= 1.f)
-			Change_Map();
-	}
 
 	if (m_pGameInstance->Key_Down(DIK_M) && m_pGameInstance->Key_Pressing(DIK_L))
 		Set_Enviroment();
@@ -485,24 +480,24 @@ void CUI_Manager::Set_Enviroment()
 	Set_Fade();
 
 	if (TIME_OF_DAY::DAY == m_eDay)
-	{
+	{ /* 밤 */
 		m_eDay = TIME_OF_DAY::NIGHT;
 		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.9f);
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_NIGHT, SD_CHANNEL_GROUP::BGM, true, 0.9f);
 		m_pGameInstance->Setting_Volumetirc(
-			1.251f,                         // 밀도
-			0.0253f,                          // 빛 강도
-			0.9f,                          // 산란 계수
-			1.78f,                           // 깊이 분포 계수
+			1.28f,                         // 밀도
+			0.001f,                          // 빛 강도
+			0.11f,                          // 산란 계수
+			1.0f,                           // 깊이 분포 계수
 			0.f
 		);
 		CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_LIGHT);
 		assert(nullptr != pLayer);
 		CLight_Main* pLight = pLayer->Get_Object<CLight_Main>();
 
-		_float4 vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
-		_float4 vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
-		_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
+		_float4 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1E1C1B3C);
+		_float4 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1A191900);
+		_float4 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
 
 		pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
@@ -523,19 +518,23 @@ void CUI_Manager::Set_Enviroment()
 	}
 	else
 	{
+		/* 낮 */
 		m_eDay = TIME_OF_DAY::DAY;
 
-		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.8f);
-
-		m_pGameInstance->Setting_Volumetirc(0.5f, 0.003f, 0.4f, 2.f, 0.f);
+		m_pGameInstance->Setting_Volumetirc(
+			1.251f,                         // 밀도
+			0.0253f,                          // 빛 강도
+			0.9f,                          // 산란 계수
+			1.78f,                           // 깊이 분포 계수
+			0.f
+		);
 		CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_LIGHT);
 		assert(nullptr != pLayer);
 		CLight_Main* pLight = pLayer->Get_Object<CLight_Main>();
 
-		_float4 vDiffuse = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1E1C1B3C);
-		_float4 vAmbient = CMyTools::ColorRGBA_HEXtoFLOAT4(0x1A191900);
-		_float4 vSpecular = CMyTools::ColorRGBA_HEXtoFLOAT4(0x12121200);
+		_float4 vDiffuse = _float4(0.6529f, 0.6157f, 0.7843f, 1.0f);
+		_float4 vAmbient = _float4(0.6275f, 0.6275f, 0.6275f, 0.0314f);
+		_float4 vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.05f);
 
 		pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 

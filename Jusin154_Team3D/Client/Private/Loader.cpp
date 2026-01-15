@@ -2582,13 +2582,29 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.vAutoDamping = { 1.f, 1.f };
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_THROWABLE_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
-				return E_FAIL;
-			}
 			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 				return E_FAIL;
 			}
 			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+		}
+		{
+			CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 0.5f, 1.5f, 0.5f };
+			Desc.fDensity = 1.f;
+			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc.eLockFlag = {};
+			Desc.vAutoDamping = { 1.f, 1.f };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, -0.75f, 0.f };
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HIDDEN_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 				return E_FAIL;
 			}
 		}
@@ -2711,13 +2727,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.1f };
 			Desc.fContactOffset = { 0.05f };
 			Desc.vhalfGeometryInfo = { 0.5f, 1.f, 0.01f };
-			Desc.fDensity = 10.f;
+			Desc.fDensity = 20.f;
 			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 1.f, 0.f));
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.5f, 1.375f, 0.f };
 
 			Desc.pxMassCenter = pxPivotTransform;
-			Desc.vAutoDamping = { 5.f, 5.f };
+			Desc.vAutoDamping = { 10.f, 10.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;

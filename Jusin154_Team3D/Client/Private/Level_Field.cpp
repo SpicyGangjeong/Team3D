@@ -342,6 +342,7 @@ HRESULT CLevel_Field::Ready_Layer_Effect(const _wstring& strLayerTag)
 	if (FAILED(m_pInfoInstance->Load_EffectParts("Rotate_Rock_Large2_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
@@ -373,7 +374,8 @@ void CLevel_Field::ResetLevel_Environment()
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(-0.574f, -0.409f, 0.584f, -0.402f));
 	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	m_pGameInstance->Set_Environment(_float3(0.585f, 0.182f, 2.83f), _float(2.f), _float2(0.075f, 0.150f), _float2(2.300f, 10.000f), _float4(0.0360f, 0.0326f, 0.0057f, 0.0018f), _float4(2.0000f, 1.f, 1.f, 1.f), _float3(0.f, 0.f, -100.f), _float3(0.f, 0.f, 100.f));
+	m_pGameInstance->Set_Environment(_float3(0.585f, 0.182f, 2.83f), _float(2.f), _float2(0.019f, 0.161f),
+		_float2(2.300f, 10.000f), _float4(0.0360f, 0.0326f, 0.0057f, 0.0018f), _float4(2.0000f, 1.f, 1.f, 1.f), _float3(0.f, 0.f, -100.f), _float3(0.f, 0.f, 100.f));
 	m_pGameInstance->Setting_Volumetirc(1.743f, 0.0001f, 0.2000f, 1.050f, 0.04862f);
 	m_pLight->Capture_PreShadow();
 }

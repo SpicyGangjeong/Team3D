@@ -75,7 +75,7 @@ void CDialogue_Panel::Setting_Choice(DIALOGUECHOICEINFO Choice)
 	pChoice->Visible(true);
 	pChoice->Set_Hover(true);
 	pChoice->Text(Choice.pText);
-	pChoice->Type(m_iChoiceCount, Choice.eType);
+	pChoice->Type(m_iChoiceCount, Choice.eType, Choice.QuestID);
 
 	m_CurrentChoices.push_back(pChoice);
 }
@@ -138,6 +138,7 @@ void CDialogue_Panel::ReSet_Choice()
 
 void CDialogue_Panel::Change_Map()
 {
+
 	m_pInfoInstance->Load_DADA_INT();
 	m_pGameInstance->Setting_Volumetirc(
 		3.f,
@@ -147,6 +148,9 @@ void CDialogue_Panel::Change_Map()
 		0.f
 	);
 	_vector vPlayerOriginPos = XMVectorZero();
+
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
+		return;
 
 	CLayer* pDuelistLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_DUELIST);
 	if (nullptr != pDuelistLayer) {
@@ -212,11 +216,6 @@ void CDialogue_Panel::Change_Map()
 
 void CDialogue_Panel::Priority_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_J))
-	{
-		Change_Map();
-	}
-
 	if (!__super::Chack_Visible())
 	{
 		return;
@@ -237,20 +236,24 @@ void CDialogue_Panel::Update(_float fTimeDelta)
 		m_fTime += fTimeDelta;
 	}
 
-	if (m_fTime >= 1.f)
+	if (m_fTime >= 1.5f)
 	{
-		if(m_bBroomRace == true)
+		if (m_bBroomRace == true)
 		{
 			m_bBroomRace = false;
 			m_pInfoInstance->Event_CallBack(TEXT("BROOMRACENPCINTERACT"));
 		}
-		else if (m_bBttle == true)
+	}
+
+	if (m_fTime >= 0.8f)
+	{
+		if (m_bBttle == true)
 		{
 			m_bBttle = false;
 			Change_Map();
 		}
 	}
-	
+
 	__super::Update(fTimeDelta);
 }
 
