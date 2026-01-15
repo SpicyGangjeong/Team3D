@@ -239,6 +239,9 @@ void CRanrok_FireBall::OnCollision(CGameObject* pOther, void* pDesc)
 
 	pPlayer->Start_CameraShake(0.3f, 2.f);
 
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::RANROK_38, SD_CHANNEL_GROUP::EFFECT, false, 0.8f);
+
 }
 
 void CRanrok_FireBall::Free()
