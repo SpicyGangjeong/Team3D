@@ -267,7 +267,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_BackGround(const _wstring& strLayerTag)
 	m_pGameInstance->Set_Fog(10.f, 5.f);
 	m_pInfoInstance->Load_MapObjects("Dungeon_Map_Data");
 
-	CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data");
+	//CInfoInstance::GetInstance()->Load_PointLights("Duengon_PointLight_Data");
 
 	return S_OK;
 }

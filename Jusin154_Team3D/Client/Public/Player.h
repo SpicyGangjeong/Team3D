@@ -20,12 +20,12 @@ public:
 		, FLOWERS
 		, END
 	};
-
 	typedef struct tagPlayerInitDesc {
 		_float4 vPos;
 		_float4 vRotQ;
 		class CBroomRaceManager* pBroomRaceManager;
 	}PLAYERDESC;
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -126,8 +126,12 @@ private:
 	void Player_PixRot();
 	void Find_HiddenObjects();
 	void Check_Reparoobejcts();
-
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
+	void UpdateFootStepSound();
+	vector<_float> GetFootStepTiming(_uint AnimIndex);
+	void PlayFootStepSound();
+	void StopFootStepSound();
+
 #ifdef _DEBUG
 	unique_ptr<BasicEffect> m_BasicEffect;
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
@@ -197,7 +201,12 @@ private:
 	_bool			m_bStartSpellAnim = {};
 	_float4			m_OriginPos = {};
 	_bool			m_bSpell_Learning_Success = {};
-		
+
+	_bool			m_bFootStepL = {};
+	_bool			m_bFootStepR = {};
+	_float			m_fPrevMoveRatio = {};
+	_uint			m_iFootStepIndex = 0;
+	_uint			m_iPrevAnimIndex = 0;
 
 	/* 무적 불 변수*/
 #ifdef _DEBUG
@@ -294,7 +303,7 @@ private:
 	void	Behavior_Broom_HoverEnter();
 	HRESULT Behavior_Broom_HoverExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_HoverExit();
-						   
+
 	void	Behavior_Broom_FlyEnter();
 	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_FlyExit();

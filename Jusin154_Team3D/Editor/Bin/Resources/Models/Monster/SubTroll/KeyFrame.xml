@@ -1,0 +1,11 @@
+<KeyFrames>
+    <Animation Index="89">
+        <KeyFrame Event="Troll/troll_55.wav" Ratio="0.460" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="91">
+        <KeyFrame Event="Troll/troll_91.wav" Ratio="0.330" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="66">
+        <KeyFrame Event="Troll/troll_1.wav" Ratio="0.280" Volume="0.80000001"/>
+    </Animation>
+</KeyFrames>

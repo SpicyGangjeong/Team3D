@@ -390,6 +390,9 @@ HRESULT CLoader::Loading_For_Logo()
 		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
 			FX_VTXPOS,
 			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements));
+		jobMapShaders.emplace_back(Deferred_ShaderLoad(m_pDevice, m_pContext,
+			FX_RANROK_ETHER,
+			TEXT("../Bin/Resources/ShaderFiles/Shader_VtxRanrokEther.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements));
 	}
 
 	m_strMessage = TEXT("Texture Loading..");
@@ -1568,6 +1571,23 @@ HRESULT CLoader::Loading_For_Effect()
 		return S_OK;
 
 		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/RanrokEther", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0, L"RANROK")))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+		});
+
+	
 
 	m_strMessage = TEXT("Model Loading..");
 

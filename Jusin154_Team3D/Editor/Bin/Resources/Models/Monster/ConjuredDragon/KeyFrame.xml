@@ -1,0 +1,7 @@
+<KeyFrames>
+    <Animation Index="33">
+        <KeyFrame Event="Ranrok/ranrok_25.wav" Ratio="0.399" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_24.wav" Ratio="0.130" Volume="0.80000001"/>
+        <KeyFrame Event="Ranrok/ranrok_25.wav" Ratio="0.400" Volume="0.80000001"/>
+    </Animation>
+</KeyFrames>

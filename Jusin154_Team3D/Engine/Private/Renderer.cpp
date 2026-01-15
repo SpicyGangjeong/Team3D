@@ -353,7 +353,7 @@ void CRenderer::Render_Decal()
 	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_Decal")))) {
 		return;
 	}
-
+	m_eType = RENDER::DECAL;
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::DECAL)])
 	{
 		if (nullptr != pRenderObject) {
@@ -451,6 +451,7 @@ void CRenderer::Render_Combined()
 	COMPUTE_TIMEDELTA("Timer_Render_Combined");
 	EVENTSCOPE_("Render_Combined");
 
+
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Combined")))) {
 		return;
 	}
@@ -541,7 +542,7 @@ void CRenderer::Render_EnvironmentPostProcess()
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_ENV_Blur_X")))) { // Target_ENV_Blur_X
 		return;
 	}
-
+	
 	m_pShader->Bind_Matrix("g_WorldMatrix",				&m_ScreenWorldMatrix);
 	m_pShader->Bind_Matrix("g_ViewMatrix",				&m_ScreenViewMatrix);
 	m_pShader->Bind_Matrix("g_ProjMatrix",				&m_ScreenProjMatrix);
@@ -661,6 +662,8 @@ void CRenderer::Render_Effect()
 		return;
 	}
 
+	m_eType = RENDER::EFFECT;
+
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
 	{
 		if (nullptr != pRenderObject)
@@ -682,7 +685,7 @@ void CRenderer::Render_WeightBlend()
 	COMPUTE_TIMEDELTA("Timer_Render_WeightBlend");
 	EVENTSCOPE_("Render_WeightBlend");
 	// Bind_Resorces
-
+	
 	m_pWeightBlendShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
 	m_pWeightBlendShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
 	m_pWeightBlendShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
@@ -834,7 +837,7 @@ void CRenderer::Render_SSAO()
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO");
 	EVENTSCOPE_("Render_SSAO");
 	_uint iKernelSize = SSAO_SAMPLE_NUMBER;
-
+	
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO_OCCLUSION")))) {
 		return;
 	}
@@ -983,7 +986,7 @@ void CRenderer::Render_Blur_Mesh()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Blur_Mesh");
 	EVENTSCOPE_("Render_Blur_Mesh");
-
+	m_eType = RENDER::BLUR;
 	m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
@@ -1015,6 +1018,7 @@ void CRenderer::Render_PostProcessing()
 	/* POSTPROCESSING */
 	COMPUTE_TIMEDELTA("Timer_Render_PostProcessing");
 	EVENTSCOPE_("Render_PostProcessing");
+
 	{
 		ID3D11Texture2D* pBackBuffer = { nullptr };
 		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
@@ -1088,7 +1092,7 @@ void CRenderer::Render_PostProcessing()
 		}
 	}
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::MOTIONBLUR));
-
+	
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
 	if (false == m_bMB) {
