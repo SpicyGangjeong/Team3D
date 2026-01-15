@@ -266,6 +266,10 @@ const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 	TEXT("Player/Voice/revelio.voice.wav"),
 	TEXT("Player/Voice/stupefy_voice.wav"),
 	TEXT("Troll/troll_voice.wav"),
+	TEXT("Troll/troll_voice_2.wav"),
+	TEXT("Troll/troll_voice_3.wav"),
+	TEXT("Troll/troll_voice_4.wav"),
+	
 #pragma endregion
 
 #pragma region BROOM
@@ -1011,6 +1015,7 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("FX/fx_sound_14.wav"),
 	TEXT("FX/fx_sound_15.wav"),
 	TEXT("FX/fx_sound_16.wav"),
+	TEXT("FX/fireworks-402788.wav"),
 
 #pragma endregion
 
