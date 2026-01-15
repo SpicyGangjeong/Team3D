@@ -62,7 +62,7 @@ public:
 	virtual _int Get_TextID();
 	virtual void Set_NextID(_int ID);
 
-	virtual void Set_Flow(_int Index);
+	virtual void Set_Flow(_int Index, _float fTime);
 	virtual _int Get_Flow();
 #pragma endregion
 

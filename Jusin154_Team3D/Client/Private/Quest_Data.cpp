@@ -161,7 +161,7 @@ _int CQuest_Data::Set_AcceptQuest(_int Index)
 		return 2;
 	}
 
-	HRESULT hr = m_pGameInstance->Add_GameObject_ToLayer<CQuestInstance>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, &QuestInfos[Index], nullptr, reinterpret_cast<CQuestInstance**>(&m_pQuestInstance));
+	HRESULT hr = m_pGameInstance->Add_GameObject_ToLayer<CQuestInstance>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, &QuestInfos[Index], nullptr, reinterpret_cast<CQuestInstance**>(&m_pQuestInstance));
 	if (FAILED(hr))
 	{
 		return -1;

@@ -95,6 +95,7 @@ void CNPCInteraction::ActiveOff()
 void CNPCInteraction::BoxOff()
 {
 	m_bBoxActive = false;
+	m_pBoxInfo.pOwner = nullptr;
 }
 
 void CNPCInteraction::NpcInfo(void* pArg)
