@@ -118,11 +118,13 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 	{
 		if (FAILED(ReadyForPhysX()))
 			return E_FAIL;
+
+		/* Laod Instance Data */
+		if (FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str(), pDesc)))
+			return E_FAIL;
 	}
 
-	/* Laod Instance Data */
-	if(FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str(), pDesc)))
-		return E_FAIL;
+
 
 	if (m_isShake)
 		m_pVIBufferInstanceCom->Set_Shake_Value(pDesc->vRadius, pDesc->vSpeed);

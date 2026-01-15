@@ -57,5 +57,6 @@
     </Animation>
     <Animation Index="165">
         <KeyFrame Event="Troll/troll_92.wav" Ratio="0.437" Volume="0.80000001"/>
+        <KeyFrame Event="Troll/OLI_01_05_TrollAttack_Outro_pt2.wav" Ratio="0.010" Volume="0.80000001"/>
     </Animation>
 </KeyFrames>
