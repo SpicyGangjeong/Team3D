@@ -146,10 +146,6 @@ void CTroll_Rock::RockHit()
 						}
 						m_bVisible = false;
 
-						_float4 vPos = {};
-						XMStoreFloat4(&vPos, pUserData->pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
-						m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, m_pOwner, &vPos);
-
 						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}
 					break;
