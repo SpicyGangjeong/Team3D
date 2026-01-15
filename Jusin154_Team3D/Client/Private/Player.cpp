@@ -171,7 +171,7 @@ void CPlayer::Update(_float fTimeDelta)
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
-
+	m_pGameInstance->Sound_Set3DListenerPos(m_pTransformCom);
 	CheckMouseInput();
 
 	if (m_pGameInstance->Key_Down(DIK_F))

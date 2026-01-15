@@ -89,6 +89,7 @@ public:
 	_float TargetDis(_fvector vTarget);
 
 	void Add_SpeedPerSec(_float fSpeedPerSec);
+	
 
 #ifdef _DEBUG
 	_float3&	Get_Rotation() { return m_vRotation; }
