@@ -22,6 +22,7 @@
 #include "ThestralCarriage.h"
 #include "MapElement_Chest.h"
 #include "ReparoObject.h"
+#include "RandomNpc.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -266,7 +267,7 @@ HRESULT CPlayer::Render()
 #ifdef _DEBUG
 #ifdef 기무리
 		//Render_CameraCoordinateSystem();
-		m_pCharacter_Controller->Render();
+		//m_pCharacter_Controller->Render();
 #endif // 기무리
 #endif // _DEBUG
 

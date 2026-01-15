@@ -108,24 +108,24 @@ public:
 	HRESULT ActiveAt_Interactive(_fvector vPosition);
 	void NextLevel(CHOICEINFO Choice);
 #pragma endregion
+
 #pragma region BroomManager
 	void   Set_Broom_Timer(_float fTimer);
 	_float Get_Broom_Timer();
 	void   Set_Broom_Booster_Timer(_float fTimer);
 	_float Get_Broom_Booster_Timer();
 #pragma endregion
+
 #pragma region CutScene
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair< _string, struct TimeLine*>& pairTimeLine);
 	_bool		IsActiveCutScene();
 #pragma endregion
+
 #pragma region Effect
-
 	HRESULT Regist_ActiveEffect(CEffect_Container* pEffect);
-
 	HRESULT Deregist_ActiveEffect(CEffect_Container* pEffect);
-
 #pragma endregion
 
 private:

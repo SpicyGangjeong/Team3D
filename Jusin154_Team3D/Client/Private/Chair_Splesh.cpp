@@ -98,6 +98,7 @@ HRESULT CChair_Splesh::Pre_Setting(CGameObject* pObject, void* pArg)
 	pHit->Set_Visible(true);
 	pSmoke->Set_Visible(true);
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROP_WOOD0, SD_CHANNEL_GROUP::EFFECT, false, 0.8f);
 
 	return S_OK;
 }

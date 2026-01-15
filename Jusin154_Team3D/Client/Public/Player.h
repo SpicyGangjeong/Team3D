@@ -208,6 +208,8 @@ private:
 	_uint			m_iFootStepIndex = 0;
 	_uint			m_iPrevAnimIndex = 0;
 
+	_bool			m_bOnGroundHit = {};
+
 	/* 무적 불 변수*/
 #ifdef _DEBUG
 	_bool			m_isDebugMode = { false };

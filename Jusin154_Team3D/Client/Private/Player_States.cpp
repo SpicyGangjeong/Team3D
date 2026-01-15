@@ -2042,6 +2042,7 @@ void CPlayer::Behavior_HitEnter()
 	m_pBroom->Set_Ride(false);
 	pair<_uint, _bool> pairAnimInfo;
 
+	m_bOnGroundHit = true;
 	if (m_eHitSpell != ENUM_CLASS(SKILL_TYPE::END)) {
 		switch (m_eHitSpell)
 		{
@@ -2067,6 +2068,7 @@ void CPlayer::Behavior_HitEnter()
 
 	}
 
+
 	m_pEffectPool->Use_Skill(SKILL_TYPE::SCREEN_HIT, this);
 
 	ProcessHitBehavior();
@@ -2077,6 +2079,46 @@ HRESULT CPlayer::Behavior_HitExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo;
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT].first || iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_BWD].first)
+	{
+		if (true == m_pCharacter_Controller->IsOnGround() && m_bOnGroundHit) {
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_14, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_15, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_20, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			}
+			m_bOnGroundHit = false;
+		}
+	}
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT].first || iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD].first)
+	{
+		if (true == m_pCharacter_Controller->IsOnGround() && m_bOnGroundHit) {
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_14, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_15, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_20, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			}
+			m_bOnGroundHit = false;
+		}
+	}
 
 	if (m_eHitType == ENUM_CLASS(HIT_TYPE::HIT_HEAVY))
 	{
@@ -2898,6 +2940,7 @@ void CPlayer::Throwing_Interactive()
 void CPlayer::ProcessHitBehavior()
 {
 	pair<_uint, _bool> pairAnimInfo;
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	switch (m_eHitType)
 	{
 	case ENUM_CLASS(HIT_TYPE::HIT_PROJECTILE):
@@ -2983,6 +3026,25 @@ void CPlayer::ProcessHitBehavior()
 	}
 	break;
 	}
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {_int iRand = m_pGameInstance->Real_Random_Int(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::PLAYERHIT0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 1:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::PLAYERHIT1, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 2:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::PLAYERHIT2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 3:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::PLAYERHIT3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	}
+		}, 0.01f);
+
 }
 
 void CPlayer::Calc_CameraPlayerAngle()

@@ -169,13 +169,13 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	_bool bStartCinematic = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bStartCinematic = false;
+	bStartCinematic = true;
 #elif 진우
 	bStartCinematic = true;
 #elif Bin
 	bStartCinematic = false;
 #elif gimch
-	bStartCinematic = false;
+	bStartCinematic = true;
 #elif 나
 	bStartCinematic = false;
 #endif
@@ -343,13 +343,13 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	// 맵 로드할지 안할지 bool 설정
 	// ---------------------------------
 	_bool isReady_Background = { true };
-	_bool isReady_Hogsmeade = { true };
+	_bool isReady_Hogsmeade = { false };
 	_bool isReady_Hogwart = { true };
 #ifdef _DEBUG
 
 #ifdef gimch
 	isReady_Background = true;
-	isReady_Hogsmeade = true;
+	isReady_Hogsmeade = false;
 	isReady_Hogwart = false;
 #endif // gimch
 #ifdef Bin
@@ -363,9 +363,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -626,7 +626,6 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp(map<_string, CLand*>* Lands)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_HOGWART, &Desc))) {
 		return E_FAIL;
 	}
-
 
 	/* BearBerry */
 	Desc.isShake = true;
@@ -1158,8 +1157,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = false;
-	isLoad_RandomNPC = false;
+	isLoad_NPC = true;
+	isLoad_RandomNPC = true;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -1244,9 +1243,9 @@ void CLevel_GamePlay::ResetLevel_Environment()
 
 	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(0.581f, 0.239f, -0.183f, 0.757f));
 	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.700), _float2(0.075f, 0.150f),
+	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.700), _float2(0.019f, 0.161f),
 									_float2(2.300f, 10.000f), _float4(0.0047f, 0.0018f, 0.0018f, 0.0018f),
-									_float4(2.f, 1.f, 1.f, 1.f), _float3(-55.9f, -10.f, -50.f), _float3(50.f, 100.f, 100.f));
+									_float4(2.f, 1.f, 1.f, 1.f), _float3(-10.f, -10.f, -50.f), _float3(10.f, 10.f, 50.f));
 	m_pLight->Capture_PreShadow();
 }
 

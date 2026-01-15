@@ -29,6 +29,7 @@ public:
 	_vector			Get_ShoulderGlobalPos();
 	void			Set_CameraShake(_float fXShock, _float fYShock);
 	void			Set_CameraAnim(_uint iIndex);
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -39,6 +40,7 @@ private:
 	_vector Calc_AnimFollowTargetPos(_fvector vGreedPos);
 	_vector Calc_BestPosition(_fvector vCastingPosition, _gvector vCastingDirection, _float fGreedDistance);
 	_vector Calc_DampingParentPos();
+	void Lerp_FovAnim(_float fTimeDelta);
 
 #pragma region Base
 	_float		m_fMouseSensor = { 0.1f };
@@ -74,9 +76,9 @@ private:
 	_float2 m_vMoveLerpPositions = { };
 	_float2 m_vMoveLerpTimer = { 0.f, TIMER_SHORT_LERP };
 
-	//_int	m_iSpellFovLerp = { 0 };
-	//_float3 m_vSpellFovLerpTimer	= { 0.f, 1.f, 2.f };
-	//_float3 m_vSpellFovLerpDegree	= { 60.f, 30.f, 60.f };
+	_bool	m_bSpellFovLerp = { false };
+	_float3 m_vSpellFovLerpTimer	= { 0.f, 1.f, 2.f };
+	_float3 m_vSpellFovLerpDegree	= { 60.f, 30.f, 60.f };
 #pragma endregion
 	_float2 m_vCameraShakeTimer = { 0.f, 0.3f };
 

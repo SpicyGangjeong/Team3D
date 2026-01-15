@@ -139,4 +139,13 @@
     <Animation Index="36">
         <KeyFrame Event="Ranrok/ranrok_54.wav" Ratio="0.101" Volume="0.80000001"/>
     </Animation>
+    <Animation Index="9">
+        <KeyFrame Event="Ranrok/ranrok_38.wav" Ratio="0.25" Volume="0.80000001"/>
+    </Animation>
+    <Animation Index="29">
+        <KeyFrame Event="Ranrok/ranrok_39.wav" Ratio="0.347" Volume="0.40000001"/>
+    </Animation>
+    <Animation Index="24">
+        <KeyFrame Event="Ranrok/ranrok_9.wav" Ratio="0.25" Volume="0.40000001"/>
+    </Animation>
 </KeyFrames>

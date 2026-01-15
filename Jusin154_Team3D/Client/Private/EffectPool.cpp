@@ -117,7 +117,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 #ifdef _DEBUG
 #ifdef gimch
 	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveMonsterEffectCreate = true;
 #endif // gimch
 #ifdef Bin
 	m_isActiveEffectCreate = true;

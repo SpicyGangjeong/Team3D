@@ -15,6 +15,8 @@ enum class SD_KIND {
 	BGM_HOGWART_1,
 	BGM_HOGWART_INT,
 	BGM_RANROK_0,
+	BGM_INSIDE,
+	BGM_RACE,
 #pragma endregion
 #pragma region FOOTSTEP
 	STEP_INT,
@@ -33,6 +35,10 @@ enum class SD_KIND {
 	SP_JAP_0,
 	SP_JAP_1,
 	SP_JAP_13,
+	SP_JAP_34,
+	SP_JAP_35,
+	SP_JAP_36,
+	SP_JAP_37,
 	SP_BLINK_2,
 #pragma endregion
 #pragma region AVADA_KEDAVRA
@@ -1017,14 +1023,43 @@ RANROK_FOOTSTEP_21,
 	FX_SOUND_15,
 	FX_SOUND_16,
 	FX_FIREWORKS,
+	FX_COUNTDOWN,
+#pragma endregion
+#pragma region PROP BROKEN
+
+	PROP_WOOD0,
+	PROP_WOOD1,
+	PROP_WOOD2,
+	BARREL0,
+	BARREL1,
+	BARREL2,
+	PAPER0,
+	PAPER1,
+	PAPER2,
+	BOX0,
+	BOX1,
+
+
 #pragma endregion
 
+#pragma region UI
+	LOGO_INTRO,
+#pragma endregion
 
 
 
 #pragma region DOBI
 	DOBI_0,
 #pragma endregion
+
+
+#pragma region PLAYERHIT
+	PLAYERHIT0,
+	PLAYERHIT1,
+	PLAYERHIT2,
+	PLAYERHIT3,
+#pragma endregion
+
 	END,
 };
 
