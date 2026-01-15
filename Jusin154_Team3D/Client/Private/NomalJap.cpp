@@ -171,6 +171,26 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_fZigZagAngle = XMConvertToRadians(m_vJapData[iIndex].w);
 
 
+#pragma region SOUND_TEST
+
+	switch (iIndex)
+	{
+	case 0 :
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_34, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 1 :
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_35, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 2 :
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_36, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 3 :
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_37, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	}
+
+#pragma endregion
+
 	_vector vDirection = m_pOwner->Get_Owner()->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 
 	XMStoreFloat3(&m_vCameraLook, vDirection);
@@ -226,9 +246,7 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_fAccZigZagTime = 0.f;
 
-#pragma region SOUND_TEST
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_13, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
-#pragma endregion
+
 
 
 	return S_OK;

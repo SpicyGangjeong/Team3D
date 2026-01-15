@@ -201,6 +201,9 @@ HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_fDuration = 10000.f;
 	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::RANROK_28, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
+
 	return S_OK;
 }
 
@@ -280,6 +283,8 @@ void CRanrok_Prop::OnCollision(CGameObject* pOther, void* pDesc)
 
 			CEffectPool* pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 			pEffectPool->Use_Skill(SKILL_TYPE::RANROK_PROP_HIT, this, &CollisionDesc->vWorldPos);
+
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_12, SD_CHANNEL_GROUP::EFFECT, false, 0.8f);
 		}
 
 	}
@@ -303,6 +308,9 @@ void CRanrok_Prop::OnCollision(CGameObject* pOther, void* pDesc)
 		pBroken_Goo->Set_Visible(true);
 		pBroken_PT->Set_Visible(true);
 		pBroken_PT2->Set_Visible(true);
+
+
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_24, SD_CHANNEL_GROUP::EFFECT, false, 1.f);
 
 		m_fDuration = 1.7f;
 		m_fAccTime = 0.f;

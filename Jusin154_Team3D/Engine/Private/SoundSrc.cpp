@@ -35,6 +35,10 @@ const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 	TEXT("Player/spells_jap_akb/jap_0.wav"), 
 	TEXT("Player/spells_jap_akb/jap_1.wav"),
 	TEXT("Player/spells_jap_akb/jap_13.wav"),
+	TEXT("Player/spells_jap_akb/jap_34.wav"),
+	TEXT("Player/spells_jap_akb/jap_35.wav"),
+	TEXT("Player/spells_jap_akb/jap_36.wav"),
+	TEXT("Player/spells_jap_akb/jap_37.wav"),
 	TEXT("Player/spells_perk_shadowblink_akb/blink_2.wav"),
 #pragma endregion
 
@@ -1019,7 +1023,9 @@ TEXT("Broom/broom_up_8.wav"),
 
 #pragma endregion
 
-
+#pragma region UI
+	TEXT("UI/Logo_Intro.wav"),
+#pragma endregion
 
 #pragma region DOBI
 	TEXT("Dobi/dobi_voice.wav"),

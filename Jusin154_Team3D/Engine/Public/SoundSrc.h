@@ -33,6 +33,10 @@ enum class SD_KIND {
 	SP_JAP_0,
 	SP_JAP_1,
 	SP_JAP_13,
+	SP_JAP_34,
+	SP_JAP_35,
+	SP_JAP_36,
+	SP_JAP_37,
 	SP_BLINK_2,
 #pragma endregion
 #pragma region AVADA_KEDAVRA
@@ -1020,6 +1024,9 @@ RANROK_FOOTSTEP_21,
 #pragma endregion
 
 
+#pragma region UI
+	LOGO_INTRO,
+#pragma endregion
 
 
 #pragma region DOBI

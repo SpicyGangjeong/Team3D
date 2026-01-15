@@ -21,6 +21,8 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::LOGO_INTRO, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
 	return S_OK;
 }
 

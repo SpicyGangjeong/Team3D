@@ -244,6 +244,11 @@ void CRandomNpc::Set_Target(CUnit& pTarget, CTransform& pTransform)
 	m_fTargetDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
 }
 
+void CRandomNpc::Play_Voice()
+{
+	//m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_DECENDO, SD_CHANNEL_GROUP::VOICE, false, 0.8f);
+}
+
 
 HRESULT CRandomNpc::Bind_ShaderResources()
 {
