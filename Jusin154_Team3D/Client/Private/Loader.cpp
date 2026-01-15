@@ -396,7 +396,6 @@ HRESULT CLoader::Loading_For_Logo()
 		}
 	}
 
-#endif // 기무리
 
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
