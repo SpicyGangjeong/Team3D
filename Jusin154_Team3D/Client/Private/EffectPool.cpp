@@ -78,6 +78,12 @@
 #include "Ranrok_DeadImpact.h"
 #include "Ranrok_Prop.h"
 
+
+#include "CutScene_Fire.h"
+#include "CutScene_Lightning.h"
+#include "CutScene_Shout.h"
+#include "CutScene_Smoke.h"
+
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -563,6 +569,45 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::CUTSCENE_FIRE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CCutScene_Fire* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CCutScene_Fire>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::CUTSCENE_LIGHTNING, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CCutScene_Lightning* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CCutScene_Lightning>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::CUTSCENE_SHOUT, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CCutScene_Shout* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CCutScene_Shout>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::CUTSCENE_SMOKE, 5, g_iStaticLevel, g_iStaticLevel, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CCutScene_Smoke* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CCutScene_Smoke>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 
 	return S_OK;
 }
