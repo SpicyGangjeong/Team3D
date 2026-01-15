@@ -46,7 +46,7 @@ private:
 	CGameObject* Find_Canvas(const _wstring& Name);
 
 	void NpcInteract(void* pArg);
-
+	void Chage();
 	void Set_Fade();
 	void Change_Map();
 	void Set_Race(_bool bRace);

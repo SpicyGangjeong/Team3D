@@ -56,6 +56,7 @@ public:
 	virtual _wstring Get_NpcName() override;
 	void Set_NpcState(_int iState) { m_eNpcState = iState; }
 	void Set_Target(CUnit& pTarget, CTransform& pTransform);
+	virtual _int Get_NpcID() override;
 	virtual void Set_Flow(_int Index, _float fTime) override;
 	virtual _int Get_Flow() override;
 protected:

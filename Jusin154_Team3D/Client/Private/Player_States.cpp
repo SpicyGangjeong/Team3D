@@ -60,7 +60,7 @@ void CPlayer::Get_Spell(_int SkillIndex)
 	m_eSpell = SkillIndex;
 }
 
-void CPlayer::Get_UIState(_int UIState)
+void CPlayer::Get_UIState(UI_STATE UIState)
 {
 	m_eUIState = UIState;
 }
@@ -3277,10 +3277,10 @@ void CPlayer::Hit_Levioso(_float fTimeDelta)
 
 _bool CPlayer::IsInputLocked()
 {
-	if (m_eUIState != ENUM_CLASS(UI_STATE::SPELL) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::QUEST) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::SPELLLNEARN) &&
-		m_eUIState != ENUM_CLASS(UI_STATE::NPC_INTERACT))
+	if (m_eUIState != UI_STATE::SPELL &&
+		m_eUIState != UI_STATE::QUEST &&
+		m_eUIState != UI_STATE::SPELLLNEARN &&
+		m_eUIState != UI_STATE::NPC_INTERACT)
 	{
 		return true;
 	}
@@ -3325,7 +3325,7 @@ void CPlayer::Add_FSM()
 		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			{
-				if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+				if ((m_eUIState != UI_STATE::SPELL)) {
 					if (!m_pFSM->IsEnable(FSMSTATE::STOP))
 					{
 						_float3	fMove = m_pGameInstance->Get_MouseMove();
