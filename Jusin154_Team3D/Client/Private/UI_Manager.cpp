@@ -201,7 +201,6 @@ void CUI_Manager::Update(_float fTimeDelta)
 			Canvas_Change(UI_STATE::GAMEPLAYER);
 	}
 
-
 	if (m_bRace == false && m_bCurrentNPCInteract == false)
 	{
 		if (m_eType == UI_STATE::GAMEPLAYER || m_eType == UI_STATE::QUEST)

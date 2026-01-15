@@ -14,6 +14,7 @@
 #include "Layer.h"
 
 #include "Ranrok_Prop.h"
+#include "CutScene_Shout.h"
 #include "Ranrok_EtherInfo.h"
 
 #pragma region STATE
@@ -371,6 +372,13 @@ void CRanrok::Trigger(CTimeSocket& Socket)
 	case TIMESOCKET_FUNC::TRANSLATION_LERP:
 	{
 
+	}break;
+	case TIMESOCKET_FUNC::RANROK_SHOUT:
+	{
+		CCutScene_Shout* pShout = { nullptr };
+		_vector vHeadPos = Get_BonePos(RANROK_ENUM_BONEMATRICES::HEAD);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::CUTSCENE_SHOUT, this, (void*)&vHeadPos, (CEffect_Container**)&pShout);
+		SAFE_RELEASE(pShout);
 	}break;
 	case TIMESOCKET_FUNC::SET_ANIMSTATE:
 	{
