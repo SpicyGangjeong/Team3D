@@ -56,6 +56,7 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 					_uint iAnimIndex = pModel->Get_AnimIndex();
 					if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
 						CFSM* pFSM = pOwner->Get_Component<CFSM>();
+						m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_83, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 						pFSM->Change_State(FSMSTATE::STUN);
 
 						/**/
@@ -150,6 +151,7 @@ void CCallBack_Troll_HitReport::onControllerHit(const PSX::PxControllersHit& hit
 				if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
 					if (false == *m_pCollisionPlayer) {
 						*m_pCollisionPlayer = true;
+						m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_83, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 						pTargetActorData->pCharacter->Get_Owner()->OnCollision(pOwner,&tagCollInfo);
 					}
 				}

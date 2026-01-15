@@ -63,6 +63,8 @@ private:
 	void SpellLearn();
 	void Quest();
 	void ReSet();
+
+	void Quest_Complete();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 

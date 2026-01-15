@@ -976,8 +976,6 @@
     <ClInclude Include="..\Public\Ranrok_EtherInfo.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TriggerBox.h" />
-    <ClInclude Include="..\Public\TriggerBox.h" />
     <ClInclude Include="..\Public\CutScene_Lightning.h">
       <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
     </ClInclude>
@@ -989,6 +987,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CutScene_Shout.h">
       <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Shout</Filter>
+       </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h">
+      <Filter>04.Mechanic\20.TriggerBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Throw.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Throw</Filter>
@@ -2956,7 +2957,6 @@
     <ClCompile Include="..\Private\Ranrok_EtherInfo.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\CutScene_Lightning.cpp">
       <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
     </ClCompile>
@@ -2989,7 +2989,6 @@
     <ClCompile Include="..\Private\State_Parry.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TriggerBox.cpp" />
     <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
     </ClCompile>

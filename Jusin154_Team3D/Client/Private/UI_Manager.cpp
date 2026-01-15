@@ -145,6 +145,8 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
 		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
 		static_cast<CGameObject*>(m_pDamage_Font)->Set_Visible(false);
+		m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
+		m_pInfoInstance->Event_CallBack(TEXT("BOXInteractionOff"));
 		break;
 
 	default:
@@ -521,7 +523,6 @@ void CUI_Manager::Change_Map()
 void CUI_Manager::Set_Race(_bool bRace)
 {
 	m_bRace = bRace;
-	static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(bRace);
 }
 
 void CUI_Manager::Set_Battle(_bool bBattle)

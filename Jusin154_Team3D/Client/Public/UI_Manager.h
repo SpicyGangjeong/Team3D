@@ -41,7 +41,6 @@ public:
 
 	void Add_Manager_Event(_wstring Name, function<void(void*)> Event);
 	void Event_Callback(_wstring Name, void* pArg = nullptr);
-
 private:
 	void Add_Canvas(_wstring Name, class CGameObject* pCanvas);
 	CGameObject* Find_Canvas(const _wstring& Name);
@@ -94,6 +93,8 @@ private:
 
 	_bool	m_bRace = { false };
 	_bool	m_bBattle = { false };
+	_bool	m_bGate = { false };
+	_float	m_fGateTime{};
 public:
 	static CUI_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
