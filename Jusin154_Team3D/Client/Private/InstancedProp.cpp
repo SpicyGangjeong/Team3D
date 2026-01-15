@@ -106,6 +106,7 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 
 	m_isShake = pDesc->isShake;
 	m_isTree = pDesc->isTree;
+	m_bEnableRigidbody = pDesc->bEnableRigidbody;
 
 	/* Com_VIBuffer_Instance_Model */
 	if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, pDesc->strPrototypeTag,
@@ -114,17 +115,15 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 
 	m_iNumMesh = m_pVIBufferInstanceCom->Get_NumMesh();
 
-	if(pDesc->bEnableRigidbody)
+	if(m_bEnableRigidbody)
 	{
 		if (FAILED(ReadyForPhysX()))
 			return E_FAIL;
-
-		/* Laod Instance Data */
-		if (FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str(), pDesc)))
-			return E_FAIL;
 	}
 
-
+	/* Laod Instance Data */
+	if (FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str(), pDesc)))
+		return E_FAIL;
 
 	if (m_isShake)
 		m_pVIBufferInstanceCom->Set_Shake_Value(pDesc->vRadius, pDesc->vSpeed);
@@ -193,7 +192,7 @@ HRESULT CInstancedProp::Load_InstancedProp(const _char* pFilePath, INSTANCE_PROP
 
 	vector<_wstring> RigidBodyTags;
 
-
+	
 	for (_uint i = 0; i < m_iNumMesh; ++i)
 	{
 		RigidBodyTags.push_back(CMyTools::ToWstring(m_pVIBufferInstanceCom->Get_MeshName(i)) + to_wstring(i));
@@ -206,7 +205,7 @@ HRESULT CInstancedProp::Load_InstancedProp(const _char* pFilePath, INSTANCE_PROP
 
 		WorldMatrices.push_back(WorldMatrix);
 
-		if(pDesc->bEnableRigidbody)
+		if(m_bEnableRigidbody)
 		{
 			for (_uint i = 0; i < m_iNumMesh; ++i)
 			{
