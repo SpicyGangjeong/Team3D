@@ -1031,6 +1031,8 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("FX/fx_sound_16.wav"),
 	TEXT("FX/fireworks-402788.wav"),
 	TEXT("FX/CountDown.wav"),
+	TEXT("FX/Swoosh0.wav"),
+	TEXT("FX/Swoosh1.wav"),
 #pragma endregion
 #pragma region PROP_BROKEN
 	TEXT("Prop/Wood0.wav"),
@@ -1060,6 +1062,11 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("Player/Hit/PlayerHit2.wav"),
 	TEXT("Player/Hit/PlayerHit3.wav"),
 #pragma endregion
+#pragma region REVELIO
+	TEXT("Spell/Revelio0.wav"),
+	TEXT("Spell/Revelio1.wav"),
+#pragma endregion
+
 
 
 #pragma region TUCKED_SWAM

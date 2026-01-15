@@ -240,7 +240,21 @@ HRESULT CDuelist_NormalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_fAccZigZagTime = 0.f;
 
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_13, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+	switch (iIndex)
+	{
+	case 0:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_34, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
+		break;
+	case 1:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_35, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
+		break;
+	case 2:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_36, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
+		break;
+	case 3:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_37, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
+		break;
+	}
 
 	return S_OK;
 }

@@ -149,7 +149,7 @@ void CDialogue_Panel::Change_Map()
 	);
 	_vector vPlayerOriginPos = XMVectorZero();
 
-	if (FAILED(m_pInfoInstance->Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Rotate_Rock_Large2")))
+	if (FAILED(m_pInfoInstance->Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
 		return;
 
 	CLayer* pDuelistLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_DUELIST);

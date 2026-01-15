@@ -1032,6 +1032,8 @@ RANROK_FOOTSTEP_21,
 	FX_SOUND_16,
 	FX_FIREWORKS,
 	FX_COUNTDOWN,
+	FX_SWOOSH0,
+	FX_SWOOSH1,
 #pragma endregion
 
 #pragma region PROP BROKEN
@@ -1064,6 +1066,11 @@ RANROK_FOOTSTEP_21,
 	PLAYERHIT1,
 	PLAYERHIT2,
 	PLAYERHIT3,
+#pragma endregion
+
+#pragma region REVELIO
+	SP_REVELIO0,
+	SP_REVELIO1,
 #pragma endregion
 
 #pragma region TUCKED_SWAM

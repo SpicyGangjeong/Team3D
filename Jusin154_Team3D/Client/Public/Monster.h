@@ -43,6 +43,7 @@ public:
 	void CameraShake(_float ClampValue, _float Min, _float Max, _float Time);
 	virtual _bool IsHitStateDisabled();
 	virtual _bool IsHitSpellDisabled();
+
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };

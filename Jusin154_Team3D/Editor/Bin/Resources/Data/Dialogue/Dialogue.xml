@@ -56,7 +56,7 @@
 			<Choice Type="0" Text="안내해줘." NextID="3" QuestID="-1" />
 			<Choice Type="0" Text="혼자 갈게." NextID="3" QuestID="-1" />
 		</Line>   
-		<Line ID="3" Tag="0" Type="1" Text="왜 멈춘거야?" NextID="4"/>
+		<Line ID="3" Tag="0" Type="1" Text="왜 멈춘거야?" NextID="4"/>      
 		<Line ID="4" Tag="1" Type="1" Text="저기 앞에 고블린이 있어." NextID="5"/>
 		<Line ID="5" Tag="1" Type="2" Text="부탁이야. 저 고블린들 좀 잡아줘." NextID="5">
 			<Choice Type="0" Text="알겠어. 맡겨." NextID="7" QuestID="-1" />

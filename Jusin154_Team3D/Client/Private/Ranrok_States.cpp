@@ -971,7 +971,7 @@ void CRanrok::Behavior_TuckedExit()
 
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;
-	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR)) {
+	if (m_iCurrentFlow == 1) {
 		m_vCreatePropTime.x = m_vCreatePropTime.y;
 	}
 }
@@ -1015,9 +1015,13 @@ void CRanrok::Behavior_LandExit()
 void CRanrok::Behavior_HitEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 
 	m_bLookAt = false;
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_BWD2].first)
+		return;
 
 	if (m_ePhase == ENUM_CLASS(RANROK_PHASE::PHASE_AIR))
 	{
@@ -1034,7 +1038,14 @@ void CRanrok::Behavior_HitEnter()
 HRESULT CRanrok::Behavior_HitExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
-	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_BWD2].first)
+	{
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		return E_FAIL;
+	}
+
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_pFSM->Change_State(FSMSTATE::COMBAT);

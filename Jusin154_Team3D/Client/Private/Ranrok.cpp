@@ -473,6 +473,7 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+
 	if (m_bDisolve)
 		return;
 
@@ -1015,7 +1016,7 @@ HRESULT CRanrok::Render_Blur()
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_HOT_SPINE); i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); ++i)
 	{
 
-		if (m_pEtherInfo[i]->isBlur() == false)
+		if (m_pEtherInfo[i]->isBlur() == false || m_pEtherInfo[i]->Get_Visible() == false)
 			continue;
 
 		if (FAILED(m_pEther_Shader->Bind_Matrices("g_OffsetMatrix",
@@ -1064,7 +1065,9 @@ HRESULT CRanrok::Render_Bloom()
 {
 	for (_uint i = ENUM_CLASS(RANROK_MESH_ORDER::ETHEREAL_HOT_SPINE); i < ENUM_CLASS(RANROK_MESH_ORDER::WINGS); ++i)
 	{
-		if (m_pEtherInfo[i]->isBloom() == false)
+		
+
+		if (m_pEtherInfo[i]->isBloom() == false || m_pEtherInfo[i]->Get_Visible() == false)
 			continue;
 
 		if (FAILED(m_pEther_Shader->Bind_Matrices("g_OffsetMatrix",
@@ -1121,7 +1124,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	{
 		if (m_iCurrentPoint >= m_Points[m_iCurrentFlow].size() * 0.3f)
 		{
-			m_fTuckedSpeed = 55.f;
+			m_fTuckedSpeed = 50.f;
 		}
 	}
 

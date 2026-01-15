@@ -64,6 +64,7 @@ void CDialogue_Font::Update(_float fTimeDelta)
 	{
 		if (m_bChoiceText == true)
 		{
+			_bool Map = true;
 			switch (m_iType)
 			{
 			case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
@@ -89,12 +90,12 @@ void CDialogue_Font::Update(_float fTimeDelta)
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BROOM):
-				m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bChoiceText);
+				m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &Map);
 				MapMove();
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BATTLE):
-				m_pInfoInstance->Event_CallBack(TEXT("BATTLE"), &m_bChoiceText);
+				m_pInfoInstance->Event_CallBack(TEXT("BATTLE"), &Map);
 				MapMove();
 				break;
 

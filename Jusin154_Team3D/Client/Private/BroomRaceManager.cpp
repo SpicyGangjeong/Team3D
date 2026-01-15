@@ -394,8 +394,6 @@ void CBroomRaceManager::Check_RingPassed()
 				{
 					racer.curRing = (_uint)m_pRaceRings.size();
 
-					
-
 					if (racer.pAI) {
 						racer.pAI->Get_Broom()->Set_Hover(true);
 						racer.pAI->Get_Broom()->Set_Move(false);
@@ -405,8 +403,6 @@ void CBroomRaceManager::Check_RingPassed()
 						racer.pRacer->Get_Broom()->Set_Hover(true);
 						racer.pRacer->Get_Broom()->Set_Move(false);
 					}
-
-
 
 					XMStoreFloat4(&racer.prevPos, currPos);
 					continue;
@@ -545,7 +541,15 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 		{
 			if (racer.pRacer == pRacer)
 			{
-				
+				_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+				if (iRand == 0)
+				{
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::FX_SWOOSH0, SD_CHANNEL_GROUP::EFFECT, false, 3.f);
+				}
+				else {
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::FX_SWOOSH1, SD_CHANNEL_GROUP::EFFECT, false, 3.f);
+				}
+
 				m_pRaceRings[racer.curRing-1]->Set_Target(false);
 					
 				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
