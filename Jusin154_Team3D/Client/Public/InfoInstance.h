@@ -14,6 +14,7 @@ class CUIObject;
 NS_END
 
 NS_BEGIN(Client)
+class CEffect_Container;
 
 class CInfoInstance final : public CBase
 {
@@ -116,6 +117,7 @@ public:
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair< _string, struct TimeLine*>& pairTimeLine);
+	_bool		IsActiveCutScene();
 #pragma endregion
 #pragma region Effect
 

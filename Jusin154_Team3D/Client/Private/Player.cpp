@@ -701,6 +701,10 @@ HRESULT CPlayer::Ready_Components()
 		Desc.fStepOffset = { 0.02f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 0.6f;
+		if (ENUM_CLASS(LEVEL::FIELD) == NEXT_LEVEL) {
+			Desc.fRadius = 1.f;
+			Desc.fHeight = 0.3f;
+		}
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
@@ -848,6 +852,16 @@ void CPlayer::CheckMouseInput()
 
 void CPlayer::ReLockOnTarget()
 {
+	// 락온조건 1. 컷씬중 아닐 때
+	if (true == m_pInfoInstance->IsActiveCutScene()) {
+		m_LockOnInfo.pChest = nullptr;
+		m_LockOnInfo.pEffect = nullptr;
+		m_LockOnInfo.pInteractive = nullptr;
+		m_LockOnInfo.pUnit = nullptr;
+		return;
+	}
+
+	// 락온조건2. 던지는중일때 추가 락온 비화성화
 	m_pInfoInstance->Get_LockOnInfo(m_LockOnInfo);
 	if (nullptr != m_LockOnInfo.pUnit) {
 		if (true == m_LockOnInfo.pUnit->isDead()) {
@@ -864,8 +878,6 @@ void CPlayer::ReLockOnTarget()
 			m_LockOnInfo.pEffect = nullptr;
 		}
 	}
-
-	//m_pLockOnMonster->Get_State
 }
 
 void CPlayer::SetGravity()

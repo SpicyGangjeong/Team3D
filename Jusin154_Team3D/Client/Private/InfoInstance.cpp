@@ -420,6 +420,11 @@ void CInfoInstance::Load_Events(pair<_string, TimeLine*>& pairTimeLine)
 	m_pCutSceneInfo->Load_Events(pairTimeLine);
 }
 
+_bool CInfoInstance::IsActiveCutScene()
+{
+	return m_pCutSceneInfo->IsActiveCutScene();
+}
+
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {

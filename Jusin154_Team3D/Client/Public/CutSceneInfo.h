@@ -26,6 +26,7 @@ public:
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair<_string, TimeLine*>& pairTimeLine);
 	HRESULT		Clear_AllEvents();
+	_bool		IsActiveCutScene() { return m_bIsActiveCutScene; }
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 	class CInfoInstance*	m_pInfoInstance = { nullptr };
@@ -34,6 +35,7 @@ private:
 
 	map<_string, TimeLine*> m_funcActiveEvents = {};
 	map<_string, TimeLine*> m_funcWaitEvents = {};
+	_bool					m_bIsActiveCutScene = { false };
 
 private:
 	void Update_ActiveEvents(_float fTimeDelta);
