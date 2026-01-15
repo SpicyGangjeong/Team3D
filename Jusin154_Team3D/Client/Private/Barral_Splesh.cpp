@@ -98,7 +98,7 @@ HRESULT CBarral_Splesh::Pre_Setting(CGameObject* pObject, void* pArg)
 	pWater_Splesh->Set_Visible(true);
 
 
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BARREL0, SD_CHANNEL_GROUP::EFFECT, false, 0.8f);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BARREL0, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
 
 
 	return S_OK;

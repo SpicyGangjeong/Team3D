@@ -226,7 +226,7 @@ HRESULT CGoblin_Mage::Behavior_SpellExitCheck(_float fTimeDelta)
 
 			Add_Event(pairAnimInfo.first,
 				[this]() {
-					m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_25, SD_CHANNEL_GROUP::ENEMY, false, 0.8f); },
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_25, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
 					0.1f);
 		}
 		return S_OK;
