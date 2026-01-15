@@ -23,6 +23,8 @@ public:
 private:
     function<void(_float fTimeDelta)> m_funcPriorityUpdate = { nullptr };
     function<void(_float fTimeDelta)> m_funcLateUpdate = { nullptr };
+    _float2 m_vTuckedSoundTimer = { 0.f, 0.7f };
+    _float3 m_vSoundPos = {};
 
 private:
     HRESULT Initialize(STATE_TUCKED_DESC* pDesc);
