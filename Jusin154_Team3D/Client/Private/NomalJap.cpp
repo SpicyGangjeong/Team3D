@@ -181,7 +181,6 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 	case 1 :
 		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_35, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 		break;
-
 	case 2 :
 		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_JAP_36, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 		break;
