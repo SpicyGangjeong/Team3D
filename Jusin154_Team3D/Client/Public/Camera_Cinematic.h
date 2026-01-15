@@ -43,14 +43,16 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Ready_SubPart();
 	HRESULT Bind_ShaderResources() override;
+	void			Update_CameraShake(_float fTimeDelta);
+	void			Start_CameraShake(_float fTime, _float fIntense);
 
 	void Lerp_Translation(_float fTimeDelta);
 	void Start_Lerp_Translation(_float fTimeMaximum, PSX::PxTransform pxTransform);
 	void Start_Lerp_Translation(_float fTimeMaximum, _float3& vTrans);
 	void Clear_Lerp_Translation();
 	void Lerp_Rotation(_float fTimeDelta);
-	void Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform);
-	void Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ);
+	void Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform, _bool bMainTainDistance);
+	void Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ, _bool bMainTainDistance);
 	void Clear_Lerp_Rotation();
 
 
@@ -82,6 +84,13 @@ private:
 	_bool	m_bLerpFovY = { false };
 	_float2 m_vFovYLerp = { 60.f, 60.f };
 	_float2 m_vLerpFovYTimer = { };
+	_bool	m_bMainTainDistance = { false };
+	_float m_fMaintainingDistance = { };
+	_bool m_bCameraShake = { false };
+	_float2	m_vAccRealRadians = { 0.f, 0.f };
+	_float2 m_vCameraShakeTimer = { 0.f, TIMER_SHORT_LERP };
+	_float m_fCameraShakeTime = TIMER_SHORT_LERP;
+	_float m_fCameraShakeIntense = 5.f;
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch = { nullptr };

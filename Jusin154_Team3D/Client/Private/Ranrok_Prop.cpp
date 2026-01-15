@@ -82,8 +82,6 @@ void CRanrok_Prop::Update(_float fTimeDelta)
 
 	__super::Update(fTimeDelta);
 
-	m_pRigidBody->Set_Position(m_pTransformCom->Get_State(STATE::POSITION), true);
-
 	Update_Event(fTimeDelta);
 
 	/* 시작 사이즈 러프 */
@@ -138,7 +136,7 @@ HRESULT CRanrok_Prop::Render()
 
 		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 		_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-		_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0f0f, 1.f);
+		_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0f0f, 0.25f);
 		_matrix WorldMatrix = XMMatrixScaling(m_pRigidBody->Get_HalfGeometryInfo().x, m_pRigidBody->Get_HalfGeometryInfo().x, m_pRigidBody->Get_HalfGeometryInfo().x) * m_pTransformCom->Get_XMWorldMatrix();
 		m_pSubShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
 
@@ -201,6 +199,7 @@ HRESULT CRanrok_Prop::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_fHp = 3.f;
 	m_fDuration = 10000.f;
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 
 	return S_OK;
 }
@@ -218,8 +217,8 @@ HRESULT CRanrok_Prop::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROKPROP"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-
-		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		m_pRigidBody->Detach_Actor(NEXT_LEVEL);
+		//m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
@@ -286,7 +285,7 @@ void CRanrok_Prop::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 	else
 	{
-
+		m_pRigidBody->Detach_Actor(NEXT_LEVEL);
 		for (auto& pPart : m_PartObjects)
 		{
 			pPart.second->Set_Visible(false);

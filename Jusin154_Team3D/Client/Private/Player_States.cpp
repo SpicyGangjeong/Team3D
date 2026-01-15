@@ -49,6 +49,11 @@
 
 #pragma region States
 
+void CPlayer::Set_Spell_Learning_Success()
+{
+	m_bSpell_Learning_Success = true;
+}
+
 // UI 연동 추가
 void CPlayer::Get_Spell(_int SkillIndex)
 {
@@ -673,6 +678,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 
 		Player_InterpTurn(fTimeDelta);
+		UpdateFootStepSound();
 
 		return S_OK;
 	}
@@ -739,6 +745,9 @@ void CPlayer::Behavior_MoveExit()
 	m_pFSM->Disable_State(FSMSTATE::MOVE | FSMSTATE::SPRINT | FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::STOP);
 	Reset_Event();
 	Get_PartObject<CWand>()->Set_Visible(true);
+	m_iFootStepIndex = 0;
+	m_fPrevMoveRatio = 0.f;
+
 }
 
 void CPlayer::Behavior_JumpEnter()
@@ -1712,9 +1721,9 @@ void CPlayer::Behavior_ShieldEnter()
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
 		0.1f);
 
-	Add_Sound_Event(pairAnimInfo.first,
-		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_PROTEGO, SD_CHANNEL_GROUP::VOICE, false, 0.7f); },
-		0.01f);
+	//Add_Sound_Event(pairAnimInfo.first,
+	//	[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_PROTEGO, SD_CHANNEL_GROUP::VOICE, false, 0.7f); },
+	//	0.01f);
 
 	Add_Sound_Event(pairAnimInfo.first,
 		[this]() {
@@ -1973,13 +1982,16 @@ void CPlayer::Behavior_ParryEnter()
 			m_pGameInstance->SlowMotion(0.4f, 0.2f); },
 		0.01f);
 
-	Add_Sound_Event(pairAnimInfo.first,
-		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);},
-		0.01f);
-
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::STUPEFY, this);  },
 		fEventRatio);
+
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
+		0.01f);
+
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_24, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 
 	m_bShield = false;
 	
@@ -2742,7 +2754,10 @@ void CPlayer::Behavior_Broom_DismountExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::BROOM_DISMOUNT);
 	Reset_Event();
+	m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_BOOST, SD_CHANNEL_GROUP::EFFECT);
+	m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_NORMAL, SD_CHANNEL_GROUP::EFFECT);
 	m_bOnce = false;
+	
 }
 
 
@@ -3068,7 +3083,7 @@ void CPlayer::Add_SpellEvent(_uint AnimIndex,_float fRatio)
 		Add_Sound_Event(AnimIndex,
 			[this]() {
 				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_ACCIO_15, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
-				0.26f);
+				0.35f);
 
 		Info.pText = TEXT("아씨오!");
 		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);

@@ -14,6 +14,7 @@ class CUIObject;
 NS_END
 
 NS_BEGIN(Client)
+class CEffect_Container;
 
 class CInfoInstance final : public CBase
 {
@@ -49,6 +50,7 @@ public:
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
 	void Get_LockOnInfo(LOCKON_INFO& Info);
+	void Get_LockOnInfoOnlyUnit(CUnit* pUnit);
 	void Set_SearchLockOnFlag(_bool bLockOn);
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 	class CMonster* Get_TargetMonster();
@@ -81,6 +83,7 @@ public:
 	_float Get_Spell_Damage(_int Index);
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
+
 #pragma endregion
 #pragma region QuestINFO
 	QUESTINFO Get_Quest(_int QuestType, _int QuestID);
@@ -93,6 +96,7 @@ public:
 #pragma region SpellLearn_Data
 	const SPELLLEARNINFO& Get_SpellLearn(_int Index) const;
 	_int Get_SpellLearnIndex();
+	void Spell_UnLock(_int SpellID);
 #pragma endregion
 #pragma region Dialogue_Font
 	//void Set_Font(void* pArg);
@@ -114,6 +118,7 @@ public:
 	void		Active_Event(_string& strKey);
 	HRESULT		DeActive_ActiveEvent(_string& strKey);
 	void		Load_Events(pair< _string, struct TimeLine*>& pairTimeLine);
+	_bool		IsActiveCutScene();
 #pragma endregion
 #pragma region Effect
 

@@ -1420,6 +1420,44 @@
 			<string tag =""/>
 		</Param_12>
 	</Socket>
+
+	<Socket fStartPosition = "13.5">
+		<Info strEventName = "TRANSLATION_LERP" eTypeParam = "TRANSFORM" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TRANSLATION_LERP"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="-0.131" Y="-0.010" Z="-0.001" W="0.991"/>
+				<Trans X="99.903" Y="15.468" Z="119.137"/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="0.8" Y="" Z="" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
 	<Socket fStartPosition = "13.5">
 		<Info strEventName = "TELEPORTATION" eTypeParam = "TRANSFORM" pTarget = "ACTOR_TROLL" eTypeFunc="TELEPORTATION"/>
 		<Param_0>
@@ -1718,7 +1756,7 @@
 			<string tag =""/>
 		</Param_12>
 	</Socket>
-	<Socket fStartPosition = "14">
+	<Socket fStartPosition = "14.5">
 		<Info strEventName = "SET_FSMSTATE" eTypeParam = "NOT_USE" pTarget = "ACTOR_PLAYER" eTypeFunc="SET_FSMSTATE"/>
 		<Param_0>
 			<OtherTarget Layer = "" TypeID = ""/>
@@ -1755,7 +1793,7 @@
 			<string tag =""/>
 		</Param_12>
 	</Socket>
-	<Socket fStartPosition = "14">
+	<Socket fStartPosition = "14.5">
 		<Info strEventName = "Off_Camera" eTypeParam = "TARGET" pTarget = "CAMERA_CINEMATIC" eTypeFunc="END_CINEMATIC"/>
 		<Param_0>
 			<OtherTarget Layer = "Layer_Camera" TypeID = "CAMERA_SHOULDER"/>

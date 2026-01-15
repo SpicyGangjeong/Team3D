@@ -63,6 +63,8 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 
 	Find_Anim();
 
+	Sound_List();
+
 	if(m_isUpdateEvent)
 	{
 		for (auto& pObject : m_Objects)
@@ -451,10 +453,14 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		}
 		if(GUI::Button("Load KeyFrame_"))
 		{
+			_char szDir[MAX_PATH] = {};
+			_string Path = {};
 			for (auto& pObject : m_Objects)
 			{
 				dynamic_cast<CUnit*>(pObject)->Reset_SoundEvent();
-				dynamic_cast<CUnit*>(m_Objects[m_iObjectIndex])->Ready_Sound_Events("../Bin/Resources/Models/Human/PlayableCharacter/KeyFrame.xml");
+				_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+				Path = _string(szDir) + "KeyFrame.xml";
+				dynamic_cast<CUnit*>(m_Objects[m_iObjectIndex])->Ready_Sound_Events(Path.c_str());
 			}
 		}
 		static _char EventName[256] = {};
@@ -745,6 +751,28 @@ void CLevel_ObjectViewer::Find_Anim()
 		}
 	}
 
+}
+
+void CLevel_ObjectViewer::Sound_List()
+{
+	GUI::Begin("Sound_List");
+	if (GUI::CollapsingHeader("Sound list"))
+	{
+		for (_uint i = 0; i < ENUM_CLASS(SOUND::SD_KIND::END); ++i)
+		{
+			_wstring Name = SOUND::SD_PATH::SD_KIND_PATHS[i];
+			
+				if (GUI::Button(("S_" + CMyTools::ToString(Name)).c_str()))
+				{
+					m_pGameInstance->Sound_Play(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT, false, m_fVolume);
+				}
+				GUI::SameLine();
+				if (GUI::SmallButton(("Stop Sound##" + to_string(i)).c_str()))
+					m_pGameInstance->Sound_Stop(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT);
+			
+		}
+	}
+	GUI::End();
 }
 
 void CLevel_ObjectViewer::Save_KeyFrame()

@@ -12,11 +12,15 @@ CCamera_Cinematic::CCamera_Cinematic(const CCamera_Cinematic& rhs) : CCamera(rhs
 
 void CCamera_Cinematic::Priority_Update(_float fTimeDelta)
 {
+	Update_CameraShake(fTimeDelta);
 	if (false == m_bIsCurrentTransition) {
 		m_pLookTargetPart->Priority_Update(fTimeDelta);
 		m_pFollowTargetPart->Priority_Update(fTimeDelta);
 		m_pTransformCom->Set_State(STATE::POSITION, m_pFollowTargetPart->Get_WorldPostion());
 		m_pTransformCom->LookAt(m_pLookTargetPart->Get_WorldPostion());
+		_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
+		vRPY += XMLoadFloat2(&m_vAccRealRadians);
+		m_pTransformCom->Rotation(vRPY);
 	}
 	else {
 		Transition(fTimeDelta);
@@ -170,7 +174,7 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	case TIMESOCKET_FUNC::ROTATION_LERP:
 	{
 		Clear_Lerp_Rotation();
-		Start_Lerp_Rotation(pContents->vParam_11.x, pContents->pxTransform);
+		Start_Lerp_Rotation(pContents->vParam_11.x, pContents->pxTransform, pContents->vFlags.b[0]);
 	} break;
 	case TIMESOCKET_FUNC::LOOK_AT:
 	{
@@ -215,6 +219,10 @@ void CCamera_Cinematic::Trigger(CTimeSocket& Socket)
 	{
 		Start_Lerp_FovY(pContents->vParam_11.z, { pContents->vParam_11.x, pContents->vParam_11.y });
 		Set_Fov(XMConvertToRadians(pContents->vParam_11.x));
+	}break;
+	case TIMESOCKET_FUNC::SHAKE:
+	{
+		Start_CameraShake(pContents->vParam_11.x, pContents->vParam_11.y);
 	}break;
 	case TIMESOCKET_FUNC::END_CINEMATIC:
 	{
@@ -308,6 +316,32 @@ HRESULT CCamera_Cinematic::Bind_ShaderResources()
 	return S_OK;
 
 }
+void CCamera_Cinematic::Update_CameraShake(_float fTimeDelta)
+{
+	if (true == m_bCameraShake) {
+		m_vCameraShakeTimer.x += fTimeDelta;
+		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) {
+			m_vCameraShakeTimer.x = 0.f;
+			m_vAccRealRadians = { 0.f, 0.f };
+			m_bCameraShake = false;
+		}
+		else {
+			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
+			fIntense *= fIntense;
+			m_vAccRealRadians = _float2(
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense)
+			);
+		}
+	}
+}
+void CCamera_Cinematic::Start_CameraShake(_float fTime, _float fIntense)
+{
+	m_bCameraShake = true;
+	m_vCameraShakeTimer.x = 0.f;
+	m_vCameraShakeTimer.y = fTime;
+	m_fCameraShakeIntense = XMConvertToRadians(fIntense);
+}
 void CCamera_Cinematic::Lerp_Translation(_float fTimeDelta)
 {
 	if (true == m_bLerpTranslation) {
@@ -352,24 +386,34 @@ void CCamera_Cinematic::Lerp_Rotation(_float fTimeDelta)
 		Rotation(vRotQ);
 	}
 }
-void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform)
+void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, PSX::PxTransform pxTransform, _bool bMainTainDistance)
 {
 	_float4 vRotQ = { pxTransform.q.x, pxTransform.q.y, pxTransform.q.z, pxTransform.q.w };
-	Start_Lerp_Rotation(fTimeMaximum, vRotQ);
+	Start_Lerp_Rotation(fTimeMaximum, vRotQ, bMainTainDistance);
+
 }
-void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ)
+void CCamera_Cinematic::Start_Lerp_Rotation(_float fTimeMaximum, _float4& vRotQ, _bool bMainTainDistance)
 {
 	m_bLerpRotiation = { fTimeMaximum != 0 };
 	m_vLerpRotiationTimer = { 0.f, fTimeMaximum };
 	XMStoreFloat4(&m_vLerpRotQStart, m_pTransformCom->Get_QuarternionVector());
 	m_vLerpRotQEnd = vRotQ;
+	_vector vPos = m_pFollowTargetPart->Get_WorldPostion();
+	_vector vLookPos = m_pLookTargetPart->Get_WorldPostion();
+
+	m_bMainTainDistance = bMainTainDistance;
+	if (m_bMainTainDistance) {
+		m_fMaintainingDistance = XMVectorGetX(XMVector3Length(vLookPos - vPos));
+	}
 }
 void CCamera_Cinematic::Clear_Lerp_Rotation()
 {
 	m_bLerpRotiation = { false };
+	m_bMainTainDistance = { false };
 	m_vLerpRotiationTimer = {};
 	m_vLerpRotQStart = {};
 	m_vLerpRotQEnd = {};
+	m_fMaintainingDistance = {};
 }
 void CCamera_Cinematic::Lerp_FovY(_float fTimeDelta)
 {
@@ -427,6 +471,9 @@ void CCamera_Cinematic::Rotation(_fvector vRotQ)
 	_vector vLookDir = XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotQ);
 
 	if (true == m_pLookTargetPart->IsStalking()) { // 스토킹 중이면 팔로우가 움직이고 아니면 룩타겟이 움직임
+		if (true == m_bLerpRotiation && true == m_bMainTainDistance) {
+			fDistance = m_fMaintainingDistance;
+		}
 		m_pFollowTargetPart->Set_WorldPostion(XMVectorSetW(vLookPos - (fDistance * vLookDir), 1.f));
 	}
 	else {

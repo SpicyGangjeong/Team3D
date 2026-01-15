@@ -58,6 +58,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 #if 진우
 	m_isDebugMode = false; // 디버그 무적 모드
 #endif
+
+#if 기무리
+	m_isDebugMode = false; // 디버그 무적 모드
+#endif
 #if 나
 	m_isDebugMode = true; // 디버그 무적 모드
 #endif
@@ -119,6 +123,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteraction"), [this](void* p) {this->Set_Interaction(*reinterpret_cast<_bool*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("SpellLearningSuccess"), [this](void* p) {this->Set_Spell_Learning_Success(); });
 
 	m_bAI = false;
 
@@ -171,8 +176,11 @@ void CPlayer::Update(_float fTimeDelta)
 	{
 		if (m_bNpcInteraction == true)
 		{
+			NPCINTERACT Interact{};
 			m_bCurrentInteraction = true;
-			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bNpcInteraction);
+			Interact.bInteract = true;
+			Interact.fAlpha = 0.f;
+			m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
 		}
 	}
 	if (m_bGuarding) {
@@ -693,6 +701,10 @@ HRESULT CPlayer::Ready_Components()
 		Desc.fStepOffset = { 0.02f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 0.6f;
+		if (ENUM_CLASS(LEVEL::FIELD) == NEXT_LEVEL) {
+			Desc.fRadius = 1.f;
+			Desc.fHeight = 0.3f;
+		}
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
@@ -840,6 +852,19 @@ void CPlayer::CheckMouseInput()
 
 void CPlayer::ReLockOnTarget()
 {
+	// 락온조건 1. 컷씬중 아닐 때
+	if (true == m_pInfoInstance->IsActiveCutScene()) {
+		m_LockOnInfo.pChest = nullptr;
+		m_LockOnInfo.pEffect = nullptr;
+		m_LockOnInfo.pInteractive = nullptr;
+		m_LockOnInfo.pUnit = nullptr;
+		return;
+	}
+	//// 락온조건2. 던지는중일때나 집어들었을 땐 몬스터 락온만 가능
+	//if (m_pGrapInteractive && m_pGrapInteractive->Is_Throwing()) {
+	//	m_pInfoInstance->Get_LockOnInfoOnlyUnit(m_LockOnInfo.pUnit);
+	//	return;
+	//}
 	m_pInfoInstance->Get_LockOnInfo(m_LockOnInfo);
 	if (nullptr != m_LockOnInfo.pUnit) {
 		if (true == m_LockOnInfo.pUnit->isDead()) {
@@ -856,8 +881,6 @@ void CPlayer::ReLockOnTarget()
 			m_LockOnInfo.pEffect = nullptr;
 		}
 	}
-
-	//m_pLockOnMonster->Get_State
 }
 
 void CPlayer::SetGravity()
@@ -950,6 +973,85 @@ void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 	Update_CameraShake(fTimeDelta);
 }
+
+void CPlayer::UpdateFootStepSound()
+{
+	_uint AnimIndex = m_pModelCom->Get_AnimIndex();
+	_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (!m_pFSM->IsEnable(FSMSTATE::WALK | FSMSTATE::JOG | FSMSTATE::SPRINT))
+		return;
+
+	auto timings = GetFootStepTiming(AnimIndex);
+	if (timings.empty())
+		return;
+
+	if (m_iPrevAnimIndex != AnimIndex)
+	{
+		m_iFootStepIndex = 0;
+		m_iFootStepIndex++;
+		m_fPrevMoveRatio = ratio;
+		m_iPrevAnimIndex = AnimIndex;
+		return;
+	}
+
+	_bool bWrapped = (ratio < m_fPrevMoveRatio);
+
+	if (bWrapped)
+		m_iFootStepIndex = 0;
+
+	while (m_iFootStepIndex < timings.size() && ratio >= timings[m_iFootStepIndex])
+	{
+		PlayFootStepSound();
+		m_iFootStepIndex++;
+	}
+
+	m_fPrevMoveRatio = ratio;
+	m_iPrevAnimIndex = AnimIndex;
+}
+
+
+
+vector<_float> CPlayer::GetFootStepTiming(_uint AnimIndex)
+{
+	{
+		if (AnimIndex == m_Animation[STATEANIM::WALK_FWD].first)
+			return { 0.15f, 0.65f };
+
+		if (AnimIndex == m_Animation[STATEANIM::JOG_FWD].first)
+			return { 0.01f, 0.17f, 0.33f,0.49f,0.66f,0.84f };
+
+		if (AnimIndex == m_Animation[STATEANIM::SPRINT].first)
+			return { 0.01f, 0.17f, 0.33f,0.49f,0.66f,0.84f };
+
+		return { 0.12f, 0.62f };
+	}
+}
+
+void CPlayer::PlayFootStepSound()
+{
+	if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
+	{
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::STEP_TERRAIN, SD_CHANNEL_GROUP::EFFECT, false, 0.3f);
+	}
+	else if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::FIELD))
+	{
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::STEP_ROCK, SD_CHANNEL_GROUP::EFFECT, false, 0.3f);
+	}
+}
+
+void CPlayer::StopFootStepSound()
+{
+	if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::GAMEPLAY))
+	{
+		m_pGameInstance->Sound_Stop(SOUND::SD_KIND::STEP_TERRAIN, SD_CHANNEL_GROUP::EFFECT);
+	}
+	else if (m_pGameInstance->Get_CurrentLevelID() == ENUM_CLASS(LEVEL::FIELD))
+	{
+		m_pGameInstance->Sound_Stop(SOUND::SD_KIND::STEP_ROCK, SD_CHANNEL_GROUP::EFFECT);
+	}
+}
+
 
 _matrix CPlayer::Get_WandPos()
 {

@@ -75,6 +75,8 @@ HRESULT CTroll::Initialize(void* pArg)
 	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("RightHand");
 	m_pWeapon_BoneMat = Get_PartObject<CTroll_Weapon>()->Get_Component<CModel>()->Get_BoneMatrixPtr("Bone");
 
+	Ready_Sound_Events("../Bin/Resources/Models/Monster/SubTroll/KeyFrame.xml");
+
 	return S_OK;
 }
 

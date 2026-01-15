@@ -725,7 +725,7 @@ void CTroll::Behavior_HitEnter()
 	m_bLookAt = false;
 	if (iCurrAnimIndex == m_Animation[STATEANIM::SLAM].first)
 	{
-		if (fRatio >= 0.29f && fRatio <= 0.6f) {
+		if (fRatio >= 0.29f && fRatio <= 0.7f) {
 			pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
 			Add_Event(pairAnimInfo.first,
 				[this]() {
@@ -808,8 +808,6 @@ void CTroll::Behavior_DeadEnter()
 			m_pDead_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pTransformCom->Get_State(STATE::POSITION));
 		}, 0.55f);
 
-	Get_PartObject<CTroll_Weapon>()->Set_Disolve(true);
-
 }
 
 HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
@@ -820,6 +818,7 @@ HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
 	{
 		m_fDeadRatio += fTimeDelta / 3.f;
 		m_fDeadRatio = min(1.f, m_fDeadRatio);
+		Get_PartObject<CTroll_Weapon>()->Set_Disolve(true);
 	}
 
 	return S_OK;

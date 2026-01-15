@@ -21,7 +21,6 @@
 #include "ReparoObject.h"
 #include "ThestralCarriage.h"
 #include "Camera_Cinematic.h"
-
 #pragma region ACTOR
 #include "Player.h"
 #include "Human_Duelist.h"
@@ -126,7 +125,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	_bool bLoadNPC = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bLoadNPC = true;
+	bLoadNPC = false;
 #endif
 #endif // _DEBUG
 	if (true == bLoadNPC) {
@@ -176,6 +175,8 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 #elif Bin
 	bStartCinematic = false;
 #elif gimch
+	bStartCinematic = false;
+#elif 나
 	bStartCinematic = false;
 #endif
 #endif // _DEBUG
@@ -363,9 +364,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -1158,8 +1159,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;

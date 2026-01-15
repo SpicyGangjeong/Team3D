@@ -354,23 +354,20 @@ void CCamPosition_Shoulder::Set_CameraAnim(_uint iIndex)
 _vector CCamPosition_Shoulder::Get_ShoulderGlobalPos()
 {
 	// Right/Left 숄더를 로컬 X 부호로 결정
-	_float shoulderSideSign = (true == m_bRightShoulderActive) ? 1.f : -1.f;
+	_float fShoulderSide = (true == m_bRightShoulderActive) ? 1.f : -1.f;
 
-	_float3 shoulderLocalPosition = m_vShoulderLocalPos;
-	shoulderLocalPosition.x *= shoulderSideSign;
+	_float3 vShoulderLocalPos = m_vShoulderLocalPos;
+	vShoulderLocalPos.x *= fShoulderSide;
 
-	_vector shoulderLocalOffset = XMLoadFloat3(&shoulderLocalPosition);
+	_vector vShoulderLocalOffset = XMLoadFloat3(&vShoulderLocalPos);
 
 	// 카메라 회전(현재 마우스로 누적된 pitch/yaw)
-	_vector cameraRotationQuaternion = XMQuaternionRotationRollPitchYaw(
+	_vector vCameraRotQ = XMQuaternionRotationRollPitchYaw(
 		XMConvertToRadians(m_vAccRotDegrees.x + m_vAccRealDegrees.x),
 		XMConvertToRadians(m_vAccRotDegrees.y + m_vAccRealDegrees.y), 0.f
 	);
 
-	// 카메라 로컬 오프셋을 카메라 회전에 맞춰 월드로 회전
-	_vector shoulderWorldOffset = XMVector3Rotate(shoulderLocalOffset, cameraRotationQuaternion);
-
-	return shoulderWorldOffset;
+	return XMVector3Rotate(vShoulderLocalOffset, vCameraRotQ);
 }
 
 

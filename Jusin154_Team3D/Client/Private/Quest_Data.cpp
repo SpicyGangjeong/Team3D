@@ -150,22 +150,31 @@ _int CQuest_Data::Get_Count(_int Index)
 	}
 }
 
-HRESULT CQuest_Data::Set_AcceptQuest(_int Index)
+_int CQuest_Data::Set_AcceptQuest(_int Index)
 {
-	if (QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::ACCEPTED) || QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::CLEARED))
-		return S_OK;
+	if (QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::ACCEPTED))
+	{
+		return 1;
+	}
+	if (QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::CLEARED))
+	{
+		return 2;
+	}
+
+	HRESULT hr = m_pGameInstance->Add_GameObject_ToLayer<CQuestInstance>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, &QuestInfos[Index], nullptr, reinterpret_cast<CQuestInstance**>(&m_pQuestInstance));
+	if (FAILED(hr))
+	{
+		return -1;
+	}
+
 	QuestInfos[Index].iAcceptState = ENUM_CLASS(QUESTSTATE::ACCEPTED);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuestInstance>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, &QuestInfos[Index], nullptr, reinterpret_cast<CQuestInstance**>(&m_pQuestInstance))))
-	{
-		return E_FAIL;
-	}
 	m_pInfoInstance->Add_Event(TEXT("MonsterDead"), [this](void* p) {this->Update_AcceptQuest(*reinterpret_cast<_int*>(p)); });
 	m_AcceptedInfo.QeustData = m_pQuestInstance;
 	m_AcceptedInfo.QeustInfo = QuestInfos[Index];
 	m_QuestAcceptedInfos.push_back(m_AcceptedInfo);
 	m_iAcceptQeustCount++;
-	return S_OK;
+	return 0;
 }
 
 void CQuest_Data::Set_ClearQuest(_int Index)

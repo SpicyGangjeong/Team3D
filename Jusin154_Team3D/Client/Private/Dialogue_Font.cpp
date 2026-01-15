@@ -69,12 +69,15 @@ void CDialogue_Font::Update(_float fTimeDelta)
 			case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
 				ENDText();
 				break;
+
 			case ENUM_CLASS(NPCTEXTTYPE::NEXTTEXT):
 				NextText();
 				break;
+
 			case ENUM_CLASS(NPCTEXTTYPE::CHOICE):
 				CHoice();
 				break;
+
 			case ENUM_CLASS(NPCTEXTTYPE::SHOPTEXT):
 				break;
 
@@ -88,14 +91,15 @@ void CDialogue_Font::Update(_float fTimeDelta)
 			case ENUM_CLASS(NPCTEXTTYPE::BROOM):
 				m_bRace = true;
 				m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bRace);
-				ReSet();
+				ENDText();
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BATTLE):
 				m_bBattle = true;
 				m_pInfoInstance->Event_CallBack(TEXT("BATTLE"), &m_bBattle);
-				ReSet();
+				ENDText();
 				break;
+
 			default:
 				break;
 			}
@@ -110,7 +114,7 @@ void CDialogue_Font::Update(_float fTimeDelta)
 					{
 					case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
 						m_fTime = 0.5f;
-						ReSet();
+						ENDText();
 						break;
 					case ENUM_CLASS(NPCTEXTTYPE::NEXTTEXT):
 						m_fTime = 0.5f;
@@ -333,22 +337,50 @@ void CDialogue_Font::SpellLearn()
 
 void CDialogue_Font::Quest()
 {
-	m_pInfoInstance->Set_AcceptQuest(m_iNextID);
-	_bool Interact = false;
-	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
-	m_pCurrentDialogue[0]->Set_Hover(Interact);
-	m_pCurrentDialogue[0]->Visible(Interact);
-	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
-	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
-	if (m_bChoiceText == true)
+	_int Index = m_pInfoInstance->Set_AcceptQuest(m_iQuestID);
+	NPCINTERACT Interact{};
+
+	switch (Index)
 	{
-		m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
-		ReSet();
+	case 0:
+		m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+		m_pCurrentDialogue[0]->Set_Hover(Interact.bInteract);
+		m_pCurrentDialogue[0]->Visible(Interact.bInteract);
+		m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+		m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+		if (m_bChoiceText == true)
+		{
+			m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
+			ReSet();
+		}
+		break;
+
+	case 1:
+		NextText(999);
+		break;
+
+	case 2:
+		Quest_Complete();
+		break;
+
+	default:
+		break;
 	}
+
 }
 
-void CDialogue_Font::ReSet()
+void CDialogue_Font::ENDText()
 {
+	NPCINTERACT Interact{};
+	Interact.bInteract = false;
+	Interact.fAlpha = 0.5f;
+	m_pNpc->Set_NextID(m_iNextID);
+	m_pCurrentDialogue[0]->Set_Hover(Interact.bInteract);
+	m_pCurrentDialogue[0]->Visible(Interact.bInteract);
+	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &Interact.bInteract);
 	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
 	m_bChoiceText = false;
 	m_bCurrentChoiceText = false;
@@ -363,10 +395,67 @@ void CDialogue_Font::ReSet()
 		m_DialoguInfo.push_back((*it));
 		it = m_pCurrentDialogue.erase(it);
 	}
-	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bChoiceText);
+	//if (m_iTextID < m_iNextID)
+		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
+}
+
+void CDialogue_Font::ReSet()
+{
+	NPCINTERACT Interact{};
+	Interact.bInteract = false;
+	Interact.fAlpha = 0.5f;
+	m_pNpc->Set_NextID(m_iTextID);
+	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
+	m_pCurrentDialogue[0]->Set_Hover(Interact.bInteract);
+	m_pCurrentDialogue[0]->Visible(Interact.bInteract);
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &Interact.bInteract);
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+	m_bChoiceText = false;
+	m_bCurrentChoiceText = false;
+	m_bRace = false;
+	m_bBattle = false;
+	vector<_int> Dummy;
+	m_NextLevel.swap(Dummy);
+	for (auto it = m_pCurrentDialogue.begin(); it != m_pCurrentDialogue.end();)
+	{
+		(*it)->Set_Hover(false);
+		(*it)->Visible(false);
+		m_DialoguInfo.push_back((*it));
+		it = m_pCurrentDialogue.erase(it);
+	}
+}
+
+void CDialogue_Font::Quest_Complete()
+{
+	NpcNextText();
+	ENDText();
 }
 
 void CDialogue_Font::NextText()
+{
+	m_pCurrentDialogue[0]->Visible(false);
+	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+	NpcDialogue();
+}
+
+void CDialogue_Font::NextLevel(CHOICEINFO Choice)
+{
+	m_iNextID = m_NextLevel[Choice.iChoice];
+	m_iType = Choice.iType;
+	m_iQuestID = Choice.QuestID;
+	m_bChoiceText = true;
+	NpcNextText();
+
+	if (m_iType == ENUM_CLASS(NPCTEXTTYPE::QUESTTEXT))
+		ReSet();
+	else
+		ENDText();
+}
+
+void CDialogue_Font::NextText(_int Index)
 {
 	m_pCurrentDialogue[0]->Visible(false);
 	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
@@ -375,29 +464,28 @@ void CDialogue_Font::NextText()
 	{
 		ReSet();
 	}
-	NpcDialogue();
+	NpcDialogue(Index);
 }
 
-void CDialogue_Font::NextLevel(CHOICEINFO Choice)
+void CDialogue_Font::NpcDialogue(_int Index)
 {
-	m_iNextID = m_NextLevel[Choice.iChoice];
-	m_iType = Choice.iType;
-	m_bChoiceText = true;
-	m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1);
-	NpcNextText();
-}
-
-void CDialogue_Font::ENDText()
-{
-	_bool Interact = false;
-	m_pNpc->Set_NextID(m_iTextID);
-	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
-	m_pCurrentDialogue[0]->Set_Hover(Interact);
-	m_pCurrentDialogue[0]->Visible(Interact);
-	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
-	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
-	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
-	ReSet();
+	auto Info = m_pInfoInstance->Get_Dialogue(m_pNpcName, Index);
+	m_bTag = Info.bTag;
+	if (m_bTag == false)
+	{
+		m_Info.pName = m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().pUnit_Name;
+	}
+	else
+	{
+		m_Info.pName = m_pName;
+	}
+	m_Info.pText = Info.pText;
+	m_Info.fTime = 99999.f;
+	m_iType = Info.iType;
+	m_iNextID = Info.NextTextID;
+	m_iTextID = Info.iLineID;
+	m_pNpc->Set_NextID(m_iNextID);
+	Npc_Dialogue(m_Info);
 }
 
 CDialogue_Font* CDialogue_Font::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

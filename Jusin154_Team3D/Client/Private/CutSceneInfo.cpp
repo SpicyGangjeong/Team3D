@@ -17,6 +17,7 @@ CCutSceneInfo::CCutSceneInfo()
 }
 void CCutSceneInfo::Update(_float fTimeDelta)
 {
+	m_bIsActiveCutScene = false;
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Pressing(DIK_LSHIFT)&& m_pGameInstance->Key_Pressing(DIK_RSHIFT) && m_pGameInstance->Key_Pressing(DIK_LALT) && m_pGameInstance->Key_Pressing(DIK_RALT)) {
 		Set_AllActiveEventsExit();
 	}
@@ -81,7 +82,11 @@ void CCutSceneInfo::Load_Events(pair<_string, TimeLine*>& pairTimeLine)
 void CCutSceneInfo::Update_ActiveEvents(_float fTimeDelta)
 {
 	_float fRatio = 0.f;
-	for (map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.begin(); iter != m_funcActiveEvents.end();) {
+	map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.begin();
+	if (iter != m_funcActiveEvents.end()) {
+		m_bIsActiveCutScene = true;
+	}
+	for (; iter != m_funcActiveEvents.end();) {
 		list<CTimeSocket*>* pSockets = &iter->second->m_Sockets;
 		iter->second->m_vTimer.x += fTimeDelta;
 		fRatio = CMyTools::Saturate(iter->second->m_vTimer.x / iter->second->m_vTimer.y);
@@ -114,6 +119,11 @@ void CCutSceneInfo::Update_ActiveEvents(_float fTimeDelta)
 		else {
 			iter++;
 		}
+	}
+
+	iter = m_funcActiveEvents.begin();
+	if (iter != m_funcActiveEvents.end()) {
+		m_bIsActiveCutScene = true;
 	}
 }
 
@@ -580,7 +590,7 @@ void CCutSceneInfo::Set_AllActiveEventsExit()
 {
 	map<_string, TimeLine*>::iterator iter = m_funcActiveEvents.begin();
 	for (; iter != m_funcActiveEvents.end();++iter) {
-		iter->second->m_vTimer.x = 1.f - FLT_EPSILON;
+		iter->second->m_vTimer.x = iter->second->m_vTimer.y - FLT_EPSILON;
 		for (list<CTimeSocket*>::iterator socketIter = (*iter).second->m_Sockets.begin();
 			socketIter != (*iter).second->m_Sockets.end(); ++socketIter) {
 			(*socketIter)->Trigger(1.f - FLT_EPSILON);

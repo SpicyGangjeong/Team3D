@@ -54,9 +54,9 @@ HRESULT CQuest_Panel::Initialize(void* pArg)
 	Visible(true);
 	ElementAllVisible(true);
 	Set_Status();
-	m_pInfoInstance->Set_AcceptQuest(0);
+	//m_pInfoInstance->Set_AcceptQuest(0);
 	//m_pInfoInstance->Set_AcceptQuest(1);
-	//m_pInfoInstance->Set_AcceptQuest(2);
+	m_pInfoInstance->Set_AcceptQuest(6);
 	Add_Function(TEXT("Click"), [this](void* p) {this->Slot_Hover(*reinterpret_cast<_int*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestPanelClose"), [this](void* p) {this->Slot_Hover(*reinterpret_cast<_int*>(p)); });
 	return S_OK;

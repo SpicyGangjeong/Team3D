@@ -5,8 +5,9 @@
 #include "wincrypt.h"
 
 #include "Engine_Define.h"
+
 #include "Editor_Macro.h"
-#include "Editor_Struct.h"
+
 
 namespace Editor
 {
@@ -17,6 +18,8 @@ namespace Editor
 	enum class COLLIDABLEOBJECT { PLAYER, MONSTER, HOSTILE_HITBOX, ALLY_HITBOX, NEUTRAL_HITBOX, ENVIRIONMENT, NPC, ITEM, TRIGGERBOX, REGION, NOCOLLIDE, END };
 	enum class MAPOBJECT_TYPE { CONTAINER, ELEMENT_STATIC, ELEMENT_INTERACT, ELEMENT_LIGHT, ELEMENT_LAKE };
 	enum class MAPOBJECT_RENDER_TYPE { NORMAL, DECAL, GLASS };
+
+	enum class SHADER_PASS_ETHER { NON_NOMALMAP, WEIGHTBLEND, BLEND, BLUR, BLOOM, END };
 
 	enum class SHADER_PASS_ANIM { DEFAULT, SHADOW, CAPTURE, BLUR, HAIR, EYELASH, OUTLINE_WRITE, OUTLINE_READ, SPECTOR, END };
 	enum class SHADER_PASS_NPC_PBR_ANIM {
@@ -78,6 +81,8 @@ namespace Editor
 
 	enum class ELEMENT_INTERACTABLE_ID { BARREL, BOX, END };
 }
+
+#include "Editor_Struct.h"
 
 using namespace Editor;
 

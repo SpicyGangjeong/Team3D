@@ -76,6 +76,8 @@ private:
 	HRESULT Bind_ShaderResources();
 	HRESULT Render_Nonblend();
 	HRESULT Render_Blend();
+	virtual HRESULT Render_Blur() override;
+	virtual HRESULT Render_Bloom() override;
 	void MoveTo(_float fTimeDelta);
 	HRESULT Load_RanrokPos(const _char* pFilePath);
 public:
@@ -209,6 +211,23 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
+
+#pragma region Ether
+
+	class CRanrok_EtherInfo* m_pEtherInfo[ENUM_CLASS(RANROK_MESH_ORDER::WINGS)] = {};
+	class CShader* m_pEther_Shader = { nullptr };
+
+
+#ifdef _DEBUG
+	_int				m_iCurrentItem = {};
+	_char				m_szBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/Ranrok/Ranrok_Ether" };
+	_string			    m_strSavePath = {};
+#endif
+
+	void Ether_Create();
+	void Ether_Update(_float fTimeDelata);
+	void Ether_GUI();
+#pragma endregion 
 };
 
 NS_END

@@ -63,10 +63,10 @@ void CTerrain::Late_Update(_float fTimeDelta)
 {
 	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-#ifdef Bin
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
-#endif // Bin
+//#ifdef Bin
+//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+//#endif // Bin
 	//}
 }
 

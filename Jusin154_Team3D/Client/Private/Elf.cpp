@@ -71,9 +71,21 @@ void CElf::Update(_float fTimeDelta)
 
 	Set_Anim();
 
-	if (m_pGameInstance->Key_Up(DIK_U))
+	if (m_pGameInstance->Key_Down(DIK_U))
 	{
 		m_iCurrentFlow++;
+	}
+
+	if (m_bFlow == true)
+	{
+		m_fFlowTime -= fTimeDelta;
+	}
+
+	if (m_fFlowTime <= 0.f && m_bFlow == true)
+	{
+		m_bFlow = false;
+		m_fFlowTime = 0.f;
+		m_iCurrentFlow = m_iFlowIndex;
 	}
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -227,9 +239,11 @@ void CElf::Set_Target(CUnit& pTarget, CTransform& pTransform)
 	m_fTargetDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
 }
 
-void CElf::Set_Flow(_int Index)
+void CElf::Set_Flow(_int Index, _float fTime)
 {
-	m_iCurrentFlow = Index;
+	m_iFlowIndex = Index;
+	m_fFlowTime = fTime;
+	m_bFlow = true;
 }
 
 _int CElf::Get_Flow()
@@ -472,14 +486,14 @@ HRESULT CElf::Ready_Components(void* pArg)
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.0001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
-		Desc.bAutoStepping = { true };
-		Desc.fStepOffset = { 0.08f };
-		Desc.fRadius = 0.2f;
-		Desc.fHeight = 0.3f;
+		Desc.bAutoStepping = { false };
+		Desc.fStepOffset = { 0.02f };
+		Desc.fRadius = 0.225f;
+		Desc.fHeight = 0.35f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_NonPlayable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_NonPlayable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
-		Desc.fWalkableSlope = 45.f;
+		Desc.fWalkableSlope = 80.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}

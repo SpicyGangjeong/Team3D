@@ -11,7 +11,7 @@
 #include "InfoInstance.h"
 #include "InstancedProp.h"
 #include "EffectPool.h"
-
+#include "EffectParts.h"
 CBroomRaceManager::CBroomRaceManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -49,6 +49,10 @@ void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
+	for (auto& RaceEnd : m_pRaceEndEffects)
+	{
+		RaceEnd->Priority_Update(fTimeDelta);
+	}
 	switch (m_eRaceState)
 	{
 	case ENUM_CLASS(RACE_STATE::COUNTDOWN):
@@ -89,6 +93,11 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
 
+	for (auto& RaceEnd : m_pRaceEndEffects)
+	{
+		RaceEnd->Update(fTimeDelta);
+	}
+
 	if (m_bRaceReady == true)
 	{
 		m_fRedayTime += fTimeDelta;
@@ -114,6 +123,19 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 			m_fRacingTimer = 0.f;
 			if (m_bRaceStart == true)
 			{
+				CTransform* pRingTransform = m_pRaceRings[m_pRaceRings.size() - 1]->Get_Component<CTransform>();
+				for (auto& RaceEnd : m_pRaceEndEffects)
+				{
+					RaceEnd->Set_Visible(true);
+
+					_vector LastRingPos = pRingTransform->Get_State(STATE::POSITION);
+					_vector ringRIght = pRingTransform->Get_State(STATE::RIGHT);
+					ringRIght = XMVector3Normalize(ringRIght);
+
+					_vector spawnPos = LastRingPos - ringRIght * 27.f;
+
+					RaceEnd->Get_Component<CTransform>()->Set_WorldMatrix(XMMatrixTranslationFromVector(spawnPos));
+				}	
 				m_pInfoInstance->Event_CallBack(TEXT("RaceEnd"));
 				m_iCount = 3;
 				m_bRaceStart = false;
@@ -138,6 +160,8 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					m_bRaceEnd = false;
 					m_fDelay = 0.f;
 					m_bCurrentRace = false;
+					m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_BOOST, SD_CHANNEL_GROUP::EFFECT);
+					m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_NORMAL, SD_CHANNEL_GROUP::EFFECT);
 				}
 			}
 		}
@@ -152,6 +176,10 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 void CBroomRaceManager::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
+	for (auto& RaceEnd : m_pRaceEndEffects)
+	{
+		RaceEnd->Late_Update(fTimeDelta);
+	}
 }
 
 HRESULT CBroomRaceManager::Render()
@@ -170,6 +198,39 @@ HRESULT CBroomRaceManager::Ready_Components()
 	if (FAILED(__super::Ready_Components(&Desc))) {
 		return E_FAIL;
 	}
+
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+
+	{
+		_string BasePath = "../Bin/Resources/Data/Effect/BroomRace/";
+
+		array<_string, 3> Colors =
+		{
+			"Firewark_Blue",
+			"Firewark_Red",
+			"Firewark_Yellow"
+		};
+
+		for (_uint i = 0; i < m_pRaceEndEffects.size(); ++i)
+		{
+			_string EffectFinal = BasePath + Colors[i];
+
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectParts>(
+				g_iStaticLevel, NEXT_LEVEL, LAYER_EFFECT, &PartsDesc, this, &m_pRaceEndEffects[i])))
+			{
+				return E_FAIL;
+			}
+
+			SAFE_ADDREF(m_pRaceEndEffects[i]);
+			m_pRaceEndEffects[i]->Load(EffectFinal.c_str(), static_cast<LEVEL>(g_iStaticLevel));
+			m_pRaceEndEffects[i]->Set_Visible(false);
+		}
+	}
+
 
 	return S_OK;
 }
@@ -218,6 +279,11 @@ void CBroomRaceManager::Free()
 		SAFE_RELEASE(Ring);
 	}
 	m_pRaceRings.clear();
+
+	for (auto& RaceEndEffects : m_pRaceEndEffects)
+	{
+		SAFE_RELEASE(RaceEndEffects);
+	}
 }
 #ifdef _DEBUG
 
@@ -313,6 +379,8 @@ void CBroomRaceManager::Check_RingPassed()
 				{
 					racer.curRing = (_uint)m_pRaceRings.size();
 
+					
+
 					if (racer.pAI) {
 						racer.pAI->Get_Broom()->Set_Hover(true);
 						racer.pAI->Get_Broom()->Set_Move(false);
@@ -323,11 +391,15 @@ void CBroomRaceManager::Check_RingPassed()
 						racer.pRacer->Get_Broom()->Set_Move(false);
 					}
 
+
+
 					XMStoreFloat4(&racer.prevPos, currPos);
 					continue;
 				}
 
 				racer.pAI ? SetTargetRing(racer.pAI) : SetTargetRing(racer.pRacer);
+
+				
 			}
 		}
 
@@ -402,15 +474,12 @@ void CBroomRaceManager::RaceReady()
 		if (racer.pAI)
 		{
 			CTransform* pTransform =
-				racer.pAI->Get_Broom()->Get_Component<CTransform>();
-
-			const _float fSpacing = 3.0f;
-			const _float fJitter = 0.5f;    
+				racer.pAI->Get_Broom()->Get_Component<CTransform>();  
 
 			_float lane = (_float)i - (_float)(m_Racers.size() - 1) * 0.5f;
-			_float side = lane * fSpacing;
+			_float side = lane * 3.0f;
 
-			side += m_pGameInstance->Real_Random_Float(-fJitter, fJitter);
+			side += m_pGameInstance->Real_Random_Float(-0.5f, 0.5f);
 
 
 			_vector offset = XMVectorSet(0.f, 1.3f, 0.f, 0.f) + pTransform->Get_State(STATE::LOOK) * side;
@@ -423,8 +492,7 @@ void CBroomRaceManager::RaceReady()
 		}
 		else if (racer.pRacer)
 		{
-			CTransform* pTransform =
-				racer.pRacer->Get_Component<CTransform>();
+			CTransform* pTransform = racer.pRacer->Get_Component<CTransform>();
 			CCharacter_Controller* pCharacter = racer.pRacer->Get_Component<CCharacter_Controller>();
 			XMStoreFloat4(&m_OriginPos, XMVectorSet(-552.794f, -27.676f, -396.840f, 1.f));
 			pCharacter->Set_Position(spawnPos);
@@ -432,6 +500,7 @@ void CBroomRaceManager::RaceReady()
 			pTransform->LookAt(pRingTransform->Get_State(STATE::POSITION));
 			racer.pRacer->Get_Broom()->Set_Ride(true);
 			racer.pRacer->Get_Broom()->Set_Move(false);
+			m_pRaceRings[racer.curRing]->Set_Target(true);;
 
 		}
 	}
@@ -457,9 +526,15 @@ void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)
 		{
 			if (racer.pRacer == pRacer)
 			{
+				
+				m_pRaceRings[racer.curRing-1]->Set_Target(false);
+					
 				racer.pRacer->Set_RaceRing(m_pRaceRings[racer.curRing]);
 				m_pInfoInstance->Event_CallBack(TEXT("CurrentRing"));
 				m_iLastRing++;
+				
+				m_pRaceRings[racer.curRing]->Set_Target(true);
+				
 
 			}
 		}
