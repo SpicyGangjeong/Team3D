@@ -1392,6 +1392,11 @@ _bool	CGameInstance::Toggle_MouseCenter()
 	return m_pMouse_Manager->Toggle_MouseCenter();
 }
 
+_bool CGameInstance::Toggle_MouseCenter(_bool Toggle)
+{
+	return m_pMouse_Manager->Toggle_MouseCenter(Toggle);
+}
+
 #pragma endregion // INPUT
 
 #pragma region FONT_MANAGER
