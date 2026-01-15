@@ -714,6 +714,9 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 
 void CLevel_ObjectViewer::Find_Anim()
 {
+	if (GUI::Button("Stop Sound"))
+		m_pGameInstance->Sound_StopAll();
+
 	if (!m_Objects.empty())
 	{
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();

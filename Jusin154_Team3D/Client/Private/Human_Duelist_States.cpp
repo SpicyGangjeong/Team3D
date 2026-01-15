@@ -281,6 +281,8 @@ void CHuman_Duelist::Behavior_HitEnter()
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		Add_Sound_Event(pairAnimInfo.first,
+			[this]() {	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LEVIOSA_27, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::STUPEFY):
 		pairAnimInfo = m_Animation[STATEANIM::DAZED_START];
