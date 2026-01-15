@@ -63,6 +63,8 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 
 	Find_Anim();
 
+	Sound_List();
+
 	if(m_isUpdateEvent)
 	{
 		for (auto& pObject : m_Objects)
@@ -745,6 +747,28 @@ void CLevel_ObjectViewer::Find_Anim()
 		}
 	}
 
+}
+
+void CLevel_ObjectViewer::Sound_List()
+{
+	GUI::Begin("Sound_List");
+	if (GUI::CollapsingHeader("Sound list"))
+	{
+		for (_uint i = 0; i < ENUM_CLASS(SOUND::SD_KIND::END); ++i)
+		{
+			_wstring Name = SOUND::SD_PATH::SD_KIND_PATHS[i];
+			
+				if (GUI::Button(("S_" + CMyTools::ToString(Name)).c_str()))
+				{
+					m_pGameInstance->Sound_Play(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT, false, m_fVolume);
+				}
+				GUI::SameLine();
+				if (GUI::SmallButton(("Stop Sound##" + to_string(i)).c_str()))
+					m_pGameInstance->Sound_Stop(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT);
+			
+		}
+	}
+	GUI::End();
 }
 
 void CLevel_ObjectViewer::Save_KeyFrame()

@@ -91,6 +91,9 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 	Ether_Create();
 
+	Ready_Sound_Events("../Bin/Resources/Models/Monster/ConjuredDragon/KeyFrame.xml");
+
+
 	return S_OK;
 }
 
