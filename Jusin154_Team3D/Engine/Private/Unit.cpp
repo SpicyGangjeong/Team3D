@@ -123,6 +123,11 @@ _wstring CUnit::Get_NpcName()
     return _wstring();
 }
 
+_int CUnit::Get_NpcID()
+{
+    return _int();
+}
+
 _int CUnit::Get_TextID()
 {
     return m_iCurrentFlow;

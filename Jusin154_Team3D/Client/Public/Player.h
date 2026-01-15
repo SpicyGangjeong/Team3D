@@ -44,7 +44,7 @@ public:
 	void			Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
 	void			Set_Shield(_bool bShield) { m_bShield = bShield; }
 	void			Start_CameraShake(_float fTime, _float fIntense);
-	_int			Get_UIState() { return m_eUIState; }
+	UI_STATE		Get_UIState() { return m_eUIState; }
 	void			Set_RaceRing(class CRaceRing* pRaceRing);
 	class CBroom*	Get_Broom() { return m_pBroom; }
 	void			Set_RaceInfo();
@@ -156,12 +156,12 @@ public:
 private:
 	// UI 연동 추가
 	void Get_Spell(_int SkillIndex);
-	void Get_UIState(_int UIState);
+	void Get_UIState(UI_STATE UIState);
 
 	virtual void Add_FSM();
 
 	function<void()> m_InputAction = nullptr;
-	_int			m_eUIState = { };
+	UI_STATE		m_eUIState = { };
 
 	const _float4x4* m_pCinematicSocketMatrix = { nullptr };
 	_float3			m_OffsetPos = {};

@@ -125,6 +125,7 @@ public:
 #pragma region MOUSE_MANAGER
 	POINT	Get_MouseViewPortPos();
 	_bool	Toggle_MouseCenter();
+	_bool	Toggle_MouseCenter(_bool Toggle);
 	_float3	Get_MouseMove();
 	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
 	void    Picking();
