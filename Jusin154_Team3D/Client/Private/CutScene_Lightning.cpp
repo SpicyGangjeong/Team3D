@@ -135,7 +135,7 @@ CGameObject* CCutScene_Lightning::Clone(void* pArg, CGameObject* pOwner)
 
 void CCutScene_Lightning::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	//CTransform* pOtherTransform = p
+	// CTransform* pOtherTransform = p
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 }
