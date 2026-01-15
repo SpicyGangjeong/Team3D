@@ -67,7 +67,6 @@ void CDialogue_Font::Update(_float fTimeDelta)
 			switch (m_iType)
 			{
 			case ENUM_CLASS(NPCTEXTTYPE::ENDTEXT):
-				//m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1);
 				ENDText();
 				break;
 
@@ -92,13 +91,13 @@ void CDialogue_Font::Update(_float fTimeDelta)
 			case ENUM_CLASS(NPCTEXTTYPE::BROOM):
 				m_bRace = true;
 				m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bRace);
-				ReSet();
+				ENDText();
 				break;
 
 			case ENUM_CLASS(NPCTEXTTYPE::BATTLE):
 				m_bBattle = true;
 				m_pInfoInstance->Event_CallBack(TEXT("BATTLE"), &m_bBattle);
-				ReSet();
+				ENDText();
 				break;
 
 			default:
@@ -344,8 +343,6 @@ void CDialogue_Font::Quest()
 	switch (Index)
 	{
 	case 0:
-		Interact.bInteract = false;
-		Interact.fAlpha = 0.5f;
 		m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
 		m_pCurrentDialogue[0]->Set_Hover(Interact.bInteract);
 		m_pCurrentDialogue[0]->Visible(Interact.bInteract);
@@ -363,7 +360,7 @@ void CDialogue_Font::Quest()
 		break;
 
 	case 2:
-		NextText();
+		Quest_Complete();
 		break;
 
 	default:
@@ -372,8 +369,18 @@ void CDialogue_Font::Quest()
 
 }
 
-void CDialogue_Font::ReSet()
+void CDialogue_Font::ENDText()
 {
+	NPCINTERACT Interact{};
+	Interact.bInteract = false;
+	Interact.fAlpha = 0.5f;
+	m_pNpc->Set_NextID(m_iNextID);
+	m_pCurrentDialogue[0]->Set_Hover(Interact.bInteract);
+	m_pCurrentDialogue[0]->Visible(Interact.bInteract);
+	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &Interact.bInteract);
 	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
 	m_bChoiceText = false;
 	m_bCurrentChoiceText = false;
@@ -388,7 +395,42 @@ void CDialogue_Font::ReSet()
 		m_DialoguInfo.push_back((*it));
 		it = m_pCurrentDialogue.erase(it);
 	}
-	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &m_bChoiceText);
+	//if (m_iTextID < m_iNextID)
+		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
+}
+
+void CDialogue_Font::ReSet()
+{
+	NPCINTERACT Interact{};
+	Interact.bInteract = false;
+	Interact.fAlpha = 0.5f;
+	m_pNpc->Set_NextID(m_iTextID);
+	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
+	m_pCurrentDialogue[0]->Set_Hover(Interact.bInteract);
+	m_pCurrentDialogue[0]->Visible(Interact.bInteract);
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &Interact.bInteract);
+	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
+	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
+	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
+	m_bChoiceText = false;
+	m_bCurrentChoiceText = false;
+	m_bRace = false;
+	m_bBattle = false;
+	vector<_int> Dummy;
+	m_NextLevel.swap(Dummy);
+	for (auto it = m_pCurrentDialogue.begin(); it != m_pCurrentDialogue.end();)
+	{
+		(*it)->Set_Hover(false);
+		(*it)->Visible(false);
+		m_DialoguInfo.push_back((*it));
+		it = m_pCurrentDialogue.erase(it);
+	}
+}
+
+void CDialogue_Font::Quest_Complete()
+{
+	NpcNextText();
+	ENDText();
 }
 
 void CDialogue_Font::NextText()
@@ -396,11 +438,6 @@ void CDialogue_Font::NextText()
 	m_pCurrentDialogue[0]->Visible(false);
 	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
 	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
-	if (m_bChoiceText == true)
-	{
-		ReSet();
-		m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1);
-	}
 	NpcDialogue();
 }
 
@@ -411,21 +448,11 @@ void CDialogue_Font::NextLevel(CHOICEINFO Choice)
 	m_iQuestID = Choice.QuestID;
 	m_bChoiceText = true;
 	NpcNextText();
-}
 
-void CDialogue_Font::ENDText()
-{
-	NPCINTERACT Interact{};
-	Interact.bInteract = false;
-	Interact.fAlpha = 0.8f;
-	m_pNpc->Set_NextID(m_iTextID);
-	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
-	m_pCurrentDialogue[0]->Set_Hover(Interact.bInteract);
-	m_pCurrentDialogue[0]->Visible(Interact.bInteract);
-	m_DialoguInfo.push_back(m_pCurrentDialogue[0]);
-	m_pCurrentDialogue.erase(m_pCurrentDialogue.begin());
-	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
-	ReSet();
+	if (m_iType == ENUM_CLASS(NPCTEXTTYPE::QUESTTEXT))
+		ReSet();
+	else
+		ENDText();
 }
 
 void CDialogue_Font::NextText(_int Index)

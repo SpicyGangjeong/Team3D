@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿#include "UI_Manager.h"
+#include "pch.h"
 #include "UI_Manager.h"
 #include "GameInstance.h"
 #include "GamePlay_Canvas.h"

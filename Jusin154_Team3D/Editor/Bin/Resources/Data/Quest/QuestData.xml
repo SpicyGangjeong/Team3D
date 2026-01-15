@@ -52,7 +52,7 @@
 		</Quest>
 		<Quest QuestID="6" QuestType="Main" QuestName="드래곤 슬레이어!" QuestInfo="용으로 변신한 란록 처치하기" AcceptState="0"> 
 			<Objectives>
-				<Objective Type="0" TargetID="2" QuestInfo="란록" CurrentCount="0" RequiredCount="1"/>
+				<Objective Type="0" TargetID="4" QuestInfo="란록" CurrentCount="0" RequiredCount="1"/>
 			</Objectives>	
 			<Rewards>
 				<Reward Type="1" Value="BOMBARDA"/>
