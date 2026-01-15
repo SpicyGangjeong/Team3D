@@ -330,11 +330,44 @@ void CUI_Manager::Update(_float fTimeDelta)
 		}
 	}
 
+	m_bCutSceneInfo = m_pInfoInstance->IsActiveCutScene();
 
-	if (m_bRace == true || m_bBattle == true || m_pInfoInstance->IsActiveCutScene())
+	if (m_bCutSceneInfo != m_bCurrentCutSceneInfo)
 	{
-		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(false);
-		static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
+		m_bCurrentCutSceneInfo = m_bCutSceneInfo;
+
+		if (m_bCutSceneInfo == true || m_bRace == true || m_bBattle == true)
+		{
+			m_pMouse_Cursor->Set_Visible(false);
+			m_pCamera_LockOn->Set_Visible(false);
+
+			static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
+			static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
+			static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
+			static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
+			static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
+
+			static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(false);
+			static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
+
+			m_pNPCInteraction->Set_Visible(!m_bRace);
+		}
+		else
+		{
+			m_pMouse_Cursor->Set_Visible(false); 
+			m_pCamera_LockOn->Set_Visible(false);
+
+			static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
+			static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(true);
+
+			static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
+
+			static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
+			static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
+			static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
+
+			m_pNPCInteraction->Set_Visible(!m_bRace);
+		}
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_M) && m_pGameInstance->Key_Pressing(DIK_L))
