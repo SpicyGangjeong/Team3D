@@ -56,8 +56,8 @@ public:
 	virtual _wstring Get_NpcName() override;
 	void Set_NpcState(_int iState) { m_eNpcState = iState; }
 	void Set_Target(CUnit& pTarget, CTransform& pTransform);
-	virtual void Set_Flow(_int Index);
-	virtual _int Get_Flow();
+	virtual void Set_Flow(_int Index, _float fTime) override;
+	virtual _int Get_Flow() override;
 protected:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
@@ -81,6 +81,10 @@ protected:
 	_bool									m_bPreviousInteract = { false };
 	_float									m_fInteractTime{};
 	_int									m_eNpcState = ENUM_CLASS(ELF_STATE::END);
+
+	_int									m_iFlowIndex{};
+	_float									m_fFlowTime{};
+	_bool									m_bFlow = { false };
 
 	unordered_map<_int, _float4>			m_Points;
 

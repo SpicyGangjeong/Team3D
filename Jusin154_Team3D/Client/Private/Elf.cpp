@@ -76,6 +76,18 @@ void CElf::Update(_float fTimeDelta)
 		m_iCurrentFlow++;
 	}
 
+	if (m_bFlow == true)
+	{
+		m_fFlowTime -= fTimeDelta;
+	}
+
+	if (m_fFlowTime <= 0.f && m_bFlow == true)
+	{
+		m_bFlow = false;
+		m_fFlowTime = 0.f;
+		m_iCurrentFlow = m_iFlowIndex;
+	}
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	__super::Update(fTimeDelta);
@@ -227,9 +239,11 @@ void CElf::Set_Target(CUnit& pTarget, CTransform& pTransform)
 	m_fTargetDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
 }
 
-void CElf::Set_Flow(_int Index)
+void CElf::Set_Flow(_int Index, _float fTime)
 {
-	m_iCurrentFlow = Index;
+	m_iFlowIndex = Index;
+	m_fFlowTime = fTime;
+	m_bFlow = true;
 }
 
 _int CElf::Get_Flow()
