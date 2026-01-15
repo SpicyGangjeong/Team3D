@@ -51,6 +51,7 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 
 void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 {
+	Lerp_FovAnim(fTimeDelta);
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
@@ -341,6 +342,28 @@ _vector CCamPosition_Shoulder::Calc_DampingParentPos()
 
 	return XMVectorLerp(XMLoadFloat4(&m_vDampingStartPosition), XMLoadFloat4(&m_vDampingDestPosition), fTime);
 }
+void CCamPosition_Shoulder::Lerp_FovAnim(_float fTimeDelta)
+{
+	if (m_bSpellFovLerp == false) {
+		m_vSpellFovLerpTimer.x = 0.f;
+		return;
+	}
+	m_vSpellFovLerpTimer.x += fTimeDelta;
+	_float fRatio = {};
+	if (m_vSpellFovLerpTimer.x < m_vSpellFovLerpTimer.y) {
+		fRatio = m_vSpellFovLerpTimer.x / m_vSpellFovLerpTimer.y;
+		m_pBinded_Camera->Set_Fov(XMConvertToRadians(CMyTools::Lerp_f1D(m_vSpellFovLerpDegree.x, m_vSpellFovLerpDegree.y, fRatio)));
+	}
+	else if (m_vSpellFovLerpTimer.x < m_vSpellFovLerpTimer.z) {
+		fRatio = (m_vSpellFovLerpTimer.x - m_vSpellFovLerpTimer.y) / (m_vSpellFovLerpTimer.z - m_vSpellFovLerpTimer.y);
+		m_pBinded_Camera->Set_Fov(XMConvertToRadians(CMyTools::Lerp_f1D(m_vSpellFovLerpDegree.y, m_vSpellFovLerpDegree.z, fRatio)));
+	}
+	else {
+		m_bSpellFovLerp = false;
+		m_vSpellFovLerpTimer.x = 0.f;
+		m_pBinded_Camera->Set_Fov(XMConvertToRadians(m_vSpellFovLerpDegree.z));
+	}
+}
 void CCamPosition_Shoulder::Set_CameraShake(_float fXShock, _float fYShock)
 {
 	m_vAccRealDegrees.x = fXShock;
@@ -350,6 +373,9 @@ void CCamPosition_Shoulder::Set_CameraAnim(_uint iIndex)
 {
 	m_bPlayAnim = true;
 	m_pModelCom->Set_AnimationIndex(iIndex,false);
+	if (iIndex == 6) {
+		m_bSpellFovLerp = true;
+	}
 }
 _vector CCamPosition_Shoulder::Get_ShoulderGlobalPos()
 {
@@ -483,7 +509,12 @@ void CCamPosition_Shoulder::Describe_Entity()
 		GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
 		GUI::SliderFloat("m_vFocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
 		GUI::SliderFloat("m_fCameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
-
+		GUI::Text("%.2f", XMConvertToDegrees(m_pBinded_Camera->Get_Fov()));
+		GUI::Text("%d", m_bSpellFovLerp);
+		GUI::SliderFloat3("m_vSpellFovLerpTimer",	(_float*)&m_vSpellFovLerpTimer, 0.f, 5.f);
+		GUI::SliderFloat3("m_vSpellFovLerpDegree",	(_float*)&m_vSpellFovLerpDegree, 1.f, 60.f);
+		
+			
 		if (GUI::TreeNode("AnimList")) {
 			for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
 			{
