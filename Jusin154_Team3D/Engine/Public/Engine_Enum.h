@@ -26,6 +26,7 @@ enum class SD_CHANNEL_GROUP {
     EFFECT,
     VOICE,
     OBJECT,
+    ENEMY,
     END
 };
 

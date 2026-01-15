@@ -37,13 +37,17 @@ private:
 	map<_string, TimeLine*> m_funcWaitEvents = {};
 	_bool					m_bIsActiveCutScene = { false };
 
+	map<_string, function<void()>> m_CutScene_StartEvents = {};
+	map<_string, function<void()>> m_CutScene_EndEvents = {};
+
 private:
 	void Update_ActiveEvents(_float fTimeDelta);
 	void Update_WaitEvents(_float fTimeDelta);
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	void Load_CutSceneXML(const string& path);
 	void Set_AllActiveEventsExit();
-
+	void Update_Start_Event(const _char* pEventKey);
+	void Update_End_Event(const _char* pEventKey);
 #ifdef _DEBUG
 public:
 #endif // _DEBUG
@@ -53,6 +57,8 @@ public:
 
 	HRESULT Ready_GameplayCutScenes();
 	HRESULT Ready_FieldCutScenes();
+	HRESULT Ready_Events();
+	
 
 public:
 	static CCutSceneInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
