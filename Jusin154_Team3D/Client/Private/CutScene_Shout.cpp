@@ -35,6 +35,8 @@ HRESULT CCutScene_Shout::Initialize(void* pArg)
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
+	m_fDuration = 5.f;
+
 
 	m_wstrEffectName = L"Ranrok_Shout";
 

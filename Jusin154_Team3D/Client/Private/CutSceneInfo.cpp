@@ -4,6 +4,7 @@
 #include "InfoInstance.h"
 #include "Monster.h"
 #include "TriggerBox.h"
+#include "Interaction_Key.h"
 #include "Layer.h"
 #include "Player.h"
 #include "Troll.h"
@@ -18,7 +19,7 @@ CCutSceneInfo::CCutSceneInfo()
 void CCutSceneInfo::Update(_float fTimeDelta)
 {
 	m_bIsActiveCutScene = false;
-	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Pressing(DIK_LSHIFT)&& m_pGameInstance->Key_Pressing(DIK_RSHIFT) && m_pGameInstance->Key_Pressing(DIK_LALT) && m_pGameInstance->Key_Pressing(DIK_RALT)) {
+	if (m_pGameInstance->Key_Pressing(DIK_ESCAPE)) {
 		Set_AllActiveEventsExit();
 	}
 #ifdef _DEBUG
@@ -134,6 +135,7 @@ void CCutSceneInfo::Update_WaitEvents(_float fTimeDelta)
 	for (map<_string, TimeLine*>::iterator iter = m_funcWaitEvents.begin(); iter != m_funcWaitEvents.end();) {
 		if (nullptr != iter->second->m_pTriggerBox) {
 			if (SUCCEEDED(iter->second->m_pTriggerBox->TryScanArea(fTimeDelta))) {
+				Update_Start_Event((iter->first).c_str());
 				SAFE_RELEASE(iter->second->m_pTriggerBox);
 				m_funcActiveEvents.insert(*iter);
 				iter = m_funcWaitEvents.erase(iter);
@@ -212,35 +214,40 @@ HRESULT CCutSceneInfo::Ready_Events()
 	m_CutScene_StartEvents.emplace("RanrokIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RANROK_0, SD_CHANNEL_GROUP::BGM, false, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RANROK_0, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_UI)->Get_Object<CInteraction_Key>()->Set_Active(false);
 		});
 
 	m_CutScene_StartEvents.emplace("TrollIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_0, SD_CHANNEL_GROUP::BGM, false, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_0, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_UI)->Get_Object<CInteraction_Key>()->Set_Active(false);
 		});
+
 #pragma endregion
 
 #pragma region END
 	m_CutScene_EndEvents.emplace("TrollIntro",
 		[this]() {
 			m_pInfoInstance->Load_ReparoObjects("Reparo_Data");
+			m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_UI)->Get_Object<CInteraction_Key>()->Set_Active(true);
 		});
 
 	m_CutScene_EndEvents.emplace("RanrokIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_1, SD_CHANNEL_GROUP::BGM, false, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Battle_1, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_UI)->Get_Object<CInteraction_Key>()->Set_Active(true);
 		});
 
 	m_CutScene_EndEvents.emplace("CarriageIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, false, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_UI)->Get_Object<CInteraction_Key>()->Set_Active(true);
 		});
 #pragma endregion
-
 
 
 	return S_OK;

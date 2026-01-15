@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "CutScene_Lightning.h"
+#include "CutScene_Smoke.h"
 
 #include "GameInstance.h"
 #include "EffectParts.h"

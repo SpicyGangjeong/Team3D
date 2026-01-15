@@ -674,6 +674,7 @@
 			<string tag =""/>
 		</Param_12>
 	</Socket>
+	
 	<Socket fStartPosition = "9" >
 		<Info strEventName = "TRANSLATION_LERP" eTypeParam = "NOT_USE" pTarget = "CAMERA_CINEMATIC" eTypeFunc="TRANSLATION_LERP"/>
 		<Param_0>
@@ -743,6 +744,43 @@
 		</Param_10>
 		<Param_11>
 			<float X="40" Y="20" Z="3.0" W=""/>
+		</Param_11>
+		<Param_12>
+			<string tag =""/>
+		</Param_12>
+	</Socket>
+	<Socket fStartPosition = "12.1" >
+		<Info strEventName = "RANROK_SHOUT" eTypeParam = "NOT_USE" pTarget = "ACTOR_RANROK" eTypeFunc="RANROK_SHOUT"/>
+		<Param_0>
+			<OtherTarget Layer = "" TypeID = ""/>
+			<Transform>
+				<RotQ X="" Y="" Z="" W=""/>
+				<Trans X="" Y="" Z=""/>
+			</Transform>
+		</Param_0>
+		<vFlags>
+			<Flag id ="0">false</Flag>
+			<Flag id ="1">false</Flag>
+			<Flag id ="2">false</Flag>
+			<Flag id ="3">false</Flag>
+			<Flag id ="4">false</Flag>
+			<Flag id ="5">false</Flag>
+			<Flag id ="6">false</Flag>
+			<Flag id ="7">false</Flag>
+			<Flag id ="8">false</Flag>
+			<Flag id ="9">false</Flag>
+			<Flag id ="10">false</Flag>
+			<Flag id ="11">false</Flag>
+			<Flag id ="12">false</Flag>
+			<Flag id ="13">false</Flag>
+			<Flag id ="14">false</Flag>
+			<Flag id ="15">false</Flag>
+		</vFlags>
+		<Param_10>
+			<uint X="" Y="" Z="" W=""/>
+		</Param_10>
+		<Param_11>
+			<float X="" Y="" Z="" W=""/>
 		</Param_11>
 		<Param_12>
 			<string tag =""/>
