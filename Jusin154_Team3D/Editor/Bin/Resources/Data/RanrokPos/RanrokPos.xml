@@ -1,0 +1,159 @@
+<RanrokPosInfo>
+	<RanrokPosData>
+		<Name Flow ="3">
+			<Position>
+				<Pos x="-10.619" y="3.829" z="222.073"/>
+			</Position>
+			<Position>
+				<Pos x="-25.924" y="11.595" z="213.374"/>
+			</Position>
+			<Position>
+				<Pos x="-33.721" y="-1.115" z="190.815"/>
+			</Position>
+			<Position>
+				<Pos x="-26.962" y="-5.371" z="162.183"/>
+			</Position>
+			<Position>
+				<Pos x="-5.953" y="-5.958" z="152.081"/>
+			</Position>
+			<Position>
+				<Pos x="17.473" y="-4.045" z="160.776"/>
+			</Position>
+			<Position>
+				<Pos x="29.420" y="-4.414" z="165.479"/>
+			</Position>
+			<Position>
+				<Pos x="39.591" y="-10.167" z="181.184"/>
+			</Position>
+			<Position>
+				<Pos x="24.508" y="-9.579" z="200.380"/>
+			</Position>
+			<Position>
+				<Pos x="15.554" y="5.833" z="201.019"/>
+			</Position>
+			<Position>
+				<Pos x="8.232" y="-12.972" z="202.142"/>
+			</Position>
+		</Name>
+		<Name Flow="2">
+			<Position>
+				<Pos x="-14.318" y="6.094" z="138.133"/>
+			</Position>
+			<Position>
+				<Pos x="-6.853" y="17.268" z="118.995"/>
+			</Position>
+			<Position>
+				<Pos x="22.444" y="26.718" z="89.211"/>
+			</Position>
+			<Position>
+				<Pos x="71.620" y="40.022" z="95.501"/>
+			</Position>
+			<Position>
+				<Pos x="89.480" y="52.386" z="131.227"/>
+			</Position>
+			<Position>
+				<Pos x="116.321" y="45.927" z="173.314"/>
+			</Position>
+			<Position>
+				<Pos x="126.576" y="31.942" z="212.061"/>
+			</Position>
+			<Position>
+				<Pos x="97.259" y="27.504" z="246.896"/>
+			</Position>
+			<Position>
+				<Pos x="36.582" y="18.214" z="267.056"/>
+			</Position>
+			<Position>
+				<Pos x="-6.689" y="16.055" z="256.872"/>
+			</Position>
+			<Position>
+				<Pos x="-32.793" y="9.117" z="227.905"/>
+			</Position>
+			<Position>
+				<Pos x="-41.259" y="-9.095" z="197.628"/>
+			</Position>
+			<Position>
+				<Pos x="-30.269" y="-6.395" z="168.142"/>
+			</Position>
+			<Position>
+				<Pos x="-1.485" y="-8.459" z="153.276"/>
+			</Position>
+			<Position>
+				<Pos x="25.978" y="-7.944" z="163.286"/>
+			</Position>
+			<Position>
+				<Pos x="40.503" y="-9.522" z="192.299"/>
+			</Position>
+			<Position>
+				<Pos x="35.584" y="-10.649" z="218.376"/>
+			</Position>
+			<Position>
+				<Pos x="10.786" y="-11.037" z="236.955"/>
+			</Position>
+		</Name>
+		<Name Flow="1">
+			<Position>
+				<Pos x="-23.674" y="2.889" z="88.944"/>
+			</Position>
+			<Position>
+				<Pos x="-52.506" y="3.156" z="104.534"/>
+			</Position>
+			<Position>
+				<Pos x="-64.457" y="0.623" z="134.250"/>
+			</Position>
+			<Position>
+				<Pos x="-51.603" y="-2.990" z="167.553"/>
+			</Position>
+			<Position>
+				<Pos x="-17.432" y="-2.766" z="167.063"/>
+			</Position>
+		</Name>
+		<Name Flow="0">
+			<Position>
+				<Pos x="75.550" y="33.734" z="164.013"/>
+			</Position>
+			<Position>
+				<Pos x="5.451" y="22.609" z="178.547"/>
+			</Position>
+			<Position>
+				<Pos x="-51.900" y="7.879" z="161.170"/>
+			</Position>
+			<Position>
+				<Pos x="-123.376" y="-12.861" z="101.634"/>
+			</Position>
+			<Position>
+				<Pos x="-109.508" y="-4.704" z="63.085"/>
+			</Position>
+			<Position>
+				<Pos x="-33.545" y="3.208" z="35.854"/>
+			</Position>
+			<Position>
+				<Pos x="21.568" y="16.357" z="17.125"/>
+			</Position>
+			<Position>
+				<Pos x="65.475" y="7.915" z="15.032"/>
+			</Position>
+			<Position>
+				<Pos x="94.002" y="11.938" z="45.093"/>
+			</Position>
+			<Position>
+				<Pos x="113.964" y="8.984" z="97.496"/>
+			</Position>
+			<Position>
+				<Pos x="124.186" y="4.729" z="142.306"/>
+			</Position>
+			<Position>
+				<Pos x="103.940" y="3.978" z="152.634"/>
+			</Position>
+			<Position>
+				<Pos x="80.791" y="2.533" z="153.991"/>
+			</Position>
+			<Position>
+				<Pos x="8.371" y="2.245" z="101.730"/>
+			</Position>
+		</Name>
+	</RanrokPosData>
+</RanrokPosInfo>
+
+
+

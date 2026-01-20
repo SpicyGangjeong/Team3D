@@ -34,8 +34,8 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 	PSX::PxRigidActor* pActor = hit.actor;
 
 	if (nullptr != pController && nullptr != pActor) {
-		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
-		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		PHYSX_USERDATA* pTargetActorData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		PHYSX_USERDATA* pOwnerActorData = static_cast<PHYSX_USERDATA*>(pController->getActor()->userData);
 		if (nullptr == pTargetActorData) { // missing user data
 			return;
 		}
@@ -56,7 +56,10 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 					_uint iAnimIndex = pModel->Get_AnimIndex();
 					if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
 						CFSM* pFSM = pOwner->Get_Component<CFSM>();
+						m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_83, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 						pFSM->Change_State(FSMSTATE::STUN);
+
+						/**/
 					}
 				}
 				if (vWorldNormal.y > 0) {
@@ -116,13 +119,19 @@ void CCallBack_Troll_HitReport::onControllerHit(const PSX::PxControllersHit& hit
 	PSX::PxController* pOtherController = hit.other;		// 다른 컨트롤러
 	PSX::PxActor* pActor = pOtherController->getActor();
 
-	ON_COLLISION_INFO CollisionDesc = {};
-
 	if (nullptr != pController && nullptr != pOtherController) {
-		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
-		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		PHYSX_USERDATA* pTargetActorData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		PHYSX_USERDATA* pOwnerActorData = static_cast<PHYSX_USERDATA*>(pController->getActor()->userData);
 		assert(nullptr != pTargetActorData); // missing user data
 
+
+		ON_COLLISION_INFO tagCollInfo = {};
+
+		_vector vHitDir = pTargetActorData->pCharacter->Get_Owner()->Get_WorldPostion() - m_pController->Get_Owner()->Get_WorldPostion();
+		vHitDir = XMVector3Normalize(vHitDir);
+		XMStoreFloat4(&tagCollInfo.vHitDir, vHitDir);
+		tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
+		tagCollInfo.fDamage = 30.f;
 		switch (pTargetActorData->eKind)
 		{
 		case PHYSX_KIND::BODY_STATIC:
@@ -142,7 +151,8 @@ void CCallBack_Troll_HitReport::onControllerHit(const PSX::PxControllersHit& hit
 				if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
 					if (false == *m_pCollisionPlayer) {
 						*m_pCollisionPlayer = true;
-						pTargetActorData->pCharacter->Get_Owner()->Get_Component<CStat>()->Get_Damage(30.f);
+						m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_83, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+						pTargetActorData->pCharacter->Get_Owner()->OnCollision(pOwner,&tagCollInfo);
 					}
 				}
 			}
@@ -190,7 +200,7 @@ void CCallBack_Troll_HitReport::Set_CurrentSlop()
 		float fAngleRad = acosf(fDot);
 		float fAngleDeg = XMConvertToDegrees(fAngleRad);
 
-		m_pController->Set_CurrentSlope(fAngleDeg);
+		m_pController->Set_CurrentSlope(fAngleDeg, m_vClimbNormal);
 	}
 }
 

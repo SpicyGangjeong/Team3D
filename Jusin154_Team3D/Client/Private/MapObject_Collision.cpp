@@ -28,10 +28,62 @@ void CMapObject_Collision::Update(_float fTimeDelta)
 
 void CMapObject_Collision::Late_Update(_float fTimeDelta)
 {
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(XMLoadFloat4((_float4*)&m_CombinedWorldMatrix.m[3][0]), m_fRadius));
 }
 
 HRESULT CMapObject_Collision::Render()
 {
+	return S_OK;
+}
+
+HRESULT CMapObject_Collision::Render_Shadow(SHADOW eType)
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
+		return E_FAIL;
+	}
+	_uint iMeshes = m_pModelComs[0]->Get_NumMeshes();
+
+	for (_uint i = 0; i < iMeshes; i++)
+	{
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SHADOW)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelComs[0]->Render(i))) {
+			return E_FAIL;
+		}if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
+			return E_FAIL;
+		}
+		_uint iMeshes = m_pModelComs[0]->Get_NumMeshes();
+
+		for (_uint i = 0; i < iMeshes; i++)
+		{
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SHADOW)))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pModelComs[0]->Render(i))) {
+				return E_FAIL;
+			}
+		}
+
+		return S_OK;
+	}
+
+	return S_OK;
+
 	return S_OK;
 }
 
@@ -67,6 +119,11 @@ HRESULT CMapObject_Collision::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 
+	ReadyForPhysX();
+	ConvertToPhysX();
+
+	m_fRadius = m_pModelComs[0]->Get_Radius();
+
 	return S_OK;
 }
 
@@ -85,27 +142,24 @@ void CMapObject_Collision::ReadyForPhysX()
 		return;
 	}
 	m_bConverted = true;
-	
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
-	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
+	_uint iLevel = NEXT_LEVEL;
 
-		_matrix parentMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
-		_matrix idenMatrix = XMMatrixIdentity();
-		_bool bSkip = { false };
-		for (_int i = 0; i < 4; ++i) {
-			if (false == XMVector4NearEqual(idenMatrix.r[i], parentMatrix.r[i], XMVectorReplicate(FLT_EPSILON5))) {
-				if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix)))) {
-					assert(false);
-				}
-				bSkip = true;
-				break;
-			}
-		}
-		if (false == bSkip) {
-			if (FAILED(pModel->Ready_PhysXMeshes(m_pParentTransformCom->Get_XMWorldMatrix()))) {
+	CModel* pModel = m_pModelComs[0];
+	_matrix parentMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
+	_matrix idenMatrix = XMMatrixIdentity();
+	_bool bSkip = { false };
+	for (_int i = 0; i < 4; ++i) {
+		if (false == XMVector4NearEqual(idenMatrix.r[i], parentMatrix.r[i], XMVectorReplicate(FLT_EPSILON5))) {
+			if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix), iLevel))) {
 				assert(false);
 			}
+			bSkip = true;
+			break;
+		}
+	}
+	if (false == bSkip) {
+		if (FAILED(pModel->Ready_PhysXMeshes(m_pParentTransformCom->Get_XMWorldMatrix(), iLevel))) {
+			assert(false);
 		}
 	}
 }
@@ -117,25 +171,22 @@ void CMapObject_Collision::ConvertToPhysX()
 	}
 	m_bReadyToCreatePhysX = true;
 
-	m_RigidBodies.resize(m_iMaxLodLevel + 1);
-	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
-	{
-		CModel* pModel = m_pModelComs[iIndexLOD];
+	CModel* pModel = m_pModelComs[0];
 
-		_uint iNumMeshes = pModel->Get_NumMeshes();
-		
-		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
-		{
-			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
-			CRigidBody_Static* pRigidBody = { nullptr };
-			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
-			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-			Desc.pMeshName = wstrName.c_str();
-			if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, wstrName, (CComponent**)&pRigidBody, &Desc))) {
-				assert(false);
-			}
-			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+	_uint iNumMeshes = pModel->Get_NumMeshes();
+
+	for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
+	{
+		_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+		CRigidBody_Static* pRigidBody = { nullptr };
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pMeshName = wstrName.c_str();
+		Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+			assert(false);
 		}
+		m_RigidBodies.push_back(pRigidBody);
 	}
 }
 
@@ -148,7 +199,7 @@ HRESULT CMapObject_Collision::Ready_Components()
 		CModel* pModel = { nullptr };
 
 		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[iIndexLOD],
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, m_ModelPrototypeTags[iIndexLOD],
 			reinterpret_cast<CComponent**>(&pModel)))){
 			return E_FAIL;
 		}
@@ -220,9 +271,7 @@ void CMapObject_Collision::Free()
 	} m_pModelComs.clear();
 
 	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
-		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
-			SAFE_RELEASE(m_RigidBodies[i][j]);
-		}
+		SAFE_RELEASE(m_RigidBodies[i]);
 	} m_RigidBodies.clear();
 
 	m_ModelPrototypeTags.clear();

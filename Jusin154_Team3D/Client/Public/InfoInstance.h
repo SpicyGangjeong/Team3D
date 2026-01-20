@@ -9,9 +9,12 @@ class CTransform;
 class CUnit;
 class CState;
 class CStat;
+class CNPCStat;
+class CUIObject;
 NS_END
 
 NS_BEGIN(Client)
+class CEffect_Container;
 
 class CInfoInstance final : public CBase
 {
@@ -21,8 +24,12 @@ private:
 	virtual ~CInfoInstance() = default;
 public:
 	HRESULT Initialize_Information(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
+	HRESULT Late_Initialize(); // GamePlay Initialize 할 때
+
+	void Load_CutScenes();
 	void Release_Information();
 	LEVEL Get_RestartLevel();
+	_bool Get_SearchLockonFloag() { return m_bSearchLockOnTarget; }
 public:
 	void Update(_float fTimeDelta);
 	void Change_Level();
@@ -33,6 +40,8 @@ public:
 	pair<_float3, _float3> Get_CameraCoordinateSystem();
 	_float Player_Damage();
 	void Set_Damage(_float fDamage);
+	void Set_PlayerPos(_fvector Position);
+	_float4 Get_PalyerPos();
 #pragma endregion
 #pragma region MONSTER_INFO
 	HRESULT Regist_PlayerAlly(CUnit* pUnit);
@@ -41,16 +50,25 @@ public:
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
 	void Get_LockOnInfo(LOCKON_INFO& Info);
+	void Get_LockOnInfoOnlyUnit(CUnit* pUnit);
+	void Set_SearchLockOnFlag(_bool bLockOn);
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 	class CMonster* Get_TargetMonster();
 #pragma endregion
 #pragma region MAP_INFO
-	HRESULT Load_MapObjects(const _char* pFilePath);
-	HRESULT Load_LightElements(const _char* pFilePath);
-	HRESULT Load_InteractableElements(const _char* pFileName);
+	HRESULT Load_MapObjects(const _char* pFilePath, const _wchar* pLayerTag);
+	HRESULT Load_LightElements(const _char* pFilePath, const _wchar* pLayerTag);
+	HRESULT Load_InteractableElements(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_WaterElemet(const _char* pFileName);
-	HRESULT Load_DoorElemet(const _char* pFileName);
-	HRESULT Load_ChestElemet(const _char* pFileName);
+	HRESULT Load_DoorElemet(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_PointLights(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath);
+	HRESULT Load_ReparoObjects(const _char* pFileName);
+	HRESULT Load_DADA_INT();
+	HRESULT Load_Npc();
+	HRESULT Load_Goblin();
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);
@@ -64,12 +82,54 @@ public:
 	UI_STATE Get_UISTATE();
 	_float Get_Spell_Damage(_int Index);
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
+	void Clear_Event();
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
+
 #pragma endregion
-#pragma region Interactive_INFO
+#pragma region QuestINFO
+	QUESTINFO Get_Quest(_int QuestType, _int QuestID);
+	_int Get_Quest_Count(_int Index);
+	const vector<QUESTINFO>& Get_AllQuest() const;
+	const vector<QUESTINFO>& Get_ClearQuest() const;
+	const vector<QUESTINFO>& Get_AcceptQuest() const;
+	HRESULT Set_AcceptQuest(_int Index);
+#pragma endregion
+#pragma region SpellLearn_Data
+	const SPELLLEARNINFO& Get_SpellLearn(_int Index) const;
+	_int Get_SpellLearnIndex();
+	void Spell_UnLock(_int SpellID);
+#pragma endregion
+#pragma region Dialogue_Font
+	//void Set_Font(void* pArg);
+	const CURRENTDIALOGUEINFO& Get_Dialogue(_wstring NpcName, _int iTextID) const;
+#pragma endregion
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
+
+	HRESULT ActiveAt_Interactive(_fvector vPosition);
+	void NextLevel(CHOICEINFO Choice);
 #pragma endregion
+
+#pragma region BroomManager
+	void   Set_Broom_Timer(_float fTimer);
+	_float Get_Broom_Timer();
+	void   Set_Broom_Booster_Timer(_float fTimer);
+	_float Get_Broom_Booster_Timer();
+#pragma endregion
+
+#pragma region CutScene
+	void		Active_Event(_string& strKey);
+	HRESULT		DeActive_ActiveEvent(_string& strKey);
+	void		Load_Events(pair< _string, struct TimeLine*>& pairTimeLine);
+	_bool		IsActiveCutScene();
+#pragma endregion
+
+#pragma region Effect
+	HRESULT Regist_ActiveEffect(CEffect_Container* pEffect);
+	HRESULT Deregist_ActiveEffect(CEffect_Container* pEffect);
+#pragma endregion
+
+
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -78,14 +138,27 @@ private:
 	class CPlayerInfo*			m_pPlayerInfo = { nullptr };
 	class CMonsterInfo*			m_pMonsterInfo = { nullptr };
 	class CMapInfo*				m_pMapInfo = { nullptr };
+	class CEffectInfo*			m_pEffectInfo = { nullptr };
+	class CCutSceneInfo*		m_pCutSceneInfo = { nullptr };
 	class CSkill_Data*			m_pSkillInfo = { nullptr };
+	class CQuest_Data*			m_pQuestInfo= { nullptr };
 	class CInteractiveInfo*		m_pInteractiveInfo =  { nullptr };
 	class CDamage_Font*			m_pDamage_Font =  { nullptr };
+	class CSpellLearn_Data*		m_pSpellLearn_Data =  { nullptr };
+	class CDialogue_Font*		m_pDialogue_Font = { nullptr };
+	class CDialogue_Data*		m_pDialogue_Data = { nullptr };
+
+	_vector						m_pPlayerPos{};
+
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 
+	_float						m_fBroom_Timer{};
+	_float						m_fBroom_Booster{};
+	_bool						m_bSearchLockOnTarget = { true };
+
 	_float						m_fDamage{};
-	UI_STATE					m_eUI_State;
+	UI_STATE					m_eUI_State = { UI_STATE::END };
 
 	// 임시로 이벤트 1개 만들어 둠
 	multimap<_wstring, function<void(void*)>> UI_Event;
@@ -95,6 +168,7 @@ private:
 
 private:
 	HRESULT Stat_FileLoad(const _char* pDirectoryPath);
+	HRESULT NPC_FileLoad(const _char* pDirectoryPath);
 
 public:
 	virtual void Free() override;

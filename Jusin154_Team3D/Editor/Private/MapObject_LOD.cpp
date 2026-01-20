@@ -114,13 +114,13 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 	
 
 	_float fRaius = m_pModelComs[0]->Get_Radius();
-	if (m_pGameInstance->IsIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), fRaius)) {
+	if (m_isVisible && m_pGameInstance->IsIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), fRaius)) {
 		
 		_vector		vCamPosition = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
 
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(vCamPosition - XMLoadFloat4(&m_vExtentPosition)));
 
-		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (fRaius * fRaius + 3600.f)));
+		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (fRaius * fRaius + 10000.f)));
 
 		if (m_pGameInstance->Key_Pressing(DIK_Z))
 			m_iLodIndex = 0;
@@ -168,7 +168,7 @@ HRESULT CMapObject_LOD::Render()
 				return E_FAIL;
 		}
 
-		if (m_bSelected)
+		if (m_bSelected && m_isVisibleSelect)
 		{
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
 				return E_FAIL;
@@ -328,13 +328,15 @@ void CMapObject_LOD::Describe_Entity()
 		return;
 	if (nullptr == m_pGameInstance)
 		return;
+	GUI::Text("----- GIZMO ----");
+	GUI::Checkbox("Visible ON / OFF", &m_isVisible);
+	GUI::Checkbox("VisibleSelect ON / OFF", &m_isVisibleSelect);
 
+	GUI::Text("----- Transform ----");
 	_float3 vMove = {};
-
-	ImGui::Text("----- Transfrom ----");
-	ImGui::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
-	ImGui::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
-	ImGui::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+	GUI::InputFloat("Right", &vMove.x, 0.1f, 1.f);
+	GUI::InputFloat("Up", &vMove.y, 0.1f, 1.f);
+	GUI::InputFloat("Look", &vMove.z, 0.1f, 1.f);
 
 	m_pTransformCom->Move_Right(vMove.x);
 	m_pTransformCom->Move_Up(vMove.y);
@@ -342,29 +344,39 @@ void CMapObject_LOD::Describe_Entity()
 
 	XMStoreFloat3(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
 
+	GUI::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
+	GUI::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
+	GUI::InputFloat("Z##Position", &m_vPosition.z, 0.1f, 1.f);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+
+
 	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		_float3 vPosition = {};
 		if (m_pGameInstance->isPicking(&vPosition))
 		{
 			memcpy(&m_vPosition, &vPosition, sizeof(_float3));
-			m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&m_vPosition));
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 		}
 	}
 
 	GUI::Text("----- Rotation ----");
-	GUI::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
-	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);
-	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 10.f, 45.f);
+	GUI::InputFloat("X##Rotation", &m_vRotation.x, 1.f, 15.f);
+	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 1.f, 15.f);
+	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 1.f, 15.f);
+
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
 	GUI::Text("----- Scale ----");
-	GUI::InputFloat("X##Scale", &m_vScale.x, 0.1f, 1.f);
-	GUI::InputFloat("Y##Scale", &m_vScale.y, 0.1f, 1.f);
-	GUI::InputFloat("Z##Scale", &m_vScale.z, 0.1f, 1.f);
+	GUI::InputFloat("X##Scale", &m_vScale.x, 0.05f, 0.1f);
+	GUI::InputFloat("Y##Scale", &m_vScale.y, 0.05f, 0.1f);
+	GUI::InputFloat("Z##Scale", &m_vScale.z, 0.05f, 0.1f);
 
 	m_vScale.x = max(0.01f, m_vScale.x);
 	m_vScale.y = max(0.01f, m_vScale.y);
 	m_vScale.z = max(0.01f, m_vScale.z);
+
+	m_pTransformCom->Set_Scale(m_vScale);
 
 
 	if (GUI::Button("Delete"))
@@ -395,7 +407,7 @@ void CMapObject_LOD::Describe_Entity()
 					_wstring dest = CMyTools::ToWstring(m_pModelComs[iModelIndex]->Get_MeshName(iMeshIndex) + to_string(iMeshIndex)).c_str();
 					Desc.pMeshName = dest.c_str();
 					Desc.iSubKind = 998;
-
+					Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 					if (FAILED(Add_Asset_Component(g_iStaticLevel, Desc.pMeshName, nullptr, &Desc))) {
 						assert(false);
 					}

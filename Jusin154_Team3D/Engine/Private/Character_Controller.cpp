@@ -1,6 +1,9 @@
 ﻿#include "pch.h"
 #include "Character_Controller.h"
 #include "GameInstance.h"
+#include "GameObject.h"
+
+CPhysX_CctQueryFilterCallback CCharacter_Controller::s_QueryFilterCallback_IGNORE_GLOBAL = {};
 
 CCharacter_Controller::CCharacter_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -57,6 +60,10 @@ HRESULT CCharacter_Controller::Render()
 		break;
 	}
 	return S_OK;
+}
+void CCharacter_Controller::Set_Name(const _char* pName)
+{
+	m_pController->getActor()->setName(pName);
 }
 #endif // _DEBUG
 PSX::PxRigidDynamic* CCharacter_Controller::Get_Actor()
@@ -140,6 +147,26 @@ _float3 CCharacter_Controller::Get_Volume()
 	}
 }
 
+_float CCharacter_Controller::Get_Height()
+{
+	switch (m_eBodyType)
+	{
+	case Engine::ACTOR::BOX:
+	{
+		PSX::PxBoxController* pBox = static_cast<PSX::PxBoxController*>(m_pController);
+		return pBox->getHalfHeight() * 2.f;
+	} break;
+	case Engine::ACTOR::CAPSULE:
+	{
+		PSX::PxCapsuleController* pCapsule = static_cast<PSX::PxCapsuleController*>(m_pController);
+		return (pCapsule->getRadius() + pCapsule->getHeight()) * 2.f;
+	} break;
+	default:
+		return 2.f;
+		break;
+	}
+}
+
 HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 {
 	PSX::PxRigidDynamic* pDOActor = BodyOriginal.Get_Actor();
@@ -148,7 +175,7 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 	m_bActive = false;
 	BodyOriginal.SetActive(true);
 
-	m_pGameInstance->Attach_Actor(*pDOActor); // DO 액터 활성화
+	m_pGameInstance->Attach_Actor(*pDOActor, m_pGameInstance->Get_CurrentLevelID()); // DO 액터 활성화
 
 	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose();
 	pDOActor->setGlobalPose(pxTransform);
@@ -156,20 +183,25 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 	return S_OK;
 }
 
-void CCharacter_Controller::Set_OnGroundFlag(_bool bOnGround)
+void CCharacter_Controller::Set_OnGroundFlag(_bool bFlag)
 {
 	m_iIsOnGround = iCoyote_Counter;
+	m_bSlide = false;
+	//if (m_fCurrentSlopeDegree < m_fWalkableSlopeDegree * 0.5f) {
+	//	m_bSlide = false;
+	//}
 }
 
-void CCharacter_Controller::Set_CurrentSlope(_float fSlope)
+void CCharacter_Controller::Set_CurrentSlope(_float fSlope, _float3& CurrentSlopeNormal)
 {
 	m_fCurrentSlopeDegree = fSlope;
+	XMStoreFloat3(&m_vLastClimbNormal, XMVector3Normalize(XMLoadFloat3(&CurrentSlopeNormal)));
 }
 
 void CCharacter_Controller::Rewind_Grounded()
 {
 	if (m_eBeforeCollisionFlags.isSet(PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)) {
-		m_iIsOnGround = iCoyote_Counter;
+		Set_OnGroundFlag(true);
 		return;
 	}
 	m_iIsOnGround -= 1;
@@ -206,7 +238,7 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 
 	PSX::PxRigidActor* hitActor = sweepHit.actor;
 
-	PhsXUserData* hitUserData = static_cast<PhsXUserData*>(hitActor->userData);
+	PHYSX_USERDATA* hitUserData = static_cast<PHYSX_USERDATA*>(hitActor->userData);
 
 	switch (PXOBJECT(hitUserData->iSubKind))
 	{
@@ -231,7 +263,10 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 		_vector vCurrentMomentum = m_pTransform->Get_CurrentMomentum();
 
 		m_pTransform->Set_CurrentMomentum( XMVectorSetY(vCurrentMomentum, fCurrentMomentumY) );
-		m_iIsOnGround = iCoyote_Counter;
+		Set_OnGroundFlag(true);
+		if (m_fCurrentSlopeDegree < m_fWalkableSlopeDegree * 0.5f) {
+			m_bSlide = false;
+		}
 	}
 	break;
 	default:
@@ -241,26 +276,28 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 	return bHit;
 }
 
-
+_bool CCharacter_Controller::IsOnGround()
+{
+	return m_eBeforeCollisionFlags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN;
+}
 
 void CCharacter_Controller::Move(_float fTimeDelta)
 {
 	PSX::PxVec3						pxVecMomentum = {};					// 순간 이동량
 	_float							fMinimumDistant = FLT_EPSILON3;		// 이동량 오차 허용치, ( 크면 클수록 이동이 더 일찍 끝난다, 순간 이동량보다 같거나 더 크면 안움직일듯? )
 	PSX::PxControllerFilters		pxFilter = {};						// 충돌 대상 필터
+	pxFilter.mFilterCallback = &s_QueryFilterCallback_IGNORE_GLOBAL;	// 쉴드 무시
 	const PSX::PxObstacleContext*	pPxObstacles = { nullptr };			// 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
 	if (true == m_bGravity) {
 		if (0 >= m_iIsOnGround) {      // 공중: 무조건 중력
 			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * m_fGravity * fTimeDelta, 0.f, 0.f));
 		}
 		else if ((iCoyote_Counter) >= m_iIsOnGround) {
-			UpdateGroundByCast(fTimeDelta); // 바닥에 플레이어 붙이게 함
+			UpdateGroundByCast(fTimeDelta);// 바닥에 플레이어 붙이게 함
 		}
 		else if (m_fCurrentSlopeDegree > m_fWalkableSlopeDegree) {        // 너무 가파른 경사: 중력
 			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
-		}
-		else {
-			// 아니면 안함
+			m_bSlide = true;
 		}
 	}
 	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
@@ -310,7 +347,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		m_pTransform = pDesc->pTransform;
 		m_fWalkableSlopeDegree = pDesc->fWalkableSlope;
 	}
-	{ // PhsXUserData
+	{ // PHYSX_USERDATA
 		m_tagData.eKind = PHYSX_KIND::CCTActor;
 		m_tagData.pOwner = m_pOwner;
 		XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
@@ -334,7 +371,6 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_BoxController(Desc);
 		m_pController->setUserData(&m_tagData);
-		m_pController->getActor()->userData = &m_tagData;
 	} break;
 	case ACTOR::CAPSULE:
 	{
@@ -350,15 +386,25 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_CapsuleController(Desc);
 		m_pController->setUserData(&m_tagData);
-		m_pController->getActor()->userData = &m_tagData;
 	} break;
 	default:
 		assert(false); // PhysX에서 불가능
 		return E_FAIL;
 		break;
 	}
-	
+
+	PSX::PxRigidDynamic* pActor = m_pController->getActor();
+	pActor->userData = &m_tagData;
+	PSX::PxShape* shapes[8]{};
+	PSX::PxU32 count = pActor->getShapes(shapes, 8);
+	for (PSX::PxU32 i = 0; i < count; ++i)
+	{
+		shapes[i]->userData = &m_tagData;
+		shapes[i]->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	}
+	m_pGameInstance->ApplyFilterData(pActor);
 	m_pController->setStepOffset(pDesc->fStepOffset);
+
 
 	if (nullptr == m_pController) {
 		assert(false);
@@ -437,7 +483,7 @@ void CCharacter_Controller::Free()
 #ifdef _DEBUG
 void CCharacter_Controller::Describe_Entity()
 {
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("Character_Controller") ){
 		GUI::Text("Gravity : %d ", m_bGravity);
 		m_pTransform->Describe_Entity();
@@ -486,6 +532,8 @@ void CCharacter_Controller::Describe_Entity()
 				GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 			}
 		}
+		GUI::Checkbox("IsSlide", &m_bSlide);
+		GUI::Text("SlopeNormal %.1f, %.1f, %.1f", m_vLastClimbNormal.x, m_vLastClimbNormal.y, m_vLastClimbNormal.z);
 		GUI::Text("%.1f", m_fCurrentSlopeDegree);
 		GUI::Text("%.1f", m_fWalkableSlopeDegree); GUI::SameLine(); if (GUI::SliderFloat("m_fWalkableSlopeDegree", &m_fWalkableSlopeDegree, 0.0f, 90.f)) {
 			m_pController->setSlopeLimit(cosf(XMConvertToRadians(m_fWalkableSlopeDegree)));

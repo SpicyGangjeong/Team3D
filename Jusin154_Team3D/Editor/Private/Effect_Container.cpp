@@ -65,6 +65,10 @@ void CEffect_Container::OnCollision(CGameObject* pOther, void* pDesc)
 
 HRESULT CEffect_Container::Load_Directory(const _char* pPath)
 {
+	if (filesystem::exists(pPath) == false) {
+		MessageBox(NULL, L"존재하지 않는 경로", L"System Message", MB_OK);
+		return E_FAIL;
+	}
 
 	for (const auto& file : filesystem::directory_iterator(pPath))
 	{
@@ -103,7 +107,7 @@ HRESULT CEffect_Container::Load_Directory(const _char* pPath)
 			size_t iPos = {};
 			_string strFilePath = szFilePath;
 
-			while ((iPos = strFilePath.find(".trail")) != std::string::npos) {
+			while ((iPos = strFilePath.find(".trail")) != string::npos) {
 				strFilePath.erase(iPos, 6);
 			};
 
@@ -145,7 +149,7 @@ HRESULT CEffect_Container::Load_Directory(const _char* pPath)
 		size_t iPos = {};
 		_string strFilePath = szFilePath;
 
-		while ((iPos = strFilePath.find(".bin")) != std::string::npos) {
+		while ((iPos = strFilePath.find(".bin")) != string::npos) {
 			strFilePath.erase(iPos, 4);
 		};
 
@@ -177,6 +181,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 		OPEN_EXISTING,             // 기존 파일 열기
 		FILE_ATTRIBUTE_NORMAL,
 		NULL
+
 	);
 
 
@@ -222,7 +227,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 		size_t iPos = strEffectPath.rfind('.');   // 뒤에서부터 '/' 검색
 
-		if (iPos != std::string::npos)
+		if (iPos != string::npos)
 		{
 			strExt += strEffectPath.substr(iPos + 1);
 			strEffectName = strEffectPath.substr(0, iPos);
@@ -230,7 +235,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 		size_t pos = strEffectName.rfind('\\');   // 뒤에서부터 '/' 검색
 
-		if (pos != std::string::npos)
+		if (pos != string::npos)
 			strEffectName = strEffectName.substr(pos + 1);
 
 		if (!strcmp(strExt.c_str(), "trail"))
@@ -250,7 +255,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 			/*이펙트 로드 로드*/
 			size_t iPos = {};
 
-			while ((iPos = strEffectPath.find(".trail")) != std::string::npos) {
+			while ((iPos = strEffectPath.find(".trail")) != string::npos) {
 				strEffectPath.erase(iPos, 6);
 			};
 
@@ -286,7 +291,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 		size_t iPosition = {};
 		_string strFilePath = strEffectPath;
 
-		while ((iPosition = strFilePath.find(".bin")) != std::string::npos) {
+		while ((iPosition = strFilePath.find(".bin")) != string::npos) {
 			strFilePath.erase(iPosition, 4);
 		};
 
@@ -323,6 +328,7 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_bVisible = true;
 	m_isCollisionEnter = false;
 	m_bHit = false;
+	m_isStop = false;
 
 	return S_OK;
 }
@@ -339,6 +345,21 @@ void CEffect_Container::Reset_Light()
 		pLight->Reset_IntensityRatio();
 	}
 
+}
+
+void CEffect_Container::Setting_Pos(_fvector vPos)
+{
+	for (auto& iter : m_PartObjects)
+	{
+		CTransform* pTransform = iter.second->Get_Component<CTransform>();
+
+		if (pTransform == nullptr)
+			continue;
+
+		pTransform->Set_State(STATE::POSITION, vPos);
+	}
+
+	m_isStop = true;
 }
 
 
@@ -433,8 +454,6 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 			pPair.second();
 		}
 	}
-	
-
 }
 
 ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision)
@@ -467,7 +486,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
@@ -496,6 +515,17 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 					m_bHit = true;
 				}
 				break;
+				case PXOBJECT::RANROK:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}break;
+				case PXOBJECT::RANROK_PROP:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
 				}
 			}
 			}
@@ -511,7 +541,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 
 			bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
 
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 			tagCollInfo.pObject = pUserData->pOwner;
 
 			switch (pUserData->eKind)
@@ -535,6 +565,188 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 	return tagCollInfo;
 }
 
+ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision)
+{
+	_vector vStartPos = StartPos;
+	_vector vEndPos = EndPos;
+	_vector vDir = { vEndPos - vStartPos };
+
+	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
+
+	PSX::PxSweepBuffer pxBuffer = {};
+
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+
+	const PSX::PxSweepHit& hit = pxBuffer.block;
+	PSX::PxRigidActor* pActor = hit.actor;
+	PSX::PxShape* pShape = hit.shape;
+	ON_COLLISION_INFO tagCollInfo = {};
+
+	tagCollInfo.vWorldPos.w = 1.f;
+
+	if (bHit) {
+
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+
+
+		if (nullptr != pActor && nullptr != pActor->userData)
+		{
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+			tagCollInfo.pObject = pUserData->pOwner;
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::CCTActor:
+			{
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+
+				case PXOBJECT::PLAYER:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::SKILL_PROTEGO:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				}
+			}
+			}
+		}
+
+
+	}
+
+	if (isTerrainCollision == true && bHit == false)
+	{
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+		tagCollInfo.pObject = m_pOwner->Get_Owner();
+
+		bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
+
+		const PSX::PxSweepHit& hit = pxBuffer.block;
+		PSX::PxRigidActor* pActor = hit.actor;
+		PSX::PxShape* pShape = hit.shape;
+
+		tagCollInfo.vWorldPos.w = 1.f;
+
+		if (bHit)
+		{
+			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+			tagCollInfo.fLength = fDistance;
+
+			if (nullptr != pActor && nullptr != pActor->userData)
+			{
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+				tagCollInfo.pObject = pUserData->pOwner;
+
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::TERRAIN:
+				{
+
+					m_bHit = true;
+					break;
+				}
+				}
+
+			}
+		}
+
+
+	}
+
+	return tagCollInfo;
+}
+
+ON_COLLISION_INFO CEffect_Container::MonsterRayCast(_vector StartPos, _vector _vDir, _float _fLength, _uint iMaxHitCapacity)
+{
+	_vector vStartPos = StartPos;
+	_vector vDir = _vDir;
+
+	_float fLength = _fLength;
+
+	vector<PSX::PxRaycastHit> Raycasts = {};
+	Raycasts.resize(iMaxHitCapacity);
+
+	_bool bHit = m_pGameInstance->RayCast(vStartPos, vDir, fLength, Raycasts.data(), iMaxHitCapacity, m_iHitCount);
+
+	ON_COLLISION_INFO tagCollInfo = {};
+
+	for (_uint i = 0; i < iMaxHitCapacity; i++)
+	{
+		PSX::PxRigidActor* pActor = Raycasts[i].actor;
+		PSX::PxShape* pShape = Raycasts[i].shape;
+
+
+		tagCollInfo.vWorldPos.w = 1.f;
+
+		if (bHit) {
+
+			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &Raycasts[i].position, sizeof(Raycasts[i].position));
+
+			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &Raycasts[i].normal, sizeof(Raycasts[i].normal));
+			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+			tagCollInfo.fLength = fLength;
+
+			if (nullptr != pActor && nullptr != pActor->userData)
+			{
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+				tagCollInfo.pObject = pUserData->pOwner;
+
+				switch (pUserData->eKind)
+				{
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+
+					case PXOBJECT::PLAYER:
+					{
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+						m_bHit = true;
+					}
+					break;
+					case PXOBJECT::SKILL_PROTEGO:
+					{
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+						m_bHit = true;
+					}
+					}
+				}
+				}
+
+
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::TERRAIN:
+				{
+
+					m_bHit = true;
+					break;
+				}
+				}
+			}
+
+		}
+
+		return tagCollInfo;
+	}
+
+	return tagCollInfo;
+}
 
 _int CEffect_Container::CollisionCheck()
 {
@@ -551,7 +763,7 @@ _int CEffect_Container::CollisionCheck()
 
 		if (nullptr != pActor && nullptr != pActor->userData) {
 
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 
 			if (pUserData->iSubKind >= UINT_MAX - 1) {
 				continue;
@@ -593,3 +805,5 @@ _int CEffect_Container::CollisionCheck()
 	return -1;
 
 }
+
+

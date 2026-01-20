@@ -109,14 +109,14 @@ HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 			return E_FAIL;
 		}
 	}
-	//{
-	//	CDummy_PhysXDoorSet::PHYSXDUMMY_DESC Desc{};
-	//	Desc.vPos = { -15.f, 3.f, -15.f };
-	//	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXDoorSet>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
-	//		return E_FAIL;
-	//	}
-	//}
+	{
+		CDummy_PhysXDoorSet::PHYSXDUMMY_DESC Desc{};
+		Desc.vPos = { -15.f, 3.f, -15.f };
+		Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXDoorSet>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+			return E_FAIL;
+		}
+	}
 	{
 		CDummy_PhysXPlatform::PHYSXDUMMY_DESC Desc{};
 		Desc.vPos = { -3.f, 2.f, 10.f };
@@ -181,6 +181,7 @@ HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 	//		return E_FAIL;
 	//	}
 	//}
+
 	return S_OK;
 }
 

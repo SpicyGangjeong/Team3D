@@ -35,6 +35,7 @@ HRESULT CUIObject::Initialize(void* pArg)
 	// 이제 뷰포트의 개수랑 정보를 저장할 포인터를 넣어준다.
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
 
+
 	// 이제 받아온 fX,fY,fSizeX,fSizeY를 다 저장 해 놓는다.
 	UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
 
@@ -44,8 +45,6 @@ HRESULT CUIObject::Initialize(void* pArg)
 	m_fSizeY = pDesc->fSizeY;
 
 	m_fOrigin_Position = _float2(pDesc->fX, pDesc->fY);
-
-	m_fOrigin_Position_vector = XMVectorSet(m_fOrigin_Position.x, m_fOrigin_Position.y, 0.f, 1.f);
 
 	m_fWinSizeX = ViewportDesc.Width;
 	m_fWinSizeY = ViewportDesc.Height;
@@ -138,6 +137,11 @@ void CUIObject::Move(_float fX, _float fY)
 	m_fY = fY;
 }
 
+_float2 CUIObject::Get_Position()
+{
+	return _float2(m_fX, m_fY);
+}
+
 void CUIObject::SizeUpdate(_float fSizeX, _float fSizeY)
 {
 	m_fSizeX = fSizeX;
@@ -207,7 +211,7 @@ _bool CUIObject::Chack_Visible()
 
 void CUIObject::Set_FadeIn()
 {
-	if (!m_bFadeIn && m_fAlpha < 1.f)
+	if (!m_bFadeIn && m_fAlpha <= 1.f)
 	{
 		m_bFadeIn = true;
 		m_bFadeOut = false;
@@ -216,7 +220,7 @@ void CUIObject::Set_FadeIn()
 
 void CUIObject::Set_FadeOut()
 {
-	if (!m_bFadeOut && m_fAlpha > 0.f)
+	if (!m_bFadeOut && m_fAlpha >= 0.f)
 	{
 		m_bFadeOut = true;
 		m_bFadeIn = false;
@@ -304,7 +308,7 @@ void CUIObject::Nine_Slice_Left(_float X)
 
 void CUIObject::Nine_Slice_Right(_float Y)
 {
-	m_vNine_Slice.y =Y;
+	m_vNine_Slice.y = Y;
 }
 
 void CUIObject::Nine_Slice_Top(_float Z)
@@ -342,7 +346,7 @@ _float2 CUIObject::Get_Origin_Position()
 	return m_fOrigin_Position;
 }
 
-_vector CUIObject::Get_Current_Position()
+_float4 CUIObject::Get_Current_Position()
 {
 	return m_fCurrent_Position;
 }
@@ -367,8 +371,14 @@ void CUIObject::Lerp_PosY(_float PosY)
 	m_fLerpY = PosY;
 }
 
-void CUIObject::Start_Lerp(_float fTimeDelta)
+_bool CUIObject::Start_Lerp_Translation(_float fTimeDelta)
 {
+	return false;
+}
+
+_bool CUIObject::Start_Lerp_Speed(_float fTimeDelta, _float2 Mouse_Point)
+{
+	return _bool();
 }
 
 void CUIObject::Reset_Pos(_float fTimeDelta)
@@ -383,7 +393,7 @@ void CUIObject::Reset_Size_Lerp(_float fTimeDelta)
 {
 }
 
-_vector CUIObject::Get_Lerp_Pos()
+_float4 CUIObject::Get_Lerp_Pos()
 {
 	return m_vLerp_Position;
 }
@@ -502,6 +512,16 @@ const CUIObject::SPELLINFO CUIObject::Get_Info(_int Index)
 	return SPELLINFO();
 }
 
+const CUIObject::QUESTINFO CUIObject::Get_QuestInfo(_int Index)
+{
+	return QUESTINFO();
+}
+
+const CUIObject::SPELLLEARNINFO CUIObject::Get_Learninfo(_int Index)
+{
+	return SPELLLEARNINFO();
+}
+
 void CUIObject::Set_FontX(_float fFontX)
 {
 	m_fFontX = fFontX;
@@ -515,6 +535,11 @@ void CUIObject::Set_FontY(_float fFontY)
 _float2 CUIObject::Get_Font()
 {
 	return _float2(m_fFontX, m_fFontY);
+}
+
+_float2 CUIObject::Get_PerPosition()
+{
+	return m_fPerPosition;
 }
 
 void CUIObject::Free()

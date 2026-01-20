@@ -40,6 +40,28 @@ CVIBuffer_Model_Instance::CVIBuffer_Model_Instance(const CVIBuffer_Model_Instanc
 	}
 }
 
+const _char* CVIBuffer_Model_Instance::Get_MeshName(_uint iMeshIndex)
+{
+	if (m_iNumMeshes <= iMeshIndex)
+		return nullptr;
+
+	return m_Meshes[iMeshIndex]->Get_Name();
+}
+
+HRESULT CVIBuffer_Model_Instance::Ready_PhysXMeshes(_uint iLevel)
+{
+	m_iNumPhysXMeshes = m_iNumMeshes;
+
+	m_TriMeshes.reserve(m_iNumMeshes);
+
+	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes);
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i) {
+		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i], iLevel);
+	}
+	return S_OK;
+}
+
 HRESULT CVIBuffer_Model_Instance::Initialize_Prototype(const _char* pModelFilePath, const _char* pMatrialPath)
 {
 	if (FAILED(Load_ModelData(pModelFilePath)))
@@ -228,7 +250,7 @@ HRESULT CVIBuffer_Model_Instance::Load_InstanceData(ifstream& in)
 
 	VTX_INSTANCE_MODEL* pData = static_cast<VTX_INSTANCE_MODEL*>(SubResource.pData);
 
-	for (_uint i = 0; i < m_iNumInstance; ++i)
+	for (_uint i = 0; i < m_iNumInstance - 1; ++i)
 	{
 		in.read(reinterpret_cast<_char*>(&pData[i]), sizeof(VTX_INSTANCE_MODEL));
 	}

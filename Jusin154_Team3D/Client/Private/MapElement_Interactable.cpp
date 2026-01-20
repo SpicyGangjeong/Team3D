@@ -33,25 +33,8 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
 		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
 	}
-
-	if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo")
-	{
-		m_eInteractableID = ELEMENT_INTERACTABLE_ID::BARREL;
-	}
-
-	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_OwlPost_Package_B")
-	{
-		m_eInteractableID = ELEMENT_INTERACTABLE_ID::BOX;
-	}
-	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_TeaShop_Table_B")
-	{
-		m_eInteractableID = ELEMENT_INTERACTABLE_ID::TABLE;
-	}
-	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_TeaShop_Chair_B")
-	{
-		m_eInteractableID = ELEMENT_INTERACTABLE_ID::TABLE;
-	}
-
+	m_isPooled = pDesc->isPooled;
+	m_eInteractableID = static_cast<ELEMENT_INTERACTABLE_ID>(pDesc->iInteractableID);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -67,18 +50,27 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 
 	// RIGID_BODY
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);//pPhysXDummyDesc->iSubKind;
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), (CComponent**)&m_pRigidBody, &Desc))) {
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HIDDEN_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 		return E_FAIL;
 	}
 
 	m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
 
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
-	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
+	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat3(&pDesc->vBoxLocalPosition));
 	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(false);
 
-	m_pInfoInstance->Regist_ActiveInteractive(this);
+	if (true == m_isPooled)
+	{
+		m_bVisible = false;
+		static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(true);
+	}
+	else
+	{
+		m_bVisible = true;
+		m_pInfoInstance->Regist_ActiveInteractive(this);
+	}
 
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
@@ -89,9 +81,12 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 
 void CMapElement_Interactable::Priority_Update(_float fTimeDelta)
 {
-	_float fRadius = m_pModelComs[0]->Get_Radius();
+	if(m_bVisible)
+	{
+		_float fRadius = m_pModelComs[0]->Get_Radius();
 
-	XMStoreFloat4(&m_vStartPos, Get_WorldPostion() + XMVectorSet(0.f , fRadius , 0.f , 0.f ));
+		XMStoreFloat4(&m_vStartPos, Get_WorldPostion() + XMVectorSet(0.f, fRadius, 0.f, 0.f));
+	}
 
 }
 
@@ -102,23 +97,25 @@ void CMapElement_Interactable::Update(_float fTimeDelta)
 
 void CMapElement_Interactable::Late_Update(_float fTimeDelta)
 {
-
-	if (m_isGraped == true)
+	if (m_bVisible)
 	{
-		 _float fRadius = m_pModelComs[0]->Get_Radius();
+		if (m_bThrow == true)
+		{
+			_float fRadius = m_pModelComs[0]->Get_Radius();
 
-		if (false == m_bHit) {
-			_vector vStartPos = XMLoadFloat4(&m_vStartPos);
-			_vector vEndPos = Get_WorldPostion() + XMVectorSet(0.f, fRadius, 0.f, 0.f);
-			ON_COLLISION_INFO CollisionInfo = CollisionCheck(vStartPos, vEndPos, 1.f);
+			if (false == m_bHit) {
+				_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+				_vector vEndPos = Get_WorldPostion() + XMVectorSet(0.f, fRadius, 0.f, 0.f);
+				ON_COLLISION_INFO CollisionInfo = CollisionCheck(vStartPos, vEndPos, 1.f);
 
-			if (m_bHit == true)
-				OnCollision(this, &CollisionInfo);
+				if (m_bHit == true)
+					OnCollision(this, &CollisionInfo);
+			}
 		}
-	}
 
-	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
+			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		}
 	}
 }
 
@@ -171,6 +168,9 @@ void CMapElement_Interactable::GrapToPlayer(_fvector vPos, _float fRatio)
 
 void CMapElement_Interactable::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (m_bThrow == false)
+		return;
+
 	if (m_bHit == false)
 		return;
 
@@ -191,18 +191,27 @@ void CMapElement_Interactable::OnCollision(CGameObject* pOther, void* pDesc)
 	case Client::ELEMENT_INTERACTABLE_ID::TABLE:
 		m_pEffectPool->Use_Skill(SKILL_TYPE::CHAIL_SPLESH, this);
 		break;
+	case Client::ELEMENT_INTERACTABLE_ID::CHAIR:
+		m_pEffectPool->Use_Skill(SKILL_TYPE::CHAIL_SPLESH, this);
+		break;
 	case Client::ELEMENT_INTERACTABLE_ID::END:
 		break;
 	default:
 		break;
 	}
 
-
-	
-	Set_Dead();
+	if (m_isPooled)
+	{
+		m_bVisible = false;
+		static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(true);
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -999.f, 0.f, 1.f));
+		m_pInfoInstance->Deregist_ActiveInteractive(this);
+	}
+	else{
+		m_pInfoInstance->Deregist_ActiveInteractive(this);
+		Set_Dead();
+	}
 }
-
-
 
 HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
 {
@@ -215,7 +224,7 @@ HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
 		CModel* pModel = { nullptr };
 
 		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, m_ModelPrototypeTags[i],
 			reinterpret_cast<CComponent**>(&pModel))))
 			return E_FAIL;
 
@@ -268,26 +277,15 @@ HRESULT CMapElement_Interactable::Render_OutLine()
 		return E_FAIL;
 	}
 
-#ifdef _DEBUG
-	GUI::Begin("Unit", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	if (GUI::CollapsingHeader("OutLine")) {
-		GUI::SetNextItemWidth(80.f);
-		GUI::ColorPicker3("vOutLineColor", (_float*)&m_vOutLineColor);
-		GUI::SliderFloat("Thickness", &m_fOutLineThickness, 0.1f, 2.f, "%.1f");
-		GUI::SliderFloat("Scale", &m_fOutLineScale, 0.1f, 2.f, "%.1f");
-		GUI::SliderFloat("Power", &m_fOutLinePower, 0.1f, 2.f, "%.1f");
-	}
-	GUI::End();
-#endif // _DEBUG
-
 	Compute_Depth();
-	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
-	m_fOutLineThickness = CMyTools::Lerp_f1D(0.07f, 0.15f, fRatio);
-	if (m_fOutLineThickness > 0.15f) {
-		m_fOutLineThickness = 0.15f;
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(0.8f, 1.2f, fRatio);
+	if (m_fOutLineThickness > 0.023f) {
+		m_fOutLineThickness = 0.023f;
 	}
-	else if (m_fOutLineThickness < 0.07f) {
-		m_fOutLineThickness = 0.07f;
+	else if (m_fOutLineThickness < 0.013f) {
+		m_fOutLineThickness = 0.013f;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
@@ -328,6 +326,15 @@ void CMapElement_Interactable::Set_KinematicFlag(_bool bFlag)
 	m_pRigidBody->Set_Kinematic(bFlag);
 }
 
+void CMapElement_Interactable::ActivateAt(_fvector vPos)
+{
+	m_bVisible = true;
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	m_pInfoInstance->Regist_ActiveInteractive(this);
+	m_pRigidBody->Set_Kinematic(false);
+	m_pRigidBody->Set_Position(vPos, true);
+}
+
 ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _fvector EndPos, _float fRadius)
 {
 
@@ -337,110 +344,75 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 
 	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
 
-	PSX::PxSweepBuffer pxBuffer = {};
+	PSX::PxSweepBufferN<12> pxBuffer = {};
 
-	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
-
-	const PSX::PxSweepHit& hit = pxBuffer.block;
-	PSX::PxRigidActor* pActor = hit.actor;
-	PSX::PxShape* pShape = hit.shape;
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC | PSX::PxQueryFlag::eNO_BLOCK, pxBuffer);
 	ON_COLLISION_INFO tagCollInfo = {};
-
+	XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
 	tagCollInfo.vWorldPos.w = 1.f;
-
 	if (bHit) {
-
-		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-
-		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-		tagCollInfo.fLength = fDistance;
-
-
-		if (nullptr != pActor && nullptr != pActor->userData)
-		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
-			tagCollInfo.pObject = pUserData->pOwner;
-
-			switch (pUserData->eKind)
-			{
-			case PHYSX_KIND::CCTActor:
-			{
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::MONSTER:
-					break;
-				case PXOBJECT::GOBLIN_WARRIOR:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				case PXOBJECT::GOBLIN_MAGICIAN:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				case PXOBJECT::TROLL:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				}
-			}
-			}
-		}
-
-
-	}
-
-	if (bHit == false)
-	{
-		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-		tagCollInfo.fLength = fDistance;
-		tagCollInfo.pObject = this;
-
-		bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
-
-		const PSX::PxSweepHit& hit = pxBuffer.block;
-		PSX::PxRigidActor* pActor = hit.actor;
-		PSX::PxShape* pShape = hit.shape;
-
-		tagCollInfo.vWorldPos.w = 1.f;
-
-		if (bHit)
-		{
-			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-			tagCollInfo.fLength = fDistance;
-
-			if (nullptr != pActor && nullptr != pActor->userData)
-			{
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
-				tagCollInfo.pObject = pUserData->pOwner;
-
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::TERRAIN:
-				{
-					/* TODO, 터레인 안됨 */
-					m_bHit = true;
+		HRESULT hr = CheckHit(&pxBuffer.block, tagCollInfo);
+		if (FAILED(hr)) {
+			PSX::PxSweepHit* hits = pxBuffer.touches;
+			_uint iHitCount = pxBuffer.getNbTouches();
+			for (_uint i = 0; i < iHitCount; ++i) {
+				PSX::PxSweepHit* pHit = &pxBuffer.touches[i];
+				hr = CheckHit(pHit, tagCollInfo);
+				if (SUCCEEDED(hr)) {
 					break;
 				}
-				}
-
 			}
 		}
-
-
 	}
-
 	return tagCollInfo;
+}
+
+HRESULT CMapElement_Interactable::CheckHit(PSX::PxSweepHit* pHit, ON_COLLISION_INFO& Info)
+{
+	HRESULT hr = E_FAIL;
+	PSX::PxActor* pActor = pHit->actor;
+	PSX::PxShape* pShape = pHit->shape;
+	PHYSX_USERDATA* pUserData = { nullptr };
+	CGameObject* pTarget = { nullptr };
+	if (nullptr != pActor && nullptr != pActor->userData || nullptr != pShape && nullptr != pShape->userData) {
+		pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		if (nullptr == pUserData) {
+			pUserData = static_cast<PHYSX_USERDATA*>(pShape->userData);
+		}
+		switch (pUserData->eKind)
+		{
+		case PHYSX_KIND::BODY_STATIC:
+		case PHYSX_KIND::CCTActor:
+		{
+			switch (PXOBJECT(pUserData->iSubKind))
+			{
+			case PXOBJECT::TERRAIN:
+			case PXOBJECT::GOBLIN_WARRIOR:
+			case PXOBJECT::GOBLIN_MAGICIAN:
+			case PXOBJECT::GOBLIN_ASSASSIN:
+			case PXOBJECT::TROLL:
+			case PXOBJECT::RANROK_BODY:
+			case PXOBJECT::RANROK:
+			{
+				hr = S_OK;
+				m_bHit = true;
+			} break;
+			default:
+				break;
+			}
+		} break;
+		default:
+			break;
+		}
+	}
+	if (SUCCEEDED(hr)) {
+		memcpy_s(&Info.vWorldPos, sizeof(Info.vWorldPos), &pHit->position, sizeof(pHit->position));
+		memcpy_s(&Info.vWorldNomal, sizeof(Info.vWorldNomal), &pHit->normal, sizeof(pHit->normal));
+		Info.fLength = pHit->distance;
+		Info.pObject = pUserData->pOwner;
+		Info.pObject->OnCollision(this, &Info);
+	}
+	return hr;
 }
 
 CMapElement_Interactable* CMapElement_Interactable::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -471,20 +443,18 @@ CGameObject* CMapElement_Interactable::Clone(void* pArg, CGameObject* pOwner)
 
 void CMapElement_Interactable::Free()
 {
-	if (nullptr != m_pRigidBody) {
-		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor());
-	}
 	__super::Free();
 
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pEffectPool);
-
-	if (nullptr != m_pInfoInstance) {
-		CInfoInstance* pInfo = m_pInfoInstance;
-		m_pInfoInstance = nullptr;
-		pInfo->Deregist_ActiveInteractive(this);
+	 
+	if (!m_isPooled) {
+		if (nullptr != m_pInfoInstance) {
+			m_pInfoInstance = nullptr;
+		}
 	}
+	
 	for (auto& pModel : m_pModelComs){
 		SAFE_RELEASE(pModel);
 	}

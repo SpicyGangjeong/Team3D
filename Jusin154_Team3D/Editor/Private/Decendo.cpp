@@ -48,7 +48,7 @@ HRESULT CDecendo::Initialize(void* pArg)
 
 	SAFE_ADDREF(m_pProjectile_Blur);
 	SAFE_ADDREF(m_pProjectile);
-
+	\
 	m_fDuration = 3.5f;
 
 	return S_OK;
@@ -75,7 +75,6 @@ void CDecendo::Update(_float fTimeDelta)
 	// 선속도
 	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
 	m_pProjectile->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
-
 	//Up벡터 방향으로 파이만큼 이동
 
 	if (m_fRotateAccTime > XM_2PI)
@@ -86,7 +85,6 @@ void CDecendo::Update(_float fTimeDelta)
 	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateUp) * sinf(m_fRotateAccTime) * 0.1f);
 	m_pProjectile->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateUp) * sinf(m_fRotateAccTime) * 0.1f);
 
-
 }
 
 void CDecendo::Late_Update(_float fTimeDelta)
@@ -94,7 +92,7 @@ void CDecendo::Late_Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
+	Get_PartObject<CTrailObject>()->Oneside_Rope_Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 
 	XMStoreFloat4(&m_vEndPos, m_pProjectile->Get_WorldPostion());
 
@@ -124,12 +122,15 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	CPartObject* pCircle0 = Get_PartObject<CEditEffect>();
 	CPartObject* pWandLight = Get_PartObject<CEditEffect>("Decendo_Wand_Light");
+	CPartObject* pDecendo_Wand_Line = Get_PartObject<CEditEffect>("Decendo_Wand_Line");
 
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	pDecendo_Wand_Line->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	pCircle0->Set_Visible(true);
 	pWandLight->Set_Visible(true);
+	pDecendo_Wand_Line->Set_Visible(true);
 
 	/* 초기 위치 저장  */
 	_vector vStartPos = m_pOwner->Get_WorldPostion();
@@ -143,6 +144,7 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject, void* pArg)
 	/* 초기 객체 비지블 */
 	m_pProjectile->Set_Visible(true);
 	m_pProjectile_Blur->Set_Visible(true);
+	//m_pProjectile_Fire->Set_Visible(true);
 
 	/*트레일 초기화 */
 	Get_PartObject<CTrailObject>()->Set_Visible(true);
@@ -250,39 +252,48 @@ void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
-	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
+	_vector vHitPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
+	CCharacter_Controller* pCCT = CollisionDesc.pObject->Get_Component<CCharacter_Controller>();
+	_vector vFootPos = {};
+	_vector vPlayerPos = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::POSITION);
 
-	for (auto& pPair : m_PartObjects)
+	if (pCCT != nullptr)
 	{
-		pPair.second->Set_Visible(true);
-		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+		vFootPos = pCCT->Get_FootPosition();
 	}
+
+
+
+	CPartObject* pDecendo_Rock_PT = Get_PartObject<CEditEffect>("Decendo_Rock_PT");
+	CPartObject* pDecendo_Red_Blur = Get_PartObject<CEditEffect>("Decendo_Red_Blur");
+	CPartObject* pDecendo_Down = Get_PartObject<CEditEffect>("Decendo_Down");
+	CPartObject* pDecendo_Ring = Get_PartObject<CEditEffect>("Decendo_Ring");
+	CPartObject* pDecendo_Smoke = Get_PartObject<CEditEffect>("Decendo_Smoke");
+	
+	pDecendo_Rock_PT->Set_Visible(true);
+	pDecendo_Rock_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+
+	pDecendo_Red_Blur->Set_Visible(true);
+	pDecendo_Red_Blur->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerPos);
+
+	pDecendo_Down->Set_Visible(true);
+	pDecendo_Down->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPlayerPos);
+
+	pDecendo_Ring->Set_Visible(true);
+	pDecendo_Ring->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+	
+	pDecendo_Smoke->Set_Visible(true);
+	pDecendo_Smoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+
+
 
 
 	m_pProjectile_Blur->Set_Visible(false);
 	m_pProjectile->Set_Visible(false);
 
 
-	CWand* pWand = static_cast<CWand*>(m_pOwner);
-
-	if (pWand == nullptr)
-		return;
-
-	CPartObject* pCircle0 = Get_PartObject<CEditEffect>();
-	CPartObject* pWandLight = Get_PartObject<CEditEffect>("Decendo_Wand_Light");
-
-
-	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
-	_vector vPlayerPos = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::POSITION);
-
-
-
 	Get_PartObject<CEditEffect>("Decendo_Down")->Get_Component<CTransform>()->LookAt(vPlayerPos);
-	Get_PartObject<CEditEffect>("Decendo_Smoke")->Get_Component<CTransform>()->LookAt(vPlayerPos);
-
 
 
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
@@ -296,7 +307,6 @@ void CDecendo::Free()
 
 	SAFE_RELEASE(m_pProjectile_Blur);
 	SAFE_RELEASE(m_pProjectile);
-
 }
 #ifdef _DEBUG
 void CDecendo::Describe_Entity()

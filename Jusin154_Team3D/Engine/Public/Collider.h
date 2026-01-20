@@ -29,6 +29,7 @@ private:
 public:
 	virtual HRESULT Render();
 	virtual HRESULT Render(_float3 m_vColor);
+	void Set_Desc(void* pDesc);
 private:
 	PrimitiveBatch<DirectX::VertexPositionColor>*	m_pBatch = { nullptr };
 	BasicEffect*									m_pEffect = { nullptr };

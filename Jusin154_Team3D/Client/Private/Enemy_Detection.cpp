@@ -19,7 +19,7 @@ HRESULT CEnemy_Detection::Initialize_Prototype()
 }
 
 HRESULT CEnemy_Detection::Initialize(void* pArg)
-{
+ {
 	ENEMY_DETECTION_DESC* pDesc = static_cast<ENEMY_DETECTION_DESC*> (pArg);
 	m_pSocketMatrices = pDesc->pSocketMatrices;
 
@@ -47,7 +47,6 @@ HRESULT CEnemy_Detection::Initialize(void* pArg)
 
 void CEnemy_Detection::Priority_Update(_float fTimeDelta)
 {
-
 	XMVECTOR MonsterPos = static_cast<CMonster*>(m_pOwner)->Get_WorldPostion();
 
 	_float fOffsetY = 3.0f; // 적절한 Y 오프셋 값 (몬스터 머리 위로 올리기 위함)

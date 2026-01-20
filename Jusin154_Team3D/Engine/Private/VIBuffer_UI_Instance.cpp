@@ -97,7 +97,7 @@ HRESULT CVIBuffer_UI_Instance::Initialize_Prototype(const INSTANCE_DESC* pInstan
 #pragma region INSTANCE_BUFFER
 	const UI_INSTANCE_DESC* pDesc = static_cast<const UI_INSTANCE_DESC*>(pInstanceDesc);
 
-	m_iNumInstance = pDesc->iNum;
+	m_iNumInstance = m_iCopyCount = pDesc->iNum;
 	m_iInstanceStride = sizeof(VTX_INSTANCE_UI);
 	m_iNumIndexPerInstance = 6;
 
@@ -336,6 +336,32 @@ _int CVIBuffer_UI_Instance::Set_Mouse_Hover(_float2 fMousePos)
 	return hoveredIndex;
 }
 
+void CVIBuffer_UI_Instance::Set_Hover(_int Index)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	if(Index == -1)
+	for (_uint i = 0; i < m_iNumInstance; i++)
+		pVertices[i].bHover = 0.f;
+
+	for (_uint i = 0; i < m_iNumInstance; i++)
+	{
+		if (i == Index)
+		{
+			pVertices[i].bHover = 1.f;
+		}
+		else
+		{
+			pVertices[i].bHover = 0.f;
+		}
+	}
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
 void CVIBuffer_UI_Instance::Set_Hover_Index(_uint iIndex)
 {
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
@@ -368,6 +394,11 @@ void CVIBuffer_UI_Instance::Set_Equip_Index(_uint iIndex)
 	pVertices[iIndex].bSpell = 1.f;
 
 	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_Draw(_int iCount)
+{
+	m_iNumInstance = (iCount == -1) ? m_iCopyCount : iCount;
 }
 
 CVIBuffer_UI_Instance* CVIBuffer_UI_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc)

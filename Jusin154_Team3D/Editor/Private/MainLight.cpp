@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "Camera_Debug.h"
 #include "GameTime.h"
+#include "Layer.h"
+#include "GameInstance.h"
 
 CMainLight::CMainLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -29,7 +31,7 @@ HRESULT CMainLight::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(1.f, -1.f, 1.f, 0.f));
+	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(-1.716f, 0.121f, 0.211f, 0.f));
 
 	m_pGameTime = CGameTime::Create();
 
@@ -118,6 +120,7 @@ void CMainLight::Update(_float fTimeDelta)
 
 void CMainLight::Late_Update(_float fTimeDelta)
 {
+
 }
 
 HRESULT CMainLight::Render()
@@ -125,7 +128,73 @@ HRESULT CMainLight::Render()
 	return S_OK;
 }
 
+HRESULT CMainLight::Capture_PreShadow()
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_BACKGROUND);
+	assert(nullptr != pLayer);
 
+	const list<CGameObject*>* pObjects = pLayer->Get_Objects();
+	for (auto& pObject : *pObjects) {
+		if (FAILED(m_pGameInstance->Add_RenderGroup(RENDER::PRESHADOW, pObject))) {
+			assert(false);
+		}
+	}
+	vector<_float3> vNeededPos = {};
+	vNeededPos.reserve(12);
+	{
+		// 외곽이 더 많아지면 많아질수록 더 정밀한 경계가 가능함
+		// 하지만 더 실제보다 멀리 외곽을 두르면 필요한 것보다 더 많이 찍게 됨
+		// 결국 딱 맞춰서 찍는게 제일 중요함
+		vNeededPos.emplace_back(_float3(-112.f, 155.f, 362.f));
+		vNeededPos.emplace_back(_float3(-188.f, 10.f, 476.f));
+		vNeededPos.emplace_back(_float3(-571.f, 19.f, 476.f));
+		vNeededPos.emplace_back(_float3(-326.f, -64.f, 480.f));
+		vNeededPos.emplace_back(_float3(569.f, 77.f, 250.f));
+		vNeededPos.emplace_back(_float3(320.f, -236.f, 360.f));
+		vNeededPos.emplace_back(_float3(570.f, 277.f, -277.f));
+		vNeededPos.emplace_back(_float3(570.f, 176.f, -527.f));
+		vNeededPos.emplace_back(_float3(-108.f, -64.f, -1146.f));
+		vNeededPos.emplace_back(_float3(-824.f, 128.f, -533.f));
+		vNeededPos.emplace_back(_float3(-826.f, 145.f, -150.f));
+		vNeededPos.emplace_back(_float3(-256.f, -92.f, -414.f));
+	}
+	_matrix xmViewMatrix = m_pTransformCom->Get_WorldMatrixInv();
+	_float4x4 ViewMatrix = {}; XMStoreFloat4x4(&ViewMatrix, xmViewMatrix);
+	_float4x4 ProjMatrix = {}; XMStoreFloat4x4(&ProjMatrix, Get_OffCenterProjMatrix(xmViewMatrix, vNeededPos));
+
+	m_pGameInstance->Render_PreShadow(ViewMatrix, ProjMatrix);
+
+	m_pGameInstance->Update_Volumetric();
+	return S_OK;
+}
+
+_matrix CMainLight::Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3>& WorldPositions)
+{
+	_float fMinX = FLT_MAX;
+	_float fMinY = FLT_MAX;
+	_float fMinZ = FLT_MAX;
+	_float fMaxX = -FLT_MAX;
+	_float fMaxY = -FLT_MAX;
+	_float fMaxZ = -FLT_MAX;
+
+	_uint iPosNum = (_uint)WorldPositions.size();
+	for (_uint iIndexPoint = 0; iIndexPoint < iPosNum; ++iIndexPoint)
+	{
+		_vector vLightViewPos = XMVector4Transform(XMVectorSetW(XMLoadFloat3(&WorldPositions[iIndexPoint]), 1.f), ViewMatrix);
+
+		_float x = XMVectorGetX(vLightViewPos);
+		_float y = XMVectorGetY(vLightViewPos);
+		_float z = XMVectorGetZ(vLightViewPos);
+
+		fMinX = min(fMinX, x);  fMaxX = max(fMaxX, x);
+		fMinY = min(fMinY, y);  fMaxY = max(fMaxY, y);
+		fMinZ = min(fMinZ, z);  fMaxZ = max(fMaxZ, z);
+	}
+	_float fShadowDepthMArgin = 10.f; // 캐릭터 이동 보정
+	fMinZ -= fShadowDepthMArgin;
+	fMaxZ += fShadowDepthMArgin;
+	return XMMatrixOrthographicOffCenterLH(fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ);
+}
 
 HRESULT CMainLight::Ready_Components()
 {
@@ -134,17 +203,20 @@ HRESULT CMainLight::Ready_Components()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
-	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
+	LightDesc.vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
+	LightDesc.vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
 	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
+	m_pTransformCom->Rotation(XMConvertToRadians(-4.f), XMConvertToRadians(271.f), 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
 
 #ifdef gimch
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
-#endif // gimch
+	//LightDesc.vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
+	//LightDesc.vAmbient = _float4(0.161f, 0.161f, 0.161f, 0.0f);
+	LightDesc.vDiffuse = _float4(0.361f, 0.451f, 0.451f, 0.204f);
+	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.0f);
 
+#endif // gimch
 
 	/* Com_Light*/
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
@@ -156,7 +228,17 @@ HRESULT CMainLight::Ready_Components()
 
 	_float4 vColor = _float4(0.7f, 0.7f, 0.7f, 0.3f);
 	m_pGameInstance->Set_FogColor(vColor);
-	m_pGameInstance->Set_FogDensity(5.f);
+	m_pGameInstance->Set_Fog(5.f, 30.f);
+	
+#ifdef gimch
+	vColor = _float4(0.2f, 0.246f, 0.256f, 1.f);
+	m_pGameInstance->Set_FogColor(vColor);
+	m_pGameInstance->Set_Fog(10.f, 10.f);
+
+#endif // gimch
+
+	
+
 	return S_OK;
 }
 

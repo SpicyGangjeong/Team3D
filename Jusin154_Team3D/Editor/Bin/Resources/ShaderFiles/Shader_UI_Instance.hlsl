@@ -18,7 +18,9 @@ float g_fFar;
 float g_fTime;
 
 float4 g_UV;
-
+float2 g_fOrigin_Size;
+float2 g_fCurrent_Size;
+float4 g_fNine_Slice;
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -44,7 +46,7 @@ struct VS_OUT
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
 
     matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
     float3 vLocalPos = In.vPosition;
@@ -85,7 +87,7 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float2 center = float2(0.5f, 0.5f);
@@ -107,7 +109,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 PS_OUT PS_Alpha_Blend(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 color = g_Texture.Sample(ClampSampler, In.vTexcoord);
@@ -124,7 +126,7 @@ PS_OUT PS_Alpha_Blend(PS_IN In)
 
 PS_OUT PS_UVAlpha_Blend(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 color = g_Texture.Sample(ClampSampler, In.vUV);
@@ -141,7 +143,7 @@ PS_OUT PS_UVAlpha_Blend(PS_IN In)
 
 PS_OUT PS_Megic_Meter(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float3 Blue = float3(41.f, 165.f, 255.f) / 255.f;
     
@@ -167,7 +169,7 @@ PS_OUT PS_Megic_Meter(PS_IN In)
 
 PS_OUT PS_Spell_List(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float3 Blue = float3(41.f, 165.f, 255.f) / 255.f;
     
@@ -193,7 +195,7 @@ PS_OUT PS_Spell_List(PS_IN In)
 
 PS_OUT PS_Eessential_Spell_Slot(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
@@ -213,7 +215,7 @@ PS_OUT PS_Eessential_Spell_Slot(PS_IN In)
 
 PS_OUT PS_Eessential_Spell(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
@@ -230,7 +232,7 @@ PS_OUT PS_Eessential_Spell(PS_IN In)
 
 PS_OUT PS_Color_Image(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
@@ -273,7 +275,7 @@ PS_OUT PS_Color_Image(PS_IN In)
 
 PS_OUT PS_Spell_Hover(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float3 HoverOff = g_Texture2.Sample(DefaultSampler, In.vTexcoord).rgb;
@@ -308,7 +310,7 @@ PS_OUT PS_Spell_Hover(PS_IN In)
 
 PS_OUT PS_Spell_Effect(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     if (In.bHover == 0)
         discard;
@@ -353,7 +355,7 @@ PS_OUT PS_Spell_Effect(PS_IN In)
 
 PS_OUT PS_Spell_Slot(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     float2 center = float2(0.5f, 0.5f);
     float2 uv = In.vTexcoord - center;
@@ -413,7 +415,7 @@ PS_OUT PS_Spell_Slot(PS_IN In)
 
 PS_OUT PS_Spell_Lock(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
@@ -435,6 +437,67 @@ PS_OUT PS_Spell_Lock(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Quest_Slot(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT)0;
+
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, Finaluv);
+    
+    color = tex1;
+    
+    color.a *= Alpha;
+    Out.vColor = color;
+    
+    return Out;
+}
+
 technique11 PosTexTechnique11
 {
     pass Default
@@ -444,7 +507,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -455,7 +518,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Alpha_Blend();
     }
 
@@ -466,7 +529,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_UVAlpha_Blend();
     }
 
@@ -477,7 +540,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Megic_Meter();
     }
 
@@ -488,7 +551,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Spell_List();
     }
 
@@ -499,7 +562,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Eessential_Spell_Slot();
     }
 
@@ -510,7 +573,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Eessential_Spell();
     }
 
@@ -521,7 +584,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Color_Image();
     }
 
@@ -532,7 +595,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Spell_Hover();
     }
 
@@ -543,7 +606,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Spell_Effect();
     }
 
@@ -554,7 +617,7 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Spell_Slot();
     }
 
@@ -565,7 +628,18 @@ technique11 PosTexTechnique11
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Spell_Lock();
+    }
+
+    pass Quest_Slot
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        
+        PixelShader = compile ps_5_0 PS_Quest_Slot();
     }
 }

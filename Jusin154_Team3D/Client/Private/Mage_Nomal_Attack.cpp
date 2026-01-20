@@ -21,8 +21,6 @@ CMage_Nomal_Attack::CMage_Nomal_Attack(const CMage_Nomal_Attack& rhs)
 
 HRESULT CMage_Nomal_Attack::Initialize_Prototype()
 {
-
-
 	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinMage/NomalAttack")))
 		return E_FAIL;
 
@@ -215,6 +213,9 @@ void CMage_Nomal_Attack::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 
 	pPlayer->Start_CameraShake(0.3f, 2.f);
+
+	
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_MAGE_HIT, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
 
 }
 

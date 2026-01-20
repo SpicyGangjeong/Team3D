@@ -180,6 +180,7 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLerpLow);
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLerpHigh);
 
+
 		if (m_iNumCount >= m_iNumVertices)
 		{
 			memmove(m_pVertices, m_pVertices + 2, sizeof(VTXPOSTEX) * (m_iNumCount - 2));
@@ -189,7 +190,7 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 	}
 
-	for (_uint i = 0; i < m_iNumCount; i += 2)
+	for (_uint i = 0; i + 1 < m_iNumCount; i += 2)
 	{
 
 		_float u = ((_float)i / (m_iNumCount - 2));
@@ -200,7 +201,6 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 		m_pVertices[i].vTexcoord = _float2(u, 0); // Low
 
 		m_pVertices[i + 1].vTexcoord = _float2(u, 1); // High
-
 
 	}
 
@@ -221,15 +221,18 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float fDamping, _float fLength , _float fMass , _fmatrix EndWorldMatrix)
 {
+
 	if (m_isFix == false)
 	{
 		if (m_iNumCount > 2)
+		{
 			memmove(m_pVertices + 2, m_pVertices, sizeof(VTXPOSTEX) * (m_iNumCount - 2));
+			memmove(m_pOldPosition + 2, m_pOldPosition, sizeof(_float3) * (m_iNumCount - 2));
+		}
 
 		if (m_iNumCount >= m_iNumVertices)
 			m_iNumCount -= 2;
 	}
-
 
 	m_pOldPosition[0] = m_pVertices[0].vPosition;
 	m_pOldPosition[1] = m_pVertices[1].vPosition;
@@ -245,7 +248,7 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 	_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), WorldMat);
 	_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), WorldMat);
 
-	/* 시작시 고정점 업데이트 */
+	/* 시작 시 고정점 업데이트 */
 	XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
 	XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);
 
@@ -264,6 +267,9 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 
 	XMStoreFloat3(&m_pVertices[m_iNumCount - 2].vPosition, vEndLow);
 	XMStoreFloat3(&m_pVertices[m_iNumCount - 1].vPosition, vEndHigh);
+
+	m_pOldPosition[m_iNumCount - 2] = m_pVertices[m_iNumCount - 2].vPosition;
+	m_pOldPosition[m_iNumCount - 1] = m_pVertices[m_iNumCount - 1].vPosition;
 
 	for (_uint i = 2; i < m_iNumCount; i++) /* 고정점은 연산에서 제외 0 , 1*/
 	{
@@ -293,7 +299,7 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 
 	}
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 20; ++i) {
 		for (_uint k = 0; k < m_iNumCount - 2; k += 2) {
 
 			/* Low , High */
@@ -316,14 +322,14 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 			_float fLowDiff = (fLength - fLowDist) / fLowDist;
 			_float fHighDiff = (fLength - fHighDist) / fHighDist;
 
-			// 각 점을 절반씩 밀거나 당겨서 거리 맞춤
-			// 손잡이(Pinned)는 움직이지 않도록 질량 비율 조절 가능 (여기선 0.5씩)
+			// 각 점을 절반씩 밀거나 당겨서  거리 맞춤
 
 			_vector vLowOffset = vDeltaLow * (fMass * fLowDiff);
 			_vector vHighOffset = vDeltaHigh * (fMass * fHighDiff);
 
-			// k!=0 (즉, 움직이는 마디)일 때만 vFirst를 움직임
-			if (k != 0)
+			// k!=0일 때만 vFirst를 움직임
+
+ 			if (k != 0)
 			{
 				vFirst[0] -= vLowOffset;
 				vFirst[1] -= vHighOffset;
@@ -334,20 +340,24 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 			vNext[1] += vHighOffset;
 
 
-			// --- 2. 고정점 몫 몰아주기 (k=0 일 때만) ---
+			// k=0일 때 vFirst (손잡이)가 움직이지 않은 몫을 vNext에게 전부 몰아줌
 
-			// k=0일 때 vFirst (손잡이)가 움직이지 않은 몫을 vNext (첫 마디)에게 전부 몰아줌
 			if (k == 0)
 			{
-				// vFirst가 움직여야 할 양(-Offset)만큼 vNext에 추가 보정 (+Offset)
+				// vFirst가 움직여야 할 만큼 vNext에 추가 보정
 				vNext[0] += vLowOffset;
 				vNext[1] += vHighOffset;
 			}
 
-			// --- 3. 결과 저장 ---
+			if (k == m_iNumCount - 4)
+			{
 
-			// vFirst 저장 (k=0 일 때는 vFirst가 vLow/vHigh의 값을 가지지만, 
-			// 움직이지 않았으므로 저장해도 무방. 하지만 명확성을 위해 조건부 저장 가능)
+				vFirst[0] -= vLowOffset;
+				vFirst[1] -= vHighOffset;
+			}
+
+
+
 			if (k != 0)
 			{
 				XMStoreFloat3(&m_pVertices[k].vPosition, vFirst[0]);
@@ -359,6 +369,179 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 			XMStoreFloat3(&m_pVertices[k + 3].vPosition, vNext[1]);
 		}
 	}
+
+	XMStoreFloat3(&m_pVertices[m_iNumCount - 2].vPosition, vEndLow);
+	XMStoreFloat3(&m_pVertices[m_iNumCount - 1].vPosition, vEndHigh);
+
+	for (_uint i = 0; i < m_iNumCount; i += 2)
+	{
+
+		_float u = ((_float)i / (m_iNumCount - 2));
+
+		if (m_iNumCount - 2 <= 0)
+			u = 0;
+
+		m_pVertices[i].vTexcoord = _float2(u, 0); // Low
+
+		m_pVertices[i + 1].vTexcoord = _float2(u, 1); // High
+
+
+	}
+
+
+	D3D11_MAPPED_SUBRESOURCE		VBResource{};
+
+	if (SUCCEEDED(m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBResource)))
+	{
+
+		memcpy(VBResource.pData, m_pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+
+		VTXPOSTEX* pDebug = static_cast<VTXPOSTEX*>(VBResource.pData);
+
+		m_pContext->Unmap(m_pVB, 0);
+	}
+}
+
+void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float fDamping, _float fLength, _float fMass)
+{
+	_matrix WorldMat = {};
+
+	WorldMat.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+	WorldMat.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
+	WorldMat.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
+	WorldMat.r[3] = WorldMatrix.r[3];
+
+	_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), WorldMat);
+	_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), WorldMat);
+
+
+	if (m_iNumCount == 0)
+	{
+		for (_uint i = 0; i < m_iNumVertices; i += 2)
+		{
+			XMStoreFloat3(&m_pVertices[i].vPosition, vLow);
+			XMStoreFloat3(&m_pVertices[i + 1].vPosition, vHigh);
+
+			m_pOldPosition[i] = m_pVertices[i].vPosition;
+			m_pOldPosition[i + 1] = m_pVertices[i + 1].vPosition;
+		}
+
+		// 처음엔 마디 1개(정점 2개)만 보여주며 시작
+		m_iNumCount = 2;
+	}
+	else
+	{
+		if (m_iNumCount > 2)
+		{
+			memmove(m_pVertices + 2, m_pVertices, sizeof(VTXPOSTEX) * (m_iNumCount - 2));
+			memmove(m_pOldPosition + 2, m_pOldPosition, sizeof(_float3) * (m_iNumCount - 2));
+		}
+
+		if (m_iNumCount >= m_iNumVertices)
+			m_iNumCount -= 2;
+
+		/* 시작 시 고정점 업데이트 */
+		XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
+		XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);
+
+
+		m_pOldPosition[0] = m_pVertices[0].vPosition;
+		m_pOldPosition[1] = m_pVertices[1].vPosition;
+
+		m_iNumCount += 2;
+	}
+	
+
+	for (_uint i = 2; i < m_iNumCount; i++) /* 고정점은 연산에서 제외 0 , 1*/
+	{
+
+		_vector vCurrentPos = XMLoadFloat3(&m_pVertices[i].vPosition);
+		vCurrentPos = XMVectorSetW(vCurrentPos, 1.f);
+
+
+		_vector vOldPos = XMLoadFloat3(&m_pOldPosition[i]);
+		vOldPos = XMVectorSetW(vOldPos, 1.f);
+
+		//if (XMVectorGetX(XMVector3Length(vOldPos)) <= 0)
+		//	continue;
+
+		_vector vVelocity = (vCurrentPos - vOldPos) * fDamping;
+
+		_vector vGravity = XMVectorSet(0.0f, m_fGravity, 0.0f, 0.0f);
+
+		// Verlet 공식: Next = Curr + Vel + Acc * dt * dt
+		_vector vNextPos = vCurrentPos + vVelocity + vGravity * (fTimeDelta * fTimeDelta);
+
+		// 과거 위치 갱신
+		XMStoreFloat3(&m_pOldPosition[i], XMLoadFloat3(&m_pVertices[i].vPosition));
+
+		// 현재 위치 갱신
+		XMStoreFloat3(&m_pVertices[i].vPosition, vNextPos);
+
+	}
+
+	for (int i = 0; i < 10; ++i) {
+		for (_uint k = 0; k < m_iNumCount - 2; k += 2) {
+
+			/* Low , High */
+			_vector vFirst[2] = { XMLoadFloat3(&m_pVertices[k].vPosition) , XMLoadFloat3(&m_pVertices[k + 1].vPosition) };
+			_vector vNext[2] = { XMLoadFloat3(&m_pVertices[k + 2].vPosition) , XMLoadFloat3(&m_pVertices[k + 3].vPosition) };
+
+
+			_vector vDeltaLow = vNext[0] - vFirst[0];
+			_vector vDeltaHigh = vNext[1] - vFirst[1];
+
+
+			_float fLowDist = XMVectorGetX(XMVector3Length(vDeltaLow));
+			_float fHighDist = XMVectorGetX(XMVector3Length(vDeltaHigh));
+
+			// 거리가 0이면 오류 방지
+			if (fLowDist < FLT_EPSILON5) continue;
+			if (fHighDist < FLT_EPSILON5) continue;
+
+			// 늘어나거나 줄어든 비율 계산 (Difference)
+			_float fLowDiff = (fLength - fLowDist) / fLowDist;
+			_float fHighDiff = (fLength - fHighDist) / fHighDist;
+
+			// 각 점을 절반씩 밀거나 당겨서  거리 맞춤
+
+			_vector vLowOffset = vDeltaLow * (fMass * fLowDiff);
+			_vector vHighOffset = vDeltaHigh * (fMass * fHighDiff);
+
+			// k!=0일 때만 vFirst를 움직임
+
+			if (k != 0)
+			{
+				vFirst[0] -= vLowOffset;
+				vFirst[1] -= vHighOffset;
+			}
+
+			// vNext는 모든 경우에 움직임
+			vNext[0] += vLowOffset;
+			vNext[1] += vHighOffset;
+
+
+			// k=0일 때 vFirst (손잡이)가 움직이지 않은 몫을 vNext에게 전부 몰아줌
+
+			if (k == 0)
+			{
+				// vFirst가 움직여야 할 만큼 vNext에 추가 보정
+				vNext[0] += vLowOffset;
+				vNext[1] += vHighOffset;
+			}
+
+			if (k != 0)
+			{
+				XMStoreFloat3(&m_pVertices[k].vPosition, vFirst[0]);
+				XMStoreFloat3(&m_pVertices[k + 1].vPosition, vFirst[1]);
+			}
+
+			// vNext 저장
+			XMStoreFloat3(&m_pVertices[k + 2].vPosition, vNext[0]);
+			XMStoreFloat3(&m_pVertices[k + 3].vPosition, vNext[1]);
+		}
+	}
+
 
 	for (_uint i = 0; i < m_iNumCount; i += 2)
 	{
@@ -405,17 +588,24 @@ HRESULT CTrail::ReStructVB(_uint iNumVertices)
 {
 	m_iNumVertices = iNumVertices;
 
+	
+	Safe_Delete_Array(m_pVertices);
+	Safe_Delete_Array(m_pOldPosition);
+
 	if (FAILED(Create_VB()))
 		return E_FAIL;
 
 	if (FAILED(Create_IB()))
 		return E_FAIL;
 
-	Safe_Delete_Array(m_pVertices);
-	Safe_Delete_Array(m_pOldPosition);
-
 	m_pOldPosition = new _float3[m_iNumVertices];
-	m_pVertices = new VTXPOSTEX[m_iNumVertices]{};
+	m_pVertices = new VTXPOSTEX[m_iNumVertices];
+
+	ZeroMemory(m_pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+	ZeroMemory(m_pOldPosition, sizeof(_float3) * m_iNumVertices);
+
+
+	Reset_Trail();
 	
 	return S_OK;
 }
@@ -436,6 +626,7 @@ HRESULT CTrail::Save_Trail(HANDLE hFile)
 HRESULT CTrail::Load_Trail(TRAIL_DESC TrailDesc)
 {
 	m_TrailDesc = TrailDesc;
+
 	return S_OK;
 }
 

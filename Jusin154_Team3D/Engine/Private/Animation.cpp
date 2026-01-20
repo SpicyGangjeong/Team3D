@@ -34,11 +34,15 @@ CAnimation::CAnimation(const CAnimation& rhs)
 		SAFE_ADDREF(pChannel);
 	}
 }
-_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, LOCALPOS_DESC** pLocalPosArray, _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask,_vector vector[3])
+_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex)
 {
-	m_fTempTrack += fTimeDelta * m_fAnimSpeed;
-	m_fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
-	m_fCurrentTrackPosition += m_fProgress;
+	if (m_bPlayAnim)
+	{
+		m_fTempTrack += fTimeDelta * m_fAnimSpeed;
+		m_fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
+		m_fCurrentTrackPosition += m_fProgress;
+	}
+
 
 	if (m_fCurrentTrackPosition >= m_fDuration) {
 		if (false == bIsLoop) {
@@ -50,22 +54,14 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 			Depart_Animation();
 			m_fCurrentTrackPosition = m_fProgress;
 			m_fTempTrack = 0.f;
-			ResetRootMotion();
-			ProgressAnimation(Bones, pLocalPosArray, bIsSpine, BoneMask, vector);
+			ProgressAnimation(Bones,  bIsSpine, BoneMask, OutScale,OutRotation,OutTranslation, RootBoneIndex);
 			return true;
 		}
 	}
 
-	ProgressAnimation(Bones, pLocalPosArray, bIsSpine, BoneMask, vector);
+	ProgressAnimation(Bones, bIsSpine, BoneMask, OutScale, OutRotation, OutTranslation, RootBoneIndex);
 
 	return false;
-}
-
-void CAnimation::ResetRootMotion()
-{
-	for (auto& pChannel : m_Channels){
-		pChannel->ResetRootMotion();
-	}
 }
 
 void CAnimation::Depart_Animation()
@@ -172,12 +168,14 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, _float 
 		if (!preHasBone[boneIndex] || fRatio <= 0.f)
 		{
 			Bones[boneIndex]->Set_TransformationMatrix(curMat);
+			m_vBoneTransformationMatrix[i] = curMat;
 			continue;
 		}
 
 		if (fRatio >= 1.f)
 		{
 			Bones[boneIndex]->Set_TransformationMatrix(curMat);
+			m_vBoneTransformationMatrix[i] = curMat;
 			continue;
 		}
 
@@ -346,8 +344,15 @@ void CAnimation::CreateGPUData(ID3D11Device* pDevice)
 
 	CreateKeyFrameBuffer(pDevice, keyframes);
 	CreateChannelBuffer(pDevice, channels);
-
 }
+
+void CAnimation::Set_CurrentTrackProgressRatio(_float fRatio)
+{
+	fRatio = clamp(fRatio, 0.f, 1.f);
+
+	m_fCurrentTrackPosition = m_fDuration * fRatio;
+}
+
 
 
 #ifdef EDITOR_PROJECT
@@ -429,14 +434,14 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const CModel* pModel
 	return S_OK;
 }
 
-void CAnimation::ProgressAnimation(const vector<CBone*>& Bones, LOCALPOS_DESC** pLocalPosArray, _bool bIsSpine,vector<_uint>BoneMask,_vector vector[3])
+void CAnimation::ProgressAnimation(const vector<CBone*>& Bones,  _bool bIsSpine,vector<_uint>BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex)
 {
 	_uint iIndex = {};
 	if (m_vBoneTransformationMatrix.size() > 0) {
 		m_vBoneTransformationMatrix.clear();
 	}
 	for (auto& pChannel : m_Channels) {
-		pChannel->Update_TransformationMatirx(Bones, pLocalPosArray, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++], bIsSpine, BoneMask, vector);
+		pChannel->Update_TransformationMatirx(Bones,  m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++], bIsSpine, BoneMask, OutScale, OutRotation, OutTranslation,RootBoneIndex);
 		m_vBoneTransformationMatrix.push_back(pChannel->Get_BoneTransformationMatrix());
 	}
 }
@@ -474,7 +479,7 @@ HRESULT CAnimation::CreateKeyFrameBuffer(ID3D11Device* pDevice,vector<KEYFRAME_D
 
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
 	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
 	srvDesc.Buffer.FirstElement = 0;
 	srvDesc.Buffer.NumElements = m_iKeyframeCount;
@@ -490,7 +495,7 @@ HRESULT CAnimation::CreateChannelBuffer(ID3D11Device* pDevice, vector<CHANNEL_DE
 {
 	D3D11_BUFFER_DESC desc{};
 	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.ByteWidth = (_int)sizeof(CHANNEL_DESC) * m_iChannelCount;
+	desc.ByteWidth = (_int)sizeof(CHANNEL_DESC) * m_iBoneCount;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = 0;
 	desc.StructureByteStride = (_int)sizeof(CHANNEL_DESC);
@@ -503,10 +508,10 @@ HRESULT CAnimation::CreateChannelBuffer(ID3D11Device* pDevice, vector<CHANNEL_DE
 
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
 	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
 	srvDesc.Buffer.FirstElement = 0;
-	srvDesc.Buffer.NumElements = m_iChannelCount;
+	srvDesc.Buffer.NumElements = m_iBoneCount;
 
 	if (FAILED(pDevice->CreateShaderResourceView(m_pChannelBuffer, &srvDesc, &m_pChannelSrv)))
 		return E_FAIL;

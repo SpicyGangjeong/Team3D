@@ -31,10 +31,18 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	void Set_Ride(_bool bRide) { m_bRide = bRide; }
+	_bool Get_Ride() { return m_bRide; }
+	void Set_Hover(_bool bHover) { m_bHoverToggle = bHover; }
 	_bool Get_Hover() { return m_bHoverToggle; }
 	_bool Get_Turbo() { return m_bTurbo; }
 
 	void Set_Input(BroomInput broomInput) { m_Input = broomInput; }
+	void Set_AISpeed(_float speedMul, _float accelMul);
+	void Set_Move(_bool bMove) { m_bMove = bMove; }	
+	_bool Get_Move() { return m_bMove; }
+	void Add_TurboBoost(_float fAmount);
+	_float Get_TurboBoost() { return m_fTurboBoost; }
+	HRESULT         Ready_Child();
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
@@ -49,7 +57,7 @@ private:
 	_float m_fSpeed = 0.f; 
 	_float m_fTurnSpeed = 0.f;
 	_float m_fTargetSpeed = 0.f;
-	_float m_fTurnMaxSpeed = 8.f;
+	_float m_fTurnMaxSpeed = 12.f;
 	_float m_fFlyTurnMaxSpeed = 9.f;
 	_float m_fTurboTurnMaxSpeed = 12.f;
 	_float m_fHoverMaxSpeed = 5.f;
@@ -59,6 +67,10 @@ private:
 	_float m_fDecel = 1.f;
 	_float m_fTurnDecel = 0.3f;
 	_float m_fVerticalSpeed = 0.f;
+	_float m_fTurboBoost = {5.f};
+	_float m_fTurboBoostChargeDelay = {};
+	_float m_fInputHoldTime = 0.f;
+	_float m_fHoldThreshold = 0.5f;
 
 
 	_float m_fFlyAccel = 1.f;
@@ -67,19 +79,41 @@ private:
 	_float m_fTurboAccel = 1.3f;
 	_float m_fTurboDecel = 0.6f;
 
+	_bool m_bMove = { true };
+
+
+	_int m_iIndex = {};
+	
+#pragma region AI
+	_float m_fAISpeedMul = 1.f;
+	_float m_fAIAccelMul = 1.f;
+
+	_float m_fAICondition = 1.f;   
+	_float m_fAISeed = 0.f;      
+	_float m_fAITime = 0.f;
+
+#pragma endregion
 
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
 
-	BroomInput m_Input;
+	BroomInput			m_Input;
+	class CEffectParts* m_pWindEffect = { nullptr };
+
+	class CEffectParts* m_pBoostScreenFX = { nullptr };
+	class CTrailObject* m_pBroomTrail = { nullptr };
+	const _float4x4* m_pBroom_TailMat = { nullptr };
+
+	_float m_fCameraOffset = { 10.f };
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 	void Update_CameraCoordinateSystem();
-	void PlayerInput();
-
+	void PlayerInput(_float fTimeDelta);
+	void Boost_Effect_Visible(_bool isVisible);
 public:
 	static CBroom* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
@@ -91,12 +125,12 @@ public:
 #pragma region STATE
 	void Camera_InterpTurn(_float fTimeDelta);
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 
 	_float		m_fAmount = { 1.f };
 	_float		m_fInputTime = {};
 	_bool		m_bRatio = { false };
 
+	
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();

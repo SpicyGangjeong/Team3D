@@ -12,6 +12,14 @@ NS_BEGIN(Client)
 
 class CEnemy_Panel final : public CPanelObject
 {
+	struct Pos 
+	{
+		CGameObject*	Prop;
+		_float3			TargetPos{};
+		_float2			UIScreenPos{};
+		_float4			Position{};
+		_int			iIndex{};
+	};
 private:
 	CEnemy_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEnemy_Panel(const CEnemy_Panel& rhs);
@@ -33,7 +41,8 @@ private:
 
 private:
 	void Update_Target();
-
+	void RanRokPropCreate(void* pArg);
+	void RanRokPropBreak(_int Index);
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
@@ -41,6 +50,11 @@ private:
 	CGameObject* m_pEnemy_HpBar = { nullptr };
 	CGameObject* m_pEnemy_Info = { nullptr };
 	CGameObject* m_pBoss_HpBar = { nullptr };
+	CGameObject* m_pRanrokProp = { nullptr };
+
+	vector<Pos> m_RanrokProps;
+	deque<Pos> m_pCurrentRanrokProps;
+	Pos		m_Pos{};
 
 public:
 	static CEnemy_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

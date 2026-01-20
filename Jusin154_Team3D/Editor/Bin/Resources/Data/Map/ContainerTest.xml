@@ -1969,24 +1969,9 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
-        <PartObject Lod_Level="1" Key_Index="1">
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_EXT_Walls_Decals</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_EXT_Walls_Decals_Lod1</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
         <PartObject Lod_Level="1" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_Window_Display</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_Window_Display_Lod1</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
-        <PartObject Lod_Level="2" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim_Lod2</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -4026,6 +4011,547 @@
         <Collision Lod_Level="1" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_PL_COL</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_PL_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+    </Container>
+    <Container Name="HW_Quidditch_Tower_Hufflepuff">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_D</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_D_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_D_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_D_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Roof_Hufflepuff</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Roof_Hufflepuff_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_B_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_B_Lod2</PrototypeTag>
+            <Position x="0.42749897" y="40.04678" z="0.061831295"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_BannerFlagEmblem_Hufflepuff_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_BannerFlagEmblem_Hufflepuff_LOD_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
+    <Container Name="HW_Quidditch_Tower_Gryffindor">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_A_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_A_LOD_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Roof_Gryffindor</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Roof_Gryffindor_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_BannerFlagEmblem_Gryffindor_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_BannerFlagEmblem_Gryffindor_LOD_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_D</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_D_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_D_Lod2</PrototypeTag>
+            <Position x="0.45790675" y="40.028557" z="0.095102973"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
+    <Container Name="HW_Quidditch_Tower_Slytherin">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_BannerFlagEmblem_Slytherin_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_BannerFlagEmblem_Slytherin_LOD_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_C_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_C_LOD_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_C_LOD_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Roof_Slytherin</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Roof_Slytherin_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_C_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_C_Lod2</PrototypeTag>
+            <Position x="0.44303691" y="40.081966" z="0.066217482"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
+    <Container Name="HW_Quidditch_Tower_Ravenclaw">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Bleachers_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_LOD_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_WoodBeams_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_BannerFlagEmblem_Ravenclaw_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_BannerFlagEmblem_Ravenclaw_LOD_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Roof_Ravenclaw</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Tower_Roof_Ravenclaw_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FlagsTower_A_Lod2</PrototypeTag>
+            <Position x="0.47176254" y="40.03347" z="0.08770138"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_B_LOD</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_B_LOD_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TowerTarp_B_LOD_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
+    <Container Name="HW_QuidditchPitch">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Benches</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Benches_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Benches_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Benches_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_BenchesSupport</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_BenchesSupport_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_BenchesSupport_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_BenchesSupport_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Cloth_InnerCorner</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Cloth_InnerCorner_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Cloth_InnerCorner_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Cloth_InnerCorner_Lod3</PrototypeTag>
+            <Position x="0.60000008" y="0.6500001" z="-0.50000012"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceArchWay_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceArchWay_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceArchWay_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceArchWay_A_Lod3</PrototypeTag>
+            <Position x="51.494694" y="-0.0030234829" z="-0.046411734"/>
+            <Scale x="0.99999982" y="1" z="0.99999982"/>
+            <Rotation x="-0" y="-89.999977" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldBanks</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldBanks_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Field</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Field_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldMarkers</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldMarkers_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldMarkers_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_Floor</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_Floor_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_Floor_Lod2</PrototypeTag>
+            <Position x="0" y="0.050000001" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWall_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWall_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWall_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWall_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="0.99000001" y="1" z="0.99000001"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_Spoke_A</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Field_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Field_B_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_InnerRailing</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_InnerRailing_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_InnerRailing_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_InnerRailing_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_MainEntrance</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_MainEntrance_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_MainEntrance_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_MainEntrance_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="0.99999952" y="1" z="0.99999952"/>
+            <Rotation x="-0" y="-179.99998" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRailing</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRailing_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRailing_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRailing_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRockBase_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRockBase_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRockBase_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRockBase_A_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterWall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterWall_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterWall_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TrenchArch_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TrenchArch_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TrenchArch_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_TrenchArch_A_Lod3</PrototypeTag>
+            <Position x="-46.820965" y="-2.6619637" z="0.0052867159"/>
+            <Scale x="0.99999982" y="1" z="0.99999982"/>
+            <Rotation x="0" y="89.999977" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRailing</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRailing_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRailing_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_OuterRailing_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="0.99999928" y="1" z="0.99999928"/>
+            <Rotation x="-0" y="-179.99997" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_SmallFlags_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_SmallFlags_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_SmallFlags_A_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Cloth_InnerCorner</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Cloth_InnerCorner_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Cloth_InnerCorner_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Cloth_InnerCorner_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="0.99999976" y="1" z="0.99999976"/>
+            <Rotation x="-0" y="-178" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceColumn_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceColumn_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceColumn_A_Lod2</PrototypeTag>
+            <Position x="52.406822" y="-0.12126596" z="-2.3387208"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceColumn_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceColumn_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceColumn_A_Lod2</PrototypeTag>
+            <Position x="52.524471" y="-0.15026797" z="2.1182823"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceDecor_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceDecor_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceDecor_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_EntranceDecor_A_Lod3</PrototypeTag>
+            <Position x="51.606476" y="9.4793625" z="-0.011214352"/>
+            <Scale x="0.99999988" y="1" z="0.99999988"/>
+            <Rotation x="-0" y="-89.999985" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_A_Lod1</PrototypeTag>
+            <Position x="52.159557" y="10.817744" z="-1.4753759"/>
+            <Scale x="0.99999994" y="1" z="0.99999994"/>
+            <Rotation x="-0" y="-90.000008" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_B_Lod1</PrototypeTag>
+            <Position x="52.272102" y="10.736789" z="4.1628904"/>
+            <Scale x="0.99999988" y="1" z="0.99999988"/>
+            <Rotation x="-0" y="-89.999985" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_C_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_C_Lod2</PrototypeTag>
+            <Position x="52.338123" y="10.862036" z="-4.0358448"/>
+            <Scale x="0.99999988" y="1" z="0.99999988"/>
+            <Rotation x="-0" y="-89.999985" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_D</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_D_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_Emblems_D_Lod2</PrototypeTag>
+            <Position x="52.246365" y="10.782727" z="1.5244936"/>
+            <Scale x="0.99999988" y="1" z="0.99999988"/>
+            <Rotation x="-0" y="-89.999985" z="-0"/>
+        </PartObject>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWallA_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWallA_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWallB_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWallB_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWallC_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWallC_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWallD_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_InnerWallD_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallA_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallA_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallB_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallB_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallC_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallC_COL_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallC_COL_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallD_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallD_COL_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_QuidditchPitch_FieldTrench_OuterWallD_COL_Lod2</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>

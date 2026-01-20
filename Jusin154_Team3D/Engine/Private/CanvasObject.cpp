@@ -43,7 +43,7 @@ void CCanvasObject::Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, 0.f, 1.f));
 
-	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+	m_fCurrent_Position = _float4(m_fX, m_fY, 0.f, 1.f);
 
 	if (m_bFadeIn == true)
 	{
@@ -109,6 +109,20 @@ _int CCanvasObject::Panels_Count()
 const vector<wstring> CCanvasObject::Panel_Name()
 {
 	return m_PanelNames;
+}
+
+void CCanvasObject::Add_Function(wstring Name, function<void(void*)> Evnet)
+{
+	m_PaneltFunction_map.emplace(Name, Evnet);
+}
+
+void CCanvasObject::Function_Callback(wstring Name, void* pArg)
+{
+	auto range = m_PaneltFunction_map.equal_range(Name);
+	for (auto it = range.first; it != range.second; ++it)
+	{
+		it->second(pArg);
+	}
 }
 
 void CCanvasObject::Add_Panel(wstring Name, CGameObject* pPanel)

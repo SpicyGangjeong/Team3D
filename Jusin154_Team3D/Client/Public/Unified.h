@@ -12,6 +12,17 @@ NS_BEGIN(Client)
 
 class CUnified final : public CGameObject
 {
+public:
+	typedef struct tagUnified_Desc
+	{
+		_float				fLodSwitchDistnace;
+		_float4				vUnifiedCenterPos;
+		_float3				vPosition;
+		_float3				vRotation;
+		_float3				vScale;
+		_wstring			srtLayerTag;
+		vector<_wstring>	srtModelPrototypeTags;
+	}UNIFIED_DESC;
 private:
 	CUnified(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUnified(const CUnified& rhs);
@@ -24,13 +35,22 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	_bool				m_isVisible = { true };
-	_uint				m_iNumMesh = {};
+	_bool				m_isVisible = { false };
+	_bool				m_isLayerEnable = { true };
+
+	_uint				m_iMaxLodLevel = {};
+	_uint				m_iLodIndex = {};
 	_float				m_fUsingSurfaceParams = {};
+	_float				m_fLodSwitchDistnace = {};
 
 	CShader*			m_pShaderCom = { nullptr };
-	CModel*				m_pModelCom = { nullptr };
+
+	_float4				m_vUnifiedCenterPos = {};
 	_float4             m_vSurfaceColor = {};
+
+	_wstring			m_srtLayerTag;
+	vector<CModel*>		m_pModelComs;
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

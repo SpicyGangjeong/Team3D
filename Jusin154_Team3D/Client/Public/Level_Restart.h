@@ -21,6 +21,7 @@ private:
 
 private:
 	virtual HRESULT Initialize() override;
+	void ResetLevel_Environment() {};
 
 private:
 	LEVEL m_eNextLevel = {};

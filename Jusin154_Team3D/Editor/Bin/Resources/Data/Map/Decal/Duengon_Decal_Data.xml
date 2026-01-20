@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Decal>
+    <Object Type="0">
+        <Position x="23.125874" y="16.475662" z="35.273384"/>
+        <Scale x="7.9999619" y="10" z="7.9999619"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="1" UVSpeedX="0.050000001" UVSpeedY="0.050000001"/>
+        <MaskRed r="2.3529413" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="0.65098041"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-14.157737" y="0.94601226" z="80.214073"/>
+        <Scale x="5" y="5" z="5"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="1" UVSpeedX="0.050000001" UVSpeedY="0.050000001"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-14.021376" y="-0.075574279" z="107.17367"/>
+        <Scale x="5" y="5" z="5"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="2" UVSpeedX="0.050000001" UVSpeedY="0.050000001"/>
+        <MaskRed r="0.39215687" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="84.533203" y="46.137321" z="176.59447"/>
+        <Scale x="30" y="40" z="30"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="2.3" UVSpeedX="0.050000001" UVSpeedY="0.050000001"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-40.429256" y="11.616314" z="215.37146"/>
+        <Scale x="15" y="15" z="15"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="1.5" UVSpeedX="0.050000001" UVSpeedY="-0.050000001"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="41.263599" y="0.224931" z="158.02771"/>
+        <Scale x="15" y="15" z="15"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="1.5" UVSpeedX="0.050000001" UVSpeedY="0.050000001"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-8.639123" y="-15.718847" z="148.95996"/>
+        <Scale x="18" y="18" z="18"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="2" UVSpeedX="0.050000001" UVSpeedY="0.050000001"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="54.616337" y="-7.7882261" z="201.21422"/>
+        <Scale x="15" y="15" z="15"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="1.2" UVSpeedX="0.050000001" UVSpeedY="0.050000001"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="16.413607" y="50.987141" z="303.37109"/>
+        <Scale x="40" y="40" z="40"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="3" UVSpeedX="0.050000001" UVSpeedY="0.050000001"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-58.143082" y="5.4055233" z="122.63522"/>
+        <Scale x="5" y="5" z="5"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Shader_Value UVTiling="1" UVSpeedX="-0.050000001" UVSpeedY="-0.050000001"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+    <Object Type="0">
+        <Position x="-0.57859856" y="-14.271697" z="196.72287"/>
+        <Scale x="49.999855" y="0.14999996" z="49.999855"/>
+        <Rotation x="0" y="75" z="0"/>
+        <Shader_Value UVTiling="10" UVSpeedX="0.0099999998" UVSpeedY="-0.02"/>
+        <MaskRed r="1" g="0" b="0" a="1"/>
+        <MaskGreen r="0" g="0" b="0" a="0"/>
+        <MaskBlue r="1" g="0" b="0" a="1"/>
+    </Object>
+</Decal>

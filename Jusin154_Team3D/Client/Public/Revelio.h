@@ -32,11 +32,11 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring	     m_wstrEffectName = {};
-	class CPlayer*	 m_pPlayer = {};
+	class CPlayer*	    m_pPlayer = {};
 	class CEffectParts* m_pRevelioPT_Y = { nullptr };
 	class CEffectParts* m_pRevelioPT_B = { nullptr };
 	class CEffectParts* m_pRevelioPT_R = { nullptr };
-
+	class CEffectParts* m_pWand_Light = { nullptr };
 public:
 	static CRevelio* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

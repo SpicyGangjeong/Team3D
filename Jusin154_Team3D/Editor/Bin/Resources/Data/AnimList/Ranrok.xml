@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animations owner="Ranrok">
+
+	<!-- IDLE -->
+	<Anim state="IDLE_G" index="100" loop="true"/>
+	<Anim state="IDLE_BREAK2" index="28" loop="false"/>
+	<Anim state="IDLE_BREAK3" index="104" loop="false"/>
+	<Anim state="IDLE_BREAK4" index="105" loop="false"/>
+	<Anim state="IDLE_TURN_180_L" index="120" loop="false"/>
+	<Anim state="IDLE_TURN_180_R" index="121" loop="false"/>
+	<Anim state="IDLE_TURN_45_L" index="122" loop="false"/>
+	<Anim state="IDLE_TURN_45_R" index="123" loop="false"/>
+	<Anim state="IDLE_TURN_90_L" index="124" loop="false"/>
+	<Anim state="IDLE_TURN_90_R" index="125" loop="false"/>
+
+	<!-- HOVER / MOVE -->
+	<Anim state="HOVER_LOOP" index="29" loop="true"/>
+	<Anim state="HOVER_DASH_BWD" index="23" loop="false"/>
+	<Anim state="HOVER_DASH_FWD" index="24" loop="false"/>
+	<Anim state="HOVER_DASH_LEFT" index="25" loop="false"/>
+	<Anim state="HOVER_DASH_RIGHT" index="26" loop="false"/>
+
+	<!-- FIRE : AIR -->
+	<Anim state="FIREBREATH_A" index="9" loop="false"/>
+	<Anim state="FIREBREATH_COOLDOWN_A" index="10" loop="false"/>
+	<Anim state="FIREBREATH_WINDUP_A" index="11" loop="false"/>
+
+	<Anim state="FIRESWEEP_A" index="15" loop="false"/>
+	<Anim state="FIRESWEEP_COOLDOWN_A" index="16" loop="false"/>
+	<Anim state="FIRESWEEP_WINDUP_A" index="17" loop="false"/>
+
+	<Anim state="FIREBALL1_A" index="0" loop="false"/>
+	<Anim state="FIREBALL2_A" index="1" loop="false"/>
+
+	<!-- GROUND ATTACK -->
+	<Anim state="GROUND_SWIPE_L" index="3" loop="false"/>
+	<Anim state="GROUND_SWIPE_R" index="4" loop="false"/>
+
+	<Anim state="FIREBREATH_G" index="6" loop="false"/>
+	<Anim state="FIRESWEEP_G" index="7" loop="false"/>
+
+	<Anim state="FIRESWEEP_G_L" index="85" loop="false"/>
+	<Anim state="FIRESWEEP_G_R" index="86" loop="false"/>
+
+	<Anim state="FIREBALL1_G" index="2" loop="false"/>
+	<Anim state="FIREBALL2_G" index="5" loop="false"/>
+
+	<!-- ETC -->
+	<Anim state="PULSE" index="33" loop="false"/>
+
+	<Anim state="TUCKED" index="21" loop="true"/>
+	<Anim state="FLY_TO_HOVER" index="20" loop="false"/>
+	<Anim state="FLY" index="18" loop="true"/>
+
+	<Anim state="LAND" index="32" loop="false"/>
+
+	<!-- SKILL -->
+	
+	<!-- FireBurst -->
+	<Anim state="SKILL" index="12" loop="false"/>
+	<!-- 앞으로 물면서 돌진 -->
+	<Anim state="RUSH_LOOP" index="91" loop="true"/>
+	<!-- Air Reel -->
+	<Anim state="FIREBURST_REEL" index="13" loop="false"/>
+
+
+	<!-- HIT -->
+	
+	<!-- Air Small -->
+	<Anim state="HIT_BWD" index="22" loop="false"/>
+	<!-- Air Large -->
+	<Anim state="HIT_BWD2" index="37" loop="false"/>
+	<!-- Ground Large -->
+	<Anim state="HIT_BWD3" index="35" loop="false"/>
+	<!-- Ground Small -->
+	<Anim state="HIT_BWD4" index="36" loop="false"/>
+
+
+	<!-- DEAD -->
+	<Anim state="DEAD" index="34" loop="false"/>
+
+</Animations>

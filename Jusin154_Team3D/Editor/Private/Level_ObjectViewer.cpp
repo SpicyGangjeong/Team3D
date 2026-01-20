@@ -11,6 +11,7 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "DummyObject.h"
+#include "EffectPool.h"
 
 #include "DummySkyBox.h"
 #include "MainLight.h"
@@ -18,6 +19,9 @@
 #include "Player.h"
 #include "Goblin.h"
 #include "Broom.h"
+#include "ReparoObject.h"
+#include "Sound_Manager.h"
+#include "Unit.h"
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
@@ -40,6 +44,7 @@ HRESULT CLevel_ObjectViewer::Initialize()
 		return E_FAIL;
 	}
 
+	m_fVolume = 0.8f;
 
 	return S_OK;
 }
@@ -57,6 +62,14 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 	Parts_Object_Setting();
 
 	Find_Anim();
+
+	Sound_List();
+
+	if(m_isUpdateEvent)
+	{
+		for (auto& pObject : m_Objects)
+			dynamic_cast<CUnit*>(pObject)->Play_Event();
+	}
 }
 
 HRESULT CLevel_ObjectViewer::Render()
@@ -177,6 +190,8 @@ void CLevel_ObjectViewer::Show_ModelFilePath()
 		Category_ModelList("Human");
 
 		Category_ModelList("Object");
+
+		Category_ModelList("VFX");
 	}
 	GUI::EndTabBar();
 	GUI::End();
@@ -327,6 +342,8 @@ void CLevel_ObjectViewer::Show_AnimList()
 					if (GUI::Button(pModel->Get_AnimList(i)))
 					{
 						pModel->Set_AnimationIndex(i);
+						m_iCurAnimIndex = i;
+						m_KeyFrames.clear();
 					}
 				}
 			}
@@ -355,6 +372,7 @@ void CLevel_ObjectViewer::Show_AnimList()
 	GUI::EndTabBar();
 	GUI::End();
 }
+
 
 void CLevel_ObjectViewer::Show_ObjectList()
 {
@@ -403,7 +421,11 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		}
 
 		_float AnimRatio = pModel->Get_CurrentTrackProgressRatio();
-		GUI::DragFloat("AnimRatio", &AnimRatio);
+		if (GUI::DragFloat("AnimRatio", &AnimRatio, 0.001f))
+		{
+			pModel->Set_CurrentTrackProgressRatio(AnimRatio);
+		}
+	
 
 		_float AnimSpeed = pModel->Get_AnimSpeed();
 		GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
@@ -415,6 +437,13 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 			pModel->Set_PlayAnim(bPlayAnim);
 		}
 
+		_int iIndex = pModel->Get_AnimIndex();
+		if (GUI::InputInt("Anim Index", &iIndex))
+		{
+			m_iCurAnimIndex = iIndex;
+			pModel->Set_AnimationIndex(iIndex);
+		}
+
 		if (GUI::Button("Load KeyFrame"))
 		{
 			_char szName[MAX_PATH] = {};
@@ -422,8 +451,19 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 			Load_KeyFrame(szName);
 		}
-
-		static _char EventName[64] = {};
+		if(GUI::Button("Load KeyFrame_"))
+		{
+			_char szDir[MAX_PATH] = {};
+			_string Path = {};
+			for (auto& pObject : m_Objects)
+			{
+				dynamic_cast<CUnit*>(pObject)->Reset_SoundEvent();
+				_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+				Path = _string(szDir) + "KeyFrame.xml";
+				dynamic_cast<CUnit*>(m_Objects[m_iObjectIndex])->Ready_Sound_Events(Path.c_str());
+			}
+		}
+		static _char EventName[256] = {};
 
 		GUI::InputText("EventName", EventName, sizeof(EventName));
 		GUI::SameLine();
@@ -432,7 +472,7 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		{
 			if (pModel)
 			{
-				_float fKeyFrame = pModel->Get_CurrentTrackPosition();
+				_float fKeyFrame = pModel->Get_CurrentTrackProgressRatio();
 				m_KeyFrames.emplace(EventName, fKeyFrame);
 
 				Save_KeyFrame();
@@ -440,6 +480,35 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 				EventName[0] = '\0';
 			}
 		}
+		GUI::Checkbox("isUpdateEvent", &m_isUpdateEvent);
+		GUI::InputFloat("Volume", &m_fVolume);
+		static _char SoundFilter[256] = {};
+
+		if (GUI::Button("Stop Sound"))
+			m_pGameInstance->Sound_StopAll();
+
+		if (GUI::CollapsingHeader("Sound list"))
+		{
+			GUI::InputText("Filter", SoundFilter, sizeof(SoundFilter));
+
+			_wstring soudnfilter = CMyTools::ToWstring(SoundFilter);
+			for (_uint i = 0; i < ENUM_CLASS(SOUND::SD_KIND::END); ++i)
+			{
+				_wstring Name = SOUND::SD_PATH::SD_KIND_PATHS[i];
+				if (string::npos != Name.find(soudnfilter))
+				{
+					if (GUI::Button(("S_" + CMyTools::ToString(Name)).c_str()))
+					{
+						strcpy_s(EventName, CMyTools::ToString(Name).c_str());
+						m_pGameInstance->Sound_Play(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT, false, m_fVolume);
+					}
+					GUI::SameLine();
+					if (GUI::SmallButton(("Stop Sound##" + to_string(i)).c_str()))
+						m_pGameInstance->Sound_Stop(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT);
+				}
+			}
+		}
+		
 
 
 		for (auto& iter : m_KeyFrames)
@@ -448,25 +517,25 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 			_bool isSelected = (m_SelectedKey == keyName);
 
-			if (ImGui::Selectable(keyName.c_str(), isSelected))
+			if (GUI::Selectable(keyName.c_str(), isSelected))
 			{
 				m_SelectedKey = keyName;
 			}
 
 			if (isSelected)
 			{
-				ImGui::Indent();
+				GUI::Indent();
 
-				ImGui::DragFloat("KeyFrame", &iter.second, 0.01f);
+				GUI::DragFloat("KeyFrame", &iter.second, 0.01f);
 
-				if (ImGui::Button("Delete KeyFrame"))
+				if (GUI::Button("Delete KeyFrame"))
 				{
 					m_KeyFrames.erase(keyName);
 					m_SelectedKey.clear();   
 					break;                     
 				}
 
-				ImGui::Unindent();
+				GUI::Unindent();
 			}
 		}
 
@@ -560,8 +629,8 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 			}
 			for (auto& iter : m_KeyFrames)
 			{
-				ImDrawList* draw = ImGui::GetForegroundDrawList();
-				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+				ImDrawList* draw = GUI::GetForegroundDrawList();
+				ImVec2 center = GUI::GetMainViewport()->GetCenter();
 				float scale = 50.f;
 
 				GUI::DragFloat(iter.first.c_str(), &iter.second);
@@ -645,6 +714,9 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 
 void CLevel_ObjectViewer::Find_Anim()
 {
+	if (GUI::Button("Stop Sound"))
+		m_pGameInstance->Sound_StopAll();
+
 	if (!m_Objects.empty())
 	{
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
@@ -659,6 +731,8 @@ void CLevel_ObjectViewer::Find_Anim()
 			if (GUI::Button(pModel->Get_AnimList(m_iAnimIndex)))
 			{
 				pModel->Set_AnimationIndex(m_iAnimIndex);
+				m_iCurAnimIndex = m_iAnimIndex;
+				m_KeyFrames.clear();
 			}
 		}
 
@@ -673,6 +747,8 @@ void CLevel_ObjectViewer::Find_Anim()
 				if (GUI::Button(pModel->Get_AnimList(i)))
 				{
 					pModel->Set_AnimationIndex(i);
+					m_iCurAnimIndex = i;
+					m_KeyFrames.clear();
 				}
 			}
 		}
@@ -680,37 +756,101 @@ void CLevel_ObjectViewer::Find_Anim()
 
 }
 
+void CLevel_ObjectViewer::Sound_List()
+{
+	GUI::Begin("Sound_List");
+	if (GUI::CollapsingHeader("Sound list"))
+	{
+		for (_uint i = 0; i < ENUM_CLASS(SOUND::SD_KIND::END); ++i)
+		{
+			_wstring Name = SOUND::SD_PATH::SD_KIND_PATHS[i];
+			
+				if (GUI::Button(("S_" + CMyTools::ToString(Name)).c_str()))
+				{
+					m_pGameInstance->Sound_Play(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT, false, m_fVolume);
+				}
+				GUI::SameLine();
+				if (GUI::SmallButton(("Stop Sound##" + to_string(i)).c_str()))
+					m_pGameInstance->Sound_Stop(static_cast<SOUND::SD_KIND>(i), SD_CHANNEL_GROUP::EFFECT);
+			
+		}
+	}
+	GUI::End();
+}
+
 void CLevel_ObjectViewer::Save_KeyFrame()
 {
+
+	_char szDrive[MAX_PATH] = {};
 	_char szDir[MAX_PATH] = {};
+	_splitpath_s(m_DummyPath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
 
-	_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+	_string Path = _string(szDrive) + szDir + "KeyFrame.xml";
 
-	_string szFile = "KeyFrame.bin";
-	_string Path = szDir + szFile;
+	tinyxml2::XMLDocument doc;
 
-	FILE* fp = nullptr;
-	fopen_s(&fp, Path.c_str(), "wb");
-	if (!fp) {
-		return;
+	tinyxml2::XMLElement* pRoot = nullptr;
+	if (doc.LoadFile(Path.c_str()) == tinyxml2::XML_SUCCESS)
+		pRoot = doc.FirstChildElement("KeyFrames");
+
+	if (!pRoot)
+	{
+		doc.Clear();
+		pRoot = doc.NewElement("KeyFrames");
+		doc.InsertFirstChild(pRoot);
 	}
 
-	_uint KeyFrameSize = (_uint)m_KeyFrames.size();
+	tinyxml2::XMLElement* pAnimNode = nullptr;
+	for (tinyxml2::XMLElement* pAnim = pRoot->FirstChildElement("Animation");
+		pAnim;
+		pAnim = pAnim->NextSiblingElement("Animation"))
+	{
+		_int idx = -1;
+		pAnim->QueryIntAttribute("Index", &idx);
 
-	fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
+		if (idx == m_iCurAnimIndex)
+		{
+			pAnimNode = pAnim;
+			break;
+		}
+	}
+
+	if (nullptr == pAnimNode)
+	{
+		pAnimNode = doc.NewElement("Animation");
+		pAnimNode->SetAttribute("Index", m_iCurAnimIndex);
+		pRoot->InsertEndChild(pAnimNode);
+	}
+
+	//while (tinyxml2::XMLElement* pKey = pAnimNode->FirstChildElement("KeyFrame"))
+	//{
+	//	pAnimNode->DeleteChild(pKey);
+	//}
 
 	for (auto& iter : m_KeyFrames)
 	{
-		_uint EventSize = (_uint)iter.first.size();
-		fwrite(&iter.second, sizeof(_float), 1, fp);
-		fwrite(&EventSize, sizeof(_uint), 1, fp);
-		fwrite(iter.first.c_str(), sizeof(_char), EventSize, fp);
+		tinyxml2::XMLElement* pKey = doc.NewElement("KeyFrame");
+		pKey->SetAttribute("Event", iter.first.c_str());
+		char buf[32];
+		sprintf_s(buf, "%.3f", iter.second);
+		pKey->SetAttribute("Ratio", buf);
+		pKey->SetAttribute("Volume", m_fVolume);
+		pAnimNode->InsertEndChild(pKey);
+
+		SOUND::SD_KIND eSoundKind = m_pGameInstance->Find_Sound(CMyTools::ToWstring(Path));
+
+		if(nullptr != m_Objects[m_iObjectIndex])
+		{
+			dynamic_cast<CUnit*>(m_Objects[m_iObjectIndex])->Add_Sound_Event(m_iCurAnimIndex,
+				[this, eSoundKind, iter]() { m_pGameInstance->Sound_Play(eSoundKind, SD_CHANNEL_GROUP::EFFECT, false, m_fVolume); },
+				iter.second, true);
+		}
 	}
+	m_KeyFrames.clear();
 
-
-	fclose(fp);
+	doc.SaveFile(Path.c_str());
+	
 }
-
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 {
@@ -756,11 +896,22 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
 
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_Test)))
-		return E_FAIL;*/
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Z_Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+	{
+		return E_FAIL;
+	}
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_Test)))
+	//	return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CReparoObject>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	//	return E_FAIL;
+
+
 
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;*/
@@ -769,9 +920,6 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_Test)))
 		return E_FAIL;*/
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;
 
 	return S_OK;
 }

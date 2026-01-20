@@ -1,6 +1,20 @@
 ﻿#include "pch.h"
 #include "Shader.h"
 
+constexpr uint64_t FNV1A64_OFFSET = 14695981039346656037ull;
+constexpr uint64_t FNV1A64_PRIME = 1099511628211ull;
+
+constexpr uint64_t Hash_FNV1a64(const char* str)
+{
+	uint64_t hash = FNV1A64_OFFSET;
+	while (*str)
+	{
+		hash ^= static_cast<uint8_t>(*str++);
+		hash *= FNV1A64_PRIME;
+	}
+	return hash;
+}
+
 CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
 {
@@ -12,6 +26,7 @@ CShader::CShader(const CShader& rhs)
 	, m_pEffect{ rhs.m_pEffect }
 	, m_iNumPasses{ rhs.m_iNumPasses }
 	, m_InputLayouts{ rhs.m_InputLayouts }
+	, m_umapShaderRawVariables{ rhs.m_umapShaderRawVariables }
 
 #ifdef _DEBUG
 	, m_strShaderPath { rhs.m_strShaderPath }
@@ -30,7 +45,7 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 
 
 #ifdef _DEBUG
-	m_strShaderPath = pShaderFilePath;
+	m_strShaderPath = pShaderFilePath;	
 	m_pElements = pElements;
 	m_iNumElements = iNumElements;
 #endif
@@ -52,79 +67,94 @@ HRESULT CShader::Initialize(void* pArg)
 
 HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _uint iLength)
 {
-	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
-	if (nullptr == pVariable)
+	SHADERVARIABLE* pTagVariable = Find_VariableByName(pConstantName);
+	if (nullptr == pTagVariable){
 		return E_FAIL;
+	}
 
-	return pVariable->SetRawValue(pData, 0, iLength);
+	return pTagVariable->pVariable->SetRawValue(pData, 0, iLength);
 }
 
 HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix)
 {
-	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
-	if (nullptr == pVariable)
+	SHADERVARIABLE* pTagVariable = Find_VariableByName(pConstantName);
+	if (nullptr == pTagVariable) {
 		return E_FAIL;
+	}
 
-	ID3DX11EffectMatrixVariable* pMatrixVariable = pVariable->AsMatrix();
-	if (nullptr == pMatrixVariable)
-		return E_FAIL;
-
-	return pMatrixVariable->SetMatrix(reinterpret_cast<const _float*>(pMatrix));
+	return pTagVariable->pMatrix->SetMatrix(reinterpret_cast<const _float*>(pMatrix));
 }
 
 HRESULT CShader::Bind_Matrices(const _char* pConstantName, const _float4x4* pMatrix, _uint iNumMatrices)
 {
-	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
-	if (nullptr == pVariable)
+	SHADERVARIABLE* pTagVariable = Find_VariableByName(pConstantName);
+	if (nullptr == pTagVariable) {
 		return E_FAIL;
+	}
 
-	ID3DX11EffectMatrixVariable* pMatrixVariable = pVariable->AsMatrix();
-	if (nullptr == pMatrixVariable)
-		return E_FAIL;
-
-	return pMatrixVariable->SetMatrixArray(reinterpret_cast<const _float*>(pMatrix), 0, iNumMatrices);
+	return pTagVariable->pMatrix->SetMatrixArray(reinterpret_cast<const _float*>(pMatrix), 0, iNumMatrices);
 }
 
 HRESULT CShader::Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV)
 {
-	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
-	if (nullptr == pVariable)
+	SHADERVARIABLE* pTagVariable = Find_VariableByName(pConstantName);
+	if (nullptr == pTagVariable || nullptr == pTagVariable->pSRV){
 		return E_FAIL;
+	}
 
-	ID3DX11EffectShaderResourceVariable* pSRVariable = pVariable->AsShaderResource();
-	if (nullptr == pSRVariable)
-		return E_FAIL;
+	if (pSRV == pTagVariable->pBeforeBindedSRV){
+		return S_OK;
+	}
 
-	return pSRVariable->SetResource(pSRV);
+	HRESULT hr = pTagVariable->pSRV->SetResource(pSRV);
+	if (SUCCEEDED(hr)){
+		pTagVariable->pBeforeBindedSRV = pSRV;
+	}
+	return hr;
 }
 
 HRESULT CShader::Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView** ppSRV, _uint iNumSRVs)
 {
-	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
-	if (nullptr == pVariable)
+	SHADERVARIABLE* pTagVariable = Find_VariableByName(pConstantName);
+	if (nullptr == pTagVariable || nullptr == pTagVariable->pSRV){
 		return E_FAIL;
+	}
 
-	ID3DX11EffectShaderResourceVariable* pSRVariable = pVariable->AsShaderResource();
-	if (nullptr == pSRVariable)
-		return E_FAIL;
+	if (iNumSRVs == 0){
+		return S_OK;
+	}
 
-	return pSRVariable->SetResourceArray(ppSRV, 0, iNumSRVs);
+	if (ppSRV == nullptr){
+		return E_INVALIDARG;
+	}
+
+	if (pTagVariable->beforeBindedSRVs.size() == iNumSRVs)
+	{
+		if (0 == memcmp(pTagVariable->beforeBindedSRVs.data(), ppSRV,
+			sizeof(ID3D11ShaderResourceView*) * iNumSRVs))
+		{
+			return S_OK;
+		}
+	}
+
+	HRESULT hr = pTagVariable->pSRV->SetResourceArray(ppSRV, 0, iNumSRVs);
+	if (SUCCEEDED(hr))
+	{
+		pTagVariable->beforeBindedSRVs.assign(ppSRV, ppSRV + iNumSRVs);
+		pTagVariable->pBeforeBindedSRV = ppSRV[0];
+	}
+
+	return hr;
 }
 
 HRESULT CShader::Bind_IntArray(const _char* pConstantName, const int* pData, _uint elementCount)
 {
-	if (m_pEffect == nullptr || pConstantName == nullptr || pData == nullptr || elementCount == 0) {
+	SHADERVARIABLE* pTagVariable = Find_VariableByName(pConstantName);
+	if (nullptr == pTagVariable) {
 		return E_FAIL;
 	}
 
-	ID3DX11EffectScalarVariable* effectScalarVariable =
-		m_pEffect->GetVariableByName(pConstantName)->AsScalar();
-
-	if (effectScalarVariable == nullptr || effectScalarVariable->IsValid() == false) {
-		return E_FAIL;
-	}
-
-	return effectScalarVariable->SetIntArray(pData, 0, elementCount);
+	return pTagVariable->pScalar->SetIntArray(pData, 0, elementCount);
 }
 
 
@@ -134,12 +164,13 @@ HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_E
 	_uint		iHlslFlag = {};
 
 #ifdef _DEBUG
-	iHlslFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+	iHlslFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_DEBUG_NAME_FOR_SOURCE;
 #else
-	iHlslFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1;
+	iHlslFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1 | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR ;
 #endif
 
-	ID3DBlob* pBlob;
+	ID3DBlob* pBlob = nullptr;
+
 
 	if (FAILED(D3DX11CompileEffectFromFile(pShaderFilePath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, iHlslFlag, 0, m_pDevice, &m_pEffect, &pBlob))) {
 		if (pBlob) {
@@ -183,7 +214,129 @@ HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_E
 
 		m_InputLayouts.push_back(pInputLayout);
 	}
+	if (FAILED(Hash_Variables())) {
+		return E_FAIL;
+	}
 	return S_OK;
+}
+
+HRESULT CShader::Hash_Variables()
+{
+	if (nullptr == m_pEffect) {
+		return E_FAIL;
+	}
+
+#ifdef _DEBUG /* 쉐이더 리프레쉬할때 변수더미를 지워서 터져버림*/
+	if (false == m_bCloned) {
+		Safe_Delete(m_umapShaderRawVariables);
+		m_umapShaderRawVariables = new unordered_map<size_t, SHADERVARIABLE>;
+	}
+#else
+	Safe_Delete(m_umapShaderRawVariables);
+	m_umapShaderRawVariables = new unordered_map<size_t, SHADERVARIABLE>;
+#endif
+
+	HRESULT hr = m_pEffect->GetDesc(&m_EffectDesc);
+	if (FAILED(hr))
+		return hr;
+
+	m_umapShaderRawVariables->clear();
+	m_umapShaderRawVariables->reserve(m_EffectDesc.GlobalVariables);
+
+	for (_uint iIndexVariable = 0; iIndexVariable < m_EffectDesc.GlobalVariables; ++iIndexVariable) {
+		ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByIndex(iIndexVariable);
+		if (pVariable == nullptr || pVariable->IsValid() != true) {
+			assert(false); // 불완전한 변수선언
+			continue;
+		}
+		
+        D3DX11_EFFECT_VARIABLE_DESC variableDesc{};
+        hr = pVariable->GetDesc(&variableDesc);
+        if (FAILED(hr) || variableDesc.Name == nullptr) {
+            assert(false);
+            continue;
+        }
+		SHADERVARIABLE* pTagVariable = Find_VariableByName(variableDesc.Name);
+		if (nullptr != pTagVariable) {
+			assert(false); // 중복된 변수정의
+			continue;
+		}
+
+		LPD3D11EFFECTTYPE VariableType = pVariable->GetType();
+		D3DX11_EFFECT_TYPE_DESC VariableTypeDesc = {};
+		VariableType->GetDesc(&VariableTypeDesc);
+		CShader::SHADERVARIABLE TagVariable = {};
+		TagVariable.pVariable = pVariable;
+		TagVariable.eType = VariableTypeDesc.Type;
+		TagVariable.eClass = VariableTypeDesc.Class;
+		TagVariable.iNumElement = VariableTypeDesc.Elements;
+		TagVariable.iNumMember = VariableTypeDesc.Members;
+		switch (TagVariable.eClass)
+		{
+		case D3D_SVC_SCALAR:
+			TagVariable.pScalar = pVariable->AsScalar();
+			if (TagVariable.pScalar && !TagVariable.pScalar->IsValid()) {
+				TagVariable.pScalar = nullptr;
+			}
+			break;
+
+		case D3D_SVC_VECTOR:
+			TagVariable.pVector = pVariable->AsVector();
+			if (TagVariable.pVector && !TagVariable.pVector->IsValid()) {
+				TagVariable.pVector = nullptr;
+			}
+			break;
+
+		case D3D_SVC_MATRIX_ROWS:
+		case D3D_SVC_MATRIX_COLUMNS:
+			TagVariable.pMatrix = pVariable->AsMatrix();
+			if (TagVariable.pMatrix && !TagVariable.pMatrix->IsValid()) {
+				TagVariable.pMatrix = nullptr;
+			}
+			break;
+
+		case D3D_SVC_OBJECT:
+			if (TagVariable.eType == D3D_SVT_SAMPLER ||
+				TagVariable.eType == D3D_SVT_SAMPLER1D ||
+				TagVariable.eType == D3D_SVT_SAMPLER2D ||
+				TagVariable.eType == D3D_SVT_SAMPLER3D ||
+				TagVariable.eType == D3D_SVT_SAMPLERCUBE)
+			{
+				TagVariable.pSampler = pVariable->AsSampler();
+				if (TagVariable.pSampler && !TagVariable.pSampler->IsValid()) {
+					TagVariable.pSampler = nullptr;
+				}
+			}
+			else
+			{
+				TagVariable.pSRV = pVariable->AsShaderResource();
+				if (TagVariable.pSRV && !TagVariable.pSRV->IsValid()) {
+					TagVariable.pSRV = nullptr;
+				}
+			}
+			break;
+
+		default:
+			assert(false);
+			break;
+		}
+
+		m_umapShaderRawVariables->insert({ Hash_FNV1a64(variableDesc.Name), TagVariable });
+	}
+
+
+	return S_OK;
+}
+
+CShader::SHADERVARIABLE* CShader::Find_VariableByName(const _char* pConstantName)
+{
+	CShader::SHADERVARIABLE* pResult = { nullptr };
+
+	unordered_map<size_t, SHADERVARIABLE>::iterator iter = m_umapShaderRawVariables->find(Hash_FNV1a64(pConstantName));
+	if (m_umapShaderRawVariables->end() != iter) {
+		pResult = &(*iter).second;
+	}
+	return pResult;
 }
 
 #ifdef _DEBUG
@@ -223,9 +376,6 @@ HRESULT CShader::Begin(_uint iPassIndex)
 
 	m_pContext->IASetInputLayout(m_InputLayouts[iPassIndex]);
 
-	/* Apply를 반드시 호출해야만 쉐이더로 그려진다. */
-	/* Apply이전에 쉐이더에 전달할 모든 데이터들을 다 던져놓아야한다. */
-
 	m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);
 
 	return S_OK;
@@ -260,6 +410,10 @@ CComponent* CShader::Clone(void* pArg, class CGameObject* pOwner)
 void CShader::Free()
 {
 	__super::Free();
+
+	if (false == m_bCloned) {
+		Safe_Delete(m_umapShaderRawVariables);
+	}
 
 	SAFE_RELEASE(m_pEffect);
 

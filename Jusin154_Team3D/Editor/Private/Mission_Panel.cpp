@@ -24,7 +24,7 @@ HRESULT CMission_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 	
 	Desc.fX = 380.f;
-	Desc.fY = 580.f;
+	Desc.fY = -580.f;
 	Desc.fSizeX = 750.f;
 	Desc.fSizeY = 410.f;
 

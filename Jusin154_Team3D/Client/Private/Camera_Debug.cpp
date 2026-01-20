@@ -18,22 +18,17 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
+	m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, false);
 #endif // _DEBUG
 
-}
-
-void CCamera_Debug::Update(_float fTimeDelta)
-{
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_DEBUG))) {
 		return;
 	}
-	Transition(fTimeDelta);
+	const _float fFixedDebugTimeDelta = 1.f / 60.f;
+	Transition(fFixedDebugTimeDelta);
 	_float3 vCamPos = {};
+	_float3 vSetPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
-#ifdef _DEBUG
-	GUI::Text("Cam Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
-#endif // _DEBUG
 
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
@@ -45,22 +40,22 @@ void CCamera_Debug::Update(_float fTimeDelta)
 #pragma region Position
 		_float fSpeed = 5.f;
 		if (m_pGameInstance->Key_Pressing(DIK_W)) {
-			m_pTransformCom->Go_Straight(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Straight(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_A)) {
-			m_pTransformCom->Go_Left(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Left(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_S)) {
-			m_pTransformCom->Go_Backward(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Backward(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_D)) {
-			m_pTransformCom->Go_Right(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Right(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_SPACE)) {
-			m_pTransformCom->Go_Up(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Up(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_C)) {
-			m_pTransformCom->Go_Down(fTimeDelta * fSpeed);
+			m_pTransformCom->Go_Down(fFixedDebugTimeDelta * fSpeed);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_TAB)) {
 			Set_InitialPos();
@@ -75,17 +70,32 @@ void CCamera_Debug::Update(_float fTimeDelta)
 			}
 		}
 
+		_long LWheel = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::W);
+		if (LWheel > 0)
+		{
+			m_pTransformCom->Add_SpeedPerSec(0.5f);
+		}
+		else if (LWheel < 0)
+			m_pTransformCom->Add_SpeedPerSec(-0.5f);
+
 #pragma endregion
 #pragma region Angle
 
 		_float3	fMove = m_pGameInstance->Get_MouseMove();
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * fMove.x * m_fMouseSensor);
-		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fTimeDelta * fMove.y * m_fMouseSensor);
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fFixedDebugTimeDelta * fMove.x * m_fMouseSensor);
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fFixedDebugTimeDelta * fMove.y * m_fMouseSensor);
 
 #pragma endregion
 
 	}
 	__super::Bind_Matrices();
+}
+
+void CCamera_Debug::Update(_float fTimeDelta)
+{
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
 }
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)
@@ -177,6 +187,31 @@ void CCamera_Debug::Free()
 
 void CCamera_Debug::Describe_Entity()
 {
+	_float3 vPosition = {};
+	GUI::Begin("PickingPos");
+	if (m_pGameInstance->Key_Pressing(DIK_Y))
+	{
+		if (m_pGameInstance->isPicking(&vPosition))
+		{
+			GUI::InputFloat3("Pos", (float*)&vPosition);
+		}
+	}
+	GUI::End();
+	GUI::Begin("CAMERA");
+	_int iPriority = m_iPriority;
+	size_t iAddress = (size_t)this;
+	_string strHeader = "DEBUG_CAMERA_Priority##" + to_string(iAddress);
+	if (GUI::SliderInt(strHeader.c_str(), &iPriority, 45, 60)) {
+		m_iPriority = iPriority;
+	}
+	if (GUI::CollapsingHeader("DebugCamera")){
+		m_pTransformCom->Describe_Entity();
+		_float fFovYDegree = XMConvertToDegrees(m_fFovy);
+		if (GUI::SliderFloat("FOV", &fFovYDegree, 0.01f, 89.f, "%.2f")) {
+			m_fFovy = XMConvertToRadians(fFovYDegree);
+		}
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

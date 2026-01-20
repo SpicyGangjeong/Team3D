@@ -27,6 +27,16 @@ HRESULT CPanelObject::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
+	if (pDesc->m_bowner == true)
+	{
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
+			m_fX + m_pOwner->Get_WorldPostion().m128_f32[0],
+			m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
+			m_fSortZ, 1.f));
+
+		m_fCurrent_Position = _float4(m_fX, m_fY, 0.f, 1.f);
+	}
 
 	m_fAlpha = 1.f;
 	return S_OK;
@@ -44,10 +54,10 @@ void CPanelObject::Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
 		m_fX + m_pOwner->Get_WorldPostion().m128_f32[0],
-		-m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
+		m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
 		m_fSortZ, 1.f));
 
-	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+	m_fCurrent_Position = _float4(m_fX, m_fY, 0.f, 1.f);
 
 	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
 
@@ -152,6 +162,61 @@ void CPanelObject::Function_Callback(wstring Name, void* pArg)
 	}
 }
 
+_bool CPanelObject::Start_Lerp_Translation(_float fTimeDelta)
+{
+	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
+
+	_vector Target = XMLoadFloat4(&m_vLerp_Position);
+
+	_vector Dir = XMVectorSubtract(Target, Pos);
+	_vector LenVec = XMVector3Length(Dir);
+	_float Distance = XMVectorGetX(LenVec);
+
+	_float move = m_fMoveSpeed * fTimeDelta;
+
+	if (Distance <= move)
+	{
+		m_fX = m_vLerp_Position.x;
+		m_fY = m_vLerp_Position.y;
+		return true;
+	}
+
+	else
+	{
+		XMVECTOR DirNorm = XMVector3Normalize(Dir);
+		m_fX = (Pos + DirNorm * move).m128_f32[0];
+		m_fY = (Pos + DirNorm * move).m128_f32[1];
+		return false;
+	}
+}
+
+void CPanelObject::Reset_Pos(_float fTimeDelta)
+{
+	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
+
+	_vector Target = XMVectorSet(m_fOrigin_Position.x, m_fOrigin_Position.y, 0.f, 0.f);
+
+	_vector Dir = XMVectorSubtract(Target, Pos);
+	_vector LenVec = XMVector3Length(Dir);
+	_float Distance = XMVectorGetX(LenVec);
+
+	_float move = m_fMoveSpeed * fTimeDelta;
+
+	if (Distance <= move)
+	{
+		m_fX = m_fOrigin_Position.x;
+		m_fY = m_fOrigin_Position.y;
+		m_bLerpOff = false;
+	}
+
+	else
+	{
+		XMVECTOR DirNorm = XMVector3Normalize(Dir);
+		m_fX = (Pos + DirNorm * move).m128_f32[0];
+		m_fY = (Pos + DirNorm * move).m128_f32[1];
+	}
+}
+
 void CPanelObject::Add_Element(wstring Name, CGameObject* pElement)
 {
 	if (pElement == nullptr)
@@ -181,6 +246,96 @@ _bool CPanelObject::Chack_Visible()
 		m_bVisible = m_bActive;
 	}
 	return m_bVisible;
+}
+
+_bool CPanelObject::Chack_Element(_float2 Position, _float2 Target, _float Scale, _float TargetScale)
+{
+	_vector vPos = XMVectorSet(Position.x, Position.y, 0.f, 1.f);
+	_vector vTarget = XMVectorSet(Target.x, Target.y, 0.f, 1.f);
+
+	_float Dir = XMVectorGetX(XMVector3Length(XMVectorSubtract(vTarget, vPos)));
+
+	if (Dir <= (Scale * 0.5f) + (TargetScale * 0.5f))
+		return true;
+
+	return false;
+}
+
+_bool CPanelObject::World_Screen(_float3 fWorld_Pos, _float2& fScreenPos, _float& fDepth, _bool& fFalse, _float& fOffSet)
+{
+	_matrix mView = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	_matrix mProj = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+
+	_vector vWorld = XMVectorSet(fWorld_Pos.x, fWorld_Pos.y, fWorld_Pos.z, 1.f);
+	_vector vView = XMVector4Transform(vWorld, mView);
+
+	fFalse = XMVectorGetZ(vView) <= 0.f;
+
+	_vector vClip = XMVector4Transform(vView, mProj);
+
+	float w = XMVectorGetW(vClip);
+	if (fabs(w) < 0.0001f)
+		return false;
+
+	float ndcX = XMVectorGetX(vClip) / w;
+	float ndcY = XMVectorGetY(vClip) / w;
+
+	fScreenPos.x = (ndcX + 1.f) * 0.5f * m_fWinSizeX;
+	fScreenPos.y = (1.f - ndcY) * 0.5f * m_fWinSizeY;
+
+	return true;
+}
+
+_bool CPanelObject::Screen(_float2& fWorld_Pos, _float Winx, _float Winy)
+{
+	return fWorld_Pos.x >= 0 && fWorld_Pos.x <= Winx &&
+		fWorld_Pos.y >= 0 && fWorld_Pos.y <= Winy;
+}
+
+_float2 CPanelObject::Get_EdgePosition(_float2 fWorld_Pos, _float Winx, _float Winy, _float OffSetY)
+{
+	_float2 center = _float2(Winx * 0.5f, Winy * 0.5f);
+	_float2 dir = _float2(fWorld_Pos.x - center.x, fWorld_Pos.y - center.y);
+
+	_float tX = FLT_MAX;
+	_float tY = FLT_MAX;
+
+	if (dir.x != 0.f)
+		tX = (dir.x > 0) ? (Winx - center.x) / dir.x : (0.f - center.x) / dir.x;
+
+	if (dir.y != 0.f)
+		tY = (dir.y > 0) ? (Winy - center.y) / dir.y : (0.f - center.y) / dir.y;
+
+	float t = min(tX, tY);
+
+	return _float2(dir.x * t, -dir.y * t - OffSetY);
+}
+
+_bool CPanelObject::World_to_ScreenUI(_float3 fWorld_Pos, _float2& fUIScreenPos, _float OffSetY)
+{
+	_float2 fScreenPos{};
+	_float  fDepth{};
+	_bool   bBehind = false;
+	_float	fOffSetX{};
+
+	_float fWinSizeX = static_cast<_float>(m_fWinSizeX);
+	_float fWinSizeY = static_cast<_float>(m_fWinSizeY);
+
+	if (!World_Screen(fWorld_Pos, fScreenPos, fDepth, bBehind, fOffSetX))
+		return false;
+
+	if (bBehind)
+	{
+		fUIScreenPos.x = fScreenPos.x;
+		fUIScreenPos.y = fWinSizeY - OffSetY;
+		return true;
+	}
+
+	if (Screen(fScreenPos, fWinSizeX, fWinSizeY))
+		return false;
+
+	fUIScreenPos = Get_EdgePosition(fScreenPos, fWinSizeX, fWinSizeY, OffSetY);
+	return true;
 }
 
 CGameObject* CPanelObject::Find_Element(const wstring& Name)

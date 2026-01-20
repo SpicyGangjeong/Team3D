@@ -92,7 +92,7 @@ HRESULT CTimer_Manager::Initialize()
 	if (FAILED(Add_Timer(TEXT("Timer_Render_WeightBlend")))) {
 		return E_FAIL;
 	}
-	if (FAILED(Add_Timer(TEXT("Timer_Render_Bloom")))) {
+	if (FAILED(Add_Timer(TEXT("Timer_Render_PostProcessing")))) {
 		return E_FAIL;
 	}
 	if (FAILED(Add_Timer(TEXT("Timer_Render_LastColor")))) {

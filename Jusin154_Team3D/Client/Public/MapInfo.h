@@ -17,16 +17,24 @@ private:
 public:
 	void Update(_float fTimeDelta);
 	void Change_Level();
-	HRESULT Load_MapObjects(const _char* pFilePath);
-	HRESULT Load_BuildingContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject);
-	HRESULT Load_StreetContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject);
-	HRESULT Load_MapRenderObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject);
-	HRESULT Load_MapCollisionObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject);
-	HRESULT Load_LightElements(const _char* pFileName);
-	HRESULT Load_InteractableElements(const _char* pFileName);
+
+public:
+	HRESULT Load_MapObjects(const _char* pFilePath, const _wchar* pLayerTag);
+	HRESULT Load_MapRenderObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject, const _wchar* pLayerTag, _bool hasCollisionMesh);
+
+	HRESULT Load_LightElements(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_InteractableElements(const _char* pFileName, const _wchar* pLayerTag);
 	HRESULT Load_WaterElemet(const _char* pFileName);
-	HRESULT Load_DoorElemet(const _char* pFileName);
-	HRESULT Load_ChestElemet(const _char* pFileName);
+	HRESULT Load_DoorElemet(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_ChestElemet(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_WorldDecal(const _char* pFileName, const _wchar* pLayerTag);
+	HRESULT Load_PointLights(const _char* pFilePath, const _wchar* pLayerTag);
+	HRESULT Load_EffectParts(const _char* pFileName, const _char* pEffectrFilePath);
+	HRESULT Load_ReparoObjects(const _char* pFileName);
+
+	HRESULT Load_DADA_INT();
+	HRESULT Load_Npc();
+	HRESULT Load_Goblin();
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
@@ -36,6 +44,9 @@ private:
 
 private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
+	HRESULT Load_BuildingContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject, const _wchar* pLayerTag);
+	HRESULT Load_StreetContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject, const _wchar* pLayerTag);
+	HRESULT Load_MapCollisionObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject, const _wchar* pLayerTag);
 
 public:
 	static CMapInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);

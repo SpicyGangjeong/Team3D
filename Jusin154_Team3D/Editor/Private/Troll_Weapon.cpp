@@ -41,16 +41,6 @@ void CTroll_Weapon::Priority_Update(_float fTimeDelta)
 {	
 	m_pModelCom->Combined_BoneMatrix();
 
-	_matrix socketMatrix = {};
-
-	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
-
-	for (int i = 0; i < 3; ++i) {
-		socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
-	}
-
-	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
-
 #ifdef _DEBUG
 	Describe_Entity();
 
@@ -65,6 +55,16 @@ void CTroll_Weapon::Update(_float fTimeDelta)
 
 void CTroll_Weapon::Late_Update(_float fTimeDelta)
 {
+
+	_matrix socketMatrix = {};
+
+	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
+
+	for (int i = 0; i < 3; ++i) {
+		socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
+	}
+
+	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 

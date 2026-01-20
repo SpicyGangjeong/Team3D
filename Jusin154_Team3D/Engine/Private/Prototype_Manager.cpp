@@ -114,8 +114,9 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, FX_LASTCOLOR,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_LastColor.hlsl"),
+
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, FX_BLUR,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_Blur.hlsl"),
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;
 	}
@@ -125,6 +126,13 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, FX_DISTORTION,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_Distortion.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+	
 
 #pragma region COMPUTE_SHADER
 
@@ -139,7 +147,25 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 		CComputeShader::Create(m_pDevice, m_pContext,
 			L"../Bin/Resources/ShaderFiles/Shader_Instance_Compute.hlsl", "CS_MAIN")))) {
 		return E_FAIL;
+	}
 
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_MODEL,
+		CComputeShader::Create(m_pDevice, m_pContext,
+			L"../Bin/Resources/ShaderFiles/Shader_Mesh_Compute.hlsl", "CS_MAIN")))) {
+		return E_FAIL;
+
+	}
+
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_LOCAL,
+		CComputeShader::Create(m_pDevice, m_pContext,
+			L"../Bin/Resources/ShaderFiles/Shader_Local_Compute.hlsl", "CS_LOCAL")))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_BONEINSERT,
+		CComputeShader::Create(m_pDevice, m_pContext,
+			L"../Bin/Resources/ShaderFiles/Shader_BoneCombinedInsertion_Compute.hlsl", "CS_MAIN")))) {
+		return E_FAIL;
 	}
 
 #pragma endregion

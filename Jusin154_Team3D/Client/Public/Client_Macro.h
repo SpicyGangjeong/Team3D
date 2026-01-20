@@ -14,14 +14,13 @@ namespace Client {
 #define FX_MESH					TEXT("FX_MESH")
 #define FX_POSTEX				TEXT("FX_POSTEX")
 #define FX_NORTEX				TEXT("FX_NORTEX")
-#define FX_CELL					TEXT("FX_CELL")
-#define FX_PARTICLE				TEXT("FX_PARTICLE")
 #define FX_INSTANCE_MODEL		TEXT("FX_INSTANCE_MODEL")
 #define FX_INSTANCE_PROP_MODEL  TEXT("FX_INSTANCE_PROP_MODEL")
 #define FX_UIEDITOR				TEXT("FX_UIEDITOR")
 #define FX_UIINSTANCE			TEXT("FX_UIINSTANCE")
 #define FX_VTXPOS				TEXT("FX_VTXPOS")
 #define FX_NPC_PBR_ANIM			TEXT("FX_NPC_PBR_ANIM")
+#define FX_RANROK_ETHER			TEXT("FX_RANROK_ETHER")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
@@ -33,6 +32,9 @@ namespace Client {
 
 #define CAMERA_DEBUG			TEXT("CAMERA_DEBUG")
 #define CAMERA_SHOULDER			TEXT("CAMERA_SHOULDER")
+#define CAMERA_AI				TEXT("CAMERA_AI")
+#define CAMERA_MODEL			TEXT("CAMERA_MODEL")
+#define CAMERA_CINEMATIC		TEXT("CAMERA_CINEMATIC")
 #pragma endregion
 #pragma region COMPONENT
 
@@ -45,8 +47,10 @@ namespace Client {
 #define LAYER_SKYBOX		TEXT("Layer_SkyBox")
 #define LAYER_EDITOR_CAMERA TEXT("Layer_Editor_Camera")
 #define LAYER_BACKGROUND	TEXT("Layer_BackGround")
+#define LAYER_HOGSMEADE		TEXT("Layer_Hogsmeade")
+#define LAYER_HOGWART		TEXT("Layer_Hogwart")
 #define LAYER_MARKER		TEXT("Layer_Marker")
-#define LAYER_PLAYER		TEXT("Layer_Player")
+#define LAYER_PLAYER		TEXT("Layer__Player")
 #define LAYER_CAMERA		TEXT("Layer_Camera")
 #define LAYER_MONSTER		TEXT("Layer_Monster")
 #define LAYER_UI			TEXT("Layer_UI")
@@ -62,7 +66,14 @@ namespace Client {
 #define LAYER_INTERACTABLE	TEXT("Layer_Interactable")
 #define LAYER_UNIFIED		TEXT("Layer_Unified")
 #define LAYER_DOOR			TEXT("Layer_Door")
-#define LAYER_HIDDEN		TEXT("Layer_HIDDEN")
+#define LAYER_HIDDEN		TEXT("Layer__HIDDEN")
+#define LAYER_RING			TEXT("Layer_Ring")
+#define LAYER_RACERAI		TEXT("Layer_RacerAI")
+#define LAYER_DADA_INT		TEXT("Layer_DADA_INT")
+#define LAYER_DUELIST		TEXT("Layer_Duelist")
+#define LAYER_NPC			TEXT("Layer_Npc")
+#define LAYER_REPARO		TEXT("Layer_Reparo")
+#define LAYER_LIGHTELMENT	TEXT("Layer_LightElement")
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 

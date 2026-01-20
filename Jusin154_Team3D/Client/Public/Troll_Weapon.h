@@ -22,16 +22,20 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	void Set_Disolve(_bool bDisolve) { m_bDisolve = bDisolve; }
 public:
 	virtual _vector Get_WorldPostion() override;
 	_matrix			Get_WorldMatrix();
 	virtual const _float4* Get_HammerPosition();
+
 
 private:
 	const _float4x4* m_pSocketMatrices = {  };
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	_float4x4				m_HammerMatrix = { };
+	_bool				m_bDisolve = { false };
+	_float				m_fDisolveTime = { 0.f };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
@@ -42,6 +46,8 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	HRESULT Render_Disolve();
+
 
 public:
 	static CTroll_Weapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

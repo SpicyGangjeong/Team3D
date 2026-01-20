@@ -11,9 +11,8 @@ private:
 	CAnimation(const CAnimation& rhs);
 	virtual ~CAnimation() = default;
 public:
-	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, LOCALPOS_DESC** pLocalPosArray, _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask,_vector vector[3] = nullptr);
-	void			ProgressAnimation(const vector<CBone*>& Bones,LOCALPOS_DESC** pLocalPosArray, _bool bIsSpine, vector<_uint> BoneMask, _vector vector[3]);
-	void			ResetRootMotion();
+	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones,  _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex = -1);
+	void			ProgressAnimation(const vector<CBone*>& Bones, _bool bIsSpine, vector<_uint> BoneMask, _float4& OutScale, _float4& OutRotation, _float4& OutTranslation, _int RootBoneIndex);
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }
 	_float			Get_AnimProgressRatio();
@@ -33,12 +32,15 @@ public:
 
 	void Set_CurrentTrackPosition(_float TrackPosition) { m_fCurrentTrackPosition = TrackPosition; }
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
-	_float Get_CurrentTrackProgressRatio() { return m_fTempTrack / m_fDurationSeconds;}
+	_float Get_CurrentTrackProgressRatio() { return m_fCurrentTrackPosition / m_fDuration;}
+	void Set_CurrentTrackProgressRatio(_float fRatio);
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
 
 	_uint Get_ChannelCount() { return m_iNumChannels; }
+	_uint Get_KeyFrameCount() { return m_iKeyframeCount; }
 	_float Get_Duration() { return m_fDuration; }
+	_float Get_AnimTime() { return m_fTempTrack; }
 
 	ID3D11Buffer* Get_KeyFrameBuffer() { return m_pKeyFrameBuffer; }
 	ID3D11Buffer* Get_ChannelBuffer() { return m_pChannelBuffer; }
@@ -46,6 +48,8 @@ public:
 	ID3D11ShaderResourceView* Get_ChannelSrv() { return m_pChannelSrv; }
 
 	_float Get_Progress() { return m_fProgress; }
+	void Set_PlayAnim(_bool bPlay) { m_bPlayAnim = bPlay; }
+	_bool Get_PlayAnim() { return m_bPlayAnim; }
 #ifdef EDITOR_PROJECT
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiAnimation* pAIAnimation);
@@ -86,6 +90,8 @@ private:
 	vector<LERPDESC>		m_StartKeyFrames;	// 이 애니메이션의 영향을 받는 본들의 초기값
 	vector<_matrix>			m_vBoneTransformationMatrix = {};
 	_float m_fProgress = {};
+	_bool m_bPlayAnim = {true};
+
 
 	_uint m_iChannelCount;
 	_uint m_iKeyframeCount;

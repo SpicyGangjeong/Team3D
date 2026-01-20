@@ -34,8 +34,62 @@ void CAlphaMap::Update(_float3& vPosition, _uint iColorIndex, _float fValue, _ui
 
 			iPixelIndex = (iCurrentZ * m_iNumPixelW) + iCurrentX;
 
-			if (m_iNumPixels <= iPixelIndex)
+			if (m_iNumPixels <= iPixelIndex || 0 > iPixelIndex)
+				continue;
+
+			if (0 == iColorIndex)
+			{
+				m_pPixels[iPixelIndex].x += fValue;
+			}
+			else if (1 == iColorIndex)
+			{
+				m_pPixels[iPixelIndex].y += fValue;
+			}
+			else if (2 == iColorIndex)
+			{
+				m_pPixels[iPixelIndex].z += fValue;
+			}
+			else if (3 == iColorIndex)
+			{
+				m_pPixels[iPixelIndex].w += fValue;
+			}
+			else
 				return;
+
+			_float fWeight = m_pPixels[iPixelIndex].x + m_pPixels[iPixelIndex].y + m_pPixels[iPixelIndex].z + m_pPixels[iPixelIndex].w;
+
+			m_pPixels[iPixelIndex] = _float4(m_pPixels[iPixelIndex].x / fWeight, m_pPixels[iPixelIndex].y / fWeight, m_pPixels[iPixelIndex].z / fWeight, m_pPixels[iPixelIndex].w / fWeight);
+		}
+	}
+
+	memcpy(SubResource.pData, m_pPixels, sizeof(_float4) * m_iNumPixels);
+
+	m_pContext->Unmap(m_pTexture2D, 0);
+
+}
+
+void CAlphaMap::Update_Land(_float2 vUV, _uint iColorIndex, _float fValue, _uint iRange)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+	if (FAILED(m_pContext->Map(m_pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
+		return;
+
+	_uint iPixelIndex = {};
+
+	_uint iStartX = (_uint)(vUV.x * m_iNumPixelW) - (iRange / 2);
+	_uint iStartZ = (_uint)(vUV.y * m_iNumPixelH) - (iRange / 2);
+
+	for (_uint j = 0; j < iRange; ++j)
+	{
+		for (_uint i = 0; i < iRange; ++i)
+		{
+			_uint iCurrentX = iStartX + i;
+			_uint iCurrentZ = iStartZ + j;
+
+			iPixelIndex = (iCurrentZ * m_iNumPixelW) + iCurrentX;
+
+			if (m_iNumPixels <= iPixelIndex || 0 > iPixelIndex)
+				continue;
 
 			if (0 == iColorIndex)
 			{
@@ -108,7 +162,6 @@ void CAlphaMap::Load_ToFile(const _char* pFilePath)
 		in.read(reinterpret_cast<_char*>(&m_pPixels[i]), sizeof(_float4));
 	}
 
-
 	in.close();
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
@@ -121,8 +174,16 @@ void CAlphaMap::Load_ToFile(const _char* pFilePath)
 
 	m_pContext->Unmap(m_pTexture2D, 0);
 
-	//if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Terrain/Hogwart_AlphaMap.dds")))
-	//	return;
+	if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Terrain/Hogsmeade_AlphaMap.dds")))
+		return;
+}
+
+void CAlphaMap::Save_DDS(const _char* pFilePath)
+{
+	string strFilePath = "../Bin/Resources/Data/Map/Terrain/" + string(pFilePath);
+
+	if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, CMyTools::ToWstring(strFilePath).c_str())))
+		return;
 }
 
 HRESULT CAlphaMap::Initialize(_uint iSizeX, _uint iSizeY)

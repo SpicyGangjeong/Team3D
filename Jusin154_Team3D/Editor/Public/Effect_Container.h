@@ -26,6 +26,7 @@ public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
 	void			Reset_Light();
 	_uint			Get_SkillType() const { return m_iSkillType; }
+	void			Setting_Pos(_fvector vPos);
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -37,17 +38,22 @@ protected:
 	void			Update_Event(_float fTimeDelta);
 	_int            CollisionCheck();
 	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	MonsterSweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	MonsterRayCast(_vector StartPos, _vector vDir, _float fLength, _uint iMaxHitCapacity);
 protected:
 
 	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
 	_float4							m_vStartPos = {};
 	_float4							m_vEndPos = {};
 	PSX::PxSweepBufferN<12>			m_Hitbuffer = {};
+	PSX::PxRaycastHit				m_RayHitbuffer = {};
+	_uint							m_iHitCount = {};
 	_bool							m_bHit = { false };
 protected:
 	_wstring						m_wstrEffectName = {};
 
 	_bool							m_isLoop = {};
+	_bool							m_isStop = {};
 
 	_float							m_fAccTime = {};
 	_float							m_fPreAccTime = {};

@@ -22,7 +22,7 @@ HRESULT CPotion::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 700.f;
-	Desc.fY = 150.f;
+	Desc.fY = -150.f;
 	Desc.fSizeX = 80.f;
 	Desc.fSizeY = 80.f;
 
@@ -135,7 +135,7 @@ HRESULT CPotion::Render()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f)* m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY - m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f)* m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

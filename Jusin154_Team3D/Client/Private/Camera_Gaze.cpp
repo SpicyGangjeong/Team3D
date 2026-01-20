@@ -32,6 +32,9 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 			_vector vNewLook = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vLookPos_Src), XMLoadFloat3(&m_vLookPos_Dest), CMyTools::Saturate(m_vLookLerpTime.x / fTimeDenom)), 1.f);
 			m_pTransformCom->LookAt(vNewLook);
 		}
+		else if (m_bSyncFollow) {
+			m_pTransformCom->Set_WorldMatrix(m_pFollowTarget->Get_Component<CTransform>()->Get_XMWorldMatrix());
+		}
 		else {
 			m_pTransformCom->LookAt(m_pLookTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION));
 		}
@@ -98,6 +101,11 @@ void CCamera_Gaze::Enable_LookLerp()
 	XMStoreFloat3(&m_vLookPos_Dest, vLookTargetPos);
 }
 
+void CCamera_Gaze::Sync_Follow(_bool bSync)
+{
+	m_bSyncFollow = bSync;
+}
+
 void CCamera_Gaze::Toggle_Priority()
 {
 	if (m_iPriority == 55) {
@@ -105,14 +113,70 @@ void CCamera_Gaze::Toggle_Priority()
 	}
 	else {
 		m_iPriority = 55;
-		m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, false);
+		m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, false);
 	}
 }
 
+void CCamera_Gaze::Toggle_AIPriority()
+{
+	if (m_iPriority == 55) {
+		m_iPriority = 102;
+	}
+	else {
+		m_iPriority = 55;
+		m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, false);
+	}
+}
+
+void CCamera_Gaze::Set_LookTarget(CGameObject* pTarget)
+{
+	SAFE_RELEASE(m_pLookTarget);
+	m_pLookTarget = pTarget;
+	SAFE_ADDREF(m_pLookTarget);
+}
+
+void CCamera_Gaze::Set_FollowTarget(CGameObject* pTarget)
+{
+	SAFE_RELEASE(m_pFollowTarget);
+	m_pFollowTarget = pTarget;
+	SAFE_ADDREF(m_pFollowTarget);
+}
 void CCamera_Gaze::Late_Update(_float fTimeDelta)
 {
 	if (false == m_bActive) {
 		return;
+	}
+}
+void CCamera_Gaze::Trigger(CTimeSocket& Socket)
+{
+	SOCKETCONTENTS* pContents = &Socket.m_Contents;
+	switch (pContents->eTypeFunc)
+	{
+	case TIMESOCKET_FUNC::TRANSLATION:
+
+		break;
+	case TIMESOCKET_FUNC::TRANSLATION_LERP:
+	{
+
+	} break;
+	case TIMESOCKET_FUNC::SET_PITCHLIMIT:
+	{
+		Set_RotDegreeVerticalLock({ pContents->vParam_11.x , pContents->vParam_11.y });
+	}break;
+	case TIMESOCKET_FUNC::ZOOM_IN:
+	{
+		Set_Fov(pContents->vParam_11.x);
+	}break;
+	case TIMESOCKET_FUNC::ZOOM_OUT:
+	{
+		Set_Fov(pContents->vParam_11.x);
+	}break;
+	case TIMESOCKET_FUNC::END_CINEMATIC:
+	{
+		m_pGameInstance->Bind_Camera(CURRENT_LEVEL, Socket.m_Contents.wstrKeyName, true);
+	}break;
+	default:
+		break;
 	}
 }
 HRESULT CCamera_Gaze::Render()
@@ -183,12 +247,24 @@ void CCamera_Gaze::Free()
 void CCamera_Gaze::Describe_Entity()
 {
 	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	_int iPriority = m_iPriority;
+	size_t iAddress = (size_t)this;
+	_string strHeader = "GAZE_CAMERA_Priority##" + to_string(iAddress);
+	if (GUI::SliderInt(strHeader.c_str(), &iPriority, 45, 60)) {
+		m_iPriority = iPriority;
+	}
 	if (GUI::CollapsingHeader("Camera_Gaze_Describe")) {
+		_float fFovYDegree = XMConvertToDegrees(m_fFovy);
+		if (GUI::SliderFloat("FOV", &fFovYDegree, 0.01f, 89.f, "%.2f")) {
+			m_fFovy = XMConvertToRadians(fFovYDegree);
+		}
 		m_pTransformCom->Describe_Entity();
 		GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);
 		GUI::Text("LOOK_DST %.2f, %.2f, %.2f", m_vLookPos_Dest.x, m_vLookPos_Dest.y, m_vLookPos_Dest.z);
 		GUI::Text("FOLLOW_SRC %.2f, %.2f, %.2f", m_vFollowPos_Src.x, m_vFollowPos_Src.y, m_vFollowPos_Src.z);
 		GUI::Text("FOLLOW_DST %.2f, %.2f, %.2f", m_vFollowPos_Dest.x, m_vFollowPos_Dest.y, m_vFollowPos_Dest.z);
+
+		GUI::DragFloat2("VerticalAngle", (_float*)&m_vAccRotDegree_VerticalLocks, 1.f, 0.f, 89.f);
 		GUI::Checkbox("TransitionLerp", &m_bEnable_TransitionLerp);
 		if (true == m_bEnable_TransitionLerp) {
 			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vTransitionTime.x, m_vTransitionTime.y);

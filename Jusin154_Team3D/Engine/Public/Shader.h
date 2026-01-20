@@ -6,6 +6,23 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL CShader final : public CComponent
 {
+	typedef struct tagShaderGlobalVariable {
+		D3D_SHADER_VARIABLE_CLASS eClass = D3D_SVC_FORCE_DWORD;
+		D3D_SHADER_VARIABLE_TYPE  eType = D3D_SVT_FORCE_DWORD;
+		_uint iNumElement;
+		_uint iNumMember;
+		union {
+			ID3DX11EffectVariable*				 pVariable = { nullptr };
+			ID3DX11EffectScalarVariable*		 pScalar;
+			ID3DX11EffectVectorVariable*         pVector;
+			ID3DX11EffectMatrixVariable*         pMatrix;
+			ID3DX11EffectShaderResourceVariable* pSRV;
+			ID3DX11EffectSamplerVariable*        pSampler;
+		};
+		ID3D11ShaderResourceView*				pBeforeBindedSRV = nullptr;
+		vector<ID3D11ShaderResourceView*>		beforeBindedSRVs;
+	}SHADERVARIABLE;
+
 private:
 	CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CShader(const CShader& rhs);
@@ -25,7 +42,14 @@ public:
 	HRESULT Bind_IntArray(const _char* pConstantName, const _int* pData, _uint elementCount);
 
 private:
+	D3DX11_EFFECT_DESC m_EffectDesc = {};
+	unordered_map<uint64_t, SHADERVARIABLE>* m_umapShaderRawVariables = {};
+
+private:
 	HRESULT CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
+	HRESULT Hash_Variables();
+
+	SHADERVARIABLE* Find_VariableByName(const _char* pConstantName);
 
 #ifdef _DEBUG
 public:

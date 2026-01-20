@@ -44,7 +44,6 @@ void CMapObject_Collision::Late_Update(_float fTimeDelta)
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 	if (m_bVisible){
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-		
 	}
 	
 }
@@ -66,7 +65,7 @@ HRESULT CMapObject_Collision::Render()
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (m_bSelected)
+		if (m_bVisible)
 		{
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
 				return E_FAIL;
@@ -157,7 +156,7 @@ HRESULT CMapObject_Collision::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Texture */
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("CollisionDebug"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("T_Noises_D"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) {
 		return E_FAIL;
 	}
 
@@ -231,14 +230,14 @@ void CMapObject_Collision::Describe_Entity()
 	if (nullptr == m_pGameInstance)
 		return;
 
-	//ImGui::Text(CMyTools::ToString(m_strModelPrototypeTag).c_str());
+	//GUI::Text(CMyTools::ToString(m_strModelPrototypeTag).c_str());
 	GUI::Checkbox("Visible", &m_bVisible);
 	_float3 vMove = {};
 
-	ImGui::Text("----- Transfrom ----");
-	ImGui::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
-	ImGui::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
-	ImGui::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+	GUI::Text("----- Transfrom ----");
+	GUI::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
+	GUI::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
+	GUI::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
 
 	m_pTransformCom->Move_Right(vMove.x);
 	m_pTransformCom->Move_Up(vMove.y);
@@ -255,22 +254,22 @@ void CMapObject_Collision::Describe_Entity()
 			m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&m_vPosition));
 		}
 	}
-	ImGui::Text("----- Rotation ----");
-	ImGui::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
-	ImGui::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);
-	ImGui::InputFloat("Z##Rotation", &m_vRotation.z, 10.f, 45.f);
+	GUI::Text("----- Rotation ----");
+	GUI::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
+	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);
+	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 10.f, 45.f);
 
-	ImGui::Text("----- Scale ----");
-	ImGui::InputFloat("X##Scale", &m_vScale.x, 0.1f, 1.f);
-	ImGui::InputFloat("Y##Scale", &m_vScale.y, 0.1f, 1.f);
-	ImGui::InputFloat("Z##Scale", &m_vScale.z, 0.1f, 1.f);
+	GUI::Text("----- Scale ----");
+	GUI::InputFloat("X##Scale", &m_vScale.x, 0.1f, 1.f);
+	GUI::InputFloat("Y##Scale", &m_vScale.y, 0.1f, 1.f);
+	GUI::InputFloat("Z##Scale", &m_vScale.z, 0.1f, 1.f);
 
 	m_vScale.x = max(0.01f, m_vScale.x);
 	m_vScale.y = max(0.01f, m_vScale.y);
 	m_vScale.z = max(0.01f, m_vScale.z);
 
 
-	if (ImGui::Button("Delete"))
+	if (GUI::Button("Delete"))
 		m_bDead = true;
 
 	if (GUI::Button("Bake_StaticPhysXMesh")) {

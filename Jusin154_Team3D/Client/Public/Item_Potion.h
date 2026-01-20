@@ -24,6 +24,8 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	void Check_GroundCollision();
+	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 	void Set_Attach(_bool Attach);
 public:
 
@@ -31,11 +33,19 @@ private:
 	const _float4x4* m_pSocketMatrices = {  };
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
+	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+
+	_float4 m_vStartPos = {};
+	PSX::PxSweepBufferN<12> m_SweepBuffer = {};
+
+	class CEffectPool* m_pEffectPool = nullptr;
 
 	_float4x4			 m_pWandTipMatrix = {};
 	_float3				 m_Offset = {};
 	_bool				 m_bAttach = { true };
-	_float m_fTimer = {};
+	_float				 m_fTimer = {};
+	_bool				 m_bHit = {};
+	_bool				 m_bOnce = {};
 
 private:
 	HRESULT Ready_Components();

@@ -33,7 +33,7 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 1150.f;
-	Desc.fY = 850.f;
+	Desc.fY = -850.f;
 	Desc.fSizeX = 1650.f;
 	Desc.fSizeY = 450.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -86,7 +86,7 @@ void CAction_Panel::Update(_float fTimeDelta)
 	}
 
 	Magic_Meter_Move();
-
+	m_fTime -= fTimeDelta;
 	__super::Update(fTimeDelta);
 }
 
@@ -180,7 +180,7 @@ void CAction_Panel::Magic_Meter_UV()
 	for (_uint i = 0; i < 5; ++i)
 	{
 		m_vMagic_MeterUV[i].x = 570.f - (55.f * i);
-		m_vMagic_MeterUV[i].y = 145.f;
+		m_vMagic_MeterUV[i].y = -145.f;
 	}
 }
 
@@ -226,6 +226,10 @@ void CAction_Panel::Ancient_Magic_Throw()
 
 void CAction_Panel::Use_Spell(_int Index)
 {
+	if (m_fTime >= 0.f)
+		return;
+
+	m_fTime = 0.5f;
 	switch (Index)
 	{
 	case 1:
@@ -292,82 +296,82 @@ HRESULT CAction_Panel::Ready_Components(void* pArg)
 
 HRESULT CAction_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CSpell_Slot**>(&m_pSpell_Slot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Slot>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast <CSpell_Slot**>(&m_pSpell_Slot))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Slot"), m_pSpell_Slot);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay1))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay1))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Overlay1"), m_pSpell_Overlay1);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay2))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay2))))
 	{
 		return E_FAIL;
 	}
 	static_cast<CUIObject*>(m_pSpell_Overlay2)->MoveX(481.f);
 	Add_Element(TEXT("Spell_Overlay2"), m_pSpell_Overlay2);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay3))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay3))))
 	{
 		return E_FAIL;
 	}
 	static_cast<CUIObject*>(m_pSpell_Overlay3)->MoveX(582.f);
 	Add_Element(TEXT("Spell_Overlay3"), m_pSpell_Overlay3);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay4))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay4))))
 	{
 		return E_FAIL;
 	}
 	static_cast<CUIObject*>(m_pSpell_Overlay4)->MoveX(683.f);
 	Add_Element(TEXT("Spell_Overlay4"), m_pSpell_Overlay4);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSlot_Number>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSlot_Number**>(&m_pSlot_Number))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSlot_Number>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSlot_Number**>(&m_pSlot_Number))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Slot_Number"), m_pSlot_Number);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHpBarBG>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CHpBarBG**>(&m_pHpBarBG))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHpBarBG>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CHpBarBG**>(&m_pHpBarBG))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("HpBarBG"), m_pHpBarBG);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter1))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter1))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter2))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter2))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter3))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter3))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter4))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter4))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pLastMagic_Meter))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pLastMagic_Meter))))
 	{
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Icon**>(&m_pMagic_Icon))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Icon>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Icon**>(&m_pMagic_Icon))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Magic_Icon"), m_pMagic_Icon);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_UI>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_UI**>(&m_pSpell_UI))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_UI>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_UI**>(&m_pSpell_UI))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_UI"), m_pSpell_UI);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPotion>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CPotion**>(&m_pPotion))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPotion>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CPotion**>(&m_pPotion))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Potion"), m_pPotion);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Item>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Item**>(&m_pMagic_Item))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Item>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Item**>(&m_pMagic_Item))))
 	{
 		return E_FAIL;
 	}

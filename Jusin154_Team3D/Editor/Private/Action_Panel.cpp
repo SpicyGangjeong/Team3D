@@ -10,6 +10,8 @@
 #include "Spell_UI.h"
 #include "Potion.h"
 #include "Magic_Item.h"
+#include "NPCInteraction.h"
+#include "Dialogue.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -31,7 +33,7 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 1150.f;
-	Desc.fY = 850.f;
+	Desc.fY = -850.f;
 	Desc.fSizeX = 1650.f;
 	Desc.fSizeY = 450.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -73,6 +75,31 @@ void CAction_Panel::Update(_float fTimeDelta)
 	if (!__super::Chack_Visible())
 	{
 		return;
+	}
+
+	if (m_bFadeIn == true)
+	{
+		if (m_fAlpha <= 1.f)
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	if (m_bFadeOut == true)
+	{
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+			Visible(false);
+		}
 	}
 
 	Magic_Meter_Move();
@@ -145,7 +172,7 @@ void CAction_Panel::Magic_Meter_UV()
 	for (_uint i = 0; i < 5; ++i)
 	{
 		m_vMagic_MeterUV[i].x = 570.f - (55.f * i);
-		m_vMagic_MeterUV[i].y = 145.f;
+		m_vMagic_MeterUV[i].y = -145.f;
 	}
 }
 
@@ -266,6 +293,16 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Magic_Item"), m_pMagic_Item);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPCInteraction>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CNPCInteraction**>(&m_pNPCInteraction))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("NPCInteraction "), m_pNPCInteraction);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDialogue>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CDialogue**>(&m_pDialogue))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Dialogue "), m_pDialogue);
 	return S_OK;
 }
 

@@ -57,6 +57,10 @@ HRESULT CMapElement_Door::Initialize(void* pArg)
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);*/
 
+	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
+	_matrix OffsetMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * m_pTransformCom->Get_XMWorldMatrix();
+	XMStoreFloat4(&m_vExtentPosition, OffsetMatrix.r[3]);
+
 	return S_OK;
 }
 
@@ -84,7 +88,7 @@ void CMapElement_Door::Late_Update(_float fTimeDelta)
 		Describe_Entity();
 #endif 
 
-	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
+	if (m_pGameInstance->IsIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), m_pModelComs[0]->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
 }

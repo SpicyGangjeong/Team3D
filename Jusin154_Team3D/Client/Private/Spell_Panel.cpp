@@ -39,7 +39,7 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 960.f;
-	Desc.fY = 540.f;
+	Desc.fY = -540.f;
 	Desc.fSizeX = g_iWinSizeX;
 	Desc.fSizeY = g_iWinSizeY;
 
@@ -240,100 +240,96 @@ HRESULT CSpell_Panel::Ready_Components(void* pArg)
 
 HRESULT CSpell_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCurrent_Spell_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CCurrent_Spell_Slot**>(&m_pCurrent_Spell_Slot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCurrent_Spell_Slot>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCurrent_Spell_Slot**>(&m_pCurrent_Spell_Slot))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Current_Spell_Slot"), m_pCurrent_Spell_Slot);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_List>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_List**>(&m_pSpell_List))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_List>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_List**>(&m_pSpell_List))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_List"), m_pSpell_List);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEessential_Spell_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEessential_Spell_Slot**>(&m_pEessential_Spell_Slot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEessential_Spell_Slot>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEessential_Spell_Slot**>(&m_pEessential_Spell_Slot))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Eessential_Spell_Slot"), m_pEessential_Spell_Slot);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEessential_Spell>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEessential_Spell**>(&m_pEessential_Spell))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEessential_Spell>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEessential_Spell**>(&m_pEessential_Spell))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Eessential_Spell"), m_pEessential_Spell);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_List_Image>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_List_Image**>(&m_pSpell_List_Image))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_List_Image>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_List_Image**>(&m_pSpell_List_Image))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_List_Image"), m_pSpell_List_Image);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_State>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_State**>(&m_pSpell_State))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_State>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_State**>(&m_pSpell_State))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_State"), m_pSpell_State);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Hover>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Hover**>(&m_pSpell_Hover))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Hover>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Hover**>(&m_pSpell_Hover))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Hover"), m_pSpell_Hover);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Hover_Effect>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Hover_Effect**>(&m_pSpell_Hover_Effect))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Hover_Effect>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Hover_Effect**>(&m_pSpell_Hover_Effect))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Hover_Effect"), m_pSpell_Hover_Effect);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Preview>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Preview**>(&m_pSpell_Preview))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Preview>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Preview**>(&m_pSpell_Preview))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Preview"), m_pSpell_Preview);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Vidio_Border>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Vidio_Border**>(&m_pSpell_Vidio_Border))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Vidio_Border>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Vidio_Border**>(&m_pSpell_Vidio_Border))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Vidio_Border"), m_pSpell_Vidio_Border);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCurrent_Slot_Number>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CCurrent_Slot_Number**>(&m_pCurrent_Slot_Number))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCurrent_Slot_Number>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCurrent_Slot_Number**>(&m_pCurrent_Slot_Number))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Current_Slot_Number"), m_pCurrent_Slot_Number);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Header>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Header**>(&m_pSpell_Header))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Header>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Header**>(&m_pSpell_Header))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Header"), m_pSpell_Header);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Header_Line>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Header_Line**>(&m_pSpell_Header_Line))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Header_Line>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Header_Line**>(&m_pSpell_Header_Line))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Header_Line"), m_pSpell_Header_Line);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Anim>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Anim**>(&m_pSpell_Anim))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Anim>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Anim**>(&m_pSpell_Anim))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Anim"), m_pSpell_Anim);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Drag>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Drag**>(&m_pSpell_Drag))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Drag>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Drag**>(&m_pSpell_Drag))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Drag"), m_pSpell_Drag);
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, m_Info, nullptr, reinterpret_cast<CSpell_Data**>(&m_pSpell_Data))))
-	//{
-	//	return E_FAIL;
-	//}
 	return S_OK;
 }
 

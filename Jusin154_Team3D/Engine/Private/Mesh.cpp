@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
+#include "Bone.h"
 #include "Mesh.h"
 #include "Model.h"
-#include "Bone.h"
 #include "Shader.h"
-#include "ComputeShader.h"
+#include "GameInstance.h"
 CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer{ pDevice, pContext }
 {
@@ -11,6 +11,9 @@ CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CMesh::CMesh(const CMesh& rhs)
 	: CVIBuffer(rhs)
+#ifdef EDITOR_PROJECT
+	,m_VertexTexcoords(rhs.m_VertexTexcoords)
+#endif
 {
 
 }
@@ -25,6 +28,7 @@ HRESULT CMesh::Bind_BoneMatrices(const vector<class CBone*>& Bones, CShader* pSh
 		XMStoreFloat4x4(&m_pBoneMatrices[i],
 			XMLoadFloat4x4(&m_offsetMatrices[i]) * Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrix());
 	}
+
 	if (0 == m_iNumBones) {
 		return S_OK;
 	}
@@ -54,6 +58,16 @@ HRESULT CMesh::Render_Indexed(_uint IndexCount, _uint StartIndexLocation, _uint 
 	m_pContext->DrawIndexed(IndexCount, StartIndexLocation, BaseVertexLocation);
 	return S_OK;
 }
+
+HRESULT CMesh::Copy_BoneMatrices(vector<_float4x4>& pDestination)
+{
+	if (pDestination.size() != m_iNumBones) {
+		return E_FAIL;
+	}
+	memcpy_s(pDestination.data(), sizeof(_float4x4) * m_iNumBones, m_pBoneMatrices, sizeof(_float4x4) * m_iNumBones);
+	return S_OK;
+}
+
 #ifdef EDITOR_PROJECT
 HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix)
 {
@@ -267,6 +281,13 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 	m_pVertexPositions = new _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
+#ifdef EDITOR_PROJECT
+	m_VertexTexcoords = new _float2[m_iNumVertices];
+	ZeroMemory(m_VertexTexcoords, sizeof(_float2) * m_iNumVertices);
+#endif // EDITOR_PROJECT
+
+
+
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &SaveMesh->Vertices[i].Pos, sizeof(_float3));
@@ -287,6 +308,9 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 			XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), PreTransformMatrix)));
 
 		pVertices[i].vTexcoord = SaveMesh->Vertices[i].UV;
+#ifdef EDITOR_PROJECT
+		memcpy(&m_VertexTexcoords[i], &pVertices[i].vTexcoord, sizeof(_float2));
+#endif // EDITOR_PROJECT
 	}
 
 	D3D11_SUBRESOURCE_DATA	InitialVBData{};
@@ -341,6 +365,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 			pVertices[i].vTexcoord = _float2(0.f, 0.f);
 	}
 
+
 	m_iNumBones = (_uint)_SaveMesh->Bones.size();
 
 	m_offsetMatrices.reserve(m_iNumBones);
@@ -363,6 +388,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 		if (-1 == iBoneIndex)
 			return E_FAIL;
 
+		m_BoneRemap.push_back((_uint)iBoneIndex);
 		m_BoneIndices.push_back(iBoneIndex);
 		m_offsetMatrices.push_back(OffsetMatrix);
 
@@ -370,6 +396,12 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 		for (_uint j = 0; j < _SaveBone.Weights.size(); j++)
 		{
 			SaveBoneWeight _SaveBoneWeight = _SaveBone.Weights[j];
+
+			if (_SaveBoneWeight.VertexId >= m_iNumVertices)
+			{
+				continue;
+			}
+
 
 			if (0.f == pVertices[_SaveBoneWeight.VertexId].vBlendWeight.x)
 			{
@@ -394,6 +426,22 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 		}
 	}
 
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		_float sum =
+			pVertices[i].vBlendWeight.x +
+			pVertices[i].vBlendWeight.y +
+			pVertices[i].vBlendWeight.z +
+			pVertices[i].vBlendWeight.w;
+
+		if (sum <= 0.f)
+		{
+			pVertices[i].vBlendIndex.x = 0;
+			pVertices[i].vBlendWeight.x = 1.f;
+		}
+	}
+
+
 	if (0 == m_iNumBones)
 	{
 		m_iNumBones = 1;
@@ -409,8 +457,40 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBData, &m_pVB)))
 		return E_FAIL;
 
+	Create_BoneRemapBuffer();
+
 
 	Safe_Delete_Array(pVertices);
+
+	return S_OK;
+}
+
+HRESULT CMesh::Create_BoneRemapBuffer()
+{
+	
+	D3D11_BUFFER_DESC desc{};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(_uint) * (_uint)m_BoneRemap.size();
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = sizeof(_uint);
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	D3D11_SUBRESOURCE_DATA init{};
+	init.pSysMem = m_BoneRemap.data();
+
+	m_pDevice->CreateBuffer(&desc, &init, &m_pBoneRemapBuffer);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	srvDesc.Buffer.FirstElement = 0;
+	srvDesc.Buffer.NumElements = (_uint)m_BoneRemap.size();
+
+	m_pDevice->CreateShaderResourceView(
+		m_pBoneRemapBuffer,
+		&srvDesc,
+		&m_pBoneRemapSRV);
 
 	return S_OK;
 }
@@ -466,7 +546,48 @@ PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, 
 
 	return pTriangleMesh;
 }
+
 #ifdef EDITOR_PROJECT
+_bool CMesh::PickingMesh(_float3* pPosition, _float2* pUV, _fmatrix WorldMatrix)
+{
+	_vector vCamPosition = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
+
+	_vector vPickingPosition = XMVectorSetW(XMLoadFloat3(pPosition), 1.f);
+
+	_vector vDir = XMVector3Normalize(vPickingPosition - vCamPosition);
+	_float2 vUV = _float2(0.f, 0.f);
+	_float fU ={};
+	_float fV ={};
+	_float fT = {};
+	for (_uint i = 0; i < m_iNumIndices / 3; ++i)
+	{
+		_uint iIndices[3] = { 
+			m_pIndices[i * 3 + 0] ,
+			m_pIndices[i * 3 + 1] ,
+			m_pIndices[i * 3 + 2] 
+		};
+
+		if (true == CMyTools::IntersectTri(
+			vCamPosition,
+			vDir,
+			XMVector3TransformCoord(XMLoadFloat3(&m_pVertexPositions[iIndices[0]]), WorldMatrix),
+			XMVector3TransformCoord(XMLoadFloat3(&m_pVertexPositions[iIndices[1]]), WorldMatrix),
+			XMVector3TransformCoord(XMLoadFloat3(&m_pVertexPositions[iIndices[2]]), WorldMatrix),
+			fT,
+			fU,
+			fV
+		))
+		{
+			_float fW = 1.0f - fU - fV;
+			pUV->x = fW * m_VertexTexcoords[iIndices[0]].x + fU * m_VertexTexcoords[iIndices[1]].x + fV * m_VertexTexcoords[iIndices[2]].x;
+			pUV->y = fW * m_VertexTexcoords[iIndices[0]].y + fU * m_VertexTexcoords[iIndices[1]].y + fV * m_VertexTexcoords[iIndices[2]].y;
+			return true;
+		}
+	}
+
+
+	return false;
+}
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
@@ -497,6 +618,9 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix Pr
 	m_pVertexPositions = new _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
+	m_VertexTexcoords = new _float2[m_iNumVertices];
+	ZeroMemory(m_VertexTexcoords, sizeof(_float2) * m_iNumVertices);
+
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
@@ -509,6 +633,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix Pr
 		memcpy(&pVertices[i].vBinormal, &pAIMesh->mBitangents[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vBinormal, XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), PreTransformMatrix)));
 		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
+		memcpy(&m_VertexTexcoords[i], &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
 	}
 
 	D3D11_SUBRESOURCE_DATA	InitialVBData{};
@@ -556,6 +681,11 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const ai
 	m_pBoneMatrices = new _float4x4[0 == m_iNumBones ? 1 : m_iNumBones];
 	ZeroMemory(m_pBoneMatrices, sizeof(_float4x4) * m_iNumBones);
 
+	_float fMinimumEffectiveWeight = 0.0001f;
+
+	vector<vector<SaveBoneWeight>> influencesPerVertex;
+	influencesPerVertex.resize(m_iNumVertices);
+
 	_float4x4 OffSetMatrix;
 	XMStoreFloat4x4(&OffSetMatrix, XMMatrixIdentity());
 
@@ -577,22 +707,59 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const ai
 
 		for (_uint j = 0; j < iNumWeight; ++j) {
 			aiVertexWeight AIWeight = pAIBone->mWeights[j];
-			if (0.f == pVertices[AIWeight.mVertexId].vBlendWeight.x) {
-				pVertices[AIWeight.mVertexId].vBlendIndex.x = i;
-				pVertices[AIWeight.mVertexId].vBlendWeight.x = AIWeight.mWeight;
+			const aiVertexWeight& aiWeight = pAIBone->mWeights[j];
+
+			if (aiWeight.mVertexId >= m_iNumVertices) {
+				continue;
 			}
-			else if (0.f == pVertices[AIWeight.mVertexId].vBlendWeight.y) {
-				pVertices[AIWeight.mVertexId].vBlendIndex.y = i;
-				pVertices[AIWeight.mVertexId].vBlendWeight.y = AIWeight.mWeight;
+
+			if (aiWeight.mWeight < fMinimumEffectiveWeight) {
+				continue;
 			}
-			else if (0.f == pVertices[AIWeight.mVertexId].vBlendWeight.z) {
-				pVertices[AIWeight.mVertexId].vBlendIndex.z = i;
-				pVertices[AIWeight.mVertexId].vBlendWeight.z = AIWeight.mWeight;
-			}
-			else {
-				pVertices[AIWeight.mVertexId].vBlendIndex.w = i;
-				pVertices[AIWeight.mVertexId].vBlendWeight.w = AIWeight.mWeight;
-			}
+
+			influencesPerVertex[aiWeight.mVertexId].push_back(
+				SaveBoneWeight{ i, aiWeight.mWeight }
+			);
+		}
+	}
+	for (_uint iVertexIndex = 0; iVertexIndex < m_iNumVertices; ++iVertexIndex)
+	{
+		vector<SaveBoneWeight>& influences = influencesPerVertex[iVertexIndex];
+
+		if (influences.empty()) {
+			continue;
+		}
+
+		sort( influences.begin(), influences.end(), []
+		(const SaveBoneWeight& left, const SaveBoneWeight& right) {
+				return left.Weight > right.Weight;
+		});
+
+		// 상위 4개만 선택
+		_uint selectedCount = min<_uint>(4, static_cast<_uint>(influences.size()));
+
+		pVertices[iVertexIndex].vBlendIndex = XMUINT4(0, 0, 0, 0);
+		pVertices[iVertexIndex].vBlendWeight = _float4(0.f, 0.f, 0.f, 0.f);
+
+		float totalWeight = 0.f;
+		for (_uint iSelectedIndex = 0; iSelectedIndex < selectedCount; ++iSelectedIndex)
+		{
+			SaveBoneWeight& influence = influences[iSelectedIndex];
+
+			if (iSelectedIndex == 0) { pVertices[iVertexIndex].vBlendIndex.x = influence.VertexId; pVertices[iVertexIndex].vBlendWeight.x = influence.Weight; }
+			if (iSelectedIndex == 1) { pVertices[iVertexIndex].vBlendIndex.y = influence.VertexId; pVertices[iVertexIndex].vBlendWeight.y = influence.Weight; }
+			if (iSelectedIndex == 2) { pVertices[iVertexIndex].vBlendIndex.z = influence.VertexId; pVertices[iVertexIndex].vBlendWeight.z = influence.Weight; }
+			if (iSelectedIndex == 3) { pVertices[iVertexIndex].vBlendIndex.w = influence.VertexId; pVertices[iVertexIndex].vBlendWeight.w = influence.Weight; }
+
+			totalWeight += influence.Weight;
+		}
+
+		if (totalWeight > 0.f)
+		{
+			pVertices[iVertexIndex].vBlendWeight.x /= totalWeight;
+			pVertices[iVertexIndex].vBlendWeight.y /= totalWeight;
+			pVertices[iVertexIndex].vBlendWeight.z /= totalWeight;
+			pVertices[iVertexIndex].vBlendWeight.w /= totalWeight;
 		}
 	}
 	if (0 == m_iNumBones) {
@@ -611,6 +778,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const ai
 
 	return S_OK;
 }
+
 #endif
 
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const CModel* pModel, SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix)
@@ -642,6 +810,13 @@ void CMesh::Free()
 {
 	__super::Free();
 
+#ifdef EDITOR_PROJECT
+	if (false == m_bCloned)
+		Safe_Delete_Array(m_VertexTexcoords);
+#endif
+
+	SAFE_RELEASE(m_pBoneRemapBuffer);
+	SAFE_RELEASE(m_pBoneRemapSRV);
 	Safe_Delete_Array(m_pBoneMatrices);
 }
 #ifdef _DEBUG

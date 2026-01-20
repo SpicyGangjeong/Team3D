@@ -23,7 +23,7 @@ HRESULT CMagic_Meter::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 190.f;
-	Desc.fY = 145.f;
+	Desc.fY = -145.f;
 	Desc.fSizeX = 70.f;
 	Desc.fSizeY = 20.f;
 

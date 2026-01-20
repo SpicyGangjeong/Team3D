@@ -94,6 +94,15 @@ void CTransform::Set_WorldMatrix(PSX::PxTransform dstMatrix)
 		XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorZero(), XMLoadFloat4((_float4*)&dstMatrix.q), XMLoadFloat3((_float3*)&dstMatrix.p)));
 }
 
+void CTransform::Compress_WorldMatrix(_float3& vTrans, _float4& vRotQ)
+{
+	vTrans.x = m_WorldMatrix.m[3][0];
+	vTrans.y = m_WorldMatrix.m[3][1];
+	vTrans.z = m_WorldMatrix.m[3][2];
+
+	XMStoreFloat4(&vRotQ, Get_QuarternionVector());
+}
+
 HRESULT CTransform::Initialize_Prototype()
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
@@ -111,6 +120,11 @@ HRESULT CTransform::Initialize(void* pArg)
 	m_fSpeedPerSec = pDesc->fSpeedPerSec;
 	m_fRotationPerSec = pDesc->fRotationPerSec;
 	m_fRadius = pDesc->fRadius;
+
+#ifdef _DEBUG
+	m_vRotation = _float3(0.f, 0.f, 0.f);
+#endif // _DEBUG
+
 
 	return S_OK;
 }
@@ -212,6 +226,26 @@ _vector CTransform::Go_LerpStraight(_float fSpeed, _float fTimeDelta)
 	return +vMomentum;
 }
 
+_vector CTransform::Go_LerpLeft(_float fSpeed, _float fTimeDelta)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vRight = Get_State(STATE::RIGHT);
+	_vector		vMomentum = XMVector3Normalize(vRight) * fSpeed * fTimeDelta;
+	vPos -= vMomentum;
+	Set_State(STATE::POSITION, vPos);
+	return -vMomentum;
+}
+
+_vector CTransform::Go_LerpRight(_float fSpeed, _float fTimeDelta)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vRight = Get_State(STATE::RIGHT);
+	_vector		vMomentum = XMVector3Normalize(vRight) * fSpeed * fTimeDelta;
+	vPos += vMomentum;
+	Set_State(STATE::POSITION, vPos);
+	return +vMomentum;
+}
+
 _vector CTransform::Go_LerpUp(_float fSpeed, _float fTimeDelta)
 {
 	_vector		vPos = Get_State(STATE::POSITION);
@@ -262,6 +296,7 @@ void CTransform::RewindMomentum()
 {
 	m_vMomentum = m_vBackMomentum;
 	m_vBackMomentum = { 0.f, 0.f, 0.f };
+	m_PrevMatrix = m_WorldMatrix;
 }
 
 void CTransform::BookMomentum(_fvector vMomentum)
@@ -286,20 +321,20 @@ void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 	Set_State(STATE::LOOK, vLook);
 }
 
-void CTransform::TurnAngle(_vector vAxis, _float fAngle)
+void CTransform::TurnAngle(_float4 vAxis, _float fAngle)
 {
 	_vector vRight = Get_State(STATE::RIGHT);
 	_vector vUp = Get_State(STATE::UP);
 	_vector vLook = Get_State(STATE::LOOK);
-
-	if (vAxis.m128_f32[0] == 0 &&
-		vAxis.m128_f32[1] == 0 &&
-		vAxis.m128_f32[2] == 0)
+	_vector Axis = XMVectorZero();
+	if (vAxis.x == 0 &&
+		vAxis.y == 0 &&
+		vAxis.z == 0)
 		return;
+	Axis = XMLoadFloat4(&vAxis);
+	Axis = XMVector3Normalize(Axis);
 
-	vAxis = XMVector3Normalize(vAxis);
-
-	_matrix TurnMatrix = XMMatrixRotationAxis(vAxis, fAngle);
+	_matrix TurnMatrix = XMMatrixRotationAxis(Axis, fAngle);
 
 	vRight = XMVector3TransformNormal(vRight, TurnMatrix);
 	vUp = XMVector3TransformNormal(vUp, TurnMatrix);
@@ -309,6 +344,24 @@ void CTransform::TurnAngle(_vector vAxis, _float fAngle)
 	Set_State(STATE::UP, vUp);
 	Set_State(STATE::LOOK, vLook);
 }
+
+void CTransform::TurnAngle_Y(_float fAngle)
+{
+	_vector vRight = Get_State(STATE::RIGHT);
+	_vector vUp = Get_State(STATE::UP);
+	_vector vLook = Get_State(STATE::LOOK);
+
+	_matrix TurnMatrix = XMMatrixRotationY(fAngle);
+
+	vRight = XMVector3TransformNormal(vRight, TurnMatrix);
+	vUp = XMVector3TransformNormal(vUp, TurnMatrix);
+	vLook = XMVector3TransformNormal(vLook, TurnMatrix);
+
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+	Set_State(STATE::LOOK, vLook);
+}
+
 
 
 void CTransform::Rotation(_fvector vAxis, _float fRadian)
@@ -374,6 +427,42 @@ void CTransform::Rotation(_fvector vRPY)
 	Set_State(STATE::LOOK, vLook);
 }
 
+void CTransform::RotationQ(_fvector vRotQ)
+{
+	_float3 vScale = Get_Scale();
+	_vector vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+	_matrix RotationMatrix = XMMatrixRotationQuaternion(vRotQ);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+	Set_State(STATE::LOOK, vLook);
+}
+
+void CTransform::RotationQ(PSX::PxQuat vRotQ)
+{
+	_float3 vScale = Get_Scale();
+	_vector vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+	_matrix RotationMatrix = XMMatrixRotationQuaternion(XMVectorSet(vRotQ.x, vRotQ.y, vRotQ.z, vRotQ.w));
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+	Set_State(STATE::LOOK, vLook);
+}
+
 void CTransform::LookAt(_fvector vAt)
 {
 	_float3 vScale = Get_Scale();
@@ -389,6 +478,29 @@ void CTransform::LookAt(_fvector vAt)
 
 void CTransform::LookAt_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
 {
+	_float3 vScale = Get_Scale();
+	_vector vPos = Get_State(STATE::POSITION);
+
+	_vector vDir = vAt - vPos;
+
+	_vector vTargetLook = XMVector3Normalize(vDir);
+	_vector vCurrentLook = Get_State(STATE::LOOK);
+
+	_vector vNewLook = XMVector3Normalize(
+		XMVectorLerp(vCurrentLook, vTargetLook, fTimeDelta * fSpeed)
+	);
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vNewLook));
+	_vector vUp = XMVector3Normalize(XMVector3Cross(vNewLook, vRight));
+
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScale.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScale.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vNewLook) * vScale.z);
+}
+
+void CTransform::LookAt_Horizontal_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
+{
+	_float3 vScale = Get_Scale();
 	_vector vPos = Get_State(STATE::POSITION);
 
 	_float3 vMyPos, vTarget;
@@ -411,9 +523,9 @@ void CTransform::LookAt_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
 	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vNewLook));
 	_vector vUp = XMVector3Normalize(XMVector3Cross(vNewLook, vRight));
 
-	Set_State(STATE::LOOK, vNewLook);
-	Set_State(STATE::RIGHT, vRight);
-	Set_State(STATE::UP, vUp);
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScale.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScale.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vNewLook) * vScale.z);
 }
 
 void CTransform::LookAt_Horizontal(_fvector vAt)
@@ -444,6 +556,13 @@ _float CTransform::TargetDis(_fvector vTarget)
 	_float dist = XMVectorGetX(
 		XMVector3Length(vTargetDis));
 	return dist;
+}
+
+void CTransform::Add_SpeedPerSec(_float fSpeedPerSec)
+{
+	m_fSpeedPerSec += fSpeedPerSec;
+	if (m_fSpeedPerSec < 0.f)
+		m_fSpeedPerSec = 0.f;
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -479,22 +598,134 @@ void CTransform::Free()
 }
 #ifdef _DEBUG
 
+void TransformXMLInput(CTransform* pTransform)
+{
+	static _char szInput[256] = "";
+
+	GUI::TextUnformatted("Transform XML:");
+	GUI::InputTextMultiline("##TransformXml", szInput, IM_ARRAYSIZE(szInput), ImVec2(-1.0f, 140.0f));
+
+	GUI::SameLine();
+	GUI::Separator();
+	if (GUI::Button("Parse"))
+	{
+		_string strInput = szInput;
+		string wrapped;
+		wrapped.reserve(strInput.size() + 32);
+		wrapped += "<Root>";
+		wrapped += strInput;
+		wrapped += "</Root>";
+
+		tinyxml2::XMLDocument doc;
+		doc.Parse(wrapped.c_str());
+		tinyxml2::XMLElement* root = doc.FirstChildElement("Root");
+
+		tinyxml2::XMLElement* transformNode = root->FirstChildElement("Transform");
+
+		tinyxml2::XMLElement* rotNode = transformNode->FirstChildElement("RotQ");
+		tinyxml2::XMLElement* transNode = transformNode->FirstChildElement("Trans");
+
+		_float qx, qy, qz, qw;
+		_float tx, ty, tz;
+		rotNode->QueryFloatAttribute("X", &qx);
+		rotNode->QueryFloatAttribute("Y", &qy);
+		rotNode->QueryFloatAttribute("Z", &qz);
+		rotNode->QueryFloatAttribute("W", &qw);
+		transNode->QueryFloatAttribute("X", &tx);
+		transNode->QueryFloatAttribute("Y", &ty);
+		transNode->QueryFloatAttribute("Z", &tz);
+
+		pTransform->Set_State(STATE::POSITION, XMVectorSet(tx, ty, tz, 1.f));
+		pTransform->RotationQ(XMQuaternionNormalize(XMVectorSet(qx, qy, qz, qw)));
+	}
+}
+
 void CTransform::Describe_Entity()
 {
-	if (GUI::TreeNode("Transform")) {
-
-		GUI::DragFloat4("Right", (_float*)(&m_WorldMatrix._11), 1.f, 0.f, 0.f, "%.3f");
-		GUI::DragFloat4("Up", (_float*)(&m_WorldMatrix._21), 1.f, 0.f, 0.f, "%.3f");
-		GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f");
-		GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f");
-
-
-		static _float3 s_vRotation = {};
-
-		if(GUI::InputFloat3("Rotation", (_float*)&s_vRotation))
+//#ifdef 기무리
+	if (GUI::TreeNode("NuriDebug")) {
 		{
-			Rotation(s_vRotation.x, s_vRotation.y, s_vRotation.z);
+			_vector vScale, vRotQ, vTrans;
+			XMMatrixDecompose(&vScale, &vRotQ, &vTrans, XMLoadFloat4x4(&m_WorldMatrix));
+			_float4 scale, rotQ, trans;
+			XMStoreFloat4(&scale, vScale);
+			XMStoreFloat4(&rotQ, vRotQ);
+			XMStoreFloat4(&trans, vTrans);
+			TransformXMLInput(this);
+			if (GUI::SmallButton("Copy")) {
+				_char buf[512] = {};
+				sprintf_s(
+					buf, sizeof(buf),
+					"<Transform>\n"
+					"\t<RotQ X=\"%.3f\" Y=\"%.3f\" Z=\"%.3f\" W=\"%.3f\"/>\n"
+					"\t<Trans X=\"%.3f\" Y=\"%.3f\" Z=\"%.3f\"/>\n"
+					"</Transform>",
+					rotQ.x, rotQ.y, rotQ.z, rotQ.w,
+					trans.x, trans.y, trans.z
+				);
+				GUI::SetClipboardText(buf);
+			}
+			GUI::Text("vScale	: %.1f\t%.1f\t%.1f", scale.x, scale.y, scale.z);
+			GUI::Text("vRotQ	: %.2f\t%.2f\t%.2f\t%.2f", rotQ.x, rotQ.y, rotQ.z, rotQ.w);
+			GUI::Text("vTrans	: %.1f\t%.1f\t%.1f", trans.x, trans.y, trans.z);
 		}
+		GUI::TreePop();
+	}
+//#endif // 기무리
+	if (GUI::TreeNode("Transform")) {
+		GUI::Text("----- Gizmo ----");
+		_float3 vMove = {};
+		GUI::InputFloat("Right", &vMove.x, 1.f, 10.f);
+		GUI::InputFloat("Up", &vMove.y, 1.0f, 10.f);
+		GUI::InputFloat("Look", &vMove.z, 1.0f, 10.f);
+
+		Move_Right(vMove.x);
+		Move_Up(vMove.y);
+		Move_Look(vMove.z);
+
+		_float3 vPosition;
+
+		XMStoreFloat3(&vPosition, Get_State(STATE::POSITION));
+
+		GUI::Text("----- Position ----");
+		GUI::InputFloat("X##Position", &vPosition.x, 0.1f, 1.f);
+		GUI::InputFloat("Y##Position", &vPosition.y, 0.1f, 1.f);
+		GUI::InputFloat("Z##Position", &vPosition.z, 0.1f, 1.f);
+		Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+
+
+		GUI::Text("----- Rotation ----");
+		GUI::InputFloat("X##Rotation", &m_vRotation.x, 1.f, 15.f);
+		GUI::InputFloat("Y##Rotation", &m_vRotation.y, 1.f, 15.f);
+		GUI::InputFloat("Z##Rotation", &m_vRotation.z, 1.f, 15.f);
+
+#ifndef 기무리
+		Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+#endif // 기무리
+#ifdef 기무리
+		_float3 vRot = {};
+		XMStoreFloat3(&vRot, Get_RollPitchYawVector());
+		GUI::Text("R : %.2f", XMConvertToDegrees(vRot.x)); GUI::SameLine();
+		GUI::Text("\tY : %.2f", XMConvertToDegrees(vRot.y)); GUI::SameLine();
+		GUI::Text("\tP : %.2f", XMConvertToDegrees(vRot.z));
+		if (GUI::SmallButton("ApplyRotation")) {
+			Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+		}
+#endif // 기무리
+
+
+		_float3 vScale = Get_Scale();
+
+		GUI::Text("----- Scale ----");
+		GUI::InputFloat("X##Scale", &vScale.x, 0.05f, 0.1f);
+		GUI::InputFloat("Y##Scale", &vScale.y, 0.05f, 0.1f);
+		GUI::InputFloat("Z##Scale", &vScale.z, 0.05f, 0.1f);
+
+		vScale.x = max(0.001f, vScale.x);
+		vScale.y = max(0.001f, vScale.y);
+		vScale.z = max(0.001f, vScale.z);
+
+		Set_Scale(vScale);
 
 		GUI::TreePop();
 		GUI::Spacing();

@@ -21,23 +21,50 @@
 #define ASSERT_JINHO(expression)
 #define ASSERT_HYUNBIN(expression)
 #define ASSERT_INHYUK(expression)
+#define IMGUI_GLOBAL_ITEM_WIDTH 160
 
+#define OPTIONAL_TRUE_KEYINPUTGUICHECK
+
+#define USE_LOWTEXTURE
+#ifndef _DEBUG // 릴리즈 모드일 때는 고해상도 유지
+#undef USE_LOWTEXTURE
+#endif // !_DEBUG
+
+#ifdef _DEBUG
 #ifdef 기무리
 #undef ASSERT_NURI
 #define ASSERT_NURI(expression) assert(expression)
+#define MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK); assert(false); 
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif 진우
 #undef ASSERT_JINWOO
 #define ASSERT_JINWOO(expression) assert(expression)
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif gimch
 #undef ASSERT_JINHO
 #define ASSERT_JINHO(expression) assert(expression)
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
+#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+#define OPTIONAL_TRUE_KEYINPUTGUICHECK true||
 #elif Bin
 #undef ASSERT_HYUNBIN
 #define ASSERT_HYUNBIN(expression) assert(expression)
-#elif 인혁
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+#elif 나
 #undef ASSERT_INHYUK
 #define ASSERT_INHYUK(expression) assert(expression)
+#undef USE_LOWTEXTURE // 매크로 옵션으로 해상도 조절, 주석 걸면 디버그모드에서 저해상도 유지
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK || true
 #endif
+#endif // _DEBUG
+
 
 #pragma endregion
 
@@ -78,11 +105,16 @@
 #endif
 
 #define FX_DEFERRED			TEXT("FX_DEFERRED")
-#define FX_LASTCOLOR		TEXT("FX_LASTCOLOR")
+#define FX_BLUR				TEXT("FX_BLUR")
 #define FX_WEIGHTBELND		TEXT("FX_WEIGHTBELND")
+#define FX_DISTORTION       TEXT("FX_DISTORTION")
 
-#define CS_EFFECT			TEXT("CS_EFFECT")
+#define CS_EFFECT					TEXT("CS_EFFECT")
 #define CS_INSTANCE_MODEL			TEXT("CS_INSTANCE_MODEL")
+#define CS_MODEL					TEXT("CS_MODEL")
+#define CS_LOCAL					TEXT("CS_LOCAL")
+#define CS_BONEINSERT				TEXT("CS_BONEINSERT")
+
 
 #define			SAFE_ADDREF(pInstance)		Safe_AddRef(pInstance)
 #define			SAFE_RELEASE(pInstance)		Safe_Release(pInstance)
@@ -99,11 +131,22 @@
 
 #define			SSAO_SAMPLE_NUMBER			64
 #define			TIMER_SHORT_LERP			0.16f
+#define         MRO_PARAMETER				2.f/ 27.f
+#define         SRO_PARAMETER				15.f/ 27.f
 
-constexpr unsigned int g_iMaxShadowWidth		= 16384;
-constexpr unsigned int g_iMaxShadowHeight		= 9216;
-//constexpr unsigned int g_iMaxShadowWidth		= 4096;
-//constexpr unsigned int g_iMaxShadowHeight		= 2304;
+constexpr unsigned int g_iNearShadowWidth		= 4096;
+constexpr unsigned int g_iNearShadowHeight		= 4096;
+
+constexpr unsigned int g_iMiddleShadowWidth		= 2048;
+constexpr unsigned int g_iMiddleShadowHeight	= 2048;
+
+constexpr unsigned int g_iFarShadowWidth		= 1024;
+constexpr unsigned int g_iFarShadowHeight		= 1024;
+
+constexpr unsigned int g_iPreShadowWidth		= 8192;
+constexpr unsigned int g_iPreShadowHeight		= 8192;
+
+
 
 #ifndef AI_TEXTURE_TYPE_MAX
 #define AI_TEXTURE_TYPE_MAX 27

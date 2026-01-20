@@ -43,11 +43,7 @@ void CTrailObject::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-
-
-
-
-	/* 디졸브 타임*/
+	/* 디스토션 타임*/
 	if (m_TrailInfo.vDistortionTime.y != 0)
 	{
 		m_TrailInfo.vDistortionTime.x += fTimeDelta;
@@ -57,6 +53,24 @@ void CTrailObject::Update(_float fTimeDelta)
 			m_TrailInfo.vDistortionTime.x = 0.f;
 		}
 	}
+	
+	/* 디졸브 타임*/
+
+	if (m_TrailInfo.isDissolve == true)
+	{
+		if (m_TrailInfo.vDissolveTime.y != 0)
+		{
+			m_TrailInfo.vDissolveTime.x += fTimeDelta;
+
+			if (m_TrailInfo.vDissolveTime.x > m_TrailInfo.vDissolveTime.y)
+			{
+				m_bVisible = false;
+				m_TrailInfo.vDissolveTime.x = 0.f;
+				m_TrailInfo.isDissolve = false;
+			}
+		}
+	}
+
 
 	/* 블룸 타임*/
 
@@ -121,6 +135,14 @@ void CTrailObject::Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _f
 	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass, EndWorldMat);
 }
 
+void CTrailObject::Oneside_Rope_Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
+{
+	if (m_bVisible == false)
+		return;
+
+	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass);
+
+}
 
 #ifdef _DEBUG
 
@@ -341,6 +363,7 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 
 	m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
 
+
 	CloseHandle(hFile);
 
 	return S_OK;
@@ -376,9 +399,6 @@ HRESULT CTrailObject::Render()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_TrailInfo.eShaderPass))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pTrailCom->Render()))
@@ -496,7 +516,7 @@ void CTrailObject::Describe_Entity()
 
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW_NEAR", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" , "UI_OVERLAY"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" };
+	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" , "TRAIL_WB"};
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY" };
 
 	_int iCurrentBloomType = static_cast<_int>(m_TrailInfo.eBloomType);
@@ -507,11 +527,11 @@ void CTrailObject::Describe_Entity()
 
 	if (GUI::TreeNode("TRAIL"))
 	{
-		if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
+		if (GUI::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 		{
 			m_TrailInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 		}
-		if (ImGui::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_POSTEX::END)))
+		if (GUI::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_POSTEX::END)))
 		{
 			m_TrailInfo.eShaderPass = static_cast<SHADER_PASS_POSTEX>(iCurrentPass);
 		}
@@ -539,6 +559,12 @@ void CTrailObject::Describe_Entity()
 
 		GUI::ColorEdit4("MixColor", (_float*)&m_TrailInfo.vColor);
 
+		if (GUI::TreeNode("Dissolve"))
+		{
+			GUI::Checkbox("Dissolve", &m_TrailInfo.isDissolve);
+			GUI::DragFloat2("fBloomTime", (_float*)&m_TrailInfo.vDissolveTime, 0.001f, 0.f);
+			GUI::TreePop();
+		}
 		if (GUI::TreeNode("Rope Trail"))
 		{
 
@@ -553,10 +579,10 @@ void CTrailObject::Describe_Entity()
 			GUI::Checkbox("Blur", &m_TrailInfo.isBlur);
 			GUI::Checkbox("OnlyBlur", &m_TrailInfo.isOnlyBlur);
 
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 			GUI::DragFloat("BlurIntensity", &m_TrailInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
 			GUI::DragInt("BlurWeight", &m_TrailInfo.iBlurWeight, 2.f, 0, 128);
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 			GUI::TreePop();
 		}
@@ -566,7 +592,7 @@ void CTrailObject::Describe_Entity()
 		{
 			GUI::ColorEdit4("MixColor", (_float*)&m_TrailInfo.vEmissive);
 
-			ImGui::PushItemWidth(80);
+			GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 
 			GUI::DragFloat("EmissiveStrength", &m_TrailInfo.fEmissiveStrength, 0.01f, 0.f);
 			GUI::DragFloat("SoftenExp", &m_TrailInfo.fSoftenExp, 0.01f, 0.f);
@@ -574,7 +600,7 @@ void CTrailObject::Describe_Entity()
 			GUI::DragFloat("CoreBoost", &m_TrailInfo.fCoreBoost, 0.01f, 0.f);
 			GUI::DragFloat("Radius", &m_TrailInfo.fRadius, 0.01f, 0.f , 1.f);
 			
-			ImGui::PopItemWidth();
+			GUI::PopItemWidth();
 
 			GUI::TreePop();
 		}
@@ -583,7 +609,7 @@ void CTrailObject::Describe_Entity()
 		{
 			if (GUI::TreeNode("BLOOM"))
 			{
-				if (ImGui::Combo("Bloom Type", &iCurrentBloomType, pBloomType, ENUM_CLASS(BLOOM_TYPE::END)))
+				if (GUI::Combo("Bloom Type", &iCurrentBloomType, pBloomType, ENUM_CLASS(BLOOM_TYPE::END)))
 				{
 					m_TrailInfo.eBloomType = static_cast<BLOOM_TYPE>(iCurrentBloomType);
 				}
@@ -591,7 +617,7 @@ void CTrailObject::Describe_Entity()
 				GUI::Checkbox("BloomDissolve", &m_TrailInfo.isBloomDissolve);
 				GUI::Checkbox("BloomReverseDissolve", &m_TrailInfo.isBloomReverseDissolve);
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::DragFloat("fBloomStrength", &m_TrailInfo.fBloomStrength, 0.001f, 0.f);
 				GUI::DragFloat2("fBloomTime", (_float*)&m_TrailInfo.vBloomTime, 0.001f, 0.f);
 
@@ -606,9 +632,9 @@ void CTrailObject::Describe_Entity()
 			{
 				_string		strName = {};
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::DragFloat("Diffuse Alpha", &m_TrailInfo.fDiffuseAlpha, 0.01f, 0.f, 1.f);
-				ImGui::PopItemWidth();
+				GUI::PopItemWidth();
 
 				if (GUI::TreeNode("DIFFUSE TEX"))
 				{
@@ -633,10 +659,10 @@ void CTrailObject::Describe_Entity()
 			{
 				_string strName = {};
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::DragFloat("SoftMask", &m_TrailInfo.fSoftMask, 0.01f, 0.f);
 				GUI::DragFloat("fSoftMaskEdge", &m_TrailInfo.fSoftMaskEdge, 0.01f, 0.f);
-				ImGui::PopItemWidth();
+				GUI::PopItemWidth();
 
 				if (GUI::TreeNode("MASK TEX"))
 				{
@@ -660,11 +686,11 @@ void CTrailObject::Describe_Entity()
 			{
 				_string strName = {};
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::Checkbox("NoiseColor", &m_TrailInfo.isNoiseColor);
 				GUI::Checkbox("NoiseAlpha", &m_TrailInfo.isNoiseAlpha);
 				GUI::DragFloat("NoiseStrength", &m_TrailInfo.fNoiseStrength, 0.01f, 0.f);
-				ImGui::PopItemWidth();
+				GUI::PopItemWidth();
 
 				if (GUI::TreeNode("NOISE TEX"))
 				{
@@ -692,14 +718,14 @@ void CTrailObject::Describe_Entity()
 				_float2		vDiffuseDistortioUVAmount = {};
 				_float2		vMaskDistortionUVAmount = {};
 
-				ImGui::PushItemWidth(80);
+				GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 				GUI::DragFloat("DistortionIntensity", &m_TrailInfo.fDistortionIntensity, 0.005f, 0.f, 1.f);
 				GUI::InputFloat("DistortionTime", &m_TrailInfo.vDistortionTime.y, 0.1f, 0.f);
 
 				GUI::DragFloat2("DiffuseDistortionUVAmount", (_float*)&m_TrailInfo.vDiffuseDistortioUVAmount, 0.1f);
 				GUI::DragFloat2("MaskDistortionUVAmount", (_float*)&m_TrailInfo.vMaskDistortionUVAmount, 0.1f);
 
-				ImGui::PopItemWidth();
+				GUI::PopItemWidth();
 
 				if (GUI::TreeNode("DISTORTION TEX"))
 				{
@@ -732,6 +758,15 @@ HRESULT CTrailObject::Bind_ShaderResources()
 
 	if (FAILED(m_pTrailCom->Bind_Resources()))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
@@ -797,6 +832,14 @@ HRESULT CTrailObject::Bind_ShaderResources()
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortionTime", &m_TrailInfo.vDistortionTime, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve", &m_TrailInfo.isDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveTime", &m_TrailInfo.vDissolveTime, sizeof(_float2)))) {
 		return E_FAIL;
 	}
 

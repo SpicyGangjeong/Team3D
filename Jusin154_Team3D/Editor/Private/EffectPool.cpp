@@ -10,16 +10,37 @@
 #include "Protego.h"
 #include "Revelio.h"
 #include "Levioso.h"
+#include "Protego_Hit.h"
 
 #include "BombardSide.h"
 #include "LeviosoSide.h"
 #include "DecendoSide.h"
 #include "NomalJapSide.h"
+#include "Stupefy.h"
+#include "StupefySide.h"
+
 
 #include "Troll_Rush_Hit.h"
 #include "Troll_Nomal_Smoke.h"
 #include "TrollSwing.h"
+#include "Troll_Shout.h"
+#include "Troll_Rush.h"
 #include "StunEffect.h"
+#include "Blink.h"
+#include "Ranrok_FireBall.h"
+#include "Ranrok_Breath.h"
+#include "Ranrok_Point.h"
+#include "Ranrok_Pulse.h"
+#include "Ranrok_Charge.h"
+#include "Ranrok_Hit.h"
+#include "Ranrok_Impact.h"
+#include "Ranrok_Land.h"
+#include "Ranrok_Rush_Bottom.h"
+#include "Ranrok_GroundPulse.h"
+#include "Ranrok_Swipe.h"
+#include "Ranrok_DeadSplash.h"
+#include "Ranrok_DeadImpact.h"
+#include "Ranrok_Prop.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -54,14 +75,14 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
 #ifdef 진우
-	m_isActiveEffectCreate = true;
+	m_isActiveEffectCreate = false;
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
 #ifdef 기무리
 	m_isActiveEffectCreate = false;
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
-#ifdef 인혁
+#ifdef 나
 	m_isActiveEffectCreate = false;
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
@@ -95,6 +116,31 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 			++iter;
 		}
 	}
+
+#ifdef  _DEBUG
+#if 진우
+
+//	GUI::Begin("RANROK PROP");
+//
+//	_uint iIndex = 0;
+//	for (auto pEffect : m_EffectList[ENUM_CLASS(SKILL_TYPE::RANROK_PROP)])
+//	{
+//		_string strName = "Ranrok_Prop" + to_string(iIndex++);
+//
+//		if(GUI::TreeNode(strName.c_str()))
+//		{
+//			pEffect->Describe_Entity();
+//			GUI::TreePop();
+//		}
+//
+//	}
+//
+//GUI::End();
+
+	Describe_Entity();
+
+#endif
+#endif
 
 
 }
@@ -189,6 +235,16 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO_HIT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CProtego_Hit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CProtego_Hit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CRevelio* pEffect = nullptr;
@@ -246,6 +302,32 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::BLINK, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CBlink* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CBlink>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::STUPEFY, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CStupefy* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CStupefy>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::STUPEFY_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CStupefySide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CStupefySide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 
 	return S_OK;
 }
@@ -282,19 +364,168 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::STUN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	//if (FAILED(Create_Effect(SKILL_TYPE::STUN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	\
+	//	CStunEffect* pEffect = nullptr;
 
-		CStunEffect* pEffect = nullptr;
+	//	pEffect = m_pGameInstance->Clone_Prototype<CStunEffect>(iPrototypeLevel, nullptr);
 
-		pEffect = m_pGameInstance->Clone_Prototype<CStunEffect>(iPrototypeLevel, nullptr);
+	//	return pEffect; }
+	//))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_FIREBALL, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_FireBall* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_FireBall>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_BREATH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Breath* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Breath>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+	
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_POINT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Point* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Point>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PURSE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Pulse* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Pulse>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_CHARGE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Charge* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Charge>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_HIT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Hit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Hit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_IMPACT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Impact* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Impact>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_LAND, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Land* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Land>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_RUSH_BOTTOM, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Rush_Bottom* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Rush_Bottom>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+	
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_GROUNDPULSE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_GroundPulse* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_GroundPulse>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_SWIPE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Swipe* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Swipe>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_DEAD_SPLASH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+		                                  
+		CRanrok_DeadSplash* pEffect = nullptr;     
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_DeadSplash>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_DEAD_IMPACT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_DeadImpact* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_DeadImpact>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_SHOUT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Shout* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Shout>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+	
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_RUSH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Rush* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Rush>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::RANROK_PROP, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CRanrok_Prop* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRanrok_Prop>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+	
+
 	return S_OK;
 }
 
-HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg)
+HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg , CEffect_Container** ppOut)
 {
 	if (pOwner == nullptr)
 		return S_OK;
@@ -308,6 +539,11 @@ HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg
 
 		m_ActiveEffectList.push_back(pSkill);
 		Safe_AddRef(pSkill);
+
+		if (nullptr != ppOut) {
+			*ppOut = pSkill;
+			SAFE_ADDREF(pSkill);
+		}
 
 		break;
 	}
@@ -355,6 +591,9 @@ HRESULT CEffectPool::Reset_Pool()
 
 
 	if (FAILED(Ready_Effect()))
+		return E_FAIL;
+
+	if (FAILED(Ready_MonsterEffect()))
 		return E_FAIL;
 
 	return S_OK;

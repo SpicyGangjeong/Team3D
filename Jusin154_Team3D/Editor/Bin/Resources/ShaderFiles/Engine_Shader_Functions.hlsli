@@ -18,7 +18,7 @@ bool AlmostEqual3(float fA, float fB)
     return abs(fA - fB) < FLT_EPSILON3;
 }
 
-float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vShadowMapSize, float bias)
+float ShadowVisibility_hwPCF(Texture2D<float> ShadowMap, float4 vLightClip, float2 vShadowMapSize, float bias, float fRange)
 {
     float2 uv = float2(vLightClip.x / vLightClip.w, -vLightClip.y / vLightClip.w) * 0.5f + 0.5f;
     float fDepthCenter = saturate(vLightClip.z / vLightClip.w);
@@ -29,8 +29,8 @@ float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vSha
     {
         for (int u = -1; u <= 1; ++u)
         {
-            float2 vOffset = float2(u, v) * vTexel;
-            float fDepth = ShadowMap.Sample(BorderOneSampler, uv + vOffset).x;
+            float2 vOffset = float2(u, v) * vTexel * fRange;
+            float fDepth = ShadowMap.Sample(BorderOneSampler, uv + vOffset);
             fVisibility += (fDepthCenter - bias > fDepth) ? 0.f : 1.f;
         }
     }
@@ -44,6 +44,7 @@ float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vSha
 float GetRimLight(float3 vCamPosition, float3 vPosition, float3 vNormal, float fRimPower, float fRimStrength)
 {
     float fRimLight = (1 - dot(normalize(vCamPosition - vPosition), vNormal));
+    fRimLight = max(fRimLight, 1e-6f);
     fRimLight = pow(fRimLight, fRimPower);
     fRimLight = fRimLight * fRimStrength;
     return fRimLight;
@@ -70,14 +71,14 @@ float2 Get_MovedUV(float2 vOriginalUV, float fDeltaU, float fDeltaV, uint iIndex
     return vOriginalUV * vDelta + vOffset;
 }
 
-float2 UV_Cutting(float2 vUV, float2 vUVCutting, int iCurrentFrame)
+float2 UV_Cutting(float2 vUV, float2 vUVCutting, uint iCurrentFrame)
 {
     float2 UV = vUV; // 이미지의 UV값
     
-    int iTotalFrame = vUVCutting.x * vUVCutting.y; // 이미지의 최대 프레임 (몇 곱하기 몇인지)
+    uint iTotalFrame = vUVCutting.x * vUVCutting.y; // 이미지의 최대 프레임 (몇 곱하기 몇인지)
     
-    int iFrameX = iCurrentFrame % (int) vUVCutting.x; // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
-    int iFrameY = iCurrentFrame / (int) vUVCutting.x; // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
+    uint iFrameX = iCurrentFrame % (uint) vUVCutting.x; // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
+    uint iFrameY = iCurrentFrame / (uint) vUVCutting.x; // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
     
     float fFreamWidth = 1.0 / vUVCutting.x; // 1.0 나누기 이미지 갯수를 해서 한칸에 얼마나 갈지 정해준다.
     float fFreamHeight = 1.0 / vUVCutting.y; // 1.0 나누기 이미지 갯수를 해서 한줄에 얼마나 갈지 정해준다.
@@ -87,6 +88,54 @@ float2 UV_Cutting(float2 vUV, float2 vUVCutting, int iCurrentFrame)
     
     return UV;
 }
+//float2 UV_Cutting(float2 originalUV, float2 uvCuttingCountFloat, int currentFrameIndex)
+//{
+//    // (1) 칸 개수는 정수로 취급 (0 방지)
+//    int uvCuttingCountX = max((int) uvCuttingCountFloat.x, 1);
+//    int uvCuttingCountY = max((int) uvCuttingCountFloat.y, 1);
+
+//    int totalFrameCount = uvCuttingCountX * uvCuttingCountY;
+
+//    // (2) currentFrameIndex를 [0, totalFrameCount)로 래핑 (정수 % 제거)
+//    int wrappedFrameIndex = currentFrameIndex;
+//    if (totalFrameCount > 0)
+//    {
+//        float inverseTotalFrameCount = 1.0f / (float) totalFrameCount;
+
+//        // loopCount = floor(currentFrameIndex / totalFrameCount)
+//        int loopCount = (int) floor((float) currentFrameIndex * inverseTotalFrameCount);
+
+//        wrappedFrameIndex = currentFrameIndex - loopCount * totalFrameCount;
+
+//        // 음수 프레임까지 방어(선택)
+//        if (wrappedFrameIndex < 0)
+//        {
+//            wrappedFrameIndex += totalFrameCount;
+//        }
+//    }
+//    else
+//    {
+//        wrappedFrameIndex = 0;
+//    }
+
+//    // (3) 가로 기준으로 행/열 구하기 (정수 /, % 제거)
+//    float inverseCuttingCountX = 1.0f / (float) uvCuttingCountX;
+//    float inverseCuttingCountY = 1.0f / (float) uvCuttingCountY;
+
+//    // frameIndexY = floor(wrappedFrameIndex / uvCuttingCountX)
+//    int frameIndexY = (int) floor((float) wrappedFrameIndex * inverseCuttingCountX);
+
+//    // frameIndexX = wrappedFrameIndex - frameIndexY * uvCuttingCountX   (% 대체)
+//    int frameIndexX = wrappedFrameIndex - frameIndexY * uvCuttingCountX;
+
+//    // (4) UV 변환
+//    float2 resultUV = originalUV;
+//    resultUV.x = resultUV.x * inverseCuttingCountX + (float) frameIndexX * inverseCuttingCountX;
+//    resultUV.y = resultUV.y * inverseCuttingCountY + (float) frameIndexY * inverseCuttingCountY;
+
+//    return resultUV;
+//}
+
 
 // (Kd F(Lambert)) + (Ks F(cook-torrance))
 
@@ -153,7 +202,7 @@ PBR_LIGHT_OUT PBR_Lighting(
     float3 vAlbedo, float fMetallic, float fRoughness,
     float3 vLightColor, float fLightIntensity, float fAttenuation, float3 vFO
 ) {
-    PBR_LIGHT_OUT Out;
+    PBR_LIGHT_OUT Out = (PBR_LIGHT_OUT)0;
     Out.vShade = 0;
     Out.vSpecular = 0;
     float3 vLighting = vLightColor * fLightIntensity;
@@ -163,8 +212,8 @@ PBR_LIGHT_OUT PBR_Lighting(
     float NdotV = saturate(dot(vNormal, vToView));
     if (NdotL <= 0 || NdotV <= 0)
     {
-        Out.vShade = 0;
-        Out.vSpecular = 0;
+        Out.vShade = float3(0.f, 0.f, 0.f);
+        Out.vSpecular = float3(0.f, 0.f, 0.f);
         return Out;
     }
     
@@ -190,6 +239,51 @@ PBR_LIGHT_OUT PBR_Lighting(
 
     return Out;
 }
+bool CalcLighting(
+    in Texture2D SurfaceTexture2D,
+    in float fTagDepthBlue,
+    in float2 uv,
+    in float3 vAlbedo,
+    inout float3 vF0,
+    inout float fMetallic, 
+    inout float fRoughness,
+    inout float fOcclusion, 
+    inout float fAttenuation)
+{
+    bool bResult = false;
+    if (true == AlmostEqual3(fTagDepthBlue * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic Roughness Occ
+    {
+        bResult = true;
+        float3 vMRO = SurfaceTexture2D.Sample(DefaultSampler, uv).rgb;
+        fMetallic = vMRO.r;
+        fRoughness = vMRO.g;
+        fOcclusion = vMRO.b;
+        
+        vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
+    }
+    else if (true == AlmostEqual3(fTagDepthBlue * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular Roughness Occ
+    {
+        bResult = true;
+        fMetallic = 0.f;
+        
+        float3 vSRO = SurfaceTexture2D.Sample(DefaultSampler, uv).rgb;
+        vF0 = vSRO.rrr;
+        fRoughness = vSRO.g;
+        fOcclusion = vSRO.b;
+    }
+    else if (true == AlmostEqual3(fTagDepthBlue * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY)) // Specular Roughness SubSurfaceScattering Occlusion
+    {
+        bResult = true;
+        fMetallic = 0.f;
+        
+        float4 vSRXO = SurfaceTexture2D.Sample(DefaultSampler, uv);
+        vF0 = vSRXO.rrr;
+        fRoughness = vSRXO.g;
+        fOcclusion = vSRXO.a;
+    }
+    return bResult;
+}
+
 float GetBloomCurve(float x, float fThreshold, uint iMethod)
 {
     float fResult = x;
@@ -226,6 +320,24 @@ float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
     float3 n = float3(vSampledRG, z);
 
     return normalize(n);
+}
+
+// BackGround ForeGround 합은 1
+float2 DepthCompare(float fCenterDepth, float fSampleDepth, float fDepthScale)
+{
+    return saturate(0.5f + float2(fDepthScale, -fDepthScale) * (fSampleDepth - fCenterDepth));
+}
+
+float2 SpreadCompare(float fOffsetLength, float2 fSpreadLength, float fPixelToSampleUnitsScale)
+{
+    return saturate(fPixelToSampleUnitsScale * fSpreadLength - fOffsetLength + 1.f);
+}
+
+float SampleWeight(float fCenterDepth, float fSampleDepth, float fOffsetLength, float fCenterSpreadLength, float fSampleSpreadLength, float fPixelToSampleUnitsScale, float fDepthScale)
+{
+    float2 vDepthCompare = DepthCompare(fCenterDepth, fSampleDepth, fDepthScale);
+    float2 vSpreadCompare = SpreadCompare(fOffsetLength, float2(fCenterSpreadLength, fSampleSpreadLength), fPixelToSampleUnitsScale);
+    return dot(vDepthCompare, vSpreadCompare);
 }
 
 float4x4 RotateX(float fAngle)
@@ -311,6 +423,26 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
 
 }
 
+float3 UnpackRGB8(int iPacked)
+{
+    return float3((iPacked >> 16) & 255, (iPacked >> 8) & 255, iPacked & 255) / 255.0f;
+}
+float3 ColorMixer(float3 vSlotA, float3 vSlotB, float fAToBFactor, int iMethod)
+{
+    float3 vResult = { 0.f, 0.f, 0.f };
+    switch (iMethod)
+    {
+        case 1:
+            vResult = (fAToBFactor) * vSlotA + (1.f - fAToBFactor) * vSlotB;
+            break;
+        case 0:
+            vResult = (fAToBFactor) * vSlotA * (1.f - fAToBFactor) * vSlotB;
+            break;
+    }
+    return vResult;
+}
+
+
 float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
 {
     if (iSelectOption < 0)
@@ -392,12 +524,12 @@ float4 ApplyDissolve(Texture2D DisolveTexture, float fDisolveRatio, float fDisol
 
 bool IsValidUV(float2 uv)
 {
-    if (uv.x < 0 || uv.x >= 1
-    || uv.y < 0 || uv.y >= 1)
+    bool bReturn = true;
+    if (uv.x < 0 || uv.x >= 1 || uv.y < 0 || uv.y >= 1)
     {
-        return false;
+        bReturn = false;
     }
-    return true;
+    return bReturn;
 }
 
 float4 BilinearFetches(float2 vGlobalTexelSize, Texture2D SrcTexture2D, float2 vCenterTexCoord, sampler samplerLinear)
@@ -442,5 +574,118 @@ float4 BilinearFetches(float2 vGlobalTexelSize, Texture2D SrcTexture2D, float2 v
 
     return float4(vFilteredColor, 1.0);
 }
+
+float4 BlendDiffuse(float4 vDiffuseA, Texture2D DiffuseBlendTexture, float2 vTexcoord, float fRatio)
+{
+    float4 vDiffuseBlendColor = DiffuseBlendTexture.Sample(DefaultSampler, vTexcoord);
+    
+    return lerp(vDiffuseA, vDiffuseBlendColor, fRatio);
+
+}
+float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIntensity = 1.f)
+{
+    float2 vReturnVelocity = float2(0.5f, 0.5f);
+    if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5)
+    {
+        return vReturnVelocity;
+    }
+
+    float2 currentNDC = vCurrentProjPos.xy / vCurrentProjPos.w;
+    float2 previousNDC = vPreviousProjPos.xy / vPreviousProjPos.w;
+
+    currentNDC.y *= -1.f;
+    previousNDC.y *= -1.f;
+
+    // UV 델타
+    float2 velocityUV = (currentNDC - previousNDC) * 0.5f;
+    velocityUV *= fIntensity;
+    velocityUV = clamp(velocityUV, -1.0f, 1.0f);
+
+    return velocityUV * 0.5f + 0.5f; // 0 속도 -> 0.5
+}
+float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos)
+{
+    return CalcVelocityUV(vCurrentProjPos, vPreviousProjPos, 1.0f);
+}
+
+float3 DownSampleFast(Texture2D SrcTexture2D, float2 vCenterTexcoord, float2 vSrcTexelSize, float2 vResolution)
+{
+    float2 uv = float2(0.f, 0.f);
+    float3 vCenterColor = SrcTexture2D.SampleLevel(BorderZeroSampler, vCenterTexcoord, 0).rgb;
+    uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, -1.0);
+    float3 fLTColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroSampler).rgb;
+    uv = vCenterTexcoord + vSrcTexelSize * float2(0.0, -1.0);
+    float3 fTColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0).rgb;
+    uv = vCenterTexcoord + vSrcTexelSize * float2(+1.0, -1.0);
+    float3 fRTColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroSampler).rgb;
+    uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, 0.0);
+    float3 fLColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0).rgb;
+    uv = vCenterTexcoord + vSrcTexelSize * float2(1.0, 0.0);
+    float3 fRColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0).rgb;
+    uv = vCenterTexcoord + vSrcTexelSize * float2(-1.0, +1.0);
+    float3 fLBColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroSampler).rgb;
+    uv = vCenterTexcoord + vSrcTexelSize * float2(0.0, 1.0);
+    float3 fBColor = SrcTexture2D.SampleLevel(BorderZeroSampler, uv, 0).rgb;
+    uv = vCenterTexcoord + vSrcTexelSize * float2(+1.0, +1.0);
+    float3 fRBColor = BilinearFetches(vResolution, SrcTexture2D, uv, BorderZeroSampler).rgb;
+    
+    return vCenterColor * 0.25f + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.0625f + (fTColor + fLColor + fRColor + fBColor) * 0.125f;
+}
+
+float4x4 Inverse4x4(float4x4 m)
+{
+    float a00 = m[0][0], a01 = m[0][1], a02 = m[0][2], a03 = m[0][3];
+    float a10 = m[1][0], a11 = m[1][1], a12 = m[1][2], a13 = m[1][3];
+    float a20 = m[2][0], a21 = m[2][1], a22 = m[2][2], a23 = m[2][3];
+    float a30 = m[3][0], a31 = m[3][1], a32 = m[3][2], a33 = m[3][3];
+
+    float b00 = a00 * a11 - a01 * a10;
+    float b01 = a00 * a12 - a02 * a10;
+    float b02 = a00 * a13 - a03 * a10;
+    float b03 = a01 * a12 - a02 * a11;
+    float b04 = a01 * a13 - a03 * a11;
+    float b05 = a02 * a13 - a03 * a12;
+    float b06 = a20 * a31 - a21 * a30;
+    float b07 = a20 * a32 - a22 * a30;
+    float b08 = a20 * a33 - a23 * a30;
+    float b09 = a21 * a32 - a22 * a31;
+    float b10 = a21 * a33 - a23 * a31;
+    float b11 = a22 * a33 - a23 * a32;
+
+    float det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+    // 역행렬이 존재하지 않는 경우 (det ≈ 0)
+    if (abs(det) < 1e-6)
+        return float4x4(1, 0, 0, 0,
+                        0, 1, 0, 0,
+                        0, 0, 1, 0,
+                        0, 0, 0, 1); // fallback: 단위행렬
+
+    float invDet = 1.0 / det;
+
+    float4x4 inv;
+    inv[0][0] = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
+    inv[0][1] = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
+    inv[0][2] = (a31 * b05 - a32 * b04 + a33 * b03) * invDet;
+    inv[0][3] = (-a21 * b05 + a22 * b04 - a23 * b03) * invDet;
+
+    inv[1][0] = (-a10 * b11 + a12 * b08 - a13 * b07) * invDet;
+    inv[1][1] = (a00 * b11 - a02 * b08 + a03 * b07) * invDet;
+    inv[1][2] = (-a30 * b05 + a32 * b02 - a33 * b01) * invDet;
+    inv[1][3] = (a20 * b05 - a22 * b02 + a23 * b01) * invDet;
+
+    inv[2][0] = (a10 * b10 - a11 * b08 + a13 * b06) * invDet;
+    inv[2][1] = (-a00 * b10 + a01 * b08 - a03 * b06) * invDet;
+    inv[2][2] = (a30 * b04 - a31 * b02 + a33 * b00) * invDet;
+    inv[2][3] = (-a20 * b04 + a21 * b02 - a23 * b00) * invDet;
+
+    inv[3][0] = (-a10 * b09 + a11 * b07 - a12 * b06) * invDet;
+    inv[3][1] = (a00 * b09 - a01 * b07 + a02 * b06) * invDet;
+    inv[3][2] = (-a30 * b03 + a31 * b01 - a32 * b00) * invDet;
+    inv[3][3] = (a20 * b03 - a21 * b01 + a22 * b00) * invDet;
+
+    return inv;
+}
+
 
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI

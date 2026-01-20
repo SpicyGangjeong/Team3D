@@ -48,15 +48,14 @@ HRESULT CLumos::Initialize(void* pArg)
 
 void CLumos::Priority_Update(_float fTimeDelta)
 {
-	__super::Priority_Update(fTimeDelta);
-
-
 	CWand* pWand = static_cast<CWand*>(m_pOwner);
 
 	if (pWand == nullptr)
 		return;
 
 	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	__super::Priority_Update(fTimeDelta);
+
 
 }
 
@@ -69,7 +68,7 @@ void CLumos::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	if (910!= m_pOwner->Get_Owner()->Get_Component<CModel>()->Get_SecondAnimIndex())
+	if (911!= m_pOwner->Get_Owner()->Get_Component<CModel>()->Get_SecondAnimIndex())
 	{
 		_int iIndex = m_pOwner->Get_Owner()->Get_Component<CModel>()->Get_SecondAnimIndex();
 		m_bVisible = false;
@@ -82,6 +81,7 @@ void CLumos::Late_Update(_float fTimeDelta)
 		return;
 
 	__super::Late_Update(fTimeDelta);
+
 
 
 }
@@ -100,6 +100,8 @@ HRESULT CLumos::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	m_isLoop = true;
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_LUMOS, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 
 	return S_OK;
 }

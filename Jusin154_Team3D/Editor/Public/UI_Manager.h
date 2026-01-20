@@ -12,7 +12,7 @@ NS_BEGIN(Editor)
 class CUI_Manager final : public CUIObject
 {
 public:
-	enum class Canvases { GAMEPLAYER_CANVAS, SPELL_CANVAS, QUEST_CANVES };
+	enum class Canvases { GAMEPLAYER_CANVAS, SPELL_CANVAS, QUEST_CANVAS , SPELLLEARN_CANVAS};
 
 private:
 	CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -41,18 +41,25 @@ public:
 
 	void Add_Manager_Event(_wstring Name, function<void(void*)> Event);
 	void Event_Callback(_wstring Name, void* pArg = nullptr);
+
 private:
 	bool SaveXML(const _string& filePath);
 	void Add_Canvas(_wstring Name, class CGameObject* pCanvas);
 	CGameObject* Find_Canvas(const _wstring& Name);
 
+	void FadeIn(Canvases eType); 
+
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
 
 	CGameObject* m_pGamePlay_Canves = { nullptr };
 	CGameObject* m_pSpell_Canvas = { nullptr };
 	CGameObject* m_pLoding_Canvas= { nullptr };
 	CGameObject* m_pQuest_Canves= { nullptr };
+	CGameObject* m_pSpellLearn_Canvas = { nullptr };
+	CGameObject* m_pDialogue_Canvas = { nullptr };
 	CGameObject* m_pMouse_Cursor = { nullptr };
 	CGameObject* m_pCamera_LockOn = { nullptr };
 	_bool			m_bCanvas_Change = { false };
@@ -66,6 +73,8 @@ private:
 
 	multimap<wstring, function<void(void*)>>		m_Event_map;
 
+	_bool m_bCgangede = { false };
+	_bool m_bSpellLearn = { false };
 
 public:
 	static CUI_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

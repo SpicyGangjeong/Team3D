@@ -44,10 +44,12 @@ HRESULT CGoblin_BattleAxe::Initialize(void* pArg)
 
 void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 {
+
 	if (m_bVisible) {
 		XMStoreFloat4(&m_vStartAxePos, Get_WorldPostion());
 		XMStoreFloat4(&m_vStartGripPos, Get_WorldPostion());
 	}
+
 	m_pModelCom->Combined_BoneMatrix();
 	_matrix socketMatrix = {};
 
@@ -58,7 +60,14 @@ void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 	}
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
-	XMStoreFloat4x4(&m_vAxeMat, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Bone")) * m_pTransformCom->Get_XMWorldMatrix());
+
+	_matrix BoneMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Bone"));
+
+	for (int i = 0; i < 3; ++i) {
+		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);
+	}
+
+	XMStoreFloat4x4(&m_vAxeMat, BoneMat * m_pTransformCom->Get_XMWorldMatrix());
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -190,7 +199,15 @@ HRESULT CGoblin_BattleAxe::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -261,7 +278,21 @@ void CGoblin_BattleAxe::SwingHit(_bool& bPlayerHit)
 		for (_uint i = 0; i < pxHits.size(); ++i) {
 			PSX::PxActor* pxHitActor = pxHits[i].actor;
 			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
-				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+				PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)pxHitActor->userData;
+
+				ON_COLLISION_INFO tagCollInfo = {};
+
+				tagCollInfo.vWorldPos.w = 1.f;
+
+				memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &pxHits[i].position, sizeof(pxHits[i].position));
+
+				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &pxHits[i].normal, sizeof(pxHits[i].normal));
+				_vector vHitDir = pUserData->pOwner->Get_WorldPostion() - this->Get_WorldPostion();
+				vHitDir = XMVector3Normalize(vHitDir);
+				XMStoreFloat4(&tagCollInfo.vHitDir, vHitDir);
+				tagCollInfo.fLength = pxHits[i].distance;
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_MEDIUM);
+				tagCollInfo.fDamage = 10.f;
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case PXOBJECT::PLAYER:
@@ -269,10 +300,8 @@ void CGoblin_BattleAxe::SwingHit(_bool& bPlayerHit)
 					if (true == bPlayerHit) {
 						continue;
 					}
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(20.f);
 					bPlayerHit = true;
-					pUserData->pOwner->OnCollision(this);
+					pUserData->pOwner->OnCollision(this,&tagCollInfo);
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
 					break;

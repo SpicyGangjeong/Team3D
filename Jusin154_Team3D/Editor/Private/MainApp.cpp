@@ -98,10 +98,31 @@ HRESULT CMainApp::Ready_Default_Setting()
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size21"), TEXT("../Bin/Resources/Fonts/Font_size21.spritefont"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size22"), TEXT("../Bin/Resources/Fonts/Font_size22.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size23"), TEXT("../Bin/Resources/Fonts/Font_size23.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size25"), TEXT("../Bin/Resources/Fonts/Font_size25.spritefont"))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size30"), TEXT("../Bin/Resources/Fonts/Font_size30.spritefont"))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size15"), TEXT("../Bin/Resources/Fonts/UI_size15.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size20"), TEXT("../Bin/Resources/Fonts/UI_size20.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size25"), TEXT("../Bin/Resources/Fonts/UI_size25.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size50"), TEXT("../Bin/Resources/Fonts/UI_size50.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size70"), TEXT("../Bin/Resources/Fonts/UI_size70.spritefont"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -179,13 +200,13 @@ HRESULT CMainApp::Ready_Prototypes()
 HRESULT CMainApp::Ready_IMGUI()
 {
 	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	GUI::CreateContext();
+	ImGuiIO& io = GUI::GetIO(); (void)io;
 	ImFont* font = nullptr;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 
-	ImGui::StyleColorsDark();
+	GUI::StyleColorsDark();
 
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
@@ -212,7 +233,7 @@ HRESULT CMainApp::Release_IMGUI()
 {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	GUI::DestroyContext();
 	return S_OK;
 }
 

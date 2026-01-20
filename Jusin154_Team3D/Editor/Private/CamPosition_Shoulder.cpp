@@ -88,7 +88,7 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 
 void CCamPosition_Shoulder::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_INSERT)) {
+	if (m_pGameInstance->Key_Down(DIK_INSERT)) {
 		m_pBinded_Camera->Toggle_Priority();
 	}
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
@@ -101,11 +101,18 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
+
+	if (true == m_bMovable) {
+		m_vAccRotDegrees.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
+		m_vAccRotDegrees.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
+		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccRotDegrees);
+	}
+
 	if (m_pGameInstance->Key_Up(DIK_P)) {
 		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio;
 		m_vShoulderStartRatio.x *= -1.f;
-		m_bLerp = true;
-		m_vLerpTimer.x = 0.f;
+		m_bLerpTranslation = true;
+		m_vLerpTranslationTimer.x = 0.f;
 	}
 }
 
@@ -114,12 +121,12 @@ void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
-	if (true == m_bLerp) {
-		m_vLerpTimer.x += fTimeDelta;
-		XMStoreFloat3(&m_vShoulderPosRatio, XMVectorLerp(XMLoadFloat3(&m_vShoulderStartRatio), XMLoadFloat3(&m_vShoulderOtherRatio), m_vLerpTimer.x / m_vLerpTimer.y));
-		if (m_vLerpTimer.x > m_vLerpTimer.y) {
-			m_bLerp = false;
-			m_vLerpTimer.x = 0.f;
+	if (true == m_bLerpTranslation) {
+		m_vLerpTranslationTimer.x += fTimeDelta;
+		XMStoreFloat3(&m_vShoulderPosRatio, XMVectorLerp(XMLoadFloat3(&m_vShoulderStartRatio), XMLoadFloat3(&m_vShoulderOtherRatio), m_vLerpTranslationTimer.x / m_vLerpTranslationTimer.y));
+		if (m_vLerpTranslationTimer.x > m_vLerpTranslationTimer.y) {
+			m_bLerpTranslation = false;
+			m_vLerpTranslationTimer.x = 0.f;
 
 			m_vShoulderPosRatio = m_vShoulderOtherRatio;
 		}
@@ -147,6 +154,13 @@ HRESULT CCamPosition_Shoulder::Ready_Components(void* pArg)
 	}
 	return S_OK;
 }
+
+void CCamPosition_Shoulder::Set_CameraShake(_float fXShock, _float fYShock)
+{
+	m_vAccRealDegrees.x = fXShock;
+	m_vAccRealDegrees.y = fYShock;
+}
+
 HRESULT CCamPosition_Shoulder::Ready_SubParts()
 {
 	{

@@ -28,7 +28,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	}
 
 	m_pInfoInstance->Regist_ActiveMonster(this);
-
+	
 	return S_OK;
 }
 
@@ -55,6 +55,19 @@ void CMonster::Update(_float fTimeDelta)
 void CMonster::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
+
+
+	_vector vDir = XMLoadFloat4(&m_vTargetPos) - Get_WorldPostion();
+	vDir = XMVector4Normalize(vDir);
+	_vector vLook = XMVector3Normalize(
+		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_float dot = XMVectorGetX(XMVector3Dot(vLook, vDir));
+	dot = max(-1.f, min(1.f, dot));
+
+	_float angle = acosf(dot);
+	m_fDegree = XMConvertToDegrees(angle);
+
+	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 }
 
 HRESULT CMonster::Render_DeadDisolve()
@@ -92,15 +105,20 @@ HRESULT CMonster::Render_OutLine()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+
 	Compute_Depth();
-	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
-	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
-	if (m_fOutLineThickness > 6.f) {
-		m_fOutLineThickness = 6.f;
-	}
-	else if (m_fOutLineThickness < 2.f) {
-		m_fOutLineThickness = 2.f;
-	}
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(2.5f, 3.f, fRatio);
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
 	}
@@ -120,9 +138,15 @@ HRESULT CMonster::Render_OutLine()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
+
 
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
@@ -131,6 +155,9 @@ HRESULT CMonster::Render_OutLine()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_READ)))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -153,7 +180,6 @@ _float2 CMonster::Get_Hp()
 {
 	return { m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp };
 }
-
 CStat* CMonster::Get_Stat()
 {
 	return m_pStat;
@@ -162,6 +188,31 @@ CStat* CMonster::Get_Stat()
 const _float4x4* CMonster::Get_HeadMatrix()
 {
 	return m_pModelCom->Get_BoneMatrixPtr("Head");
+}
+
+_float  CMonster::Get_HpRatio()
+{
+	return Get_Hp().x / Get_Hp().y;
+}
+
+void CMonster::CameraShake(_float ClampValue, _float Min, _float Max, _float Time)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(Get_WorldPostion()).first);
+	if (pPlayer == nullptr)
+		return;
+	_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
+	_float fShakeValue = clamp(ClampValue / fDistance, Min, Max);
+	pPlayer->Start_CameraShake(Time, fShakeValue);
+}
+
+_bool CMonster::IsHitStateDisabled()
+{
+	return _bool();
+}
+
+_bool CMonster::IsHitSpellDisabled()
+{
+	return _bool();
 }
 
 HRESULT CMonster::Ready_Components(void*pArg)
@@ -195,10 +246,10 @@ HRESULT CMonster::Render_Disolve()
 	if (FLT_EPSILON3 * 10 < m_fDisolveTime)
 	{
 		m_bDrawOutLine = false;
-		_bool bDisolve = true;
+		_int bDisolve = 1;
 		_float fDisolveAmount = 0.1f;
 		_float fDisolveEdgeWidth = 0.1f;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_int)))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &m_fDisolveTime, sizeof(_float)))) {
@@ -221,6 +272,45 @@ HRESULT CMonster::Render_Disolve()
 	return S_OK;
 }
 
+void CMonster::Set_Easing(_uint iAnimIndex,_float fEasingStartRatio,_float fEasingEndRatio,_float fEasingTime)
+{
+	Add_Event(iAnimIndex,
+		[this, fEasingTime]() {m_fEasing = fEasingTime;},
+		fEasingStartRatio);
+
+	Add_Event(iAnimIndex,
+		[this]() {m_fEasing = 1.f; },
+		fEasingEndRatio);
+}
+
+
+void CMonster::Update_Disolve(_float fTimeDelta,_float fRatio)
+{
+	if (!m_bDisolve)
+		return;
+
+	if (!m_bDisolveReverse)
+	{
+		m_fDisolveTime += fTimeDelta * fRatio;
+
+		if (m_fDisolveTime >= 1.f)
+		{
+			m_fDisolveTime = 1.f;
+		}
+	}
+	else
+	{
+		m_fDisolveTime -= fTimeDelta * fRatio;
+
+		if (m_fDisolveTime <= 0.f)
+		{
+			m_fDisolveTime = 0.f;
+			m_bDisolve = false;
+			m_bDisolveReverse = false;
+		}
+	}
+}
+
 void CMonster::Free()
 {
 	__super::Free();
@@ -237,11 +327,11 @@ void CMonster::Free()
 
 void CMonster::Describe_Entity()
 {
-	if (ImGui::TreeNode("ANIM STATE")) {
+	if (GUI::TreeNode("ANIM STATE")) {
 
 		for (auto& pState : m_States)
 		{
-			if (ImGui::Button(to_string(pState.first).c_str()))
+			if (GUI::Button(to_string(pState.first).c_str()))
 			{
 				m_pFSM->Change_State(pState.first);
 			}
@@ -250,7 +340,7 @@ void CMonster::Describe_Entity()
 
 		GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 }
 

@@ -32,12 +32,13 @@ HRESULT CRigidBody_Static::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg))) {
         return E_FAIL;
     }
+
     RIGIDBODY_STATIC_DESC* pDesc = static_cast<RIGIDBODY_STATIC_DESC*>(pArg);
     m_wstrMeshName = pDesc->pMeshName;
     m_tagData.pOwner = m_pOwner;
     XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
     m_tagData.pBody = this;
-    m_pRigidBody = m_pGameInstance->Add_StaticActor(*this);
+    m_pRigidBody = m_pGameInstance->Add_StaticActor(*this, m_pGameInstance->Get_NextLevelID(), pDesc->pWorldMatrix);
     m_pRigidBody->userData = &m_tagData;
     m_pRigidBody->setName(CMyTools::ToString(m_wstrMeshName).c_str());
 

@@ -4,14 +4,14 @@
 #include "GameInstance.h"
 #include "Broom.h"
 #include "RaceRing.h"
-#include "CamPosition_Shoulder.h"
+#include "CamPosition_AI.h"
 #include "BroomRaceManager.h"
 
 #pragma region STATE
 #include "State_Broom_Ride.h"
 #include "State_Broom_Ride_Move.h"
-#include "State_Broom_Hover.h"
-#include "State_Broom_Fly.h"
+#include "State_Hover.h"
+#include "State_Fly.h"
 #include "State_Broom_TurboFly.h"
 #pragma endregion
 
@@ -38,6 +38,9 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_iIndex = static_cast<RacerDesc*>(pArg)->iIndex;
+	m_bAI = true;
+
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
@@ -57,7 +60,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+	Load_AnimXML("../Bin/Resources/Data/AnimList/BroomRacerAI.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -68,11 +71,11 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
 	}
 
-	_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Y = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Z = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(X, Y, Z, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+
+
+
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -83,19 +86,23 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 
-	m_bAI = true;
-
 	m_pBroom->Set_Ride(true);
 
-	m_pBroomRaceManager = static_cast<CBroomRaceManager*>(pArg);
+	m_pBroom->Set_Move(false);
 
-	CBroomRaceManager::RacerInfo Info;
+	m_pBroomRaceManager = static_cast<RacerDesc*>(pArg)->pRacerManager;
 
-	Info.pRacer = this;
-	Info.curRing = 0;
-	Info.prevPos = Get_WorldPostion();
+	m_LaneOffsetX = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
+	m_LaneOffsetY = m_pGameInstance->Real_Random_Float(-3.f, 3.f);
 
-	m_pBroomRaceManager->Push_BroomRacer(Info);
+	m_TurnGain = m_pGameInstance->Real_Random_Float(0.85f, 1.15f);
+	m_HeightGain = m_pGameInstance->Real_Random_Float(0.85f, 1.15f);
+
+	m_pBroom->Set_AISpeed(
+		m_pGameInstance->Real_Random_Float(0.8f, 1.2f),
+		m_pGameInstance->Real_Random_Float(0.8f, 1.2f)
+	);
+
 
 	return S_OK;
 }
@@ -103,23 +110,15 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 void CBroomRacerAI::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
-
-	m_pRaceRing = m_pBroomRaceManager->GetTargetRing(this);
 }
 
 void CBroomRacerAI::Update(_float fTimeDelta)
 {
+	Set_Input(fTimeDelta);
+
 	m_pFSM->Update_State(fTimeDelta);
 
-	float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
-
-	float ease = 1.f;
-	if (ratio < 0.4f)
-		ease = 1.15f;
-	else if (ratio > 0.85f)
-		ease = 0.85f;
-
-	m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
 
@@ -131,8 +130,9 @@ void CBroomRacerAI::Update(_float fTimeDelta)
 
 void CBroomRacerAI::Late_Update(_float fTimeDelta)
 {
-	Set_Input(fTimeDelta);
-
+	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
+		return;
+	}
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
@@ -153,21 +153,47 @@ HRESULT CBroomRacerAI::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-			return E_FAIL;
-		}
-
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
+
+		}
+		if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
+		{
+			if (FAILED(Bind_ShaderParameters(i))) {
+				return E_FAIL;
+			}
+			if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+				return E_FAIL;
+			}
+
+			m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+		}
+		else {
+
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+				return E_FAIL;
+			}
+
+			m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+			m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 		}
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
 	}
+
 
 
 	return S_OK;
@@ -187,13 +213,20 @@ HRESULT CBroomRacerAI::Render_Shadow(SHADOW eType)
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
+			return E_FAIL;
+
+		}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
-			return E_FAIL;
-		}
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -221,7 +254,20 @@ HRESULT CBroomRacerAI::Ready_Components()
 		return E_FAIL;
 	}
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+	switch (m_iIndex)
+	{
+	case 1:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_VictorRookWood_Model");
+		break;
+	case 2:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+		break;
+	case 3:
+		m_strModelPrototypeTag = TEXT("Prototype_Component_ChiyoKogawa_Model");
+		break;
+	default:
+		break;
+	}
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
@@ -229,11 +275,20 @@ HRESULT CBroomRacerAI::Ready_Components()
 		return E_FAIL;
 	}
 
-	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
-		return E_FAIL;
+	if (m_pModelCom->Get_Type() == MODEL::PBR_ANIM)
+	{
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
+			reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+			return E_FAIL;
+		}
 	}
+	else {
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+			reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+			return E_FAIL;
+		}
+	}
+
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.fRange = 10.f;
 	LightDesc.iLevel = NEXT_LEVEL;
@@ -250,7 +305,7 @@ HRESULT CBroomRacerAI::Ready_Components()
 
 HRESULT CBroomRacerAI::Ready_Parts()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this, &m_pBroom))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, &m_iIndex, this, &m_pBroom))) {
 		return E_FAIL;
 	}
 
@@ -274,44 +329,120 @@ HRESULT CBroomRacerAI::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+	_float Intensity = 0.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
+HRESULT CBroomRacerAI::Bind_ShaderParameters(_uint iMeshOrder)
+{
+	_bool bUseColorMixer = false;
+
+	_uint iColorParam = { UINT_MAX };
+	_float fMixerFactor = { FLT_MAX };
+	_uint iColorMixerMethod = { 0 };
+
+	switch (m_pModelCom->Get_UsingPass(iMeshOrder, m_pShaderCom))
+	{
+	case 23:
+		if (m_strModelPrototypeTag == TEXT("Prototype_Component_F_Student_Model"))
+		{
+			bUseColorMixer = true;
+			iColorParam = 0x2E2E2E;
+			fMixerFactor = 0.00f;
+			iColorMixerMethod = 1;
+		}
+		else {
+			bUseColorMixer = true;
+			iColorParam = 0x2E2E2E;
+			fMixerFactor = 0.9f;
+			iColorMixerMethod = 1;
+		}
+		break;
+	}
+	if (true == bUseColorMixer) {
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iPackedBlendColor", &iColorParam, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fMixerFactor", &fMixerFactor, sizeof(_float)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMixerMethod", &iColorMixerMethod, sizeof(_uint)))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
+void CBroomRacerAI::Set_RaceInfo()
+{
+	if (m_pBroomRaceManager)
+	{
+		CBroomRaceManager::RacerInfo Info;
+
+		Info.pAI = this;
+		Info.curRing = 0;
+		XMStoreFloat4(&Info.prevPos, Get_WorldPostion());
+
+		m_pBroomRaceManager->Push_BroomRacer(Info);
+	}
+}
+
+_vector CBroomRacerAI::Get_RingForwardTarget()
+{
+	_vector ringPos = m_pRaceRing->Get_WorldPostion();
+	_vector ringFwd = m_pRaceRing->Get_Component<CTransform>()->Get_State(STATE::RIGHT);
+	ringFwd = XMVector3Normalize(ringFwd);
+
+	_vector targetPos = ringPos + ringFwd;
+	targetPos = XMVectorSet(targetPos.m128_f32[0] + m_LaneOffsetX, targetPos.m128_f32[1] + m_LaneOffsetY, targetPos.m128_f32[2], 1.f);
+
+	return targetPos;
+}
 
 _float CBroomRacerAI::ComputeTurnToRing()
 {
-	_vector toRing = m_pRaceRing->Get_WorldPostion() - m_pBroom->Get_WorldPostion();
-	toRing = XMVector3Normalize(XMVectorSetY(toRing, 0.f));
+	_vector targetPos = Get_RingForwardTarget();
+
+	_vector toTarget = targetPos - m_pBroom->Get_WorldPostion();
+	toTarget = XMVector3Normalize(XMVectorSetY(toTarget, 0.f));
 
 	_vector myLook = m_pBroom->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 	myLook = XMVector3Normalize(XMVectorSetY(myLook, 0.f));
 
-	_vector cross = XMVector3Cross(myLook, toRing);
-	_float turn = XMVectorGetY(cross);
+	_float turn = XMVectorGetY(XMVector3Cross(myLook, toTarget));
 
-	_float DEAD = 0.05f;
-	if (fabsf(turn) < DEAD)
+	_float dist = XMVectorGetX(XMVector3Length(targetPos - m_pBroom->Get_WorldPostion()));
+
+	_float atten = clamp(dist / 40.f, 0.f, 1.f);
+
+	if (fabsf(turn) < 0.02f)
 		return 0.f;
 
-	return clamp(turn, -1.f, 1.f);
+	return clamp(turn * atten, -1.f, 1.f);
 }
-
 
 
 _float CBroomRacerAI::ComputeHeightAdjust()
 {
-	_float dy = (XMVectorGetY(m_pRaceRing->Get_WorldPostion()) + 15.f)
-		- XMVectorGetY(m_pBroom->Get_WorldPostion());
+	_vector targetPos = Get_RingForwardTarget();
+	_vector broomPos = m_pBroom->Get_WorldPostion();
 
-	_float DEAD = 5.f;
-	_float RANGE = 40.f;
+	_float dy = XMVectorGetY(targetPos) - XMVectorGetY(broomPos);
 
-	if (fabsf(dy) < DEAD)
+	_float dist = XMVectorGetX(XMVector3Length(targetPos - broomPos));
+
+	_float atten = clamp(dist / 40.f, 0.f, 1.f);
+
+	if (fabsf(dy) < 1.f)
 		return 0.f;
 
-	return clamp(dy / RANGE, -1.f, 1.f);
+	return clamp((dy / 20.f) * atten, -1.f, 1.f);
 }
-
 
 
 CBroomRacerAI* CBroomRacerAI::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -346,7 +477,7 @@ void CBroomRacerAI::Free()
 	SAFE_RELEASE(m_pBroomModel);
 	SAFE_RELEASE(m_pBroomTransform);
 	SAFE_RELEASE(m_pBroom);
-	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
+	SAFE_RELEASE(m_pCamPosition_AIPart);
 }
 #ifdef _DEBUG
 
@@ -404,9 +535,10 @@ HRESULT CBroomRacerAI::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 	if (!m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CBroomRacerAI::Behavior_Broom_HoverExit()
@@ -431,34 +563,19 @@ HRESULT CBroomRacerAI::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	if (!m_pBroom->Get_Hover())
 	{
 
-		if (Y > 0.f)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-		}
-		else if (Y < 0.f)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
-		}
-
 		_float ax = fabsf(X);
 		_float ay = fabsf(Y);
 		_float az = fabsf(Z);
 
 		if (ay > ax && ay > az)
 		{
-			if (Y > 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-			else
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 		}
 		else if (ax >= az)
 		{
 			if (ay >= ax)
 			{
-				if (Y > 0)
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-				else
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 			}
 			else {
 				if (X < 0)
@@ -472,13 +589,7 @@ HRESULT CBroomRacerAI::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 		}
 		else
 		{
-			if (Y > 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_UP];
-			else if (Y< 0)
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_DOWN];
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
-			}
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
 		}
 		
 
@@ -488,9 +599,10 @@ HRESULT CBroomRacerAI::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	if (m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CBroomRacerAI::Behavior_Broom_FlyExit()
@@ -517,9 +629,10 @@ HRESULT CBroomRacerAI::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 	if (m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CBroomRacerAI::Behavior_Broom_TurboFlyExit()
@@ -572,7 +685,7 @@ void CBroomRacerAI::Add_FSM()
 	}
 
 	{
-		CState_Broom_Hover::STATE_BROOM_HOVER_DESC Desc{};
+		CState_Hover::STATE_HOVER_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_HoverEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_HoverExitCheck(fTimedelta); };
@@ -582,11 +695,11 @@ void CBroomRacerAI::Add_FSM()
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::HOVER, CState_Broom_Hover::Create(&Desc));
+		m_States.emplace(FSMSTATE::HOVER, CState_Hover::Create(&Desc));
 	}
 
 	{
-		CState_Broom_Fly::STATE_BROOM_FLY_DESC Desc{};
+		CState_Fly::STATE_FLY_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_FlyEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_FlyExitCheck(fTimedelta); };
@@ -596,7 +709,7 @@ void CBroomRacerAI::Add_FSM()
 			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::FLY, CState_Broom_Fly::Create(&Desc));
+		m_States.emplace(FSMSTATE::FLY, CState_Fly::Create(&Desc));
 	}
 
 	{
@@ -617,52 +730,31 @@ void CBroomRacerAI::Add_FSM()
 
 }
 
-void CBroomRacerAI::Set_Anim()
-{
-	m_Animation[STATEANIM::BROOM_IDLE] = { 710,true };
-	m_Animation[STATEANIM::BROOM_FWD] = { 711,true };
-	m_Animation[STATEANIM::BROOM_LEFT] = { 713,true };
-	m_Animation[STATEANIM::BROOM_RIGHT] = { 714,true };
-	m_Animation[STATEANIM::BROOM_DOWN] = { 712,true };
-	m_Animation[STATEANIM::BROOM_UP] = { 715,true };
-	m_Animation[STATEANIM::BROOM_REVELIO] = { 678,false };
-
-	m_Animation[STATEANIM::BROOM_MOUNT] = { 734,false };
-	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 737,false };
-	m_Animation[STATEANIM::BROOM_HOVER_START] = { 699,false };
-	m_Animation[STATEANIM::BROOM_DISMOUNT] = { 738,false };
-
-
-	m_Animation[STATEANIM::BROOM_HOVER_IDLE] = { 703,true };
-	m_Animation[STATEANIM::BROOM_HOVER_FWD] = { 700,true };
-	m_Animation[STATEANIM::BROOM_HOVER_LEFT] = { 701,true };
-	m_Animation[STATEANIM::BROOM_HOVER_RIGHT] = { 702,true };
-	m_Animation[STATEANIM::BROOM_HOVER_REVELIO] = { 721,false };
-
-	m_Animation[STATEANIM::BROOM_TURBO_DOWN] = { 716,true };
-	m_Animation[STATEANIM::BROOM_TURBO_FWD] = { 717,true };
-	m_Animation[STATEANIM::BROOM_TURBO_LEFT] = { 718,true };
-	m_Animation[STATEANIM::BROOM_TURBO_RIGHT] = { 719,true };
-	m_Animation[STATEANIM::BROOM_TURBO_UP] = { 720,true };
-}
-
 void CBroomRacerAI::Set_Input(_float fTimeDelta)
 {
+	if (m_pRaceRing == nullptr)
+		return;
 	_float targetX = ComputeTurnToRing();
 	_float targetY = ComputeHeightAdjust();
 
-	_float SMOOTH = 6.f;
+	CBroom::BroomInput InputDesc{};
 
-	m_fSmoothX += (targetX - m_fSmoothX) * SMOOTH * fTimeDelta;
-	m_fSmoothY += (targetY - m_fSmoothY) * SMOOTH * fTimeDelta;
+	InputDesc.X = 0.f;
+	InputDesc.Y = 0.f;
+	InputDesc.Z = 0.f;
 
-	CBroom::BroomInput InputDesc;
-	InputDesc.Z = 1.f;
-	InputDesc.X = m_fSmoothX;
-	InputDesc.Y = m_fSmoothY;
-	InputDesc.bHoverToggle = false;
+	if (m_pBroom->Get_Move())
+	{
+		InputDesc.Z = 1.f;
+		InputDesc.X = targetX*m_TurnGain;
+		InputDesc.Y = targetY*m_HeightGain;
+	}
+
+	InputDesc.bHoverToggle = (m_pBroomRaceManager->Get_RaceState() != ENUM_CLASS(CBroomRaceManager::RACE_STATE::RACING));
+
 	InputDesc.bTurbo = false;
 
 	m_pBroom->Set_Input(InputDesc);
 }
+
 

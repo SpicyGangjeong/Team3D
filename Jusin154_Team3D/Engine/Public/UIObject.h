@@ -15,6 +15,7 @@ typedef struct tagUIObjectDesc
 {
 	_float fX, fY = {};
 	_float fSizeX, fSizeY = {};
+	_bool  m_bowner = true;
 }UIOBJECT_DESC;
 
 typedef struct tagSpellInfo
@@ -36,11 +37,57 @@ typedef struct tagSpellInfo
 	_float			fPreview{};
 	_float			fVidio{};
 }SPELLINFO;
+
+typedef struct tagObjectiveInfo
+{
+	_int iObjectType{};
+	_int iTargetID{};
+	_int iRequiredCount{};
+	_int iCurrentCount{};
+}OBJECTIVEINFO;
+
+typedef struct tagRewardsInfo
+{
+	_int iRewardType{};
+	_int iRewardID{};
+}REWARDSINFO;
+
+typedef struct tagQuestInfo
+{
+	_int					iQuestID{};
+	_int					iType{};
+	_wstring				pQuestName;
+	_wstring				pQuestInfo;
+	vector<OBJECTIVEINFO>	ObjectiveInfo;
+	vector<REWARDSINFO>		RewardsInfo;
+	_int					iAcceptState;
+}QUESTINFO;
+
 typedef struct SlotHover
 {
 	_int iSlotID{};
 	_int iHover_Index{};
 }HOVER_INFO;
+
+typedef struct tagCurrentQeustSerectInfo
+{
+	_int iQuestCategory{};
+	_int iQuestIndex{};
+}CURRENTQUESTSECETINFO;
+
+typedef struct tagSpellLearnInfo
+{
+	_wstring		pSpellName{};
+	_wstring		pImageName{};
+	_int			iSpellID{};
+	_int			iSpellType{};
+	_float			fSpellSize{};
+	_float2			fStartPosition{};
+	_float2			fEndPosition{};
+	vector<_float4> Booster;
+	vector<_float4> Lines;
+}SPELLLEARNINFO;
+
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIObject(const CUIObject& rhs);
@@ -57,6 +104,7 @@ public:
 	virtual void MoveX(_float fX);
 	virtual void MoveY(_float fY);
 	virtual void Move(_float fX, _float fY);
+	virtual _float2 Get_Position();
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY);
 	virtual void SizeUpX(_float fSizeX);
 	virtual void SizeUpY(_float fSizeY);
@@ -102,17 +150,18 @@ public:
 	virtual _float Get_Nine_Slice_Bottom();
 
 	virtual _float2 Get_Origin_Position();			// Start Position
-	virtual _vector Get_Current_Position();			// Current Position
+	virtual _float4 Get_Current_Position();			// Current Position
 	virtual _float3 Get_Origin_Size();				// Start Size
 	virtual _float3 Get_Current_Size();				// Current Size
 
 	virtual void Lerp_PosX(_float PosX);
 	virtual void Lerp_PosY(_float PosY);
-	virtual void Start_Lerp(_float fTimeDelta);
+	virtual _bool Start_Lerp_Translation(_float fTimeDelta);
+	virtual _bool Start_Lerp_Speed(_float fTimeDelta, _float2 Mouse_Point);
 	virtual void Reset_Pos(_float fTimeDelta);
 	virtual void Start_Size_Lerp(_float fTimeDelta);
 	virtual void Reset_Size_Lerp(_float fTimeDelta);
-	virtual _vector Get_Lerp_Pos();
+	virtual _float4 Get_Lerp_Pos();
 	virtual void LerpOn();
 	virtual void LerpOff();
 	virtual _bool Get_LerpOn();
@@ -140,15 +189,18 @@ public:
 	virtual _bool Get_Hover();
 
 	virtual const SPELLINFO Get_Info(_int Index);
+	virtual const QUESTINFO Get_QuestInfo(_int Index);
+	virtual const SPELLLEARNINFO Get_Learninfo(_int Index);
 
 	virtual void Set_FontX(_float fFontX);
 	virtual void Set_FontY(_float fFontY);
 	virtual _float2 Get_Font();
+	virtual _float2 Get_PerPosition();
+
 protected:
-	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
-	_vector					m_fCurrent_Position{};
-	_vector					m_vLerp_Position{};
+	_float4					m_fCurrent_Position{};
+	_float4					m_vLerp_Position{};
 	_float					m_fLerpX{};
 	_float					m_fLerpY{};
 	_float3					m_fOrigin_Size{};
@@ -200,6 +252,8 @@ protected:
 	_float					m_fFontX{};
 	_float					m_fFontY{};
 	_float					m_fFontOffSet{};
+
+	_float2					m_fPerPosition{};
 protected:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

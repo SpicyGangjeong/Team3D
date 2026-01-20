@@ -1,12 +1,15 @@
-﻿#include "pch.h"
+﻿#include "UI_Manager.h"
+#include "pch.h"
 #include "UI_Manager.h"
 #include "GameInstance.h"
 #include "GamePlay_Canvas.h"
 #include "Spell_Canvas.h"
 #include "Quest_Canvas.h"
+#include "SpellLearn_Canvas.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
 #include "Loding_Canvas.h"
+#include "Dialogue_Canvas.h"
 #include "tinyxml2.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -26,18 +29,32 @@ HRESULT CUI_Manager::Initialize_Prototype()
 
 HRESULT CUI_Manager::Initialize(void* pArg)
 {
+	CUIObject::UIOBJECT_DESC	Desc{};
+
+	Desc.fX = 960.f;
+	Desc.fY = 540.f;
+	Desc.fSizeX = g_iWinSizeX;
+	Desc.fSizeY = g_iWinSizeY;
+
+	if (FAILED(__super::Initialize(&Desc)))
+	{
+		return E_FAIL;
+	}
+
 	if (FAILED(Ready_Components(pArg)))
 	{
 		return E_FAIL;
 	}
 	m_bCanvas_Change = false;
 	m_eType = Canvases::GAMEPLAYER_CANVAS;
+	m_fAlpha = 0.f;
+	m_fAlphaTime = 1.f;
 	return S_OK;
 }
 
 void CUI_Manager::Canvas_Change(Canvases eType)
 {
-		m_eType = eType;
+	m_eType = eType;
 
 	switch (eType)
 	{
@@ -45,6 +62,7 @@ void CUI_Manager::Canvas_Change(Canvases eType)
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pQuest_Canves)->Visible(false);
+		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
 
 		break;
 	case Canvases::SPELL_CANVAS:
@@ -52,8 +70,14 @@ void CUI_Manager::Canvas_Change(Canvases eType)
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 
 		break;
-	case Canvases::QUEST_CANVES:
+	case Canvases::QUEST_CANVAS:
 		static_cast<CCanvasObject*>(m_pQuest_Canves)->Visible(true);
+		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
+
+		break;
+
+	case Canvases::SPELLLEARN_CANVAS:
+		static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(true);
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 
 		break;
@@ -106,31 +130,127 @@ void CUI_Manager::Update(_float fTimeDelta)
 	{
 		if (m_eType == Canvases::GAMEPLAYER_CANVAS)
 			Canvas_Change(Canvases::SPELL_CANVAS);
-		else if(m_eType == Canvases::SPELL_CANVAS)
+		else if (m_eType == Canvases::SPELL_CANVAS)
 			Canvas_Change(Canvases::GAMEPLAYER_CANVAS);
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_TAB))
+	if (m_eType == Canvases::GAMEPLAYER_CANVAS || m_eType == Canvases::QUEST_CANVAS)
 	{
-		if (m_eType == Canvases::GAMEPLAYER_CANVAS)
-			Canvas_Change(Canvases::QUEST_CANVES);
-		else if (m_eType == Canvases::QUEST_CANVES)
-			Canvas_Change(Canvases::GAMEPLAYER_CANVAS);
+		if (m_pGameInstance->Key_Down(DIK_TAB))
+		{
+			if (m_bActive == false)
+			{
+				m_bActive = true;
+				if (m_eType == Canvases::GAMEPLAYER_CANVAS)
+				{
+					m_eType = Canvases::QUEST_CANVAS;
+
+				}
+				else if (m_eType == Canvases::QUEST_CANVAS)
+				{
+					m_eType = Canvases::GAMEPLAYER_CANVAS;
+				}
+			}
+		}
 	}
+	if (m_eType == Canvases::GAMEPLAYER_CANVAS || m_eType == Canvases::SPELLLEARN_CANVAS)
+	{
+		if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+		{
+			if (m_bActive == false)
+			{
+				m_bActive = true;
+				if (m_eType == Canvases::GAMEPLAYER_CANVAS)
+				{
+					m_eType = Canvases::SPELLLEARN_CANVAS;
+				}
+				else if (m_eType == Canvases::SPELLLEARN_CANVAS)
+				{
+					m_eType = Canvases::GAMEPLAYER_CANVAS;
+				}
+			}
+		}
+	}
+
 
 	if (m_pGameInstance->Key_Down(DIK_SLASH))
 	{
 		SaveXML("../Bin/Resources/Data/UI/Data.xml");
 	}
 
+	if (m_bActive == true && m_bHover == false)
+	{
+		if (m_fAlpha <= 1.f)
+		{
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+		}
+
+		if (m_fAlpha > 1.f)
+		{
+			m_fAlpha = 1.f;
+			m_bFadeIn = true;
+			Canvas_Change(m_eType);
+		}
+	}
+
+	if (m_bFadeIn == true)
+	{
+		m_fTime += fTimeDelta;
+	}
+
+	if (m_fTime >= 1.f)
+	{
+		m_bHover = true;
+		m_bFadeIn = false;
+		m_fTime = 0.f;
+	}
+
+	if (m_bActive == true && m_bHover == true)
+	{
+		if (m_bCgangede == false)
+		{
+			m_bCgangede = true;
+		}
+
+		if (m_fAlpha < 0.f)
+		{
+			m_fAlpha = 0.f;
+			m_bActive = false;
+			m_bHover = false;
+			m_bCgangede = false;
+		}
+
+		if (m_fAlpha > 0.f)
+		{
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;
+		}
+	}
+
+	__super::Update(fTimeDelta);
 }
 
 void CUI_Manager::Late_Update(_float fTimeDelta)
 {
+	if (m_bActive == true)
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CUI_Manager::Render()
 {
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::CANVASFADE)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Render())) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -141,6 +261,32 @@ _vector CUI_Manager::Get_WorldPostion()
 
 HRESULT CUI_Manager::Bind_ShaderResources()
 {
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+
+
 	return S_OK;
 }
 
@@ -149,7 +295,14 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
 		return E_FAIL;
 	}
-
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UIChange"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canves)))) {
 		return E_FAIL;
 	}
@@ -165,15 +318,25 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	}
 	Add_Canvas(TEXT("Quest_Canves"), m_pQuest_Canves);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpellLearn_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpellLearn_Canvas**>(&m_pSpellLearn_Canvas)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("SpellLearn_Canvas"), m_pSpellLearn_Canvas);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDialogue_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CDialogue_Canvas**>(&m_pDialogue_Canvas)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Dialogue_Canvas"), m_pDialogue_Canvas);
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;
 	}
 	//Add_Canvas(TEXT("Mouse_Cursor"), m_pMouse_Cursor);
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCameraLockOn>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCameraLockOn**>(&m_pCamera_LockOn)))) {
-	//	return E_FAIL;
-	//}
-	////Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCameraLockOn>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCameraLockOn**>(&m_pCamera_LockOn)))) {
+		return E_FAIL;
+	}
+	//Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
 
 	return S_OK;
 }
@@ -228,6 +391,11 @@ CGameObject* CUI_Manager::Find_Canvas(const _wstring& Name)
 	return iter->second;
 }
 
+void CUI_Manager::FadeIn(Canvases eType)
+{
+
+}
+
 CUI_Manager* CUI_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CUI_Manager* pInstance = new CUI_Manager(pDevice, pContext);
@@ -259,6 +427,8 @@ void CUI_Manager::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pVIBufferCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pShaderCom);
 }
 
 void CUI_Manager::Describe_Entity()

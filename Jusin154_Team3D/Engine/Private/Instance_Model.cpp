@@ -341,6 +341,10 @@ HRESULT CInstance_Model::Load_InstanceModel(INSTANCE_DESC InstanceDesc)
 
 	m_InstanceDesc = InstanceDesc;
 
+	if (m_InstanceDesc.fTimeMult <= 0)
+		m_InstanceDesc.fTimeMult = 1.f;
+
+
 	Change_NumInstance();
 
 	return S_OK;
@@ -353,6 +357,10 @@ HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
 	if (!ReadFile(hFile, &m_InstanceDesc, sizeof(INSTANCE_DESC), &dwByte, nullptr)) {
 		return E_FAIL;
 	}
+
+	if (m_InstanceDesc.fTimeMult <= 0)
+		m_InstanceDesc.fTimeMult = 1.f;
+
 
 	Change_NumInstance();
 
@@ -552,7 +560,8 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 	{
 		CS_PARTICLE_DESC* pDesc = static_cast<CS_PARTICLE_DESC*>(ConstantSubResource.pData);
 
-		pDesc->fTimeDelta = fTimeDelta;
+		pDesc->fTimeDelta = fTimeDelta * m_InstanceDesc.fTimeMult;
+
 		pDesc->isLoop = m_InstanceDesc.isLoop;
 		pDesc->isDrop = m_InstanceDesc.isDrop;
 		pDesc->isTurn = m_InstanceDesc.isTurn;
@@ -568,17 +577,21 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isRandomAniIndex = m_InstanceDesc.isRandomAniIndex;
 		pDesc->isExcludePos = m_InstanceDesc.isExcludePos;
 		pDesc->isStop_Move_For_Depth_Compare = m_InstanceDesc.isStop_Move_For_Depth_Compare;
+		pDesc->isNoPos = m_InstanceDesc.isNoPos;
+		pDesc->isNoResetTime = m_InstanceDesc.isNoResetTime;
+		pDesc->isLocal_Located_Not_TakeDelay = m_InstanceDesc.isLocal_Located_Not_TakeDelay;
+		pDesc->isCompute_LocalInverse = m_InstanceDesc.isCompute_LocalInverse;
+		pDesc->isRoundLengthLerp = m_InstanceDesc.isRoundLengthLerp;
 
-		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
 		pDesc->fMoveLerpOption = m_InstanceDesc.fMoveLerpOption;
 
-		pDesc->ViewMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW);
-		pDesc->ProjMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ);
 		pDesc->fFar = *m_pGameInstance->Get_CurrentCameraFar();
 		pDesc->vScreenSize = m_pGameInstance->Get_ViewPortSize();
 
-
+		memcpy(&pDesc->WorldMatrix, m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr(), sizeof(_float4x4));
+		memcpy(&pDesc->ViewMatrix, m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW), sizeof(_float4x4));
+		memcpy(&pDesc->ProjMatrix, m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ), sizeof(_float4x4));
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -621,6 +634,9 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 {
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
 	D3D11_MAPPED_SUBRESOURCE		ParticleValue_SubResource{};
+
+	_float4x4 IdentityMat = {};
+	XMStoreFloat4x4(&IdentityMat, XMMatrixIdentity());
 
 	if (SUCCEEDED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
 	{
@@ -666,12 +682,26 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				memcpy(&pVertices[i].vUp, SRMatrix.m[1], sizeof(_float4));
 				memcpy(&pVertices[i].vLook, SRMatrix.m[2], sizeof(_float4));
 
+				/* 구위의 한점으로 위치를 정하기 위한 반지름 */
+				_float fRoundRange = m_pGameInstance->Random_Float(m_InstanceDesc.vRoundRangeLength.x, m_InstanceDesc.vRoundRangeLength.y);
+				_float fAzimuthAngle = m_pGameInstance->Random_Float(m_InstanceDesc.vAzimuthAngle.x, m_InstanceDesc.vAzimuthAngle.y);
+				_float fPolarAngle = m_pGameInstance->Random_Float(m_InstanceDesc.vPolarAngle.x, m_InstanceDesc.vPolarAngle.y);
 
 				pVertices[i].vTranslation = _float4(
-					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.x - m_InstanceDesc.vRange.x * 0.5f, m_InstanceDesc.vCenter.x + m_InstanceDesc.vRange.x * 0.5f),
-					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.y - m_InstanceDesc.vRange.y * 0.5f, m_InstanceDesc.vCenter.y + m_InstanceDesc.vRange.y * 0.5f),
-					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.z - m_InstanceDesc.vRange.z * 0.5f, m_InstanceDesc.vCenter.z + m_InstanceDesc.vRange.z * 0.5f),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.x - m_InstanceDesc.vRange.x * 0.5f, m_InstanceDesc.vCenter.x + m_InstanceDesc.vRange.x * 0.5f)
+					 + fRoundRange * cosf(XMConvertToRadians(fAzimuthAngle)) * sinf(XMConvertToRadians(fPolarAngle)) ,
+					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.y - m_InstanceDesc.vRange.y * 0.5f, m_InstanceDesc.vCenter.y + m_InstanceDesc.vRange.y * 0.5f)
+					+ fRoundRange * sinf(XMConvertToRadians(fAzimuthAngle)) * sinf(XMConvertToRadians(fPolarAngle)),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.z - m_InstanceDesc.vRange.z * 0.5f, m_InstanceDesc.vCenter.z + m_InstanceDesc.vRange.z * 0.5f)
+					+ fRoundRange * cosf(XMConvertToRadians(fPolarAngle)),
 					1.f);
+
+				
+				pParticleValues[i].fRoundRangeLength = fRoundRange;
+				pParticleValues[i].fAzimuthAngle = XMConvertToRadians(fAzimuthAngle);
+				pParticleValues[i].fPolarAngle = XMConvertToRadians(fPolarAngle);
+				pParticleValues[i].fRoundLengthLerpSpeed = m_InstanceDesc.fRoundLengthLerpSpeed;
+
 
 				_float3			vSinAmount = _float3(
 					m_pGameInstance->Random_Float(m_InstanceDesc.vSinMinAmount.x, m_InstanceDesc.vSinMaxAmount.x),
@@ -722,6 +752,15 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].vDeltaSize = vSizeLerp;
 
 
+				_float3			vWolrdOffset = _float3(
+					m_pGameInstance->Random_Float(m_InstanceDesc.vWolrdOffsetMin.x, m_InstanceDesc.vWolrdOffsetMax.x),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vWolrdOffsetMin.y, m_InstanceDesc.vWolrdOffsetMax.y),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vWolrdOffsetMin.z, m_InstanceDesc.vWolrdOffsetMax.z)
+				);
+
+
+				pParticleValues[i].vWolrdOffset = vWolrdOffset;
+
 				//라이프 타임 설정
 				pVertices[i].vLifeTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vLifeTime.x, m_InstanceDesc.vLifeTime.y));
 
@@ -730,7 +769,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].vDiffuseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDiffuseUVMoveTime.x, m_InstanceDesc.vDiffuseUVMoveTime.y));
 				pParticleValues[i].vDistortionUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDistortionUVMoveTime.x, m_InstanceDesc.vDistortionUVMoveTime.y));
 				pParticleValues[i].vNoiseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
-				pParticleValues[i].vDissolveUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
+				pParticleValues[i].vDissolveUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDissolveUVMoveTime.x, m_InstanceDesc.vDissolveUVMoveTime.y));
 				pParticleValues[i].fSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vSpeed.x, m_InstanceDesc.vSpeed.y);
 				pParticleValues[i].fRotaionSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vRotationSpeed.x, m_InstanceDesc.vRotationSpeed.y);
 				pParticleValues[i].vAniIndex = _float2(0.f, m_InstanceDesc.vAniIndex.y);
@@ -740,20 +779,30 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].vDelay = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDelay.x, m_InstanceDesc.vDelay.y));
 				pParticleValues[i].fDropAttenuation = m_pGameInstance->Random_Float(m_InstanceDesc.vDropAttenuation.x, m_InstanceDesc.vDropAttenuation.y);
 				pParticleValues[i].fAcceleration = _float(m_pGameInstance->Random_Float(m_InstanceDesc.vAcceleration.x, m_InstanceDesc.vAcceleration.y));
-
+				pParticleValues[i].fRotateAttenuation = _float(m_pGameInstance->Random_Float(m_InstanceDesc.vRotateAttenuation.x, m_InstanceDesc.vRotateAttenuation.y));
+				pParticleValues[i].fRotateAttDelay = _float(m_pGameInstance->Random_Float(m_InstanceDesc.vRotateAttDelay.x, m_InstanceDesc.vRotateAttDelay.y));
+				
 				pParticleValues[i].fCollisionTime = 0.f;
 				pParticleValues[i].isCompareStop = false;
 				pParticleValues[i].isStop = false;
+				pParticleValues[i].fLoopCount = 0.f;
+				
 
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginLook, SRMatrix.m[2], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginTranslation, &pVertices[i].vTranslation, sizeof(_float4));
 
+				memcpy(&pParticleValues[i].PreWorldMatrix, &IdentityMat, sizeof(_float4x4));
+				memcpy(&pParticleValues[i].LocalMatrixInv, &IdentityMat, sizeof(_float4x4));
+				
+
 				if (m_InstanceDesc.isRandomAniIndex == true)
 				{
 					pParticleValues[i].vAniIndex = _float2((_float)m_pGameInstance->Random_Int(0, (_int)m_InstanceDesc.vAniIndex.y) , m_InstanceDesc.vAniIndex.y);
 				}
+
+
 			}
 
 			m_pContext->Unmap(m_pParticleValueBuffer, 0);
@@ -832,14 +881,14 @@ void CInstance_Model::Free()
 
 void CInstance_Model::Describe_Entity()
 {
-	if (ImGui::TreeNode("Model Option"))
+	if (GUI::TreeNode("Model Option"))
 	{
 		const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 
-		ImGui::Separator(); ImGui::Spacing();
-		ImGui::PushItemWidth(120);
+		GUI::Separator(); GUI::Spacing();
+		GUI::PushItemWidth(120);
 
-		if (ImGui::InputInt("NumInstance", &m_InstanceDesc.iNumInstance))
+		if (GUI::InputInt("NumInstance", &m_InstanceDesc.iNumInstance))
 		{
 			Change_NumInstance();
 		}
@@ -854,44 +903,122 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		if (GUI::Checkbox("NoPos", &m_InstanceDesc.isNoPos))
+		{
+			Instane_Buffer_ReStruct();
+		}
+		
+		if (GUI::Checkbox("Local_Located_Not_TakeDelay", &m_InstanceDesc.isLocal_Located_Not_TakeDelay))
+		{
+			Instane_Buffer_ReStruct();
+
+		}
+
+		if (GUI::Checkbox("Compute_LocalInverse", &m_InstanceDesc.isCompute_LocalInverse))
+		{
+			Instane_Buffer_ReStruct();
+
+		}
+		
+
 		if (GUI::Checkbox("RandomIndex", &m_InstanceDesc.isRandomAniIndex))
 		{
 			Instane_Buffer_ReStruct();
 		}
 
 
-
 		if (GUI::TreeNode("Transform"))
 		{
 
-			if (ImGui::DragFloat3("Center", reinterpret_cast<_float*>(&m_InstanceDesc.vCenter)))
+			if (GUI::DragFloat3("Center", reinterpret_cast<_float*>(&m_InstanceDesc.vCenter)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("Range", reinterpret_cast<_float*>(&m_InstanceDesc.vRange)))
+			if (GUI::DragFloat3("Range", reinterpret_cast<_float*>(&m_InstanceDesc.vRange)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
+			if (GUI::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("SizeMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMax)))
+			if (GUI::DragFloat3("SizeMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMax)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("RotationMin", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMin)))
+			if (GUI::DragFloat3("RotationMin", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMin)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("RotationMax", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMax)))
+			if (GUI::DragFloat3("RotationMax", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMax)))
 			{
 				Instane_Buffer_ReStruct();
+			}
+
+
+			if (GUI::DragFloat2("RoundRangeLength", reinterpret_cast<_float*>(&m_InstanceDesc.vRoundRangeLength)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat2("AzimuthAngle", reinterpret_cast<_float*>(& m_InstanceDesc.vAzimuthAngle)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat2("PolarAngle", reinterpret_cast<_float*>(&m_InstanceDesc.vPolarAngle)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+
+			if (GUI::DragFloat3("WolrdOffsetMin", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMin)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat3("WolrdOffsetMax", reinterpret_cast<_float*>(&m_InstanceDesc.vWolrdOffsetMax)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+
+			if (GUI::TreeNode("Round Range"))
+			{
+	
+
+				if (ImGui::DragFloat2("RoundRangeLength", reinterpret_cast<_float*>(&m_InstanceDesc.vRoundRangeLength)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat2("AzimuthAngle", reinterpret_cast<_float*>(&m_InstanceDesc.vAzimuthAngle)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat2("PolarAngle", reinterpret_cast<_float*>(&m_InstanceDesc.vPolarAngle)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (GUI::Checkbox("RoundLengthLerp", &m_InstanceDesc.isRoundLengthLerp))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+
+				if (ImGui::DragFloat("fRoundLengthLerpSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.fRoundLengthLerpSpeed)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				GUI::TreePop();
 			}
 
 			GUI::TreePop();
@@ -902,34 +1029,34 @@ void CInstance_Model::Describe_Entity()
 		{
 			_int iMoveLerpOption = (_int)m_InstanceDesc.fMoveLerpOption;
 
-			if (ImGui::Combo("Move Lerp Option", &iMoveLerpOption, pLerp, 9))
+			if (GUI::Combo("Move Lerp Option", &iMoveLerpOption, pLerp, 9))
 			{
 				Instane_Buffer_ReStruct();
 
 				m_InstanceDesc.fMoveLerpOption = (_float)iMoveLerpOption;
 			}
 
-			if (ImGui::DragFloat2("Speed", reinterpret_cast<_float*>(&m_InstanceDesc.vSpeed)))
+			if (GUI::DragFloat2("Speed", reinterpret_cast<_float*>(&m_InstanceDesc.vSpeed)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vDrag)))
+			if (GUI::DragFloat2("Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vDrag)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("Acceleration", reinterpret_cast<_float*>(&m_InstanceDesc.vAcceleration)))
+			if (GUI::DragFloat2("Acceleration", reinterpret_cast<_float*>(&m_InstanceDesc.vAcceleration)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("VelocityMin", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMin)))
+			if (GUI::DragFloat3("VelocityMin", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMin)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat3("VelocityMax", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMax)))
+			if (GUI::DragFloat3("VelocityMax", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMax)))
 			{
 				Instane_Buffer_ReStruct();
 			}
@@ -960,17 +1087,22 @@ void CInstance_Model::Describe_Entity()
 			if (GUI::TreeNode("Pivot Move"))
 			{
 
+				if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
 				if (GUI::Checkbox("PivotMove", &m_InstanceDesc.isPivotMove))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("PivotMin", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMin)))
+				if (GUI::DragFloat3("PivotMin", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMin)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("PivotMax", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMax)))
+				if (GUI::DragFloat3("PivotMax", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMax)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -986,12 +1118,12 @@ void CInstance_Model::Describe_Entity()
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat2("Gravity", reinterpret_cast<_float*>(&m_InstanceDesc.vGravity)))
+				if (GUI::DragFloat2("Gravity", reinterpret_cast<_float*>(&m_InstanceDesc.vGravity)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat2("DropAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vDropAttenuation)))
+				if (GUI::DragFloat2("DropAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vDropAttenuation)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1005,10 +1137,22 @@ void CInstance_Model::Describe_Entity()
 		if (GUI::TreeNode("Rotate"))
 		{
 
-			if (ImGui::DragFloat2("RotationSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationSpeed)))
+			if (GUI::DragFloat2("RotationSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationSpeed)))
 			{
 				Instane_Buffer_ReStruct();
 			}
+
+			if (GUI::DragFloat2("RotateAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vRotateAttenuation)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat2("RotateAttDelay", reinterpret_cast<_float*>(&m_InstanceDesc.vRotateAttDelay)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+			
+			
 
 			if (GUI::TreeNode("Nomal Turn"))
 			{
@@ -1017,12 +1161,12 @@ void CInstance_Model::Describe_Entity()
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("DeltaAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMin)))
+				if (GUI::DragFloat3("DeltaAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMin)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("DeltaAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMax)))
+				if (GUI::DragFloat3("DeltaAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMax)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1040,20 +1184,14 @@ void CInstance_Model::Describe_Entity()
 				}
 
 
-				if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
+
+
+				if (GUI::DragFloat3("DeltaAxisAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMin)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-
-
-
-				if (ImGui::DragFloat3("DeltaAxisAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMin)))
-				{
-					Instane_Buffer_ReStruct();
-				}
-
-				if (ImGui::DragFloat3("DeltaAxisAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMax)))
+				if (GUI::DragFloat3("DeltaAxisAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMax)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1071,12 +1209,12 @@ void CInstance_Model::Describe_Entity()
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("SinWaveMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMinAmount)))
+				if (GUI::DragFloat3("SinWaveMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMinAmount)))
 				{
 					Instane_Buffer_ReStruct();
 				}
 
-				if (ImGui::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
+				if (GUI::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
 				{
 					Instane_Buffer_ReStruct();
 				}
@@ -1099,19 +1237,19 @@ void CInstance_Model::Describe_Entity()
 
 			_int iSizeLerpOption = (_int)m_InstanceDesc.fSizeLerpOption;
 
-			if (ImGui::Combo("Size Lerp Option", &iSizeLerpOption, pLerp, 9))
+			if (GUI::Combo("Size Lerp Option", &iSizeLerpOption, pLerp, 9))
 			{
 				Instane_Buffer_ReStruct();
 
 				m_InstanceDesc.fSizeLerpOption = (_float)iSizeLerpOption;
 			}
 
-			if (ImGui::DragFloat3("LerpSizeAmount", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaSize)))
+			if (GUI::DragFloat3("LerpSizeAmount", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaSize)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("Size Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeDrag)))
+			if (GUI::DragFloat2("Size Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeDrag)))
 			{
 				Instane_Buffer_ReStruct();
 			}
@@ -1123,43 +1261,59 @@ void CInstance_Model::Describe_Entity()
 
 		if (GUI::TreeNode("Time"))
 		{
-			if (ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
+
+			if (GUI::Checkbox("NoResetTime", &m_InstanceDesc.isNoResetTime))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("Delay", reinterpret_cast<_float*>(&m_InstanceDesc.vDelay)))
+			if (GUI::DragFloat("TimeMult", reinterpret_cast<_float*>(&m_InstanceDesc.fTimeMult)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("DiffuseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDiffuseUVMoveTime)))
+			if (GUI::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("MaskingUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vMaskingUVMoveTime)))
+			if (GUI::DragFloat2("Delay", reinterpret_cast<_float*>(&m_InstanceDesc.vDelay)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat2("DiffuseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDiffuseUVMoveTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat2("MaskingUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vMaskingUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
 
-			if (ImGui::DragFloat2("DistortionUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDistortionUVMoveTime)))
+			if (GUI::DragFloat2("DistortionUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDistortionUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
+			if (GUI::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("AniTime", reinterpret_cast<_float*>(&m_InstanceDesc.vAniTime)))
+			if (GUI::DragFloat2("DissolveUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDissolveUVMoveTime)))
 			{
 				Instane_Buffer_ReStruct();
 			}
 
-			if (ImGui::DragFloat2("AniIndex", reinterpret_cast<_float*>(&m_InstanceDesc.vAniIndex)))
+			if (GUI::DragFloat2("AniTime", reinterpret_cast<_float*>(&m_InstanceDesc.vAniTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::DragFloat2("AniIndex", reinterpret_cast<_float*>(&m_InstanceDesc.vAniIndex)))
 			{
 				Instane_Buffer_ReStruct();
 			}
@@ -1188,11 +1342,11 @@ void CInstance_Model::Describe_Entity()
 
 
 
-		ImGui::PopItemWidth();
-		ImGui::TreePop();
+		GUI::PopItemWidth();
+		GUI::TreePop();
 	}
 
-	ImGui::Separator();
+	GUI::Separator();
 }
 
 #endif // _DEBUG

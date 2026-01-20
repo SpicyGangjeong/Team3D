@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "UIObject.h"
 #include "tinyxml2.h"
+#include "QuestInstance.h"
 
 CQuest_Data::CQuest_Data(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice, pContext)
@@ -43,8 +44,8 @@ HRESULT CQuest_Data::Initialize(void* pArg)
 
 		pQuest->QueryIntAttribute("QuestID", &quest.iQuestID);
 		pQuest->QueryIntAttribute("QuestType", &quest.iType);
-		quest.pQuestName = pQuest->Attribute("QuestName");
-		quest.pQuestInfo = pQuest->Attribute("QuestInfo");
+		quest.pQuestName = CMyTools::ToWstring(pQuest->Attribute("QuestName"));
+		quest.pQuestInfo = CMyTools::ToWstring(pQuest->Attribute("QuestInfo"));
 
 		tinyxml2::XMLElement* pObjectives = pQuest->FirstChildElement("Objectives");
 		if (pObjectives)
@@ -53,8 +54,9 @@ HRESULT CQuest_Data::Initialize(void* pArg)
 			while (pObjective)
 			{
 				OBJECTIVEINFO  obj{};
-
-				pObjective->QueryIntAttribute("Objective", &obj.iObjectType);
+				_int Clear = 0;
+				pObjective->QueryIntAttribute("Objective", &Clear);
+				obj.bClear = Clear != 0;
 				pObjective->QueryIntAttribute("TargetID", &obj.iTargetID);
 				pObjective->QueryIntAttribute("RequiredCount", &obj.iRequiredCount);
 				pObjective->QueryIntAttribute("CurrentCount", &obj.iCurrentCount);
@@ -81,11 +83,13 @@ HRESULT CQuest_Data::Initialize(void* pArg)
 				pReward = pReward->NextSiblingElement("Reward");
 			}
 		}
-
+		m_iQuest_Count++;
 		QuestInfos.push_back(quest);
 
 		pQuest = pQuest->NextSiblingElement("Quest");
 	}
+
+	Set_AcceptQuest(0);
 
 	return S_OK;
 }
@@ -96,6 +100,8 @@ void CQuest_Data::Priority_Update(_float fTimeDelta)
 
 void CQuest_Data::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_0))
+		Update_AcceptQuest(0);
 }
 
 void CQuest_Data::Late_Update(_float fTimeDelta)
@@ -110,6 +116,90 @@ HRESULT CQuest_Data::Render()
 _vector CQuest_Data::Get_WorldPostion()
 {
 	return _vector();
+}
+
+CQuest_Data::QUESTINFO CQuest_Data::Get_Quest(_int QuestID)
+{
+	return QuestInfos[QuestID];
+}
+
+const vector<CQuest_Data::QUESTINFO>& CQuest_Data::Get_AllQuest() const
+{
+	return CQuest_Data::QuestInfos;
+}
+
+const vector<CQuest_Data::QUESTINFO>& CQuest_Data::Get_ClearQuest() const
+{
+	return	CQuest_Data::m_QuestEndInfos;
+}
+
+const vector<CQuest_Data::QUESTINFO>& CQuest_Data::Get_AcceptQuest() const
+{
+	return CQuest_Data::m_QuestAcceptedInfos;
+}
+
+_int CQuest_Data::Get_Count(_int Index)
+{
+	switch (Index)
+	{
+	case 0:
+		return m_iQuest_Count;
+
+	case 1:
+		return m_iAcceptQeustCount;
+
+	case 2:
+		return m_iClearQeustCount;
+
+	default:
+		return -1;
+	}
+}
+
+HRESULT CQuest_Data::Set_AcceptQuest(_int Index)
+{
+	if (QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::ACCEPTED) || QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::CLEARED))
+		return S_OK;
+	QuestInfos[Index].iAcceptState = ENUM_CLASS(QUESTSTATE::ACCEPTED);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuestInstance>
+		(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, &QuestInfos[Index], this, reinterpret_cast <CQuestInstance**>(&m_pQuestInstance))))
+	{
+		return E_FAIL;
+	}
+
+	m_QuestAcceptedInfoObject.push_back(m_pQuestInstance);
+	m_QuestAcceptedInfos.push_back(QuestInfos[Index]);
+	m_iAcceptQeustCount++;
+	return S_OK;
+}
+
+void CQuest_Data::Set_ClearQuest(_int Index)
+{
+	if (QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::NONE) || QuestInfos[Index].iAcceptState == ENUM_CLASS(QUESTSTATE::CLEARED))
+		return;
+
+	QuestInfos[Index].iAcceptState = ENUM_CLASS(QUESTSTATE::CLEARED);
+	m_QuestEndInfos.push_back(QuestInfos[Index]);
+	m_iClearQeustCount++;
+	if (m_iAcceptQeustCount >= 0)
+		m_iAcceptQeustCount--;
+}
+
+void CQuest_Data::Update_AcceptQuest(_int MonsterID)
+{
+	m_QuestAcceptedInfoObject.erase(remove_if(m_QuestAcceptedInfoObject.begin(), m_QuestAcceptedInfoObject.end(),
+		[MonsterID, this](auto& it) {
+			CQuestInstance* instance = static_cast<CQuestInstance*>(it);
+			if (static_cast<CQuestInstance*>(it)->Update_Objective(MonsterID) == true)
+			{
+				Set_ClearQuest(static_cast<CQuestInstance*>(it)->Get_QuestID());
+				return true;
+			}
+			return false;
+		}),
+		m_QuestAcceptedInfoObject.end()
+	);
 }
 
 HRESULT CQuest_Data::Bind_ShaderResources()
@@ -152,6 +242,7 @@ void CQuest_Data::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pVIBufferCom);
 }
 
 void CQuest_Data::Describe_Entity()

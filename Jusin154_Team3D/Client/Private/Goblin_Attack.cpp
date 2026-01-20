@@ -6,6 +6,7 @@
 #include "Wand.h"
 #include "Player.h"
 #include "Goblin_BattleAxe.h"
+#include "TrailObject.h"
 
 CGoblin_Attack::CGoblin_Attack(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -44,8 +45,19 @@ HRESULT CGoblin_Attack::Initialize(void* pArg)
 
 	m_pPT1 = Get_PartObject<CEffectParts>("Goblin_Particle");
 	m_pPT2 = Get_PartObject<CEffectParts>("Goblin_Particle2");
+	m_pAttack_Trail = Get_PartObject<CTrailObject>();
 
-	m_fDuration = 2.f;
+	SAFE_ADDREF(m_pPT1);
+	SAFE_ADDREF(m_pPT2);
+	SAFE_ADDREF(m_pAttack_Trail);
+	m_fDuration = 4.f;
+
+
+	m_Events.emplace(1.2f, [&]() {
+
+		m_pAttack_Trail->SetDissolve(true);
+		
+		});
 
 	return S_OK;
 }
@@ -66,12 +78,14 @@ void CGoblin_Attack::Update(_float fTimeDelta)
 	Update_Event(fTimeDelta);
 
 
-	CGoblin_BattleAxe* pAxe = static_cast<CGoblin_BattleAxe*>(m_pOwner);
+	_matrix WorldMat = m_pOwner->Get_Owner()->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
-	_float4x4 AxeMat = pAxe->Get_AxeMatrix();
+	_matrix BoneMat = XMLoadFloat4x4(m_vMat);
 
-	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
-	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+	m_pPT1->Get_Component<CTransform>()->Set_State(STATE::POSITION, BoneMat.r[3]);
+	m_pPT2->Get_Component<CTransform>()->Set_State(STATE::POSITION, BoneMat.r[3]);
+
+	m_pAttack_Trail->Trail_Update(BoneMat, fTimeDelta);
 
 
 }
@@ -90,16 +104,26 @@ HRESULT CGoblin_Attack::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
-	
-	CGoblin_BattleAxe* pAxe = static_cast<CGoblin_BattleAxe*>(m_pOwner);
-	
-	_float4x4 AxeMat = pAxe->Get_AxeMatrix();
+	//
+	//CGoblin_BattleAxe* pAxe = static_cast<CGoblin_BattleAxe*>(m_pOwner);
+	//
+	//_float4x4 AxeMat = pAxe->Get_AxeMatrix();
 
-	 m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
-	 m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+	m_vMat = static_cast<_float4x4*>(pArg);
+
+	 //m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+	 //m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+
+	_matrix BoneMat = XMLoadFloat4x4(m_vMat);
+
+	m_pPT1->Get_Component<CTransform>()->Set_State(STATE::POSITION, BoneMat.r[3]);
+	m_pPT2->Get_Component<CTransform>()->Set_State(STATE::POSITION, BoneMat.r[3]);
 
 	m_pPT1->Set_Visible(true);
 	m_pPT2->Set_Visible(true);
+	m_pAttack_Trail->Set_Visible(true);
+	m_pAttack_Trail->SetDissolve(false);
+	m_pAttack_Trail->Get_Component<CTrail>()->Reset_Trail();
 
 	return S_OK;
 }
@@ -172,6 +196,10 @@ void CGoblin_Attack::OnCollision(CGameObject* pOther, void* pDesc)
 void CGoblin_Attack::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pPT1);
+	SAFE_RELEASE(m_pPT2);
+	SAFE_RELEASE(m_pAttack_Trail);
 
 }
 #ifdef _DEBUG

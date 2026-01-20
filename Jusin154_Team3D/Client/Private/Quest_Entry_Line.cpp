@@ -22,7 +22,7 @@ HRESULT CQuest_Entry_Line::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 330.f;
-	Desc.fY = -230.f;
+	Desc.fY = 230.f;
 	Desc.fSizeX = 256.f;
 	Desc.fSizeY = 64.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -40,11 +40,12 @@ HRESULT CQuest_Entry_Line::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
 	m_vNine_Slice = _float4(0.f, 256.f, 0.f, 64.f);
-	m_fFontX = 928.f;
+	m_fFontX = 948.f;
 	m_fFontY = 520.f;
 	SizeUpX(800.f);
 	SizeUpY(15.f);
-	Visible(true);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
+	Visible(false);
 	return S_OK;
 }
 
@@ -119,9 +120,9 @@ HRESULT CQuest_Entry_Line::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
-
-	_float OffSet = m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("보 상") - 22) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("조 건"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	 
+	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("보 상")) - 22) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("조 건"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }
@@ -205,6 +206,20 @@ HRESULT CQuest_Entry_Line::Ready_Components(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CQuest_Entry_Line::Set_Hover(void* pArg)
+{
+	CURRENTQUESTSECETINFO* Desc = static_cast<CURRENTQUESTSECETINFO*>(pArg);
+
+	m_iCurrentQuest = Desc->iQuestCategory;
+	m_iQuest_Index = Desc->iQuestIndex;
+	if (m_iQuest_Index == -1)
+	{
+		Visible(false);
+		return;
+	}
+	Visible(true);
 }
 
 CQuest_Entry_Line* CQuest_Entry_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

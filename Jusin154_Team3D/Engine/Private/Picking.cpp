@@ -48,7 +48,7 @@ void CPicking::Update()
 #ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_Picking"));
 #endif // _DEBUG
-	m_pGameInstance->Copy_RenderTarget(TEXT("Target_Depth"), m_pTexture2D);
+	m_pGameInstance->Copy_RenderTargetTo(TEXT("Target_Depth"), m_pTexture2D);
 #ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_Picking"));
 #endif // _DEBUG

@@ -28,6 +28,15 @@ CCollider::CCollider(const CCollider& rhs)
 #endif
 }
 
+#ifdef _DEBUG
+void CCollider::Set_Desc(void* pDesc)
+{
+	m_pBounding->Set_Desc(pDesc);
+}
+#endif // _DEBUG
+
+
+
 HRESULT CCollider::Initialize_Prototype()
 {
 

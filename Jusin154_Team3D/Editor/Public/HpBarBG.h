@@ -24,6 +24,7 @@ public:
 	void Heal(_float fTimeDelta);
 	void Hit(_float fTimeDelta);
 	virtual void SizeUpX(_float SizeX) override;
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;

@@ -25,6 +25,7 @@ public:
 		_wstring    wstrDissolveName = {};
 		_wstring    wstrEmissiveName = {};
 		_wstring    wstrDistortionName = {};
+		_wstring    wstrNomalName = {};
 		_wstring    wstrModelName = {};
 
 		_wstring    wstrEffectName = {};
@@ -58,6 +59,7 @@ public:
 public:
 	HRESULT			Load_Directory(const _char* pPath);
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
+	void			Setting_Pos(_fvector vPos);
 	HRESULT         Load_Package(const _char* pPath);
 	HRESULT         Load_Data(const _char* pPath);
 	HRESULT         Create_Effect();
@@ -75,8 +77,10 @@ protected:
 	void				Update_Event(_float fTimeDelta);
 	HRESULT				Reset_EffectParts();
 	_int				CollisionCheck();
-	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
-	ON_COLLISION_INFO	MonsterSweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	SweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	MonsterSweepTarget(_fvector StartPos, _fvector EndPos, _float fRadius, _bool isTerrainCollision = false);
+	ON_COLLISION_INFO	MonsterRayCast(_fvector StartPos, _fvector vDir, _float fLength, _uint iMaxHitCapacity);
+	_vector				Get_LockOnPos(LOCKON_INFO Info);
 
 protected:
 	_float4							m_vStartPos = {};
@@ -86,6 +90,7 @@ protected:
 	_wstring						m_wstrEffectName = {};
 	_bool							m_bHit = { false };
 	_bool							m_isLoop = {};
+	_bool							m_isStop = {};
 
 	_float							m_fAccTime = {};
 	_float							m_fPreAccTime = {};
@@ -93,11 +98,13 @@ protected:
 	_float							m_fDelay = {};
 	_bool							m_isDelayed = { false };
 	_bool							m_isCollisionEnter = { false };
+	_uint							m_iHitCount = {};
 
 	map<_float, function<void()>>	m_Events = {};
 	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
 	_bool							m_bHasDamage = { false };
 	LOCKON_INFO						m_Info = {};
+	_bool							m_bHitShield = {false};
 private:
 	vector<EFFECT_SAVE_INFO>        m_EffectsInfo = {};
 	vector<TRAIL_SAVE_INFO>			m_TrailsInfo = {};

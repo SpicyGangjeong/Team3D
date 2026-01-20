@@ -9,18 +9,19 @@ class CRenderTarget final : public CBase
 private:
 	CRenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderTarget() = default;
-
 public:
 	ID3D11RenderTargetView* Get_RTV() const { return m_pRTV; }
+	ID3D11ShaderResourceView* Get_SRV() const { return m_pSRV; }
 
 public:
 	HRESULT Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
 	void Clear();
-	void Copy_Resource(ID3D11Texture2D* pTexture2D);
-	void Paste_Resource(ID3D11Texture2D* pTexture2D);
+	void Copy_ResourceTo(ID3D11Texture2D* pTexture2D);
+	void Copy_ResourceTo(const CRenderTarget& Target);
+	void Copy_ResourceFrom(ID3D11Texture2D* pTexture2D);
+	void Copy_ResourceFrom(const CRenderTarget& Target);
 	void Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc);
-	ID3D11ShaderResourceView* Get_SRV() const { return m_pSRV; }
 
 #ifdef _DEBUG
 public:

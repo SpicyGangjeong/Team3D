@@ -40,12 +40,23 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT	Ready_Components(void* pArg)override;
+	virtual void Trigger(class CTimeSocket& Socket) {};
+	virtual void EnableTransition(_float fTransitionTime);
+	virtual void DisableTransition();
+
+
+	void	Set_RotDegreeVerticalLock(_float2 vVerticalLock);
+	_float2 Get_RotDegreeVerticalLock();
+
 	_bool IsActive() const { return m_bActive; }
 	_bool IsImportantThan(CCamera* pOther) const;
 	const _float* Get_CurrentFar();
 	void ZoomIn(_float fTimeDelta);
-	void Set_Fov(_float fFovy,_float fTimeDelta, _bool& bZoomIn);
+	void Set_FovSlope(_float fFovy,_float fTimeDelta, _bool& bZoomIn);
+
+	void Set_Fov(_float fFovy);
 	_float Get_Fov();
+
 
 protected:
 	_float			m_fFovy = {};
@@ -61,6 +72,7 @@ protected:
 	_float3			m_vFollowPos_Src = { 0.f, 0.f, 0.f };
 	_float3			m_vFollowPos_Dest = { 0.f, 0.f, 0.f };
 	_uint			m_iPriority = { UINT_MAX };
+	_float2			m_vAccRotDegree_VerticalLocks = { 87.f, 87.f };
 
 	_bool			m_bIsCurrentTransition = { false };
 	_bool			m_bEnable_TransitionLerp = { false };
@@ -79,7 +91,7 @@ protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Bind_Matrices();
-	void Transition(_float fTimeDelta);
+	virtual void Transition(_float fTimeDelta);
 
 public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner)PURE;

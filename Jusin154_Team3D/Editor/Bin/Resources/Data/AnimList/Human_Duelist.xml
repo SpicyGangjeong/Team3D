@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animations owner="Human_Duelist">
+
+	<!-- IDLE -->
+	<Anim state="IDLE" index="243" loop="true"/>
+	
+	<!-- IDLE_BREAK -->
+	<Anim state="IDLE_BREAK1" index="152" loop="false"/>
+	<Anim state="IDLE_BREAK2" index="153" loop="false"/>
+	
+	<!-- SKILL / ATTACK -->
+	<Anim state="SKILL" index="240" loop="false"/>
+	<Anim state="LIGHT_ATTACK" index="32" loop="false"/>
+	<Anim state="LIGHT_ATTACK2" index="35" loop="false"/>
+	<Anim state="LIGHT_ATTACK3" index="37" loop="false"/>
+	<Anim state="LIGHT_ATTACK4" index="39" loop="false"/>
+	
+	<!-- SPELL -->
+	<Anim state="SPELL" index="34" loop="false"/>
+	
+	<!-- LAND -->
+	<Anim state="LAND" index="349" loop="false"/>
+
+	<!-- HIT / FLINCH -->
+	<Anim state="HIT_LEVIOSO" index="348" loop="true"/>
+	<Anim state="HIT_BWD" index="310" loop="false"/>
+	<Anim state="TUMBLE" index="472" loop="false"/>
+	<Anim state="TUMBLE_FWD" index="470" loop="false"/>
+	<Anim state="TUMBLE2" index="474" loop="false"/>
+	
+
+	<!-- DAZED -->
+	<Anim state="DAZED_START" index="485" loop="false"/>
+	<Anim state="DAZED_LOOP" index="484" loop="false"/>
+	<Anim state="DAZED_END1" index="482" loop="false"/>
+	<Anim state="DAZED_END2" index="483" loop="false"/>
+
+	<!-- KNOCKDOWN -->
+	<Anim state="KNOCKDOWN_BWD_SPLT" index="325" loop="false"/>
+	<Anim state="KNOCKDOWN_FWD_SPLT" index="324" loop="false"/>
+
+	<!-- GETUP -->
+	<Anim state="GETUP_BWD" index="329" loop="false"/>
+	<Anim state="GETUP_FWD" index="297" loop="false"/>
+
+	<!-- CUTSCENE -->
+	<Anim state="CUTSCENE_DUEL" index="349" loop="false"/>
+
+</Animations>

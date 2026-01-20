@@ -14,19 +14,23 @@ public:
 	HRESULT Add_MRT(const _wstring& strMultiRenderTargetKey, const _wstring& strRenderTargetKey);
 	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV);
 	HRESULT Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV);
-	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV);
+	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV , _bool isClear);
 	HRESULT Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
-	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
-	HRESULT Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Copy_RenderTargetTo(const _wstring& strSrcTag, ID3D11Texture2D* pDst2D);
+	HRESULT Copy_RenderTargetFrom(const _wstring& strDstTag, ID3D11Texture2D* pSrc2D);
+	HRESULT Copy_RenderTargetAToB(const _wstring& strATag, const _wstring& strBTag);
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
-
+	HRESULT Clear_RenderTarget(const _wstring& strRenderTargetKey);
+	ID3D11ShaderResourceView* Get_RenderTarget_SRV(const _wstring& strRenderTargetKey);
 	// 두 랜더타겟을 하나로 모음
 	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
 	// 랜더 타겟의 크기를 dest로 다시 맞춤
 	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
+	void	Flush_All_SRVs(_uint iStartSlot = 0, _uint numSlots = D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
+	void	Flush_All_CSUAVs(_uint iStartSlot = 0, _uint numSlots = D3D11_PS_CS_UAV_REGISTER_COUNT);
 
 #ifdef _DEBUG
 public:
@@ -37,8 +41,8 @@ public:
 
 #ifdef _DEBUG
 private:
-	_int m_iSizeX = { 200 };
-	_int m_iSizeY = { 200 };
+	_int m_iSizeX = { 16 * 14 };
+	_int m_iSizeY = { 9 * 14 };
 #endif // _DEBUG
 
 private:

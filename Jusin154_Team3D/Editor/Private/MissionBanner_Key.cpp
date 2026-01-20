@@ -22,7 +22,7 @@ HRESULT CMissionBanner_Key::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -255.f;
-	Desc.fY = 160.f;
+	Desc.fY = -160.f;
 	Desc.fSizeX = 160.f;
 	Desc.fSizeY = 80.f;
 

@@ -9,6 +9,7 @@
 #include "CallBack_Troll_HitReport.h"
 #include "EffectParts.h"
 #include "EffectPool.h"
+#include "TimeSocket.h"
 #include "Layer.h"
 #include "TrailObject.h"
 #include "MapElement_Interactable.h"
@@ -18,7 +19,7 @@
 #include "State_Move.h"
 #include "State_Combat.h"
 #include "State_Hit.h"
-#include "Troll_State_Rush.h"
+#include "State_Rush.h"
 #include "State_Throw.h"
 #pragma endregion
 
@@ -50,7 +51,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+	Load_AnimXML("../Bin/Resources/Data/AnimList/Troll.xml");
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -65,7 +66,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(110.f, 24.f, 135.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(96.927f, -15.f, 129.544f, 1.f));
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -73,6 +74,8 @@ HRESULT CTroll::Initialize(void* pArg)
 	m_pLeftHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("LeftHand");
 	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("RightHand");
 	m_pWeapon_BoneMat = Get_PartObject<CTroll_Weapon>()->Get_Component<CModel>()->Get_BoneMatrixPtr("Bone");
+
+	Ready_Sound_Events("../Bin/Resources/Models/Monster/SubTroll/KeyFrame.xml");
 
 	return S_OK;
 }
@@ -88,7 +91,7 @@ void CTroll::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
 
-	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+	m_pModelCom->Play_Animation(fTimeDelta * m_fEasing, m_pTransformCom);
 
 	__super::Update(fTimeDelta);
 
@@ -165,21 +168,8 @@ void CTroll::Late_Update(_float fTimeDelta)
 	}
 
 	if (true == m_bLookAt) {
-		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
+		m_pTransformCom->LookAt_Horizontal_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
-
-
-	_vector vDir = XMLoadFloat4(&m_vTargetPos) - Get_WorldPostion();
-	vDir = XMVector4Normalize(vDir);
-	_vector vLook = XMVector3Normalize(
-		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
-	float dot = XMVectorGetX(XMVector3Dot(vLook, vDir));
-	dot = max(-1.f, min(1.f, dot));
-
-	float angle = acosf(dot);
-	m_fDegree = XMConvertToDegrees(angle);
-
-	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
@@ -191,10 +181,18 @@ HRESULT CTroll::Render()
 		return E_FAIL;
 	}
 
+	if (FAILED(Render_DeadDisolve())) {
+		return E_FAIL;
+	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
 
@@ -202,12 +200,23 @@ HRESULT CTroll::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
+
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->Begin_OutLine_Write(2);
+		}
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
+		}
+
+		if (true == m_bDrawOutLine) {
+			m_pGameInstance->End_OutLine_Write();
 		}
 	}
 
@@ -228,6 +237,13 @@ HRESULT CTroll::Render()
 	//}
 #endif
 
+	if (0.f < m_fDeadRatio) {
+		_bool bDisolve = false;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -239,13 +255,17 @@ HRESULT CTroll::Render_OutLine()
 	}
 
 	Compute_Depth();
-	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
-	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
-	if (m_fOutLineThickness > 6.f) {
-		m_fOutLineThickness = 6.f;
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	m_fOutLineThickness = CMyTools::Lerp_f1D(5.f, 10.f, fRatio);
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
 	}
-	else if (m_fOutLineThickness < 2.f) {
-		m_fOutLineThickness = 2.f;
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
@@ -266,7 +286,12 @@ HRESULT CTroll::Render_OutLine()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
 
@@ -277,6 +302,9 @@ HRESULT CTroll::Render_OutLine()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::OUTLINE_READ)))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(27, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -299,13 +327,21 @@ HRESULT CTroll::Render_Shadow(SHADOW eType)
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(26, 0);
+
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
@@ -331,10 +367,9 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
+	XMStoreFloat4(&m_DamageInfo.vTarget_Pos, m_pCharacter_Controller->Get_HeadPosition());
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-
-
-	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
 
 	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
@@ -351,44 +386,110 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::JAP):
 			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
 			break;
-		default:
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+		case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ACCIO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::STUPEFY);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC);
 			break;
 		}
 	}
 	else
 	{
 		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
+		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+		if (pProps != nullptr)
+		{
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW);
+		}
 	}
-
-	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
-
-	if (pProps != nullptr)
-	{
-		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
-	}
+	
 
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
 		m_pFSM->Change_State(FSMSTATE::DEAD);
+		_int ID = m_pStat->Get_Stat().iObjectID;
+		m_pInfoInstance->Event_CallBack(TEXT("MonsterDead"), &ID);
 		return;
 	}
-	m_pFSM->Change_State(FSMSTATE::HIT);
 
+	if (m_pFSM->IsEnable(FSMSTATE::SLAM) || IsHitSpellDisabled()) {
+		m_pFSM->Change_State(FSMSTATE::HIT);
+	}
 
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
+}
+
+void CTroll::Trigger(CTimeSocket& Socket)
+{
+
+	SOCKETCONTENTS* pContents = &Socket.m_Contents;
+	switch (pContents->eTypeFunc)
+	{
+	case TIMESOCKET_FUNC::TELEPORTATION:
+	{
+		m_pTransformCom->Set_WorldMatrix(pContents->pxTransform);
+		m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
+	} break;
+	case TIMESOCKET_FUNC::SET_FSMSTATE:
+	{
+		if (pContents->vFlags.b[0]){
+			m_pFSM->Change_State(FSMSTATE::RUSH);
+		} else if (pContents->vFlags.b[1]) {
+			m_pFSM->Change_State(FSMSTATE::SLAM);
+		}else if (pContents->vFlags.b[2]) {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+		}
+	} break;
+	case TIMESOCKET_FUNC::SET_ANIMSTATE:
+	{
+		if (pContents->vFlags.b[0]){
+			auto& pairAnimation = m_Animation[STATEANIM::RUSH_LOOP];
+			m_pModelCom->Set_AnimationIndex(pairAnimation.first, pairAnimation.second);
+		} else if (pContents->vFlags.b[1]) {
+			auto& pairAnimation = m_Animation[STATEANIM::SLAM];
+			m_pModelCom->Set_AnimationIndex(pairAnimation.first, pairAnimation.second);
+		} else if (pContents->vFlags.b[2]) {
+			auto& pairAnimation = m_Animation[STATEANIM::IDLE];
+			m_pModelCom->Set_AnimationIndex(pairAnimation.first, pairAnimation.second);
+		} else if (pContents->vFlags.b[3]) {
+			m_pModelCom->Set_AnimationIndex(143, false);
+		}
+	} break;
+	case TIMESOCKET_FUNC::LOOK_AT:
+	{
+		if (pContents->vFlags.b[0]) {
+			m_pTransformCom->LookAt_Horizontal(XMVectorSetW(XMLoadFloat3((_float3*)&pContents->pxTransform.p), 1.f));
+		}
+		else {
+			m_pTransformCom->LookAt_Horizontal(pContents->pOtherTarget->Get_WorldPostion());
+		}
+	} break;
+	case TIMESOCKET_FUNC::END_CINEMATIC:
+	{
+		m_pGameInstance->Bind_Camera(CURRENT_LEVEL, Socket.m_Contents.wstrKeyName, true);
+	}break;
+	default:
+		break;
+	}
 }
 
 HRESULT CTroll::Ready_Components()
@@ -447,7 +548,7 @@ HRESULT CTroll::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_TROLL"), (CComponent**)&m_pStat))) {
@@ -501,7 +602,7 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pTroll_Particle->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pTroll_Particle->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle", static_cast<LEVEL>(g_iStaticLevel));
 	m_pTroll_Particle->FollowParents(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
 
 
@@ -511,7 +612,7 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pTroll_Particle2->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pTroll_Particle2->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle2", static_cast<LEVEL>(g_iStaticLevel));
 	m_pTroll_Particle2->FollowParents(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
 
 
@@ -520,7 +621,7 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pRight_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRight_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(g_iStaticLevel));
 	m_pRight_Smoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightArm"));
 
 	if (FAILED(Add_PartObject<CEffectParts>("Troll_Left_Smoke", g_iStaticLevel, &m_pLeft_Smoke, &PartsDesc)))
@@ -528,29 +629,37 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
-	m_pLeft_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeft_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(g_iStaticLevel));
 	m_pLeft_Smoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("Troll_Dead_Smoke", g_iStaticLevel, &m_pDead_Smoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+	m_pDead_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollDead/TrollDead", static_cast<LEVEL>(g_iStaticLevel));
+
 
 
 	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeftTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
 
-	m_pLeftTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeftTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(g_iStaticLevel));
 	m_pLeftTrail->Set_Visible(false);
 
 	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRightTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
 
-	m_pRightTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRightTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(g_iStaticLevel));
 	m_pRightTrail->Set_Visible(false);
 
 	if (FAILED(Add_PartObject<CTrailObject>("Weapon_Trail", g_iStaticLevel, &m_pWeaponTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
 
-	m_pWeaponTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Swing_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pWeaponTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Swing_Trail", static_cast<LEVEL>(g_iStaticLevel));
 	m_pWeaponTrail->Set_Visible(false);
 
 
@@ -561,6 +670,15 @@ HRESULT CTroll::Ready_Parts()
 HRESULT CTroll::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
@@ -633,14 +751,22 @@ void CTroll::Free()
 	SAFE_RELEASE(m_pLeftTrail);
 	SAFE_RELEASE(m_pRightTrail);
 	SAFE_RELEASE(m_pWeaponTrail);
+	SAFE_RELEASE(m_pRushEffect);
+	SAFE_RELEASE(m_pDead_Smoke);
 }
 #ifdef _DEBUG
 
 void CTroll::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+
 	if (GUI::CollapsingHeader("Troll")) {
 		__super::Describe_Entity();
+
+		if (GUI::Button("Dead"))
+		{
+			m_pFSM->Change_State(FSMSTATE::DEAD);
+		}
 
 		_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
 
@@ -648,6 +774,13 @@ void CTroll::Describe_Entity()
 
 		GUI::Text(strSocket.c_str());
 
+		for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
+		{
+			if (GUI::Button(m_pModelCom->Get_AnimList(i)))
+			{
+				m_pModelCom->Set_AnimationIndex(i);
+			}
+		}
 
 		m_pTransformCom->Describe_Entity();
 	}

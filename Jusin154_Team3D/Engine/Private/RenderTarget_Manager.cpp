@@ -65,8 +65,6 @@ HRESULT CRenderTarget_Manager::Begin_MRT(const _wstring& strMultiRenderTargetKey
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
-
     if (nullptr != pDSV) {
         m_pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
     }
@@ -97,8 +95,6 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NonClear(const _wstring& strMultiRender
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
-
     if (nullptr != pDSV) {
         m_pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
     }
@@ -115,7 +111,7 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NonClear(const _wstring& strMultiRender
 
     return S_OK;
 }
-HRESULT CRenderTarget_Manager::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CRenderTarget_Manager::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV , _bool isClear)
 {
     m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pOriginalDSV);
 
@@ -127,22 +123,28 @@ HRESULT CRenderTarget_Manager::Begin_MRT_Include_BackBuffer(const _wstring& strM
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
-
     if (nullptr != pDSV) {
         m_pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
     }
 
     pRenderTargetViews[iNumRenderTargets++] = m_pBackBufferRTV;
 
+    
+
     for (auto& pRenderTarget : *pMRTList)
     {
-        pRenderTarget->Clear();
+        if (isClear == true) {
+            pRenderTarget->Clear();
+        }
+
         pRenderTargetViews[iNumRenderTargets++] = pRenderTarget->Get_RTV();
     }
+
+
     if (0 == iNumRenderTargets) {
         return E_FAIL;
     }
+
 
     m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, (nullptr == pDSV) ? m_pOriginalDSV : pDSV);
 
@@ -160,8 +162,6 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NO_DepthStencil(const _wstring& strMRTT
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
-
     for (auto& pRenderTarget : *pMRTList)
     {
         pRenderTarget->Clear();
@@ -175,26 +175,42 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NO_DepthStencil(const _wstring& strMRTT
 
     return S_OK;
 }
-HRESULT CRenderTarget_Manager::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CRenderTarget_Manager::Copy_RenderTargetTo(const _wstring& strSrcTag, ID3D11Texture2D* pDst2D)
 {
-    CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+    CRenderTarget* pRenderTarget = Find_RenderTarget(strSrcTag);
     if (nullptr == pRenderTarget) {
         return E_FAIL;
     }
 
-    pRenderTarget->Copy_Resource(pTexture2D);
+    pRenderTarget->Copy_ResourceTo(pDst2D);
 
     return S_OK;
 }
 
-HRESULT CRenderTarget_Manager::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CRenderTarget_Manager::Copy_RenderTargetFrom(const _wstring& strDstTag, ID3D11Texture2D* pSrc2D)
 {
-    CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+    CRenderTarget* pRenderTarget = Find_RenderTarget(strDstTag);
     if (nullptr == pRenderTarget) {
         return E_FAIL;
     }
 
-    pRenderTarget->Paste_Resource(pTexture2D);
+    pRenderTarget->Copy_ResourceFrom(pSrc2D);
+
+    return S_OK;
+}
+
+HRESULT CRenderTarget_Manager::Copy_RenderTargetAToB(const _wstring& strATag, const _wstring& strBTag)
+{
+    CRenderTarget* pTargetA = Find_RenderTarget(strATag);
+    if (nullptr == pTargetA) {
+        return E_FAIL;
+    }
+    CRenderTarget* pTargetB = Find_RenderTarget(strBTag);
+    if (nullptr == pTargetB) {
+        return E_FAIL;
+    }
+
+    pTargetA->Copy_ResourceTo(*pTargetB);
 
     return S_OK;
 }
@@ -215,6 +231,29 @@ HRESULT CRenderTarget_Manager::Bind_CS_RenderTarget(_uint iIndex, const _wstring
 
    return S_OK;
 }
+
+HRESULT CRenderTarget_Manager::Clear_RenderTarget(const _wstring& strRenderTargetKey)
+{
+    CRenderTarget* pTargetA = Find_RenderTarget(strRenderTargetKey);
+    if (nullptr == pTargetA) {
+        return E_FAIL;
+    }
+
+    pTargetA->Clear();
+
+	return S_OK;
+}
+
+ID3D11ShaderResourceView* CRenderTarget_Manager::Get_RenderTarget_SRV(const _wstring& strRenderTargetKey)
+{
+    CRenderTarget* pRenderTarget = Find_RenderTarget(strRenderTargetKey);
+
+    if(nullptr == pRenderTarget)
+        return nullptr;
+  
+    return pRenderTarget->Get_SRV();
+}
+
 
 HRESULT CRenderTarget_Manager::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, 
     const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, 
@@ -256,7 +295,6 @@ HRESULT CRenderTarget_Manager::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer
     { // Bind RTVs
         _uint iNumRenderTargets = { 1 };
         ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { pOutput->Get_RTV(), };
-        m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
         m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, nullptr);
     }
 
@@ -343,12 +381,16 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
         assert(false);
     }
 
+    vResolution = { vp.Width, vp.Height };
+    if (FAILED(pShader->Bind_RawValue("g_vSrcResolution", &vResolution, sizeof(_float2)))) {
+        assert(false);
+    }
+
     pOutput->Clear();
 
     { // Bind RTVs
         _uint iNumRenderTargets = { 1 };
         ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { pOutput->Get_RTV(), };
-        m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
         m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, nullptr);
     }
 
@@ -365,6 +407,15 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
         break;
     case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURX:
         pConstantName = "g_DiffuseTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::DOWNSAMPLE:
+        pConstantName = "g_DiffuseTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::MOTIONBLURTENT:
+        pConstantName = "g_VelocityTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::MOTIONBLURTILE:
+        pConstantName = "g_VelocityTexture";
         break;
     case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURY:
         pConstantName = "g_BlurXTexture";
@@ -465,15 +516,35 @@ HRESULT CRenderTarget_Manager::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CS
     return S_OK;
 }
 
+void CRenderTarget_Manager::Flush_All_SRVs(_uint iStartSlot, _uint numSlots)
+{
+    ID3D11ShaderResourceView* nullSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = {};
+
+    m_pContext->VSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->PSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->GSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->HSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->DSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+    m_pContext->CSSetShaderResources(iStartSlot, numSlots, nullSrvs);
+}
+
+void CRenderTarget_Manager::Flush_All_CSUAVs(_uint iStartSlot, _uint numSlots)
+{
+    ID3D11UnorderedAccessView* nullUavs[D3D11_PS_CS_UAV_REGISTER_COUNT] = {};
+    m_pContext->CSSetUnorderedAccessViews(iStartSlot, numSlots, nullUavs, nullptr);
+}
+
+
 HRESULT CRenderTarget_Manager::End_MRT()
 {
-    ID3D11RenderTargetView* pRenderTargets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { m_pBackBufferRTV };
-
-    m_pContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, pRenderTargets, m_pOriginalDSV);
+    // 1개만 채워넣어도 나머지 언급되지 않은 7개 타겟들은 전부 null로 채워지는 기본동작을 함
+    // https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-omsetrendertargets
+    m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pOriginalDSV); 
 
     SAFE_RELEASE(m_pBackBufferRTV);
     SAFE_RELEASE(m_pOriginalDSV);
-
+    Flush_All_SRVs();
+    Flush_All_CSUAVs();
     return S_OK;
 }
 
@@ -522,7 +593,7 @@ void CRenderTarget_Manager::RenderTarget_Debuger()
 
     GUI::Spacing();
 
-    GUI::PushItemWidth(80);
+    GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
     if (GUI::Button("ToggleAll")) {
         Toggle_RT_Debugger();
     }

@@ -52,6 +52,20 @@ struct ParticleValue
     float  fAcceleration;
     
     bool   isStop;
+    
+    float  fRotateAttenuation;
+    float  fRotateAttDelay;
+    
+    float3 vWolrdOffset;
+    float  fLoopCount;  /* 현재 몇번째 루프중인지 */
+    
+    float fRoundRangeLength;
+    float fAzimuthAngle;
+    float fPolarAngle;
+    float fRoundLengthLerpSpeed;
+    
+    row_major matrix PreWorldMatrix;
+    row_major matrix LocalMatrixInv;
 };
 
 
@@ -85,7 +99,12 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isMoveUp;
     bool isExcludePos;
     bool isStopMove_For_Depth_Compare;
-    bool isPadding2;
+    bool isNoPos;
+    
+    bool isNoResetTime;
+    bool isLocal_Located_Not_TakeDelay;
+    bool isCompute_LocalInverse;
+    bool isRoundLengthLerp;
 
     float fTimeDelta;
     float fSizeLerpOption; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
@@ -98,8 +117,6 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     float2 vScreenSize;
     float fPadding0;
     float fPadding1;
-
-    
 }
 
 //내가 몇개의 스레드를 사용할 것인지 지정하는데
@@ -116,20 +133,16 @@ void CS_MAIN(
     float fGravity = particleValue.fGravity;
     float fOnlyDropY = 0.f;
     float fRatio = particle.vLifeTime.x / particle.vLifeTime.y;
+    bool  _isLocal_Located_Not_TakeDelay = isLocal_Located_Not_TakeDelay;
     
-    particleValue.vDelay.x += fTimeDelta;
-    
-    if (particleValue.vDelay.x < particleValue.vDelay.y)
+    if (particleValue.fLoopCount == 0.f) /* 첫 루프에는 딜레이에 따른 위치를 설정받지 않도록함 */
     {
-     
-        g_VBInstanceOutput[iIndex] = particle;
-        g_ParticleValueOutput[iIndex] = particleValue;
-        
-        return;
+        _isLocal_Located_Not_TakeDelay = false;
     }
     
-    if (particle.vLifeTime.x <= FLT_EPSILON5)
+    if (_isLocal_Located_Not_TakeDelay == true && particleValue.vDelay.x <= FLT_EPSILON5)
     {
+     
         if (isNoWorld)
         {
             row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
@@ -141,6 +154,85 @@ void CS_MAIN(
             particle.vUp = CurMat[1].xyzw;
             particle.vLook = CurMat[2].xyzw;
             particle.vTranslation = CurMat[3].xyzw;
+            
+            /* 월드 오프셋 */
+            
+            particle.vTranslation += CurMat[0] * particleValue.vWolrdOffset.x;
+            particle.vTranslation += CurMat[1] * particleValue.vWolrdOffset.y;
+            particle.vTranslation += CurMat[2] * particleValue.vWolrdOffset.z;
+
+        }
+        
+        if (isNoPos)
+        {
+            
+            particle.vTranslation.xyz += WorldMatrix[3].xyz;
+            
+            /* 월드 오프셋 */
+            
+            particle.vTranslation += WorldMatrix[0] * particleValue.vWolrdOffset.x;
+            particle.vTranslation += WorldMatrix[1] * particleValue.vWolrdOffset.y;
+            particle.vTranslation += WorldMatrix[2] * particleValue.vWolrdOffset.z;
+        }
+    }
+    
+    if (isRoundLengthLerp == true)
+    {
+        if (particleValue.vDelay.x < particleValue.vDelay.y)
+        {
+            float3 vRoundRange = float3(
+					 particleValue.fRoundRangeLength * cos(particleValue.fAzimuthAngle) * sin(particleValue.fPolarAngle),
+					 particleValue.fRoundRangeLength * sin(particleValue.fAzimuthAngle) * sin(particleValue.fPolarAngle),
+					 particleValue.fRoundRangeLength * cos(particleValue.fPolarAngle));
+        
+        
+            particleValue.vOriginTranslation.xyz += particleValue.fRoundLengthLerpSpeed * vRoundRange * fTimeDelta;
+            particle.vTranslation.xyz += particleValue.fRoundLengthLerpSpeed * vRoundRange * fTimeDelta;
+            
+        }
+    }
+    particleValue.vDelay.x += fTimeDelta;
+    
+    if (particleValue.vDelay.x < particleValue.vDelay.y)
+    {
+     
+        g_VBInstanceOutput[iIndex] = particle;
+        g_ParticleValueOutput[iIndex] = particleValue;
+        
+        return;
+    }
+    
+    if (particle.vLifeTime.x <= FLT_EPSILON5 && _isLocal_Located_Not_TakeDelay == false)
+    {
+        if (isNoWorld)
+        {
+            row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+        
+       
+            CurMat = mul(CurMat, WorldMatrix);
+        
+            particle.vRight = CurMat[0].xyzw;
+            particle.vUp = CurMat[1].xyzw;
+            particle.vLook = CurMat[2].xyzw;
+            particle.vTranslation = CurMat[3].xyzw ;
+            
+            /* 월드 오프셋 */
+            
+            particle.vTranslation += CurMat[0] * particleValue.vWolrdOffset.x;
+            particle.vTranslation += CurMat[1] * particleValue.vWolrdOffset.y;
+            particle.vTranslation += CurMat[2] * particleValue.vWolrdOffset.z;
+
+        }
+        
+        if (isNoPos)
+        {       
+            particle.vTranslation.xyz += WorldMatrix[3].xyz;
+            
+            /* 월드 오프셋 */
+            
+            particle.vTranslation += WorldMatrix[0] * particleValue.vWolrdOffset.x;
+            particle.vTranslation += WorldMatrix[1] * particleValue.vWolrdOffset.y;
+            particle.vTranslation += WorldMatrix[2] * particleValue.vWolrdOffset.z;
         }
         
     }
@@ -148,10 +240,13 @@ void CS_MAIN(
     // 라이프타임 움직임
     particle.vLifeTime.x += fTimeDelta;
     
+    /* 이전 월드를 기록한다 */
+    
+    row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+    particleValue.PreWorldMatrix = CurMat;
+    
     
     /* 내 z가 가려지는 상황이었다면 연산하지않음*/
-    
-    
     if (particle.vLifeTime.x >= particle.vLifeTime.y || particleValue.isStop == true)
     {
 
@@ -167,6 +262,7 @@ void CS_MAIN(
         }
         
        //초기화
+        particleValue.fLoopCount += 1.f;
         particle.vRight = particleValue.vOriginRight;
         particle.vUp = particleValue.vOriginUp;
         particle.vLook = particleValue.vOriginLook;
@@ -175,9 +271,20 @@ void CS_MAIN(
         particle.vLifeTime.x = 0.f;
         particleValue.vDelay.x = 0.f;
         particleValue.isStop = false;
+        
+        if (isNoResetTime == false)
+        {
+            particleValue.vMaskingUVMoveTime.x = 0.f;
+            particleValue.vDiffuseUVMoveTime.x = 0.f;
+            particleValue.vNoiseUVMoveTime.x = 0.f;
+            particleValue.vDistortionUVMoveTime.x = 0.f;
+            particleValue.vDissolveUVMoveTime.x = 0.f;
+            
+            if (isRandomAniIndex == false)
+                particleValue.vAniIndex.x = 0.f;
+        }
 
-        if (isRandomAniIndex == false)
-            particleValue.vAniIndex.x = 0.f;
+
         
         g_VBInstanceOutput[iIndex] = particle;
         g_ParticleValueOutput[iIndex] = particleValue;
@@ -185,6 +292,7 @@ void CS_MAIN(
         return ;
     }
     
+
       
     if (isDrop == true)
     {        
@@ -209,6 +317,9 @@ void CS_MAIN(
         
         float fDrag = particleValue.fDrag;
         
+        if (fMoveLerpOption != 0.f)
+            fDrag = SelectLerpUV(float2(particleValue.fDrag, 0.f), fTime, fMoveLerpOption).x;
+        
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;
         
@@ -230,6 +341,9 @@ void CS_MAIN(
         
         float fDrag = particleValue.fDrag;
         
+        if (fMoveLerpOption != 0.f)
+            fDrag = SelectLerpUV(float2(particleValue.fDrag, 0.f), fTime, fMoveLerpOption).x;
+        
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;
         
@@ -250,6 +364,9 @@ void CS_MAIN(
         float fRatio = 1 - (1 - fTime * fTime);
         
         float fDrag = particleValue.fDrag;
+        
+        if (fMoveLerpOption != 0.f)
+            fDrag = SelectLerpUV(float2(particleValue.fDrag, 0.f), fTime, fMoveLerpOption).x;
         
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;
@@ -307,12 +424,32 @@ void CS_MAIN(
         particle.vTranslation += vector( sin(particle.vLifeTime.x * 3.141592 * 2.f) * particleValue.vSinAmount, 0.f);
     }
     
+    
+    /* Rotate Time */
+    float fTimeX = (particle.vLifeTime.x - particleValue.fRotateAttDelay);
+    float fTimeY = (particle.vLifeTime.y - particleValue.fRotateAttDelay);
+    float fRotateTimeRatio = 0;
+        
+    if (particleValue.fRotateAttDelay <= FLT_EPSILON5)
+    {
+        fRotateTimeRatio = particle.vLifeTime.x / particle.vLifeTime.y;
+    }
+    else if (fTimeX > 0 && fTimeY != 0)
+    {
+        fRotateTimeRatio = saturate(fTimeX / fTimeY);
+    }
+    
     if (isTurn == true)
     {
         float fRotationSpeed = 1.f;
         
         if (particleValue.fRotaionSpeed > FLT_EPSILON5)
             fRotationSpeed = particleValue.fRotaionSpeed;
+        
+        fRotationSpeed = fRotationSpeed - fRotateTimeRatio * particleValue.fRotateAttenuation;
+        
+        if (fRotationSpeed < FLT_EPSILON5)
+            fRotationSpeed = 0.f;
         
         /* ROTATE */
         float4x4 RotateXMat = RotateX(particleValue.vDeltaAngle.x * fTimeDelta * fRotationSpeed);
@@ -340,6 +477,11 @@ void CS_MAIN(
         
         if (particleValue.fRotaionSpeed > FLT_EPSILON5)
             fRotationSpeed = particleValue.fRotaionSpeed;
+        
+        fRotationSpeed = fRotationSpeed - fRotateTimeRatio * particleValue.fRotateAttenuation;
+        
+        if (fRotationSpeed < FLT_EPSILON5)
+            fRotationSpeed = 0.f;
         
         float4x4 RotateAxisRightMat = RotateAxis(particle.vRight, particleValue.vDeltaAxisAngle.x * fRotationSpeed * fTimeDelta);
         float4x4 RotateAxisUpMat = RotateAxis(particle.vUp, particleValue.vDeltaAxisAngle.y * fRotationSpeed * fTimeDelta);
@@ -517,6 +659,15 @@ void CS_MAIN(
         particleValue.vDissolveUVMoveTime.x = 0.f;
     }
         
+    if (isCompute_LocalInverse == true)
+    {
+        row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+        
+        CurMat = mul(CurMat, WorldMatrix);
+        
+        particleValue.LocalMatrixInv = Inverse4x4(CurMat); /* 데칼 메쉬만 인스턴스당 1번 수행할거임 */
+    }
+   
     //아웃풋 대입
     
     g_VBInstanceOutput[iIndex] = particle;

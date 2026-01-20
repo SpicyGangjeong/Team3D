@@ -34,6 +34,7 @@ public:
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	virtual void Trigger(CTimeSocket& Socket)override;
 private:
 	void    Troll_Trail_Visible(_bool isTrailVisible);
 
@@ -59,9 +60,13 @@ private:
 	class CEffectParts* m_pTroll_Particle = { nullptr };
 	class CEffectParts* m_pTroll_Particle2 = { nullptr };
 
+	class CEffectParts* m_pDead_Smoke = { nullptr };
+
+
 	class CTrailObject* m_pLeftTrail = { nullptr };
 	class CTrailObject* m_pRightTrail = { nullptr };
 	class CTrailObject* m_pWeaponTrail = { nullptr };
+
 
 	const _float4x4* m_pLeftHand_BoneMat = { nullptr };
 	const _float4x4* m_pRightHand_BoneMat = { nullptr };
@@ -88,7 +93,6 @@ public:
 private:
 	virtual void Add_FSM();
 	void SlamHit(Engine::_bool& bHit, Engine::_float4* m_pStartPos, bool& retFlag);
-	virtual void Set_Anim();
 	void CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits);
 
 	_float m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = {};
@@ -96,9 +100,9 @@ private:
 
 	_float m_fRushTime = {};
 	_float m_fAttackDelay = {};
+	_bool	m_bIsHit = { false };
 
-	_float m_fDegree = {};
-	_float m_fCross = {};
+	class   CEffect_Container* m_pRushEffect = nullptr;
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
@@ -149,6 +153,8 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
+
+	virtual _bool IsHitSpellDisabled() override;
 };
 
 NS_END

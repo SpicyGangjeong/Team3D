@@ -41,7 +41,7 @@ public:
 	HRESULT	Add_Timer(const _wstring& strTimerTag);
 	void	Compute_TimeDelta(const _wstring& strTimerTag);
 	void	Compute_FrameCount();
-	void	Present_TimeCost() const;
+	void	Present_TimeCost() ;
 #pragma endregion
 
 #pragma region LEVEL_MANAGER
@@ -51,6 +51,7 @@ public:
 	_uint	Get_NextLevelID();
 	_bool	Check_LevelShouldChange();
 	void	Set_LevelToChange();
+	void	ResetLevel_Environment();
 #pragma endregion
 
 #pragma region PROTOTYPE_MANAGER
@@ -97,14 +98,16 @@ public:
 
 	class CLayer* Get_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag);
 	void Clear_Objects_With_Layers(_uint iLevelIndex);
+	void Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
 #pragma endregion
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
-	void Render_PreShadow();
-#pragma endregion
-
-#pragma region ASSET_MANAGER
+	void	Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
+	RENDER	Get_CurrentRenderPass();
+	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
+	HRESULT Bind_PrevMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
+	void	Set_Environment(_float3 vSSAO, _float fExposure, _float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax);
 #pragma endregion
 
 #pragma region KEY_MANAGER
@@ -122,7 +125,9 @@ public:
 #pragma region MOUSE_MANAGER
 	POINT	Get_MouseViewPortPos();
 	_bool	Toggle_MouseCenter();
+	_bool	Toggle_MouseCenter(_bool Toggle);
 	_float3	Get_MouseMove();
+	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
 	void    Picking();
 	HRESULT Ray_WorldToLocal(_fmatrix* InvWorldMatrix);
 	_bool   MousePicking_InLocalSpace(const _float3& vPointA, const _float3& vPointB, const _float3& vPointC, _float3& pOut);
@@ -131,24 +136,27 @@ public:
 #pragma endregion
 
 #pragma region PIPELINE
-	void Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix);
-	const _float4x4* Get_Transform_Float4x4(D3DTS eState);
-	_matrix Get_Transform_Matrix(D3DTS eState);
-	const _float4* Get_CamPosition();
-	const _vector Get_CamXMPosition();
-	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
-	_bool IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
-	_bool IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
-	pair<_bool, _ubyte> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
-	HRESULT Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
-	HRESULT Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
-	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
-	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
+	void					Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix);
+	const _float4x4*		Get_Transform_Float4x4(D3DTS eState);
+	_matrix					Get_Transform_Matrix(D3DTS eState);
+	_matrix					Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType);
+	const _float4*			Get_CamPosition();
+	const _vector			Get_CamXMPosition();
+	void					Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
+	_bool					IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
+	_bool					IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+	pair<_bool, _ubyte>		IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
+	HRESULT					Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
+	HRESULT					Bind_CascadeValues(class CShader* pShader);
+	HRESULT					Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
+	HRESULT					Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
-	HRESULT Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
-	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
-	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
-	_float  Get_ShadowBoxFar(_uint iShadowBoxIndex);
+	HRESULT					Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
+	HRESULT					Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
+	const _float4x4*		Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
+	_float					Get_ShadowBoxFar(_uint iShadowBoxIndex);
+	HRESULT					Begin_OutLine_Write(_uint iDSSMask);
+	HRESULT					End_OutLine_Write();
 #pragma endregion
 #pragma region LIGHT_MANAGER
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
@@ -156,6 +164,8 @@ public:
 	void			  Delete_Light(_uint _iCurrentLevel, class CLight* _pLight);
 	const LIGHT_DESC* Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex);
 	HRESULT			  Render_Lights(_uint _iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);
+	list<class CLight*>* Get_LightList(_uint _iCurrentLevel);
+	_uint				Get_NumLight(_uint _iCurrentLevel);
 #pragma endregion
 #pragma region COLLIDER_MANAGER
 	HRESULT Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding);
@@ -169,16 +179,19 @@ public:
 	HRESULT Add_MRT(const _wstring& strMultiRenderTargetKey, const _wstring& strRenderTargetKey);
 	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
-	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr , _bool isClear = true);
 	HRESULT Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
-	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
-	HRESULT Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Copy_RenderTargetTo(const _wstring& strSrcTag, ID3D11Texture2D* pDst2D);
+	HRESULT Copy_RenderTargetFrom(const _wstring& strDstTag, ID3D11Texture2D* pSrc2D);
+	HRESULT Copy_RenderTargetAToB(const _wstring& strATag, const _wstring& strBTag);
 	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
 	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
+	HRESULT Clear_RenderTarget(const _wstring& strRenderTargetKey);
+	ID3D11ShaderResourceView* Get_RenderTarget_SRV(const _wstring& strRenderTargetKey);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -189,13 +202,24 @@ public:
 	HRESULT Release_Camera(_uint iLevel, const _wstring& wstrCameraKey);
 	HRESULT Add_Camera(_uint iLevel, class CCamera* pCamera, const _wstring& strCameraKey);
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
+	class CCamera* Get_Camera(_uint iLevel, const _wstring& strCameraKey);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
 	_vector Get_CameraLook();
 	_float	Get_CameraFov();
+	_float	Get_CameraNear();
 	const _float* Get_CurrentCameraFar();
 	void Force_CamPosition(_fvector vPos);
 #pragma endregion
 #pragma region SOUND_MANAGER
+	HRESULT Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode);
+	SOUND::SD_KIND Find_Sound(const _wstring wstrFilePath);
+	void Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume);
+	void Sound_Play_3DPos(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _float3& refSpeaker, _float fMin = 3.f, _float fMax = 20.f, _bool bRepeat = false);
+	void Sound_Pause_Channel(SD_CHANNEL_GROUP eSoundChannel, bool bPause); 
+	void Sound_Set3DListenerPos(class CTransform* pTransform);
+	void Sound_StopChannel(SD_CHANNEL_GROUP eSoundChannel); 
+	void Sound_Stop(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel); 
+	void Sound_StopAll(); 
 #pragma endregion
 
 #pragma region PICKING
@@ -203,14 +227,18 @@ public:
 #pragma endregion
 #pragma region PhysX_Manager
 	PSX::PxMaterial* Create_Material(_float3* vMatInfo);
-	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
-	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc);
-	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
-	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody);
-	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
+	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh, _uint iLevel);
+	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel);
+	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel, const _float4x4* pWorldMatrix);
+	PSX::PxJoint* Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1);
+	PSX::PxD6Joint* Create_BasicPxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos);
+	PSX::PxFixedJoint* Create_BasicPxFixedJoint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 	_bool SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+	_bool Overlap(_float fRadius, _fvector vCenter, PSX::PxQueryFlags queryFlags, PSX::PxOverlapCallback& overlapBuffer, PSX::PxQueryFilterCallback* filterCallback = nullptr);
 	_bool RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
 	_bool RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
 
@@ -218,15 +246,16 @@ public:
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
 	PSX::PxController*	Get_Controller(_uint iControllerIndex);
 	void				ReleaseController(_uint iControllerIndex);
-	void				Attach_Actor(PSX::PxActor& Actor);
-	void				Detach_Actor(PSX::PxActor& pActor);
+	void				Attach_Actor(PSX::PxActor& Actor, _uint iLevel);
+	void				Detach_Actor(PSX::PxActor& pActor, _uint iLevel);
 	void				Release_Actor(PSX::PxActor& Actor);
+	void				ApplyFilterData(PSX::PxRigidActor* pRigidActor);
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 #ifdef EDITOR_PROJECT
+	void Add_Editor_Plane(PHYSX_USERDATA& PlaneData);
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
-	void Add_Editor_Plane(PhsXUserData& PlaneData);
 #pragma endregion
 #pragma region THREADHOLDER
 	template<class Function, class... Args>
@@ -240,7 +269,7 @@ public:
 #pragma endregion
 
 #pragma region FOG
-	void	Set_FogDensity(_float fFogDensity);
+	void	Set_Fog(_float fFogDensity, _float fPow);
 	void	Set_FogColor(_float4& vFogColor);
 
 	HRESULT Bind_FogValue(class CShader* pShader);
@@ -248,7 +277,8 @@ public:
 
 #pragma region RESOURCE_MANGER
 	public:
-		ID3D11ShaderResourceView* Add_Resource(const _char* pFilePath);
+		ID3D11ShaderResourceView* Add_Resource(const _char* pFilePath, _uint iLevel = 0);
+		void Clear_LevelResources(_uint iLevel);
 #pragma endregion
 
 #pragma region FONT_MANAGER
@@ -260,11 +290,18 @@ public:
 		_float FontSizeX(const _wstring& strFontTag, const _tchar* pText);
 #pragma endregion
 
+#pragma region VOLUMETRIC
+		ID3D11ShaderResourceView*	Get_VolumeSRV();
+		_float*						Get_DepthPackExponentPtr();
+		void						Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent, _float fHeightOffset);
+		void						Update_Volumetric();
+#pragma endregion
+
 
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel);
 
-	void Add_SaveModel(const _char* filePath, SaveModel sModel);
+	void Add_SaveModel(const _char* filePath, SaveModel& sModel);
 
 	SaveModel* Load_SaveModel(const _char* filePath);
 #ifdef EDITOR_PROJECT
@@ -299,6 +336,8 @@ private:
 	class CFog*						m_pFog = { nullptr };
 	class CResource_Manager*		m_pResource_Manager = { nullptr };
 	class CFont_Manager*			m_pFont_Manager = { nullptr };
+	class CVolumetric*				m_pVolumetric = { nullptr };
+	class CSound_Manager*			m_pSound_Manager = { nullptr };
 
 	mt19937 m_Rng{ random_device{}() };
 	_float2							m_vViewPortSize = {};
@@ -309,6 +348,8 @@ private:
 	_float							m_fSlowIntense = {};
 #ifdef _DEBUG
 private:
+	_bool							m_bRendererTimerOpen = false;
+
 	_float							m_fTimer_PriorityUpdate = { 0.f };
 	_float							m_fTimer_Update = { 0.f };
 	_float							m_fTimer_LateUpdate = { 0.f };
@@ -334,11 +375,12 @@ private:
 	_float							m_fTimer_Render_NonLight = { 0.f };
 	_float							m_fTimer_Render_Blend = { 0.f };
 	_float							m_fTimer_Render_WeightBlend = { 0.f };
-	_float							m_fTimer_Render_Bloom = { 0.f };
+	_float							m_fTimer_Render_PostProcessing = { 0.f };
 	_float							m_fTimer_Render_LastColor = { 0.f };
 	_float							m_fTimer_Render_Tone_Mapping = { 0.f };
 	_float							m_fTimer_Render_UI = { 0.f };
 	_float							m_fTimer_Render_UI_Overley = { 0.f };
+
 
 	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;
