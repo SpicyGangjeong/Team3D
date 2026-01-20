@@ -34,6 +34,7 @@ public:
 	void    Disable_Light();
 	void    Add_Light();
 	void    FollowParents(const _float4x4* pParentsMat, const _float4x4* pOffsetMat = nullptr);
+	EFFECT_INFO* Get_Effect_Info() { return &m_EffectInfo; }
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -47,6 +48,8 @@ protected:
 	CTexture* m_pDissolve_TextureCom = { nullptr };
 	CTexture* m_pEmissive_TextureCom = { nullptr };
 	CTexture* m_pDistortion_TextureCom = { nullptr };
+	CTexture* m_pNormal_TextureCom = { nullptr };
+	CTexture* m_pSurface_TextureCom = { nullptr };
 
 	CShader* m_pShaderCom = { nullptr };
 	CLight*  m_pLightCom = { nullptr };
@@ -54,7 +57,10 @@ protected:
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
 	const _float4x4* m_pParentMatrix = { nullptr };
-	_float4x4 m_FinalParentMatrix;
+
+	_float4x4    m_ScreenViewMatrix = {};
+	_float4x4    m_OrthographicMatrix = {};
+	_float4x4    m_FinalParentMatrix;
 
 protected:
 	EFFECT_INFO  m_EffectInfo = {};
@@ -65,6 +71,7 @@ protected:
 	_wstring	 m_strModelName = {};
 	_wstring     m_strEmissiveName = {};
 	_wstring     m_strDistortionName = {};
+	_wstring     m_strNomalMapName = {};
 
 public:
 	virtual void Free() override;

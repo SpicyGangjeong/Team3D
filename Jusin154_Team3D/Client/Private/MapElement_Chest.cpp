@@ -6,6 +6,7 @@
 #include "Layer.h"
 #include "MapElement_Chest_Lid.h"
 #include "Player.h"
+#include "InfoInstance.h"
 
 CMapElement_Chest::CMapElement_Chest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapElement{ pDevice, pContext }
@@ -13,7 +14,8 @@ CMapElement_Chest::CMapElement_Chest(ID3D11Device* pDevice, ID3D11DeviceContext*
 }
 
 CMapElement_Chest::CMapElement_Chest(const CMapElement_Chest& rhs)
-	: CMapElement(rhs)
+	: CMapElement(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -56,13 +58,18 @@ HRESULT CMapElement_Chest::Initialize(void* pArg)
 	m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
 
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
-	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
-
+	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat3(&pDesc->vBoxLocalPosition));
+	m_pRigidBody->Set_Kinematic(true);
+	m_bChest = true;
 	return S_OK;
 }
 
 void CMapElement_Chest::Priority_Update(_float fTimeDelta)
 {
+	m_iEntered -= 1;
+	if (m_iEntered < 0) {
+		m_iEntered = 0;
+	}
 	m_pLid->Priority_Update(fTimeDelta);
 }
 
@@ -71,7 +78,7 @@ void CMapElement_Chest::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	/*if(CHEST_STATE::OPENED != m_eCurState)
 	{
-		_vector vPlayerPos = m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_WorldPostion();
+		_vector vPlayerPos = m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_PLAYER)->Get_Object<CHuman_Duelist>()->Get_WorldPostion();
 
 		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPos - m_pTransformCom->Get_State(STATE::POSITION)));
 
@@ -124,8 +131,8 @@ void CMapElement_Chest::Late_Update(_float fTimeDelta)
 
 		if (CMapElement_Chest::CHEST_STATE::FOUND == m_eCurState)
 		{
-			m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
-			m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
+			//m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 		}
 		else
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
@@ -157,15 +164,43 @@ HRESULT CMapElement_Chest::Render()
 	}
 
 #ifdef _DEBUG
-	if (FAILED(m_pRigidBody->Render())) {
+	/*if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
-	}
+	}*/
 #endif // _DEBUG
 
-	if (FAILED(m_pLid->Render(m_iShaderPass_Index)))
+ 	if (FAILED(m_pLid->Render(m_iShaderPass_Index)))
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CMapElement_Chest::OnRayCollision(CGameObject* pCaster, _uint iCastedOrder, _float fDistance, _float3 vCastedWorldPos)
+{
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pCaster);
+	if (nullptr == pPlayer) {
+		return;
+	}
+	if (fDistance < m_fEncounterDistance) {
+		m_iEntered = 4;
+		
+		if (m_pGameInstance->Key_Down(DIK_F) && m_eCurState != CHEST_STATE::OPENED)
+		{
+			m_eCurState = CHEST_STATE::OPENED;
+		}
+	}
+}
+
+_bool CMapElement_Chest::IsScannable(_fvector vPosition)
+{
+	_float fDistance = XMVectorGetX(XMVector3Length(m_pTransformCom->Get_State(STATE::POSITION) - vPosition));
+
+	if (fDistance <= 20.f && m_eCurState == CHEST_STATE::IDLE)
+	{
+		m_eCurState = CHEST_STATE::FOUND;
+	}
+
+	return false;
 }
 
 HRESULT CMapElement_Chest::Ready_Components(void* pArg)
@@ -179,7 +214,7 @@ HRESULT CMapElement_Chest::Ready_Components(void* pArg)
 		CModel* pModel = { nullptr };
 
 		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, m_ModelPrototypeTags[i],
 			reinterpret_cast<CComponent**>(&pModel))))
 			return E_FAIL;
 
@@ -201,10 +236,12 @@ HRESULT CMapElement_Chest::Ready_Components(void* pArg)
 	// RIGID_BODY
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), (CComponent**)&m_pRigidBody, &Desc))) {
+	Desc.bAutoOwnerTranslation = true;
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HIDDEN_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 		return E_FAIL;
 	}
 
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 
 	return S_OK;
 }
@@ -273,10 +310,12 @@ void CMapElement_Chest::Chage_State()
 
 		case CMapElement_Chest::CHEST_STATE::FOUND:
 			m_iShaderPass_Index = 21; //ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::CHEST_FOUND, SD_CHANNEL_GROUP::OBJECT, false, 0.8f);
 			break;
 
 		case CMapElement_Chest::CHEST_STATE::OPENED:
 			m_iShaderPass_Index = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::CHEST_OPEN, SD_CHANNEL_GROUP::OBJECT, false, 0.8f);
 			m_pLid->Open();
 			break;
 
@@ -315,9 +354,6 @@ CGameObject* CMapElement_Chest::Clone(void* pArg, CGameObject* pOwner)
 
 void CMapElement_Chest::Free()
 {
-	if (nullptr != m_pRigidBody) {
-		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor());
-	}
 	__super::Free();
 
 	if (m_bCloned)

@@ -40,22 +40,21 @@ HRESULT CDecendoSide::Initialize(void* pArg)
 	m_wstrEffectName = L"DecendoSide";
 
 	m_pWandLight = Get_PartObject<CEditEffect>("Wand_Light_R");
+	m_pWand_Fire = Get_PartObject<CEditEffect>("Wand_Fire");
+
 	m_pWandTrail = Get_PartObject<CTrailObject>();
+
 
 	SAFE_ADDREF(m_pWandLight);
 	SAFE_ADDREF(m_pWandTrail);
+	SAFE_ADDREF(m_pWand_Fire);
 
 	m_fDuration = 2.f;
 
-	m_Events.emplace(0.6f, [&]() {
-		CWand* pWand = static_cast<CWand*>(m_pOwner);
+	m_Events.emplace(0.8f, [&]() {
 
-		if (pWand == nullptr)
-			return;
-
-		m_isTrailEnd = true;
-
-		XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
+		m_pWandTrail->SetDissolve(true);
+		m_pWand_Fire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -9999.f, 0.f, 1.f));
 	});
 
 	return S_OK;
@@ -85,7 +84,7 @@ void CDecendoSide::Update(_float fTimeDelta)
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	_matrix TrailMat = m_isTrailEnd ? XMLoadFloat4x4(&m_TrailStopMat) : pWand->Get_WorldMatrix();
-	m_pWandTrail->Trail_Update(TrailMat, fTimeDelta);
+	m_pWandTrail->Oneside_Rope_Trail_Update(TrailMat, fTimeDelta);
 
 }
 
@@ -179,6 +178,7 @@ void CDecendoSide::Free()
 
 	Safe_Release(m_pWandLight);
 	Safe_Release(m_pWandTrail);
+	Safe_Release(m_pWand_Fire);
 }
 #ifdef _DEBUG
 

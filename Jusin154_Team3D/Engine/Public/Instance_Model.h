@@ -61,29 +61,41 @@ public:
 
 		_float2		vDropAttenuation = { 1.f , 1.f };
 
-		_float		fPadding0 = {};
-		_float3		vPadding1 = {};
+		_float2		vRotateAttenuation = {};
+		_float2		vRotateAttDelay = {};
 
 		_float		fSizeLerpOption = {};
 		_float		fMoveLerpOption = {};
 
 		_bool		isDetphCompareStop = {};
-		_bool		isPadding0 = {};
+		_bool		isNoPos = {};
 
 		_float3     vVelocityMin = {};
 		_float3     vVelocityMax = {};
 
 		_float2      vAcceleration = {};
 
-		_float4     vPadding4 = {};
-		_float4     vPadding5 = {};
-		_float4     vPadding6 = {};
+		_bool       isNoResetTime = {};
+		_bool       isLocal_Located_Not_TakeDelay = {}; 
+		_bool       isCompute_LocalInverse = {};
+		_bool       isRoundLengthLerp = {};
+
+		_float		fTimeMult = { 1.f };
+		_float2     vRoundRangeLength = {};
+		_float2     vAzimuthAngle = {};
+		_float2     vPolarAngle = {};
+		_float		fRoundLengthLerpSpeed = {};
+
+		_float3     vPadding6 = {};
 
 		_bool		isRandomAniIndex = {};
 		_bool		isMoveUp = {};
 		_bool		isMoveRight = {};
 		_bool		isExcludePos = {};
 		_bool		isStop_Move_For_Depth_Compare = {};
+
+		_float3     vWolrdOffsetMax = {};
+		_float3     vWolrdOffsetMin = {};
 
 	}INSTANCE_DESC;
 
@@ -108,7 +120,7 @@ public:
 		_float2		vDiffuseUVMoveTime = { 1.f, 1.f };
 		_float2     vDistortionUVMoveTime = { 1.f , 1.f };
 		_float2		vNoiseUVMoveTime = { 1.f ,1.f };
-		_float2		vAniTime = { 0.01f , 0.01f };
+		_float2		vAniTime = { 1.f , 1.f };
 		_float2	    vAniIndex = {};
 
 		_bool		isMoveForward = {};
@@ -142,15 +154,41 @@ public:
 
 		_float2		vDropAttenuation = { 1.f , 1.f };
 
-		_float		fPadding0 = {};
-		_float3		vPadding1 = {};
+		_float2		vRotateAttenuation = {};
+		_float2		vRotateAttDelay = {};
 
 		_float		fSizeLerpOption = {};
 		_float		fMoveLerpOption = {};
 
 		_bool		isDetphCompareStop = {};
-		_bool		isRandomAniIndex = {};
+		_bool		isNoPos = {};
 
+		_float3     vVelocityMin = {};
+		_float3     vVelocityMax = {};
+
+		_float2      vAcceleration = {};
+
+		_bool       isNoResetTime = {};
+		_bool       isLocal_Located_Not_TakeDelay = {};
+		_bool       isCompute_LocalInverse = {};
+		_bool       isRoundLengthLerp = {};
+
+		_float		fTimeMult = { 1.f };
+		_float2     vRoundRangeLength = {};
+		_float2     vAzimuthAngle = {};
+		_float2     vPolarAngle = {};
+		_float		fRoundLengthLerpSpeed = {};
+
+		_float3     vPadding6 = {};
+
+		_bool		isRandomAniIndex = {};
+		_bool		isMoveUp = {};
+		_bool		isMoveRight = {};
+		_bool		isExcludePos = {};
+		_bool		isStop_Move_For_Depth_Compare = {};
+
+		_float3     vWolrdOffsetMax = {};
+		_float3     vWolrdOffsetMin = {};
 	}PRE_INSTANCE_DESC;
 
 	typedef struct tagCSParticleDesc
@@ -176,7 +214,12 @@ public:
 		_int     isMoveUp = {};
 		_int     isExcludePos = {};
 		_int     isStop_Move_For_Depth_Compare = {};
-		_int     isPadding2 = {};
+		_int     isNoPos = {};
+
+		_int	 isNoResetTime = {};
+		_int	 isLocal_Located_Not_TakeDelay = {};
+		_int	 isCompute_LocalInverse = {};
+		_int	 isRoundLengthLerp = {};
 
 		_float   fTimeDelta = {};
 		_float	 fSizeLerpOption = {};
@@ -231,6 +274,19 @@ public:
 		_float    fAcceleration = {};
 
 		_bool     isStop = {};
+		_float    fRotateAttenuation = {};
+		_float    fRotateAttDelay = {};
+
+		_float3   vWolrdOffset = {};
+		_float	  fLoopCount = {};
+
+		_float      fRoundRangeLength = {};
+		_float      fAzimuthAngle = {};
+		_float      fPolarAngle = {};
+		_float		fRoundLengthLerpSpeed = {};
+
+		_float4x4  PreWorldMatrix = {};
+		_float4x4  LocalMatrixInv = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 
@@ -258,8 +314,11 @@ public:
 	HRESULT			Load_InstanceModel(INSTANCE_DESC InstanceDesc);
 	HRESULT			Load_InstanceModel(HANDLE hFile);
 	HRESULT         Bind_CS_Output(_uint Index, _uint iBufferIndex);
+public:
+	void			Set_TimeMult(_float fTimeMult) { m_InstanceDesc.fTimeMult = fTimeMult; }
+	void            Set_Loop(_bool isLoop) { m_InstanceDesc.isLoop = isLoop; }
 private:
-		bool LoadData(const _char* filename);
+		bool		LoadData(const _char* filename);
 
 private:
 #ifdef EDITOR_PROJECT
@@ -307,8 +366,11 @@ private:
 
 	ID3D11ShaderResourceView*	m_pVBInstance_Srv = { nullptr };
 	ID3D11ShaderResourceView*   m_pParticleValue_Srv = { nullptr };
+
+private:
+
+
 public:
-	//인스턴싱으로 바꾸기
 	static CInstance_Model* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);

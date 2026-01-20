@@ -17,15 +17,19 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Capture_PreShadow();
 
 private:
-	CLight* m_pLightCom = { nullptr };
+	CLight*		m_pLightCom = { nullptr };
+
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources();
+	_matrix Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3>& WorldPositions);
+	void	Add_PreShadowRenderGroup(CLayer* pLayer);
 
 public:
 	static CLight_Main* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -33,7 +37,6 @@ public:
 	virtual void Free() override;
 #ifdef _DEBUG
 	virtual void Describe_Entity() override;
-
 #endif // _DEBUG
 
 };

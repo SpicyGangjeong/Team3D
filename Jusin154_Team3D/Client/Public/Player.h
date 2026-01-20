@@ -7,39 +7,76 @@ NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
+public:
+	enum PLAYER_MESH_ORDER {
+		CLOTH_SIM
+		, HAIR_MAIN
+		, CLOTH
+		, EYELASH
+		, TEETH
+		, BODY
+		, HEAD_EYE_OCC
+		, HEAD_EYES
+		, FLOWERS
+		, END
+	};
+	typedef struct tagPlayerInitDesc {
+		_float4 vPos;
+		_float4 vRotQ;
+		class CBroomRaceManager* pBroomRaceManager;
+	}PLAYERDESC;
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
 	virtual ~CPlayer() = default;
 
 public:
-	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void	Priority_Update(_float fTimeDelta) override;
+	virtual void	Update(_float fTimeDelta) override;
+	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
-	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
-	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
-	_bool Get_Aim() { return m_bAim; }
-	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
-	void Set_Shield(_bool bShield) { m_bShield = bShield; }
-	void Start_CameraShake(_float fTime, _float fIntense);
+	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
+	virtual void	OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	virtual void	Trigger(class CTimeSocket& Socket)override;
+	_bool			Get_Aim() { return m_bAim; }
+	void			Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
+	void			Set_Shield(_bool bShield) { m_bShield = bShield; }
+	void			Start_CameraShake(_float fTime, _float fIntense);
+	UI_STATE		Get_UIState() { return m_eUIState; }
+	void			Set_RaceRing(class CRaceRing* pRaceRing);
+	class CBroom*	Get_Broom() { return m_pBroom; }
+	void			Set_RaceInfo();
+	_bool			IsParryWindow();
+	_bool			Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
+	_matrix			Get_WandPos();
+	void			Set_OpenDoor(_bool bOpen) { m_bOpenDoor = bOpen; }
+	void			UpdateGrapInteractive(_float fTimeDelta);
+	void			Update_CameraShake(_float fTimeDelta);
+	HRESULT			Update_RaycastElements();
+	void			Set_Battle(_bool bBattle) { m_bDuel_ZOnlyMove = bBattle; }
+	void			Set_Interaction(_bool bInteraction);
+	void			ExitBattle();
+	void			Set_OriginPos(_vector vPos) { XMStoreFloat4(&m_OriginPos, vPos); }
+	void			Add_TurboBoost(_float fAmount);
 #ifdef _DEBUG
-	void Render_CameraCoordinateSystem();
+	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG
-	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
-	_matrix Get_WandPos();
-	void UpdateGrapInteractive(_float fTimeDelta);
-	void Update_CameraShake(_float fTimeDelta);
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	LOCKON_INFO m_LockOnInfo = {};
 	class CMapElement_Interactable* m_pGrapInteractive = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
+	CGameObject* m_pCurrentNpcInteraction = { nullptr };
+
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
 	_bool m_bCameraShake = { false };
+
+	_bool m_bNpcInteraction = { false };
+	_bool m_bCurrentInteraction = { false };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
@@ -47,10 +84,15 @@ private:
 	_float2 m_vCameraShakeTimer = { 0.f, TIMER_SHORT_LERP };
 	_float m_fCameraShakeTime = TIMER_SHORT_LERP;
 	_float m_fCameraShakeIntense = 5.f;
+	_float m_fOriginGravityAmount = {};
+	_float m_fGravityAmount = {};
 
-	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
-	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
+	_float m_fTempWeight = {};
+
 	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
+	class CCamPosition_Head* m_pCamPosition_HeadPart = { nullptr };
+	_float	m_fRayDistance = { 10.f };
+	_uint	m_iRayHitCount = { 0 };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -63,16 +105,33 @@ private:
 	class CTransform* m_pBroomTransform = { nullptr };
 	class CBroom* m_pBroom = { nullptr };
 	CStat* m_pStat = { nullptr };
+	//class CPlayerRobe* m_pRobePart = { nullptr };
+
+
+	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
+	class CRaceRing* m_pRaceRing = { nullptr };
+	class CThestralCarriage* m_pCarriage = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
+	void CheckMouseInput();
 	void ReLockOnTarget();
 	void SetGravity();
-
+	void Add_SpellEvent(_uint AnimIndex, _float fRatio);
+	void Play_SpellHitAnim();
+	void Player_PixRot();
+	void Find_HiddenObjects();
+	void Check_Reparoobejcts();
 	void Update_CameraCoordinateSystem(_float fTimeDelta);
+	void UpdateFootStepSound();
+	vector<_float> GetFootStepTiming(_uint AnimIndex);
+	void PlayFootStepSound();
+	void StopFootStepSound();
+
 #ifdef _DEBUG
 	unique_ptr<BasicEffect> m_BasicEffect;
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
@@ -93,23 +152,18 @@ public:
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
-
+	void Set_Spell_Learning_Success();
 private:
 	// UI 연동 추가
 	void Get_Spell(_int SkillIndex);
-	void Get_UIState(_int UIState);
+	void Get_UIState(UI_STATE UIState);
 
 	virtual void Add_FSM();
-	virtual void Set_Anim();
-
-	void	Reset_LightCombo() { m_iLightCombo = 0; }
-	_uint	Next_LightCombo() { return ++m_iLightCombo; }
-	void	Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
 
 	function<void()> m_InputAction = nullptr;
-	_int			m_eUIState = { };
-	_uint			m_iLightCombo = { 0 };
+	UI_STATE		m_eUIState = { };
 
+	const _float4x4* m_pCinematicSocketMatrix = { nullptr };
 	_float3			m_OffsetPos = {};
 	_float			m_fAmount = { 1.f };
 	_float			m_fInputTime = {};
@@ -120,12 +174,46 @@ private:
 	_bool			m_bLookAt = {false};
 	_bool			m_bSpellHit = {};
 	_float3			m_BroomScale = { 0.f, 0.f, 0.f };
+	_float3			m_vScale = { 0.f, 0.f, 0.f };
 	_float3			m_TargetScale = { 1.f, 1.f, 1.f };
 	_float			m_fScaleSmoothSpeed = 2.5f;
 	_bool			m_bLumos = {};
 	_bool			m_bShield = {false};
 	_float			m_fAnimTime = {};
 	_bool			m_bTurbo = {};
+	_float			m_fBlinkTime = {  };
+	_float			m_fAccel = { 1.f };
+	_float			m_fSlideSpeed = {};
+	_float			m_fTargetSpeed = { 7.f };
+	_float			m_fMoveTime = {};
+	_float			m_fCross = 0.f;
+	_float			m_fabsDir = 0.f;
+	array<_int, 256> SecondMaskIndex = {};
+	_bool			m_bOpenDoor = { false };
+	_bool			m_bOpeningCutScene = { false };
+	_float			m_fAirTime = {};
+	_bool			m_bCanParry = {};
+	_bool			m_bBlock = {};
+	_bool			m_bDuel_ZOnlyMove = {};
+	_float			m_fDegree = {};
+	_bool			m_bGuarding = {};
+	_float 			m_fParryTimer = {};
+	_bool			m_bStartSpellAnim = {};
+	_float4			m_OriginPos = {};
+	_bool			m_bSpell_Learning_Success = {};
+
+	_bool			m_bFootStepL = {};
+	_bool			m_bFootStepR = {};
+	_float			m_fPrevMoveRatio = {};
+	_uint			m_iFootStepIndex = 0;
+	_uint			m_iPrevAnimIndex = 0;
+
+	_bool			m_bOnGroundHit = {};
+
+	/* 무적 불 변수*/
+#ifdef _DEBUG
+	_bool			m_isDebugMode = { false };
+#endif
 
 	HRESULT InputAction();
 	HRESULT InputMove();
@@ -138,6 +226,10 @@ private:
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
 
+	void	Behavior_CutSceneEnter();
+	HRESULT Behavior_CutSceneExitCheck(_float fTimeDelta);
+	void	Behavior_CutSceneExit();
+
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
 	void	Behavior_MoveExit();
@@ -147,12 +239,24 @@ private:
 	void	Behavior_JumpExit();
 
 	void	Behavior_LandEnter();
-	HRESULT Behavior_LandExitCheck();
+	HRESULT Behavior_LandExitCheck(_float fTimeDelta);
 	void	Behavior_LandExit();
+
+	void	Behavior_FallEnter();
+	HRESULT Behavior_FallExitCheck(_float fTimeDelta);
+	void	Behavior_FallExit();
 
 	void	Behavior_DodgeEnter();
 	HRESULT Behavior_DodgeExitCheck(_float fTimeDelta);
 	void	Behavior_DodgeExit();
+
+	void	Behavior_BlinkEnter();
+	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);
+	void	Behavior_BlinkExit();
+
+	void	Behavior_SlideEnter();
+	HRESULT Behavior_SlideExitCheck(_float fTimeDelta);
+	void	Behavior_SlideExit();
 
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
@@ -165,14 +269,30 @@ private:
 	void	Behavior_SpellEnter();
 	HRESULT Behavior_SpellExitCheck();
 	void	Behavior_SpellExit();
+	 
+	void	Behavior_AncientSpellEnter();
+	HRESULT Behavior_AncientSpellExitCheck();
+	void	Behavior_AncientSpellExit();
 
 	void	Behavior_ShieldEnter();
-	HRESULT Behavior_ShieldExitCheck();
+	HRESULT Behavior_ShieldExitCheck(_float fTimeDelta);
 	void	Behavior_ShieldExit();
 
+	void	Behavior_BlockEnter();
+	HRESULT Behavior_BlockExitCheck(_float fTimeDelta);
+	void	Behavior_BlockExit();
+
+	void	Behavior_ParryEnter();
+	HRESULT Behavior_ParryExitCheck(_float fTimeDelta);
+	void	Behavior_ParryExit();
+
 	void	Behavior_HitEnter();
-	HRESULT Behavior_HitExitCheck();
+	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
+
+	void	Behavior_Spell_LearningEnter();
+	HRESULT Behavior_Spell_LearningExitCheck(_float fTimeDelta);
+	void	Behavior_Spell_LearningExit();
 
 	void	Behavior_Broom_RideEnter();
 	HRESULT Behavior_Broom_RideExitCheck(_float fTimeDelta);
@@ -185,7 +305,7 @@ private:
 	void	Behavior_Broom_HoverEnter();
 	HRESULT Behavior_Broom_HoverExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_HoverExit();
-						   
+
 	void	Behavior_Broom_FlyEnter();
 	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_FlyExit();
@@ -201,7 +321,16 @@ private:
 	void Player_InterpTurn(_float fTimeDelta);
 	void Throwing_Interactive();
 	void Attach_Broom();
+	void ProcessHitBehavior();
+	void Calc_CameraPlayerAngle();
+
 #pragma endregion
+
+#pragma region HITBEHAVIOR
+	void Hit_Levioso(_float fTimeDelta);
+
+#pragma endregion
+	_bool IsInputLocked();
 
 private:
 	class CEffectPool* m_pEffectPool = nullptr;

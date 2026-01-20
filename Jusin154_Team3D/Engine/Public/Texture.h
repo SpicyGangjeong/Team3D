@@ -26,13 +26,12 @@ public:
 	void  HoverName();
 #endif
 private:
-	HRESULT Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName);
+	HRESULT Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName, _uint iLevel = 0);
 	virtual HRESULT Initialize(void* pArg) override;
 
-	HRESULT Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV);
-	HRESULT ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath);
-	HRESULT ParseTexturePathToSRVs(const _tchar* pTextureFolderPath);
-	HRESULT Load_CubeSRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV);
+	HRESULT Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV, _uint iLevel);
+	HRESULT ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath, _uint iLevel);
+	HRESULT ParseTexturePathToSRVs(const _tchar* pTextureFolderPath, _uint iLevel);
 
 private:
 	vector<ID3D11ShaderResourceView*>				m_SRVs = {};
@@ -42,7 +41,7 @@ private:
 #endif // 
 
 public:
-	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName = L"");
+	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName = L"", _uint iLevel = 0);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 #ifdef _DEBUG

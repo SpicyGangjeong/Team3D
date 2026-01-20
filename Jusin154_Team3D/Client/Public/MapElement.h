@@ -14,6 +14,7 @@ class CMapElement abstract : public CGameObject
 {
 public:
 	typedef struct tagMapElement_Desc {
+		_bool					bVisible = {};
 		_uint					iRenderType{};
 		CTransform*				pParentTransform = { nullptr };
 		_float3					vScale;
@@ -34,6 +35,8 @@ public:
 	virtual void	Update(_float fTimeDelta) override;
 	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+
 
 protected:
 	_uint				m_iMaxLodLevel = {};

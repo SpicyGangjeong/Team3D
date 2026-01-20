@@ -63,6 +63,10 @@ int   g_iBloomType;
 
 float2 g_vBloomTime;
 
+/* 디졸브 */
+float2 g_vDissolveTime;
+bool   g_isDissolve;
+
 
 
 struct VS_IN
@@ -80,7 +84,7 @@ struct VS_OUT
 
 VS_OUT VS_MAIN(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
     
 
 
@@ -100,7 +104,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 VS_OUT VS_TRAIL(VS_IN In)
 {
-    VS_OUT Out;
+    VS_OUT Out = (VS_OUT)0;
     
     
     matrix matWVP;
@@ -133,7 +137,7 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -141,7 +145,7 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 PS_OUT PS_UVMove(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT)0;
 
     float2 vMovedUV = Get_MovedUV(In.vTexcoord, g_fDeltaU, g_fDeltaV, g_iIndexU, g_iIndexV);
     
@@ -255,6 +259,11 @@ vector Draw_Trail(PS_IN In)
     /* 디퓨즈 알파 컷*/
     if (vMtrlDiffuse.a <= FLT_EPSILON5)
         discard;
+    
+    if (g_isDissolve)
+    {
+        vMtrlDiffuse.a *= saturate((0.96f - g_vDissolveTime.x / g_vDissolveTime.y)); 
+    }
 
     return vMtrlDiffuse;
      
@@ -286,24 +295,39 @@ float4 EmissiveDraw(PS_IN In)
     return saturate(vEmissiveMtrl * fEmissive * fEmissiveStrength);
 }
 
+float4 SoftEffect(PS_IN In, float4 vMtrlDiffuse)
+{
+        /* 소프트 이펙트 */
+    
+    float4 vDiffuse = vMtrlDiffuse;
+    
+    float2 vTexcoord;
+    
+    vTexcoord.x = In.vProjPos.x / In.vProjPos.w * 0.5f + 0.5f;
+    vTexcoord.y = In.vProjPos.y / In.vProjPos.w * -0.5f + 0.5f;
+    
+    float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vTexcoord);
+    
+    float fOldViewZ = vDepthDesc.y * g_fFar;
+    
+    float fDistance = fOldViewZ - In.vProjPos.w;
+    
+    vDiffuse.a = vDiffuse.a * saturate(fDistance);
+
+    clip(vDiffuse.a - FLT_EPSILON7);
+    
+    return vDiffuse;
+    
+}
 PS_TRAILOUT PS_Trail(PS_IN In)
 {
-    PS_TRAILOUT Out;
-    
-    int2 iTexel = int2(In.vPosition.xy);
-    
-    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
-    
-    float fbias = 0.000005f;
-    
-    if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
-        discard;
-    
+    PS_TRAILOUT Out = (PS_TRAILOUT)0;
+
     vector vMtrlDiffuse;
     
     vMtrlDiffuse = Draw_Trail(In);
    
-    
+    SoftEffect(In, vMtrlDiffuse);
     /* 웨이트 블랜드 */
     
     float fWeight = clamp(pow(In.vProjPos.w, -2.5f), 1.0f, 1000.0f);
@@ -340,6 +364,7 @@ PS_BLUR_OUT PS_TRAIL_BLUR(PS_IN In)
  
     vMtrlDiffuse = Draw_Trail(In);
     
+    SoftEffect(In, vMtrlDiffuse);
     //// 색깔 추가할 처리 (이미시브)
    
     //vMtrlDiffuse += EmissiveDraw(In);
@@ -358,11 +383,13 @@ struct PS_BLOOM_OUT
 
 PS_BLUR_OUT PS_TRAIL_BLOOM(PS_IN In)
 {
-    PS_BLUR_OUT Out;
+    PS_BLUR_OUT Out = (PS_BLUR_OUT)0;
     
     vector vMtrlDiffuse;
  
     vMtrlDiffuse = Draw_Trail(In);
+    
+    SoftEffect(In, vMtrlDiffuse);
     
     //// 색깔 추가할 처리 (이미시브)
    
@@ -394,6 +421,8 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     
     vMtrlDiffuse = Draw_Trail(In);
     
+    SoftEffect(In, vMtrlDiffuse);
+    
     vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
 
     Out.vDiffuse = vMtrlDiffuse;
@@ -408,6 +437,8 @@ PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
     vector vMtrlDiffuse;
     
     vMtrlDiffuse = Draw_Trail(In);
+    
+    SoftEffect(In, vMtrlDiffuse);
     
     vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
     
@@ -428,7 +459,7 @@ technique11 PosTexTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -438,7 +469,7 @@ technique11 PosTexTechnique11
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -448,7 +479,7 @@ technique11 PosTexTechnique11
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_UIBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -458,17 +489,17 @@ technique11 PosTexTechnique11
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_UVMove();
     }
 
     pass TrailPass
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_Trail();
     }
 
@@ -478,7 +509,7 @@ technique11 PosTexTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_BLEND();
     }
 
@@ -488,7 +519,7 @@ technique11 PosTexTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_WEIGHTED_FOR_BLEND();
     }
 
@@ -498,7 +529,7 @@ technique11 PosTexTechnique11
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_TRAIL_BLUR();
     }
 
@@ -506,11 +537,22 @@ technique11 PosTexTechnique11
     pass TrailBloom
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        
         PixelShader = compile ps_5_0 PS_TRAIL_BLOOM();
     }
 
+
+
+    pass Trail_WB
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        
+        PixelShader = compile ps_5_0 PS_Trail();
+    }
 }

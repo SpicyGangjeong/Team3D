@@ -69,7 +69,7 @@ void CCamera::Transition(_float fTimeDelta)
         fRatio = 1.f;
         m_bIsCurrentTransition = false;
     }
-
+     
     _vector vFollowTarget = m_pFollowTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION);
     _vector vLookTarget = m_pLookTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION);
 
@@ -132,6 +132,30 @@ HRESULT CCamera::Ready_Components(void* pArg)
     return S_OK;
 }
 
+void CCamera::EnableTransition(_float fTransitionTime)
+{
+    m_bIsCurrentTransition = true;
+    m_vTransitionTime.x = 0.f;
+    m_vTransitionTime.y = fTransitionTime;
+}
+
+void CCamera::DisableTransition()
+{
+    m_bIsCurrentTransition = false;
+    m_vTransitionTime.x = 0.f;
+    m_vTransitionTime.y = 1.f;
+}
+
+void CCamera::Set_RotDegreeVerticalLock(_float2 vVerticalLock)
+{
+    m_vAccRotDegree_VerticalLocks = vVerticalLock;
+}
+
+_float2 CCamera::Get_RotDegreeVerticalLock()
+{
+    return m_vAccRotDegree_VerticalLocks;
+}
+
 _bool CCamera::IsImportantThan(CCamera* pOther) const
 {
     return m_iPriority > pOther->m_iPriority;
@@ -151,7 +175,7 @@ void CCamera::ZoomIn(_float fTimeDelta)
   
 }
 
-void CCamera::Set_Fov(_float fFovy, _float fTimeDelta,_bool& bZoomIn)
+void CCamera::Set_FovSlope(_float fFovy, _float fTimeDelta,_bool& bZoomIn)
 {
     if (fFovy > m_fFovy)
     {
@@ -173,6 +197,11 @@ void CCamera::Set_Fov(_float fFovy, _float fTimeDelta,_bool& bZoomIn)
         m_fFovy = fFovy;
         bZoomIn = false;
     }
+}
+
+void CCamera::Set_Fov(_float fFovy)
+{
+    m_fFovy = fFovy;
 }
 
 _float CCamera::Get_Fov()

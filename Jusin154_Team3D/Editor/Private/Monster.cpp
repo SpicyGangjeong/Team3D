@@ -57,6 +57,11 @@ void CMonster::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
+float  CMonster::Get_HpRatio()
+{
+	return m_fHp / m_fMaxHp;
+}
+
 HRESULT CMonster::Render_OutLine()
 {
 	m_bDrawOutLine = false;
@@ -66,16 +71,16 @@ HRESULT CMonster::Render_OutLine()
 
 	GUI::SetNextItemWidth(80.f);
 	static _float3 vOutLineColor = _float3(1.f, 0.960784376f, 0.933333397f);
-	static _float fOutLineThickness = { 5.f }; // 카메라로부터 거리가 멀어지면 늘어나게끔 바꾸는걸 추천함
 	static _float fOutLineScale = { 1.f };
 	static _float fOutLinePower = { 1.f };
 	GUI::ColorPicker3("vOutLineColor", (_float*)&vOutLineColor);
-	GUI::SliderFloat("Thickness", &fOutLineThickness, 0.1f, 2.f, "%.1f");
 	GUI::SliderFloat("Scale", &fOutLineScale, 0.1f, 2.f, "%.1f");
 	GUI::SliderFloat("Power", &fOutLinePower, 0.1f, 2.f, "%.1f");
+
 	Compute_Depth();
-	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
-	fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
+	_float fCamFar = *m_pGameInstance->Get_CurrentCameraFar();
+	_float fRatio = CMyTools::Saturate((m_fCamDepth / (fCamFar * fCamFar)));
+	_float fOutLineThickness = CMyTools::Lerp_f1D(1.5f, 2.f, fRatio);
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
 	}
@@ -172,11 +177,11 @@ void CMonster::Free()
 void CMonster::Describe_Entity()
 {
 
-	if (ImGui::TreeNode("ANIM STATE")) {
+	if (GUI::TreeNode("ANIM STATE")) {
 
 		for (auto& pState : m_States)
 		{
-			if (ImGui::Button(to_string(pState.first).c_str()))
+			if (GUI::Button(to_string(pState.first).c_str()))
 			{
 				m_pFSM->Change_State(pState.first);
 			}
@@ -185,7 +190,7 @@ void CMonster::Describe_Entity()
 
 		GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 }
 

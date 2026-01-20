@@ -1,0 +1,516 @@
+struct KeyFrame
+{
+    float3 vScale;
+    float4 vRotation;
+    float3 vTranslation;
+    float fTrackPosition;
+};
+
+struct Channel
+{
+    uint StartIndex;
+    uint KeyCount;
+    uint BoneIndex;
+};
+
+struct BoneLocal
+{
+    row_major float4x4 BoneLocal;
+};
+
+StructuredBuffer<KeyFrame> g_KeyFrameBuffer : register(t0);
+StructuredBuffer<Channel> g_ChannelBuffer : register(t1);
+StructuredBuffer<KeyFrame> g_PrevKeyFrameBuffer : register(t2);
+StructuredBuffer<Channel> g_PrevChannelBuffer : register(t3);
+StructuredBuffer<int> g_ParentBuffer : register(t4);
+StructuredBuffer<BoneLocal> g_BoneLocalBuffer : register(t5);
+StructuredBuffer<uint> g_BoneRemap : register(t6); 
+StructuredBuffer<int> g_SkipBone : register(t7);
+StructuredBuffer<KeyFrame> g_SecondKeyFrameBuffer : register(t8);
+StructuredBuffer<Channel> g_SecondChannelBuffer : register(t9);
+StructuredBuffer<uint> g_BoneMask : register(t10);
+
+RWStructuredBuffer<float4x4> g_LocalMatrixOut : register(u0);
+
+cbuffer AnimCB : register(b0)
+{
+    float CurrentTime;
+    float Duration;
+    uint MeshBoneCount;
+    uint BoneCount;
+
+    uint CurrentAnimIndex;
+    uint PrevAnimIndex;
+    float PrevTime;
+    float BlendRatio;
+
+    int RootBoneIndex;
+    int PlayHeadBone;
+    int HeadBoneIndex;
+    float HeadAimWeight;
+
+    int SkipCount;
+    int IsSkip;
+    int _pad1;
+    int _pad2;
+
+    float3 TargetDir_Local;
+    float padding3;
+
+    row_major float4x4 PreTransformMatrix;
+    float4 RootInitRot;
+    
+    int UseUpperBody;
+    float UpperBlend;
+    int SecondAnimIndex;
+    float SecondAnimTime;
+    
+    row_major float4x4 WorldMatrix;
+};
+
+static const float EPS = 1e-6f;
+
+float4 QuatNormalize(float4 q)
+{
+    return q * rsqrt(max(dot(q, q), EPS));
+}
+
+float4 QuatSlerp(float4 a, float4 b, float t)
+{
+    a = QuatNormalize(a);
+    b = QuatNormalize(b);
+
+    float cosTheta = dot(a, b);
+
+    if (cosTheta < 0.0f)
+    {
+        b = -b;
+        cosTheta = -cosTheta;
+    }
+
+    if (cosTheta > 0.9995f)
+        return QuatNormalize(lerp(a, b, t));
+
+    float theta = acos(clamp(cosTheta, -1.0f, 1.0f));
+    float sinTheta = max(sin(theta), EPS);
+
+    float w0 = sin((1.0f - t) * theta) / sinTheta;
+    float w1 = sin(t * theta) / sinTheta;
+
+    return a * w0 + b * w1;
+}
+
+row_major float4x4 MakeAffine(float3 scale, float4 rot, float3 trans)
+{
+    rot = QuatNormalize(rot);
+
+    float xx = rot.x * rot.x;
+    float yy = rot.y * rot.y;
+    float zz = rot.z * rot.z;
+    float xy = rot.x * rot.y;
+    float xz = rot.x * rot.z;
+    float yz = rot.y * rot.z;
+    float wx = rot.w * rot.x;
+    float wy = rot.w * rot.y;
+    float wz = rot.w * rot.z;
+
+    float3 r0 = float3(1.0f - 2.0f * (yy + zz), 2.0f * (xy + wz), 2.0f * (xz - wy));
+    float3 r1 = float3(2.0f * (xy - wz), 1.0f - 2.0f * (xx + zz), 2.0f * (yz + wx));
+    float3 r2 = float3(2.0f * (xz + wy), 2.0f * (yz - wx), 1.0f - 2.0f * (xx + yy));
+
+    r0 *= scale.x;
+    r1 *= scale.y;
+    r2 *= scale.z;
+
+    row_major float4x4 M;
+    M[0] = float4(r0, 0.0f);
+    M[1] = float4(r1, 0.0f);
+    M[2] = float4(r2, 0.0f);
+    M[3] = float4(trans, 1.0f);
+    return M;
+}
+
+void DecomposeAffine_RowMajor(row_major float4x4 M, out float3 S, out float4 R, out float3 T)
+{
+    T = float3(M._41, M._42, M._43);
+
+    float3 r0 = float3(M._11, M._12, M._13);
+    float3 r1 = float3(M._21, M._22, M._23);
+    float3 r2 = float3(M._31, M._32, M._33);
+
+    S = float3(length(r0), length(r1), length(r2));
+    float3 invS = 1.0f / max(S, float3(EPS, EPS, EPS));
+
+    r0 *= invS.x;
+    r1 *= invS.y;
+    r2 *= invS.z;
+
+    float trace = r0.x + r1.y + r2.z;
+    float4 q;
+
+    if (trace > 0.0f)
+    {
+        float s = sqrt(trace + 1.0f) * 2.0f;
+        q.w = 0.25f * s;
+        q.x = (r1.z - r2.y) / s;
+        q.y = (r2.x - r0.z) / s;
+        q.z = (r0.y - r1.x) / s;
+    }
+    else if (r0.x > r1.y && r0.x > r2.z)
+    {
+        float s = sqrt(1.0f + r0.x - r1.y - r2.z) * 2.0f;
+        q.w = (r1.z - r2.y) / s;
+        q.x = 0.25f * s;
+        q.y = (r1.x + r0.y) / s;
+        q.z = (r2.x + r0.z) / s;
+    }
+    else if (r1.y > r2.z)
+    {
+        float s = sqrt(1.0f + r1.y - r0.x - r2.z) * 2.0f;
+        q.w = (r2.x - r0.z) / s;
+        q.x = (r1.x + r0.y) / s;
+        q.y = 0.25f * s;
+        q.z = (r2.y + r1.z) / s;
+    }
+    else
+    {
+        float s = sqrt(1.0f + r2.z - r0.x - r1.y) * 2.0f;
+        q.w = (r0.y - r1.x) / s;
+        q.x = (r2.x + r0.z) / s;
+        q.y = (r2.y + r1.z) / s;
+        q.z = 0.25f * s;
+    }
+
+    R = QuatNormalize(q);
+}
+row_major float4x4 ApplyHeadAim(uint bone, row_major float4x4 M)
+{
+    if (PlayHeadBone != 1)
+        return M;
+    if (bone != HeadBoneIndex)
+        return M;
+    if (HeadAimWeight <= 0.f)
+        return M;
+
+    float3 curFwd = normalize(float3(M._31, M._32, M._33));
+    float3 target = normalize(TargetDir_Local);
+
+    float d = dot(curFwd, target);
+
+    float3 axis = cross(curFwd, target);
+    float axisLen = length(axis);
+    if (axisLen <= EPS)
+        return M;
+
+    axis /= axisLen;
+
+    float angle = acos(saturate(d));
+    angle *= saturate(HeadAimWeight);
+
+    float4 qAim = float4(axis * sin(angle * 0.5f), cos(angle * 0.5f));
+    qAim = QuatNormalize(qAim);
+
+    row_major float4x4 AimM = MakeAffine(float3(1, 1, 1), qAim, float3(0, 0, 0));
+    return mul(AimM, M);
+}
+
+
+uint FindKeyIndexCur(uint start, uint count, float t)
+{
+    uint lo = 0;
+    uint hi = count - 1;
+
+    float tLast = g_KeyFrameBuffer[start + hi].fTrackPosition;
+    if (t >= tLast)
+        return hi - 1;
+
+    while (lo + 1 < hi)
+    {
+        uint mid = (lo + hi) >> 1;
+        float tm = g_KeyFrameBuffer[start + mid].fTrackPosition;
+        if (t < tm)
+            hi = mid;
+        else
+            lo = mid;
+    }
+    return lo;
+}
+
+uint FindKeyIndexPrev(uint start, uint count, float t)
+{
+    uint lo = 0;
+    uint hi = count - 1;
+
+    float tLast = g_PrevKeyFrameBuffer[start + hi].fTrackPosition;
+    if (t >= tLast)
+        return hi - 1;
+
+    while (lo + 1 < hi)
+    {
+        uint mid = (lo + hi) >> 1;
+        float tm = g_PrevKeyFrameBuffer[start + mid].fTrackPosition;
+        if (t < tm)
+            hi = mid;
+        else
+            lo = mid;
+    }
+    return lo;
+}
+
+uint FindKeyIndexSecond(uint start, uint count, float t)
+{
+    uint lo = 0;
+    uint hi = count - 1;
+
+    float tLast = g_SecondKeyFrameBuffer[start + hi].fTrackPosition;
+    if (t >= tLast)
+        return hi - 1;
+
+    while (lo + 1 < hi)
+    {
+        uint mid = (lo + hi) >> 1;
+        float tm = g_SecondKeyFrameBuffer[start + mid].fTrackPosition;
+        if (t < tm)
+            hi = mid;
+        else
+            lo = mid;
+    }
+    return lo;
+}
+
+void SampleLocalTRS_Cur(uint bone, float t, out float3 S, out float4 R, out float3 T)
+{
+    Channel ch = g_ChannelBuffer[bone];
+
+    if (ch.KeyCount == 0)
+    {
+        DecomposeAffine_RowMajor(g_BoneLocalBuffer[bone].BoneLocal, S, R, T);
+        return;
+    }
+    
+    if (ch.KeyCount < 2)
+    {
+        KeyFrame k = g_KeyFrameBuffer[ch.StartIndex];
+        S = k.vScale;
+        T = k.vTranslation;
+        R = QuatNormalize(k.vRotation);
+        return;
+    }
+
+    uint idx0 = FindKeyIndexCur(ch.StartIndex, ch.KeyCount, t);
+    uint idx1 = idx0 + 1;
+
+    KeyFrame k0 = g_KeyFrameBuffer[ch.StartIndex + idx0];
+    KeyFrame k1 = g_KeyFrameBuffer[ch.StartIndex + idx1];
+
+    float denom = max(k1.fTrackPosition - k0.fTrackPosition, EPS);
+    float a = saturate((t - k0.fTrackPosition) / denom);
+
+    S = lerp(k0.vScale, k1.vScale, a);
+    T = lerp(k0.vTranslation, k1.vTranslation, a);
+    R = QuatSlerp(k0.vRotation, k1.vRotation, a);
+}
+
+void SampleLocalTRS_Prev(uint bone, float t, out float3 S, out float4 R, out float3 T)
+{
+    Channel ch = g_PrevChannelBuffer[bone];
+
+    if (ch.KeyCount == 0)
+    {
+        DecomposeAffine_RowMajor(g_BoneLocalBuffer[bone].BoneLocal, S, R, T);
+        return;
+    }
+    
+    if (ch.KeyCount < 2)
+    {
+        KeyFrame k = g_PrevKeyFrameBuffer[ch.StartIndex];
+        S = k.vScale;
+        T = k.vTranslation;
+        R = QuatNormalize(k.vRotation);
+        return;
+    }
+
+    uint idx0 = FindKeyIndexPrev(ch.StartIndex, ch.KeyCount, t);
+    uint idx1 = idx0 + 1;
+
+    KeyFrame k0 = g_PrevKeyFrameBuffer[ch.StartIndex + idx0];
+    KeyFrame k1 = g_PrevKeyFrameBuffer[ch.StartIndex + idx1];
+
+    float denom = max(k1.fTrackPosition - k0.fTrackPosition, EPS);
+    float a = saturate((t - k0.fTrackPosition) / denom);
+
+    S = lerp(k0.vScale, k1.vScale, a);
+    T = lerp(k0.vTranslation, k1.vTranslation, a);
+    R = QuatSlerp(k0.vRotation, k1.vRotation, a);
+}
+
+row_major float4x4 SampleBlendedLocal(uint bone)
+{
+    float3 S;
+    float4 R;
+    float3 T;
+
+    if (PrevAnimIndex == -1 || CurrentAnimIndex == PrevAnimIndex)
+    {
+        SampleLocalTRS_Cur(bone, CurrentTime, S, R, T);
+        if (bone == RootBoneIndex)
+        {
+            T = 0;
+            R = RootInitRot;
+        }
+
+        row_major float4x4 M = MakeAffine(S, R, T);
+        return ApplyHeadAim(bone, M);
+    }
+
+    float br = saturate(BlendRatio);
+
+    float3 sA, sB, tA, tB;
+    float4 rA, rB;
+
+    float prevT = (BlendRatio < 1e-4f) ? CurrentTime : PrevTime;
+
+    SampleLocalTRS_Prev(bone, prevT, sA, rA, tA);
+    SampleLocalTRS_Cur(bone, CurrentTime, sB, rB, tB);
+
+    S = lerp(sA, sB, br);
+    T = lerp(tA, tB, br);
+    R = QuatSlerp(rA, rB, br);
+
+    if (bone == RootBoneIndex)
+    {
+        T = 0;
+        R = RootInitRot;
+    }
+
+    row_major float4x4 M = MakeAffine(S, R, T);
+    return ApplyHeadAim(bone, M);
+}
+
+
+void SampleLocalTRS_Second(uint bone, float t, out float3 S, out float4 R, out float3 T)
+{
+    Channel ch = g_SecondChannelBuffer[bone];
+
+    if (ch.KeyCount == 0)
+    {
+        DecomposeAffine_RowMajor(g_BoneLocalBuffer[bone].BoneLocal, S, R, T);
+        return;
+    }
+
+    if (ch.KeyCount < 2)
+    {
+        KeyFrame k = g_SecondKeyFrameBuffer[ch.StartIndex];
+        S = k.vScale;
+        T = k.vTranslation;
+        R = QuatNormalize(k.vRotation);
+        return;
+    }
+
+    uint idx0 = FindKeyIndexSecond(ch.StartIndex, ch.KeyCount, t);
+    uint idx1 = idx0 + 1;
+
+    KeyFrame k0 = g_SecondKeyFrameBuffer[ch.StartIndex + idx0];
+    KeyFrame k1 = g_SecondKeyFrameBuffer[ch.StartIndex + idx1];
+
+    float denom = max(k1.fTrackPosition - k0.fTrackPosition, EPS);
+    float a = saturate((t - k0.fTrackPosition) / denom);
+
+    S = lerp(k0.vScale, k1.vScale, a);
+    T = lerp(k0.vTranslation, k1.vTranslation, a);
+    R = QuatSlerp(k0.vRotation, k1.vRotation, a);
+}
+
+void SampleBaseTRS(uint bone, out float3 S, out float4 R, out float3 T)
+{
+    if (PrevAnimIndex == -1 || CurrentAnimIndex == PrevAnimIndex)
+    {
+        SampleLocalTRS_Cur(bone, CurrentTime, S, R, T);
+    }
+    else
+    {
+        float br = saturate(BlendRatio);
+
+        float3 sA, sB, tA, tB;
+        float4 rA, rB;
+
+        float prevT = (BlendRatio < 1e-4f) ? CurrentTime : PrevTime;
+
+        SampleLocalTRS_Prev(bone, prevT, sA, rA, tA);
+        SampleLocalTRS_Cur(bone, CurrentTime, sB, rB, tB);
+
+        S = lerp(sA, sB, br);
+        T = lerp(tA, tB, br);
+        R = QuatSlerp(rA, rB, br);
+    }
+
+    if (bone == RootBoneIndex)
+    {
+        T = 0;
+        R = RootInitRot;
+    }
+}
+
+
+row_major float4x4 SampleDualAnimLocal(uint bone)
+{
+    float3 S0, T0;
+    float4 R0;
+    SampleBaseTRS(bone, S0, R0, T0);
+
+    if (UseUpperBody != 1 || g_BoneMask[bone] == 0)
+    {
+        row_major float4x4 M0 = MakeAffine(S0, R0, T0);
+        return ApplyHeadAim(bone, M0);
+    }
+
+    float3 S1, T1;
+    float4 R1;
+    SampleLocalTRS_Second(bone, SecondAnimTime, S1, R1, T1);
+
+    float w = saturate(UpperBlend);
+
+    float3 S = lerp(S0, S1, w);
+    float3 T = lerp(T0, T1, w);
+    float4 R = QuatSlerp(R0, R1, w);
+
+    if (bone == RootBoneIndex)
+    {
+        T = 0;
+        R = RootInitRot;
+    }
+
+    row_major float4x4 M = MakeAffine(S, R, T);
+    return ApplyHeadAim(bone, M);
+}
+
+[numthreads(256, 1, 1)]
+void CS_LOCAL(uint3 DTid : SV_DispatchThreadID)
+{
+    uint bone = DTid.x;
+    
+    if (bone >= BoneCount)
+        return;
+    
+    //if (SkipCount != 0 && IsSkip)
+    //{
+    //    for (int i = 0; i < SkipCount; i++)
+    //    {
+    //        if (bone == g_SkipBone[i])
+    //        {
+    //            g_LocalMatrixOut[bone] = g_BoneLocalBuffer[bone].BoneLocal;
+    //            return;
+    //        }
+    //    }
+    //}
+
+    if (UseUpperBody == 1 && g_BoneMask[bone] == 1)
+    {
+        g_LocalMatrixOut[bone] = SampleDualAnimLocal(bone); 
+    }
+    else
+    {
+        g_LocalMatrixOut[bone] = SampleBlendedLocal(bone);
+    }
+
+}

@@ -11,18 +11,12 @@ private:
 	CBone(const CBone& other);
 	virtual ~CBone() = default;
 public:
-	_matrix Get_CombinedTransformationMatrix() const {
-		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);
-	}
-	_float4x4* Get_CombinedTransformationMatrixPtr() {
-		return &m_CombinedTransformationMatrix;
-	}
-	void Set_CombinedTransformationMatrixPtr(_matrix& newMatrix) {
-		return XMStoreFloat4x4(&m_CombinedTransformationMatrix, newMatrix);
-	}
-	_bool Compare_Name(const _char* pBoneName) const {
-		return !strcmp(pBoneName, m_strName.c_str());
-	}
+	_matrix Get_CombinedTransformationMatrix() const { return XMLoadFloat4x4(&m_CombinedTransformationMatrix); }
+	_float4x4* Get_CombinedTransformationMatrixPtr() { return &m_CombinedTransformationMatrix; }
+	_float4x4* Get_TransformationMatrixPtr() { return &m_TransformationMatrix; };
+
+	void Set_CombinedTransformationMatrix(_fmatrix newMatrix) { return XMStoreFloat4x4(&m_CombinedTransformationMatrix, newMatrix); }
+	_bool Compare_Name(const _char* pBoneName) const { return !strcmp(pBoneName, m_strName.c_str()); }
 	void Get_KeyFrame(KEYFRAME& kf, _bool bIsCurrentFrame);	// 현재 본의 로컬매트릭스를 캡쳐해서 키프레임으로 성분 분해하여 올려보낸다.
 	const _char* Get_Name() const { return m_strName.c_str(); }
 	_float3 Get_LocalPosition();
@@ -30,12 +24,16 @@ public:
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix); // 애니메이션에서 현재 로컬 매트릭스를 변경할 때 사용된다
 	_float4x4 Get_TransformationMatrix() { return m_TransformationMatrix; }
 	_int Get_ParentBoneIndex() { return m_iParentBoneIndex; }
+	void SetCPUEvaluated(bool Evaluat) { m_bCPUEvaluated = Evaluat; }
+	_bool IsCPUEvaluated() const { return m_bCPUEvaluated; }
+
 private:
 	_string m_strName = {};
 	_float4x4 m_TransformationMatrix = {};				// 본의 현재 로컬 매트릭스
 	_float4x4 m_CombinedTransformationMatrix = {};		// 본의 루트노드로부터 상대적인 복합매트릭스 ( 부모노드는 PreTranformMatrix와 월드좌표로부터 상대적임 )
 	_float4x4 m_matInitial = {};
 	_int m_iParentBoneIndex = { -1 };					// 부모본의 인덱스 ( 모델에 있는 본벡터의 인덱스 ) ( 부모는 인덱스 -1 고정 )
+	_bool m_bCPUEvaluated = false;
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
 	// 바이너리

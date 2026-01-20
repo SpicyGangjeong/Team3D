@@ -3,10 +3,28 @@
 #include "Shader.h"
 #include "GameInstance.h"
 
-CPipeLine::CPipeLine()
-	:m_pGameInstance(CGameInstance::GetInstance())
+CPipeLine::CPipeLine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: m_pDevice{ pDevice }
+	, m_pContext{ pContext }
+	, m_pGameInstance{ CGameInstance::GetInstance() }
 {
+	SAFE_ADDREF(m_pDevice);
+	SAFE_ADDREF(m_pContext);
 	SAFE_ADDREF(m_pGameInstance);
+}
+
+void CPipeLine::Set_Environment(_float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax)
+{
+	m_fShadowNearBoxRatio = vNFBoxRatio.x;
+	m_fShadowFarBoxRatio = vNFBoxRatio.y;
+
+	m_fSafe_RadiusMultiplier = vSafeRadius.x;
+	m_fSafe_RadiusMargin = vSafeRadius.y;
+
+	m_vShadowBias = vShadowBias;
+	m_vShadowRadius = vShadowRadius;
+	m_vShadowBoxMarginMin = vShadowBoxMarginMin;
+	m_vShadowBoxMarginMax = vShadowBoxMarginMax;
 }
 
 void CPipeLine::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
@@ -22,6 +40,23 @@ const _float4x4* CPipeLine::Get_Transform_Float4x4(D3DTS eState)
 _matrix CPipeLine::Get_Transform_Matrix(D3DTS eState)
 {
 	return XMLoadFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(eState)]);
+}
+
+_matrix CPipeLine::Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType)
+{
+	_uint iPass = UINT_MAX;
+	if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_NEAR)) {
+		iPass = 0;
+	}
+	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_MIDDLE)) {
+		iPass = 1;
+	}
+	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_FAR)) {
+		iPass = 2;
+	}
+	assert(iPass != UINT_MAX);
+
+	return XMLoadFloat4x4(&m_ShadowTransformStateMatrices[iPass][ENUM_CLASS(eState)]);
 }
 
 const _float4* CPipeLine::Get_CamPosition()
@@ -74,21 +109,20 @@ pair<_bool, _ubyte> CPipeLine::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _fl
 	// 월드 센터를 셰도우뷰 센터로 바꿈
 	_vector vShadowViewCenter = XMVectorSetW(XMVector3Rotate(vWorldCenter, XMLoadFloat4(&m_vShadowInvDirectionalRPYQuat)), 1.f);
 
-	_float fSafeRadius = fRadius; // 인스턴싱된 객체 고려해서 좀 더 넓게 탐색
+	_float fSafeRadius = (fRadius + m_fSafe_RadiusMargin) * m_fSafe_RadiusMultiplier; // 그림자임을 고려해서 객체 부피보다 좀 더 넓게 탐색
 
 	for (_uint iCascadeIndex = 0; iCascadeIndex < ENUM_CLASS(SHADOW::END); ++iCascadeIndex) {
 		const _float4* pTargetPlanes = nullptr;
+		if (iCascadeIndex == 2) {
+			continue;
+			// 게임 특성 상 Far가 너무 멀어서 프리베이크랑 차이가 안남
+			pTargetPlanes = m_vFarShadowViewBoxPlane;
+		}
 		if (iCascadeIndex == 0) {
 			pTargetPlanes = m_vNearShadowViewBoxPlane;
-			fSafeRadius = fRadius;
 		}
 		if (iCascadeIndex == 1) {
 			pTargetPlanes = m_vMiddleShadowViewBoxPlane;
-			fSafeRadius = fRadius;
-		}
-		if (iCascadeIndex == 2) {
-			pTargetPlanes = m_vFarShadowViewBoxPlane;
-			fSafeRadius = fRadius;
 		}
 
 		_bool bIsInside = true;
@@ -123,9 +157,15 @@ HRESULT CPipeLine::Bind_CascadeSplitRatio(class CShader* pShader, const _char* p
 	return S_OK;
 }
 
-HRESULT CPipeLine::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+HRESULT CPipeLine::Bind_CascadeValues(CShader* pShader)
 {
-	return pShader->Bind_RawValue(pConstantName, &m_vShadowBias, sizeof(_float4));
+	HRESULT hr = {};
+	hr = pShader->Bind_RawValue("g_vShadowRadiusTexel", &m_vShadowRadius, sizeof(_float4));
+	if (FAILED(hr)) {
+		return hr;
+	}
+	hr = pShader->Bind_RawValue("g_vShadowBias", &m_vShadowBias, sizeof(_float4));
+	return hr;
 }
 
 HRESULT CPipeLine::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
@@ -151,6 +191,20 @@ HRESULT CPipeLine::Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::pat
 	return S_OK;
 }
 
+HRESULT CPipeLine::Begin_OutLine_Write(_uint iDSSRef)
+{
+	m_pContext->OMGetDepthStencilState(&m_pPrevDSS, &m_iPrevDSSRef);
+	m_pContext->OMSetDepthStencilState(m_pDSS_OutLineWrite, iDSSRef);
+	return S_OK;
+}
+
+HRESULT CPipeLine::End_OutLine_Write()
+{
+	m_pContext->OMSetDepthStencilState(m_pPrevDSS, m_iPrevDSSRef);
+	SAFE_RELEASE(m_pPrevDSS);
+	return S_OK;
+}
+
 HRESULT CPipeLine::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
 {
 	_vector vShadowQuat = XMQuaternionNormalize(XMLoadFloat4(&vShadowDirRPYQuat));
@@ -170,6 +224,9 @@ HRESULT CPipeLine::Bind_Shadow_Resource(CShader* pShader, const _char* pConstant
 	}
 	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_FAR)) {
 		iPass = 2;
+	}
+	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_PRE)) {
+		return m_pGameInstance->Bind_PreShadowMatrix(pShader, pConstantName, eType);
 	}
 	assert(iPass != UINT_MAX);
 
@@ -254,6 +311,30 @@ HRESULT CPipeLine::Initialize()
 		XMStoreFloat4x4(&m_TransformStateMatrices[i], XMMatrixIdentity());
 	}
 
+	if (nullptr == m_pDSS_OutLineWrite) {
+		D3D11_DEPTH_STENCIL_DESC depthStencilDescription{};
+		depthStencilDescription.DepthEnable = TRUE;
+		depthStencilDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;     // true에 해당
+		depthStencilDescription.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;         // less_equal
+
+		depthStencilDescription.StencilEnable = TRUE;
+		depthStencilDescription.StencilReadMask = 0xFF;
+		depthStencilDescription.StencilWriteMask = 0xFF;
+
+		// FrontFace
+		depthStencilDescription.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDescription.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDescription.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;   // Replace
+		depthStencilDescription.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;      // Always
+
+		// BackFace
+		depthStencilDescription.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDescription.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDescription.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+		depthStencilDescription.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		m_pDevice->CreateDepthStencilState(&depthStencilDescription, &m_pDSS_OutLineWrite);
+	}
+
 	return S_OK;
 }
 
@@ -303,13 +384,41 @@ void CPipeLine::Make_LightBoxes()
 		if (iIndex == 1) targetPlanes = m_vMiddleShadowViewBoxPlane;
 		if (iIndex == 2) targetPlanes = m_vFarShadowViewBoxPlane;
 
+		fMinX += m_vShadowBoxMarginMin.x;
+		fMaxX += m_vShadowBoxMarginMax.x;
+		fMinY += m_vShadowBoxMarginMin.y;
+		fMaxY += m_vShadowBoxMarginMax.y;
+		fMinZ += m_vShadowBoxMarginMin.z;
+		fMaxZ += m_vShadowBoxMarginMax.z;
+
+		_uint iShadowWidth = { 0 };
+		_uint iShadowHeight = { 0 };
+		switch (iIndex)
+		{
+			case 0:
+				iShadowWidth  = g_iNearShadowWidth;
+				iShadowHeight = g_iNearShadowHeight;
+				break;
+			case 1:
+				iShadowWidth = g_iMiddleShadowWidth;
+				iShadowHeight = g_iMiddleShadowHeight;
+				break;
+			case 2:
+				iShadowWidth = g_iFarShadowWidth;
+				iShadowHeight = g_iFarShadowHeight;
+				break;
+		default:
+			break;
+		}
+
+		Adjust_ShadowTexcel(fMinX, fMinY, fMaxX, fMaxY, iShadowWidth, iShadowHeight);
+
 		targetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
 		targetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
 		targetPlanes[2] = _float4(0.f, -1.f, 0.f, fMinY); // Bottom
 		targetPlanes[3] = _float4(0.f, 1.f, 0.f, -fMaxY); // Top
 		targetPlanes[4] = _float4(0.f, 0.f, -1.f, fMinZ); // Near
 		targetPlanes[5] = _float4(0.f, 0.f, 1.f, -fMaxZ); // Far
-
 
 		XMStoreFloat4x4(&m_ShadowTransformStateMatrices[iIndex][ENUM_CLASS(D3DTS::VIEW)], ViewMatrix);
 		XMStoreFloat4x4(&m_ShadowTransformStateMatrices[iIndex][ENUM_CLASS(D3DTS::VIEW_INV)], ViewInvMatrix);
@@ -376,6 +485,31 @@ void CPipeLine::Update_ShadowDepthNdcZ()
 	}
 }
 
+// Out으로 _float4를 새롭게 메모리로 받고 다시 밖에서 할당할 바에 레퍼런스로 쓰는게 더 나을지도?
+// 카메라 미세 흔들림으로 인한 그림자 튐 보정
+void CPipeLine::Adjust_ShadowTexcel(_float& fMinX, _float& fMinY, _float& fMaxX, _float& fMaxY, _uint iShadowWidth, _uint iShadowHeight)
+{
+	_float fCascadeWidth = (fMaxX - fMinX);
+	_float fCascadeHeight = (fMaxY - fMinY);
+
+	_float fTexelSizeX = fCascadeWidth / (_float)(iShadowWidth);
+	_float fTexelSizeY = fCascadeHeight / (_float)(iShadowHeight);
+
+	// 박스 xy 중심
+	_float fCascadeCenterX = (fMinX + fMaxX) * 0.5f;
+	_float fCascadeCenterY = (fMinY + fMaxY) * 0.5f;
+	{
+		fCascadeCenterX = floorf(fCascadeCenterX / fTexelSizeX) * fTexelSizeX;
+		fCascadeCenterY = floorf(fCascadeCenterY / fTexelSizeY) * fTexelSizeY;
+	}
+	
+	// 박스 중심으로 min/max 보정
+	fMinX = fCascadeCenterX - fCascadeWidth * 0.5f;
+	fMaxX = fCascadeCenterX + fCascadeWidth * 0.5f;
+	fMinY = fCascadeCenterY - fCascadeHeight * 0.5f;
+	fMaxY = fCascadeCenterY + fCascadeHeight * 0.5f;
+}
+
 ID3D11ShaderResourceView* CPipeLine::Find_GlobalShaderResourceView(const _tchar* wszKeyGlobalSRV)
 {
 	auto iter = m_mapGlobalSRV.find(wszKeyGlobalSRV);
@@ -385,9 +519,9 @@ ID3D11ShaderResourceView* CPipeLine::Find_GlobalShaderResourceView(const _tchar*
 	return (*iter).second;
 }
 
-CPipeLine* CPipeLine::Create()
+CPipeLine* CPipeLine::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPipeLine* pInstance = new CPipeLine();
+	CPipeLine* pInstance = new CPipeLine(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{
@@ -400,6 +534,11 @@ CPipeLine* CPipeLine::Create()
 void CPipeLine::Free()
 {
 	__super::Free();
+	SAFE_RELEASE(m_pDevice);
+	SAFE_RELEASE(m_pContext);
+	SAFE_RELEASE(m_pPrevDSS);
+	SAFE_RELEASE(m_pDSS_OutLineWrite);
+	SAFE_RELEASE(m_pGameInstance);
 	for (auto& pairSRV : m_mapGlobalSRV) {
 		SAFE_RELEASE(pairSRV.second);
 	}
@@ -412,25 +551,49 @@ void CPipeLine::Describe_Entity()
 {
 	GUI::Begin("SYSTEM");
 	if (GUI::CollapsingHeader("PipeLine")) {
+		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 		_bool bModified = { false };
 		_float fNear = m_fShadowNearBoxRatio;
 		_float fFar = m_fShadowFarBoxRatio;
+		_float fSafe_RadiusMultiplier = m_fSafe_RadiusMultiplier;
+		_float fSafe_RadiusMargin = m_fSafe_RadiusMargin;
 		_float4 vShadowBias = m_vShadowBias;
-		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.01f, 0.01f, 0.999f, "%.2f")) {
+		_float4 vShadowRadius = m_vShadowRadius;
+		_float3	vShadowBoxMarginMin = m_vShadowBoxMarginMin;
+		_float3	vShadowBoxMarginMax = m_vShadowBoxMarginMax;
+		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.001f, 0.001f, 0.999f, "%.3f")) {
 			bModified = true;
 		}
-		if (GUI::DragFloat("m_fShadowFarBoxRatio", &fFar, 0.01f, 0.01f, 0.999f, "%.2f")) {
+		if (GUI::DragFloat("m_fShadowFarBoxRatio", &fFar, 0.001f, 0.001f, 0.999f, "%.3f")) {
 			bModified = true;
 		}
-		GUI::PushItemWidth(150.f);
+		if (GUI::DragFloat("m_fSafe_RadiusMultiplier", &fSafe_RadiusMultiplier, 0.01f, 1.f, 3.f, "%.3f")) {
+			bModified = true;
+		}
+		if (GUI::DragFloat("m_fSafe_RadiusMargin", &fSafe_RadiusMargin, 1.f, 10.f, 40.f, "%.3f")) {
+			bModified = true;
+		}
 		if (GUI::DragFloat4("ShadowBiasNMFS", (_float*)&vShadowBias, 0.0001f, 0.0001f, 1.f, "%.4f")) {
 			bModified = true;
 		}
-		GUI::PushItemWidth(80.f);
+		if (GUI::DragFloat4("ShadowSampleRadius", (_float*)&vShadowRadius, 0.0001f, 1.f, 3.f, "%.4f")) {
+			bModified = true;
+		}
+		if (GUI::SliderFloat3("fShadowBoxMarginMin", (_float*)&vShadowBoxMarginMin, -100.F, 100.f, "%.1f")) {
+			bModified = true;
+		}
+		if (GUI::SliderFloat3("fShadowBoxMarginMax", (_float*)&vShadowBoxMarginMax, -100.F, 100.f, "%.1f")) {
+			bModified = true;
+		}
 		if (true == bModified) {
 			m_fShadowNearBoxRatio = fNear;
 			m_fShadowFarBoxRatio = fFar;
 			m_vShadowBias = vShadowBias;
+			m_vShadowRadius = vShadowRadius;
+			m_fSafe_RadiusMultiplier = fSafe_RadiusMultiplier;
+			m_fSafe_RadiusMargin = fSafe_RadiusMargin;
+			m_vShadowBoxMarginMin = vShadowBoxMarginMin;
+			m_vShadowBoxMarginMax = vShadowBoxMarginMax;
 		}
 	}
 	GUI::End();

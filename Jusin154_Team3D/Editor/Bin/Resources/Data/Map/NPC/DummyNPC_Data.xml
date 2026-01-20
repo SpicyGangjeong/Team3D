@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NPC>
+    <Object ID="13" Index="4">
+        <Position x="7.1631966" y="-10.129012" z="-29.87093"/>
+        <Scale x="0.99811238" y="1" z="0.99811238"/>
+        <Rotation x="0" y="214" z="0"/>
+    </Object>
+    <Object ID="1" Index="1">
+        <Position x="47.214542" y="4.2283616" z="82.240288"/>
+        <Scale x="0.99857348" y="1" z="0.99857348"/>
+        <Rotation x="0" y="120" z="0"/>
+    </Object>
+    <Object ID="2" Index="0">
+        <Position x="48.645473" y="4.2111044" z="80.637032"/>
+        <Scale x="0.99998683" y="1" z="0.99998683"/>
+        <Rotation x="0" y="287" z="0"/>
+    </Object>
+    <Object ID="5" Index="2">
+        <Position x="40.331745" y="6.6973305" z="99.171661"/>
+        <Scale x="0.99978107" y="1" z="0.99978107"/>
+        <Rotation x="0" y="160" z="0"/>
+    </Object>
+    <Object ID="6" Index="3">
+        <Position x="90.164291" y="15.802738" z="142.52655"/>
+        <Scale x="1.0003461" y="1" z="1.0003461"/>
+        <Rotation x="0" y="135" z="0"/>
+    </Object>
+    <Object ID="7" Index="5">
+        <Position x="114.85642" y="15.469075" z="116.20981"/>
+        <Scale x="0.99999529" y="1" z="0.99999529"/>
+        <Rotation x="0" y="315" z="0"/>
+    </Object>
+    <Object ID="9" Index="6">
+        <Position x="35.15633" y="1.598594" z="50.624886"/>
+        <Scale x="0.99999732" y="1" z="0.99999732"/>
+        <Rotation x="0" y="120" z="0"/>
+    </Object>
+    <Object ID="10" Index="7">
+        <Position x="129.77383" y="15.728663" z="121.83965"/>
+        <Scale x="0.99999732" y="1" z="0.99999732"/>
+        <Rotation x="0" y="-105" z="0"/>
+    </Object>
+    <Object ID="11" Index="8"> 
+        <Position x="-393.24478" y="-33.342117" z="-362.13519"/>
+        <Scale x="0.9999885" y="1" z="0.9999885"/>
+        <Rotation x="0" y="285" z="0"/>
+    </Object>
+    <Object ID="12" Index="9">
+        <Position x="79.841499" y="3.8484674" z="83.004013"/>
+        <Scale x="0.99980307" y="1" z="0.99980307"/>
+        <Rotation x="0" y="210" z="0"/>
+    </Object>
+    <Object ID="14" Index="10">
+        <Position x="113.73" y="13.5" z="96.3"/>
+        <Scale x="0.99980307" y="1" z="0.99980307"/>
+        <Rotation x="0" y="-74" z="0"/>
+    </Object>
+    <Object ID="15" Index="11">
+        <Position x="123.5" y="16.4" z="117.7"/>
+        <Scale x="0.99980307" y="1" z="0.99980307"/>
+        <Rotation x="0" y="-27" z="0"/>
+    </Object>
+</NPC>

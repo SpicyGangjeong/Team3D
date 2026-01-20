@@ -47,9 +47,9 @@ private:
 	class CTrailObject*									 m_pTrailObject = { nullptr };
 	map<_wstring, vector<pair<_wstring, _wstring>>>		 m_MatFiles = {}; // map<머테리얼 이름, vector<텍스쳐이름 , 텍스쳐 경로>>
 
-	_char												 m_szBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/"};
+	_char												 m_szBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/Ranrok"};
 	_char												 m_szTrailBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/Trail/" };
-	_char												 m_szPackageBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/" };
+	_char												 m_szPackageBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/Ranrok" };
 
 	_string												 m_strSavePath = {};
 	_string												 m_strTrailSavePath = {};
@@ -58,6 +58,7 @@ private:
 private:
 	class CEffectPool*									 m_pEffectPool = nullptr;
 	_bool											     m_isWandPos = {};
+
 public:
 	static CEffect_Editor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

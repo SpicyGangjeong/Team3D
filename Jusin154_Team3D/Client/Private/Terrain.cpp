@@ -32,13 +32,14 @@ HRESULT CTerrain::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fUsingSurfaceParams = 15.f / 27.f;
+	m_fUsingSurfaceParams = SRO_PARAMETER;
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 
 	{
 		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
 		Desc.pMeshName = pDesc->strRigidBody_MeshName.c_str();
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		Desc.pWorldMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 		/* Com_RigidBody */
 		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->strRigidBody_ComponentTag,
 			reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
@@ -51,17 +52,18 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 void CTerrain::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->RewindMomentum();
 }
 
 void CTerrain::Update(_float fTimeDelta)
 {
-
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
 {
 	//if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 	//}
 }
 
@@ -169,6 +171,15 @@ HRESULT CTerrain::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -234,19 +245,24 @@ void CTerrain::Free()
 #ifdef _DEBUG
 void CTerrain::Describe_Entity()
 {
-	GUI::Begin("Renderer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
-	if (GUI::CollapsingHeader("Terr"))
-	{
-		static _int iTuningValue = 16;
-		GUI::DragInt("DSN1", (_int*)&iTuningValue, 1, 1024);
-		GUI::DragInt("DSN2", (_int*)&iTuningValue, 1, 1024);
-		GUI::DragInt("DSN3", (_int*)&iTuningValue, 1, 1024);
-		m_vDRN.x = 1.f / (_float)iTuningValue;
-		m_vDRN.y = 1.f / (_float)iTuningValue;
-		m_vDRN.z = 1.f / (_float)iTuningValue;
-		GUI::PopItemWidth();
-	}
-	GUI::End();
+	//GUI::Begin("Renderer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	//GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
+	//size_t iIndex = (size_t)this;
+
+	//
+	//_string strTag = "Terrain_" + to_string((size_t)iIndex);
+	//if (GUI::CollapsingHeader(strTag.c_str()))
+	//{
+	//	static _int iTuningValue = 16;
+	//	GUI::DragInt("DSN1", (_int*)&iTuningValue, 1, 1024);
+	//	GUI::DragInt("DSN2", (_int*)&iTuningValue, 1, 1024);
+	//	GUI::DragInt("DSN3", (_int*)&iTuningValue, 1, 1024);
+	//	m_vDRN.x = 1.f / (_float)iTuningValue;
+	//	m_vDRN.y = 1.f / (_float)iTuningValue;
+	//	m_vDRN.z = 1.f / (_float)iTuningValue;
+	//	GUI::PopItemWidth();
+	//	GUI::Checkbox("Visible", &m_bVisible);
+	//}
+	//GUI::End();
 }
 #endif // _DEBUG

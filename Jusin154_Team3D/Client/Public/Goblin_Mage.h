@@ -37,7 +37,7 @@ public:
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
 	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
-	CEnemy_Detection* m_pDetection = { nullptr };
+	//CEnemy_Detection* m_pDetection = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -60,6 +60,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	void HitState_Behavior(_float fTimeDelta);
 
 public:
 	static CGoblin_Mage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -72,7 +73,6 @@ public:
 
 private:
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 private:
 	class CEffectPool* m_pEffectPool = { nullptr };
 
@@ -81,12 +81,24 @@ private:
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 20.f,5.f,30.f,15.f };
 
-	_bool m_bStep = { false };
-	_float m_fTpTime = {};
-	_float m_fAirTime = {};
-	_vector m_vOriginPos = {};
-	_float m_fLength = {};
-	_bool m_bShield = { false };
+	_bool	m_bStep = { false };
+	_float	m_fTpTime = {};
+	_float	m_fAirTime = {};
+	_float	m_fLength = {};
+	_bool	m_bShield = { false };
+	_bool	m_bPos = {};
+	_float	m_fAccel = { 3.f };
+	_float	m_fTargetSpeed = { 60.f };
+	_float	m_fSpeed = {};
+	_bool	m_bAir = {};
+	_float	m_fGravityAmount = {};
+	_float	m_fHitTimer = {};
+	_float	m_fTumbleTimer = {};
+	_bool	m_bCameraShake = {};
+
+#ifdef _DEBUG
+	_bool   m_isDebugMode = {};
+#endif
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
@@ -120,6 +132,10 @@ private:
 	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);
 	void	Behavior_BlinkExit();
 
+	void	Behavior_FearEnter();
+	HRESULT Behavior_FearExitCheck(_float fTimeDelta);
+	void	Behavior_FearExit();
+
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
@@ -127,6 +143,16 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
+
+#pragma region HIT_BEHAVIOR
+
+	void Hit_Accio(_float fTimeDelta);
+	void Hit_Levioso(_float fTimeDelta);
+	void Hit_Jap();
+	void Descendo_Event();
+	void TumbleAnim(_float fTimeDelta);
+
+#pragma endregion
 
 };
 

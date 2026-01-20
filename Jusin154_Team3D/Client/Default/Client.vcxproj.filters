@@ -50,7 +50,7 @@
       <Filter>02.GameObjects\Cameras\Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Light_Main.h">
-      <Filter>02.GameObjects\Environment\Lights\Main</Filter>
+      <Filter>02.GameObjects\Environment\99.Lights\Main</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerInfo.h">
       <Filter>03.InfoInstance\00.PlayerInfo</Filter>
@@ -78,12 +78,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Broom.h">
       <Filter>02.GameObjects\Item\Broom</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Dummy_PhysXWall.h">
-      <Filter>02.GameObjects\PhysX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h">
-      <Filter>02.GameObjects\PhysX</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>04.Mechanic\State</Filter>
@@ -338,7 +332,7 @@
       <Filter>04.Mechanic\State\State_Combat\State_Swing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Blink.h">
-      <Filter>04.Mechanic\State\State_Combat\State_Blink</Filter>
+      <Filter>04.Mechanic\State\Movement\State_Blink</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Dagger.h">
       <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
@@ -361,7 +355,7 @@
     <ClInclude Include="..\Public\State_IdleBreak.h">
       <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Troll_State_Rush.h">
+    <ClInclude Include="..\Public\State_Rush.h">
       <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_LightAttack.h">
@@ -406,10 +400,6 @@
     <ClInclude Include="..\Public\Goblin_Mage.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Goblin.h" />
-    <ClInclude Include="..\Public\Goblin_Spector.h">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Goblin_Spector.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
     </ClInclude>
@@ -448,9 +438,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Lake.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Goblin.h">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Protego.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego</Filter>
@@ -527,11 +514,11 @@
     <ClInclude Include="..\Public\Barral_Splesh.h">
       <Filter>02.GameObjects\Effect\PropsEffect\Barral</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Broom_Hover.h">
-      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
+    <ClInclude Include="..\Public\State_Hover.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Hover</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Broom_Fly.h">
-      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Fly</Filter>
+    <ClInclude Include="..\Public\State_Fly.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Fly</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MiniMap_Camera.h">
       <Filter>02.GameObjects\Cameras\MiniMap_Camera</Filter>
@@ -563,29 +550,14 @@
     <ClInclude Include="..\Public\Accio.h">
       <Filter>02.GameObjects\Effect\Effects\Accio</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Quest_Border.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Quest_Entry_Line.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Quest_Header.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Quest_HeaderLine.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Quest_Info.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Quest_Info_Header.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Quest_Info_Line.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Quest_List.h">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Quest_Canvas.h">
       <Filter>02.GameObjects\UI\Quest_Canvas</Filter>
@@ -602,7 +574,429 @@
     <ClInclude Include="..\Public\RaceRing.h">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BroomRaceManager.h" />
+    <ClInclude Include="..\Public\Screen_Wind.h">
+      <Filter>02.GameObjects\Effect\ScreenFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Status.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Status</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Data.h">
+      <Filter>04.Mechanic\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Interaction_Key.h">
+      <Filter>02.GameObjects\UI\Interaction_Key</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireBreath.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Pulse.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Pulse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Tucked.h">
+      <Filter>04.Mechanic\State\Movement\Tucked</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_AncientSpell.h">
+      <Filter>04.Mechanic\State\State_Combat\State_AncientSpell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\QuestInstance.h">
+      <Filter>04.Mechanic\Quest\QuestInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Slot.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Info_Header.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Stupefy.h">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Static.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Lightning.h">
+      <Filter>02.GameObjects\Effect\Effects\Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LightningSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireSweep.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireSweep</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Ground.h">
+      <Filter>04.Mechanic\State\Movement\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Swipe.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Swipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Slide.h">
+      <Filter>04.Mechanic\State\Focus\Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Skill.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRaceManager.h">
+      <Filter>02.GameObjects\BroomRaceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Data.h">
+      <Filter>04.Mechanic\Skill\SpellLearn_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_MovePointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Name.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Panel.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Canvas.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Blink.h">
+      <Filter>02.GameObjects\Effect\Effects\Blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Skill2.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NPC_EleazarFig.h">
+      <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Transformation.h">
+      <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TransformationSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Avadakedavra.h">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Slot.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Overlay.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_LookPointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_ChaserPointer.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpellLearn_Booster.h">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_NonPlayable_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_NonPlayable_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Fall.h">
+      <Filter>04.Mechanic\State\Focus\State_Fall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AvadakedavraSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_FireBall.h">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NPCInteraction.h">
+      <Filter>02.GameObjects\UI\NPCInteraction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue_Font.h">
+      <Filter>04.Mechanic\Dialogue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue.h">
+      <Filter>04.Mechanic\Dialogue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WorldDecal.h">
+      <Filter>02.GameObjects\Environment\98,WorldDecal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PointLight.h">
+      <Filter>02.GameObjects\Environment\99.Lights\PointLight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_FireBall.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_FireBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Breath.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_AI.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Dialogue_Data.h">
+      <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Point.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Assassin.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Sword.h">
+      <Filter>02.GameObjects\Item\Goblin_Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Slash.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Slash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dash.h">
+      <Filter>04.Mechanic\State\Movement\Dash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Spector.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Assassin_Spector.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Circle.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Flag.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Scoreboard.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Broom_TargetGate.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Finish.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Finish</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Exit.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Exit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Record.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_Trophy.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ReparoObject.h">
+      <Filter>02.GameObjects\ReparoObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InstancedProp_Light.h">
+      <Filter>02.GameObjects\Environment\02.InstancedProp\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Pulse.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Pulse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Charge.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Fear.h">
+      <Filter>04.Mechanic\State\Focus\Fear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_Booster_Slot.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_BoosterBar.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_HpBar.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_HpSlot.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_Info.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_Info_Key.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_InfoBG.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ride_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Model.h">
+      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Impact.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrol_Impact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Hit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RandomNpc.h">
+      <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Land.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_GroundPulse.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_DeadSplash.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Swipe.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_DeadImpact.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Human_Duelist.h">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_NormalJap.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_Protego.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_Levioso.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_CutScene.h">
+      <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ThestralCarriage.h">
+      <Filter>02.GameObjects\Item\ThestralCarriage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutSceneInfo.h">
+      <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Cinematic.h">
+      <Filter>02.GameObjects\Cameras\Camera_Cinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Choice.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Panel.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dialogue_Canvas.h">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Prop.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectInfo.h">
+      <Filter>03.InfoInstance\05.EffectInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_JapSide.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Protego_Hit.h">
+      <Filter>02.GameObjects\Effect\Effects\Protego\ProtegoHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_ProtegoHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego\Goblin_ProtegoHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_Prop.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Block.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StupefySide.h">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy\StupefySide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_ENUM.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Balloon.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Balloon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Parry.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AccioSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_TargetGate2D.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Shout.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Shout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rush.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Self_Hit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duelist_ProtegoHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_TargetGate2D.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Elf.h">
+      <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Cave.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_SkillUI.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Reparo.h">
+      <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Spell_Learning.h">
+      <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PotionScreen.h">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PotionBroken.h">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionBroken</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitScreen.h">
+      <Filter>02.GameObjects\Effect\Effects\HitScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRace_Bubble.h">
+      <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_WorldLook.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_PropHit.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ranrok_EtherInfo.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene_Lightning.h">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene_Fire.h">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene_Smoke.h">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Smoke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene_Shout.h">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Shout</Filter>
+       </ClInclude>
+    <ClInclude Include="..\Public\TriggerBox.h">
+      <Filter>04.Mechanic\20.TriggerBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Throw.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Throw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Attack.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Attack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -613,14 +1007,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="99.Define">
-      <UniqueIdentifier>{2899f7fc-0ed2-41c0-8e24-0d89f08ffc39}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.MainApp">
       <UniqueIdentifier>{2902e559-abdf-4dd7-ac4c-cc6e2b81ad0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\00.DEFAULT">
-      <UniqueIdentifier>{05a0db73-4fbf-456c-9137-bb605c632d68}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels">
       <UniqueIdentifier>{aa499dd2-f7cb-4abd-9b3c-19f6e8427d7e}</UniqueIdentifier>
@@ -658,41 +1046,14 @@
     <Filter Include="02.GameObjects\NPC\Ally">
       <UniqueIdentifier>{a7d0a3fa-b3dc-40c6-b258-ffcde49b05c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic">
-      <UniqueIdentifier>{b5bef783-5315-4488-ac64-cb98d16a84a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\Item">
-      <UniqueIdentifier>{31681680-d5de-43c9-bc2d-2c91ca58a593}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State">
-      <UniqueIdentifier>{1bfec6dc-f008-4d18-87d6-be38824b1272}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\10.Field">
       <UniqueIdentifier>{2b209526-b728-4fba-a184-b9224d72903a}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\99.Restart">
       <UniqueIdentifier>{e12b3048-dd6d-41bf-b346-e4abdaa4f215}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Environment\Lights">
-      <UniqueIdentifier>{74f21f9b-30bf-412e-ba4e-526958ab2a52}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Cameras\Debug">
       <UniqueIdentifier>{8d89a59c-fbd2-4a4a-ab01-a70abb80cc49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Lights\Main">
-      <UniqueIdentifier>{b24c78ef-dccc-41f0-a086-053ae6b7fbf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Plane">
-      <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop">
-      <UniqueIdentifier>{2814c935-13d9-4b9a-94ba-c9e470219a18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop\SkyBox">
-      <UniqueIdentifier>{19ee2ea4-2d79-46bd-b857-c759e3ec6cf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\Prop\SkyBox\TriggerBox">
-      <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition">
       <UniqueIdentifier>{25ad4a41-5b06-4659-bd29-c0c4265a3277}</UniqueIdentifier>
@@ -750,30 +1111,6 @@
     </Filter>
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport">
       <UniqueIdentifier>{dc05dfc9-22e5-4a2a-b016-c55b215c0c68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus">
-      <UniqueIdentifier>{0834c76d-83d8-4ef5-9d19-7277686d28c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat">
-      <UniqueIdentifier>{017fc692-bac0-4635-843c-02fb59009f5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement">
-      <UniqueIdentifier>{349939a0-8b9a-4a1a-8f0a-ca5014cd4e18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Dodge">
-      <UniqueIdentifier>{5fa1e5a9-acd8-499d-90ee-9cf17441b3a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Jump">
-      <UniqueIdentifier>{41d2e34e-5280-4b3c-961e-064484f1449d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Focus\Land">
-      <UniqueIdentifier>{1034dd61-dd17-456a-990b-628c45f74b51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Idle">
-      <UniqueIdentifier>{2999d0c5-81e4-44d6-99b3-4801e6f84dd7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Move">
-      <UniqueIdentifier>{0a3f9629-27d1-411c-806e-b550af8f1ca1}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect">
       <UniqueIdentifier>{23fc95c4-0db3-4569-bd37-4d9bc32938ba}</UniqueIdentifier>
@@ -898,12 +1235,6 @@
     <Filter Include="02.GameObjects\Effect\Effects\Lumos">
       <UniqueIdentifier>{6bc9fd95-31bc-40f3-83cc-15ebb756b04a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\Skill">
-      <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\Skill\Skill_Data">
-      <UniqueIdentifier>{2bc5b43e-0e24-49d4-95b0-549ad4428201}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement">
       <UniqueIdentifier>{f3f219aa-034f-4aa2-9f2e-d75d15bd1f4a}</UniqueIdentifier>
     </Filter>
@@ -979,50 +1310,17 @@
     <Filter Include="02.GameObjects\UI\UI_Manager">
       <UniqueIdentifier>{9cc8fea6-837e-4f68-b116-134c9dc68a26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Hit">
-      <UniqueIdentifier>{5a7e32b1-6fa9-44e2-8d6e-b117c3454d5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Troll_Combat">
-      <UniqueIdentifier>{46e41554-f9a0-41c5-992c-f736ef1a333f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Throw">
-      <UniqueIdentifier>{039f471d-9623-4026-9493-5bb52c6a8cd3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Item\Troll_Rock">
       <UniqueIdentifier>{837ff377-2bcd-4a54-baf2-18b1be9d90a0}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Item\Goblin_Dagger">
       <UniqueIdentifier>{7d6fe51e-3d6d-4fed-9e5d-27e257672e01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Swing">
-      <UniqueIdentifier>{f109c973-c532-4549-9680-d0d6495b0fa8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Blink">
-      <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Mouse_Cursor">
       <UniqueIdentifier>{b8c7e12b-da04-4d49-bc61-104649975d0b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Interactable">
       <UniqueIdentifier>{17eaf081-6fbf-4965-b04d-10749e6032c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Slam">
-      <UniqueIdentifier>{75479637-e795-4656-a4ef-3772d8a6d007}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing">
-      <UniqueIdentifier>{27d5a2b8-98db-4dbf-9916-0806cfa97c9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\IdleBreak">
-      <UniqueIdentifier>{a7f11f50-5740-4670-ad9e-d21640b2cca7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_LightAttack">
-      <UniqueIdentifier>{12ff4f09-ec6c-4b98-966a-0d84c9ad253c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Rush">
-      <UniqueIdentifier>{7bb8a04a-00a0-4864-9781-8069d84806ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Spell">
-      <UniqueIdentifier>{e68261eb-a581-4bf5-b48d-b47cc81f7406}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.GamePlay">
       <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
@@ -1053,9 +1351,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Screen\Logo\Logo_Text">
       <UniqueIdentifier>{c584798b-d7aa-4cb0-b6e8-c2aff73757ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Movement\Shuffle">
-      <UniqueIdentifier>{0ed6a11e-5d22-4b9f-a39c-f2319c27caf4}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage">
       <UniqueIdentifier>{5973b96c-42c3-4cda-9627-f741e12124cd}</UniqueIdentifier>
@@ -1126,26 +1421,11 @@
     <Filter Include="02.GameObjects\Item\Goblin_Axe">
       <UniqueIdentifier>{e666a8b4-c92e-48ee-b63b-40d852b27b06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Effect\Effects\WandEnd">
-      <UniqueIdentifier>{14ad0431-680b-4c8b-93d7-601aee5ce435}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Sustain">
-      <UniqueIdentifier>{22207d12-6fd2-4692-9329-b0ea0e19ca84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.InfoInstance\03.InteractiveInfo">
       <UniqueIdentifier>{1d1dc743-5cf2-4b8f-a80e-16b16437c7aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Dead">
-      <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Stun">
-      <UniqueIdentifier>{2e2a53dc-9ea6-427f-88b3-d8857193d432}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Attack">
       <UniqueIdentifier>{967d1741-2780-40b7-b55e-9fd58e931ef7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\Damage">
-      <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Mage">
       <UniqueIdentifier>{13977e62-6b05-41de-9919-20a06cd336e5}</UniqueIdentifier>
@@ -1165,15 +1445,6 @@
     <Filter Include="02.GameObjects\Effect\State_Effect\Stun">
       <UniqueIdentifier>{c9370e36-317e-45e7-a8c7-98a623864824}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player">
-      <UniqueIdentifier>{48b905c1-b91e-44ca-a61b-86633826768b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Ride_Move">
-      <UniqueIdentifier>{d6be355f-c860-4323-9967-583265749698}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Dismount">
-      <UniqueIdentifier>{51b299f6-ebb0-4f58-9620-5e1dc24a2e60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
     </Filter>
@@ -1189,20 +1460,11 @@
     <Filter Include="02.GameObjects\Effect\PropsEffect\Chair">
       <UniqueIdentifier>{3103c6e1-60cb-438b-a3eb-844b919ccd43}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Hover">
-      <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Fly">
-      <UniqueIdentifier>{f24321bb-6750-4baa-b19a-bf5a3c2a8909}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Cameras\MiniMap_Camera">
       <UniqueIdentifier>{dbf4ff12-e5eb-439a-aa02-e5a424453b08}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Enemy_Detection">
       <UniqueIdentifier>{34a4beb9-ccb9-4847-ae45-af4e7dc25d94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\State_Shield">
-      <UniqueIdentifier>{fd4a0869-2491-4fec-9df9-3aedbac96171}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\Shopper">
       <UniqueIdentifier>{02cb243a-f63e-4e55-9d55-b47e31a4c13e}</UniqueIdentifier>
@@ -1231,17 +1493,8 @@
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel">
       <UniqueIdentifier>{322edb99-c59d-4a92-8ab1-8ec57a9e18fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border">
-      <UniqueIdentifier>{ba5406be-c0a0-41dd-879f-a324d71ea4b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line">
       <UniqueIdentifier>{c02a6573-5be6-4f17-b1b0-39698c0fff5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header">
-      <UniqueIdentifier>{da2bbb64-73eb-427a-ae36-21c9ed5db304}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine">
-      <UniqueIdentifier>{73ceb062-c340-4365-9fb3-7bb21f9b9552}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info">
       <UniqueIdentifier>{bfeebdc4-6aa9-400f-a086-3d6a32a3d37e}</UniqueIdentifier>
@@ -1252,20 +1505,554 @@
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line">
       <UniqueIdentifier>{7c8b3162-a6d5-441f-84ae-cfb4bf779dfa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List">
-      <UniqueIdentifier>{2d8d199b-8ba8-497a-afb3-edcc4c905ea5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_TurboFly">
-      <UniqueIdentifier>{2326c134-a2bb-45f1-8452-2dd49bf42697}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\BroomRacerAI">
       <UniqueIdentifier>{6ffe4bf3-60e2-4dd3-beef-cc7cf7b50328}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Item\RaceRing">
       <UniqueIdentifier>{f00654f0-c372-4289-ab1d-167941076573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\ScreenFX">
+      <UniqueIdentifier>{125737f1-56b3-4746-9be2-ea1bcb90c013}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\BroomRaceManager">
       <UniqueIdentifier>{9e8bccb6-c491-4f3a-bdb8-5f03f13ad84d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Interaction_Key">
+      <UniqueIdentifier>{08163c4a-63c9-4cc2-97b4-97bb2f9467ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Status">
+      <UniqueIdentifier>{bffcced5-6951-4db4-9df1-44b33b52ece7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot">
+      <UniqueIdentifier>{6bbfb8f0-c71a-4769-b1e6-efd5d863ba7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Stupefy">
+      <UniqueIdentifier>{7672784a-86a8-4485-a4de-a979bd0c8f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Static">
+      <UniqueIdentifier>{c3b86f00-da19-47ad-a26e-7ff641e2c4d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Lightning">
+      <UniqueIdentifier>{8abf6703-8c12-4dd5-9a10-a6747a1c6037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Lightning\LightningSide">
+      <UniqueIdentifier>{b494a051-9dcc-4739-9048-13fb963c441f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok">
+      <UniqueIdentifier>{bb981766-6030-4dd9-b92d-f6819a70c93d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas">
+      <UniqueIdentifier>{c00fdde9-9768-475d-bde2-d89305b759d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel">
+      <UniqueIdentifier>{1c4d53fe-facb-4a8e-9f4e-c02e3b333d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn">
+      <UniqueIdentifier>{f0015309-1656-42bb-8c06-58660586eeeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer">
+      <UniqueIdentifier>{ec3213cc-8976-4c8b-b317-6155cae388cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name">
+      <UniqueIdentifier>{7d84f56c-9d2f-483e-9ee1-2637d35ccb7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Blink">
+      <UniqueIdentifier>{262cc240-d062-406a-9d47-36702fe6b9f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Transformation">
+      <UniqueIdentifier>{87b1db75-938f-462f-a288-fe9c8d6c689e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\GateKeeper">
+      <UniqueIdentifier>{cef7b9f7-3bb3-4782-a1a8-09751fa538d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Transformation\TransformationSide">
+      <UniqueIdentifier>{064b5e2f-dcde-47fd-a43d-43e25800393d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra">
+      <UniqueIdentifier>{575f6ef3-7013-448a-b448-e94f1ddc5647}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer">
+      <UniqueIdentifier>{d9c0bcb6-64f6-4b58-a68d-ff04c91b9861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer">
+      <UniqueIdentifier>{61024044-17a9-45ed-a6f9-73385290846d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster">
+      <UniqueIdentifier>{b512f128-fcec-4db4-8cd2-08abfc56e000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay">
+      <UniqueIdentifier>{2af08f38-aff0-4632-acb8-492111ff88f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot">
+      <UniqueIdentifier>{dd7d2910-1d3d-42c4-9390-ac60685357ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\Behavior\NPC">
+      <UniqueIdentifier>{954ad10f-edc4-4dda-a2e1-741a418831e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\NPC">
+      <UniqueIdentifier>{b265ac30-97f5-4dac-bc6b-b11fba1c5ad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide">
+      <UniqueIdentifier>{f9c3f711-4032-4455-9d70-b81c5320f8c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok">
+      <UniqueIdentifier>{93545681-c4c5-4a6a-9496-7b2e7b8a9302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok">
+      <UniqueIdentifier>{087ad9ea-445d-4bf7-8ec4-0f29a0c2dd53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\NPCInteraction">
+      <UniqueIdentifier>{09764279-bf54-48e4-853a-45b5a65c92a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\99.Lights">
+      <UniqueIdentifier>{74f21f9b-30bf-412e-ba4e-526958ab2a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\99.Lights\Main">
+      <UniqueIdentifier>{b24c78ef-dccc-41f0-a086-053ae6b7fbf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\98,WorldDecal">
+      <UniqueIdentifier>{511923f0-d74a-4e9e-9fc6-30ae8ddf8d53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\99.Lights\PointLight">
+      <UniqueIdentifier>{4151af66-59d0-496d-a9a0-0c0603166192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_FireBall">
+      <UniqueIdentifier>{a682b36b-cead-4c0d-abda-466b0a5f52c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath">
+      <UniqueIdentifier>{a3b5e707-dbb3-47da-a77b-b0ca62b89e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\AI">
+      <UniqueIdentifier>{a24f4687-f540-44e5-ae47-fe176c4c9042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point">
+      <UniqueIdentifier>{a94e24d2-0f61-4263-b834-bfdf9f6c06ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin">
+      <UniqueIdentifier>{af9f5cf6-151a-49bc-9af4-28ba0bde1d37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Goblin_Sword">
+      <UniqueIdentifier>{db12252c-8c0d-40bc-9466-e76ec60e2509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector">
+      <UniqueIdentifier>{0c62f4f7-a0e6-4ff2-a4dd-25e3dd79709e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector">
+      <UniqueIdentifier>{bf7cf91b-742f-4913-8af2-39ed94d19e23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel">
+      <UniqueIdentifier>{e5da4124-9936-46e7-981b-9d8ccc9590d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle">
+      <UniqueIdentifier>{b5b99876-ca87-4276-9276-5961625e06c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag">
+      <UniqueIdentifier>{8a87e6cb-ba54-45ee-866b-9098085f973b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard">
+      <UniqueIdentifier>{09fac7f5-d246-4860-a151-04c92c0677f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate">
+      <UniqueIdentifier>{c61b7c21-0ea8-42c4-a535-8624ce17fc8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Exit">
+      <UniqueIdentifier>{b585e3f0-93f7-4825-b049-5616a680d102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Record">
+      <UniqueIdentifier>{40d9d62b-f8cf-4a09-89cc-2f336f8052a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Finish">
+      <UniqueIdentifier>{2246ff16-d62c-4e16-a948-16e7968e0933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy">
+      <UniqueIdentifier>{756a21e7-6714-47cc-8d2d-0b993a00a3ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ReparoObject">
+      <UniqueIdentifier>{4fbbe0ec-6b65-49f1-a72d-fe73ddbf2b4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\02.InstancedProp\Light">
+      <UniqueIdentifier>{2e3b9cee-41ee-4984-a1d0-3aaebbcf41a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define">
+      <UniqueIdentifier>{2899f7fc-0ed2-41c0-8e24-0d89f08ffc39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\00.DEFAULT">
+      <UniqueIdentifier>{05a0db73-4fbf-456c-9137-bb605c632d68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Pulse">
+      <UniqueIdentifier>{0464c6ff-87b8-4a3e-bc06-c912b32a65eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge">
+      <UniqueIdentifier>{fd036f05-4c10-4322-b0c2-aac65e7011a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel">
+      <UniqueIdentifier>{5bf233fa-6f9c-40d5-85c6-adbc7fcf7d28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar">
+      <UniqueIdentifier>{d3ad8db7-ff00-498d-ba50-aa4c38a56d4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot">
+      <UniqueIdentifier>{721edad8-8be2-4e4c-9730-1c1cf8655880}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key">
+      <UniqueIdentifier>{76eaa3a8-b4ba-4530-9369-61666e660e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG">
+      <UniqueIdentifier>{99c0bf2f-3686-4171-b23d-2c0bdf3c6d9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info">
+      <UniqueIdentifier>{7876ff7e-f456-49ce-8fd6-766116613ff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\Camera_Model">
+      <UniqueIdentifier>{40504926-63cc-4132-ade2-5a789e1a82a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit">
+      <UniqueIdentifier>{b537dfd4-fcad-401f-a49a-8fdafeb91ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrol_Impact">
+      <UniqueIdentifier>{15ea8015-5b0a-4678-bf02-55b042ef4de4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\RandomNpc">
+      <UniqueIdentifier>{88b62177-01fc-424d-a444-4fb5fd4b2db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Human_Duelist">
+      <UniqueIdentifier>{9bd903be-dc05-4dd6-9abc-d676be0b7f7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Land">
+      <UniqueIdentifier>{9cf44fef-f3be-409e-b530-6aef90db5c0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse">
+      <UniqueIdentifier>{c756e70b-1ba2-4a25-a177-b50bbc1a332a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush">
+      <UniqueIdentifier>{eb8e52f5-0283-4acf-8fbb-0e734b7580e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot">
+      <UniqueIdentifier>{9c357e12-18b3-461e-b74c-76f85280796f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar">
+      <UniqueIdentifier>{8b69e309-b90b-47f6-8f2d-3dd778b468fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact">
+      <UniqueIdentifier>{a7aeb7ef-a180-49ba-81f6-c8a47dcb941d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe">
+      <UniqueIdentifier>{7a994c53-e406-485e-82c2-6a116b6b23e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash">
+      <UniqueIdentifier>{e1fcb75d-6e7a-4adb-9835-6913ac6f44b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Prop">
+      <UniqueIdentifier>{77cbc828-2eec-4c0e-8425-d9fdf8c4c797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop">
+      <UniqueIdentifier>{95a34fdb-ac6d-4312-8d28-1931f95c4f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap">
+      <UniqueIdentifier>{09b5e5b3-c1fe-4399-b2d3-96d652255bb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Duelist_Protego">
+      <UniqueIdentifier>{b12b49e0-3bdc-403f-be34-3e97cada7270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso">
+      <UniqueIdentifier>{5351494b-8047-488a-ba2b-59a88dae4534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\04.CutSceneInfo">
+      <UniqueIdentifier>{41ab19cd-5fd6-48e8-b920-cf6d034c5677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic">
+      <UniqueIdentifier>{b5bef783-5315-4488-ac64-cb98d16a84a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Item">
+      <UniqueIdentifier>{31681680-d5de-43c9-bc2d-2c91ca58a593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State">
+      <UniqueIdentifier>{1bfec6dc-f008-4d18-87d6-be38824b1272}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus">
+      <UniqueIdentifier>{0834c76d-83d8-4ef5-9d19-7277686d28c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Dodge">
+      <UniqueIdentifier>{5fa1e5a9-acd8-499d-90ee-9cf17441b3a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Jump">
+      <UniqueIdentifier>{41d2e34e-5280-4b3c-961e-064484f1449d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Land">
+      <UniqueIdentifier>{1034dd61-dd17-456a-990b-628c45f74b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Slide">
+      <UniqueIdentifier>{ee880571-e18c-4206-80ea-448cadd04d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\State_Fall">
+      <UniqueIdentifier>{b85f80a2-d88e-4eb0-91af-da93b49bfa09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Fear">
+      <UniqueIdentifier>{99712e38-b76a-4c04-8ba3-16ddaac72679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat">
+      <UniqueIdentifier>{017fc692-bac0-4635-843c-02fb59009f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Throw">
+      <UniqueIdentifier>{039f471d-9623-4026-9493-5bb52c6a8cd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Swing">
+      <UniqueIdentifier>{f109c973-c532-4549-9680-d0d6495b0fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Slam">
+      <UniqueIdentifier>{75479637-e795-4656-a4ef-3772d8a6d007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_LightAttack">
+      <UniqueIdentifier>{12ff4f09-ec6c-4b98-966a-0d84c9ad253c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Spell">
+      <UniqueIdentifier>{e68261eb-a581-4bf5-b48d-b47cc81f7406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Sustain">
+      <UniqueIdentifier>{22207d12-6fd2-4692-9329-b0ea0e19ca84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Dead">
+      <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Shield">
+      <UniqueIdentifier>{fd4a0869-2491-4fec-9df9-3aedbac96171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireBreath">
+      <UniqueIdentifier>{cbb70230-b830-4554-a678-c571d5a87176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireBall">
+      <UniqueIdentifier>{77fc199c-dd8f-4b36-8869-161a4998c189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Pulse">
+      <UniqueIdentifier>{70ff75c1-3309-4db7-9f5c-51573046df9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_AncientSpell">
+      <UniqueIdentifier>{c69a2485-7f6e-4e22-81b4-1410fdae9d57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_FireSweep">
+      <UniqueIdentifier>{2c39ba68-2f23-4bc9-a277-b6e9295c11a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Swipe">
+      <UniqueIdentifier>{2fd96fb0-dbc3-4486-afda-82b3b1b63060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Skill">
+      <UniqueIdentifier>{cef80506-72c7-4bb9-a691-760f0a576eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Skill2">
+      <UniqueIdentifier>{785b1fd0-ef6f-43ab-96fc-e233cd93b29d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Slash">
+      <UniqueIdentifier>{0736f27e-2722-483b-88b6-30471ad70835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_CutScene">
+      <UniqueIdentifier>{b50fed80-37dd-4adb-afd4-ba153cef8a92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement">
+      <UniqueIdentifier>{349939a0-8b9a-4a1a-8f0a-ca5014cd4e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Idle">
+      <UniqueIdentifier>{2999d0c5-81e4-44d6-99b3-4801e6f84dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Move">
+      <UniqueIdentifier>{0a3f9629-27d1-411c-806e-b550af8f1ca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\IdleBreak">
+      <UniqueIdentifier>{a7f11f50-5740-4670-ad9e-d21640b2cca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Shuffle">
+      <UniqueIdentifier>{0ed6a11e-5d22-4b9f-a39c-f2319c27caf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Tucked">
+      <UniqueIdentifier>{5fa641cd-bc30-4ab6-a8d4-26a9785ef4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Ground">
+      <UniqueIdentifier>{9e2863cd-1a30-4a27-a076-5e1baff3dee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\State_Blink">
+      <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Dash">
+      <UniqueIdentifier>{6d1f0862-40a4-4c0b-9921-87fe6af2008b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Hit">
+      <UniqueIdentifier>{5a7e32b1-6fa9-44e2-8d6e-b117c3454d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat">
+      <UniqueIdentifier>{46e41554-f9a0-41c5-992c-f736ef1a333f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing">
+      <UniqueIdentifier>{27d5a2b8-98db-4dbf-9916-0806cfa97c9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Rush">
+      <UniqueIdentifier>{7bb8a04a-00a0-4864-9781-8069d84806ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Stun">
+      <UniqueIdentifier>{2e2a53dc-9ea6-427f-88b3-d8857193d432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player">
+      <UniqueIdentifier>{48b905c1-b91e-44ca-a61b-86633826768b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Ride_Move">
+      <UniqueIdentifier>{d6be355f-c860-4323-9967-583265749698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Dismount">
+      <UniqueIdentifier>{51b299f6-ebb0-4f58-9620-5e1dc24a2e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_TurboFly">
+      <UniqueIdentifier>{2326c134-a2bb-45f1-8452-2dd49bf42697}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Hover">
+      <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Fly">
+      <UniqueIdentifier>{f24321bb-6750-4baa-b19a-bf5a3c2a8909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill">
+      <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill\Skill_Data">
+      <UniqueIdentifier>{2bc5b43e-0e24-49d4-95b0-549ad4428201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill\SpellLearn_Data">
+      <UniqueIdentifier>{69f95207-1e94-42f2-9690-d3e34e4ff5a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Damage">
+      <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Quest">
+      <UniqueIdentifier>{fe64513c-fbb3-4577-b424-82d99c9075a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Quest\QuestInstance">
+      <UniqueIdentifier>{35a6cb6f-4bbb-47fb-8f7a-63615128dece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Dialogue">
+      <UniqueIdentifier>{11c35878-12b4-4c55-b872-004fed9a4fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Dialogue\Dialogue_Data">
+      <UniqueIdentifier>{b03591a7-a14e-425a-8a3f-2a6a054c884a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\ThestralCarriage">
+      <UniqueIdentifier>{d07bd195-0cdf-4a47-8c50-e3a88361352f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\Camera_Cinematic">
+      <UniqueIdentifier>{581e7b08-09ae-4e52-8e84-d6ac8cc94dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas">
+      <UniqueIdentifier>{20f56d81-fd4b-4e24-a73e-792a4700c512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel">
+      <UniqueIdentifier>{6be7a9ad-d735-40db-8183-91b762b6d412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice">
+      <UniqueIdentifier>{89dba592-166f-49b8-9894-07c20a3eaca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\05.EffectInfo">
+      <UniqueIdentifier>{ee5c9922-7c5c-45a2-a53d-7df30172fbaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide">
+      <UniqueIdentifier>{f2ddb6fa-89b6-4322-912e-61e0ce79278c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Protego\ProtegoHit">
+      <UniqueIdentifier>{c63abdad-13ae-43af-812a-25bcd5f7064b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Protego\Goblin_ProtegoHit">
+      <UniqueIdentifier>{696df72a-c0ad-483d-9fb3-b5e053696457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit">
+      <UniqueIdentifier>{75632dfe-2808-4ce3-abc1-8020563d3a6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Block">
+      <UniqueIdentifier>{c0fdb122-503b-47f0-a544-90d153464c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Balloon">
+      <UniqueIdentifier>{e198ab8c-2452-4f6e-adda-ecea58b44da9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Stupefy\StupefySide">
+      <UniqueIdentifier>{b38bbd65-c266-4117-9a36-a0ec4a8377ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Parry">
+      <UniqueIdentifier>{b57b393b-0e6f-47ad-9301-46b8f725a452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D">
+      <UniqueIdentifier>{4a11eb4b-127e-41f2-8456-cae963c94a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Accio\AccioSide">
+      <UniqueIdentifier>{0e6d6920-c33c-4202-a2a5-3c883e1d4597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Rush">
+      <UniqueIdentifier>{a4b6f0be-8841-4748-8947-e497d755c2d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Shout">
+      <UniqueIdentifier>{34b736fb-456e-46e3-8038-49cff23b2f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit">
+      <UniqueIdentifier>{c276c050-7000-441e-bb53-30ec3c20c6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\Elf">
+      <UniqueIdentifier>{9263815e-9651-4ba2-813f-c2a7f207522d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Cave">
+      <UniqueIdentifier>{5599bbbd-12f7-4b40-8e3d-24f869cce464}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI">
+      <UniqueIdentifier>{b28b8285-3d1a-49cf-bde2-c7ebc18e6389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Reparo">
+      <UniqueIdentifier>{88c3bc02-a51d-4cd8-87a2-197722d48f83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Spell_Learning">
+      <UniqueIdentifier>{26d7f6f4-0b5f-4b9a-9cef-df91b8a485bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion">
+      <UniqueIdentifier>{1f2c5d56-c8a8-458e-a48c-444d7c885cf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion\PotionBroken">
+      <UniqueIdentifier>{3f02d29d-759e-4572-9439-ec79909273e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Potion\PotionScreen">
+      <UniqueIdentifier>{6fa4085d-e9eb-47c3-b384-2aa92baf1d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\HitScreen">
+      <UniqueIdentifier>{8c62c8f3-d8ba-4a6d-99bd-6270333ea0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\BroomRace">
+      <UniqueIdentifier>{67efb2e4-26f6-41b5-a754-eddf91f1d528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\BroomRace\Bubble">
+      <UniqueIdentifier>{ce57978a-c208-4fe6-bbfd-8f582c20ff07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook">
+      <UniqueIdentifier>{b3924c52-0c0d-4cd1-94f4-1eb61d2c6c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit">
+      <UniqueIdentifier>{06672a35-4ed9-4c17-aa7f-bb249190a1ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\20.TriggerBox">
+      <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether">
+      <UniqueIdentifier>{b31f467c-d66f-4da4-bddb-a55ec8f2bcbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect">
+      <UniqueIdentifier>{9db6926a-d4a6-4ed3-a5d8-67aaf5cbdb5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning">
+      <UniqueIdentifier>{a3530fbc-6ba9-433d-9d8d-0090bf8b3367}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Fire">
+      <UniqueIdentifier>{79c6e3f5-c4f3-4e81-8444-f3b7a2f9287d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Smoke">
+      <UniqueIdentifier>{6997eb06-b74d-42e1-b68a-5072f677fefd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\CutSceneEffect\CutScene_Shout">
+      <UniqueIdentifier>{abf505b2-d91f-4ab1-ad69-ff571a74c035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Throw">
+      <UniqueIdentifier>{8300a5c5-8e4f-4d4c-957b-ccc99c5cbc3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Attack">
+      <UniqueIdentifier>{e1af9a18-369a-4168-8d6e-c98c951ecb39}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1303,7 +2090,7 @@
       <Filter>02.GameObjects\Cameras\Debug</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Light_Main.cpp">
-      <Filter>02.GameObjects\Environment\Lights\Main</Filter>
+      <Filter>02.GameObjects\Environment\99.Lights\Main</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerInfo.cpp">
       <Filter>03.InfoInstance\00.PlayerInfo</Filter>
@@ -1331,12 +2118,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Broom.cpp">
       <Filter>02.GameObjects\Item\Broom</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp">
-      <Filter>02.GameObjects\PhysX</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp">
-      <Filter>02.GameObjects\PhysX</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Root.cpp">
       <Filter>04.Mechanic\State</Filter>
@@ -1588,7 +2369,7 @@
       <Filter>04.Mechanic\State\State_Combat\State_Swing</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Blink.cpp">
-      <Filter>04.Mechanic\State\State_Combat\State_Blink</Filter>
+      <Filter>04.Mechanic\State\Movement\State_Blink</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Dagger.cpp">
       <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
@@ -1620,7 +2401,7 @@
     <ClCompile Include="..\Private\State_IdleBreak.cpp">
       <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
+    <ClCompile Include="..\Private\State_Rush.cpp">
       <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_LightAttack.cpp">
@@ -1670,9 +2451,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Enemy_Panel.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Goblin_Spector.cpp">
-      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
@@ -1738,11 +2516,11 @@
     <ClCompile Include="..\Private\Chair_Splesh.cpp">
       <Filter>02.GameObjects\Effect\PropsEffect\Chair</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Broom_Hover.cpp">
-      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
+    <ClCompile Include="..\Private\State_Hover.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Hover</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Broom_Fly.cpp">
-      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Fly</Filter>
+    <ClCompile Include="..\Private\State_Fly.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Fly</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MiniMap_Camera.cpp">
       <Filter>02.GameObjects\Cameras\MiniMap_Camera</Filter>
@@ -1774,17 +2552,8 @@
     <ClCompile Include="..\Private\Accio.cpp">
       <Filter>02.GameObjects\Effect\Effects\Accio</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Quest_Border.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Quest_Entry_Line.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Quest_Header.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Quest_HeaderLine.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Info.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
@@ -1794,9 +2563,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Info_Line.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Quest_List.cpp">
-      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Quest_Canvas.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas</Filter>
@@ -1813,7 +2579,437 @@
     <ClCompile Include="..\Private\RaceRing.cpp">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\BroomRaceManager.cpp" />
+    <ClCompile Include="..\Private\Screen_Wind.cpp">
+      <Filter>02.GameObjects\Effect\ScreenFX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Status.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Status</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Data.cpp">
+      <Filter>04.Mechanic\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Interaction_Key.cpp">
+      <Filter>02.GameObjects\UI\Interaction_Key</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\QuestInstance.cpp">
+      <Filter>04.Mechanic\Quest\QuestInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Slot.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stupefy.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireBreath.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBreath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireBall.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_FireBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Pulse.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Pulse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Tucked.cpp">
+      <Filter>04.Mechanic\State\Movement\Tucked</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_AncientSpell.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_AncientSpell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_FireSweep.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_FireSweep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Ground.cpp">
+      <Filter>04.Mechanic\State\Movement\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Swipe.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Swipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slide.cpp">
+      <Filter>04.Mechanic\State\Focus\Slide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Static.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Lightning.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Lightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LightningSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Lightning\LightningSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRaceManager.cpp">
+      <Filter>02.GameObjects\BroomRaceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Data.cpp">
+      <Filter>04.Mechanic\Skill\SpellLearn_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_MovePointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_MovePointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Name.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Name</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Panel.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Canvas.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Blink.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill2.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Skill2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transformation.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TransformationSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Transformation\TransformationSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Avadakedavra.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NPC_EleazarFig.cpp">
+      <Filter>02.GameObjects\NPC\Ally\GateKeeper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Slot.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Overlay.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_LookPointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLeam_LookPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_ChaserPointer.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SPellLeam_ChaserPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpellLearn_Booster.cpp">
+      <Filter>02.GameObjects\UI\SpellLearn_Canvas\SpellLearn_Panel\SpellLearn_Booster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_NonPlayable_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_NonPlayable_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Fall.cpp">
+      <Filter>04.Mechanic\State\Focus\State_Fall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AvadakedavraSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Avadakedavra\AvadakedavraSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Ranrok</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NPCInteraction.cpp">
+      <Filter>02.GameObjects\UI\NPCInteraction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue_Font.cpp">
+      <Filter>04.Mechanic\Dialogue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue.cpp">
+      <Filter>04.Mechanic\Dialogue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WorldDecal.cpp">
+      <Filter>02.GameObjects\Environment\98,WorldDecal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PointLight.cpp">
+      <Filter>02.GameObjects\Environment\99.Lights\PointLight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_FireBall.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_FireBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Breath.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Breath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_AI.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Dialogue_Data.cpp">
+      <Filter>04.Mechanic\Dialogue\Dialogue_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Point.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Assassin.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Assassin_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Assassin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Sword.cpp">
+      <Filter>02.GameObjects\Item\Goblin_Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slash.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Slash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dash.cpp">
+      <Filter>04.Mechanic\State\Movement\Dash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Spector.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Warrior_Spector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Assassin_Spector.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector\Goblin_Assassin_Spector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Circle.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Circle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Flag.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Flag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Scoreboard.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Scoreboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Broom_TargetGate.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Finish.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Finish</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Exit.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Exit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Record.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Record</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_Trophy.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_Trophy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ReparoObject.cpp">
+      <Filter>02.GameObjects\ReparoObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InstancedProp_Light.cpp">
+      <Filter>02.GameObjects\Environment\02.InstancedProp\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Pulse.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Pulse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Charge.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Charge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Fear.cpp">
+      <Filter>04.Mechanic\State\Focus\Fear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_Booster_Slot.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Booster_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_BoosterBar.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_BoosterBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_HpBar.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_HpSlot.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_HpSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_Info.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_Info_Key.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_Info_Key</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_InfoBG.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel\Ride_InfoBG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ride_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Ride_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Model.cpp">
+      <Filter>02.GameObjects\Cameras\Camera_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Impact.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrol_Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Hit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Nomal_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RandomNpc.cpp">
+      <Filter>02.GameObjects\NPC\Ally\RandomNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Human_Duelist.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Human_Duelist_States.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Human_Duelist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Land.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Land</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_GroundPulse.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_GroundPulse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_DeadSplash.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadSplash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_DeadImpact.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_DeadImpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Swipe.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Swipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_NormalJap.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_NormalJap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_Protego.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_Levioso.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\Duelist_Levioso</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_CutScene.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_CutScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThestralCarriage.cpp">
+      <Filter>02.GameObjects\Item\ThestralCarriage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutSceneInfo.cpp">
+      <Filter>03.InfoInstance\04.CutSceneInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Cinematic.cpp">
+      <Filter>02.GameObjects\Cameras\Camera_Cinematic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Canvas.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Choice.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel\Dialogue_Choice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dialogue_Panel.cpp">
+      <Filter>02.GameObjects\UI\Dialogue_Canvas\Dialogue_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectInfo.cpp">
+      <Filter>03.InfoInstance\05.EffectInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_JapSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\Duelist_JapSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Protego_Hit.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Protego\ProtegoHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_ProtegoHit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Protego\Goblin_ProtegoHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duelist_ProtegoHit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Duelist_Protego\Duelist_ProtegoHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Block.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Block</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StupefySide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Stupefy\StupefySide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Cave.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Cave</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Reparo.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Reparo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Spell_Learning.cpp">
+      <Filter>04.Mechanic\State\Focus\Spell_Learning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_WorldLook.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\CamPosition_WorldLook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PotionScreen.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PotionBroken.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Potion\PotionBroken</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitScreen.cpp">
+      <Filter>02.GameObjects\Effect\Effects\HitScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRace_Bubble.cpp">
+      <Filter>02.GameObjects\Effect\BroomRace\Bubble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_PropHit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Ranrok\Ranrok_Prop\Ranrok_PropHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TriggerBox.cpp">
+      <Filter>04.Mechanic\20.TriggerBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_Ether.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ranrok_EtherInfo.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Ranrok\Ranrok_Ether</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene_Lightning.cpp">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Lightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene_Fire.cpp">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene_Smoke.cpp">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Smoke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene_Shout.cpp">
+      <Filter>02.GameObjects\Effect\CutSceneEffect\CutScene_Shout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Attack.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Throw.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Throw</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Private\State_Parry.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AccioSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Accio\AccioSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Balloon.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Balloon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Parry.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Parry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rush.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Shout.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Shout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Self_Hit.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Self_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_TargetGate2D.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Broom_Panel\Broom_TargetGate2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Elf.cpp">
+      <Filter>02.GameObjects\NPC\Ally\Elf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_SkillUI.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_SkillUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Goblin_States.cpp">

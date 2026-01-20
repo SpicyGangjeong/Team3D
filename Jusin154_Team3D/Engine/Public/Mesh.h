@@ -18,15 +18,22 @@ public:
 	void SeT_MaterialIndex(_uint iMaterialIndex) { m_iMaterialIndex = iMaterialIndex; }
 
 	const _char* Get_Name() const { return m_strName.c_str(); }
+	_int Get_NumBone() { return m_iNumBones; }
 	HRESULT Bind_BoneMatrices(const vector<class CBone*>& Bones, class CShader* pShader, const _char* pConstantName);
 	HRESULT Bind_BoneMatrices(_float4x4* pCombinedMatrices, class CShader* pShader, const _char* pConstantName);
 	HRESULT Render_Indexed(_uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
-
+	HRESULT Copy_BoneMatrices(vector<_float4x4>& pDestination);
+	vector<_int> Get_BoneIndices() { return m_BoneIndices; }
 #ifdef EDITOR_PROJECT
+public:
+	_bool PickingMesh(_float3* pPosition, _float2* pUV, _fmatrix WorldMatrix);
 private:
 	virtual HRESULT Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const aiMesh* pAIMesh);
+
+	void BuildGlobalToLocal(_uint boneCount);
+
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
 #endif // EDITOR_PROJECT
@@ -38,13 +45,16 @@ public:
 	virtual HRESULT Render_Instance(_uint iNumInstance);
 	
 	_uint Get_Vertex() { return m_iNumVertices; }
+	vector<_float4x4> Get_OffsetMatrix() { return m_offsetMatrices; }
+	ID3D11ShaderResourceView* Get_BoneRemapSRV() { return m_pBoneRemapSRV; }
+	ID3D11Buffer* Get_BoneRemapBuffer() { return m_pBoneRemapBuffer; }
 private:
 	virtual HRESULT Initialize(void* pArg) override;
 	// 바이너리
 	virtual HRESULT Initialize_Prototype(MODEL eType, const class CModel* pModel, SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_NonAnim(SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_Anim(const class CModel* pModel, SaveMesh* _SaveMesh);
-
+	HRESULT Create_BoneRemapBuffer();
 private:
 	_string m_strName = { };
 	_uint	m_iMaterialIndex = {};
@@ -54,11 +64,17 @@ private:
 	vector<_int>		m_BoneIndices;
 	_float4x4*			m_pBoneMatrices = { nullptr };
 	vector<_float4x4>	m_offsetMatrices;
+	vector<_uint> m_BoneRemap;
+	ID3D11ShaderResourceView* m_pBoneRemapSRV = nullptr;
+	ID3D11Buffer* m_pBoneRemapBuffer = nullptr;
 
 	// 바이너리
-	std::vector<_uint>   m_Indices;
-	std::vector<_float3> m_Vertices;
+	vector<_uint>   m_Indices;
+	vector<_float3> m_Vertices;
 	//
+#ifdef EDITOR_PROJECT
+	_float2*		m_VertexTexcoords = {};
+#endif
 
 private:
 	_uint						m_iNumBuffer = {};

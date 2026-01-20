@@ -24,7 +24,7 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 380.f;
-	Desc.fY = 30.f;
+	Desc.fY = -30.f;
 	Desc.fSizeX = 105.f;
 	Desc.fSizeY = 105.f;
 
@@ -139,6 +139,11 @@ void CSpell_Overlay::Use_Spell()
 			m_pInfoInstance->Event_CallBack(TEXT("UseSpell"), &Spell);
 		}
 	}
+	else
+	{
+		_int Spell = 0;
+		m_pInfoInstance->Event_CallBack(TEXT("UseSpell"), &Spell);
+	}
 }
 
 
@@ -207,17 +212,6 @@ void CSpell_Overlay::Update(_float fTimeDelta)
 			m_bSpellUsed[i] = m_pInfoInstance->Get_Spell_Info(m_Spells[i]).bUse_Skill;
 			m_fCoolTime = m_pInfoInstance->Get_CoolTime(m_Spells[m_iCurrent_Slot]);
 		}
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_N))
-	{
-		Nocool = true;
-		m_pInfoInstance->Event_CallBack(TEXT("NoCooL"), &Nocool);
-	}
-	if (m_pGameInstance->Key_Down(DIK_M))
-	{
-		Nocool = false;
-		m_pInfoInstance->Event_CallBack(TEXT("NoCooL"), &Nocool);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_N))

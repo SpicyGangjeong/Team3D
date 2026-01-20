@@ -2,6 +2,7 @@
 #include "Land.h"
 
 #include "GameInstance.h"
+#include "AlphaMap.h"
 
 CLand::CLand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
@@ -25,7 +26,7 @@ void CLand::Update(_float fTimeDelta)
 
 void CLand::Late_Update(_float fTimeDelta)
 {
-	if(m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pModelCom->Get_Radius()))
+	if(m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), 400.f))
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	else
 	{
@@ -43,8 +44,8 @@ HRESULT CLand::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom)))
-			return E_FAIL;
+	/*	if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom)))
+			return E_FAIL;*/
 
 		if (FAILED(m_pShaderCom->Begin(17))) {
 			return E_FAIL;
@@ -60,6 +61,8 @@ HRESULT CLand::Render()
 
 HRESULT CLand::Initialize_Prototype()
 {
+	m_fUsingSurfaceParams = MRO_PARAMETER;
+
 	return S_OK;
 }
 
@@ -74,8 +77,13 @@ HRESULT CLand::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Ready_AlphaMap()))
+		return E_FAIL;
 
+	LAND_DESC* pLand_Desc = static_cast<LAND_DESC*>(pArg);
 
+	if(pLand_Desc->isLoadAlphaMap)
+		m_pAlphaMap->Load_ToFile(pLand_Desc->strAlphaMapTag.c_str());
 
 	return S_OK;
 }
@@ -91,6 +99,7 @@ HRESULT CLand::Ready_Components(void* pArg)
 	m_bEdit = pDesc->bEdit;
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 	m_pTransformCom->Set_Scale(pDesc->vScale);
+	memcpy(&m_vScale, &pDesc->vScale, sizeof(_float3));
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->strModelComTag,
@@ -101,6 +110,19 @@ HRESULT CLand::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
+
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Diffuse"), reinterpret_cast<CComponent**>(&m_pDiffuseTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Normal"), reinterpret_cast<CComponent**>(&m_pNormalTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_MRO"), reinterpret_cast<CComponent**>(&m_pMROTextureCom), nullptr))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -122,6 +144,32 @@ HRESULT CLand::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pDiffuseTextureCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTextures", 0, m_pDiffuseTextureCom->Get_Size()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pNormalTextureCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTextures", 0, m_pNormalTextureCom->Get_Size()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pMROTextureCom->Bind_ShaderResources(m_pShaderCom, "g_SurfaceParamsTextures", 0, m_pMROTextureCom->Get_Size()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_SRV("g_MaskTexture", m_pAlphaMap->Get_SRV()))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLand::Ready_AlphaMap()
+{
+	m_pAlphaMap = CAlphaMap::Create(m_pDevice, m_pContext, 1024, 1024);
+
+	if (nullptr == m_pAlphaMap)
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -157,34 +205,66 @@ void CLand::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
+
+	SAFE_RELEASE(m_pDiffuseTextureCom);
+	SAFE_RELEASE(m_pNormalTextureCom);
+	SAFE_RELEASE(m_pMROTextureCom);
+	SAFE_RELEASE(m_pAlphaMap);
 }
 
 void CLand::Describe_Entity()
 {
 	GUI::Begin("Land Debug");
 
-	XMStoreFloat4(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
-	GUI::DragFloat3("LandPos", (_float*)(&m_vPosition));
-	m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
+	GUI::InputFloat2("PickingUV", (_float*)(&m_vPickingUV));
 
+	GUI::Text("----- AlphaMap ----");
+	GUI::InputInt("Color", &m_iColorIndex);
+	m_iColorIndex = max(0, min(4, m_iColorIndex));
+	GUI::InputInt("Rnage", (_int*)(&m_iMaskRange));
+	GUI::DragFloat("Value", &m_fMaskValue, 0.01f, -1.0f, 1.f);
+
+	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_M))
+	{
+		_float3 m_vPickingPosition = {};
+		if (m_pGameInstance->isPicking(&m_vPickingPosition))
+		{
+			if (m_pModelCom->PickingMesh(&m_vPickingPosition, &m_vPickingUV, 0, m_pTransformCom->Get_XMWorldMatrix()))
+			{
+				m_pAlphaMap->Update_Land(m_vPickingUV, m_iColorIndex, m_fMaskValue, m_iMaskRange);
+			}
+			//XMStoreFloat3(&m_vPickingPosition, XMVector3TransformCoord(XMLoadFloat3(&m_vPickingPosition), m_pTransformCom->Get_WorldMatrixInv()));
+		}
+	}
+	GUI::Text("----- Position ----");
+	XMStoreFloat4(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+	GUI::InputFloat("X##LandPos", &m_vPosition.x, 0.1f, 10.f);
+	GUI::InputFloat("Y##LandPos", &m_vPosition.y, 0.1f, 10.f);
+	GUI::InputFloat("Z##LandPos", &m_vPosition.z, 0.1f, 10.f);
+	m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
 
 	GUI::Text("----- Scale ----");
 	GUI::InputFloat("X##Scale", &m_vScale.x, 0.1f, 1.f);
 	GUI::InputFloat("Y##Scale", &m_vScale.y, 0.1f, 1.f);
 	GUI::InputFloat("Z##Scale", &m_vScale.z, 0.1f, 1.f);
 
+	if (GUI::Button("Save", ImVec2(100.f, 30.f)))
+	{
+		m_pAlphaMap->Save_ToFile("Land_TU_BB_AlphaMap.bin");
+	}
+	if (GUI::Button("Load", ImVec2(100.f, 30.f)))
+	{
+		m_pAlphaMap->Load_ToFile("Land_TU_BB_AlphaMap.bin");
+	}	
+	if (GUI::Button("SaveDDS", ImVec2(100.f, 30.f)))
+	{
+		m_pAlphaMap->Save_DDS("Land_TU_BB_AlphaMap.dds");
+	}
 	m_vScale.x = max(0.01f, m_vScale.x);
 	m_vScale.y = max(0.01f, m_vScale.y);
 	m_vScale.z = max(0.01f, m_vScale.z);
 
 	m_pTransformCom->Set_Scale(m_vScale);
-
-	GUI::Text("----- Rotation ----");
-	GUI::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
-	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);
-	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 10.f, 45.f);
-
-	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
 	GUI::End();
 }

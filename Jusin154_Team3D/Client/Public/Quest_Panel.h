@@ -33,19 +33,29 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	void Set_Status();
+	void Slot_Hover(_int Index);
+
+private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	CGameObject* m_pQuest_Border = { nullptr };
-	CGameObject* m_pQuest_Header = { nullptr };
-	CGameObject* m_pQuest_HeaderLine = { nullptr };
-	CGameObject* m_pQuest_List = { nullptr };
+	class CQuest_Data* m_pQuest_Date = { nullptr };
+
+	CGameObject* m_pQuest_Data = { nullptr };
+
 	CGameObject* m_pQuest_Info = { nullptr };
-	CGameObject* m_pQuest_Info_Header= { nullptr };
+	CGameObject* m_pQuest_Info_Header = { nullptr };
 	CGameObject* m_pQuest_Info_Line = { nullptr };
 	CGameObject* m_pQuest_Entry_Line = { nullptr };
+	CGameObject* m_pQuest_Slot = { nullptr };
+	CGameObject* m_pQuest_Status1 = { nullptr };
+	CGameObject* m_pQuest_Status2 = { nullptr };
+	CGameObject* m_pQuest_Status3 = { nullptr };
 
+	_bool	m_bClick[3] = { false };
 public:
 	static CQuest_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

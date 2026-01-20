@@ -3,18 +3,18 @@
 #include "GameInstance.h"
 
 CQuest_Info_Line::CQuest_Info_Line(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CQuest_Info_Line::CQuest_Info_Line(const CQuest_Info_Line& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
 HRESULT CQuest_Info_Line::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CQuest_Info_Line::Initialize(void* pArg)
@@ -22,7 +22,7 @@ HRESULT CQuest_Info_Line::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 323.f;
-	Desc.fY = -315.f;
+	Desc.fY = 315.f;
 	Desc.fSizeX = 256.f;
 	Desc.fSizeY = 64.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -42,7 +42,8 @@ HRESULT CQuest_Info_Line::Initialize(void* pArg)
 	m_vNine_Slice = _float4(11.f, 245.f, 0.f, 64.f);
 	SizeUpX(934.f);
 	SizeUpY(15.f);
-	Visible(true);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
+	Visible(false);
 	return S_OK;
 }
 
@@ -200,6 +201,22 @@ HRESULT CQuest_Info_Line::Ready_Components(void* pArg)
 
 	return S_OK;
 }
+
+void CQuest_Info_Line::Set_Hover(void* pArg)
+{
+	CURRENTQUESTSECETINFO* Desc = static_cast<CURRENTQUESTSECETINFO*>(pArg);
+
+	m_iCurrentQuest = Desc->iQuestCategory;
+	m_iQuest_Index = Desc->iQuestIndex;
+	if (m_iQuest_Index == -1)
+	{
+		Visible(false);
+		return;
+	}
+	Visible(true);
+}
+
+
 
 CQuest_Info_Line* CQuest_Info_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

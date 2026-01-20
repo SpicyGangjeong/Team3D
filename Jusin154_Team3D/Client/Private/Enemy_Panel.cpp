@@ -6,6 +6,7 @@
 #include "Boss_HpBar.h"
 #include "InfoInstance.h"
 #include "Monster.h"
+#include "Enemy_SkillUI.h"
 
 CEnemy_Panel::CEnemy_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CPanelObject(pDevice, pContext)
@@ -28,7 +29,7 @@ HRESULT CEnemy_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 960.f;
-	Desc.fY = 50.f;
+	Desc.fY = -50.f;
 	Desc.fSizeX = 960.f;
 	Desc.fSizeY = 150.f;
 
@@ -48,6 +49,20 @@ HRESULT CEnemy_Panel::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fCanvasAlpha = 1.f;
+	for (_int i = 0; i < 5; ++i)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_SkillUI>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_SkillUI**>(&m_pRanrokProp)))) {
+			return E_FAIL;
+		}
+
+		static_cast<CUIObject*>(m_pRanrokProp)->Visible(false);
+		m_Pos.Prop = m_pRanrokProp;
+		m_Pos.Position = _float4(0.f, 0.f, 0.f, 0.f);
+		m_RanrokProps.push_back(m_Pos);
+	}
+	m_pInfoInstance->Add_Event(TEXT("RANROKPROP"), [this](void* p) {this->RanRokPropCreate(p); });
+	m_pInfoInstance->Add_Event(TEXT("RANROKPROPBREAK"), [this](void* p) {this->RanRokPropBreak(*reinterpret_cast<_int*>(p)); });
+
 	Visible(true);
 	ElementAllVisible(true);
 	return S_OK;
@@ -62,6 +77,10 @@ void CEnemy_Panel::Update_Target()
 		static_cast<CUIObject*>(m_pEnemy_Info)->Set_FadeOut();
 		return;
 	}
+
+	CStat* pStat = m_pInfoInstance->Get_TargetMonster()->Get_Stat();
+	if (pStat == nullptr)
+		return;
 	if (m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().bBoss == true)
 	{
 		static_cast<CBoss_HpBar*>(m_pBoss_HpBar)->Update_Target();
@@ -75,6 +94,50 @@ void CEnemy_Panel::Update_Target()
 		static_cast<CEnemy_HpBar*>(m_pEnemy_HpBar)->Update_Target();
 		static_cast<CEnemy_Info*>(m_pEnemy_Info)->Update_Target();
 		static_cast<CEnemy_Info*>(m_pEnemy_Info)->Set_Font_Move(false);
+	}
+}
+
+void CEnemy_Panel::RanRokPropCreate(void* pArg)
+{
+	PROPUI Prop = *reinterpret_cast<PROPUI*>(pArg);
+
+	if (m_pCurrentRanrokProps.size() >= 5)
+	{
+		Pos old{};
+		old = m_pCurrentRanrokProps.back();
+		m_pCurrentRanrokProps.pop_back();
+		m_RanrokProps.push_back(old);
+	}
+
+	if (m_RanrokProps.empty() == true)
+		return;
+
+	Pos RanRokProp = m_RanrokProps.back();
+	m_RanrokProps.pop_back();
+
+	static_cast<CUIObject*>(RanRokProp.Prop)->Visible(true);
+	RanRokProp.Position = Prop.vPosition;
+	RanRokProp.TargetPos =_float3(Prop.vPosition.x, Prop.vPosition.y, Prop.vPosition.z);
+	//static_cast<CUIObject*>(RanRokProp)->Set_Time(Info.fTime);
+	static_cast<CUIObject*>(RanRokProp.Prop)->Set_Hover(true);
+	RanRokProp.iIndex = Prop.iIndex;
+	m_pCurrentRanrokProps.push_front(RanRokProp);
+}
+
+void CEnemy_Panel::RanRokPropBreak(_int Index)
+{
+	for (auto it = m_pCurrentRanrokProps.begin();it != m_pCurrentRanrokProps.end();	++it)
+	{
+		if (it->iIndex == Index)
+		{
+			static_cast<CUIObject*>(it->Prop)->Visible(false);
+			static_cast<CUIObject*>(it->Prop)->Set_Hover(false);
+
+			m_RanrokProps.push_back(*it);
+
+			m_pCurrentRanrokProps.erase(it);
+			break;
+		}
 	}
 }
 
@@ -94,6 +157,22 @@ void CEnemy_Panel::Update(_float fTimeDelta)
 		return;
 	}
 	Update_Target();
+
+	if (m_pCurrentRanrokProps.empty() == false)
+	{
+		for (auto& it : m_pCurrentRanrokProps)
+		{
+			_bool Screen = World_to_ScreenUI(it.TargetPos, it.UIScreenPos, 480.f);
+
+			static_cast<CEnemy_SkillUI*>(it.Prop)->Visible(Screen);
+
+			if (Screen == true)
+			{
+				static_cast<CEnemy_SkillUI*>(it.Prop)->Move(it.UIScreenPos.x, it.UIScreenPos.y);
+			}
+		}
+	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -137,19 +216,19 @@ HRESULT CEnemy_Panel::Ready_Components(void* pArg)
 
 HRESULT CEnemy_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_HpBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_HpBar**>(&m_pEnemy_HpBar))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_HpBar>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_HpBar**>(&m_pEnemy_HpBar))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Enemy_HpBar"), m_pEnemy_HpBar);
 	
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Info>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Info**>(&m_pEnemy_Info))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Info>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Info**>(&m_pEnemy_Info))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Enemy_Info"), m_pEnemy_Info);
 	
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBoss_HpBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CBoss_HpBar**>(&m_pBoss_HpBar))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBoss_HpBar>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CBoss_HpBar**>(&m_pBoss_HpBar))))
 	{
 		return E_FAIL;
 	}

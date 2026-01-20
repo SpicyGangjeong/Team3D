@@ -12,7 +12,6 @@ CRenderTarget::CRenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
     SAFE_ADDREF(m_pContext);
 }
 
-
 HRESULT CRenderTarget::Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)
 {
     D3D11_TEXTURE2D_DESC            TextureDesc{};
@@ -63,19 +62,27 @@ HRESULT CRenderTarget::Bind_ShaderResource(CShader* pShader, const _char* pConst
 
     return S_OK;
 }
-
 void CRenderTarget::Clear()
 {
     m_pContext->ClearRenderTargetView(m_pRTV, reinterpret_cast<_float*>(&m_vClearColor));
 }
 
-void CRenderTarget::Copy_Resource(ID3D11Texture2D* pTexture2D)
+void CRenderTarget::Copy_ResourceTo(ID3D11Texture2D* pTexture2D)
 {
     m_pContext->CopyResource(pTexture2D, m_pTexture2D);
 }
-void CRenderTarget::Paste_Resource(ID3D11Texture2D* pTexture2D)
+void CRenderTarget::Copy_ResourceTo(const CRenderTarget& Target)
+{
+    m_pContext->CopyResource(Target.m_pTexture2D, m_pTexture2D);
+}
+
+void CRenderTarget::Copy_ResourceFrom(ID3D11Texture2D* pTexture2D)
 {
     m_pContext->CopyResource(m_pTexture2D, pTexture2D);
+}
+void CRenderTarget::Copy_ResourceFrom(const CRenderTarget& Target)
+{
+    m_pContext->CopyResource(m_pTexture2D, Target.m_pTexture2D);
 }
 void CRenderTarget::Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc)
 {

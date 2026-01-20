@@ -35,7 +35,8 @@ HRESULT CEffectParts::Initialize(void* pArg)
 
 void CEffectParts::Priority_Update(_float fTimeDelta)
 {
-
+	if (m_EffectInfo.isMotionBlur == true)
+		m_pTransformCom->RewindMomentum();
 }
 
 void CEffectParts::Update(_float fTimeDelta)
@@ -118,6 +119,12 @@ HRESULT CEffectParts::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Base_MRO"),
+		reinterpret_cast<CComponent**>(&m_pSurface_TextureCom))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

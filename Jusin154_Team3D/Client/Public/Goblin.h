@@ -28,6 +28,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
+	virtual HRESULT Render_OutLine() override;
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -48,6 +49,7 @@ private:
 
 	_bool m_bDetection = { false };
 
+
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };
 	class CEffectParts* m_pGoblin_Particle2 = { nullptr };
@@ -58,6 +60,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	void HitState_Behavior(_float fTimeDelta);
 
 public:
 	static CGoblin* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -70,18 +73,25 @@ public:
 
 private:
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 5.f,2.f,15.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 10.f,2.f,15.f };
 
-	_bool	m_bStep = { false };
+	_bool	m_bStep = { true };
 	_float	m_fTpTime = {};
 	_float	m_fAirTime = {};
-	_vector m_vOriginPos = {};
 	_float	m_fLength = {};
 	_float	m_fMoveTime = {};
 	_bool	m_bFirstMove = {};
+	_bool	m_bPos = {};
+	_float	m_fAccel = { 3.f};
+	_float	m_fTargetSpeed = {60.f};
+	_float	m_fSpeed = {};
+	_bool	m_bAir = {};
+	_float	m_fGravityAmount = {};
+	_float	m_fHitTimer = {};
+	_float	m_fTumbleTimer = {};
+	_bool	m_bCameraShake = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
@@ -99,7 +109,6 @@ private:
 	HRESULT Behavior_CombatExitCheck(_float fTimeDelta);
 	void	Behavior_CombatExit();
 
-
 	void	Behavior_SwingEnter();
 	HRESULT Behavior_SwingExitCheck(_float fTimeDelta);
 	void	Behavior_SwingExit();
@@ -116,6 +125,10 @@ private:
 	HRESULT Behavior_ShuffleExitCheck(_float fTimeDelta);
 	void	Behavior_ShuffleExit();
 
+	void	Behavior_FearEnter();
+	HRESULT Behavior_FearExitCheck(_float fTimeDelta);
+	void	Behavior_FearExit();
+
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
@@ -123,6 +136,17 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
+
+#pragma region HIT_BEHAVIOR
+
+	void Hit_Accio(_float fTimeDelta);
+	void Hit_Levioso(_float fTimeDelta);
+	void Hit_Jap();
+	void Descendo_Event();
+	void TumbleAnim(_float fTimeDelta);
+
+#pragma endregion
+
 };
 
 NS_END

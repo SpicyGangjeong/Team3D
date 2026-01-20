@@ -40,12 +40,16 @@ private:
 	_wchar* Save_ModelName(const _char* Category);
 	void Load_KeyFrame(const _char* Name);
 	void Find_Anim();
+	void Sound_List();
 	void Save_KeyFrame();
+	void ResetLevel_Environment() {};
 
 private:
 	vector<CGameObject*>	m_Objects;
 	vector<CGameObject*>	m_PartsObjects;
 	class CRootModelPart*	m_HumanRoot = { nullptr };
+
+	_bool					m_isUpdateEvent = { true };
 	_int					m_iObjectIndex = { 0 };
 	_int					m_iPartsObjectIndex = { 0 };
 	_float					m_fKeyFrame = {};
@@ -58,6 +62,8 @@ private:
 	_char					m_FindAnimName[256] = {};
 	string					m_SelectedKey;
 	_int					m_iAnimIndex = {};
+	_int					m_iCurAnimIndex = {};
+	_float					m_fVolume = {0.f};
 
 	class CPlayer* m_Test = { nullptr };
 public:

@@ -52,7 +52,7 @@ private:
 	_int					m_iSpellType{};
 	_int					m_iSkillType{};
 
-	_vector					m_vLerpPosition{};
+	_float4					m_vLerpPosition{};
 	_float					m_fLerpX{};
 	_float					m_fLerpY{};
 	_float					m_fMoveSpeed{};
@@ -101,6 +101,7 @@ private:
 	_float2					m_fFontPos	{};
 	_float					m_fFontX	{};
 	_float					m_fFontY	{};
+
 public:
 	static CIMGUIUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

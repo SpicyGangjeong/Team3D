@@ -78,14 +78,16 @@ public:
 		_float      fRopeLength = { 0.1f };
 		_float		fMass = { 0.5f };
 
-		_float3 vPadding1 = {};
+		_float2 vDissolveTime = {};
+
+		_float  fPadding0 = {};
 		_float3 vPadding2 = {};
 
 		_float  fPadding1 = {};
 		_float  fPadding2 = {};
 		_float  fPadding3 = {};
 			    
-		_bool   isPadding0 = {};
+		_bool   isDissolve = {};
 		_bool   isPadding1 = {};
 		_bool   isPadding2 = {};
 
@@ -104,6 +106,9 @@ public:
 	void	     Set_Target(class CTransform* pTargetTransform);
 	void         Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
 	void         Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta);
+	void		 Oneside_Rope_Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
+	void		 SetDissolve(_bool isDissolve) { m_TrailInfo.isDissolve = isDissolve; }
+	TRAIL_INFO*  Get_TrailInfo() { return &m_TrailInfo; }
 public:
 #ifdef _DEBUG
 	HRESULT Save_Trail(const _char* pPath);

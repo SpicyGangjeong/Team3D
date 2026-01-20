@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "MapElement.h"
@@ -19,10 +19,20 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	_bool		m_isCollision = {};
+	_float		m_fRadius = {};
+	_float3		m_vWorldCenterPosition = {};
+
+	vector<CRigidBody_Static*> m_RigidBodies;
+
+private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Bind_ShaderResources() override;
+
+	void			ReadyForPhysX();
+	void			ConvertToPhysX();
 
 public:
 	static CMapElement_Static* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

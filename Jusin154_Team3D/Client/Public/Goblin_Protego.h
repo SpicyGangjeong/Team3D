@@ -19,6 +19,7 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void Set_Visible(_bool bVisible)override;
 
 public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
@@ -34,9 +35,8 @@ private:
 	_wstring	 m_wstrEffectName = {};
 
 	class CEffectParts* m_pSphere = { nullptr };
-	class CEffectParts* m_pBottom = { nullptr };
-	class CEffectParts* m_pCircle = { nullptr };
-
+	class CEffectParts* m_pSphereLay = { nullptr };
+	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	_float		 m_fSizeAccTime = {};
 	_float       m_fAmountSize = {};
 	_float       m_fSpeed = {};

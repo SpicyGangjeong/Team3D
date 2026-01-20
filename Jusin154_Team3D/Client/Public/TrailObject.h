@@ -29,9 +29,13 @@ public:
 public:
 	void    Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
 	void    Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta);
+	void    Oneside_Rope_Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
 
 	HRESULT Load_Trail(CEffect_Container::TRAIL_SAVE_INFO Trail_Save_Info, LEVEL eLevel);
 	HRESULT Load_Trail(const _char* pPath, LEVEL eLevel);
+
+	void   SetDissolve(_bool isDissolve) { m_TrailInfo.isDissolve = isDissolve; }
+	TRAIL_INFO* Get_TrailInfo() { return &m_TrailInfo; }
 
 private:
 	HRESULT Bind_ShaderResources() override;

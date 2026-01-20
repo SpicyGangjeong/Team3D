@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Component.h"
+#include "CallBack_QueryFilterCallback.h"
 
 NS_BEGIN(Engine)
 class CTransform;
@@ -13,6 +14,7 @@ class ENGINE_DLL CCharacter_Controller final :
 	/* dev-treadmill.tistory.com/159 */
 	// 기본적으로 아무 힘도 받지 않는, 주지 않는 놈임
 	// kinematic 기반임
+	static CPhysX_CctQueryFilterCallback s_QueryFilterCallback_IGNORE_GLOBAL;
 public:
 #pragma region STRUCT
 	typedef struct tagCharacter_ControllerDesc
@@ -47,6 +49,7 @@ private:
 public:
 #ifdef _DEBUG
 	virtual HRESULT Render() override;
+	virtual void Set_Name(const _char* pName);
 #endif
 	PSX::PxRigidDynamic* Get_Actor();
 	PSX::PxController* Get_Controller();
@@ -64,16 +67,23 @@ public:
 	void			Resize_Volume(_float fHeight);	// 높이를 수정하고 바닥에 붙임
 	void			Modify_Volume(_float3 fVolume); // 높이 수정하고 바닥에 붙든 말든 상관안함
 	_float3			Get_Volume();
+	_float			Get_Height();
 
 	HRESULT			ConvertToDO(class CRigidBody_Dynamic& BodyOriginal);
-	void			Set_OnGroundFlag(_bool bOnGround);
+	_float3			Get_LastSlopeNormal() { return m_vLastClimbNormal; };
+	void			Set_OnGroundFlag(_bool bFlag);
+	_bool			IsSliding() { return m_bSlide; };
 	_bool			IsGravity() { return m_bGravity; }
 	void			SetGravity(_bool bCondition) { m_bGravity = bCondition; };
-	void			Set_CurrentSlope(_float fSlope);
+	void			Set_CurrentSlope(_float fSlope, _float3& CurrentSlopeNormal);
 	void			Rewind_Grounded();
 	_bool			IsActive() const { return m_bActive; }
 	void			SetActive(_bool bCondition) { m_bActive = bCondition; }
 	_bool			UpdateGroundByCast(_float fTimeDelta);
+	void			Set_GravityAmount(_float Amount) { m_fGravity = Amount; }
+	void			Reset_GravityAmount() { m_fGravity = 0.450f; }
+	_float			Get_GravityAmount() { return m_fGravity; }
+	_bool			IsOnGround();
 
 private:
 	ACTOR					m_eBodyType = { ACTOR::END };
@@ -85,11 +95,13 @@ private:
 	_float					m_fCurrentSlopeDegree = { 0.f };
 	_int					m_iIsOnGround = { 0 };
 	_float4					m_vAccHeight = { 0.f, 0.16f, 0.f, 0.01f };
-	PhsXUserData			m_tagData = {};
-	
+	PHYSX_USERDATA			m_tagData = {};
+
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
 	_bool					m_bActive = { true };
 	_bool					m_bGravity = { true };
+	_bool					m_bSlide = { false };
+	_float3					m_vLastClimbNormal = { 0.f, 1.f - FLT_EPSILON, 0.f };;
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };

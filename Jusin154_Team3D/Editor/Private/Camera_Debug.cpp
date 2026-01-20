@@ -15,10 +15,6 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
 	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
-}
-
-void CCamera_Debug::Update(_float fTimeDelta)
-{
 	if (false == m_bActive) {
 		return;
 	}
@@ -40,7 +36,7 @@ void CCamera_Debug::Update(_float fTimeDelta)
 	}
 #endif // gimch
 
-	
+
 	if (m_bMovable) {
 #pragma region Position
 		_float fSpeed = 5.f;
@@ -66,6 +62,14 @@ void CCamera_Debug::Update(_float fTimeDelta)
 			Set_InitialPos();
 		}
 
+		_long LWheel = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::W);
+		if (LWheel > 0)
+		{
+			m_pTransformCom->Add_SpeedPerSec(0.5f);
+		}
+		else if (LWheel < 0)
+			m_pTransformCom->Add_SpeedPerSec(-0.5f);
+
 #pragma endregion
 #pragma region Angle
 
@@ -77,6 +81,12 @@ void CCamera_Debug::Update(_float fTimeDelta)
 
 	}
 	__super::Bind_Matrices();
+
+}
+
+void CCamera_Debug::Update(_float fTimeDelta)
+{
+	Describe_Entity();
 }
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)
@@ -164,7 +174,32 @@ void CCamera_Debug::Free()
 {
 	__super::Free();
 }
-
 void CCamera_Debug::Describe_Entity()
 {
+	_float3 vPosition = {};
+	GUI::Begin("CAMERA");
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
+	if (m_pGameInstance->Key_Pressing(DIK_Y))
+	{
+		if (m_pGameInstance->isPicking(&vPosition))
+		{
+			GUI::InputFloat3("Pos", (float*)&vPosition);
+		}
+	}
+	GUI::End();
+	GUI::Begin("CAMERA");
+	_int iPriority = m_iPriority;
+	size_t iAddress = (size_t)this;
+	_string strHeader = "DEBUG_CAMERA_Priority##" + to_string(iAddress);
+	if (GUI::SliderInt(strHeader.c_str(), &iPriority, 45, 60)) {
+		m_iPriority = iPriority;
+	}
+	if (GUI::CollapsingHeader("DebugCamera")) {
+		m_pTransformCom->Describe_Entity();
+		_float fFovYDegree = XMConvertToDegrees(m_fFovy);
+		if (GUI::SliderFloat("FOV", &fFovYDegree, 0.01f, 89.f, "%.2f")) {
+			m_fFovy = XMConvertToRadians(fFovYDegree);
+		}
+	}
+	GUI::End();
 }

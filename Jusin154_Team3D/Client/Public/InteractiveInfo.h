@@ -23,6 +23,9 @@ public:
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pUnit);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pUnit);
 
+	HRESULT Ready_PoolingInteractive(); // Ready Pooling
+	HRESULT ActiveAt_Interactive(_fvector vPosition); // Spawn Pooling Object
+
 	class CMapElement_Interactable* Get_LockOnUnit();
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
@@ -33,9 +36,13 @@ private:
 	class CMapElement_Interactable*			m_pLockOnInteractive = { nullptr };
 	list<class CMapElement_Interactable*>	m_ActiveInteractive = {};
 
+	list<class CMapElement_Interactable*>	m_PoolingInteractive = {};
+	list<class CMapElement_Interactable*>	m_PoolingActiveInteractive = {};
 private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	HRESULT	Refresh_LockOnTarget();
+	
+
 public:
 	static CInteractiveInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	virtual void Free() override;

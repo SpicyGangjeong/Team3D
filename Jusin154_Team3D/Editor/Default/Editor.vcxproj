@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>EDITOR_PROJECT;$(USERNAME);_DEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../Public/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../../EngineSDK/Inc/PhysX/;../Public/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -123,7 +123,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName)/;../ThirdPartyLib/ZLib/$(ConfigurationName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;fmod_vc.lib;Crypt32.lib;assimp-vc145-mtd.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;fmod_vc.lib;Crypt32.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;assimp-vc145-mtd.lib;DirectXTKd.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -150,7 +150,7 @@ call Update_Shaders.bat
       <PreprocessorDefinitions>EDITOR_PROJECT;$(USERNAME);NDEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../Public/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../../EngineSDK/Inc/PhysX/;../Public/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -160,7 +160,7 @@ call Update_Shaders.bat
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName)/;../ThirdPartyLib/ZLib/$(ConfigurationName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;fmod_vc.lib;Crypt32.lib;assimp-vc145-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;fmod_vc.lib;Crypt32.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;assimp-vc145-mt.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -175,38 +175,117 @@ call Update_Shaders.bat
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\public\AlphaMap.h" />
+    <ClInclude Include="..\Public\Blink.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Boss_HpBer.h" />
+    <ClInclude Include="..\public\Broom_Circle.h" />
+    <ClInclude Include="..\public\Broom_Exit.h" />
+    <ClInclude Include="..\public\Broom_Fiish.h" />
+    <ClInclude Include="..\public\Broom_Panel.h" />
+    <ClInclude Include="..\public\Broom_Flag.h" />
+    <ClInclude Include="..\public\Broom_Record.h" />
+    <ClInclude Include="..\public\Broom_Scoreboard.h" />
+    <ClInclude Include="..\public\Broom_TargetGate2D.h" />
+    <ClInclude Include="..\public\Broom_Trophy.h" />
+    <ClInclude Include="..\Public\CallBack_Ranrok_HitReport.h" />
+    <ClInclude Include="..\public\Ranrok_EtherInfo.h" />
+    <ClInclude Include="..\public\Dialogue_Canvas.h" />
+    <ClInclude Include="..\public\Dialogue_Choice.h" />
+    <ClInclude Include="..\public\Dialogue_Panel.h" />
+    <ClInclude Include="..\public\DummyDecal.h" />
+    <ClInclude Include="..\public\Dialogue.h" />
+    <ClInclude Include="..\public\DummyNPC.h" />
     <ClInclude Include="..\public\Enemy_Detection.h" />
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
+    <ClInclude Include="..\public\InstancedProp_Light.h" />
+    <ClInclude Include="..\public\Interaction_Panel.h" />
+    <ClInclude Include="..\public\LightSpawner.h" />
+    <ClInclude Include="..\public\MapElement_Balloon.h" />
     <ClInclude Include="..\public\MapElement_Chest.h" />
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
-    <ClInclude Include="..\Public\Quest_Border.h" />
+    <ClInclude Include="..\public\NPCInteraction.h" />
+    <ClInclude Include="..\Public\BroomBoost.h" />
+    <ClInclude Include="..\Public\Protego_Hit.h" />
+    <ClInclude Include="..\Public\Ranrok_Prop.h" />
+    <ClInclude Include="..\public\QuestInstance.h" />
     <ClInclude Include="..\public\Quest_Canvas.h" />
     <ClInclude Include="..\public\Quest_Data.h" />
-    <ClInclude Include="..\public\Quest_Entry_Line.h" />
-    <ClInclude Include="..\public\Quest_Header.h" />
-    <ClInclude Include="..\public\Quest_HeaderLine.h" />
+    <ClInclude Include="..\Public\Quest_Entry_Line.h" />
     <ClInclude Include="..\public\Quest_Info.h" />
     <ClInclude Include="..\public\Quest_Info_Header.h" />
     <ClInclude Include="..\public\Quest_Info_Line.h" />
-    <ClInclude Include="..\public\Quest_List.h" />
     <ClInclude Include="..\public\Quest_Panel.h" />
+    <ClInclude Include="..\public\Quest_Slot.h" />
+    <ClInclude Include="..\public\Quest_Status.h" />
+    <ClInclude Include="..\public\RaceRing.h" />
+    <ClInclude Include="..\Public\Ranrok.h" />
+    <ClInclude Include="..\Public\Ranrok_Breath.h" />
+    <ClInclude Include="..\Public\Ranrok_Charge.h" />
+    <ClInclude Include="..\Public\Ranrok_DeadImpact.h" />
+    <ClInclude Include="..\Public\Ranrok_GroundPulse.h" />
+    <ClInclude Include="..\Public\Ranrok_DeadSplash.h" />
+    <ClInclude Include="..\Public\Ranrok_Swipe.h" />
+    <ClInclude Include="..\Public\Ranrok_Rush_Bottom.h" />
+    <ClInclude Include="..\Public\Ranrok_Land.h" />
+    <ClInclude Include="..\Public\Ranrok_Impact.h" />
+    <ClInclude Include="..\Public\Ranrok_Hit.h" />
+    <ClInclude Include="..\Public\Ranrok_Pulse.h" />
+    <ClInclude Include="..\Public\Ranrok_Point.h" />
+    <ClInclude Include="..\Public\Ranrok_FireBall.h" />
+    <ClInclude Include="..\Public\ReparoObject.h" />
+    <ClInclude Include="..\public\Ride_BoosterBar.h" />
+    <ClInclude Include="..\public\Ride_Booster_Slot.h" />
+    <ClInclude Include="..\public\Ride_HpBar.h" />
+    <ClInclude Include="..\public\Ride_HpSlot.h" />
+    <ClInclude Include="..\public\Ride_Info.h" />
+    <ClInclude Include="..\public\Ride_InfoBG.h" />
+    <ClInclude Include="..\public\Ride_Info_Key.h" />
+    <ClInclude Include="..\public\Ride_Panel.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
+    <ClInclude Include="..\public\SpellLearn_Booster.h" />
+    <ClInclude Include="..\public\SpellLearn_ChaserPointer.h" />
+    <ClInclude Include="..\public\SpellLearn_LookPointer.h" />
+    <ClInclude Include="..\Public\SpellLearn.h" />
+    <ClInclude Include="..\public\SpellLearn_Canvas.h" />
+    <ClInclude Include="..\public\SpellLearn_Data.h" />
+    <ClInclude Include="..\public\SpellLearn_MovePointer.h" />
+    <ClInclude Include="..\public\SpellLearn_Name.h" />
+    <ClInclude Include="..\public\SpellLearn_Overlay.h" />
+    <ClInclude Include="..\public\SpellLearn_Panel.h" />
+    <ClInclude Include="..\public\SpellLearn_Slot.h" />
     <ClInclude Include="..\Public\State_Blink.h" />
+    <ClInclude Include="..\Public\State_Broom_Dismount.h" />
+    <ClInclude Include="..\Public\State_Broom_Ride.h" />
+    <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
+    <ClInclude Include="..\Public\State_Broom_TurboFly.h" />
     <ClInclude Include="..\Public\State_Dead.h" />
+    <ClInclude Include="..\Public\State_FireBall.h" />
+    <ClInclude Include="..\Public\State_FireBreath.h" />
+    <ClInclude Include="..\Public\State_FireSweep.h" />
+    <ClInclude Include="..\Public\State_Fly.h" />
+    <ClInclude Include="..\Public\State_Ground.h" />
     <ClInclude Include="..\Public\State_Hit.h" />
+    <ClInclude Include="..\Public\State_Hover.h" />
     <ClInclude Include="..\Public\State_IdleBreak.h" />
+    <ClInclude Include="..\Public\State_Pulse.h" />
+    <ClInclude Include="..\Public\State_Rush.h" />
     <ClInclude Include="..\Public\State_Shuffle.h" />
+    <ClInclude Include="..\Public\State_Skill.h" />
     <ClInclude Include="..\Public\State_Slam.h" />
     <ClInclude Include="..\Public\State_Swing.h" />
+    <ClInclude Include="..\Public\State_Swipe.h" />
     <ClInclude Include="..\Public\State_Throw.h" />
+    <ClInclude Include="..\Public\State_Tucked.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
+    <ClInclude Include="..\Public\Stupefy.h" />
+    <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Troll.h" />
+    <ClInclude Include="..\Public\Troll_Rush.h" />
+    <ClInclude Include="..\Public\Troll_Shout.h" />
     <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
     <ClInclude Include="..\Public\Troll_Nomal_Smoke.h" />
     <ClInclude Include="..\Public\TrollSwing.h" />
@@ -237,13 +316,13 @@ call Update_Shaders.bat
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXDoorSet.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXEffectHitBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXFixedDoor.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXHitBox.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -393,38 +472,121 @@ call Update_Shaders.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\private\AlphaMap.cpp" />
+    <ClCompile Include="..\Private\Blink.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Boss_HpBer.cpp" />
+    <ClCompile Include="..\private\Broom_Circle.cpp" />
+    <ClCompile Include="..\private\Broom_Exit.cpp" />
+    <ClCompile Include="..\private\Broom_Fiish.cpp" />
+    <ClCompile Include="..\private\Broom_Panel.cpp" />
+    <ClCompile Include="..\private\Broom_Flag.cpp" />
+    <ClCompile Include="..\private\Broom_Record.cpp" />
+    <ClCompile Include="..\private\Broom_Scoreboard.cpp" />
+    <ClCompile Include="..\Private\Broom_States.cpp" />
+    <ClCompile Include="..\private\Broom_TargetGate2D.cpp" />
+    <ClCompile Include="..\private\Broom_Trophy.cpp" />
+    <ClCompile Include="..\private\Ranrok_EtherInfo.cpp" />
+    <ClCompile Include="..\private\Dialogue.cpp" />
+    <ClCompile Include="..\Private\CallBack_Ranrok_HitReport.cpp" />
+    <ClCompile Include="..\private\Dialogue_Canvas.cpp" />
+    <ClCompile Include="..\private\Dialogue_Choice.cpp" />
+    <ClCompile Include="..\private\Dialogue_Panel.cpp" />
+    <ClCompile Include="..\private\DummyDecal.cpp" />
+    <ClCompile Include="..\private\DummyNPC.cpp" />
     <ClCompile Include="..\Private\Enemy_Detection.cpp" />
     <ClCompile Include="..\Private\Goblin_BattleAxe.cpp" />
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
+    <ClCompile Include="..\private\InstancedProp_Light.cpp" />
+    <ClCompile Include="..\private\Interaction_Panel.cpp" />
+    <ClCompile Include="..\private\LightSpawner.cpp" />
+    <ClCompile Include="..\Private\Loader_ObjectViewer.cpp" />
+    <ClCompile Include="..\private\MapElement_Balloon.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
-    <ClCompile Include="..\Private\Quest_Border.cpp" />
+    <ClCompile Include="..\private\NPCInteraction.cpp" />
+    <ClCompile Include="..\Private\BroomBoost.cpp" />
+    <ClCompile Include="..\Private\Protego_Hit.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Ether.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Prop.cpp" />
+    <ClCompile Include="..\private\QuestInstance.cpp" />
     <ClCompile Include="..\private\Quest_Canvas.cpp" />
     <ClCompile Include="..\private\Quest_Data.cpp" />
-    <ClCompile Include="..\private\Quest_Entry_Line.cpp" />
-    <ClCompile Include="..\private\Quest_Header.cpp" />
-    <ClCompile Include="..\private\Quest_HeaderLine.cpp" />
+    <ClCompile Include="..\Private\Quest_Entry_Line.cpp" />
     <ClCompile Include="..\private\Quest_Info.cpp" />
     <ClCompile Include="..\private\Quest_Info_Header.cpp" />
     <ClCompile Include="..\private\Quest_Info_Line.cpp" />
-    <ClCompile Include="..\private\Quest_List.cpp" />
     <ClCompile Include="..\private\Quest_Panel.cpp" />
+    <ClCompile Include="..\private\Quest_Slot.cpp" />
+    <ClCompile Include="..\private\Quest_Status.cpp" />
+    <ClCompile Include="..\private\RaceRing.cpp" />
+    <ClCompile Include="..\Private\Ranrok.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Breath.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Charge.cpp" />
+    <ClCompile Include="..\Private\Ranrok_DeadImpact.cpp" />
+    <ClCompile Include="..\Private\Ranrok_GroundPulse.cpp" />
+    <ClCompile Include="..\Private\Ranrok_DeadSplash.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Swipe.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Rush_Bottom.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Land.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Impact.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Hit.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Pulse.cpp" />
+    <ClCompile Include="..\Private\Ranrok_Point.cpp" />
+    <ClCompile Include="..\Private\Ranrok_FireBall.cpp" />
+    <ClCompile Include="..\Private\Ranrok_States.cpp" />
+    <ClCompile Include="..\Private\ReparoObject.cpp" />
+    <ClCompile Include="..\private\Ride_BoosterBar.cpp" />
+    <ClCompile Include="..\private\Ride_Booster_Slot.cpp" />
+    <ClCompile Include="..\private\Ride_HpBar.cpp" />
+    <ClCompile Include="..\private\Ride_HpSlot.cpp" />
+    <ClCompile Include="..\private\Ride_Info.cpp" />
+    <ClCompile Include="..\private\Ride_InfoBG.cpp" />
+    <ClCompile Include="..\private\Ride_Info_Key.cpp" />
+    <ClCompile Include="..\private\Ride_Panel.cpp" />
     <ClCompile Include="..\Private\Skill_Data.cpp" />
+    <ClCompile Include="..\private\SpellLearn_Booster.cpp" />
+    <ClCompile Include="..\private\SpellLearn_ChaserPointer.cpp" />
+    <ClCompile Include="..\private\SpellLearn_LookPointer.cpp" />
+    <ClCompile Include="..\Private\SpellLearn.cpp" />
+    <ClCompile Include="..\private\SpellLearn_Canvas.cpp" />
+    <ClCompile Include="..\private\SpellLearn_Data.cpp" />
+    <ClCompile Include="..\private\SpellLearn_MovePointer.cpp" />
+    <ClCompile Include="..\private\SpellLearn_Name.cpp" />
+    <ClCompile Include="..\private\SpellLearn_Overlay.cpp" />
+    <ClCompile Include="..\private\SpellLearn_Panel.cpp" />
+    <ClCompile Include="..\private\SpellLearn_Slot.cpp" />
     <ClCompile Include="..\Private\State_Blink.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Ride.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp" />
+    <ClCompile Include="..\Private\State_Broom_TurboFly.cpp" />
     <ClCompile Include="..\Private\State_Dead.cpp" />
+    <ClCompile Include="..\Private\State_FireBall.cpp" />
+    <ClCompile Include="..\Private\State_FireBreath.cpp" />
+    <ClCompile Include="..\Private\State_FireSweep.cpp" />
+    <ClCompile Include="..\Private\State_Fly.cpp" />
+    <ClCompile Include="..\Private\State_Ground.cpp" />
     <ClCompile Include="..\Private\State_Hit.cpp" />
+    <ClCompile Include="..\Private\State_Hover.cpp" />
     <ClCompile Include="..\Private\State_IdleBreak.cpp" />
+    <ClCompile Include="..\Private\State_Pulse.cpp" />
+    <ClCompile Include="..\Private\State_Rush.cpp" />
     <ClCompile Include="..\Private\State_Shuffle.cpp" />
+    <ClCompile Include="..\Private\State_Skill.cpp" />
     <ClCompile Include="..\Private\State_Slam.cpp" />
     <ClCompile Include="..\Private\State_Swing.cpp" />
+    <ClCompile Include="..\Private\State_Swipe.cpp" />
     <ClCompile Include="..\Private\State_Throw.cpp" />
+    <ClCompile Include="..\Private\State_Tucked.cpp" />
     <ClCompile Include="..\Private\StunEffect.cpp" />
+    <ClCompile Include="..\Private\Stupefy.cpp" />
+    <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Troll.cpp" />
+    <ClCompile Include="..\Private\Troll_Rush.cpp" />
+    <ClCompile Include="..\Private\Troll_Shout.cpp" />
     <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp" />
     <ClCompile Include="..\Private\TrollSwing.cpp" />
@@ -455,13 +617,13 @@ call Update_Shaders.bat
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXDoorSet.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXFixedDoor.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXHitBox.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -643,23 +805,22 @@ call Update_Shaders.bat
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxRanrokEther.hlsl" />
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </TreatWarningAsError>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPos.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxNorTex.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPointParticle.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>

@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 #include "Troll.h"
+#include "EffectPool.h"
+#include "Layer.h"
 
 CTroll_Rock::CTroll_Rock(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -33,11 +35,17 @@ HRESULT CTroll_Rock::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
+
 	return S_OK;
 }
 
 void CTroll_Rock::Priority_Update(_float fTimeDelta)
 {
+
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 	m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)
@@ -122,25 +130,50 @@ void CTroll_Rock::RockHit()
 				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
 				XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
 				tagCollInfo.fLength = fLength;
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
-				switch (PXOBJECT(pUserData->iSubKind))
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
+				tagCollInfo.fDamage = 10.f;
+				switch (pUserData->eKind)
 				{
-				case Engine::PXOBJECT::PLAYER:
-				{
-					if (false == m_bVisible) {
-						break;
+				case PHYSX_KIND::BODY_DYNAMIC:
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case PXOBJECT::SKILL_PROTEGO:
+					{
+						if (false == m_bVisible) {
+							break;
+						}
+						m_bVisible = false;
+
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}
-					m_bVisible = false;
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(10.f);
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					break;
+					}
+					break;
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case Engine::PXOBJECT::PLAYER:
+					{
+						if (false == m_bVisible) {
+							break;
+						}
+						m_bVisible = false;
+
+						_float4 vPos = {};
+						XMStoreFloat4(&vPos , pUserData->pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
+						m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, m_pOwner , &vPos);
+
+						m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_ATTACK_ROCKTHROW_HITACTOR, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+						m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, m_pOwner , &tagCollInfo.vWorldPos);
+
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					}
+					break;
+					}
 				}
-				break;
-				case Engine::PXOBJECT::ALLY_HITBOX:
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -190,7 +223,7 @@ HRESULT CTroll_Rock::Ready_Components()
 
 	CTransform::TRANSFORM_DESC Desc = {};
 
-	Desc.fSpeedPerSec = 18.f;
+	Desc.fSpeedPerSec = 25.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
@@ -215,7 +248,15 @@ HRESULT CTroll_Rock::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -263,14 +304,14 @@ void CTroll_Rock::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
-
+	SAFE_RELEASE(m_pEffectPool);
 }
 #ifdef _DEBUG
 
 void CTroll_Rock::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("TrollRock")) {
 		GUI::Checkbox("Visible", &m_bVisible);
 	}

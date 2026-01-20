@@ -11,35 +11,35 @@ public:
 #pragma region Color
 	// [(255, 255, 255, xx), alpha] -> [(0~1, 0~1, 0~1, alpha)]
 	// 0xRRGGBBxx, alpha -> _float4( 0~1, 0~1, 0~1, alpha )
-	static _float4 ColorRGB_A_HEXtoFLOAT4(_uint hexCode, _float alpha) {
+	inline static _float4 ColorRGB_A_HEXtoFLOAT4(_uint hexCode, _float alpha) {
 		float r, g, b, a; DecodeRGBA(hexCode, r, g, b, a, false); a = alpha;
 		return _float4(r, g, b, a);
 	}
 
 	// [(255, 255, 255, 255)] -> [(0~1, 0~1, 0~1, 0~1)]
 	// 0xRRGGBBAA -> _float4( 0~1, 0~1, 0~1, 0~1 )
-	static _float4 ColorRGBA_HEXtoFLOAT4(_uint hexCode) {
+	inline static _float4 ColorRGBA_HEXtoFLOAT4(_uint hexCode) {
 		float r, g, b, a; DecodeRGBA(hexCode, r, g, b, a, true);
 		return _float4(r, g, b, a);
 	}
 
 	// [(255, 255, 255, xx), alpha] -> [(0~1, 0~1, 0~1, alpha)]
 	// 0xRRGGBBxx, alpha -> _vector( 0~1, 0~1, 0~1, alpha )
-	static _vector ColorRGB_A_HEXtoVECTOR(_uint hexCode, _float alpha) {
+	inline static _vector ColorRGB_A_HEXtoVECTOR(_uint hexCode, _float alpha) {
 		float r, g, b, a; DecodeRGBA(hexCode, r, g, b, a, false); a = alpha;
 		return XMVectorSet(r, g, b, a);
 	}
 
 	// [(255, 255, 255, 255)] -> [(0~1, 0~1, 0~1, 0~1)]
 	// 0xRRGGBBAA -> _vector( 0~1, 0~1, 0~1, 0~1 )
-	static _vector ColorRGBA_HEXtoVECTOR(_uint hexCode) {
+	inline static _vector ColorRGBA_HEXtoVECTOR(_uint hexCode) {
 		float r, g, b, a; DecodeRGBA(hexCode, r, g, b, a, true);
 		return XMVectorSet(r, g, b, a);
 	}
 #pragma endregion
 #pragma region String
 	// wstring --> string 변환
-	static _string ToString(const _wstring& var)
+	inline static _string ToString(const _wstring& var)
 	{
 		int size_needed = WideCharToMultiByte(CP_UTF8, 0, var.c_str(),
 			(int)var.size(), nullptr, 0, nullptr, nullptr);
@@ -52,7 +52,7 @@ public:
 	}
 
 	// string --> wstring 변환
-	static _wstring ToWstring(const _string& var)
+	inline static _wstring ToWstring(const _string& var)
 	{
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, var.c_str(),
 			(int)var.size(), nullptr, 0);
@@ -65,7 +65,7 @@ public:
 	}
 
 	// source에 keyword가 있는지 검사
-	static _bool ContainsString(const char* source, const char* keyword) {
+	inline static _bool ContainsString(const char* source, const char* keyword) {
 		if (!source || !keyword || *keyword == '\0') {
 			return false;
 		}
@@ -75,13 +75,13 @@ public:
 #pragma endregion
 #pragma region Mathematics
 	// ratio로 현재 value 가져오기
-	static _float Lerp_f1D(_float fA, _float fB, _float fRatio)
+	inline static _float Lerp_f1D(_float fA, _float fB, _float fRatio)
 	{
 		return fA + (fB - fA) * fRatio;
 	}
 
 	// value로 현재 ratio 가져오기
-	static _float InverseLerp_f1D(_float fA, _float fB, _float fValue)
+	inline static _float InverseLerp_f1D(_float fA, _float fB, _float fValue)
 	{
 		if (fA == fB) {
 			return 0.0f;
@@ -101,7 +101,7 @@ public:
 	}
 
 	// dx9에 있던 IntersectTri
-	static _bool IntersectTri(
+	inline static _bool IntersectTri(
 		const _fvector& vPos, const _fvector& vDir,
 		const _fvector& vertexA, const _gvector& vertexB, const _hvector& vertexC,
 		_float& t, _float& u, _float& v)
@@ -130,17 +130,24 @@ public:
 
 		return t >= 0.f;
 	}
-
 	// 매트릭스 럴프
-	static void MatrixLerp(	_In_ _float4x4* pMatOrigin, // Origin -> 0
+	inline static void MatrixLerp(	_In_ _float4x4* pMatOrigin, // Origin -> 0
 							_In_ _float4x4* pMatTarget, // Target -> 1
+							_Out_ _float4x4& matOut, _float fRatio) {
+		_matrix matOrigin = XMLoadFloat4x4(pMatOrigin);
+		_matrix matTarget = XMLoadFloat4x4(pMatTarget);
+		MatrixLerp(matOrigin, matTarget, matOut, fRatio);
+	}
+	
+	inline static void MatrixLerp(	_In_ _fmatrix pMatOrigin, // Origin -> 0
+							_In_ _cmatrix pMatTarget, // Target -> 1
 							_Out_ _float4x4& matOut, _float fRatio) {
 		fRatio = Saturate(fRatio);
 
 		_vector vTargetScale{}, vTargetRotq{}, vTargetTrans{};
 		_vector vOriginScale{}, vOriginRotq{}, vOriginTrans{};
-		XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, XMLoadFloat4x4(pMatTarget));
-		XMMatrixDecompose(&vOriginScale, &vOriginRotq, &vOriginTrans, XMLoadFloat4x4(pMatOrigin));
+		XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, pMatTarget);
+		XMMatrixDecompose(&vOriginScale, &vOriginRotq, &vOriginTrans, pMatOrigin);
 
 		vTargetScale = XMVectorLerp(vOriginScale, vTargetScale, fRatio);
 		vTargetRotq = XMQuaternionSlerp(vOriginRotq, vTargetRotq, fRatio);
@@ -148,9 +155,33 @@ public:
 
 		XMStoreFloat4x4(&matOut, (XMMatrixAffineTransformation(vTargetScale, XMVectorZero(), vTargetRotq, vTargetTrans)));
 	}
+	
+	inline static void MatrixLerp(
+			_In_ _float3* pTransOrigin, // Origin -> 0
+			_In_ _float3* pTransDest,
+			_In_ _float4* pRotQOrigin,
+			_In_ _float4* pRotQDest,
+			_Out_ _float4x4& matOut, _float fRatio) {
+		fRatio = Saturate(fRatio);
+
+		_vector vOriginRotQ = XMVectorSet(pRotQOrigin->x, pRotQOrigin->y, pRotQOrigin->z, pRotQOrigin->w);
+		_vector vOriginTrans = XMVectorSet(pTransOrigin->x, pTransOrigin->y, pTransOrigin->z, 0.f);
+
+		_vector vDestRotQ	= XMVectorSet(pRotQDest->x, pRotQDest->y, pRotQDest->z, pRotQDest->w);
+		_vector vDestTrans	= XMVectorSet(pTransDest->x, pTransDest->y, pTransDest->z, 0.f);
+
+		if (XMVectorGetX(XMVector4Dot(vOriginRotQ, vDestRotQ)) < 0.f){
+			vDestRotQ = XMVectorNegate(vDestRotQ);
+		}
+
+		_vector vLerpRotQ = XMQuaternionSlerp(vOriginRotQ, vDestRotQ, fRatio);
+		_vector vLerpTrans = XMVectorLerp(vOriginTrans, vDestTrans, fRatio);
+
+		XMStoreFloat4x4(&matOut, XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), vLerpRotQ, vLerpTrans));
+	}
 
 	// 비슷하면 1 직교하면 0 완전 반대방향일수록 -1
-	static _float DirectionCompare(_vector a, _vector b)
+	inline static _float DirectionCompare(_vector a, _vector b)
 	{
 		_vector vNormalA = XMVector3Normalize(a);
 		_vector vNormalB = XMVector3Normalize(b);
@@ -158,7 +189,7 @@ public:
 	}
 
 	// hlsl에 있는 Saturate 
-	static _float Saturate(_float fValue) {
+	inline static _float Saturate(_float fValue) {
 		if (fValue > 1.f) {
 			fValue = 1.f;
 		}
@@ -169,7 +200,7 @@ public:
 	}
 
 	// 입력 라디안이 들어오면 -PI ~ +PI로 정규화된 라디안으로 변경
-	static _float NormalizeRadian(_float fRadian)
+	inline static _float NormalizeRadian(_float fRadian)
 	{
 		fRadian = fmodf(fRadian, XM_2PI);
 		if (fRadian <= -XM_PI) {
@@ -224,7 +255,7 @@ public:
 	}
 	// yaw 360도 자동 커트
 	// pitch 80도 클램프
-	inline static void AdjustAccumulateDegreePitchYawDegree(_float2& vAccumulateDegreePitchYaw, float fPitchLimitDegree = 80.f)
+	inline static void AdjustAccumulateDegreePitchYawDegree(_float2& vAccumulateDegreePitchYaw, float fPitchLimitLowerDegree = 60.f, float fPitchLimitUpperDegree = 60.f)
 	{
 		if (vAccumulateDegreePitchYaw.y > 360.f)
 		{
@@ -235,13 +266,13 @@ public:
 			vAccumulateDegreePitchYaw.y += 360.f;
 		}
 
-		if (vAccumulateDegreePitchYaw.x > fPitchLimitDegree)
+		if (vAccumulateDegreePitchYaw.x > fPitchLimitUpperDegree)
 		{
-			vAccumulateDegreePitchYaw.x = fPitchLimitDegree;
+			vAccumulateDegreePitchYaw.x = fPitchLimitUpperDegree;
 		}
-		else if (vAccumulateDegreePitchYaw.x < -fPitchLimitDegree)
+		else if (vAccumulateDegreePitchYaw.x < -fPitchLimitLowerDegree)
 		{
-			vAccumulateDegreePitchYaw.x = -fPitchLimitDegree;
+			vAccumulateDegreePitchYaw.x = -fPitchLimitLowerDegree;
 		}
 	}
 
@@ -267,6 +298,40 @@ public:
 			vAccumulateRadianPitchYaw.x = -fPitchLimitRadian;
 		}
 	}
+	static inline _vector MakeQuaternionFromTo(_vector vAOrigin, _vector vBDest)
+	{
+		vAOrigin = XMVector3Normalize(vAOrigin);
+		vBDest = XMVector3Normalize(vBDest);
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vAOrigin, vBDest));
+
+		if ( 1.f - fDot < FLT_EPSILON) { // 같은 방향 제외
+			return XMQuaternionIdentity();
+		}
+		if (fDot < -1.f + FLT_EPSILON) { // 반대방향 제외
+			_vector vTempAxis = XMVector3Cross(vAOrigin, XMVectorSet(1.f, 0.f, 0.f, 0.f));
+			_float fTempLength = XMVectorGetX(XMVector3Length(vTempAxis));
+
+			if (fTempLength < FLT_EPSILON5) {
+				vTempAxis = XMVector3Cross(vAOrigin, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+			}
+
+			vTempAxis = XMVector3Normalize(vTempAxis);
+			return XMQuaternionRotationAxis(vTempAxis, XM_PI);
+		}
+
+		_vector vRotAxis = XMVector3Cross(vAOrigin, vBDest);
+		_float  fRotLength = XMVectorGetX(XMVector3Length(vRotAxis));
+		if (fRotLength < FLT_EPSILON5) {
+			return XMQuaternionIdentity();
+		}
+		vRotAxis = XMVector3Normalize(vRotAxis);
+
+		_float fRotAngle = acosf(clamp(fDot, -1.f, 1.f));
+		_vector vRotQ = XMQuaternionRotationAxis(vRotAxis, fRotAngle);
+		return XMQuaternionNormalize(vRotQ);
+	}
+
 
 	inline static void SortHitsByDistance(vector<PSX::PxRaycastHit>& hits)
 	{
@@ -285,7 +350,7 @@ public:
 				return hitLeft.distance < hitRight.distance;
 			});
 	}
-
+	
 
 	inline static _uint AlphabetToInt(_tchar Alphabet)
 	{
@@ -296,6 +361,222 @@ public:
 
 		return (Alphabet - 'A');
 	}
+
+	template<typename ENUM, size_t N>
+	inline static _bool TryParseEnum( string_view text, const pair<string_view, ENUM>(&table)[N], ENUM& outValue)
+	{
+		for (size_t i = 0; i < N; ++i)
+		{
+			if (table[i].first == text)
+			{
+				outValue = table[i].second;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	template<typename ENUM, size_t N>
+	inline static string_view EnumToString( ENUM value, const pair<string_view, ENUM>(&table)[N], string_view fallback = "UNKNOWN")
+	{
+		for (size_t i = 0; i < N; ++i)
+		{
+			if (table[i].second == value)
+				return table[i].first;
+		}
+		return fallback;
+	}
+#ifdef _DEBUG
+
+	inline static _bool DescribePxTransform(PSX::PxTransform& pxTransform, size_t iID)
+	{
+		PSX::PxVec3 vAxis = {};
+		_float fAngle = {};
+		pxTransform.q.toRadiansAndUnitAxis(fAngle, vAxis);
+		GUI::Text((to_string((_int)iID) + "Pos : %.2f %.2f %.2f").c_str(), pxTransform.p.x, pxTransform.p.y, pxTransform.p.z);
+		GUI::Text((to_string((_int)iID) + "fAngle vAxis : %.2f %.2f %.2f %.2f").c_str(), fAngle, vAxis.x, vAxis.y, vAxis.z);
+		if (GUI::DragFloat3((to_string((_int)iID) + " Pos").c_str(), (_float*)&pxTransform.p, 0.01f, -2.f, 2.f, "%.2f")) {
+			return true;
+		}
+		if (GUI::DragFloat((to_string((_int)iID) + " fAngle").c_str(), &fAngle, XMConvertToRadians(1.f), XMConvertToRadians(0.1f), 2.f * XM_2PI, "%.2f")) {
+			pxTransform.q = PSX::PxQuat(fAngle, vAxis);
+			return true;
+		}
+		return false;
+	}
+
+#endif // _DEBUG
+
+	// 루트의 끝에 있는 조인트 위치를 구함
+	inline static PSX::PxTransform Calc_JointPosFromRoute(PSX::PxRigidActor* pRouteActor, _float3 vCapsuleHalfLengths, bool bIsHead)
+	{
+		PSX::PxShape* shapeArray[1] = {};
+		pRouteActor->getShapes(shapeArray, 1);
+
+		PSX::PxShape* routeShape = shapeArray[0];
+		PSX::PxTransform pxRouteWorld = PSX::PxShapeExt::getGlobalPose(*routeShape, *pRouteActor);
+		PSX::PxVec3 capsuleAxisWorld = pxRouteWorld.q.rotate(PSX::PxVec3(1.f, 0.f, 0.f));
+
+		PSX::PxTransform pxResult;
+		pxResult.q = pxRouteWorld.q;
+		pxResult.p = pxRouteWorld.p + (bIsHead ? 1.f : -1.f) * capsuleAxisWorld * (vCapsuleHalfLengths.y + vCapsuleHalfLengths.x);
+
+		return pxResult;
+	}
+	static _bool Modify_D6Joint(PSX::PxD6Joint& joint, _uint iID)
+	{
+		_bool bIsModified = false;
+
+		const char* motionItems[] = { "Locked", "Limited", "Free" };
+
+		struct AxisRow { PSX::PxD6Axis::Enum axis; const char* label; };
+		const AxisRow axisRows[] =
+		{
+			{ PSX::PxD6Axis::eX,      "X Motion"      },
+			{ PSX::PxD6Axis::eY,      "Y Motion"      },
+			{ PSX::PxD6Axis::eZ,      "Z Motion"      },
+			{ PSX::PxD6Axis::eTWIST,  "Twist Motion"  },
+			{ PSX::PxD6Axis::eSWING1, "Swing1 Motion" },
+			{ PSX::PxD6Axis::eSWING2, "Swing2 Motion" },
+		};
+
+		for (const AxisRow& row : axisRows)
+		{
+			const PSX::PxD6Motion::Enum pxCurMotion = joint.getMotion(row.axis);
+
+			int iCurIndex = 0;
+			if (pxCurMotion == PSX::PxD6Motion::eLOCKED)  iCurIndex = 0;
+			else if (pxCurMotion == PSX::PxD6Motion::eLIMITED) iCurIndex = 1;
+			else                                               iCurIndex = 2; // eFREE
+
+			int iNewIndex = iCurIndex;
+			std::string uiId = std::string(row.label) + " ##" + std::to_string(iID);
+
+			if (GUI::Combo(uiId.c_str(), &iNewIndex, motionItems, IM_ARRAYSIZE(motionItems)) && iNewIndex != iCurIndex)
+			{
+				PSX::PxD6Motion::Enum pxNewMotion =
+					(iNewIndex == 0) ? PSX::PxD6Motion::eLOCKED :
+					(iNewIndex == 1) ? PSX::PxD6Motion::eLIMITED :
+					PSX::PxD6Motion::eFREE;
+
+				joint.setMotion(row.axis, pxNewMotion);
+				bIsModified = true;
+			}
+		}
+
+		const _bool bIsLinearLimited =
+			(joint.getMotion(PSX::PxD6Axis::eX) == PSX::PxD6Motion::eLIMITED) ||
+			(joint.getMotion(PSX::PxD6Axis::eY) == PSX::PxD6Motion::eLIMITED) ||
+			(joint.getMotion(PSX::PxD6Axis::eZ) == PSX::PxD6Motion::eLIMITED);
+
+		const _bool bIsSwingLimited =
+			(joint.getMotion(PSX::PxD6Axis::eSWING1) == PSX::PxD6Motion::eLIMITED) ||
+			(joint.getMotion(PSX::PxD6Axis::eSWING2) == PSX::PxD6Motion::eLIMITED);
+
+		const _bool bIsTwistLimited =
+			(joint.getMotion(PSX::PxD6Axis::eTWIST) == PSX::PxD6Motion::eLIMITED);
+
+		PSX::PxJointLinearLimit pxLinearLimit = joint.getLinearLimit();
+		_float fLinearLimit = pxLinearLimit.value;
+
+		if (GUI::DragFloat((std::string("LinearLimit ##") + std::to_string(iID)).c_str(), &fLinearLimit, 0.01f, 0.f, 10.f, "%.3f"))
+			bIsModified = true;
+
+		PSX::PxJointLimitCone pxSwingLimit = joint.getSwingLimit();
+		PSX::PxJointAngularLimitPair pxTwistLimit = joint.getTwistLimit();
+
+		_float fSwingDeg = XMConvertToDegrees(pxSwingLimit.yAngle);
+		_float fTwistAbsDeg = XMConvertToDegrees(PSX::PxMax(PSX::PxAbs(pxTwistLimit.lower), PSX::PxAbs(pxTwistLimit.upper)));
+
+		if (GUI::DragFloat((std::string("SwingDeg ##") + std::to_string(iID)).c_str(), &fSwingDeg, 1.f, 0.f, 180.f, "%.2f"))
+			bIsModified = true;
+
+		if (GUI::DragFloat((std::string("TwistAbsDeg ##") + std::to_string(iID)).c_str(), &fTwistAbsDeg, 1.f, 0.f, 180.f, "%.2f"))
+			bIsModified = true;
+
+		PSX::PxD6JointDrive pxSlerpDrive = joint.getDrive(PSX::PxD6Drive::eSLERP);
+		_bool bIsSlerpDriveEnabled = (pxSlerpDrive.stiffness > 0.f) || (pxSlerpDrive.damping > 0.f) || (pxSlerpDrive.forceLimit > 0.f);
+
+		if (GUI::Checkbox((std::string("Enable SLERP Drive ##") + std::to_string(iID)).c_str(), &bIsSlerpDriveEnabled))
+			bIsModified = true;
+
+		if (GUI::SliderFloat((std::string("SLERP stiffness ##") + std::to_string(iID)).c_str(), &pxSlerpDrive.stiffness, 0.f, 100.f, "%.2f"))
+			bIsModified = true;
+
+		GUI::SameLine();
+
+		if (GUI::SliderFloat((std::string("SLERP damping ##") + std::to_string(iID)).c_str(), &pxSlerpDrive.damping, 0.f, 100.f, "%.2f"))
+			bIsModified = true;
+
+		PSX::PxD6JointDrive pxLinearDriveX = joint.getDrive(PSX::PxD6Drive::eX);
+		_bool bIsLinearDriveEnabled = (pxLinearDriveX.stiffness > 0.f) || (pxLinearDriveX.damping > 0.f) || (pxLinearDriveX.forceLimit > 0.f);
+
+		if (GUI::Checkbox((std::string("Enable Linear Drive(XYZ) ##") + std::to_string(iID)).c_str(), &bIsLinearDriveEnabled))
+			bIsModified = true;
+
+		if (GUI::SliderFloat((std::string("Linear stiffness ##") + std::to_string(iID)).c_str(), &pxLinearDriveX.stiffness, 0.f, 100.f, "%.2f"))
+			bIsModified = true;
+
+		GUI::SameLine();
+
+		if (GUI::SliderFloat((std::string("Linear damping ##") + std::to_string(iID)).c_str(), &pxLinearDriveX.damping, 0.f, 100.f, "%.2f"))
+			bIsModified = true;
+
+		if (bIsModified)
+		{
+			pxLinearLimit.value = PSX::PxMax(0.f, fLinearLimit);
+			joint.setLinearLimit(pxLinearLimit);
+
+			const _float fSwingRad = XMConvertToRadians(fSwingDeg);
+			pxSwingLimit.yAngle = fSwingRad;
+			pxSwingLimit.zAngle = fSwingRad;
+			joint.setSwingLimit(pxSwingLimit);
+
+			const _float fTwistAbsRad = XMConvertToRadians(fTwistAbsDeg);
+			pxTwistLimit.lower = -fTwistAbsRad;
+			pxTwistLimit.upper = +fTwistAbsRad;
+			joint.setTwistLimit(pxTwistLimit);
+
+			if (!bIsSlerpDriveEnabled)
+				joint.setDrive(PSX::PxD6Drive::eSLERP, PSX::PxD6JointDrive(0.f, 0.f, 0.f, pxSlerpDrive.flags & PSX::PxD6JointDriveFlag::eACCELERATION));
+			else
+				joint.setDrive(PSX::PxD6Drive::eSLERP, pxSlerpDrive);
+
+			if (!bIsLinearDriveEnabled)
+			{
+				const PSX::PxD6JointDrive pxOff(0.f, 0.f, 0.f, pxLinearDriveX.flags & PSX::PxD6JointDriveFlag::eACCELERATION);
+				joint.setDrive(PSX::PxD6Drive::eX, pxOff);
+				joint.setDrive(PSX::PxD6Drive::eY, pxOff);
+				joint.setDrive(PSX::PxD6Drive::eZ, pxOff);
+			}
+			else
+			{
+				joint.setDrive(PSX::PxD6Drive::eX, pxLinearDriveX);
+				joint.setDrive(PSX::PxD6Drive::eY, pxLinearDriveX);
+				joint.setDrive(PSX::PxD6Drive::eZ, pxLinearDriveX);
+			}
+		}
+
+		return bIsModified;
+	}
+
+
+	// 힌지 월드축을 가져와서 레볼루트 조인트의 회전 쿼터니언을 구함
+	inline static PSX::PxQuat Calc_RevJointPosFromWorldHingeAxis(const PSX::PxVec3& pxHingeWorldAxis)
+	{
+		PSX::PxVec3 pxBasicAxis = PSX::PxVec3(0.f, 1.f, 0.f);
+		if (PSX::PxAbs(pxHingeWorldAxis.dot(pxBasicAxis)) > 0.99f)
+		{
+			pxBasicAxis = PSX::PxVec3(0.f, 0.f, 1.f);
+		}
+
+		PSX::PxVec3 zAxis = pxHingeWorldAxis.cross(pxBasicAxis).getNormalized();
+		PSX::PxVec3 yAxis = zAxis.cross(pxHingeWorldAxis).getNormalized();
+
+		PSX::PxMat33 pxResultMatrix(pxHingeWorldAxis, yAxis, zAxis);
+		return PSX::PxQuat(pxResultMatrix);
+	}
+
 #pragma endregion
 #pragma region FileSystem
 	//static void Folder_Func(/* 재귀적으로 탐색할지		*/	_In_	_bool											bRecursive,

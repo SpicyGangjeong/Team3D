@@ -28,6 +28,8 @@ private:
 	HRESULT Ready_Layer_Door(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Chest(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_MapObjectManager(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Player_And_Ranrok();
+	void ResetLevel_Environment() {};
 
 
 

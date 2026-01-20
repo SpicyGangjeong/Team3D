@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "RigidBody_Dynamic.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 
 CRigidBody_Dynamic::CRigidBody_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext):
     CRigidBody(pDevice, pContext)
@@ -21,28 +22,40 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
 #ifdef _DEBUG
 HRESULT CRigidBody_Dynamic::Render()
 {
-	_matrix  WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z) * m_pTransform->Get_XMWorldMatrix();
+	return Render(nullptr, CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f));
+}
+
+HRESULT CRigidBody_Dynamic::Render(function<void()> custumState)
+{
+	return Render(custumState, CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f));
+}
+HRESULT CRigidBody_Dynamic::Render(function<void()> custumState, _fvector vColor)
+{
+	if (m_pOwner->isDead())
+		return S_OK;
+	PSX::PxTransform pxTranform = m_pRigidBody->getGlobalPose();
+	_matrix WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z)
+		* XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMLoadFloat4((_float4*)&pxTranform.q), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
-
 	switch (m_eActorType)
 	{
 	case ACTOR::BOX:
 	{
-		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
 	} break;
 	case ACTOR::CAPSULE:
 	{
-		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
-		_matrix WorldUp = XMMatrixTranslationFromVector(m_pTransform->Get_State(STATE::UP) * m_vhalfGeometryInfo.y);
-		_matrix WorldDown = XMMatrixTranslationFromVector(m_pTransform->Get_State(STATE::UP) * -m_vhalfGeometryInfo.y);
-		m_pSubShape->Draw(WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
-		m_pSubShape->Draw(WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		WorldMatrix = XMMatrixAffineTransformation(XMVectorSet(1.f, 1.f, 1.f, 0.f), XMVectorZero(), XMQuaternionMultiply(XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f)), XMLoadFloat4((_float4*)&pxTranform.q)), XMVectorSetW(XMLoadFloat3((_float3*)&pxTranform.p), 1.f));
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
+		_matrix WorldUp = XMMatrixTranslationFromVector(WorldMatrix.r[1] * m_vhalfGeometryInfo.y);
+		_matrix WorldDown = XMMatrixTranslationFromVector(WorldMatrix.r[1] * -m_vhalfGeometryInfo.y);
+		m_pSubShape->Draw(WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
+		m_pSubShape->Draw(WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
 	} break;
 	case ACTOR::SPHERE:
 	{
-		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true, custumState);
 	} break;
 	default:
 		break;
@@ -50,6 +63,10 @@ HRESULT CRigidBody_Dynamic::Render()
 	return S_OK;
 }
 #endif 
+void CRigidBody_Dynamic::Set_Name(const _char* szName)
+{
+	m_pRigidBody->setName(szName);
+}
 void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
 {
 	m_vhalfGeometryInfo = vhalfGeometryInfo;
@@ -101,17 +118,26 @@ void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
 	Add_DebugShape();
 #endif // _DEBUG
 }
-void CRigidBody_Dynamic::Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation)
+void CRigidBody_Dynamic::Move_LocalPos(_matrix newLocalPos)
 {
-	m_vLocalRotQ = vNewRotQ;
-	m_vLocalTranslation = vNewTranslation;
+	_vector vScale, vPos, vRotQ;
+	XMMatrixDecompose(&vScale, &vRotQ, &vPos, newLocalPos);
+	Move_LocalPos(vPos, vRotQ);
+}
+void CRigidBody_Dynamic::Move_LocalPos(_float4& vNewRotQ, _float3& vNewTranslation)
+{
+	Move_LocalPos(XMLoadFloat4(&vNewRotQ), XMLoadFloat3(&vNewTranslation));
+}
+void CRigidBody_Dynamic::Move_LocalPos(_fvector vNewRotQ, _gvector vNewTranslation)
+{
+	XMStoreFloat4(&m_vLocalRotQ, vNewRotQ);
+	XMStoreFloat3(&m_vLocalTranslation, vNewTranslation);
 	PSX::PxShape* pShape = { nullptr };
 	m_pRigidBody->getShapes(&pShape, m_pRigidBody->getNbShapes());
-	pShape->setLocalPose(PSX::PxTransform(vNewTranslation.x, vNewTranslation.y, vNewTranslation.z, PSX::PxQuat(vNewRotQ.x, vNewRotQ.y, vNewRotQ.z, vNewRotQ.w)));
+	pShape->setLocalPose(PSX::PxTransform(PSX::PxVec3(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z), PSX::PxQuat(m_vLocalRotQ.x, m_vLocalRotQ.y, m_vLocalRotQ.z, m_vLocalRotQ.w)));
 #ifdef _DEBUG
 	Add_DebugShape();
 #endif // _DEBUG
-
 }
 _float CRigidBody_Dynamic::Get_Mass()
 {
@@ -137,6 +163,31 @@ void CRigidBody_Dynamic::Set_Kinematic(_bool bKinematic)
 	m_pRigidBody->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, bKinematic);
 }
 
+void CRigidBody_Dynamic::Move_Kinematic(_fmatrix xmTransform, _bool bTeleport)
+{
+	_vector vScale, vPos, vRotQ;
+	XMMatrixDecompose(&vScale, &vRotQ, &vPos, xmTransform);
+	Move_Kinematic(vPos, vRotQ, bTeleport);
+}
+
+void CRigidBody_Dynamic::Move_Kinematic(_fvector vPos, _gvector vRotq, _bool bTeleport)
+{
+	PSX::PxTransform pxTransform = {};
+	XMStoreFloat3((_float3*)&pxTransform.p, vPos);
+	XMStoreFloat4((_float4*)&pxTransform.q, vRotq);
+	Move_Kinematic(pxTransform, bTeleport);
+}
+
+void CRigidBody_Dynamic::Move_Kinematic(PSX::PxTransform& pxDestination, _bool bTeleport)
+{
+	if (true == bTeleport) {
+		Set_Transform(pxDestination, bTeleport);
+	}
+	else {
+		m_pRigidBody->setKinematicTarget(pxDestination);
+	}
+}
+
 HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
 {
 	m_pTransform->Set_WorldMatrix(m_pRigidBody->getGlobalPose());
@@ -145,23 +196,101 @@ HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
 	m_pRigidBody->setAngularVelocity(PSX::PxZERO()); // DO 객체 이동 제거
 	m_pRigidBody->setLinearVelocity(PSX::PxZERO());
 
-	Detach_Actor();
+	Detach_Actor(m_pGameInstance->Get_CurrentLevelID());
 	CCTOriginal.SetActive(true);
 
 	return E_FAIL;
 }
 
-void CRigidBody_Dynamic::Detach_Actor()
+
+void CRigidBody_Dynamic::Detach_Actor(_uint iLevel)
 {
-	m_pGameInstance->Detach_Actor(*m_pRigidBody); // 현재 액터 비활성화
+	m_pGameInstance->Detach_Actor(*m_pRigidBody, iLevel); // 현재 액터 비활성화
 	m_bActive = false;
 }
-
 _vector CRigidBody_Dynamic::Get_Position()
 {
 	PSX::PxVec3 pxPos = m_pRigidBody->getGlobalPose().p;
 	_vector vPos = { pxPos.x, pxPos.y, pxPos.z };
 	return vPos;
+}
+
+void CRigidBody_Dynamic::Set_Position(_vector vPos, _bool bTeleport)
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	pxTransform.p.x = vPos.m128_f32[0];
+	pxTransform.p.y = vPos.m128_f32[1];
+	pxTransform.p.z = vPos.m128_f32[2];
+	Set_Transform(pxTransform, bTeleport);
+}
+
+void CRigidBody_Dynamic::Set_Rotation(_vector vRotQ, _bool bTeleport)
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	pxTransform.q.x = vRotQ.m128_f32[0];
+	pxTransform.q.y = vRotQ.m128_f32[1];
+	pxTransform.q.z = vRotQ.m128_f32[2];
+	pxTransform.q.w = vRotQ.m128_f32[3];
+	Set_Transform(pxTransform, bTeleport);
+}
+
+void CRigidBody_Dynamic::Set_Transform(_matrix WorldMatrix, _bool bTeleport)
+{
+	_vector vScale, vPos, vRotQ;
+	XMMatrixDecompose(&vScale, &vRotQ, &vPos, WorldMatrix);
+	Set_Transform(vPos, vRotQ, bTeleport);
+}
+
+void CRigidBody_Dynamic::Set_Transform(_vector vPos, _vector vRotQ, _bool bTeleport)
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	pxTransform.p.x = vPos.m128_f32[0];
+	pxTransform.p.y = vPos.m128_f32[1];
+	pxTransform.p.z = vPos.m128_f32[2];
+
+	pxTransform.q.x = vRotQ.m128_f32[0];
+	pxTransform.q.y = vRotQ.m128_f32[1];
+	pxTransform.q.z = vRotQ.m128_f32[2];
+	pxTransform.q.w = vRotQ.m128_f32[3];
+	Set_Transform(pxTransform, bTeleport);
+}
+
+void CRigidBody_Dynamic::Set_CenterTransform(_vector vStart, _vector vEnd, _bool bTeleport)
+{
+	_vector vCenterWorldPos = (vStart + vEnd) * 0.5f;
+	_vector vRotQ = XMQuaternionIdentity();
+	_vector vDir = XMVectorSetW(vEnd - vStart, 0.f);
+	_float vLength = XMVectorGetX(XMVector3Length(vDir));
+	if (vLength > FLT_EPSILON5) {
+		vDir = XMVector3Normalize(vDir);
+		vRotQ = CMyTools::MakeQuaternionFromTo(XMVectorSet(0.f, 1.f, 0.f, 0.f), vDir);
+	}
+	if (true == bTeleport) {
+		Set_Transform(vCenterWorldPos, vRotQ, bTeleport);
+	}
+	else {
+		if (m_pRigidBody->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC) {
+			Move_Kinematic(vCenterWorldPos, vRotQ);
+		}
+		else {
+			Set_Transform(vCenterWorldPos, vRotQ, bTeleport);
+		}
+	}
+}
+
+void CRigidBody_Dynamic::Set_Transform(PSX::PxTransform pxTransform, _bool bTeleport)
+{
+	m_pRigidBody->setGlobalPose(pxTransform, true);
+
+	if (true == bTeleport) {
+		if (IsKinematic()) {
+			return;
+		}
+		m_pRigidBody->setLinearVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+		m_pRigidBody->setAngularVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+		m_pRigidBody->clearForce();
+		m_pRigidBody->clearTorque();
+	}
 }
 
 _float3 CRigidBody_Dynamic::Get_FootPosition()
@@ -206,6 +335,19 @@ _float3 CRigidBody_Dynamic::Get_HeadPosition()
 	return vOut;
 }
 
+PSX::PxTransform CRigidBody_Dynamic::Get_GlobalPosition()
+{
+	return m_pRigidBody->getGlobalPose();
+}
+
+PSX::PxTransform CRigidBody_Dynamic::Get_HeadPositionPxTransform()
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	_float3 vFootPos = Get_HeadPosition();
+	pxTransform.p = { vFootPos.x, vFootPos.y, vFootPos.z };
+	return pxTransform;
+}
+
 PSX::PxTransform CRigidBody_Dynamic::Get_FootPositionPxTransform()
 {
 	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
@@ -227,7 +369,7 @@ HRESULT CRigidBody_Dynamic::Initialize_Prototype(RIGIDBODY_PROTOTYPE_DYNAMIC_DES
 	m_eLockFlag			= Desc.eLockFlag;
 	m_PxMassCenter		= Desc.pxMassCenter;
 	m_vDamping			= Desc.vAutoDamping;
-	m_vLocalRotQ = Desc.vLocalRotQ;
+	m_vLocalRotQ		= Desc.vLocalRotQ;
 	m_vLocalTranslation = Desc.vLocalTranslation;
 
 	return S_OK;
@@ -245,21 +387,46 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 		return E_FAIL;
 	}
 #endif // _DEBUG
+	RIGIDBODY_DYNAMIC_DESC* pDesc = static_cast<RIGIDBODY_DYNAMIC_DESC*>(pArg);
 	m_tagData.pOwner = m_pOwner;
 	XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
 	m_tagData.pBody = this;
-	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this);
-	m_pRigidBody->userData = &m_tagData;
+	m_tagData.bAutoOwnerTranslation = pDesc->bAutoOwnerTranslation;
+	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this, m_pGameInstance->Get_NextLevelID());
 	m_pRigidBody->setCMassLocalPose(m_PxMassCenter);
 	m_pRigidBody->setRigidDynamicLockFlags(m_eLockFlag);
 	m_pRigidBody->setLinearDamping(m_vDamping.x);
 	m_pRigidBody->setAngularDamping(m_vDamping.y);
-	Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
-	//m_pRigidBody->joint;
-	//PSX::PxRevol
+	if (ACTOR::CAPSULE != m_eActorType) {
+		Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
+	}
+
+
 
 	return S_OK;
 }
+
+_bool CRigidBody_Dynamic::IsKinematic()
+{
+	return m_pRigidBody->getRigidBodyFlags().isSet(PSX::PxRigidBodyFlag::eKINEMATIC);
+}
+
+//void CRigidBody_Dynamic::Move(PSX::PxTransform& pxTransform, _bool bTeleport)
+//{
+//	if (m_pRigidBody->getRigidBodyFlags().isSet(PSX::PxRigidBodyFlag::eKINEMATIC)) {
+//		m_pRigidBody->setKinematicTarget(pxTransform);
+//	}
+//	else {
+//		m_pRigidBody->setGlobalPose(pxTransform, true);
+//
+//		if (true == bTeleport) {
+//			m_pRigidBody->setLinearVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+//			m_pRigidBody->setAngularVelocity(PSX::PxVec3(0.f, 0.f, 0.f));
+//			m_pRigidBody->clearForce();
+//			m_pRigidBody->clearTorque();
+//		}
+//	}
+//}
 
 #ifdef _DEBUG
 HRESULT CRigidBody_Dynamic::Add_DebugShape()
@@ -312,10 +479,11 @@ CComponent* CRigidBody_Dynamic::Clone(void* pArg, CGameObject* pOwner)
 
 void CRigidBody_Dynamic::Free()
 {
-	__super::Free();
 	if (nullptr != m_pRigidBody) {
+		m_pRigidBody->userData = nullptr;
 		m_pRigidBody = nullptr;
 	}
+	__super::Free();
 }
 #ifdef _DEBUG
 
@@ -330,30 +498,27 @@ void CRigidBody_Dynamic::Describe_Entity()
 		Set_HalfGeometryInfo(m_vhalfGeometryInfo);
 	}
 	GUI::Text("Translation"); GUI::SameLine();
-	if (GUI::DragFloat3("##LocalPos", (_float*)&m_vLocalTranslation, 0.125f, -10.f, 10.f, "%.4f")) {
-		Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
+	_float3 vLocalTranslation = m_vLocalTranslation;
+	if (GUI::DragFloat3("##LocalPos", (_float*)&vLocalTranslation, 0.125f, -10.f, 10.f, "%.4f")) {
+		Move_LocalPos(m_vLocalRotQ, vLocalTranslation);
 	}
 	_vector q = XMLoadFloat4(&m_vLocalRotQ);
 
-	// 기본 방향벡터 (엔진 기준)
 	_vector forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), q);
 	_vector right = XMVector3Rotate(XMVectorSet(1, 0, 0, 0), q);
 	_vector up = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), q);
 
-	// --- RPY 계산 ---
 	_float fYaw = atan2f(XMVectorGetX(forward), XMVectorGetZ(forward));
 	_float fPitch = asinf(-XMVectorGetY(forward));
-	_float fRoll = atan2f(XMVectorGetY(right), XMVectorGetY(up)); // 수정된 Roll 계산
+	_float fRoll = atan2f(XMVectorGetY(right), XMVectorGetY(up));
 
-	_float3 vRPY = { fRoll, fPitch, fYaw }; // Roll-Pitch-Yaw 순서 정렬
+	_float3 vRPY = { fRoll, fPitch, fYaw };
 
-	// --- GUI 편집 ---
 	GUI::Text("Rotation (Roll Pitch Yaw)");
 	GUI::SameLine();
 	if (GUI::DragFloat3("##LocalRotq", (_float*)&vRPY,
 		XMConvertToRadians(0.5f), -XM_2PI, XM_2PI, "%.5f"))
 	{
-		// XMQuaternionRotationRollPitchYaw는 (Yaw→Pitch→Roll) 순서
 		_vector vRotq = XMQuaternionRotationRollPitchYaw(vRPY.z, vRPY.y, vRPY.x);
 		XMStoreFloat4(&m_vLocalRotQ, vRotq);
 		Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);

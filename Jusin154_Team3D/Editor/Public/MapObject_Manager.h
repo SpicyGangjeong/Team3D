@@ -44,22 +44,34 @@ private:
 	vector<_wstring>					m_LODModelPrototypeTags;
 	vector<filesystem::path>			m_ModelPrototypePaths;
 
+	_uint								m_iSelectedIndex = {};
 	_uint								m_iContainerObjectIndex = {};
 	_int								m_iGlassIndex = { 1 };
 
 	class CBuildingContainer*			m_pContainer = { nullptr };
 	_char								m_szSaveFileName[MAX_PATH] = {};
 	_char								m_szSaveContainerName[MAX_PATH] = {};
+
+#pragma region LIGHT
+	LIGHT_DESC							m_Light_Desc = {};
+#pragma endregion
+
+	class CInfoInstance*					m_pInfoInstance = { nullptr };
+
 private:
 	HRESULT		Ready_Components();
 	HRESULT		Bind_ShaderResources();
 
 #pragma region SAVE_LOAD
 	HRESULT		Save_MapData(const _char* pFileName);
+	HRESULT		Save_StaticElements(const _char* pFileName);
 	HRESULT		Load_MapData(const _char* pFileName);
+
+	HRESULT		Load_MapData(const _char* pFileName, const _wchar* pLayerTag);
 
 	HRESULT		Save_ContainerData(const _char* pFileName, const _char* pContainerName);
 	HRESULT		Load_ContainerData(const _char* pFileName, const _char* pContainerName);
+
 	HRESULT		Load_ContainerToMapObject(const _char* pFileName, const _char* pContainerName);
 
 	HRESULT		Save_LightObject(const _char* pFileName);
@@ -69,12 +81,35 @@ private:
 	HRESULT     Load_InteractObject(const _char* pFileName);
 
 	HRESULT		Load_WaterObject(const _char* pFileName);
+
+	HRESULT		Save_PointLightObject(const _char* pFileName);
+	HRESULT		Save_Decal(const _char* pFileName);
+
+	HRESULT		Save_RaceRing(const _char* pFileName);
+	HRESULT		Load_RaceRing(const _char* pFileName);
+
+	HRESULT		Save_Balloons(const _char* pFileName);
+	HRESULT		Load_Balloons(const _char* pFileName);
+
+	HRESULT     Load_DADA_INT();
+
+	HRESULT		Save_EditEffect(const _char* pFileName);
+	HRESULT		Load_EditEffect(const _char* pFileName, const _char* pEffectrFilePath);
+
+	HRESULT		Save_DummyNpc(const _char* pFileName);
 #pragma endregion
 
 	void		Update_PrototypeList();
 	void		Update_ObjectList();
 	void		Update_Edit();
 	void		Update_ContainerObject();
+	void		Update_Unified();
+	void 		Update_LightSpawer();
+	void 		Update_Decal();
+	void 		Update_RaceRing();
+	void		Update_EditEffect();
+	void		Update_Balloon();
+	void		Update_DummyNpc();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
 	void		Create_Elemnt(_wstring& strPrototypeTag);

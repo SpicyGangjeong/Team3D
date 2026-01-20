@@ -20,6 +20,7 @@ private:
 	HRESULT Ready_Layer_Light();
 	HRESULT Ready_Layer_Camera(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_PhysXObjects(const _wstring& strLayerTag);
+	void ResetLevel_Environment() {};
 
 
 

@@ -22,6 +22,7 @@ void CMonsterInfo::Change_Level()
 	for (CMonster* pMonster : m_ActiveMonsters) {
 		SAFE_RELEASE(pMonster);
 	} m_ActiveMonsters.clear();
+
 	for (CUnit* pPlayerAlly : m_PlayerAllies) {
 		SAFE_RELEASE(pPlayerAlly);
 	} m_PlayerAllies.clear();
@@ -118,6 +119,8 @@ CMonster* CMonsterInfo::Get_TargetMonster()
 
 HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 {
+	if (!m_pInfoInstance->Get_SearchLockonFloag())
+		return S_OK;
 	SAFE_RELEASE(m_pLockOnMonster);
 	_vector vCameraLook = m_pGameInstance->Get_CameraLook();
 	_vector vCameraPos = m_pGameInstance->Get_CamXMPosition();
@@ -144,12 +147,18 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 		{
 			// (카메라의 룩)과 (카메라 -> 몬스터 방향 벡터)를 내적해서 가장 큰 크기가 나온 몬스타가 락온 대상
 			CMonster* pMonster = (*iter);
-			if (pMonster->Get_Hp().x <= 0) {
-				continue;
+
+			CStat*pStat = pMonster->Get_Component<CStat>();
+
+			if (pStat != nullptr) {
+				if (pMonster->Get_Hp().x <= 0) {
+					continue;
+				}
 			}
+
 			vMonsterPos = pMonster->Get_LockOnPos();
 			vToMonsterDir = vMonsterPos - vCameraPos;
-			if (150.f <= XMVectorGetX(XMVector4Length(vToMonsterDir))) {
+			if (40.f <= XMVectorGetX(XMVector4Length(vToMonsterDir))) {
 				continue;
 			}
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);

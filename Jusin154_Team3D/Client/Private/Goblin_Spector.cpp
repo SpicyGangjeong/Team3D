@@ -161,7 +161,12 @@ HRESULT CGoblin_Spector::Render()
 	
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
 			return E_FAIL;
 		}
 
@@ -172,6 +177,9 @@ HRESULT CGoblin_Spector::Render()
 		if (FAILED(m_pShaderCom->Begin(iShaderPass))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -215,23 +223,7 @@ HRESULT CGoblin_Spector::Ready_Components()
 		return E_FAIL;
 	}
 
-	CPartObject::PARTOBJECT_DESC PartsDesc{};
 
-	PartsDesc.pParentTransform = m_pTransformCom;
-
-	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeft_Trail, &PartsDesc))) {
-		return E_FAIL;
-	}
-
-	m_pLeft_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pLeft_Trail->Set_Visible(false);
-
-	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRight_Trail, &PartsDesc))) {
-		return E_FAIL;
-	}
-
-	m_pRight_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pRight_Trail->Set_Visible(false);
 
 
 	return S_OK;
@@ -259,12 +251,39 @@ HRESULT CGoblin_Spector::Ready_Parts()
 		return E_FAIL;
 	}
 
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeft_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pLeft_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(g_iStaticLevel));
+	m_pLeft_Trail->Set_Visible(false);
+
+	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRight_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pRight_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(g_iStaticLevel));
+	m_pRight_Trail->Set_Visible(false);
+
 	return S_OK;
 }
 
 HRESULT CGoblin_Spector::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
@@ -275,6 +294,10 @@ HRESULT CGoblin_Spector::Bind_ShaderResources()
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+	_float Intensity = 0.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
 	return S_OK;
@@ -318,7 +341,7 @@ void CGoblin_Spector::Free()
 void CGoblin_Spector::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("GoblinSpector")) {
 		_float3 vScale = m_pTransformCom->Get_Scale();
 		GUI::DragFloat3("Scale", (_float*)&vScale);

@@ -6,6 +6,7 @@
 #include "GameInstance.h"
 #include "EditEffect.h"
 #include "TrailObject.h"
+#include "Player.h"
 
 
 CNomalJap::CNomalJap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -23,6 +24,7 @@ CNomalJap::CNomalJap(const CNomalJap& rhs)
 HRESULT CNomalJap::Initialize_Prototype()
 {
 
+
 	return S_OK;
 
 }
@@ -35,19 +37,23 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	m_wstrEffectName = L"Nomal_Jap";
-
 	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap"))) {
 		return E_FAIL;
 	}
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::JAP);
+
+
+	m_wstrEffectName = L"Nomal_Jap";
+
 
 
 	m_pProjectile_Side = Get_PartObject<CEditEffect>("JapProjSide");
 	m_pProjectile = Get_PartObject<CEditEffect>("JapProjCircle");
+	m_pJapFire = Get_PartObject<CEditEffect>("JapFire");
 
 	SAFE_ADDREF(m_pProjectile);
 	SAFE_ADDREF(m_pProjectile_Side);
+	SAFE_ADDREF(m_pJapFire);
 
 	m_fDuration = 1.7f;
 	assert(m_fDuration > 0.f);
@@ -66,8 +72,9 @@ void CNomalJap::Priority_Update(_float fTimeDelta)
 void CNomalJap::Update(_float fTimeDelta)
 {
 
-	if (m_bVisible == false)
+	if (m_bVisible == false) {
 		return;
+	}
 
 	__super::Update(fTimeDelta);
 
@@ -80,6 +87,7 @@ void CNomalJap::Update(_float fTimeDelta)
 	// 선속도
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
 	m_pProjectile->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
+	m_pJapFire->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
 
 	//Up벡터 방향으로 파이만큼 이동
 
@@ -90,6 +98,7 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateUp) * sinf(m_fAccRotateTime) * m_fRotateAmount);
 	m_pProjectile->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateUp) * sinf(m_fAccRotateTime) * m_fRotateAmount);
+	m_pJapFire->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateUp) * sinf(m_fAccRotateTime) * m_fRotateAmount);
 
 	// 내 라이트 방향으로 좌우무빙 하도록 해보자 
 
@@ -101,30 +110,31 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateRight) * sinf(m_fAccZigZagTime) * m_fZigZagAmount);
 	m_pProjectile->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateRight) * sinf(m_fAccZigZagTime) * m_fZigZagAmount);
+	m_pJapFire->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateRight) * sinf(m_fAccZigZagTime) * m_fZigZagAmount);
 
+	XMStoreFloat4(&m_vEndPos, m_pProjectile->Get_WorldPostion());
+
+	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
+
+	if (true == m_pGameInstance->SphereCast(0.25f, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
+		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
+	{
+		OnCollision(this);
+	}
 
 }
 
 
 void CNomalJap::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false) {
+	if (false == m_bVisible) {
 		return;
 	}
-
-	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
-
-
-	XMStoreFloat4(&m_vEndPos, m_pProjectile->Get_WorldPostion());
-
-	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
-
-	if (true == m_pGameInstance->SphereCast(0.125, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
-		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
-	{
-		OnCollision();
+	if (false == m_bHit) {
+		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+		_vector vEndPos = m_pProjectile->Get_WorldPostion();
+		SweepTarget(vStartPos, vEndPos, 0.002f);
 	}
-
 	__super::Late_Update(fTimeDelta);
 }
 
@@ -141,38 +151,39 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 	XMStoreFloat4(&m_vStartPos, vStartPos);
 
 	/* 초기 객체 위치 초기화 */
-
 	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 	m_pProjectile_Side->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
+	m_pJapFire->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 
 	/* 초기 객체 비지블 */
 	m_pProjectile->Set_Visible(true);
 	m_pProjectile_Side->Set_Visible(true);
+	m_pJapFire->Set_Visible(true);
 
-	/*트레일 초기화 */
-	Get_PartObject<CTrailObject>()->Set_Visible(true);
-	Get_PartObject<CTrailObject>()->Get_Component<CTrail>()->Reset_Trail();
 
 	_uint iIndex = *static_cast<_uint*>(pArg);
-	
+
 
 	m_fLinearSpeed = m_vJapData[iIndex].x;
 	m_fAngle = XMConvertToRadians(m_vJapData[iIndex].y);
 	m_fZigZagSpeed = m_vJapData[iIndex].z;
 	m_fZigZagAngle = XMConvertToRadians(m_vJapData[iIndex].w);
-	
+
 
 	_vector vDirection = m_pOwner->Get_Owner()->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 
 	XMStoreFloat3(&m_vCameraLook, vDirection);
 
+
 	{ /* 대상 위치 지정 */
+		m_bHit = false;
+		m_pInfoInstance->Get_LockOnInfo(m_Info);
+		if (nullptr != m_Info.pUnit) {
+			XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
 
-		CUnit* pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
-		if (nullptr != pTargetUnit) {
-
-			XMStoreFloat4(&m_vTargetPos, pTargetUnit->Get_WorldPostion());
-
+			if (XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos))) >= 35.f) { //거리가 일정 이상이라면 그냥 정면으로 발사
+				XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);
+			}
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}
 		else {
@@ -264,11 +275,13 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	int iIndex = CollisionCheck();
 
-	if (iIndex < 0)
+	if (iIndex < 0) {
 		return;
+	}
 
-	if (m_isCollisionEnter == true)
+	if (m_isCollisionEnter == true) {
 		return;
+	}
 
 	m_isCollisionEnter = true;
 
@@ -286,11 +299,10 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 
 	m_pProjectile_Side->Set_Visible(false);
 	m_pProjectile->Set_Visible(false);
-	Get_PartObject<CEditEffect>("Circle_Particle_Red")->Set_Visible(false);
+	m_pJapFire->Set_Visible(false);
 
-	Get_PartObject<CTrailObject>()->Set_Visible(false);
-	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 
+	dynamic_cast<CPlayer*>(m_pOwner->Get_Owner())->Start_CameraShake(0.2f, 1.f);
 }
 
 void CNomalJap::Free()
@@ -299,13 +311,14 @@ void CNomalJap::Free()
 
 	Safe_Release(m_pProjectile);
 	Safe_Release(m_pProjectile_Side);
+	SAFE_RELEASE(m_pJapFire);
 
 }
 #ifdef _DEBUG
 
 void CNomalJap::Describe_Entity()
 {
-	GUI::Begin("Jap");
+	GUI::Begin("Jap", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 
 	GUI::InputFloat("Speed", &m_fLinearSpeed);
 

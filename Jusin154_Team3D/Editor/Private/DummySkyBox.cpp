@@ -64,6 +64,9 @@ HRESULT CDummySkyBox::Render()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Bind_FogValue(m_pShaderCom)))
+			return E_FAIL;
+
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SKYBOX)))) {
 			return E_FAIL;
 		}

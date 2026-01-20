@@ -22,6 +22,12 @@ HRESULT CElementObject::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
+		m_fX + m_pOwner->Get_WorldPostion().m128_f32[0],
+		m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
+		m_fSortZ, 1.f));
+
 	return S_OK;
 }
 
@@ -39,11 +45,19 @@ void CElementObject::Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
 		m_fX + m_pOwner->Get_WorldPostion().m128_f32[0],
-		-m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
+		m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
 		m_fSortZ, 1.f));
 
-	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
-	m_vLerp_Position = XMVectorSet(m_fLerpX, m_fLerpY, 0.f, 1.f);
+	m_pRect =
+	{
+		long((m_fX + m_pOwner->Get_WorldPostion().m128_f32[0]) - m_fSizeX * 0.5f),
+		long((m_fY + m_pOwner->Get_WorldPostion().m128_f32[1]) - m_fSizeY * 0.5f),
+		long((m_fX + m_pOwner->Get_WorldPostion().m128_f32[0]) + m_fSizeX * 0.5f),
+		long((m_fY + m_pOwner->Get_WorldPostion().m128_f32[1]) + m_fSizeY * 0.5f)
+	};
+
+	m_fCurrent_Position = _float4(m_fX, m_fY, 0.f, 1.f);
+	m_vLerp_Position = _float4(m_fLerpX, m_fLerpY, 0.f, 1.f);
 }
 
 void CElementObject::Late_Update(_float fTimeDelta)
@@ -57,6 +71,7 @@ HRESULT CElementObject::Render()
 
 _vector CElementObject::Get_WorldPostion()
 {
+
 	return m_pOwner->Get_WorldPostion();
 }
 
@@ -122,11 +137,11 @@ _float CElementObject::Get_Nine_Slice_Bottom()
 	return m_vNine_Slice.w;
 }
 
-void CElementObject::Start_Lerp(_float fTimeDelta)
+_bool CElementObject::Start_Lerp_Translation(_float fTimeDelta)
 {
-	_vector Pos = m_fCurrent_Position;
+	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
 
-	_vector Target = m_vLerp_Position;
+	_vector Target = XMLoadFloat4(&m_vLerp_Position);
 
 	_vector Dir = XMVectorSubtract(Target, Pos);
 	_vector LenVec = XMVector3Length(Dir);
@@ -136,9 +151,9 @@ void CElementObject::Start_Lerp(_float fTimeDelta)
 
 	if (Distance <= move)
 	{
-		m_fX = m_vLerp_Position.m128_f32[0];
-		m_fY = m_vLerp_Position.m128_f32[1];
-		m_bLerpOn = false;
+		m_fX = m_vLerp_Position.x;
+		m_fY = m_vLerp_Position.y;
+		return true;
 	}
 
 	else
@@ -146,12 +161,53 @@ void CElementObject::Start_Lerp(_float fTimeDelta)
 		XMVECTOR DirNorm = XMVector3Normalize(Dir);
 		m_fX = (Pos + DirNorm * move).m128_f32[0];
 		m_fY = (Pos + DirNorm * move).m128_f32[1];
+		return false;
 	}
+}
+
+_bool CElementObject::Start_Lerp_Speed(_float fTimeDelta, _float2 MousePoint)
+{
+	_vector Mouse = XMVectorSet(MousePoint.x, MousePoint.y, 1.f, 1.f);
+	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
+	_vector Target = XMLoadFloat4(&m_vLerp_Position);
+
+	_vector Dir = XMVectorSubtract(Target, Pos);
+	_vector MouseDir = XMVectorSubtract(Mouse, Pos);
+
+	_vector NorDir = XMVector3Normalize(Dir);
+	_vector NorMouse = XMVector3Normalize(MouseDir);
+
+	_float SameDir = XMVectorGetX(XMVector3Dot(NorDir, NorMouse));
+	_float Weight = max(0.5f, SameDir);
+	_vector LenVec = XMVector3Length(Dir);
+	_float Distance = XMVectorGetX(LenVec);
+
+	_float move = m_fMoveSpeed * fTimeDelta * Weight;
+
+	if (Distance <= move)
+	{
+		m_fX = m_vLerp_Position.x;
+		m_fY = m_vLerp_Position.y;
+		return true;
+	}
+
+	else
+	{
+		XMVECTOR DirNorm = XMVector3Normalize(Dir);
+		m_fX = (Pos + DirNorm * move).m128_f32[0];
+		m_fY = (Pos + DirNorm * move).m128_f32[1];
+		return false;
+	}
+}
+
+_bool CElementObject::Set_Trgger()
+{
+	return _bool();
 }
 
 void CElementObject::Reset_Pos(_float fTimeDelta)
 {
-	_vector Pos = m_fCurrent_Position;
+	_vector Pos = XMLoadFloat4(&m_fCurrent_Position);
 
 	_vector Target = XMVectorSet(m_fOrigin_Position.x, m_fOrigin_Position.y, 0.f, 0.f);
 
@@ -184,7 +240,7 @@ void CElementObject::Reset_Size_Lerp(_float fTimeDelta)
 {
 }
 
-_vector CElementObject::Get_Lerp_Pos()
+_float4 CElementObject::Get_Lerp_Pos()
 {
 	return m_vLerp_Position;
 }

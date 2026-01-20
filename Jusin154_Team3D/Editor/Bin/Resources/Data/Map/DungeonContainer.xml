@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Land>
+    <Container Name="SD_Center_Structure_Core">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Bottom_Rock</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Bottom_Rock_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Bottom_Rock_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Bottom_Rock_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_A_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_B_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_B_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Curve_B_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Top_rock</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Top_rock_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Top_rock_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_Central_Structure_Core_Top_rock_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
+    <Container Name="MainFloor">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="60" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="120" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="0.99999952" y="1" z="0.99999952"/>
+            <Rotation x="0" y="180" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="4" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="240" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="5" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Repository_ArenaFloor_A_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="0.99999994" y="1" z="0.99999994"/>
+            <Rotation x="0" y="300" z="0"/>
+        </PartObject>
+    </Container>
+</Land>

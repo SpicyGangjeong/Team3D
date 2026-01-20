@@ -6,6 +6,9 @@
 #include "Troll_Rock.h"
 #include "EffectPool.h"
 #include "TrailObject.h"
+#include "Troll_Weapon.h"
+#include "EditEffect.h"
+#include "Effect_Container.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -47,7 +50,9 @@ void CTroll::Behavior_IdleBreakEnter()
 	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
 	m_bLookAt = true;
-	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 3);
+	_int RandIndex = 3;
+
+
 	switch (RandIndex)
 	{
 	case 0: //땅 두번구르기 왼발 오른발
@@ -76,6 +81,17 @@ void CTroll::Behavior_IdleBreakEnter()
 		break;
 	case 1:// 방망이
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
+
+		Add_Event(pairAnimInfo.first, [this]() {
+
+			_matrix WeaponMat = XMLoadFloat4x4(m_pWeapon_BoneMat) * Get_PartObject<CTroll_Weapon>()->Get_Component<CTransform>()->Get_XMWorldMatrix();;
+
+			_float4 vPosition = {};
+			XMStoreFloat4(&vPosition, WeaponMat.r[3]);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+			}, 0.7f);
+
 		break;
 	case 2: // 발구르기
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
@@ -93,8 +109,24 @@ void CTroll::Behavior_IdleBreakEnter()
 		break;
 	case 3: //소리지르기
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
+
+
+		Add_Event(pairAnimInfo.first, [this]() {
+
+			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("mouth_bag")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_float4 vPosition = {};
+
+			XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_SHOUT, this , &vPosition);
+
+			}, 0.2f);
+
 		break;
 	}
+
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
@@ -269,6 +301,23 @@ void CTroll::Behavior_RushEnter()
 	pairAnimInfo = m_Animation[STATEANIM::RUSH_START];
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first, [this]() {
+
+		_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_LeftFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+		_float4 vPosition = {};
+		XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+		}, 0.45f);
+
+	Add_Event(m_Animation[STATEANIM::RUSH_LOOP].first, [this]() {
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_RUSH, this, nullptr , &m_pRushEffect);
+
+		}, 0.f);
+	
 }
 
 HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
@@ -289,6 +338,12 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 		}
 		else {
 			m_fRushTime += fTimeDelta;
+
+			if (m_fRushTime >= 1.f && m_pRushEffect != nullptr)
+			{
+				m_pRushEffect->Get_PartObject<CEditEffect>()->Get_Component<CInstance_Model>()->Set_Loop(false);
+				SAFE_RELEASE(m_pRushEffect);
+			}
 
 			if (m_fRushTime >= 1.5f)
 			{
@@ -334,7 +389,9 @@ void CTroll::Behavior_ThrowEnter()
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 	Add_Event(pairAnimInfo.first,
-		[this](){Get_PartObject<CTroll_Rock>()->Set_Visible(true);},
+		[this](){Get_PartObject<CTroll_Rock>()->Set_Visible(true);
+	m_pRock_Smoke->Set_Visible(true);
+		},
 		0.95f);
 }
 
@@ -389,6 +446,7 @@ void CTroll::Behavior_ThrowExit()
 	m_pFSM->Disable_State(FSMSTATE::THROW_ROCK);
 	Get_PartObject<CTroll_Rock>()->Set_Attach(true);
 	Get_PartObject<CTroll_Rock>()->Set_Visible(false);
+	m_pRock_Smoke->Set_Visible(false);
 }
 
 void CTroll::Behavior_SwingEnter()
@@ -405,16 +463,20 @@ void CTroll::Behavior_SwingEnter()
 		[this]() {m_bLookAt = false; },
 		0.2f);
 
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Troll_Trail_Visible(true);
+			m_pWeaponTrail->Set_Visible(true);
+			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail(); },
+		0.3f);
 
-	Troll_Trail_Visible(true);
-	m_pWeaponTrail->Set_Visible(true);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			Troll_Trail_Visible(false); 
 			m_pWeaponTrail->Set_Visible(false);
 		},
-		0.6f);
+		0.65f);
 }
 
 HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
@@ -448,16 +510,13 @@ void CTroll::Behavior_SlamEnter()
 	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] =
 		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)];
 
-
-	Troll_Trail_Visible(true);
-	m_pWeaponTrail->Set_Visible(true);
-
 	Add_Event(pairAnimInfo.first,
 		[this]() {
-			Troll_Trail_Visible(false);
-			m_pWeaponTrail->Set_Visible(false);
-		},
-		0.7f);
+			Troll_Trail_Visible(true);
+			m_pWeaponTrail->Set_Visible(true);
+			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail(); },
+		0.15f);
+
 
 
 	Add_Event(m_Animation[STATEANIM::SLAM].first,
@@ -466,6 +525,8 @@ void CTroll::Behavior_SlamEnter()
 
 	Add_Event(m_Animation[STATEANIM::SLAM].first, [this]() {
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
+		Troll_Trail_Visible(false);
+		m_pWeaponTrail->Set_Visible(false);
 		} , 0.3f);
 
 }
@@ -501,15 +562,20 @@ void CTroll::Behavior_BackHandSwingEnter()
 		[this]() { m_bLookAt = false; },
 		0.2f);
 
-	Troll_Trail_Visible(true);
-	m_pWeaponTrail->Set_Visible(true);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Troll_Trail_Visible(true);
+			m_pWeaponTrail->Set_Visible(true);
+			m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail(); },
+		0.4f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			Troll_Trail_Visible(false); 
 			m_pWeaponTrail->Set_Visible(false);
 		},
-		0.9f);
+		0.66f);
 }
 
 HRESULT CTroll::Behavior_BackHandSwingExitCheck(_float fTimeDelta)

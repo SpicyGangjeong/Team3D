@@ -46,10 +46,14 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		if(m_eNextLevelID == LEVEL::UI)
 			m_bNextLevel = true;
 
+#ifdef 기무리
+		m_bNextLevel = true;
+#endif // 기무리
 		if (m_pGameInstance->Key_Down(DIK_F1))
 		{
-			if (m_eNextLevelID != LEVEL::LOGO)
+			if (m_eNextLevelID != LEVEL::LOGO){
 				m_bNextLevel = true;
+			}
 			else
 			{
 				static_cast<CUIObject*>(m_pIntro_Image)->Set_Hover(true);

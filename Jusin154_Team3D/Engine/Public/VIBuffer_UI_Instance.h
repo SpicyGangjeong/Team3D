@@ -36,8 +36,10 @@ public:
 	void Set_Index_Renge_Color(_uint StartIndex, _uint EndIndex, _float vColor);
 	void Set_Index_Color(_int Index, _float vColor);
 	_int Set_Mouse_Hover(_float2 fMousePos);
+	void Set_Hover(_int Index);
 	void Set_Hover_Index(_uint iIndex);
 	void Set_Equip_Index(_uint iIndex);
+	void Set_Draw(_int iCount = -1);
 
 private:
 	VTX_INSTANCE_UI*	m_pInstanceVertices = { nullptr };

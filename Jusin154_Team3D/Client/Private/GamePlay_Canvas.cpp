@@ -7,6 +7,9 @@
 #include "Action_Panel.h"
 #include "Enemy_Panel.h"
 //#include "Mouse_Cursor.h"
+#include "Broom_Panel.h"
+#include "Ride_Panel.h"
+#include "InfoInstance.h"
 
 CGamePlay_Canvas::CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CCanvasObject(pDevice, pContext)
@@ -14,7 +17,8 @@ CGamePlay_Canvas::CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* p
 }
 
 CGamePlay_Canvas::CGamePlay_Canvas(const CGamePlay_Canvas& rhs)
-	:CCanvasObject(rhs)
+	:CCanvasObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -45,6 +49,7 @@ HRESULT CGamePlay_Canvas::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	m_pInfoInstance->Add_Event(TEXT("BroomRide"), [this](void* p) {this->Set_Ride(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -55,6 +60,24 @@ void CGamePlay_Canvas::Priority_Update(_float fTimeDelta)
 
 void CGamePlay_Canvas::Update(_float fTimeDelta)
 {
+
+	if (m_bCurrentRide != m_bRide)
+	{
+		if (m_bRide == true)
+		{
+			static_cast<CUIObject*>(m_pRide_Panel)->Visible(true);
+			static_cast<CUIObject*>(m_pRide_Panel)->Set_FadeIn();
+			static_cast<CUIObject*>(m_pAction_Panel)->Visible(false);
+		}
+		else
+		{
+			static_cast<CUIObject*>(m_pRide_Panel)->Set_FadeOut();
+			static_cast<CUIObject*>(m_pAction_Panel)->Visible(true);
+			static_cast<CUIObject*>(m_pAction_Panel)->Set_FadeIn();
+		}
+		m_bCurrentRide = m_bRide;
+	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -88,36 +111,47 @@ HRESULT CGamePlay_Canvas::Ready_Components(void* pArg)
 
 HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoading_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoading_Panel**>(&m_pLoading_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoading_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CLoading_Panel**>(&m_pLoading_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("LoadingPanel"), m_pLoading_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMiniMap_Panel**>(&m_pMinimap_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMiniMap_Panel**>(&m_pMinimap_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("MinimapPanel"), m_pMinimap_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Panel**>(&m_pMission_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Panel**>(&m_pMission_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("MissionPanel"), m_pMission_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CAction_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CAction_Panel**>(&m_pAction_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CAction_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CAction_Panel**>(&m_pAction_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("ActionPanel"), m_pAction_Panel);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Panel**>(&m_pEnemy_Panel))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Panel**>(&m_pEnemy_Panel))))
 	{
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Enemy_Panel"), m_pEnemy_Panel);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CBroom_Panel**>(&m_pBroom_Panel))))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("Broom_Panel"), m_pBroom_Panel);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRide_Panel>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CRide_Panel**>(&m_pRide_Panel))))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("Ride_Panel"), m_pRide_Panel);
 
 	return S_OK;
 }

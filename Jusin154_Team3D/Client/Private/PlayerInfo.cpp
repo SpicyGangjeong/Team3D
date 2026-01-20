@@ -10,6 +10,9 @@ CPlayerInfo::CPlayerInfo()
 
 CStat* CPlayerInfo::Get_PlayerStatPtr()
 {
+	if (m_pStat == nullptr)
+		return nullptr;
+
 	return m_pStat;
 }
 

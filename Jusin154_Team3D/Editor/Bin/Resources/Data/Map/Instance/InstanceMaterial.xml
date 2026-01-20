@@ -210,4 +210,126 @@
         <Surface>SRO</Surface>
     </Mesh>
    </SM_ScotsPine_LargeA_Master>
+   <SM_HM_LightPost mesh="2">
+    <Mesh>
+        <Material>T_HM_LampPost_Glass_Dark_D</Material>
+        <Material>T_HM_LampPost_Glass_MRO</Material>
+        <Material>T_HM_LampPost_Glass_MRO</Material>
+        <Surface>MRO</Surface>
+    </Mesh>
+    <Mesh>
+        <Material>T_HM_LampPost_D</Material>
+        <Material>T_HM_LampPost_N</Material>
+        <Material>T_HM_LampPost_MRO</Material>
+        <Surface>MRO</Surface>
+    </Mesh>
+   </SM_HM_LightPost>
+   <SM_HM_Light_Post_Floating mesh="2">
+        <Mesh>
+            <Material>T_HM_LampPost_D</Material>
+            <Material>T_HM_LampPost_N</Material>
+            <Material>T_HM_LampPost_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_HM_LampPost_Glass_Dark_D</Material>
+            <Material>T_HM_LampPost_Glass_MRO</Material>
+            <Material>T_HM_LampPost_Glass_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SM_HM_Light_Post_Floating>
+   <SM_HW_LightFixture_Base_D mesh="2">
+        <Mesh>
+            <Material>T_HW_LightFixture_WallD_D</Material>
+            <Material>T_HW_LightFixture_WallD_N</Material>
+            <Material>T_HW_LightFixture_WallD_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_HW_LightFixture_WallD_glass_D</Material>
+            <Material>T_HW_LightFixture_WallD_glass_D</Material>
+            <Material>T_HW_LightFixture_WallD_glass_D</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SM_HW_LightFixture_Base_D>
+   <SM_OL_StratifiedCliff_A1_Lod1 mesh="2">
+        <Mesh>
+            <Material>T_OL_StratifiedCliff_A1_01_D</Material>
+            <Material>T_OL_StratifiedCliff_A1_01_N</Material>
+            <Material>T_OL_StratifiedCliff_A1_01_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_OL_StratifiedCliff_A1_02_D</Material>
+            <Material>T_OL_StratifiedCliff_A1_02_N</Material>
+            <Material>T_OL_StratifiedCliff_A1_02_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+   </SM_OL_StratifiedCliff_A1_Lod1>
+   <SM_OL_StratifiedRock_B mesh="1">
+        <Mesh>
+            <Material>T_OL_StratifiedRock_B1_D</Material>
+            <Material>T_OL_StratifiedRock_B1_N</Material>
+            <Material>T_OL_StratifiedRock_B1_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+   </SM_OL_StratifiedRock_B>
+   <SM_OL_StratifiedRock_D_B mesh="1">
+        <Mesh>
+            <Material>T_OL_StratifiedRock_D1_D</Material>
+            <Material>T_OL_StratifiedRock_D1_N</Material>
+            <Material>T_OL_StratifiedRock_D1_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+   </SM_OL_StratifiedRock_D_B>
+    <SM_HM_Stone_FrontSteps_A mesh="1">
+        <Mesh>
+            <Material>T_HoneyDukes_BaseStone_01_D</Material>
+            <Material>T_HoneyDukes_BaseStone_01_N</Material>
+            <Material>T_HoneyDukes_BaseStone_01_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SM_HM_Stone_FrontSteps_A>
+    <SM_HM_Quid_StoneKit_A mesh="1">
+        <Mesh>
+            <Material>T_HM_Quid_StoneKit_A_D</Material>
+            <Material>T_HM_Quid_StoneKit_A_N</Material>
+            <Material>T_HM_Quid_StoneKit_A_SRO</Material>
+            <Surface>SRO</Surface>
+        </Mesh>
+   </SM_HM_Quid_StoneKit_A>
+    <SK_BRR_RouteMarker mesh="2">
+        <Mesh>
+            <Material>T_BRR_RouteBanner_D</Material>
+            <Material>T_BRR_RouteBanner_N</Material>
+            <Material>T_BRR_RouteBanner_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_BRR_RouteBanner_D</Material>
+            <Material>T_BRR_RouteBanner_N</Material>
+            <Material>T_BRR_RouteBanner_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SK_BRR_RouteMarker>
+   <SM_HM_BLDG_TeaShop_Door_A mesh="3">
+        <Mesh>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_D</Material>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_N</Material>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_D</Material>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_N</Material>
+            <Material>T_HM_BLDG_TeaShop_Windows_A_Glass_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+        <Mesh>
+            <Material>T_HM_BLDG_TeaShop_Door_A_D</Material>
+            <Material>T_HM_BLDG_TeaShop_Door_A_N</Material>
+            <Material>T_HM_BLDG_TeaShop_Door_A_MRO</Material>
+            <Surface>MRO</Surface>
+        </Mesh>
+   </SM_HM_BLDG_TeaShop_Door_A>
 </Instance>

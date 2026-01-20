@@ -39,6 +39,7 @@ HRESULT CGoblin_Dagger::Initialize(void* pArg)
 void CGoblin_Dagger::Priority_Update(_float fTimeDelta)
 {
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
+	m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)
 	{
 		_matrix socketMatrix = {};
@@ -139,7 +140,15 @@ HRESULT CGoblin_Dagger::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -194,25 +203,43 @@ void CGoblin_Dagger::Dagger_Hit()
 				XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
 				tagCollInfo.fLength = fLength;
 				
-				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
 				tagCollInfo.pObject = pUserData->pOwner;
-				switch (PXOBJECT(pUserData->iSubKind))
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_PROJECTILE);
+				tagCollInfo.fDamage = 10.f;
+				
+				switch (pUserData->eKind)
 				{
-				case Engine::PXOBJECT::PLAYER:
-				{
-					if (false == m_bVisible) {
-						break;
+				case PHYSX_KIND::BODY_DYNAMIC:
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case PXOBJECT::SKILL_PROTEGO:
+					{
+						if (false == m_bVisible) {
+							break;
+						}
+						m_bVisible = false;
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					}
-					m_bVisible = false;
-					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(10.f);
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					break;
+					}
+					break;
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case Engine::PXOBJECT::PLAYER:
+					{
+						if (false == m_bVisible) {
+							break;
+						}
+						m_bVisible = false;
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					}
+					break;
+
+					}
 				}
-				break;
-				case Engine::PXOBJECT::ALLY_HITBOX:
-					break;
-				default:
-					break;
 				}
 				
 				

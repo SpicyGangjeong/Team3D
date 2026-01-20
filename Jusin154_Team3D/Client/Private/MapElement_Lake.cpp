@@ -94,6 +94,9 @@ HRESULT CMapElement_Lake::Render()
 	if (FAILED(m_pModelComs[0]->Render(0))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pShallowModels[0]->Render(0))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -111,14 +114,14 @@ HRESULT CMapElement_Lake::Ready_Components(void* pArg)
 		CModel* pModel = { nullptr };
 
 		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, m_ModelPrototypeTags[i],
 			reinterpret_cast<CComponent**>(&pModel))))
 			return E_FAIL;
 
 		m_pModelComs.push_back(pModel);
 
 		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->ShallowModelPrototypeTags[i],
+		if (FAILED(__super::Add_Asset_Component(NEXT_LEVEL, pDesc->ShallowModelPrototypeTags[i],
 			reinterpret_cast<CComponent**>(&pModel))))
 			return E_FAIL;
 

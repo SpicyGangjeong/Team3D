@@ -44,6 +44,7 @@ HRESULT CWand::Initialize(void* pArg)
 
 void CWand::Priority_Update(_float fTimeDelta)
 {
+	m_pModelCom->Combined_BoneMatrix();
 #ifdef _DEBUG
 	Describe_Entity();
 
@@ -52,12 +53,13 @@ void CWand::Priority_Update(_float fTimeDelta)
 
 void CWand::Update(_float fTimeDelta)
 {
-	m_pModelCom->Combined_BoneMatrix();
+
 
 }
 
 void CWand::Late_Update(_float fTimeDelta)
 {
+
 	_matrix socketMatrix = {};
 
 	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
@@ -68,12 +70,15 @@ void CWand::Late_Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 	XMStoreFloat4x4(&m_pWandTipMatrix, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Effect")) * m_pTransformCom->Get_XMWorldMatrix());
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CWand::Render()
 {
-	if (!m_pModelCom)
+
+
+	if (!m_bVisible)
 		return S_OK;
 
 	if (FAILED(Bind_ShaderResources())) {
@@ -138,7 +143,15 @@ HRESULT CWand::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}

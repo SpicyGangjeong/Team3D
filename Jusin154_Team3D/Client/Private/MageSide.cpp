@@ -42,9 +42,13 @@ HRESULT CMageSide::Initialize(void* pArg)
 	m_wstrEffectName = L"MageSide";
 
 	m_pMage_PT = Get_PartObject<CEffectParts>("Mage_PT0");
+	m_pMage_Fire = Get_PartObject<CEffectParts>("Mage_Fire");
+
 	m_pMage_Trail = Get_PartObject<CTrailObject>("Mage_Trail");
 
+
 	SAFE_ADDREF(m_pMage_PT);
+	SAFE_ADDREF(m_pMage_Fire);
 	SAFE_ADDREF(m_pMage_Trail);
 
 	m_fDuration = 5.f;
@@ -52,6 +56,7 @@ HRESULT CMageSide::Initialize(void* pArg)
 	m_Events.emplace(3.f, [&]() {
 		m_isParticleEnd = true;
 		m_pMage_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+		m_pMage_Fire->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
 
 		});
 
@@ -73,7 +78,8 @@ void CMageSide::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-
+	if (m_pOwner->isDead())
+		return;
 	_matrix BoneMat = XMLoadFloat4x4(m_pOwner->Get_Component<CModel>()->Get_BoneMatrixPtr("RightHand"));
 
 	for (int i = 0; i < 3; ++i) {
@@ -87,8 +93,12 @@ void CMageSide::Update(_float fTimeDelta)
 	_matrix CombinedMat = BoneMat * WorldMat;
 
 
-	if(m_isParticleEnd == false)
+	if (m_isParticleEnd == false)
+	{
 		m_pMage_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, CombinedMat.r[3]);
+		m_pMage_Fire->Get_Component<CTransform>()->Set_State(STATE::POSITION, CombinedMat.r[3]);
+	}
+
 	m_pMage_Trail->Trail_Update(CombinedMat, fTimeDelta);
 
 }
@@ -116,9 +126,11 @@ HRESULT CMageSide::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pMage_Trail->Get_Component<CTrail>()->Reset_Trail();
 
 	m_pMage_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, CombinedMat.r[3]);
+	m_pMage_Fire->Get_Component<CTransform>()->Set_State(STATE::POSITION, CombinedMat.r[3]);
 
 	m_pMage_PT->Set_Visible(true);
 	m_pMage_Trail->Set_Visible(true);
+	m_pMage_Fire->Set_Visible(true);
 
 	m_isParticleEnd = false;
 
@@ -197,6 +209,7 @@ void CMageSide::Free()
 
 	SAFE_RELEASE(m_pMage_PT);
 	SAFE_RELEASE(m_pMage_Trail);
+	SAFE_RELEASE(m_pMage_Fire);
 
 }
 #ifdef _DEBUG

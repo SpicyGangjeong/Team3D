@@ -15,11 +15,11 @@ public:
 
 	struct PendingEvent
 	{
-		_float fRatio = 0.f;
-		_uint AnimIndex = 0;
-		function<void()> Callback;
-		_bool bKeep = { false };
-		_bool bExecuted = { false };
+		_float               fRatio = 0.f;
+		_uint                AnimIndex = 0;
+		function<void()>     Callback;
+		_bool                bKeep = { false };
+		_float               PrevRatio = {};
 	};
 protected:
 	CUnit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,9 +32,13 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
+	virtual const _float4x4* Get_SocketMatrixPtr(const _char* pSocketName);
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 	_bool IsAI() { return m_bAI; }
 
+	HRESULT Ready_Sound_Events(const _char* pFilePath);
+	void Add_Sound_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bKeep = false);
+	void Reset_SoundEvent();
 #ifdef _DEBUG
 	void Load_KeyFrame();
 #endif // _DEBUG
@@ -51,6 +55,15 @@ public:
 
 	virtual void Reset_Sprint() {};
 	virtual void Reset_Walk() {};
+
+	virtual _bool Get_Npc() { return m_bNpc; }
+	virtual _wstring Get_Name();
+	virtual _wstring Get_NpcName();
+	virtual _int Get_NpcID();
+	virtual _int Get_TextID();
+	virtual void Set_NextID(_int ID);
+	virtual void Set_Flow(_int Index, _float fTime);
+	virtual _int Get_Flow();
 #pragma endregion
 
 protected:
@@ -62,7 +75,9 @@ protected:
 	_float			m_fRimLightPower = { 3.2f };
 	_float			m_fRimLightStrength = { 3.04f };
 	_float3			m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
+	_float			m_fMBIntensity = 1.f;
 
+	_bool			m_bNpc = { false };
 	_bool			m_bAI = {};
 
 	map<_string, _float> m_KeyFrames;
@@ -77,9 +92,13 @@ protected:
 	_float m_fHitRadius = {};
 
 	vector<PendingEvent> m_PendingEvents;
+	vector<PendingEvent> m_SoundEvents = {};
 
 	_float m_fHitDegree = {};
 	_float m_fHitCross = {};
+	_int	m_eHitType = {};
+
+	_int	m_iCurrentFlow = 0;
 
 private:
 	virtual void Add_FSM() {};
@@ -90,9 +109,17 @@ private:
 
 protected:
 	HRESULT Ready_Components(void*pArg);
+#ifdef _DEBUG
+public:
+#endif // _DEBUG
 	void Play_Event();
+protected:
 	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bKeep = false);
+	void Reset_Event();
 	void Check_HitAngle(_vector ProjectileDir);
+	virtual void Load_AnimXML(const string& path);
+	STATEANIM::ESTATE StringToStateAnim(const string& s);
+
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;

@@ -50,7 +50,7 @@ HRESULT CBombardSide::Initialize(void* pArg)
 	SAFE_ADDREF(m_pWandTrail);
 	SAFE_ADDREF(m_pWandParticle);
 
-	m_fDuration = 2.f;
+	m_fDuration = 3.f;
 
 	m_Events.emplace(0.6f, [&]() {
 		m_isParticleEnd = true;
@@ -61,9 +61,7 @@ HRESULT CBombardSide::Initialize(void* pArg)
 		if (pWand == nullptr)
 			return;
 
-		m_isTrailEnd = true;
-
-		XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
+		m_pWandTrail->SetDissolve(true);
 		});
 
 	return S_OK;
@@ -99,7 +97,7 @@ void CBombardSide::Update(_float fTimeDelta)
 
 	// 트레일이 종료되면 위치를 고정함
 	_matrix TrailMat = m_isTrailEnd ? XMLoadFloat4x4(&m_TrailStopMat) : pWand->Get_WorldMatrix();
-	m_pWandTrail->Trail_Update(TrailMat, fTimeDelta);
+	m_pWandTrail->Oneside_Rope_Trail_Update(TrailMat, fTimeDelta);
 
 }
 

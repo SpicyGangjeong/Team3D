@@ -3,7 +3,10 @@
 
 #include "GameInstance.h"
 #include "EffectParts.h"
-
+#include "Player.h"
+#include "EffectPool.h"
+#include "Layer.h"
+#include "MapElement_Interactable.h"
 
 CGoblin_Protego::CGoblin_Protego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -32,24 +35,23 @@ HRESULT CGoblin_Protego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_pSphere = Get_PartObject<CEffectParts>("ProtegoSphere");
-	m_pBottom = Get_PartObject<CEffectParts>("ProtegoBottom");
-	m_pCircle = Get_PartObject<CEffectParts>("ProtegoCircle");
+	m_pSphereLay = Get_PartObject<CEffectParts>("ProtegoLay");
 
 	SAFE_ADDREF(m_pSphere);
-	SAFE_ADDREF(m_pBottom);
-	SAFE_ADDREF(m_pCircle);
+	SAFE_ADDREF(m_pSphereLay);
 
-	m_wstrEffectName = L"Goblin_Protego";
+	m_wstrEffectName = L"Protego";
 
 
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
-	m_fDuration = 3.f;
+	m_fDuration = 6.f;
 
 	return S_OK;
 }
@@ -57,7 +59,6 @@ HRESULT CGoblin_Protego::Initialize(void* pArg)
 void CGoblin_Protego::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
-
 }
 
 void CGoblin_Protego::Update(_float fTimeDelta)
@@ -66,13 +67,15 @@ void CGoblin_Protego::Update(_float fTimeDelta)
 		return;
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle-> Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
 
+	if (m_bVisible == false) {
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	}
 
 
 	/* 시작 사이즈 러프 */
@@ -85,17 +88,24 @@ void CGoblin_Protego::Update(_float fTimeDelta)
 	_float3 vSize = _float3(fSize, fSize, fSize);
 
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
-	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
+	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
 }
 
 void CGoblin_Protego::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
+	if (m_bVisible == false) {
 		return;
+	}
 
+	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position());
 	__super::Late_Update(fTimeDelta);
 
+}
 
+void CGoblin_Protego::Set_Visible(_bool bVisible)
+{
+	m_bVisible = true;
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), CURRENT_LEVEL);
 }
 
 HRESULT CGoblin_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
@@ -103,18 +113,21 @@ HRESULT CGoblin_Protego::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
+	m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pSphereLay->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	m_pSphere->Set_Visible(true);
-	m_pCircle->Set_Visible(true);
-	m_pBottom->Set_Visible(true);
+	m_pSphereLay->Set_Visible(true);
+
 
 
 	_float3 vSize = _float3(1.f, 1.f, 1.f);
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
-	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
+	m_pSphereLay->Get_Component<CTransform>()->Set_Scale(vSize);
+
+
 
 	m_fSizeAccTime = 0.f;
 
@@ -125,6 +138,17 @@ HRESULT CGoblin_Protego::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
+	}
+
+
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_PROTEGO);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
@@ -164,8 +188,105 @@ CGameObject* CGoblin_Protego::Clone(void* pArg, CGameObject* pOwner)
 
 void CGoblin_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	//CTransform* pOtherTransform = p
+	if (!m_bVisible)
+		return;
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	if (pEffect_Container != nullptr)
+	{
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+			if (iRand == 0) {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_17, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			else {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
+			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		}
+			break;
+		case ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA):
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+			if (iRand == 0) {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_17, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			else {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
+			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		}
+			break;
+		case ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC):
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+			if (iRand == 0) {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_17, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			else {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
+			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		}
+			break;
+		case ENUM_CLASS(SKILL_TYPE::STUPEFY):
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+			if (iRand == 0) {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_17, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			else {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
+			m_bVisible = false;
+			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		}
+			break;
+		default:
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_12, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			break;
+		}
+	}
+	else
+	{
+		CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+		if (pProps != nullptr)
+		{
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 1);
+			if (iRand == 0) {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_17, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			else {
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_3, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			}
+			m_pOwner->OnCollision(pOther, CollisionDesc);
+			m_pRigidBody->Detach_Actor(CURRENT_LEVEL);
+			m_bVisible = false;
+		}
+	}
+
+	m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>()
+		->Use_Skill(SKILL_TYPE::GOBLIN_PROTEGO_HIT, m_pOwner, &CollisionDesc->vWorldPos);
 
 }
 
@@ -176,20 +297,19 @@ void CGoblin_Protego::Free()
 	//if(m_pPhysHitBox != nullptr)
 	//	if (m_pPhysHitBox->Get_Depth() == false)
 	//		SAFE_RELEASE(m_pPhysHitBox);
-
+	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pSphere);
-	SAFE_RELEASE(m_pBottom);
-	SAFE_RELEASE(m_pCircle);
+	SAFE_RELEASE(m_pSphereLay);
 
 }
 #ifdef _DEBUG
 
 void CGoblin_Protego::Describe_Entity()
 {
-	GUI::Begin("PROTEGO", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	GUI::Begin("PROTEGO");
 
-	GUI::DragFloat("fAmountSize" ,&m_fAmountSize);
-	GUI::DragFloat("fSpeed" , &m_fSpeed);
+	GUI::DragFloat("fAmountSize", &m_fAmountSize);
+	GUI::DragFloat("fSpeed", &m_fSpeed);
 
 	GUI::End();
 }

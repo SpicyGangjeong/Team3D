@@ -205,13 +205,13 @@ void CMouse_Manager::Free()
 void CMouse_Manager::Describe_Entity()
 {
 	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	if (GUI::CollapsingHeader("Mouse_Manager")) {
 		GUI::Text("AccumulateMomentum %.2f, %.2f", m_vMove.x, m_vMove.y);
 		GUI::Text("CurPos %d, %d", m_ptCurrentMouseCur.x, m_ptCurrentMouseCur.y);
 		GUI::Text("Lock %d", m_bLockMouseToCenter);
 		POINT pt = Get_MouseViewPortPos();
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO& io = GUI::GetIO();
 		GUI::Text("IMGUI MousePos: %.1f, %.1f", io.MousePos.x, io.MousePos.y);
 		//io.MousePos = ImVec2((float)pt.x, (float)pt.y);
 		GUI::Text("VPPOS: %d, %d", pt.x, pt.y);

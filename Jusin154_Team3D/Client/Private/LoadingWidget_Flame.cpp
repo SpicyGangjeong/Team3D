@@ -22,7 +22,7 @@ HRESULT CLoadingWidget_Flame::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -237.f;
-	Desc.fY = 90.f;
+	Desc.fY = -90.f;
 	Desc.fSizeX = 100.f;
 	Desc.fSizeY = 100.f;
 

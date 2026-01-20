@@ -19,6 +19,8 @@
 #include "Fog.h"
 #include "Resource_Manager.h"
 #include "Font_Manager.h"
+#include "Volumetric.h"
+#include "Sound_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -50,13 +52,17 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 			}
 		}
 	}
-#ifdef 기무리
-	m_pThreadHolder = CThreadHolder::Create(12);
-#endif // 기무리
-#ifndef 기무리
+#ifdef _DEBUG
+#ifdef Bin
+	m_pThreadHolder = CThreadHolder::Create(8);
+#else
 	m_pThreadHolder = CThreadHolder::Create(6);
-#endif // !기무리
+#endif // 
+#endif // _DEBUG
 
+#ifndef _DEBUG
+	m_pThreadHolder = CThreadHolder::Create(12);
+#endif // !_DEBUG
 
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;
@@ -81,7 +87,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pKey_Manager) {
 		return E_FAIL;
 	}
-	m_pPipeLine = CPipeLine::Create();
+	m_pPipeLine = CPipeLine::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pPipeLine) {
 		return E_FAIL;
 	}
@@ -100,8 +106,13 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pCollider_Manager) {
 		return E_FAIL;
 	}
-	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext);
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext, EngineDesc.iNumLevels);
 	if (nullptr == m_pPhysX_Manager) {
+		return E_FAIL;
+	}
+
+	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000, EngineDesc.iNumLevels);
+	if (nullptr == m_pResource_Manager) {
 		return E_FAIL;
 	}
 
@@ -110,13 +121,18 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
-	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000);
-	if (nullptr == m_pResource_Manager) {
+	m_pVolumetric = CVolumetric::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pVolumetric) {
 		return E_FAIL;
 	}
 
 	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pFont_Manager) {
+		return E_FAIL;
+	}
+
+	m_pSound_Manager = CSound_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pSound_Manager) {
 		return E_FAIL;
 	}
 
@@ -133,7 +149,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
-	//m_pSound_Manager->Update();
+	m_pSound_Manager->Update();
 #ifdef _DEBUG
 	m_pResource_Manager->Describe_Entity();
 	m_pFog->Update_Fog();
@@ -149,6 +165,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pPhysX_Manager->Update(fExcuteTimeDelta);
 
 	m_pObject_Manager->Late_Update(fExcuteTimeDelta);
+
+	m_pVolumetric->Dispatch();
 
 	m_pLevel_Manager->Update(fExcuteTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
@@ -176,6 +194,8 @@ void CGameInstance::Clear_Resources(_uint iLevelIndex)
 	m_pCamera_Manager->Clear_Cameras(iLevelIndex);
 	m_pObject_Manager->Clear(iLevelIndex);
 	m_pLight_Manager->Light_Clear(iLevelIndex);
+	m_pResource_Manager->Clear_LevelResources(iLevelIndex);
+	m_pPhysX_Manager->ClearScene(iLevelIndex);
 }
 
 _float CGameInstance::Random_Normal()
@@ -369,7 +389,7 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_Render_NonLight = Get_TimeDelta(TEXT("Timer_Render_NonLight"));
 	m_fTimer_Render_Blend = Get_TimeDelta(TEXT("Timer_Render_Blend"));
 	m_fTimer_Render_WeightBlend = Get_TimeDelta(TEXT("Timer_Render_WeightBlend"));
-	m_fTimer_Render_Bloom = Get_TimeDelta(TEXT("Timer_Render_Bloom"));
+	m_fTimer_Render_PostProcessing = Get_TimeDelta(TEXT("Timer_Render_PostProcessing"));
 	m_fTimer_Render_LastColor = Get_TimeDelta(TEXT("Timer_Render_LastColor"));
 	m_fTimer_Render_Tone_Mapping = Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
 	m_fTimer_Render_UI = Get_TimeDelta(TEXT("Timer_Render_UI"));
@@ -377,7 +397,7 @@ void CGameInstance::Compute_FrameCount()
 #endif // _DEBUG
 }
 
-void CGameInstance::Present_TimeCost() const
+void CGameInstance::Present_TimeCost() 
 {
 #pragma region TimeCost
 #ifdef _DEBUG
@@ -390,7 +410,7 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_PhysX
 		+ m_fTimer_Level;
 
-	GUI::PushItemWidth(80);
+	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	GUI::Begin("Previous_Frame_Timer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 
 	if (GUI::CollapsingHeader("Detail"))
@@ -425,138 +445,148 @@ void CGameInstance::Present_TimeCost() const
 			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 			GUI::Text("Level %d", int(m_fTimer_Level / fTotal * 100.f));
 		}
-		if (GUI::IsPopupOpen("Renderer_Timer"))
+		if (GUI::Button("Renderer_Timer"))
 		{
-			if (GUI::BeginPopup("Renderer_Timer")) {
-				_float fRenderer_Total = m_fTimer_Render_Priority
-					+ m_fTimer_Render_Shadow
-					+ m_fTimer_Render_NonBlend
-					+ m_fTimer_Render_SSAO
-					+ m_fTimer_Render_SSAO_BLUR
-					+ m_fTimer_Render_LightAcc
-					+ m_fTimer_Render_Blur
-					+ m_fTimer_Render_Combined
-					+ m_fTimer_Render_Occlusion
-					+ m_fTimer_Render_EnvironmentPostProcess
-					+ m_fTimer_Render_Fog
-					+ m_fTimer_Render_Effect
-					+ m_fTimer_Render_NonLight
-					+ m_fTimer_Render_Blend
-					+ m_fTimer_Render_WeightBlend
-					+ m_fTimer_Render_Bloom
-					+ m_fTimer_Render_LastColor
-					+ m_fTimer_Render_Tone_Mapping
-					+ m_fTimer_Render_UI
-					+ m_fTimer_Render_UI_Overley;
+			m_bRendererTimerOpen = !m_bRendererTimerOpen;
+		}
+		if (m_bRendererTimerOpen)
+			{
+				GUI::SetNextWindowSize(ImVec2(320.f, 0.f), ImGuiCond_FirstUseEver);
+
+				if (GUI::Begin("Renderer_Timer", &m_bRendererTimerOpen, ImGuiWindowFlags_AlwaysAutoResize))
 				{
-					GUI::ProgressBar(m_fTimer_Render_Priority / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Priority %d", int(m_fTimer_Render_Priority / fRenderer_Total * 100.f));
+					_float fRenderer_Total = m_fTimer_Render_Priority
+						+ m_fTimer_Render_Shadow
+						+ m_fTimer_Render_NonBlend
+						+ m_fTimer_Render_SSAO
+						+ m_fTimer_Render_SSAO_BLUR
+						+ m_fTimer_Render_LightAcc
+						+ m_fTimer_Render_Blur
+						+ m_fTimer_Render_Combined
+						+ m_fTimer_Render_Occlusion
+						+ m_fTimer_Render_EnvironmentPostProcess
+						+ m_fTimer_Render_Fog
+						+ m_fTimer_Render_Effect
+						+ m_fTimer_Render_NonLight
+						+ m_fTimer_Render_Blend
+						+ m_fTimer_Render_WeightBlend
+						+ m_fTimer_Render_PostProcessing
+						+ m_fTimer_Render_LastColor
+						+ m_fTimer_Render_Tone_Mapping
+						+ m_fTimer_Render_UI
+						+ m_fTimer_Render_UI_Overley;
+
+					// 0으로 나눔 방지
+					if (fRenderer_Total <= FLT_EPSILON)
+						fRenderer_Total = 1.f;
+
+					{
+						GUI::ProgressBar(m_fTimer_Render_Priority / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Priority %d", int(m_fTimer_Render_Priority / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Shadow / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Shadow %d", int(m_fTimer_Render_Shadow / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_NonBlend / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_NonBlend %d", int(m_fTimer_Render_NonBlend / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_SSAO / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_SSAO %d", int(m_fTimer_Render_SSAO / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_SSAO_BLUR / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_SSAO_BLUR %d", int(m_fTimer_Render_SSAO_BLUR / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_LightAcc / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_LightAcc %d", int(m_fTimer_Render_LightAcc / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Blur / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Blur %d", int(m_fTimer_Render_Blur / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Combined / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Combined %d", int(m_fTimer_Render_Combined / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Occlusion / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Occlusion %d", int(m_fTimer_Render_Occlusion / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_EnvironmentPostProcess %d", int(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Fog / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Fog %d", int(m_fTimer_Render_Fog / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Effect / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Effect %d", int(m_fTimer_Render_Effect / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_NonLight / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_NonLight %d", int(m_fTimer_Render_NonLight / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Blend / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Blend %d", int(m_fTimer_Render_Blend / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_WeightBlend / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_PostProcessing / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_PostProcessing %d", int(m_fTimer_Render_PostProcessing / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_LastColor %d", int(m_fTimer_Render_LastColor / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_Tone_Mapping / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_Tone_Mapping %d", int(m_fTimer_Render_Tone_Mapping / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_UI / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_UI %d", int(m_fTimer_Render_UI / fRenderer_Total * 100.f));
+					}
+					{
+						GUI::ProgressBar(m_fTimer_Render_UI_Overley / fRenderer_Total, ImVec2(200.f, 0.f));
+						GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+						GUI::Text("Render_UI_Overley %d", int(m_fTimer_Render_UI_Overley / fRenderer_Total * 100.f));
+					}
 				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Shadow / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Shadow %d", int(m_fTimer_Render_Shadow / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_NonBlend / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_NonBlend %d", int(m_fTimer_Render_NonBlend / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_SSAO / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_SSAO %d", int(m_fTimer_Render_SSAO / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_SSAO_BLUR / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_SSAO_BLUR %d", int(m_fTimer_Render_SSAO_BLUR / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_LightAcc / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_LightAcc %d", int(m_fTimer_Render_LightAcc / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Blur / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Blur %d", int(m_fTimer_Render_Blur / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Combined / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Combined %d", int(m_fTimer_Render_Combined / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Occlusion / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Occlusion %d", int(m_fTimer_Render_Occlusion / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_EnvironmentPostProcess %d", int(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Fog / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Fog %d", int(m_fTimer_Render_Fog / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Effect / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Effect %d", int(m_fTimer_Render_Effect / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_NonLight / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_NonLight %d", int(m_fTimer_Render_NonLight / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Blend / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Blend %d", int(m_fTimer_Render_Blend / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_WeightBlend / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Bloom / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Bloom %d", int(m_fTimer_Render_Bloom / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_LastColor %d", int(m_fTimer_Render_LastColor / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_Tone_Mapping / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_Tone_Mapping %d", int(m_fTimer_Render_Tone_Mapping / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_UI / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_UI %d", int(m_fTimer_Render_UI / fRenderer_Total * 100.f));
-				}
-				{
-					GUI::ProgressBar(m_fTimer_Render_UI_Overley / fRenderer_Total, ImVec2(200.f, 0.f));
-					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-					GUI::Text("Render_UI_Overley %d", int(m_fTimer_Render_UI_Overley / fRenderer_Total * 100.f));
-				}
-				GUI::EndPopup();
-			}
+
+				GUI::End();
+
 		}
 		{
 			GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
-			GUI::SameLine();
-			if (GUI::SmallButton("Renderer_Timer")) {
-				GUI::OpenPopup("Renderer_Timer");
-			}
 			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 			GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
 		}
@@ -650,6 +680,11 @@ void CGameInstance::Set_LevelToChange()
 	return m_pLevel_Manager->Set_LevelToChange();
 }
 
+void CGameInstance::ResetLevel_Environment()
+{
+	return m_pLevel_Manager->ResetLevel_Environment();
+}
+
 CComponent* CGameInstance::Clone_Asset_Prototype(_uint iTargetLevel, const _wstring& strPrototypeTag, void* pArg, CGameObject* pOwner)
 {
 	return m_pPrototype_Manager->Clone_Asset_Prototype(iTargetLevel, strPrototypeTag, pArg, pOwner);
@@ -674,14 +709,40 @@ void CGameInstance::Clear_Objects_With_Layers(_uint iLevelIndex)
 	m_pObject_Manager->Clear(iLevelIndex);
 }
 
+void CGameInstance::Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag)
+{
+	m_pObject_Manager->Clear_Layer(iLevelIndex, strLayerTag);
+}
+
 HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {	
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
-void CGameInstance::Render_PreShadow()
+void CGameInstance::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix)
 {
-	return m_pRenderer->Render_PreShadow();
+	return m_pRenderer->Render_PreShadow(ViewMatrix, ProjMatrix);
+}
+
+RENDER CGameInstance::Get_CurrentRenderPass()
+{
+	return m_pRenderer->Get_CurrentRenderPass();
+}
+
+HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);
+}
+
+HRESULT CGameInstance::Bind_PrevMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	return m_pRenderer->Bind_PrevMatrix(pShader, pConstants, eType);
+}
+
+void CGameInstance::Set_Environment(_float3 vSSAO, _float fExposure, _float2 vNFBoxRatio, _float2 vSafeRadius, _float4 vShadowBias, _float4 vShadowRadius, _float3 vShadowBoxMarginMin, _float3 vShadowBoxMarginMax)
+{
+	m_pRenderer->Set_Environment(vSSAO, fExposure);
+	m_pPipeLine->Set_Environment(vNFBoxRatio, vSafeRadius, vShadowBias, vShadowRadius, vShadowBoxMarginMin, vShadowBoxMarginMax);
 }
 
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
@@ -697,6 +758,11 @@ const _float4x4* CGameInstance::Get_Transform_Float4x4(D3DTS eState)
 _matrix CGameInstance::Get_Transform_Matrix(D3DTS eState)
 {
 	return m_pPipeLine->Get_Transform_Matrix(eState);
+}
+
+_matrix CGameInstance::Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType)
+{
+	return m_pPipeLine->Get_ShadowTransform_Matrix(eState, eShadowType);
 }
 
 const _float4* CGameInstance::Get_CamPosition()
@@ -734,9 +800,9 @@ HRESULT CGameInstance::Bind_CascadeSplitRatio(CShader* pShader, const _char* pCo
 	return m_pPipeLine->Bind_CascadeSplitRatio(pShader, pConstantName, bNear);
 }
 
-HRESULT CGameInstance::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+HRESULT CGameInstance::Bind_CascadeValues(CShader* pShader)
 {
-	return m_pPipeLine->Bind_CascadeBias(pShader, pConstantName);
+	return m_pPipeLine->Bind_CascadeValues(pShader);
 }
 
 HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
@@ -769,6 +835,16 @@ _float  CGameInstance::Get_ShadowBoxFar(_uint iShadowBoxIndex)
 	return m_pPipeLine->Get_ShadowBoxFar(iShadowBoxIndex);
 }
 
+HRESULT CGameInstance::Begin_OutLine_Write(_uint iDSSRef)
+{
+	return m_pPipeLine->Begin_OutLine_Write(iDSSRef);
+}
+
+HRESULT CGameInstance::End_OutLine_Write()
+{
+	return m_pPipeLine->End_OutLine_Write();
+}
+
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
 	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
@@ -794,6 +870,15 @@ HRESULT CGameInstance::Render_Lights(_uint _iCurrentLevel, CShader* pShader, CVI
 	return m_pLight_Manager->Render_Lights(_iCurrentLevel, pShader, pVIBuffer);
 }
 
+list<class CLight*>* CGameInstance::Get_LightList(_uint _iCurrentLevel)
+{
+	return m_pLight_Manager->Get_LightList(_iCurrentLevel);
+}
+
+_uint CGameInstance::Get_NumLight(_uint _iCurrentLevel)
+{
+	return m_pLight_Manager->Get_NumLight(_iCurrentLevel);
+}
 
 HRESULT CGameInstance::Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding)
 {
@@ -829,9 +914,9 @@ HRESULT CGameInstance::Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11Depth
 	return m_pRenderTarget_Manager->Begin_MRT_NonClear(strMRTTag, pDSV);
 }
 
-HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isClear)
 {
-	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV);
+	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV , isClear);
 }
 
 HRESULT CGameInstance::Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag)
@@ -849,13 +934,17 @@ HRESULT CGameInstance::Bind_RenderTarget(const _wstring& strTargetTag, CShader* 
 	return m_pRenderTarget_Manager->Bind_RenderTarget(strTargetTag, pShader, pConstantName);
 }
 
-HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetTo(const _wstring& strSrcTag, ID3D11Texture2D* pDst2D)
 {
-	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetTo(strSrcTag, pDst2D);
 }
-HRESULT CGameInstance::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+HRESULT CGameInstance::Copy_RenderTargetFrom(const _wstring& strDstTag, ID3D11Texture2D* pSrc2D)
 {
-	return m_pRenderTarget_Manager->Paste_RenderTarget(strTargetTag, pTexture2D);
+	return m_pRenderTarget_Manager->Copy_RenderTargetFrom(strDstTag, pSrc2D);
+}
+HRESULT CGameInstance::Copy_RenderTargetAToB(const _wstring& strATag, const _wstring& strBTag)
+{
+	return m_pRenderTarget_Manager->Copy_RenderTargetAToB(strATag, strBTag);
 }
 HRESULT CGameInstance::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
 {
@@ -873,6 +962,17 @@ HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTar
 {
 	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
 }
+
+HRESULT CGameInstance::Clear_RenderTarget(const _wstring& strRenderTargetKey)
+{
+	return m_pRenderTarget_Manager->Clear_RenderTarget(strRenderTargetKey);
+}
+
+ID3D11ShaderResourceView* CGameInstance::Get_RenderTarget_SRV(const _wstring& strRenderTargetKey)
+{
+	return m_pRenderTarget_Manager->Get_RenderTarget_SRV(strRenderTargetKey);
+}
+
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
@@ -896,6 +996,10 @@ HRESULT CGameInstance::Add_Camera(_uint iLevel, CCamera* pCamera, const _wstring
 {
 	return m_pCamera_Manager->Add_Camera(iLevel, pCamera, strCameraKey);
 }
+CCamera* CGameInstance::Get_Camera(_uint iLevel, const _wstring& strCameraKey)
+{
+	return m_pCamera_Manager->Get_Camera(iLevel, strCameraKey);
+}
 HRESULT CGameInstance::Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority)
 {
 	return m_pCamera_Manager->Bind_Camera(iLevel, strCameraKey, bIgnorePriority);
@@ -912,6 +1016,10 @@ _float CGameInstance::Get_CameraFov()
 {
 	return m_pCamera_Manager->Get_CameraFov();
 }
+_float CGameInstance::Get_CameraNear()
+{
+	return m_pCamera_Manager->Get_CameraNear();
+}
 const _float* CGameInstance::Get_CurrentCameraFar()
 {
 	return m_pCamera_Manager->Get_CurrentCameraFar();
@@ -919,6 +1027,42 @@ const _float* CGameInstance::Get_CurrentCameraFar()
 void CGameInstance::Force_CamPosition(_fvector vPos)
 {
 	return m_pCamera_Manager->Force_CamPosition(vPos);
+}
+HRESULT CGameInstance::Load_Sound(SOUND::SD_KIND eKind, const _tchar* wstrSoundFilePath, FMOD_MODE eSoundMode)
+{
+	return m_pSound_Manager->Load_Sound(eKind, wstrSoundFilePath, eSoundMode);
+}
+SOUND::SD_KIND CGameInstance::Find_Sound(const _wstring wstrFilePath)
+{
+	return m_pSound_Manager->Find_Sound(wstrFilePath);
+}
+void CGameInstance::Sound_Play(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _bool bRepeat, _float fVolume)
+{
+	m_pSound_Manager->Sound_Play(eSoundKind, eSoundChannel, bRepeat, fVolume);
+}
+void CGameInstance::Sound_Play_3DPos(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel, _float3& refSpeaker, _float fMin, _float fMax, _bool bRepeat)
+{
+	m_pSound_Manager->Sound_Play_3DPos(eSoundKind, eSoundChannel, refSpeaker, fMin, fMax, bRepeat);
+}
+void CGameInstance::Sound_Pause_Channel(SD_CHANNEL_GROUP eSoundChannel, bool bPause)
+{
+	m_pSound_Manager->Sound_Pause_Channel(eSoundChannel, bPause);
+}
+void CGameInstance::Sound_Set3DListenerPos(CTransform* pTransform)
+{
+	m_pSound_Manager->Sound_Set3DListenerPos(pTransform);
+}
+void CGameInstance::Sound_StopChannel(SD_CHANNEL_GROUP eSoundChannel)
+{
+	m_pSound_Manager->Sound_StopChannel(eSoundChannel);
+}
+void CGameInstance::Sound_Stop(SOUND::SD_KIND eSoundKind, SD_CHANNEL_GROUP eSoundChannel)
+{
+	m_pSound_Manager->Sound_Stop(eSoundKind, eSoundChannel);
+}
+void CGameInstance::Sound_StopAll()
+{
+	m_pSound_Manager->Sound_StopAll();
 }
 _bool CGameInstance::isPicking(_float3* pOut)
 {
@@ -935,11 +1079,9 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 {
 	m_ModelMap[filePath] = pModel;
 }
-
-
 #endif
 
-void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
+void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel& sModel)
 {
 	lock_guard<mutex> lock(m_mtxLoadModelLock);
 	m_sModelMap[filePath] = sModel;
@@ -962,27 +1104,39 @@ PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)
 	return m_pPhysX_Manager->Create_Material(vMatInfo);
 }
 
-void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh)
+void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh, _uint iLevel)
 {
-	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
+	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh, iLevel);
 }
 
-void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc)
+void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc, _uint iLevel)
 {
-	return m_pPhysX_Manager->RegistHeight(pName, Desc);
+	return m_pPhysX_Manager->RegistHeight(pName, Desc, iLevel);
 }
 
-PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
+PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody, _uint iLevel)
 {
-	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
+	return m_pPhysX_Manager->Add_DynamicActor(RigidBody, iLevel);
 	}
-PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
+PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel)
 {
-	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
+	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel);
 }
-PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
+PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody, _uint iLevel, const _float4x4* pWorldMatrix)
 {
-	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
+	return m_pPhysX_Manager->Add_StaticActor(RigidBody, iLevel, pWorldMatrix);
+}
+PSX::PxJoint* CGameInstance::Create_PxJoint(PHYSX_JOINT eType, PSX::PxRigidActor* pActor0, PSX::PxTransform& pxLocalFrame0, PSX::PxRigidActor* pActor1, PSX::PxTransform& pxLocalFrame1)
+{
+	return m_pPhysX_Manager->Create_PxJoint(eType, pActor0, pxLocalFrame0, pActor1, pxLocalFrame1);
+}
+PSX::PxD6Joint* CGameInstance::Create_BasicPxD6Joint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	return m_pPhysX_Manager->Create_BasicPxD6Joint(pActor0, pActor1, pxJointWorldPos);
+}
+PSX::PxFixedJoint* CGameInstance::Create_BasicPxFixedJoint(PSX::PxRigidDynamic* pActor0, PSX::PxRigidDynamic* pActor1, const PSX::PxTransform& pxJointWorldPos)
+{
+	return m_pPhysX_Manager->Create_BasicPxFixedJoint(pActor0, pActor0, pxJointWorldPos);
 }
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
@@ -991,6 +1145,10 @@ _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir,
 _bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+_bool CGameInstance::Overlap(_float fRadius, _fvector vCenter, PSX::PxQueryFlags queryFlags, PSX::PxOverlapCallback& overlapBuffer, PSX::PxQueryFilterCallback* filterCallback)
+{
+	return m_pPhysX_Manager->Overlap(fRadius, vCenter, queryFlags, overlapBuffer, filterCallback);
 }
 _bool CGameInstance::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
 {
@@ -1016,17 +1174,21 @@ void CGameInstance::ReleaseController(_uint iControllerIndex)
 {
 	m_pPhysX_Manager->ReleaseController(iControllerIndex);
 }
-void CGameInstance::Attach_Actor(PSX::PxActor& Actor)
+void CGameInstance::Attach_Actor(PSX::PxActor& Actor, _uint iLevel)
 {
-	m_pPhysX_Manager->Attach_Actor(Actor);
+	m_pPhysX_Manager->Attach_Actor(Actor, iLevel);
 }
-void CGameInstance::Detach_Actor(PSX::PxActor& Actor)
+void CGameInstance::Detach_Actor(PSX::PxActor& Actor, _uint iLevel)
 {
-	m_pPhysX_Manager->Detach_Actor(Actor);
+	m_pPhysX_Manager->Detach_Actor(Actor, iLevel);
 }
 void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
-	m_pPhysX_Manager->Detach_Actor(Actor);
+	m_pPhysX_Manager->Release_Actor(Actor);
+}
+void CGameInstance::ApplyFilterData(PSX::PxRigidActor* pRigidActor)
+{
+	m_pPhysX_Manager->ApplyFilterData(pRigidActor);
 }
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
@@ -1037,7 +1199,7 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
 }
-void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
+void CGameInstance::Add_Editor_Plane(PHYSX_USERDATA& PlaneData)
 {
 	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
 }
@@ -1050,9 +1212,9 @@ HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 #pragma endregion
 
 #pragma region FOG
-void CGameInstance::Set_FogDensity(_float fFogDensity)
+void CGameInstance::Set_Fog(_float fFogDensity, _float fPow)
 {
-	m_pFog->Set_FogDensity(fFogDensity);
+	m_pFog->Set_Fog(fFogDensity, fPow);
 }
 void CGameInstance::Set_FogColor(_float4& vFogColor)
 {
@@ -1063,9 +1225,14 @@ HRESULT CGameInstance::Bind_FogValue(class CShader* pShader)
 {
 	return m_pFog->Bind_FogValue(pShader);
 }
-ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
+ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath, _uint iLevel)
 {
-	return m_pResource_Manager->Add_Texture(pFilePath);
+	return m_pResource_Manager->Add_Texture(pFilePath, iLevel);
+}
+
+void CGameInstance::Clear_LevelResources(_uint iLevel)
+{
+	m_pResource_Manager->Clear_LevelResources(iLevel);
 }
 
 #pragma endregion // FOG
@@ -1074,65 +1241,110 @@ ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
 
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Pressing(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Pressing(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 bool		CGameInstance::Key_Up(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Up(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Up(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 bool		CGameInstance::Key_Down(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Key_Down(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Down(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Pressing(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Pressing(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Pressing(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Up(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Up(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Up(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
 {
-	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Down(_iKey);
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
-	//}
+	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_StartMove()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_StartMove();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_StartMove();
 	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_Moving()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_Moving();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Moving();
 	}
+#endif // _DEBUG
 	return false;
 }
 _bool CGameInstance::Mouse_StopMove()
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+#ifndef _DEBUG
+	return m_pKey_Manager->Mouse_StopMove();
+#endif // !_DEBUG
+#ifdef _DEBUG
+	if (OPTIONAL_TRUE_KEYINPUTGUICHECK false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_StopMove();
 	}
+#endif // _DEBUG
 	return false;
 }
 _float3 CGameInstance::Get_MouseMove()
@@ -1144,6 +1356,11 @@ _float3 CGameInstance::Get_MouseMove()
 		return vMouseMove;
 	}
 	return { 0.f, 0.f, 0.f };
+}
+
+_long CGameInstance::Get_DIMouseMove(MOUSEMOVESTATE eMouseState)
+{
+	return m_pKey_Manager->Get_DIMouseMove(eMouseState);
 }
 
 void    CGameInstance::Picking()
@@ -1175,6 +1392,11 @@ _bool	CGameInstance::Toggle_MouseCenter()
 	return m_pMouse_Manager->Toggle_MouseCenter();
 }
 
+_bool CGameInstance::Toggle_MouseCenter(_bool Toggle)
+{
+	return m_pMouse_Manager->Toggle_MouseCenter(Toggle);
+}
+
 #pragma endregion // INPUT
 
 #pragma region FONT_MANAGER
@@ -1204,14 +1426,39 @@ _float CGameInstance::FontSizeX(const _wstring& strFontTag, const _tchar* pText)
 	return m_pFont_Manager->FontSizeX(strFontTag, pText);
 }
 
+
+
 #pragma endregion
 
+#pragma region VOLUMETRIC
+ID3D11ShaderResourceView* CGameInstance::Get_VolumeSRV()
+{
+	return m_pVolumetric->Get_VolumeSRV();
+}
+
+_float* CGameInstance::Get_DepthPackExponentPtr()
+{
+	return m_pVolumetric->Get_DepthPackExponentPtr();
+}
+
+void CGameInstance::Setting_Volumetirc(_float fDensity, _float fLightIntensity, _float fAsymmetryParameter, _float fDepthPackExponent, _float fHeightOffset)
+{
+	m_pVolumetric->Setting_Volumetirc(fDensity , fLightIntensity , fAsymmetryParameter, fDepthPackExponent, fHeightOffset);
+}
+
+void CGameInstance::Update_Volumetric()
+{
+	m_pVolumetric->Update();
+}
+
+#pragma endregion
 void CGameInstance::Release_Engine()
 {
 	SAFE_RELEASE(m_pThreadHolder);
 
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pSound_Manager);
 	SAFE_RELEASE(m_pFont_Manager);
 	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);
@@ -1222,6 +1469,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pKey_Manager);
 	SAFE_RELEASE(m_pMouse_Manager);
 	SAFE_RELEASE(m_pTimer_Manager);
+	SAFE_RELEASE(m_pVolumetric);
 	SAFE_RELEASE(m_pRenderer);
 	SAFE_RELEASE(m_pObject_Manager);
 	SAFE_RELEASE(m_pPhysX_Manager);

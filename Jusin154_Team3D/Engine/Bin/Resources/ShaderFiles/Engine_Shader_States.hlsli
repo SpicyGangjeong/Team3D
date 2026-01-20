@@ -49,6 +49,16 @@ RasterizerState RS_Front
     CullMode = Front;
 };
 
+RasterizerState RS_Shadow
+{
+    FillMode = Solid;
+    CullMode = Back;
+    FrontCounterClockwise = false;
+    DepthClipEnable = true;
+    ScissorEnable = false;
+    MultisampleEnable = false;
+    AntialiasedLineEnable = false;
+};
 
 /*
 typedef struct D3D10_DEPTH_STENCIL_DESC
@@ -75,6 +85,13 @@ DepthStencilState DSS_None
 {
     DepthEnable = false;
     DepthWriteMask = zero;
+};
+
+DepthStencilState DSS_Default_Less
+{
+    DepthEnable = true;
+    DepthWriteMask = all;
+    DepthFunc = less;
 };
 
 DepthStencilState DSS_Effect
@@ -166,6 +183,15 @@ DepthStencilState DSS_Default_OutLine_SRead
     BackFaceStencilDepthFail = Keep;
     BackFaceStencilPass = Keep;
     BackFaceStencilFunc = NOT_Equal;
+};
+
+DepthStencilState DSS_ShadowWrite
+{
+    DepthEnable = true;
+    DepthWriteMask = all;
+    DepthFunc = less_equal;
+
+    StencilEnable = false;
 };
 
 DepthStencilState DSS_Occlusion
@@ -286,6 +312,23 @@ BlendState BS_WeightBlend
 
     
 
+};
+
+BlendState BS_BULR_MESH // ADDITIVE_BLEND
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = false;
+    BlendEnable[2] = false;
+    BlendEnable[3] = false;
+    BlendEnable[4] = false;
+    BlendEnable[5] = false;
+    BlendEnable[6] = false;
+    BlendEnable[7] = false;
+
+    // Ac * (1) + Bc * (1);
+    SrcBlend[0] = one;
+    DestBlend[0] = one;
+    BlendOp[0] = Add;
 };
 
 BlendState BS_WhiteMask

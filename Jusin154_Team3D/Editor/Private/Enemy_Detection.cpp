@@ -22,7 +22,7 @@ HRESULT CEnemy_Detection::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
-	Desc.fY = 500.f;
+	Desc.fY = -500.f;
 	Desc.fSizeX = 150.f;
 	Desc.fSizeY = 150.f;
 

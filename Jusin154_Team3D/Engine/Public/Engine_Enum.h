@@ -5,19 +5,30 @@ NS_BEGIN(Engine)
 enum class STATE { RIGHT, UP, LOOK, POSITION, END };
 enum class LIGHT { DIRECTIONAL, POINT, SPOT, END };
 enum class COLLIDER { AABB, OBB, SPHERE, END };
-enum class RENDER {PRIORITY, SHADOW_NEAR, NONBLEND, DECAL, BLUR, NONLIGHT, EFFECT ,BLEND, BLOOM, UI, OCCLUSION, SHADOW_MIDDLE, SHADOW_FAR, PRESHADOW, UI_OVERLAY, END };
+enum class RENDER {PRIORITY, SHADOW_NEAR, NONBLEND, DECAL, BLUR, NONLIGHT, EFFECT ,BLEND, BLOOM, DISTORTION, BULR_MESH ,UI, OCCLUSION, SHADOW_MIDDLE, PRESHADOW, UI_OVERLAY, EFFECT_NONBLEND,END };
 enum class RAY { LOCAL, WORLD, END };
 enum class ACTOR { BOX, CAPSULE, SPHERE, PLANE, TRIANGLEMESH, HEIGHTFIELD, END };
-enum class BLEND_BONE{SPINE,SHOULDER_L,SHOULDER_R,NECK,SHOULDER_NECK_L, SHOULDER_NECK_R,END};
+enum class BLEND_BONE{SPINE,SHOULDER_L,SHOULDER_R,NECK,SHOULDER_NECK_L, SHOULDER_NECK_R,HEAD, HIPS_CLOTH, END};
 enum class STAT { NAME, CURRENTHP, MAXHP, TARGETHP, MELEE, MAGIC, DEFENSE, SPEED, AGILITY, LEVEL, EXPERIENCE, MAX_EXPERIENCE, GOLD, END };
 //enum class CONDITION { POISON, HPREGENERATION, PANIC, GRAP, END };
 enum class SHADOW : _ubyte { 
 		SHADOW_NEAR		= 1 << 0
 	,	SHADOW_MIDDLE	= 1 << 1
-	,	SHADOW_FAR		= 1 << 2
-	,	END = 3
+	,	SHADOW_FAR		= 1 << 2 // Far는 현재 미사용
+	,	SHADOW_PRE		= 1 << 3
+////////////////
+	,	END = 3 // 케스케이드 셰도우 한정
 };
 
+enum class SD_CHANNEL_GROUP {
+    BGM,
+    ENVIRONMENT,
+    EFFECT,
+    VOICE,
+    OBJECT,
+    ENEMY,
+    END
+};
 
 enum class TEXTURE_LOAD_TYPE { 
     SINGLE,  // original/diffuseddd.png
@@ -46,15 +57,30 @@ enum class SHADER_PASS_CELL { DEBUG, END };
 
 enum class SHADER_PASS_DEFERRED { DEBUG, DIRECTIONAL, POINT, COMBINED, BLUR, SPOT,
 	UPSAMPLE, BLOOM_BLURX, BLOOM_BLURY, EMBOSSING, BLOOM_ACCUM, BLOOM_FINISH, BLURX_ENVIRONMENT,
-	POSTCOMBINED, FOG, TONE_MAPPING, SSAO_OCCLUSION, SSAO_BLUR,
+	POSTCOMBINED, FOG, TONE_MAPPING, SSAO_OCCLUSION, SSAO_BLUR, MOTIONBLUR, DOWNSAMPLE, MOTIONBLURTILE, MOTIONBLURTENT, PRINT_BACKBUFFER,
 	END };
 
-enum class QUESTTYPE {MAIN, SUB, END};
+enum class SHADER_PASS_BLUR { BLUR_X , BLUR_Y , COMBINED,  END};
+
 enum class TEXTURE_MOUNT_SLOT0 { NOT_DEFINED, METALLIC, SPECULAR, HEIGHT,   END };
 enum class TEXTURE_MOUNT_SLOT1 { NOT_DEFINED, ROUGHNESS,                    END };
 enum class TEXTURE_MOUNT_SLOT2 { NOT_DEFINED, OCCLUSION, ALPHA, Amount_Scatter, END };
 enum class TEXTURE_MOUNT_SLOT3 { NOT_DEFINED, HEIGHT, ALPHA, Brightness_Scatter, END };
 
+enum PBR_FLAG
+{
+	PBR_NONE = 0,
+	PBR_MRO = 1,
+	PBR_SRO = 2,
+	PBR_MROH = 3,
+	PBR_MROA = 4,
+	PBR_SROH = 5,
+	PBR_SROA = 6,
+	PBR_MROA_MASK = 7,
+	PBR_MRS = 8,
+	PBR_SRA = 9,
+	PBR_HRO = 10
+};
 
 #ifndef EDITOR_PROJECT
 enum aiTextureType {
@@ -101,20 +127,31 @@ enum class PHYSX_KIND {
     OBSTACLEActor,
 };
 
+enum class PHYSX_JOINT {
+	D6,
+	DISTANCE,
+	REVOLUTE,
+	FIXED,
+	END
+};
+
 enum class PXOBJECT : _uint {
 #pragma region NOT_DEFINE
-	NOT_DEFINE = 000,
+	NOT_DEFINE = 0,
+	LEG,
 #pragma endregion
 #pragma region PLAYER
 	PLAYER = 10,
+	AI,
 #pragma endregion
 #pragma region MONSTER
 	MONSTER = 30,
 	GOBLIN_WARRIOR,		// 31
 	GOBLIN_MAGICIAN,
-	GOBLIN_THEIF,
+	GOBLIN_ASSASSIN,
 	TROLL,
 	PENSIVE_GUARDIAN,
+	RANROK,
 
 #pragma endregion
 #pragma region HOSTILE_HITBOX
@@ -125,13 +162,10 @@ enum class PXOBJECT : _uint {
 	GOBLIN_SHIELD_BREAK_MAGIC,
 	GOBLIN_NORMAL_MAGIC,
 	TROLL_GROUND_STRIKE,
-
-	/*
-	* _int iKind;
-	*  if (iKind > 100 && iKind < 200){
-	*  dammage
-	*/
-
+	GOBLIN_PROTEGO,
+	RANROK_PROP,
+	DUELIST_PROTEGO,
+    RANROK_BODY,
 #pragma endregion
 #pragma region ALLY_HITBOX
 	ALLY_HITBOX = 200,
@@ -165,16 +199,19 @@ enum class PXOBJECT : _uint {
 	DOOR,
 	BUILDING,
 	BOX,
+	RACERING,
 #pragma endregion
 #pragma region NPC
 	NPC = 500,
+	OLLIVANDER,
+	ELEAZARFIG,
 
 #pragma endregion
 #pragma region ITEM
 	ITEM = 600,
 	DROPITEM = 630,
 	TRAP = 660,
-
+    POTION = 690,
 #pragma endregion
 #pragma region TRIGGERBOX
 	TRIGGERBOX = 700,
@@ -195,9 +232,163 @@ enum class PXOBJECT : _uint {
 #pragma region NOCOLLIDE
 	NOCOLLIDE = 900,
 	GAIL,
+	JOINT_ROUTE,
+	JOINT_ANCHOR,
 
 #pragma endregion
 	END = 999
+};
+
+enum class HIT_TYPE
+{
+	HIT_NONE = 0,				// 히트모션 없음
+	HIT_PROJECTILE,				// 발사체
+	HIT_MEDIUM,				// 적당한 공격
+	HIT_HEAVY,				// 강공격
+	END
+};
+
+
+enum class EFileTypeId // 머테리얼 파싱용 Enum class
+{
+    Diffuse_Map,
+    Diffuse_Texture,
+    Diffuse_A_Map,
+    Difuse_1,
+    Base_color,
+    DiffuseTexture,
+    Distort_texture,
+    Diffuse,
+    Lamp,
+    WindowDiffuse,
+    Color_Glass,
+    Window_Surface_Diffuse,
+    InteriorDiffuse,
+    Diffuse_Moss,
+    Moss_Diffuse,
+    Diffuse_C,
+    Diffuse_D,
+    Cavity_D,
+    Diffuse_A,
+    Object_Diffuse,
+    Diffuse_B,
+    Lichen_D,
+    Diffuse_B_Map,
+    TopBlend_Albedo,
+    Base_colour,
+
+    Normal_Map,
+    HRO_Map,
+    Normal_1,
+    Object_Normal,
+    Normal_A_Map,
+    Base_Normal,
+    Object_Normal_Underbar,
+    NormalTexture,
+    Normal,
+    NormalMap,
+    Window_Surface_Normal,
+    Cloth_Detail_Normal,
+    Detail_Normal,
+    TopBlend_Normal,
+    Moss_Normal,
+    Cavity_Detail_N,
+    Moss_Normal_Map,
+    Window_Surface_Normal_SHININESS,
+    Normal_Map_A,
+    Normal_Map_B,
+    Lichen_Detail_N,
+    Normal_B_Map,
+
+    MRO,
+    MRO_Map,
+    WIndow_Surface_MRO,
+    PackedTexture,
+    MRO_Map_A,
+    MRO_Map_B,
+    MROH,
+    MROA_Mask,
+    MROA_Map,
+    MROA,
+    MRS,
+
+    SRO_Map,
+    SRO,
+    Moss_SRO,
+    SRO_Map_A,
+    SRO_Map_D,
+    SRO_Map_B,
+    TopBlend_SRO,
+    Detail_SRO,
+    SRO_B_Map,
+    SROH,
+    SROA,
+    SROA_Map,
+    SROH_A_Map,
+
+    MROH_SROH_Map_A,
+    Object_MRO_SRO,
+    MROH_SROH_Map_B,
+    MRO_SRO_Map_A,
+    MROH_SROH_A,
+    MRO_SRO_Map_B,
+    MRO_SRO_B,
+    MROH_SROH_B,
+    Moss_MRO_SRO_Map,
+    Roughness,
+
+    RGBA_Mask,
+    exterior_Cube_Map,
+    Interior_Cube_Map,
+
+    InteriorEmissive,
+    Emissive_Map,
+    Lamp_Emissive,
+    FakeExtDiffuse,
+    Diffuse_with_alpha,
+    Emissive_Texture,
+
+    Wind_Position_Map,
+    Detail_Diffuse,
+    Subsurface,
+    Color_Mask,
+    Mask_Texture_packed,
+
+    Worn_MRO,
+    Worn_Normal,
+    Detail_MRO,
+    SRA,
+
+    Detail_Diffuse_A,
+    Cavity_Lichen_D_Mask,
+    Detail_Diffuse_B,
+    Detail_Albedo,
+    Top_Layer_Base_Color,
+    Detail_Normal_A,
+    Detail_Normal_B,
+    Vertex_Blend_Texture,
+    Water_Color_tex,
+    emissiveMask,
+    EmissiveAlphaMask,
+    Distortion_Map,
+    Distortion_Bottom,
+    Distortion_Top,
+    Albedo,
+    Displacement,
+    Material,
+    Distortion_Pattern,
+    Ground_Diffuse,
+    Ground_MRO_SRO,
+    Corruption_Mask,
+
+    Rock_Texture,
+    Rock_MRO,
+    Base_MRO_SRO,
+    MRO_SRO,
+    Rock_Details,
+    Rock_baked_Normals,
+
+    Unknown
 };
 
 NS_END

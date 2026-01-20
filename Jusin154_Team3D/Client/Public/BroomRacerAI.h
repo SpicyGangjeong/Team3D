@@ -7,6 +7,31 @@ NS_BEGIN(Client)
 
 class CBroomRacerAI final : public CUnit
 {
+public:
+	struct RacerDesc
+	{
+		class CBroomRaceManager* pRacerManager = {nullptr};
+		_int iIndex = { 0 };
+	};
+	enum MESH_ORDER {
+		HEAD_EYE_OCC,
+		HEAD_FACE,
+		HEAD_TEETH,
+		HEAD_EYELASH,
+		HEAD_EYES,
+		BODY_ARMS,
+		HAIR_MAIN,
+		HAIR_MAIN_CLOTH,
+		LOWER,
+		SHOES,
+		UPPER,
+		HAIR_SUB,
+		HAIR_SUB_CLOTH,
+		ROBE_SKIRT,
+		ROBE_FUR,
+		ROBE_CLOTH,
+		END
+	};
 private:
 	CBroomRacerAI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBroomRacerAI(const CBroomRacerAI& Prototype);
@@ -20,6 +45,9 @@ public:
 	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	void Set_RaceRing(class CRaceRing* pRaceRing) {m_pRaceRing = pRaceRing;}
+	class CBroom* Get_Broom() { return m_pBroom; }
+	void Set_RaceInfo();
 private:
 	CLight* m_pLightCom = { nullptr };
 	LIGHT_DESC LightDesc = {};
@@ -29,13 +57,16 @@ private:
 	class CBroom* m_pBroom = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };
 	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
-	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
+	class CCamPosition_AI* m_pCamPosition_AIPart = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	HRESULT Bind_ShaderParameters(_uint iMeshOrder);
+
+	_vector Get_RingForwardTarget();
 
 	_float ComputeTurnToRing();
 	_float ComputeHeightAdjust();
@@ -58,7 +89,6 @@ public:
 
 private:
 	virtual void Add_FSM();
-	virtual void Set_Anim();
 	void Set_Input(_float fTimeDelta);
 
 	function<void()> m_InputAction = nullptr;
@@ -75,8 +105,11 @@ private:
 	_float			m_fScaleSmoothSpeed = 2.5f;
 	_float			m_fAnimTime = {};
 	_bool			m_bTurbo = {};
-	_float			m_fSmoothX = {};
-	_float			m_fSmoothY = {};
+	_float			m_LaneOffsetX = 0.f; 
+	_float			m_LaneOffsetY = 0.f; 
+	_float			m_TurnGain = 1.f;
+	_float			m_HeightGain = 1.f;
+	_int			m_iIndex = {};
 
 	void	Behavior_Broom_Ride_MoveEnter();
 	HRESULT Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta);

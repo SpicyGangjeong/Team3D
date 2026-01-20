@@ -62,7 +62,9 @@ private:
 	_float3				m_vBoxCorners[8] = {};
 
 	_float3				m_vExtentPosition = {};
+	_float3				m_vWorldExtentPosition = {};
 	_float3				m_vExtentRadius = {};
+	_float				m_fMaxRadius = {};
 	_float3				vContainerMin = { 999.f, 999.f, 999.f };
 	_float3				vContainerMax = { -999.f, -999.f, -999.f };
 

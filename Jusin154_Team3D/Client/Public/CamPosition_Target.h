@@ -2,6 +2,10 @@
 #include "Client_Define.h"
 #include "CamPosition.h"
 
+NS_BEGIN(Engine)
+class CUnit;
+NS_END
+
 NS_BEGIN(Client)
 
 class CCamPosition_Target final : public CCamPosition
@@ -20,6 +24,12 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual _vector Get_WorldPostion() override;
+	virtual void Set_WorldPostion(_vector vPos);
+	virtual _bool IsStalking();
+	virtual void Stalking_Target(CGameObject* pStalkingTarget, const _float4x4* pTargetSocketMatrix);
+	virtual void Stop_Stalking();
+
+	_matrix Get_XMWorldMatrix();
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -27,6 +37,8 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources() override;
 
+	CGameObject* m_pStalkingTarget = { nullptr };
+	const _float4x4* m_pTargetSocketMatrix = { nullptr };
 public:
 	static CCamPosition_Target* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCamPosition_Target* Clone(void* pArg, class CGameObject* pOWner) override;

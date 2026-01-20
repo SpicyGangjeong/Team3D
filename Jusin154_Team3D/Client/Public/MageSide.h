@@ -34,6 +34,7 @@ private:
 	_wstring						  m_wstrEffectName = {};
 
 	class CEffectParts*				  m_pMage_PT = { nullptr };
+	class CEffectParts*				  m_pMage_Fire = { nullptr };
 	class CTrailObject*				  m_pMage_Trail = { nullptr };
 
 	_bool				m_isParticleEnd = {};

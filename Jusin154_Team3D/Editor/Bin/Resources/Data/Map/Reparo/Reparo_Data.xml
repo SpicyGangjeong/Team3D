@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Reparo>
+    <Object Type="0" Radius="10">
+        <Position x="91.9" y="15.1" z="125.6"/>
+        <Rotation x="0" y="-74" z="0"/>
+    </Object>
+    <Object Type="0" Radius="10">
+        <Position x="123.4" y="16.1" z="144.3"/>
+        <Rotation x="0" y="-8" z="0"/>
+    </Object>
+    <Object Type="1" Radius="15">
+        <Position x="93.46" y="15.6" z="138.2"/>
+        <Rotation x="0" y="135" z="0"/>
+    </Object>
+    <Object Type="1" Radius="15">
+        <Position x="129.3" y="15.5" z="112.9"/>
+        <Rotation x="2" y="168" z="-3"/>
+    </Object>
+</Reparo>

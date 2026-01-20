@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Quest_Info.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CQuest_Info::CQuest_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CQuest_Info::CQuest_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CQuest_Info::CQuest_Info(const CQuest_Info& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -22,7 +24,7 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 325.f;
-	Desc.fY = -250.f;
+	Desc.fY = 250.f;
 	Desc.fSizeX = 128.f;
 	Desc.fSizeY = 128.f;
 
@@ -45,10 +47,12 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	SizeUpX(960);
 	SizeUpY(m_fOriginPerviewSize);
 	m_fSortZ = 0.02f;
-	m_fFontX = 740.f;
-	m_fFontY = 500.f;
+	m_fFontX = 530.f;
+	m_fFontY = 530.f;
 	m_iPerQuestIndex = -1;
-	Visible(true);
+	m_iCurrentIndex = -1;
+	Visible(false);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(p); });
 	return S_OK;
 }
 
@@ -95,12 +99,23 @@ void CQuest_Info::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+
+	if (m_iCurrentIndex != m_iQuest_Index)
+	{
+		Y(m_fOriginPerviewSize + (m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size() * 30.f));
+		m_iCurrentIndex = m_iQuest_Index;
+		vector<Text> Texts;
+		Text Textinfo;
+		m_Text.swap(Texts);
+		for (_int i = 0; i < m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size(); ++i)
+		{
+			Textinfo.pCurrentText = to_wstring(m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo[i].iCurrentCount);
+			Textinfo.pRequiredText = to_wstring(m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo[i].iRequiredCount);
+			m_Text.push_back(Textinfo);
+		}
+	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
-	Hover();
-	m_pRect.left = long(m_fX - m_vScale.x * 0.5f);
-	m_pRect.top = long(m_fY - m_vScale.y * 0.5f);
-	m_pRect.right = long(m_fX + m_vScale.x * 0.5f);
-	m_pRect.bottom = long(m_fY + m_vScale.y * 0.5f);
 	__super::Update(fTimeDelta);
 }
 
@@ -129,6 +144,19 @@ HRESULT CQuest_Info::Render()
 	}
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
+	}
+
+	if (m_iQuest_Index != -1)
+	{
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fOriginPerviewSize), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+
+		for (_int i = 0; i < m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo.size(); ++i)
+		{
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pInfoInstance->Get_Quest(m_iCurrentQuest, m_iQuest_Index).ObjectiveInfo[i].pQuestInfo.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fOriginPerviewSize + 80 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_Text[i].pCurrentText.c_str(), _float2(m_fFontX + m_fX + 800.f, m_fFontY - m_fOriginPerviewSize + 80 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("/"), _float2(m_fFontX + m_fX + 830.f, m_fFontY - m_fOriginPerviewSize + 80 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+			m_pGameInstance->Render_Text(TEXT("Font_size20"), m_Text[i].pRequiredText.c_str(), _float2(m_fFontX + m_fX + 860.f, m_fFontY - m_fOriginPerviewSize + 80 + (50.f * i)), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+		}
 	}
 
 	return S_OK;
@@ -218,21 +246,37 @@ HRESULT CQuest_Info::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CQuest_Info::Hover()
+void CQuest_Info::Set_Hover(void* pArg)
 {
-	POINT ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	_float2 fMouse;
-	fMouse.x = ptMouse.x - g_iWinSizeX * 0.5f;
-	fMouse.y = -(ptMouse.y - g_iWinSizeY * 0.5f);
+	CURRENTQUESTSECETINFO* Desc = static_cast<CURRENTQUESTSECETINFO*>(pArg);
 
-	if (fMouse.x >= m_pRect.left && fMouse.x <= m_pRect.right &&
-		fMouse.y >= m_pRect.top && fMouse.y <= m_pRect.bottom)
+	m_iCurrentQuest = Desc->iQuestCategory;
+	m_iQuest_Index = Desc->iQuestIndex;
+	if (m_iQuest_Index == -1)
 	{
-		_int a = 0;
+		Visible(false);
+		return;
 	}
+	Visible(true);
+}
 
+void CQuest_Info::Set_QuestType(_int Index)
+{
+	m_iQuestSlot = Index;
+	if (m_iCurrentQeustSlot != m_iQuestSlot)
+	{
+		m_iCurrentQeustSlot = m_iQuestSlot;
+		m_iCurrentIndex = -1;
+	}
+}
+
+void CQuest_Info::Y(_float fSizeY)
+{
+	m_fSizeY = fSizeY;
+
+	_float Delta = fSizeY - m_fOriginPerviewSize;
+
+	m_fY = m_fOrigin_Position.y - (Delta * 0.5f);
 }
 
 CQuest_Info* CQuest_Info::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

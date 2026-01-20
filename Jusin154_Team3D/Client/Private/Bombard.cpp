@@ -44,7 +44,10 @@ HRESULT CBombard::Initialize(void* pArg)
 	m_wstrEffectName = L"Bombard";
 
 	m_pLight_Projectile = Get_PartObject<CEffectParts>("Bombard_Projectile");
+	m_pWand_Light_B = Get_PartObject<CEffectParts>("Wand_Light_B");
+
 	SAFE_ADDREF(m_pLight_Projectile);
+	SAFE_ADDREF(m_pWand_Light_B);
 
 	m_fDuration = 2.5f;
 
@@ -72,6 +75,13 @@ void CBombard::Update(_float fTimeDelta)
 	pPJTransform->Translation( XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
 
 
+	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
+
+	if (pWand == nullptr)
+		return;
+
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+
 }
 
 void CBombard::Late_Update(_float fTimeDelta)
@@ -89,9 +99,16 @@ void CBombard::Late_Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f , true);
 
-		OnCollision(this, &CollisionInfo);
+		if (false == m_bHit) {
+			_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+			_vector vEndPos = XMLoadFloat4(&m_vEndPos);
+			if (false == XMVector3NearEqual(vEndPos, XMVectorZero(), XMVectorReplicate(FLT_EPSILON5)))
+			{
+				ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.02f, true);
+				OnCollision(this, &CollisionInfo);
+			}
+		}
 	}
 
 }
@@ -110,13 +127,15 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 	CPartObject* pShootPt = Get_PartObject<CEffectParts>("Bombard_Shoot_Pt");
 	CPartObject* pCircle0 = Get_PartObject<CEffectParts>("Bombard_Circle0");
 
-
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	m_pLight_Projectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	pCircle0->Set_Visible(true);
 	pShootPt->Set_Visible(true);
+	m_pWand_Light_B->Set_Visible(true);
+
 
 	m_pLight_Projectile->Set_Visible(true);
 
@@ -129,9 +148,9 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 	{ /* 대상 위치 지정 */
 
 		m_pInfoInstance->Get_LockOnInfo(m_Info);
-		if (nullptr != m_Info.pUnit) {
+		if (nullptr != m_Info.pUnit || nullptr != m_Info.pEffect) {
 
-			XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
+			XMStoreFloat4(&m_vTargetPos, Get_LockOnPos(m_Info));
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}
@@ -140,7 +159,6 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 			XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);
 		}
 	}
-
 
 	return S_OK;
 }
@@ -191,6 +209,21 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_bHit == false)
 		return;
 
+	_int iRand = m_pGameInstance->Random_Int(0, 2);
+	switch (iRand)
+	{
+	case 0:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_23, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 1:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_32, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 2:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_39, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	}
+
+
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
@@ -212,7 +245,7 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
+	m_pWand_Light_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	
 	m_pLight_Projectile->Set_Visible(false);
 
@@ -230,7 +263,7 @@ void CBombard::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pLight_Projectile);
-
+	SAFE_RELEASE(m_pWand_Light_B);
 }
 #ifdef _DEBUG
 void CBombard::Describe_Entity()

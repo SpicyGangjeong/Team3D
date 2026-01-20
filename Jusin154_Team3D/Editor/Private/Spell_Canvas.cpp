@@ -92,6 +92,7 @@ HRESULT CSpell_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Spell_Panel"), m_pSpell_Panel);
+
 	return S_OK;
 }
 

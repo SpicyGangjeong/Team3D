@@ -77,13 +77,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Z_Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
 	m_pInfoInstance->Regist_PlayerAlly(this);
 
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
+#if 진우 
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, -80.f, -11.4f, 1.f));
+#endif
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -95,15 +98,25 @@ HRESULT CPlayer::Initialize(void* pArg)
 #endif // _DEBUG
 
 	// UI 연동 추가
+	m_pModelCom->Set_DisableRootMotionScale(true);
 
+	m_pBroomModel = m_pBroom->Get_Component<CModel>();
+	m_pBroomTransform = m_pBroom->Get_Component<CTransform>();
+	SAFE_ADDREF(m_pBroom);
+	SAFE_ADDREF(m_pBroomModel);
+	SAFE_ADDREF(m_pBroomTransform);
 
+#ifdef gimch	
+	m_pCharacter_Controller->Set_GravityAmount(0.f);
+#endif
 	return S_OK;
 }
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	ReLockOnTarget();
-	SetGravity();
+	if (m_pCharacter_Controller->Get_GravityAmount() > 0.f)
+		SetGravity();
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
@@ -136,6 +149,9 @@ void CPlayer::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
+	if (m_bVisible == false)
+		return;
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	__super::Late_Update(fTimeDelta);
@@ -155,16 +171,25 @@ HRESULT CPlayer::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-			return E_FAIL;
-		}
-
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pShaderCom->Bind_Matrices(
+			"g_OffsetMatrix",
+			m_pModelCom->Get_OffsetMatrix(i).data(),
+			(_int)m_pModelCom->Get_OffsetMatrix(i).size()
+		)))
+		{
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}
+
+		m_pModelCom->Bind_OutPut_SRV_VS(31, 0);
+		m_pModelCom->Bind_OutPut_SRV_VS_Prev(32, 0);
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -172,7 +197,7 @@ HRESULT CPlayer::Render()
 	}
 
 #ifdef _DEBUG
-	m_pCharacter_Controller->Render();
+	//m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
 	Render_CameraCoordinateSystem();
 #endif
@@ -240,7 +265,7 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 	}
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
+	m_strModelPrototypeTag = TEXT("Prototype_Component_Playable_Model");
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
@@ -292,10 +317,48 @@ HRESULT CPlayer::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
-		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
 	}
 
 	return S_OK;
+}
+void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
+{
+	m_vCameraShakeTimer.x = 0.f;
+	m_vCameraShakeTimer.y = fTime;
+	m_fCameraShakeIntense = fIntense;
+	m_bCameraShake = true;
+}
+
+void CPlayer::Update_CameraShake(_float fTimeDelta)
+{
+	if (true == m_bCameraShake) {
+		m_vCameraShakeTimer.x += fTimeDelta;
+		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) {
+			m_vCameraShakeTimer.x = 0.f;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(0.f, 0.f);
+			m_bCameraShake = false;
+		}
+		else {
+			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
+			fIntense *= fIntense;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense)
+			);
+		}
+	}
+}
+
+HRESULT CPlayer::InputBroom()
+{
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)
+		|| m_pGameInstance->Key_Pressing(DIK_SPACE))
+	{
+
+		return S_OK;
+	}
+	return E_FAIL;
 }
 
 HRESULT CPlayer::Ready_Parts()
@@ -322,6 +385,11 @@ HRESULT CPlayer::Ready_Parts()
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
 		}
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, L"LAYER_ITEM", nullptr, this, &m_pBroom))) {
+		return E_FAIL;
 	}
 
 	return S_OK;
@@ -448,10 +516,19 @@ void CPlayer::Free()
 }
 #ifdef _DEBUG
 
+
+
 void CPlayer::Describe_Entity()
 {
 	GUI::Begin("PLAYER_DESC");
 	m_pCharacter_Controller->Describe_Entity();
+
+	if (m_pGameInstance->Key_Up(DIK_HOME))
+	{
+		m_pCharacter_Controller->Set_GravityAmount(0.f);
+		m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Get_CamPosition()->x, m_pGameInstance->Get_CamPosition()->y, m_pGameInstance->Get_CamPosition()->z, 1.f));
+	}
+
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
 	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
@@ -517,6 +594,32 @@ void CPlayer::Describe_Entity()
 	GUI::Text("Angle %.2f", degree);
 
 	m_pLightCom->Describe_Entity();
+
+#ifdef _DEBUG
+
+#if 진우
+	if(m_pGameInstance->Key_Down(DIK_K))
+	{
+		_float3 vPos;
+		if (m_pGameInstance->isPicking(&vPos))
+		{
+			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&vPos),1.f));
+		}
+	}
+#endif
+
+#if gimch
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		_float3 vPos;
+		if (m_pGameInstance->isPicking(&vPos))
+		{
+			m_pCharacter_Controller->Set_Position(XMVectorSetW(XMLoadFloat3(&vPos), 1.f));
+		}
+	}
+#endif
+#endif // 
+
 
 	GUI::End();
 }

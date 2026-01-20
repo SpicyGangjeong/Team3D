@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "Dummy_PhysXDoorSet.h"
 #include "Dummy_PhysXFixedDoor.h"
-#include "Dummy_PhysXDoorFrame.h"
 #include "GameInstance.h"
 
 
@@ -32,22 +31,41 @@ HRESULT CDummy_PhysXDoorSet::Initialize(void* pArg)
 	if (FAILED(Ready_PartObject(pArg))) {
 		return E_FAIL;
 	}
+	PSX::PxRigidDynamic* doorRigidDynamicActor = m_pDoorPart->Get_Actor();
+	PSX::PxTransform doorGlobalPose = doorRigidDynamicActor->getGlobalPose();
 
-	PSX::PxTransform pxFrameTransform = {};
-	PSX::PxTransform pxDoorTransform = {};
-	PSX::PxRigidDynamic* pFrameBody = m_pFramePart->Get_Actor();
-	PSX::PxRigidDynamic* pDoorBody = m_pDoorPart->Get_Actor();
+	PSX::PxVec3 hingeLocalPositionInDoor = PSX::PxVec3(-1.5f, 0.0f, 0.0f);
 
-	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION) + XMVectorSet(0.f, 1.f, 0.f, 0.f);
-	PSX::PxVec3 vHingeLocalPos = {};
-	XMStoreFloat3((_float3*)&vHingeLocalPos, vPos);
-	pxFrameTransform.p = pFrameBody->getGlobalPose().transformInv(vHingeLocalPos);
-	pxDoorTransform.p	= pDoorBody->getGlobalPose().transformInv(vHingeLocalPos);
-	
-	pxDoorTransform.q = pxFrameTransform.q = PSX::PxQuat(XM_PIDIV2, PSX::PxVec3(0.f, 0.f, 1.f));
+	// 2) 힌지 월드 위치 = 도어 글로벌 포즈로 로컬 점 변환
+	PSX::PxVec3 hingeWorldPosition = doorGlobalPose.transform(hingeLocalPositionInDoor);
 
-	m_pPSXJoint = m_pGameInstance->Create_PxRevoluteJoint(pFrameBody, pxFrameTransform, pDoorBody ,pxDoorTransform);
-	
+	// 3) 힌지 회전축(월드 Y)
+	PSX::PxVec3 hingeWorldAxis = PSX::PxVec3(0.f, 1.f, 0.f);
+
+	// 4) Revolute는 프레임 X축이 회전축이므로 X->힌지축 회전
+	PSX::PxQuat jointWorldOrientation = PSX::PxShortestRotation(PSX::PxVec3(1.f, 0.f, 0.f), hingeWorldAxis);
+
+	// 5) 월드 프레임 구성
+	PSX::PxTransform jointWorldFrame = PSX::PxTransform(hingeWorldPosition, jointWorldOrientation);
+
+	// 6) 도어 로컬 프레임(도어 기준)
+	PSX::PxTransform jointLocalFrameInDoor = doorGlobalPose.transformInv(jointWorldFrame);
+
+	// 7) 조인트 생성
+	m_pPSXJoint = (PSX::PxRevoluteJoint*)m_pGameInstance->Create_PxJoint(
+		PHYSX_JOINT::REVOLUTE,
+		doorRigidDynamicActor,
+		jointLocalFrameInDoor,
+		nullptr,
+		jointWorldFrame
+	);
+	m_pPSXJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eDRIVE_ENABLED, true);
+	m_pPSXJoint->setDriveVelocity(2.f);
+	m_pPSXJoint->setDriveForceLimit(5000.f);
+	//m_pPSXJoint->setLimit(PSX::PxJointAngularLimitPair(XMConvertToRadians(-70.f), XMConvertToRadians(70.f)));
+	//m_pPSXJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eLIMIT_ENABLED, true);
+	//m_pPSXJoint->setRevoluteJointFlag(PSX::PxRevoluteJointFlag::eLIMIT_ENABLED, false);
+
 	return S_OK;
 }
 
@@ -89,15 +107,6 @@ HRESULT CDummy_PhysXDoorSet::Ready_Components(void* pArg)
 
 HRESULT CDummy_PhysXDoorSet::Ready_PartObject(void* pArg)
 {
-	{
-		CDummy_PhysXDoorFrame::PHYSXDUMMY_DESC Desc{};
-		Desc.pParentTransform = m_pTransformCom;
-		Desc.vPos = { -10.f, 3.f, -10.f };
-		Desc.iSubKind = 23;
-		if (FAILED(Add_PartObject<CDummy_PhysXDoorFrame>("DoorFrame", g_iStaticLevel, &m_pFramePart, &Desc))) {
-			return E_FAIL;
-		}
-	}
 	{
 		CDummy_PhysXFixedDoor::PHYSXDUMMY_DESC Desc{};
 		Desc.pParentTransform = m_pTransformCom;
@@ -146,7 +155,6 @@ void CDummy_PhysXDoorSet::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pDoorPart);
-	SAFE_RELEASE(m_pFramePart);
 }
 
 void CDummy_PhysXDoorSet::Describe_Entity()

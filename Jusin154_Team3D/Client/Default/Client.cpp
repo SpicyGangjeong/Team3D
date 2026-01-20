@@ -10,12 +10,16 @@ HINSTANCE   g_hInstance;
 HWND        g_hWnd;
 WCHAR       szTitle[MAX_LOADSTRING];
 WCHAR       szWindowClass[MAX_LOADSTRING];
+_bool       g_bFullscreen = false;
+RECT        g_rcWindowed = {}; 
+
 
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+void                ToggleFullscreen();
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -99,7 +103,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
     _float      fTimeAcc = { };
-
+    const _float fMaxTimer = { 1.f / 60.f };
     while (true)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -130,7 +134,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             pMainApp->Update(1.f / 60.f);
 #endif // _DEBUG
 #ifndef _DEBUG
-            pMainApp->Update(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
+            _float fFrameTime = min(pGameInstance->Get_TimeDelta(TEXT("Timer_60")), fMaxTimer);
+            pMainApp->Update(fFrameTime);
 #endif
             pMainApp->Render();
 
@@ -179,7 +184,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     g_hInstance = hInstance;
-
     RECT     rcWindow = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
     AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, FALSE);
@@ -197,6 +201,26 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     g_hWnd = hWnd;
 
+#ifndef _DEBUG
+    {
+        g_bFullscreen = true;
+
+        SetWindowLong(g_hWnd, GWL_STYLE, GetWindowLong(g_hWnd, GWL_STYLE) & ~WS_OVERLAPPEDWINDOW);
+
+        _int screenX = GetSystemMetrics(SM_CXSCREEN);
+        _int screenY = GetSystemMetrics(SM_CYSCREEN);
+
+        SetWindowPos(
+            g_hWnd,
+            HWND_TOP,
+            0, 0,
+            screenX, screenY,
+            SWP_NOOWNERZORDER | SWP_FRAMECHANGED
+        );
+    }
+#endif
+
+
     return TRUE;
 }
 
@@ -210,9 +234,61 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_SYSKEYDOWN:
+    {
+        if (wParam == VK_RETURN && (lParam & (1 << 29)))
+        {
+            ToggleFullscreen();
+            return 0;
+        }
+    }
+    break;
+
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
+}
+
+
+void ToggleFullscreen()
+{
+    DWORD style = GetWindowLong(g_hWnd, GWL_STYLE);
+
+    if (!g_bFullscreen)
+    {
+        GetWindowRect(g_hWnd, &g_rcWindowed);
+
+        SetWindowLong(g_hWnd, GWL_STYLE, style & ~WS_OVERLAPPEDWINDOW);
+
+        _int screenX = GetSystemMetrics(SM_CXSCREEN);
+        _int screenY = GetSystemMetrics(SM_CYSCREEN);
+
+        SetWindowPos(
+            g_hWnd,
+            HWND_TOP,
+            0, 0,
+            screenX, screenY,
+            SWP_NOOWNERZORDER | SWP_FRAMECHANGED
+        );
+
+        g_bFullscreen = true;
+    }
+    else
+    {
+        SetWindowLong(g_hWnd, GWL_STYLE, style | WS_OVERLAPPEDWINDOW);
+
+        SetWindowPos(
+            g_hWnd,
+            HWND_NOTOPMOST,
+            g_rcWindowed.left,
+            g_rcWindowed.top,
+            g_rcWindowed.right - g_rcWindowed.left,
+            g_rcWindowed.bottom - g_rcWindowed.top,
+            SWP_NOOWNERZORDER | SWP_FRAMECHANGED
+        );
+
+        g_bFullscreen = false;
+    }
 }

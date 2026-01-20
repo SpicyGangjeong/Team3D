@@ -36,6 +36,9 @@ public:
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CGameObject* m_pQuest_Panel = { nullptr };
+
+	_bool	m_bClick[3] = { false };
+	_int m_iIndex{};
 public:
 	static CQuest_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

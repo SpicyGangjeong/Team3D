@@ -14,14 +14,13 @@ namespace Editor {
 #define FX_MESH					TEXT("FX_MESH")
 #define FX_POSTEX				TEXT("FX_POSTEX")
 #define FX_NORTEX				TEXT("FX_NORTEX")
-#define FX_CELL					TEXT("FX_CELL")
-#define FX_PARTICLE				TEXT("FX_PARTICLE")
 #define FX_INSTANCE_MODEL		TEXT("FX_INSTANCE_MODEL")
 #define FX_INSTANCE_PROP_MODEL  TEXT("FX_INSTANCE_PROP_MODEL")
 #define FX_UIEDITOR				TEXT("FX_UIEDITOR")
 #define FX_UIINSTANCE			TEXT("FX_UIINSTANCE")
 #define FX_VTXPOS				TEXT("FX_VTXPOS")
 #define FX_NPC_PBR_ANIM			TEXT("FX_NPC_PBR_ANIM")
+#define FX_RANROK_ETHER			TEXT("FX_RANROK_ETHER")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
@@ -45,7 +44,7 @@ namespace Editor {
 #define LAYER_EDITOR_CAMERA TEXT("Layer_Editor_Camera")
 #define LAYER_BACKGROUND	TEXT("Layer_BackGround")
 #define LAYER_MARKER		TEXT("Layer_Marker")
-#define LAYER_PLAYER		TEXT("Layer_Player")
+#define LAYER_PLAYER		TEXT("Layer__Player")
 #define LAYER_CAMERA		TEXT("Layer_Camera")
 #define LAYER_MONSTER		TEXT("Layer_Monster")
 #define LAYER_UI			TEXT("Layer_UI")
@@ -56,6 +55,8 @@ namespace Editor {
 #define LAYER_CELL			TEXT("Layer_Cell")
 #define LAYER_TRIGGER		TEXT("Layer_Trigger")
 #define LAYER_LIGHT			TEXT("Layer_Light")
+#define LAYER_HOGSMEADE		TEXT("Layer_Hogsmeade")
+#define LAYER_HOGWART		TEXT("Layer_Hogwart")
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 

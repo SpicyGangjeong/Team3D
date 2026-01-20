@@ -2,6 +2,7 @@
 #include "CallBack_Playable_HitReport.h"
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "Player.h"
 
 CCallBack_Playable_HitReport::CCallBack_Playable_HitReport()
 {
@@ -31,8 +32,8 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 	PSX::PxRigidActor* pActor = hit.actor;
 
 	if (nullptr != pController && nullptr != pActor) {
-		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
-		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		PHYSX_USERDATA* pTargetActorData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+		PHYSX_USERDATA* pOwnerActorData = static_cast<PHYSX_USERDATA*>(pController->getActor()->userData);
 		if (nullptr == pTargetActorData) { // missing user data
 			return;
 		}
@@ -75,13 +76,27 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 			case PXOBJECT::DOOR:
 			{
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-				_float fDot = vDir.dot(PSX::PxVec3(0.f, 1.f, 0.f));
-				if (fDot > 0) {
-					pDynamic->addTorque(PSX::PxVec3(0.f, 1.f, 0.f) * fLength * 100.f, PSX::PxForceMode::eFORCE);
+				if (pDynamic->getRigidBodyFlags().isSet(PSX::PxRigidBodyFlag::eKINEMATIC)){
+					pDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
 				}
-				else {
-					pDynamic->addTorque(PSX::PxVec3(0.f, -1.f, 0.f) * fLength * 100.f, PSX::PxForceMode::eFORCE);
+				pDynamic->wakeUp();
+				PSX::PxVec3 vCompressedDir = hit.dir;
+				if (vCompressedDir.magnitudeSquared() < FLT_EPSILON5) {
+					vCompressedDir = -hit.worldNormal;
 				}
+				vCompressedDir.normalize();
+				PSX::PxVec3 hingeAxis = PSX::PxVec3(0.f, 1.f, 0.f);
+
+				PSX::PxVec3 vForceDir = vCompressedDir - hingeAxis * vCompressedDir.dot(hingeAxis);
+				if (vForceDir.magnitudeSquared() < FLT_EPSILON5){
+					break;
+				}
+				vForceDir.normalize();
+
+				float forceMagnitude = PSX::PxClamp(fLength * 200.f, 0.f, 500.f);
+				PSX::PxRigidBodyExt::addForceAtPos(*pDynamic, vForceDir * forceMagnitude, { (_float)hit.worldPos.x, (_float)hit.worldPos.y, (_float)hit.worldPos.z }, PSX::PxForceMode::eFORCE);
+				pTargetActorData->pOwner->OnCollision();
+				dynamic_cast<CPlayer*>(m_pController->Get_Owner())->Set_OpenDoor(true);
 			} break;
 			default:
 			{
@@ -110,7 +125,7 @@ void CCallBack_Playable_HitReport::onControllerHit(const PSX::PxControllersHit& 
 	PSX::PxController* pOtherController = hit.other;		// 다른 컨트롤러
 
 	if (nullptr != pController && nullptr != pOtherController) {
-		PhsXUserData* pActorData = static_cast<PhsXUserData*>(pOtherController->getActor()->userData);
+		PHYSX_USERDATA* pActorData = static_cast<PHYSX_USERDATA*>(pOtherController->getActor()->userData);
 		assert(nullptr != pActorData); // missing user data
 
 		switch (pActorData->eKind)
@@ -159,7 +174,7 @@ void CCallBack_Playable_HitReport::Set_CurrentSlop()
 		float fAngleRad = acosf(fDot);
 		float fAngleDeg = XMConvertToDegrees(fAngleRad);
 
-		m_pController->Set_CurrentSlope(fAngleDeg);
+		m_pController->Set_CurrentSlope(fAngleDeg, m_vClimbNormal);
 	}
 }
 

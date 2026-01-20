@@ -26,6 +26,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 {
 	GUI::Begin("SelectEditor");
 	if (GUI::Button("Map Editor", { 100, 100 })) {
+		m_pGameInstance->Clear_LevelResources(ENUM_CLASS(LEVEL::LOGO));
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::MAP))))
 			return;
 	}
@@ -54,6 +55,19 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			return;
 	}
 	GUI::End();
+#ifdef gimch
+	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::OBJECT))))
+		return;
+#endif // gimch
+#ifdef 기무리
+	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::OBJECT))))
+		return;
+#endif // 기무리
+#ifdef 진우
+	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::EFFECT))))
+		return;
+#endif // 진우
+
 }
 
 HRESULT CLevel_Logo::Render()

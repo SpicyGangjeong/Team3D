@@ -2,7 +2,8 @@
 #include "Item_Potion.h"
 
 #include "GameInstance.h"
-
+#include "EffectPool.h"
+#include "Layer.h"
 CItem_Potion::CItem_Potion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
 {
@@ -32,12 +33,16 @@ HRESULT CItem_Potion::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
 	return S_OK;
 }
 
 void CItem_Potion::Priority_Update(_float fTimeDelta)
 {
-
+	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 	
 #ifdef _DEBUG
 	Describe_Entity();
@@ -56,14 +61,25 @@ void CItem_Potion::Late_Update(_float fTimeDelta)
 	if (m_bVisible)
 	{
 		m_fTimer += fTimeDelta;
-		if (m_fTimer >= 1.7f) {
-			m_fTimer = 0.f;
-			m_bVisible = false;
+		if (m_fTimer >= 1.f && m_bOnce == false) {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::SCREEN_POTION , this);
+			m_bOnce = true;
+		}
+		if (m_fTimer >= 1.6f) {
+			m_bAttach = false;
 		}
 
+		if (m_fTimer >= 3.f) {
+			m_fTimer = 0.f;
+			m_bVisible = false;
+			m_bAttach = true;
+			m_bOnce = false;
+		}
 	}
+
 	if (m_bAttach)
 	{
+		m_bHit = false;
 		_matrix socketMatrix = {};
 
 		socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
@@ -74,10 +90,23 @@ void CItem_Potion::Late_Update(_float fTimeDelta)
 
 		m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 	}
+	else
+	{
+		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+		_matrix world = XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr());
+		m_pTransformCom->Set_WorldMatrix(world);
+
+		m_pTransformCom->Go_Right(fTimeDelta);
+
+	}
+	if (false == m_bHit) {
+		Check_GroundCollision();
+	}
 
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
+	
 
 HRESULT CItem_Potion::Render()
 {
@@ -108,18 +137,94 @@ HRESULT CItem_Potion::Render()
 		}
 	}
 
+#ifdef _DEBUG
+	m_pRigidBody->Render();
+#endif // _DEBUG
+
+
 	return S_OK;
+}
+
+void CItem_Potion::Check_GroundCollision()
+{
+	_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+	_vector vEndPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vDir = vEndPos - vStartPos;
+	_float fLength = XMVectorGetX(XMVector4Length(vDir));
+	vDir = XMVector4Normalize(vDir);
+	m_SweepBuffer = {};
+	_bool bHit = m_pGameInstance->SphereCast(0.02f, vStartPos, vDir, fLength, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eSTATIC, m_SweepBuffer);
+	if (true == bHit) {
+		vector<PSX::PxSweepHit*> Hits;
+		_uint iHitCount = m_SweepBuffer.nbTouches;
+		if (true == m_SweepBuffer.hasBlock) {
+			iHitCount += 1;
+			Hits.reserve(iHitCount);
+			Hits.emplace_back(&m_SweepBuffer.block);
+		}
+		else {
+			Hits.reserve(iHitCount);
+		}
+		for (_uint i = 0; i < m_SweepBuffer.nbTouches; ++i) {
+			Hits.emplace_back(&m_SweepBuffer.touches[i]);
+		}
+
+		for (_uint i = 0; i < Hits.size(); ++i) {
+			PSX::PxSweepHit* pHit = Hits[i];
+			PSX::PxActor* pActor = pHit->actor;
+			if (nullptr != pActor && nullptr != pActor->userData) {
+				const PSX::PxSweepHit& hit = m_SweepBuffer.block;
+				PSX::PxShape* pShape = hit.shape;
+
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+
+
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::TERRAIN:
+				{
+					OnCollision(this);
+					m_bHit = true;
+					break;
+				}
+				}
+			}
+		}
+	}
+}
+
+
+void CItem_Potion::OnCollision(CGameObject* pOther, void* pDesc)
+{
+	if (m_bVisible == false)
+		return;
+
+	m_bHit = false;
+	m_pEffectPool->Use_Skill(SKILL_TYPE::POTION_BROKEN, this);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::POTION_BROKEN, SD_CHANNEL_GROUP::EFFECT, false, 0.3f);
+	m_fTimer = 0.f;
+	m_bVisible = false;
+	m_bAttach = true;
+	m_bOnce = false;
 }
 
 void CItem_Potion::Set_Attach(_bool Attach)
 {
 	m_bAttach = Attach;
+
 }
 
 
 HRESULT CItem_Potion::Ready_Components()
 {
-	__super::Ready_Components(nullptr);
+
+	CTransform::TRANSFORM_DESC Desc = {};
+
+	Desc.fSpeedPerSec = 10.f;
+	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+	Desc.fRadius = 10.f;
+
+	__super::Ready_Components(&Desc);
 
 
 	/* Com_Model */
@@ -131,6 +236,16 @@ HRESULT CItem_Potion::Ready_Components()
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
+
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::POTION);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_POTION"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor(), NEXT_LEVEL);
+	}
 
 	return S_OK;
 }
@@ -188,6 +303,8 @@ void CItem_Potion::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
+	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pEffectPool);
 
 }
 #ifdef _DEBUG

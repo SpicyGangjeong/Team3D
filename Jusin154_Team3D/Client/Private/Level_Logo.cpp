@@ -21,14 +21,20 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::LOGO_INTRO, SD_CHANNEL_GROUP::EFFECT, false, 0.4f);
 	return S_OK;
 }
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-//#ifdef 기무리
-//	m_pGameInstance->Set_LevelToChange();
-//#endif // 기무리
+#ifdef _DEBUG
+#ifdef 기무리
+	m_pGameInstance->Set_LevelToChange();
+#elif Bin
+	m_pGameInstance->Set_LevelToChange();
+#endif // 기무리
+#endif // _DEBUG
 
 	if (m_pGameInstance->Key_Down(DIK_F1))
 	{
@@ -42,6 +48,9 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			return;
 		}
 	}
+ 
+
+
 }
 
 HRESULT CLevel_Logo::Render()
