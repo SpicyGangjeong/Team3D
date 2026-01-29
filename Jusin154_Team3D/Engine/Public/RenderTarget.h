@@ -29,6 +29,7 @@ public:
 	void Ready_Debug();
 	void Describe_Entity(const _char* pName);
 	void Toggle_RT_Debug();
+	void Set_Name(const _char* pName, _uint iSize);
 #endif
 
 private:

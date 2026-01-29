@@ -147,6 +147,11 @@ HRESULT CRenderer::Initialize()
 	D3D11_VIEWPORT		Viewport{};
 	m_pContext->RSGetViewports(&iNumViewports, &Viewport);
 	{
+		/* Target_LDRBackBuffer */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_LDRBackBuffer"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 1.f, 1.f)))) {
+			return E_FAIL;
+		}
 		/* Target_ToneMapping */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_ToneMapping"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 1.f, 1.f)))) {
@@ -427,6 +432,10 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_Fog")))) {
 			return E_FAIL;
 		}
+		/* MRT_LDRBackbuffer */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_LDRBackbuffer"), TEXT("Target_LDRBackBuffer")))) {
+			return E_FAIL;
+		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_AfterCombined")))) {
 			return E_FAIL;
 		}
@@ -519,6 +528,9 @@ HRESULT CRenderer::Initialize()
 
 
 		/* MRT_Blur_Mesh */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_Mesh"), TEXT("Target_LDRBackBuffer")))) {
+			return E_FAIL;
+		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_Mesh"), TEXT("Target_VelocityMap")))) {
 			return E_FAIL;
 		}

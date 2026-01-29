@@ -290,7 +290,8 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     float fPixelSpeed = length(vBlurVeloPixel);
     
     float2 vBlurDirPixel = (vBlurVeloPixel / max(fPixelSpeed, FLT_EPSILON5));
-// 픽셀별 블러 반경 (핵심)
+    
+    // 픽셀의 속도로 블러 반경을 가변적으로 돌림
     float fBlurRadiusPixel = clamp(fPixelSpeed * 0.4f , 0.f, g_fMBMaxBlurRadius);
     fBlurRadiusPixel = max(fBlurRadiusPixel, 1.f);
 
@@ -309,7 +310,7 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     
     // 센터의 스프레드 길이
     float2 vReferenceVelocityPixel = bBorrowedVelocityFromTile ? vBlurVeloPixel : vCenterVeloPixel; // 빌린놈이면 빌린 타일이 속도 레퍼런스, 아니면 센터가 속도 레퍼런스가 됨
-    float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, fBlurRadiusPixel); // 
+    float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, fBlurRadiusPixel); // fSampleSpreadLengthPixel 랑 비교하게 될 짝꿍
 
     [loop]
     for (int iInterval = -iMaxRadius; iInterval <= iMaxRadius; ++iInterval) {
@@ -1241,11 +1242,9 @@ PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
             vColor /= g_fToneMappingExposure;
             break;
         case 1:
-            vColor = pow(vColor, 2.2f);
             vColor = float4(ReinHard_ToneMapper(vColor.xyz), 1.f);
             break;
         case 2:
-            vColor = pow(vColor, 2.2f);
             vColor = float4(Filmic_ToneMapper(vColor.xyz), 1.f);
             break;
         default:
