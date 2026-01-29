@@ -683,7 +683,7 @@ void CRenderer::Describe_Entitiy()
 		if (GUI::CollapsingHeader("MotionBlurr")) {
 			GUI::Checkbox("m_bMB", &m_bMB);
 			GUI::SliderFloat("g_fMBSampleBias", &m_fMBSampleBias, -1.f, 1.f, "%.3f");
-			GUI::SliderFloat("g_fMBBlurRadius", &m_fMBBlurRadius, 0.1f, (_float)m_iMBMaxSampleCount, "%.1f");
+			GUI::SliderFloat("m_fMBMaxBlurRadius", &m_fMBMaxBlurRadius, 0.1f, (_float)m_iMBMaxSampleCount, "%.1f");
 			GUI::SliderInt("g_iMBSampleCount", &m_iMBSampleCount, 0, m_iMBMaxSampleCount, "%d");
 		}
 		if (GUI::CollapsingHeader("End_Padding")) {

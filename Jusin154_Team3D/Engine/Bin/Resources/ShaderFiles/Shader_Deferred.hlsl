@@ -82,7 +82,7 @@ Texture2D g_TileVelocityTexture;
 
 int g_iMBSampleCount;
 int g_iMBMaxSampleCount;
-float g_fMBBlurRadius;
+float g_fMBMaxBlurRadius;
 int g_iMBType;
 int g_iMBTileSize;
 float g_fMBSampleBias;
@@ -254,8 +254,8 @@ struct PS_OUT_SSAO_BLUR
 // g_fFar
 // g_fMBSampleBias
 // g_fMBBlurRadius
-// g_iMBSampleCount
-// g_iMBMaxSampleCount
+// g_iMBSampleCount 실제 현재 프레임 모션블러 픽셀
+// g_iMBMaxSampleCount 허용가능한 모션블러 픽셀
 // g_iMBType
 PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
 {
@@ -269,7 +269,7 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     bool bBorrowedVelocityFromTile = false;
     
     float2 vBlurVelo = vCenterVelo;
-    float2 vBlurVeloPixel = vCenterVeloPixel;
+    float2 vBlurVeloPixel = vCenterVeloPixel; // 프레임당 픽셀 이동량
     
     float fVelocityEpsilon = 0.5f;
     
@@ -287,28 +287,30 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
         Out.vVelocity = float2(0.5f, 0.5f);
         return Out;
     }
+    float fPixelSpeed = length(vBlurVeloPixel);
     
-    float2 vBlurDirPixel = (vBlurVeloPixel / max(length(vBlurVeloPixel), FLT_EPSILON5));
-    int iMaxRadius = min(g_iMBSampleCount, g_iMBMaxSampleCount);
+    float2 vBlurDirPixel = (vBlurVeloPixel / max(fPixelSpeed, FLT_EPSILON5));
+// 픽셀별 블러 반경 (핵심)
+    float fBlurRadiusPixel = clamp(fPixelSpeed * 0.4f , 0.f, g_fMBMaxBlurRadius);
+    fBlurRadiusPixel = max(fBlurRadiusPixel, 1.f);
+
+    int iMaxRadius = (int)ceil(fBlurRadiusPixel);
+    iMaxRadius = clamp(iMaxRadius, 1, min(g_iMBSampleCount, g_iMBMaxSampleCount));
     
      // 샘플링 당 이동 픽셀
-    float fSamplePixelSpeed = g_fMBBlurRadius / max((float) iMaxRadius, 1.f);
+    float fSamplePixelSpeed = fBlurRadiusPixel / max((float) iMaxRadius, 1.f);
     
     // 샘플유닛의 크기
-    float fScalePixelToSampleUnit = (float) iMaxRadius / max(g_fMBBlurRadius, FLT_EPSILON5);
+    float fScalePixelToSampleUnit = (float) iMaxRadius / max(fBlurRadiusPixel, FLT_EPSILON5);
     float fScaleDepth = 0.5f / max(g_fMBSampleBias, FLT_EPSILON5);
     float4 vAccColorSum = float4(0.f, 0.f, 0.f, 0.f);
     float2 vAccVeloSum = float2(0.f, 0.f);
     float fAccWeight = 0.f;
     
     // 센터의 스프레드 길이
-    float2 vReferenceVelocityPixel = vCenterVeloPixel;
-    if (true == bBorrowedVelocityFromTile)
-    {
-        vReferenceVelocityPixel = vBlurVeloPixel;
-    }
-    float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, g_fMBBlurRadius);
-    
+    float2 vReferenceVelocityPixel = bBorrowedVelocityFromTile ? vBlurVeloPixel : vCenterVeloPixel; // 빌린놈이면 빌린 타일이 속도 레퍼런스, 아니면 센터가 속도 레퍼런스가 됨
+    float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, fBlurRadiusPixel); // 
+
     [loop]
     for (int iInterval = -iMaxRadius; iInterval <= iMaxRadius; ++iInterval) {
         float fOffset = (float) abs(iInterval);
@@ -324,7 +326,7 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
 
         // 샘플의 스프레드 길이
         float fBlurSampleAccurate = abs(dot(vSampledVeloPixel, vBlurDirPixel));
-        float fSampleSpreadLengthPixel = clamp(fBlurSampleAccurate, 0.f, g_fMBBlurRadius);
+        float fSampleSpreadLengthPixel = clamp(fBlurSampleAccurate, 0.f, fBlurRadiusPixel);
         if (true == bBorrowedVelocityFromTile)
         {
             fSampleSpreadLengthPixel = max(fSampleSpreadLengthPixel, fCenterSpreadLengthPixel);

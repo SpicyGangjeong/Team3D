@@ -1052,7 +1052,7 @@ void CRenderer::Render_PostProcessing()
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			assert(false); return;
 		}
-		if (FAILED(m_pShader->Bind_RawValue("g_fMBBlurRadius", &m_fMBBlurRadius, sizeof(_float)))) {
+		if (FAILED(m_pShader->Bind_RawValue("g_fMBMaxBlurRadius", &m_fMBMaxBlurRadius, sizeof(_float)))) {
 			assert(false); return;
 		}
 		if (FAILED(m_pShader->Bind_RawValue("g_fMBSampleBias", &m_fMBSampleBias, sizeof(_float)))) {

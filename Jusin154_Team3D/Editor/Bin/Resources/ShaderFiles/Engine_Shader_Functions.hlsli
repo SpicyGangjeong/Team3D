@@ -600,7 +600,7 @@ float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIn
     float2 velocityUV = (currentNDC - previousNDC) * 0.5f;
     velocityUV *= fIntensity;
     velocityUV = clamp(velocityUV, -1.0f, 1.0f);
-    length(velocityUV);
+
     return velocityUV * 0.5f + 0.5f; // 0 속도 -> 0.5
 }
 float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos)
