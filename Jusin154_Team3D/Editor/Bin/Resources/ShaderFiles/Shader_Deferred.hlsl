@@ -270,13 +270,19 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     
     float2 vBlurVelo = vCenterVelo;
     float2 vBlurVeloPixel = vCenterVeloPixel;
-    if (length(vBlurVeloPixel) < 0.5f) {
+    
+    float fVelocityEpsilon = 30.f;
+    
+    if (length(vBlurVeloPixel) < fVelocityEpsilon)
+    {
+    // 사실상 정지해 있던 픽셀이면 텐트벨로시티맵에서 빌려옴
         vBlurVelo = g_TileVelocityTexture.Sample(PointSampler, vCenterUV).xy * 2.f - 1.f;
         vBlurVeloPixel = vBlurVelo * g_vResolution.xy;
         bBorrowedVelocityFromTile = true;
     }
     
-    if (length(vBlurVeloPixel) < 0.5f) {
+    if (length(vBlurVeloPixel) < fVelocityEpsilon) {
+    // 텐트벨로시티맵에서 빌려온 픽셀또한 정지해 있었으면 원본 그대로 반환
         Out.vColor = g_ColorTexture.Sample(ClampLinearSampler, vCenterUV);
         Out.vVelocity = float2(0.5f, 0.5f);
         return Out;
@@ -1225,18 +1231,18 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
 PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
-    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
     vColor *= g_fToneMappingExposure; 
-    vColor = pow(vColor, 2.2f);
     switch (g_iToneMappingType) {
         case 0:
-            vColor = pow(vColor, 1.f/2.2f);
             vColor /= g_fToneMappingExposure;
             break;
         case 1:
+            vColor = pow(vColor, 2.2f);
             vColor = float4(ReinHard_ToneMapper(vColor.xyz), 1.f);
             break;
         case 2:
+            vColor = pow(vColor, 2.2f);
             vColor = float4(Filmic_ToneMapper(vColor.xyz), 1.f);
             break;
         default:
