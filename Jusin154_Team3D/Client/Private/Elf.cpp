@@ -71,15 +71,15 @@ void CElf::Update(_float fTimeDelta)
 
 	Set_Anim();
 
-	if (m_pGameInstance->Key_Down(DIK_U))
-	{
-		m_iCurrentFlow++;
-	}
+	//if (m_pGameInstance->Key_Down(DIK_U))
+	//{
+	//	m_iCurrentFlow++;
+	//}
 
-	if (m_bFlow == true)
-	{
-		m_fFlowTime -= fTimeDelta;
-	}
+	//if (m_bFlow == true)
+	//{
+	//	m_fFlowTime -= fTimeDelta;
+	//}
 
 	if (m_fFlowTime <= 0.f && m_bFlow == true)
 	{
@@ -247,7 +247,6 @@ _int CElf::Get_NpcID()
 void CElf::Set_Flow(_int Index, _float fTime)
 {
 	m_iFlowIndex = Index;
-	m_fFlowTime = fTime;
 	m_bFlow = true;
 }
 

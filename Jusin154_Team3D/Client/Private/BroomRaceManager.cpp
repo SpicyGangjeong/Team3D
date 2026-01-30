@@ -177,7 +177,6 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 		}
 	}
 
-	m_bCurrentRace = true;
 #ifdef _DEBUG
 	//Describe_Entity();
 #endif // _DEBUG
@@ -521,6 +520,7 @@ void CBroomRaceManager::RaceReady()
 	m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
 	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RACE, SD_CHANNEL_GROUP::BGM, true, 0.8f);
 
+	m_bCurrentRace = true;
 }
 
 void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)

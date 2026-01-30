@@ -268,9 +268,17 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_bCurrentNPCInteract == true && m_bNPCInteract == false)
 	{
+		m_fAlphaVelue = 1.f;
 		m_bCurrentNPCInteract = m_bNPCInteract;
+		if (m_bCurrentNPCInteract != m_bNPCInteract)
+			m_bCurrentNPCInteract = m_bNPCInteract;
 
-		if (m_bActive == false)
+		if (m_eType == UI_STATE::NPC_INTERACT)
+		{
+			Canvas_Change(UI_STATE::GAMEPLAYER);
+		}
+
+		/*if (m_bActive == false)
 		{
 			m_bActive = true;
 			m_bAlphaZero = true;
@@ -278,7 +286,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 			{
 				m_eType = UI_STATE::GAMEPLAYER;
 			}
-		}
+		}*/
 	}
 
 	if (m_bActive == true && m_bHover == false)
@@ -629,11 +637,11 @@ void CUI_Manager::NpcInteract(void* pArg)
 	NPCINTERACT Interact = *reinterpret_cast<NPCINTERACT*>(pArg);
 
 	m_bNPCInteract = Interact.bInteract;
-	m_bHover = Interact.bInteract;
-	m_bActive = Interact.bInteract;
-	m_fAlpha= Interact.fAlpha;
-	m_bAlphaZero = true;
-	m_fAlphaVelue = 1.f;
+	//m_bHover = Interact.bInteract;
+	//m_bActive = Interact.bInteract;
+	//m_fAlpha= Interact.fAlpha;
+	//m_bAlphaZero = true;
+	//m_fAlphaVelue = 1.f;
 }
 
 void CUI_Manager::Chage()

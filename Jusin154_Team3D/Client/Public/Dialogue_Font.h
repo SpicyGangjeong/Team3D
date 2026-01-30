@@ -44,6 +44,7 @@ public:
 	void Npc_Dialogue(DIALOGUEINFO Info);
 
 	void NextText();
+	void Skip();
 	void NextLevel(CHOICEINFO Choice);
 	void ENDText();
 	void NextText(_int Index);

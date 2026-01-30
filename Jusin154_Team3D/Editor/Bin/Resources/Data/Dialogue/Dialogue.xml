@@ -40,7 +40,7 @@
 			<Choice Type="4" Text="네. 이제 갑시다." NextID="4" QuestID="6"/>
 			<Choice Type="0" Text="조금만 더 생각할게요." NextID="3" QuestID="-1"/>
 		</Line>
-		<Line ID="20" Tag="1" Type="1" Text="…두려움을 느끼는 건 정상일세." NextID="21"/>
+		<Line ID="20" Tag="1" Type="1" Text="두려움을 느끼는 건 정상일세." NextID="21"/>
 		<Line ID="21" Tag="1" Type="1" Text="하지만 란록은 기다려주지 않아." NextID="22"/>
 		<Line ID="22" Tag="1" Type="1" Text="시간이 지날수록, 상황은 더 나빠질 걸세." NextID="23"/>
 		<Line ID="23" Tag="1" Type="2" Text="그래도 떠나기 전에 정비하겠나?" NextID="23">
