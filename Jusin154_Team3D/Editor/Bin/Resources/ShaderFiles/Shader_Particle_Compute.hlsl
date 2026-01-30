@@ -115,8 +115,10 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     row_major matrix ProjMatrix;
     
     float2 vScreenSize;
-    float fPadding0;
-    float fPadding1;
+    bool   isInstanceBillboard;
+    float  fPadding1;
+    
+    float4 vCamposition;
 }
 
 //내가 몇개의 스레드를 사용할 것인지 지정하는데
@@ -558,6 +560,26 @@ void CS_MAIN(
     if (length(particleValue.vVelocity) > FLT_EPSILON5)
         particle.vTranslation.xyz += fRatio * particleValue.vVelocity;
     
+    if (isInstanceBillboard == true)
+    {
+        float3 vBillboardLook = normalize(vCamposition.xyz - particle.vTranslation.xyz);
+        float3 vBillboardRight = normalize(cross(float3(0.f, 1.f, 0.f), vBillboardLook));
+        float3 vBillboardUp = normalize(cross(vBillboardLook, vBillboardRight));
+        
+        float fLengthRight = length(particle.vRight);
+        float fLengthUp = length(particle.vUp);
+        float fLengthLook = length(particle.vLook);
+        
+        matrix BillBoardMat = { vector(vBillboardRight, 0.f), vector(vBillboardUp, 0.f), vector(vBillboardLook, 0.f), vector(0.f, 0.f, 0.f, 1.f) };
+        matrix LocalRotMat = { normalize(particleValue.vOriginRight) * fLengthRight, normalize(particleValue.vOriginUp) * fLengthUp, normalize(particleValue.vOriginLook) * fLengthLook, vector(0.f, 0.f, 0.f, 1.f) };
+        
+        matrix CombinedMat = mul(LocalRotMat, BillBoardMat);
+        
+        particle.vRight = CombinedMat[0];
+        particle.vUp = CombinedMat[1];
+        particle.vLook = CombinedMat[2];
+    }
+    
     if (isSizeMove == true)
     {
         float3 CurLength =
@@ -595,6 +617,7 @@ void CS_MAIN(
         
     }
     
+
        
     //애니메이션 속도 , 인덱스
     
