@@ -731,6 +731,10 @@ void CRenderer::Render_NonLight()
 	COMPUTE_TIMEDELTA("Timer_Render_NonLight");
 	EVENTSCOPE_("Render_NonLight");
 	m_eType = RENDER::NONLIGHT;
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		return;
+	}
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::NONLIGHT)])
 	{
 		if (nullptr != pRenderObject){
@@ -742,6 +746,9 @@ void CRenderer::Render_NonLight()
 		SAFE_RELEASE(pRenderObject);
 	}
 
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	m_RenderObjects[ENUM_CLASS(RENDER::NONLIGHT)].clear();
 	COMPUTE_TIMEDELTA("Timer_Render_NonLight");
 }
@@ -993,6 +1000,9 @@ void CRenderer::Render_Blend()
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
 
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		return;
+	}
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BLEND)])
 	{
 		if (nullptr != pRenderObject) {
@@ -1004,6 +1014,9 @@ void CRenderer::Render_Blend()
 		SAFE_RELEASE(pRenderObject);
 	}
 
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].clear();
 	COMPUTE_TIMEDELTA("Timer_Render_Blend");
 }

@@ -91,7 +91,7 @@ private:
 
 	// ToneMapping
 	_int	m_iToneMappingType = { 2 };
-	_float	m_fExposure = { 0.7f };
+	_float	m_fExposure = { 0.5f };
 
 	// Bloom
 	_int	m_iBloomEmbossingPass = { 1 };
