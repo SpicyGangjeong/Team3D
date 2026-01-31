@@ -82,7 +82,7 @@ Texture2D g_TileVelocityTexture;
 
 int g_iMBSampleCount;
 int g_iMBMaxSampleCount;
-float g_fMBBlurRadius;
+float g_fMBMaxBlurRadius;
 int g_iMBType;
 int g_iMBTileSize;
 float g_fMBSampleBias;
@@ -254,8 +254,8 @@ struct PS_OUT_SSAO_BLUR
 // g_fFar
 // g_fMBSampleBias
 // g_fMBBlurRadius
-// g_iMBSampleCount
-// g_iMBMaxSampleCount
+// g_iMBSampleCount 실제 현재 프레임 모션블러 픽셀
+// g_iMBMaxSampleCount 허용가능한 모션블러 픽셀
 // g_iMBType
 PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
 {
@@ -269,40 +269,49 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     bool bBorrowedVelocityFromTile = false;
     
     float2 vBlurVelo = vCenterVelo;
-    float2 vBlurVeloPixel = vCenterVeloPixel;
-    if (length(vBlurVeloPixel) < 0.5f) {
+    float2 vBlurVeloPixel = vCenterVeloPixel; // 프레임당 픽셀 이동량
+    
+    float fVelocityEpsilon = 0.5f;
+    
+    if (length(vBlurVeloPixel) < fVelocityEpsilon)
+    {
+    // 사실상 정지해 있던 픽셀이면 텐트벨로시티맵에서 빌려옴
         vBlurVelo = g_TileVelocityTexture.Sample(PointSampler, vCenterUV).xy * 2.f - 1.f;
         vBlurVeloPixel = vBlurVelo * g_vResolution.xy;
         bBorrowedVelocityFromTile = true;
     }
     
-    if (length(vBlurVeloPixel) < 0.5f) {
+    if (length(vBlurVeloPixel) < fVelocityEpsilon) {
+    // 텐트벨로시티맵에서 빌려온 픽셀또한 정지해 있었으면 원본 그대로 반환
         Out.vColor = g_ColorTexture.Sample(ClampLinearSampler, vCenterUV);
         Out.vVelocity = float2(0.5f, 0.5f);
         return Out;
     }
+    float fPixelSpeed = length(vBlurVeloPixel);
     
-    float2 vBlurDirPixel = (vBlurVeloPixel / max(length(vBlurVeloPixel), FLT_EPSILON5));
-    int iMaxRadius = min(g_iMBSampleCount, g_iMBMaxSampleCount);
+    float2 vBlurDirPixel = (vBlurVeloPixel / max(fPixelSpeed, FLT_EPSILON5));
+    
+    // 픽셀의 속도로 블러 반경을 가변적으로 돌림
+    float fBlurRadiusPixel = clamp(fPixelSpeed * 0.4f , 0.f, g_fMBMaxBlurRadius);
+    fBlurRadiusPixel = max(fBlurRadiusPixel, 1.f);
+
+    int iMaxRadius = (int)ceil(fBlurRadiusPixel);
+    iMaxRadius = clamp(iMaxRadius, 1, min(g_iMBSampleCount, g_iMBMaxSampleCount));
     
      // 샘플링 당 이동 픽셀
-    float fSamplePixelSpeed = g_fMBBlurRadius / max((float) iMaxRadius, 1.f);
+    float fSamplePixelSpeed = fBlurRadiusPixel / max((float) iMaxRadius, 1.f);
     
     // 샘플유닛의 크기
-    float fScalePixelToSampleUnit = (float) iMaxRadius / max(g_fMBBlurRadius, FLT_EPSILON5);
+    float fScalePixelToSampleUnit = (float) iMaxRadius / max(fBlurRadiusPixel, FLT_EPSILON5);
     float fScaleDepth = 0.5f / max(g_fMBSampleBias, FLT_EPSILON5);
     float4 vAccColorSum = float4(0.f, 0.f, 0.f, 0.f);
     float2 vAccVeloSum = float2(0.f, 0.f);
     float fAccWeight = 0.f;
     
     // 센터의 스프레드 길이
-    float2 vReferenceVelocityPixel = vCenterVeloPixel;
-    if (true == bBorrowedVelocityFromTile)
-    {
-        vReferenceVelocityPixel = vBlurVeloPixel;
-    }
-    float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, g_fMBBlurRadius);
-    
+    float2 vReferenceVelocityPixel = bBorrowedVelocityFromTile ? vBlurVeloPixel : vCenterVeloPixel; // 빌린놈이면 빌린 타일이 속도 레퍼런스, 아니면 센터가 속도 레퍼런스가 됨
+    float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, fBlurRadiusPixel); // fSampleSpreadLengthPixel 랑 비교하게 될 짝꿍
+
     [loop]
     for (int iInterval = -iMaxRadius; iInterval <= iMaxRadius; ++iInterval) {
         float fOffset = (float) abs(iInterval);
@@ -318,7 +327,7 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
 
         // 샘플의 스프레드 길이
         float fBlurSampleAccurate = abs(dot(vSampledVeloPixel, vBlurDirPixel));
-        float fSampleSpreadLengthPixel = clamp(fBlurSampleAccurate, 0.f, g_fMBBlurRadius);
+        float fSampleSpreadLengthPixel = clamp(fBlurSampleAccurate, 0.f, fBlurRadiusPixel);
         if (true == bBorrowedVelocityFromTile)
         {
             fSampleSpreadLengthPixel = max(fSampleSpreadLengthPixel, fCenterSpreadLengthPixel);
@@ -349,6 +358,7 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     Out.vVelocity = vBlurredVelo * 0.5f + 0.5f;
     return Out;
 }
+
 PS_OUT_VELOCITYTILE PS_MOTIONBLUR_TILESAMPLE(PS_IN In)
 {
     PS_OUT_VELOCITYTILE Out = (PS_OUT_VELOCITYTILE) 0;
@@ -1225,12 +1235,10 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
 PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
-    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
     vColor *= g_fToneMappingExposure; 
-    vColor = pow(vColor, 2.2f);
     switch (g_iToneMappingType) {
         case 0:
-            vColor = pow(vColor, 1.f/2.2f);
             vColor /= g_fToneMappingExposure;
             break;
         case 1:

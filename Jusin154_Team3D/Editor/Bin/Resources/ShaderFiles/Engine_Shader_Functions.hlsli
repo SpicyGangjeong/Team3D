@@ -485,7 +485,7 @@ float3 ReinHard_ToneMapper(float3 vColor)
 {
     float k = 1.f;
     vColor = (vColor / (vColor + k));
-    return pow(vColor, 1.f / 2.2f);
+    return vColor;
 }
 
 float3 Filmic_ToneMapper(float3 vColor)
@@ -501,7 +501,7 @@ float3 Filmic_ToneMapper(float3 vColor)
         / (vColor * (fC * vColor + fD) + fE)
     );
     
-    return pow(vColor, 1.f / 2.2f);
+    return vColor;
 }
 
 

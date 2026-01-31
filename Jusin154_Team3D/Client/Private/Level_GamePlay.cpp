@@ -125,7 +125,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	_bool bLoadNPC = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bLoadNPC = false;
+	bLoadNPC = true;
 #endif
 #endif // _DEBUG
 	if (true == bLoadNPC) {
@@ -173,7 +173,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 #elif 진우
 	bStartCinematic = true;
 #elif Bin
-	bStartCinematic = false;
+	bStartCinematic = true;
 #elif gimch
 	bStartCinematic = true;
 #elif 나
