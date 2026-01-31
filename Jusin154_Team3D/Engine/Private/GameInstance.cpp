@@ -344,6 +344,9 @@ HRESULT CGameInstance::Bind_DepthStencil(CShader* pShader, const _char* pContant
 void CGameInstance::Get_BackBufferPTR(ID3D11Texture2D** pTexture2D)
 {
 	m_pGraphic_Device->Get_BackBufferPTR(pTexture2D);
+	assert(false); 
+	// 백버퍼는 DXGI_FORMAT_R8G8B8A8_UNORM임. 만약 ToneMapping 이전에 Backbuffer에 무언가 넣을려고 하는 의도였다면
+	// Renderer의 Target_LDRBackBuffer를 이용해야함 ( 김누리한테 말해보셈 ifdef 걸어도 됨 )
 }
 
 _float CGameInstance::Get_TimeDelta(const _wstring& strTimerTag)
@@ -916,6 +919,10 @@ HRESULT CGameInstance::Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11Depth
 
 HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isClear)
 {
+	assert(false);
+	// 백버퍼는 DXGI_FORMAT_R8G8B8A8_UNORM임. 만약 ToneMapping 이전에 Backbuffer에 무언가 넣을려고 하는 의도였다면
+	// Renderer의 Target_LDRBackBuffer를 이용해야함 ( 김누리한테 말해보셈 ifdef 걸어도 됨 )
+
 	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV , isClear);
 }
 

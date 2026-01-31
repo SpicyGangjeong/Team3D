@@ -81,7 +81,7 @@ private:
 	_float m_fMinShadowBrightness = { 0.47f };
 
 	// MotionBlur 
-	_float	m_fMBBlurRadius = { 28.f };
+	_float	m_fMBMaxBlurRadius = { 28.f };
 	_float	m_fMBSampleBias = { 0.005f };
 	_int	m_iMBMaxSampleCount = { 28 };
 	_int	m_iMBSampleCount = { m_iMBMaxSampleCount };
@@ -91,7 +91,7 @@ private:
 
 	// ToneMapping
 	_int	m_iToneMappingType = { 2 };
-	_float	m_fExposure = { 0.7f };
+	_float	m_fExposure = { 0.5f };
 
 	// Bloom
 	_int	m_iBloomEmbossingPass = { 1 };
