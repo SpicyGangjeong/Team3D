@@ -77,6 +77,31 @@ void CBombard::Update(_float fTimeDelta)
 
 	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
 
+	if (m_isSoundDelay == true)
+	{
+		m_fAccSoundDelay += fTimeDelta;
+
+		if (m_fAccSoundDelay >= 0.4f)
+		{
+			m_isSoundDelay = false;
+
+			_int iRand = m_pGameInstance->Random_Int(0, 2);
+
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_23, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_32, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_39, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			}
+		}
+	}
+
 	if (pWand == nullptr)
 		return;
 
@@ -123,6 +148,7 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 	if (pWand == nullptr)
 		return E_FAIL;
 
+	m_isSoundDelay = false;
 
 	CPartObject* pShootPt = Get_PartObject<CEffectParts>("Bombard_Shoot_Pt");
 	CPartObject* pCircle0 = Get_PartObject<CEffectParts>("Bombard_Circle0");
@@ -209,19 +235,10 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 	if (m_bHit == false)
 		return;
 
-	_int iRand = m_pGameInstance->Random_Int(0, 2);
-	switch (iRand)
-	{
-	case 0:
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_23, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
-		break;
-	case 1:
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_32, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
-		break;
-	case 2:
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_39, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
-		break;
-	}
+	m_fAccSoundDelay = 0.f;
+	m_isSoundDelay = true;
+
+
 
 
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);

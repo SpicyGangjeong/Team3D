@@ -947,6 +947,7 @@ void CTroll::Behavior_DeadExit()
 {
 	m_bDead = true;
 	m_pDead_Smoke->Set_Visible(false);
+
 }
 
 _bool CTroll::IsHitSpellDisabled()
@@ -1110,7 +1111,9 @@ void CTroll::Add_FSM()
 					}
 				}
 				m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-				m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.8f);
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, false, 0.3f);
+
 				m_bDead = true;
 			}
 			};

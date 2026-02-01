@@ -165,6 +165,9 @@ HRESULT CTransformation::Pre_Setting(CGameObject* pObject, void* pArg)
 	_matrix PJ_WorldMat = { vRight , vUp ,vLook , vPos };
 
 	m_pTransformation_PJ->Get_Component<CTransform>()->Set_WorldMatrix(PJ_WorldMat);
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::TRANSFORMATION_0, SD_CHANNEL_GROUP::EFFECT, false, 1.f);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::TRANSFORMATION_1, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 	return S_OK;
 }
 
@@ -304,6 +307,11 @@ void CTransformation::OnCollision(CGameObject* pOther, void* pDesc)
 	pRotate_1->Set_Visible(true);
 
 	m_pTransformation_PJ->Get_Effect_Info()->isDissolve = true;
+
+
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::TRANSFORMATION_HIT0, SD_CHANNEL_GROUP::EFFECT, false, 0.8f);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::TRANSFORMATION_HIT1, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::TRANSFORMATION_HIT2, SD_CHANNEL_GROUP::EFFECT, false, 0.8f);
 }
 
 void CTransformation::Free()

@@ -226,6 +226,8 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 
 	if (pHitCCT != nullptr)
 	{
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_LEVIOSA_26, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
+
 		CEffectParts* pLevioso_Spline = Get_PartObject<CEffectParts>("Levioso_Spline");
 		CEffectParts* pLevioso_Hit0 = Get_PartObject<CEffectParts>("Levioso_Hit0");
 
