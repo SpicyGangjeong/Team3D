@@ -133,17 +133,29 @@ _int CUnit::Get_TextID()
     return m_iCurrentFlow;
 }
 
+_int CUnit::Get_NextID()
+{
+    return m_iCurrentNext;
+}
+
+void CUnit::Set_TextID(_int ID)
+{
+    m_iCurrentFlow = ID;
+}
+
 void CUnit::Set_NextID(_int ID)
 {
+    m_iCurrentNext = ID;
 }
 
 void CUnit::Set_Flow(_int Index, _float fTime)
 {
+    m_iCurrentFlow = Index;
 }
 
 _int CUnit::Get_Flow()
 {
-    return _int();
+    return m_iCurrentFlow;
 }
 
 HRESULT CUnit::Ready_Components(void *pArg)

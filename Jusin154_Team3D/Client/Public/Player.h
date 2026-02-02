@@ -60,6 +60,7 @@ public:
 	void			ExitBattle();
 	void			Set_OriginPos(_vector vPos) { XMStoreFloat4(&m_OriginPos, vPos); }
 	void			Add_TurboBoost(_float fAmount);
+	void			ReSetNPC();
 #ifdef _DEBUG
 	void			Render_CameraCoordinateSystem();
 #endif // _DEBUG

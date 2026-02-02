@@ -111,11 +111,13 @@ void CDialogue_Panel::Choice_Slot(CHOICEINFO Choice)
 	case ENUM_CLASS(NPCTEXTTYPE::BROOM):
 		m_pInfoInstance->Event_CallBack(TEXT("NPCNEXTTEXT"), &Choice);
 		m_bBroomRace = true;
+		m_fTime = 0.f;
 		break;
 
 	case ENUM_CLASS(NPCTEXTTYPE::BATTLE):
 		m_pInfoInstance->Event_CallBack(TEXT("NPCNEXTTEXT"), &Choice);
 		m_bBttle = true;
+		m_fTime = 0.f;
 		break;
 
 	default:
@@ -237,7 +239,7 @@ void CDialogue_Panel::Update(_float fTimeDelta)
 	}
 
 
-	if (m_fTime >= 0.8f)
+	if (m_fTime >= 1.f)
 	{
 		if (m_bBroomRace == true)
 		{
@@ -249,6 +251,8 @@ void CDialogue_Panel::Update(_float fTimeDelta)
 			m_bBttle = false;
 			Change_Map();
 		}
+		m_pInfoInstance->Event_CallBack(TEXT("ReSetNPC"));
+		m_fTime = 0.f;
 	}
 
 	__super::Update(fTimeDelta);

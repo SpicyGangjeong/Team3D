@@ -72,7 +72,6 @@ void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 				m_bRaceEnd = true;
 				_float Alpha = 2.f;
 				m_pInfoInstance->Event_CallBack(TEXT("UIFadeIn"), &Alpha);
-
 				for (auto& racer : m_Racers)
 				{
 					if (racer.pAI)
@@ -163,6 +162,7 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					pTransform->Set_State(STATE::POSITION, XMLoadFloat4(&m_OriginPos));
 					pCharacter->Set_Position(XMLoadFloat4(&m_OriginPos));
 					m_bRaceEnd = false;
+					m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bRaceEnd);
 					m_fDelay = 0.f;
 					m_bCurrentRace = false;
 					m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_BOOST, SD_CHANNEL_GROUP::EFFECT);
@@ -604,8 +604,9 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 		return S_OK;
 	}
 
-	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
-	{
+	//for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	//{
+		auto* Object = root->FirstChildElement("Object");
 		CRaceRing::RACERING_DESC Desc = {};
 
 		Desc.pBroomRaceManager = this;
@@ -628,7 +629,7 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
 			return E_FAIL;
-	}
+	//}
 
 	return S_OK;
 }
