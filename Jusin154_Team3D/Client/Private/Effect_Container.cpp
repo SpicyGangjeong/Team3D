@@ -867,75 +867,89 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_fvector StartPos, _fvec
 
 	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
 
-	PSX::PxSweepBuffer pxBuffer = {};
-
+	PSX::PxSweepBufferN<12> pxBuffer = {};
 	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
 
-	const PSX::PxSweepHit& hit = pxBuffer.block;
-	PSX::PxRigidActor* pActor = hit.actor;
-	PSX::PxShape* pShape = hit.shape;
 	ON_COLLISION_INFO tagCollInfo = {};
-
-	tagCollInfo.vWorldPos.w = 1.f;
-
 	if (bHit) {
-
-		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-
-		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-		tagCollInfo.fLength = fDistance;
-
-
-		if (nullptr != pActor && nullptr != pActor->userData)
-		{
-			PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
-			tagCollInfo.pObject = pUserData->pOwner;
-			tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_PROJECTILE);
-			tagCollInfo.fDamage = 10.f;
-
-			switch (pUserData->eKind)
-			{
-			case PHYSX_KIND::BODY_DYNAMIC:
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::SKILL_PROTEGO:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-					m_bHitShield = true;
-				}
-				break;
-				}
-				break;
-			case PHYSX_KIND::CCTActor:
-			{
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-
-				case PXOBJECT::PLAYER:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-
-				}
-			}
-			}
+		vector<PSX::PxSweepHit*> Hits;
+		_uint iHitCount = pxBuffer.nbTouches;
+		if (true == pxBuffer.hasBlock) {
+			iHitCount += 1;
+			Hits.reserve(iHitCount);
+			Hits.emplace_back(&pxBuffer.block);
+		}
+		else {
+			Hits.reserve(iHitCount);
+		}
+		for (_uint i = 0; i < pxBuffer.nbTouches; ++i) {
+			Hits.emplace_back(&pxBuffer.touches[i]);
 		}
 
+		for (_uint i = 0; i < Hits.size(); ++i) {
+			const PSX::PxSweepHit& hit = *Hits[i];
+			PSX::PxRigidActor* pActor = hit.actor;
+			PSX::PxShape* pShape = hit.shape;
 
+			tagCollInfo.vWorldPos.w = 1.f;
+
+			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+
+			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+			tagCollInfo.fLength = fDistance;
+
+
+			if (nullptr != pActor && nullptr != pActor->userData || nullptr != pShape && nullptr != pShape->userData)
+			{
+				PHYSX_USERDATA* pUserData = nullptr;
+				if (nullptr == pActor->userData) {
+					pUserData = static_cast<PHYSX_USERDATA*>(pShape->userData);
+				}
+				else {
+					pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+				}
+				tagCollInfo.pObject = pUserData->pOwner;
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_PROJECTILE);
+				tagCollInfo.fDamage = 10.f;
+
+				switch (pUserData->eKind)
+				{
+				case PHYSX_KIND::BODY_DYNAMIC:
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case PXOBJECT::SKILL_PROTEGO:
+					{
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+						m_bHit = true;
+						m_bHitShield = true;
+					}
+					break;
+					}
+					break;
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+
+					case PXOBJECT::PLAYER:
+					{
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+						m_bHit = true;
+					}
+					break;
+
+					}
+				}
+				default:
+					break;
+				}
+			}
+		}
 	}
 
 	if (isTerrainCollision == true && bHit == false)
 	{
-		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-		tagCollInfo.fLength = fDistance;
-		tagCollInfo.pObject = m_pOwner->Get_Owner();
-
 		bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
 
 		const PSX::PxSweepHit& hit = pxBuffer.block;

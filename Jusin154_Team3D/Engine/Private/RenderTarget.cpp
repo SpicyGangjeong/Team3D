@@ -116,6 +116,11 @@ void CRenderTarget::Toggle_RT_Debug()
     m_isDraw = !m_isDraw;
 }
 
+void CRenderTarget::Set_Name(const _char* pName, _uint iSize)
+{
+    m_pRTV->SetPrivateData(WKPDID_D3DDebugObjectName, iSize, pName);
+}
+
 _bool CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer ,_float fX, _float fY, _float fSizeX, _float fSizeY)
 {
     if (m_isDraw == false) {
