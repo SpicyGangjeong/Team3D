@@ -41,8 +41,8 @@ public:
 
 #ifdef _DEBUG
 private:
-	_int m_iSizeX = { 16 * 14 };
-	_int m_iSizeY = { 9 * 14 };
+	_int m_iSizeX = { 350 };
+	_int m_iSizeY = { 350 };
 #endif // _DEBUG
 
 private:

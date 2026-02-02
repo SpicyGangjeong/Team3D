@@ -374,7 +374,7 @@ void CLevel_Field::ResetLevel_Environment()
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(-0.574f, -0.409f, 0.584f, -0.402f));
 	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	m_pGameInstance->Set_Environment(_float3(0.585f, 0.182f, 2.83f), _float(2.f), _float2(0.019f, 0.161f),
+	m_pGameInstance->Set_Environment(_float3(0.585f, 0.182f, 2.83f), _float(0.5f), _float2(0.019f, 0.161f),
 		_float2(2.300f, 10.000f), _float4(0.0360f, 0.0326f, 0.0057f, 0.0018f), _float4(2.0000f, 1.f, 1.f, 1.f), _float3(0.f, 0.f, -100.f), _float3(0.f, 0.f, 100.f));
 	m_pGameInstance->Setting_Volumetirc(1.743f, 0.0001f, 0.2000f, 1.050f, 0.04862f);
 	m_pLight->Capture_PreShadow();

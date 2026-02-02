@@ -103,10 +103,11 @@ void CRanrok_Breath::Update(_float fTimeDelta)
 
 	if (m_isStartRayCast == true)
 	{
-		ON_COLLISION_INFO CollisionInfo = MonsterRayCast(XMLoadFloat4(&m_vStartPos), CombinedMat.r[2] * -1.f, 50.f, 50);
+		ON_COLLISION_INFO CollisionInfo = MonsterRayCast(vStartPos, CombinedMat.r[2] * -1.f, 50.f, 50);
 		if (m_bHit = true)
 			OnCollision(this, &CollisionInfo);
-
+		_vector vEndPos = vStartPos + CombinedMat.r[2] * -1.f * 50.f;
+		MonsterSweepTarget(vStartPos, vEndPos, 0.6f, false);
 	}
 
 

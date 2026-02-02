@@ -206,6 +206,9 @@ void CRenderer::Render_Priority()
 	COMPUTE_TIMEDELTA("Timer_Render_Priority");
 	EVENTSCOPE_("Render_Priority");
 	m_eType = RENDER::PRIORITY;
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_LDRBackbuffer")))) {
+		return;
+	}
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::PRIORITY)])
 	{
 		if (nullptr != pRenderObject) {
@@ -217,6 +220,9 @@ void CRenderer::Render_Priority()
 		SAFE_RELEASE(pRenderObject);
 	}
 
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	m_RenderObjects[ENUM_CLASS(RENDER::PRIORITY)].clear();
 	COMPUTE_TIMEDELTA("Timer_Render_Priority");
 }
@@ -612,6 +618,9 @@ void CRenderer::Render_Fog()
 	EVENTSCOPE_("Render_Fog");
 
 
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		return;
+	}
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_Texture"))) {
 		return;
 	}
@@ -621,20 +630,21 @@ void CRenderer::Render_Fog()
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
 
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 
-	{ // BackBuffer 
-		ID3D11Texture2D* pBackBuffer = nullptr;
-		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
-		m_pGameInstance->Copy_RenderTargetFrom(TEXT("Target_Fog"), pBackBuffer);
-		SAFE_RELEASE(pBackBuffer);
+	if (FAILED(m_pGameInstance->Copy_RenderTargetAToB(TEXT("Target_LDRBackBuffer"), TEXT("Target_Fog")))) {
+		return;
+	}
+
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		return;
 	}
 
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
 	m_pShader->Bind_RawValue("g_fDepthPackExponent", m_pGameInstance->Get_DepthPackExponentPtr(), sizeof(_float));
-
-	//if (FAILED(m_pGameInstance->Bind_FogValue(m_pShader))) { // 여기서 포그에서 쓰는 상수들 바인딩 해줌
-	//    assert(false);
-	//}
 
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 		return;
@@ -650,6 +660,10 @@ void CRenderer::Render_Fog()
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	COMPUTE_TIMEDELTA("Timer_Render_Fog");
 }
 
@@ -685,7 +699,10 @@ void CRenderer::Render_WeightBlend()
 	COMPUTE_TIMEDELTA("Timer_Render_WeightBlend");
 	EVENTSCOPE_("Render_WeightBlend");
 	// Bind_Resorces
-	
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		assert(false); return;
+	}
 	m_pWeightBlendShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
 	m_pWeightBlendShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
 	m_pWeightBlendShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
@@ -703,6 +720,9 @@ void CRenderer::Render_WeightBlend()
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	COMPUTE_TIMEDELTA("Timer_Render_WeightBlend");
 }
 
@@ -711,6 +731,10 @@ void CRenderer::Render_NonLight()
 	COMPUTE_TIMEDELTA("Timer_Render_NonLight");
 	EVENTSCOPE_("Render_NonLight");
 	m_eType = RENDER::NONLIGHT;
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		return;
+	}
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::NONLIGHT)])
 	{
 		if (nullptr != pRenderObject){
@@ -722,6 +746,9 @@ void CRenderer::Render_NonLight()
 		SAFE_RELEASE(pRenderObject);
 	}
 
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	m_RenderObjects[ENUM_CLASS(RENDER::NONLIGHT)].clear();
 	COMPUTE_TIMEDELTA("Timer_Render_NonLight");
 }
@@ -806,6 +833,9 @@ void CRenderer::Combine_Blur()
 	COMPUTE_TIMEDELTA("Timer_Combine_Blur");
 	EVENTSCOPE_("Combine_Blur");
 
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		return;
+	}
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Y"), m_pBlurShader, "g_BlurYTexture"))) {
 		return;
 	}
@@ -829,6 +859,9 @@ void CRenderer::Combine_Blur()
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
 
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	COMPUTE_TIMEDELTA("Timer_Combine_Blur");
 }
 
@@ -967,6 +1000,9 @@ void CRenderer::Render_Blend()
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
 
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		return;
+	}
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BLEND)])
 	{
 		if (nullptr != pRenderObject) {
@@ -978,6 +1014,9 @@ void CRenderer::Render_Blend()
 		SAFE_RELEASE(pRenderObject);
 	}
 
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].clear();
 	COMPUTE_TIMEDELTA("Timer_Render_Blend");
 }
@@ -991,9 +1030,9 @@ void CRenderer::Render_Blur_Mesh()
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
 
-	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(L"MRT_Blur_Mesh", nullptr, false)))
-		return;
-
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_Blur_Mesh")))) {
+		assert(false); return;
+	}
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BULR_MESH)])
 	{
 		if (nullptr != pRenderObject) {
@@ -1020,12 +1059,9 @@ void CRenderer::Render_PostProcessing()
 	EVENTSCOPE_("Render_PostProcessing");
 
 	{
-		ID3D11Texture2D* pBackBuffer = { nullptr };
-		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
-		if (FAILED(m_pGameInstance->Copy_RenderTargetFrom(TEXT("Target_AfterBlend"), pBackBuffer))) {
-			assert(false);
+		if (FAILED(m_pGameInstance->Copy_RenderTargetAToB(TEXT("Target_LDRBackBuffer"), TEXT("Target_AfterBlend")))) {
+			return;
 		}
-		SAFE_RELEASE(pBackBuffer);
 		if (FAILED(m_pShader->Bind_RawValue("g_iMBTileSize", &m_iMBTileSize, sizeof(_int)))) {
 			assert(false);  return;
 		}
@@ -1034,7 +1070,12 @@ void CRenderer::Render_PostProcessing()
 		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_VelocityTile"), TEXT("Target_VelocityTent"), SHADER_PASS_DEFERRED::MOTIONBLURTENT);
 	}
 	/* MotionBlur */
-	if (false == m_bMB) {
+	if (true == m_bMB) {
+		if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+			assert(false); return;
+		}
+	}
+	else {
 		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_MotionBlur")))) {
 			assert(false); return;
 		}
@@ -1052,7 +1093,7 @@ void CRenderer::Render_PostProcessing()
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			assert(false); return;
 		}
-		if (FAILED(m_pShader->Bind_RawValue("g_fMBBlurRadius", &m_fMBBlurRadius, sizeof(_float)))) {
+		if (FAILED(m_pShader->Bind_RawValue("g_fMBMaxBlurRadius", &m_fMBMaxBlurRadius, sizeof(_float)))) {
 			assert(false); return;
 		}
 		if (FAILED(m_pShader->Bind_RawValue("g_fMBSampleBias", &m_fMBSampleBias, sizeof(_float)))) {
@@ -1095,10 +1136,8 @@ void CRenderer::Render_PostProcessing()
 	
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
-	if (false == m_bMB) {
-		if (FAILED(m_pGameInstance->End_MRT())) {
-			return;
-		}
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
 	}
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Bloom")))) {
 		return;
@@ -1158,8 +1197,15 @@ void CRenderer::Render_PostProcessing()
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2"), TEXT("Target_Bloom_2x2_2"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 8
 
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2_2"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::UPSAMPLE);
-	m_pGameInstance->Finish_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::BLOOM_FINISH); // 9
 
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		assert(false); return;
+	}
+	m_pGameInstance->Finish_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::BLOOM_FINISH); // 9
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	COMPUTE_TIMEDELTA("Timer_Render_PostProcessing");
 }
 
@@ -1196,14 +1242,12 @@ void CRenderer::Render_DistortionAcc()
 	EVENTSCOPE_("Render_DistortionAcc");
 	// Bind_Resorces
 
-	ID3D11Texture2D* pBackBufferTexture2D = { nullptr };
-
-	m_pGameInstance->Get_BackBufferPTR(&pBackBufferTexture2D);
-
-	if (FAILED(m_pGameInstance->Copy_RenderTargetFrom(TEXT("Target_PreEffect"), pBackBufferTexture2D))) {
+	if (FAILED(m_pGameInstance->Copy_RenderTargetAToB(TEXT("Target_LDRBackBuffer"), TEXT("Target_PreEffect")))) {
 		return;
 	}
-
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_LDRBackbuffer")))) {
+		assert(false); return;
+	}
 	m_pDistortionShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);
 	m_pDistortionShader->Bind_Matrix("g_ViewMatrix", &m_ScreenViewMatrix);
 	m_pDistortionShader->Bind_Matrix("g_ProjMatrix", &m_ScreenProjMatrix);
@@ -1221,8 +1265,9 @@ void CRenderer::Render_DistortionAcc()
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
 
-	SAFE_RELEASE(pBackBufferTexture2D);
-
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 	COMPUTE_TIMEDELTA("Timer_Render_DistortionAcc");
 }
 
@@ -1281,11 +1326,8 @@ void CRenderer::Render_Tone_Mapping()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Tone_Mapping");
 	EVENTSCOPE_("Render_Tone_Mapping");
-	{ // BackBuffer 
-		ID3D11Texture2D* pBackBuffer = nullptr;
-		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
-		m_pGameInstance->Copy_RenderTargetFrom(TEXT("Target_ToneMapping"), pBackBuffer);
-		SAFE_RELEASE(pBackBuffer);
+	if (FAILED(m_pGameInstance->Copy_RenderTargetAToB(TEXT("Target_LDRBackBuffer"), TEXT("Target_ToneMapping")))) {
+		return;
 	}
 
 	m_pShader->Bind_Matrix("g_WorldMatrix", &m_ScreenWorldMatrix);

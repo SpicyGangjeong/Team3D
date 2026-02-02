@@ -24,6 +24,10 @@ HRESULT CRenderTarget_Manager::Add_RenderTarget(const _wstring& strRenderTargetK
     }
 
     m_RenderTargets.emplace(strRenderTargetKey, pRenderTarget);
+#ifdef _DEBUG
+    _string strName = CMyTools::ToString(strRenderTargetKey);
+    pRenderTarget->Set_Name(strName.c_str(), (_uint)strName.length());
+#endif // _DEBUG
 
 
     return S_OK;

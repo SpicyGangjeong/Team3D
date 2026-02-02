@@ -115,7 +115,7 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, _uint iWinCX, _uint iWinCY)
 	SwapChain.BufferDesc.Width = iWinCX;
 	SwapChain.BufferDesc.Height = iWinCY;
 
-	SwapChain.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	SwapChain.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	SwapChain.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	SwapChain.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
@@ -153,8 +153,11 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 	if (FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture)))
 		return E_FAIL;
 
-	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
-		return E_FAIL;
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+	m_pDevice->CreateRenderTargetView(pBackBufferTexture, &rtvDesc, &m_pBackBufferRTV);
 
 	SAFE_RELEASE(pBackBufferTexture);
 
