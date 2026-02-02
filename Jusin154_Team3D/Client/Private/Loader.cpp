@@ -2657,7 +2657,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 				DESC_Ranrok_Body.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 				DESC_Ranrok_Body.vMatInfo = { 0.5f, 0.5f, 0.6f };
 				DESC_Ranrok_Body.fContactOffset = { 0.05f };
-				DESC_Ranrok_Body.vhalfGeometryInfo = { 2.1f, 2.1f, 2.1f };
+				DESC_Ranrok_Body.vhalfGeometryInfo = { 2.5f, 2.5f, 2.5f };
 				DESC_Ranrok_Body.fDensity = 1.f;
 				DESC_Ranrok_Body.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 				DESC_Ranrok_Body.eLockFlag = {};

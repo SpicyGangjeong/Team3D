@@ -609,6 +609,7 @@ enum class SD_KIND {
 		GOBLIN_MAGE_HIT,
 		GOBLIN_DOWN_ATTCK_0,
 		GOBLIN_DOWN_ATTCK_1,
+		GOBLIN_LAND,
 #pragma endregion
 
 #pragma region GOBLIN_VOICE
