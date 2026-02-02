@@ -6,6 +6,7 @@
 #include "ComputeShader.h"
 #include "Bone.h"
 #include "GameObject.h"
+#include "Camera.h"
 
 CInstance_Model::CInstance_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CComponent{ pDevice  , pContext }
@@ -582,12 +583,13 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isLocal_Located_Not_TakeDelay = m_InstanceDesc.isLocal_Located_Not_TakeDelay;
 		pDesc->isCompute_LocalInverse = m_InstanceDesc.isCompute_LocalInverse;
 		pDesc->isRoundLengthLerp = m_InstanceDesc.isRoundLengthLerp;
-
+		pDesc->isInstanceBillboard = m_InstanceDesc.isInstanceBillboard;
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
 		pDesc->fMoveLerpOption = m_InstanceDesc.fMoveLerpOption;
 
 		pDesc->fFar = *m_pGameInstance->Get_CurrentCameraFar();
 		pDesc->vScreenSize = m_pGameInstance->Get_ViewPortSize();
+		pDesc->vCamposition = *m_pGameInstance->Get_CamPosition();
 
 		memcpy(&pDesc->WorldMatrix, m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr(), sizeof(_float4x4));
 		memcpy(&pDesc->ViewMatrix, m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW), sizeof(_float4x4));
@@ -904,6 +906,11 @@ void CInstance_Model::Describe_Entity()
 		}
 
 		if (GUI::Checkbox("NoPos", &m_InstanceDesc.isNoPos))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (GUI::Checkbox("Instance Billboard", &m_InstanceDesc.isInstanceBillboard))
 		{
 			Instane_Buffer_ReStruct();
 		}

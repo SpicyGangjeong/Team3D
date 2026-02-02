@@ -136,6 +136,8 @@ HRESULT CBombardSide::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BOMBARDA_SIDE_0, SD_CHANNEL_GROUP::EFFECT, false, 0.5f);
+
 	return S_OK;
 }
 

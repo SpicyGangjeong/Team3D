@@ -131,6 +131,8 @@ HRESULT CTransformationSide::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::TRANSFORMATION_SIDE0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	return S_OK;
 }
 

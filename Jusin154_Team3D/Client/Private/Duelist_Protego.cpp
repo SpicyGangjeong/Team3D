@@ -232,7 +232,23 @@ void CDuelist_Protego::OnCollision(CGameObject* pOther, void* pDesc)
 		}
 			break;
 		default:
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_12, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			_uint iRandomIndex = m_pGameInstance->Real_Random_Int(0, 3);
+
+			switch (iRandomIndex)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROTEGO_HIT_0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROTEGO_HIT_1, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROTEGO_HIT_2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			case 3:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROTEGO_HIT_2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+				break;
+			}
 			break;
 		}
 	}

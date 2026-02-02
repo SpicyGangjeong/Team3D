@@ -196,7 +196,7 @@ void CGoblin_Mage::Behavior_SpellEnter()
 	Add_Event(pairAnimInfo.first, [this]() {
 
 		m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_MAGE_SIDE, this);
-
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_DOWN_ATTCK_1, SD_CHANNEL_GROUP::ENEMY, false, 0.6f);
 		}, 0.1f);
 
 	Add_Event(pairAnimInfo.first,
@@ -226,7 +226,11 @@ HRESULT CGoblin_Mage::Behavior_SpellExitCheck(_float fTimeDelta)
 
 			Add_Event(pairAnimInfo.first,
 				[this]() {
-					m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_25, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_25, SD_CHANNEL_GROUP::ENEMY, false, 0.3f); 
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_DOWN_ATTCK_0, SD_CHANNEL_GROUP::ENEMY, false, 0.6f);
+				},
+
+					
 					0.1f);
 		}
 		return S_OK;
