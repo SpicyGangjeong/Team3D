@@ -244,7 +244,8 @@ HRESULT CCutSceneInfo::Ready_Events()
 	m_CutScene_EndEvents.emplace("CarriageIntro",
 		[this]() {
 			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.9f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, true, 0.3f);
 			m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_UI)->Get_Object<CInteraction_Key>()->Set_Active(true);
 		});
 #pragma endregion

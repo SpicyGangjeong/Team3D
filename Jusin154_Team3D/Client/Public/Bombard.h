@@ -42,6 +42,9 @@ private:
 	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
 	_float							  m_fLinearSpeed = 2.f;
 	_float3							  m_vCameraLook = {};
+
+	_float							  m_fAccSoundDelay = {};
+	_bool							  m_isSoundDelay = { false };
 public:
 	static CBombard* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

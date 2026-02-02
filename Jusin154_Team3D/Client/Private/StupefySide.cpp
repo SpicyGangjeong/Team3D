@@ -151,6 +151,8 @@ HRESULT CStupefySide::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_pWandTrail->SetDissolve(false);
 
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::STUPEFY_SIDE_0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 	return S_OK;
 }
 

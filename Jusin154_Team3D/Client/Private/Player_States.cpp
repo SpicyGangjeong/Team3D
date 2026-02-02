@@ -935,7 +935,7 @@ void CPlayer::Behavior_BlinkEnter()
 
 	Add_Sound_Event(m_Animation[STATEANIM::DODGE].first,
 		[this]() {
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BLINK_2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BLINK_2, SD_CHANNEL_GROUP::EFFECT, false, 1.f);
 		},
 		0.01f);
 
@@ -1133,9 +1133,34 @@ void CPlayer::Behavior_CombatEnter()
 
 			Add_Event(pairAnimInfo.first,
 				[this]() {
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::THROW_3, SD_CHANNEL_GROUP::EFFECT, false, 0.5f);
+				},
+				0.2f);
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {
 					m_pGameInstance->SlowMotion(0.1f, 0.35f);
 				},
 				0.1f);
+
+			_uint iRandomIndex = m_pGameInstance->Real_Random_Int(0, 3);
+
+			switch (iRandomIndex)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::THROW_0, SD_CHANNEL_GROUP::EFFECT, false, 0.5f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::THROW_1, SD_CHANNEL_GROUP::EFFECT, false, 0.5f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::THROW_2, SD_CHANNEL_GROUP::EFFECT, false, 0.5f);
+				break;
+			case 3:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::THROW_2, SD_CHANNEL_GROUP::EFFECT, false, 0.5f);
+				break;
+			}
+	
 		}
 	}
 }
@@ -1175,6 +1200,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			else {
 				return S_OK;
 			}
+
 			Add_Event(pairAnimInfo.first,
 				[this]() { m_bLookAt = true; },
 				0.1f);
@@ -1189,6 +1215,8 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 					m_pGameInstance->SlowMotion(0.1f, 0.35f);
 				},
 				0.1f);
+
+	
 		}
 	}
 
@@ -1290,8 +1318,17 @@ void CPlayer::Behavior_LightAttackEnter()
 		fRatio);
 
 	Add_Event(pairAnimInfo.first,
-		[this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  },
+		[this]() {  
+			m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());
+
+		},
 		0.0f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::JAP_SIDE_0, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
+		},
+		0.05f);
 }
 
 HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
@@ -1338,13 +1375,58 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 
 				Add_Event(iNext,
 					[this]() {
-						_uint comboIndex = m_pModelCom->Get_AnimIndex() - m_Animation[STATEANIM::LIGHT_ATTACK].first;
-						m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &comboIndex);
+						_uint iComboIndex = m_pModelCom->Get_AnimIndex() - m_Animation[STATEANIM::LIGHT_ATTACK].first;
+						m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iComboIndex);
 					},
 					fAttackRatio);
 
+				_uint iComboIndex = m_pModelCom->Get_AnimIndex() - m_Animation[STATEANIM::LIGHT_ATTACK].first;
+				_float fTime = 0.f;
+
+				switch (iComboIndex)
+				{
+				case 0:
+					fTime = 0.1f;
+					break;
+				case 1:
+					fTime = 0.f;
+					break;
+				case 2:
+					fTime = 0.f;
+					break;
+				case 3:
+					fTime = 0.1f;
+					break;
+				}
+
 				Add_Event(iNext,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE,Get_PartObject<CWand>());
+					[this]() {
+						_uint iComboIndex = m_pModelCom->Get_AnimIndex() - m_Animation[STATEANIM::LIGHT_ATTACK].first;
+
+						switch (iComboIndex)
+						{
+						case 0:
+							m_pGameInstance->Sound_Play(SOUND::SD_KIND::JAP_SIDE_0, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
+							break;
+						case 1:
+							m_pGameInstance->Sound_Play(SOUND::SD_KIND::JAP_SIDE_1, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
+							break;
+						case 2:
+							m_pGameInstance->Sound_Play(SOUND::SD_KIND::JAP_SIDE_2, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
+							break;
+						case 3:
+							m_pGameInstance->Sound_Play(SOUND::SD_KIND::JAP_SIDE_3, SD_CHANNEL_GROUP::EFFECT, false, 0.6f);
+							break;
+						}
+
+						m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());
+					},
+					fTime);
+
+				Add_Event(iNext,
+					[this]() {
+				
+						m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE,Get_PartObject<CWand>());
 					},
 					0.0f);
 			}
@@ -1679,6 +1761,7 @@ void CPlayer::Behavior_AncientSpellEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::LIGHTNING_SIDE, Get_PartObject<CWand>());
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::LIGHTNINH_SIDE_0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
 		},
 		0.18f);
 
@@ -1729,9 +1812,10 @@ void CPlayer::Behavior_ShieldEnter()
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
 		0.1f);
 
-	//Add_Sound_Event(pairAnimInfo.first,
-	//	[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_PROTEGO, SD_CHANNEL_GROUP::VOICE, false, 0.7f); },
-	//	0.01f);
+	/* 왜 빠져있는거임? */
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_PROTEGO, SD_CHANNEL_GROUP::VOICE, false, 0.7f); },
+		0.01f);
 
 	Add_Sound_Event(pairAnimInfo.first,
 		[this]() {
@@ -1995,11 +2079,14 @@ void CPlayer::Behavior_ParryEnter()
 		fEventRatio);
 
 	Add_Sound_Event(pairAnimInfo.first,
-		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); },
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.8f); },
 		0.01f);
 
 	Add_Sound_Event(pairAnimInfo.first,
 		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_24, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
+
+	Add_Sound_Event(pairAnimInfo.first,
+		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::STUPEFY_HIT_0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 
 	m_bShield = false;
 	

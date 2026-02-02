@@ -97,6 +97,8 @@ public:
 		_float3     vWolrdOffsetMax = {};
 		_float3     vWolrdOffsetMin = {};
 
+		_bool		isInstanceBillboard = {};
+
 	}INSTANCE_DESC;
 
 	typedef struct tagPreInstanceDesc
@@ -230,8 +232,10 @@ public:
 		_float4x4  ProjMatrix = {};
 
 		_float2 vScreenSize;
-		_float  fPadding0;
+		_int    isInstanceBillboard;
 		_float  fPadding1;
+
+		_float4 vCamposition;
 
 	}CS_PARTICLE_DESC;
 

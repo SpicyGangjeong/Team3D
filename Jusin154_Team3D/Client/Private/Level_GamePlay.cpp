@@ -125,7 +125,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	_bool bLoadNPC = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bLoadNPC = true;
+	bLoadNPC = false;
 #endif
 #endif // _DEBUG
 	if (true == bLoadNPC) {
@@ -152,7 +152,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
 
-
+	m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
 	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_0, SD_CHANNEL_GROUP::BGM, true, 0.6f);
 
 	return S_OK;
@@ -169,7 +169,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	_bool bStartCinematic = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bStartCinematic = true;
+	bStartCinematic = false;
 #elif 진우
 	bStartCinematic = true;
 #elif Bin
@@ -363,9 +363,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -1157,8 +1157,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Npc()
 	isLoad_NPC = false;
 #endif // 
 #ifdef 기무리
-	isLoad_NPC = true;
-	isLoad_RandomNPC = true;
+	isLoad_NPC = false;
+	isLoad_RandomNPC = false;
 #endif // 
 #ifdef 나
 	isLoad_RandomNPC = true;
@@ -1243,7 +1243,7 @@ void CLevel_GamePlay::ResetLevel_Environment()
 
 	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(0.581f, 0.239f, -0.183f, 0.757f));
 	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.700), _float2(0.019f, 0.161f),
+	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.5f), _float2(0.019f, 0.161f),
 									_float2(2.300f, 10.000f), _float4(0.0047f, 0.0018f, 0.0018f, 0.0018f),
 									_float4(2.f, 1.f, 1.f, 1.f), _float3(-10.f, -10.f, -50.f), _float3(10.f, 10.f, 50.f));
 	m_pLight->Capture_PreShadow();

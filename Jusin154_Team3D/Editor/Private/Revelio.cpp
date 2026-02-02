@@ -150,6 +150,8 @@ HRESULT CRevelio::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	}
 
+
+
 	return S_OK;
 }
 
