@@ -7,6 +7,8 @@ NS_BEGIN(SOUND)
 
 enum class SD_KIND {
 #pragma region BGM
+	BGM_Loading,
+	BGM_GamePlay,
 	BGM_Battle_0,
 	BGM_Battle_1,
 	BGM_Land_DAY,
@@ -605,6 +607,8 @@ enum class SD_KIND {
 		GOBLIN_149,
 		GOBLIN_150,
 		GOBLIN_MAGE_HIT,
+		GOBLIN_DOWN_ATTCK_0,
+		GOBLIN_DOWN_ATTCK_1,
 #pragma endregion
 
 #pragma region GOBLIN_VOICE
@@ -1140,6 +1144,34 @@ RANROK_FOOTSTEP_21,
 	ROCK_COLLIDE10,
 	ROCK_COLLIDE11,
 #pragma endregion
+
+#pragma region THROW
+	THROW_0,
+	THROW_1,
+	THROW_2,
+	THROW_3,
+#pragma endregion
+
+#pragma region LIGHTNING_SIDE
+	LIGHTNINH_SIDE_0,
+#pragma endregion
+	JAP_SIDE_0,
+	JAP_SIDE_1,
+	JAP_SIDE_2,
+	JAP_SIDE_3,
+	BOMBARDA_SIDE_0,
+	PROTEGO_HIT_0,
+	PROTEGO_HIT_1,
+	PROTEGO_HIT_2,
+	STUPEFY_HIT_0,
+	STUPEFY_SIDE_0,
+
+	TRANSFORMATION_HIT0,
+	TRANSFORMATION_HIT1,
+	TRANSFORMATION_HIT2,
+	TRANSFORMATION_SIDE0,
+	TRANSFORMATION_0,
+	TRANSFORMATION_1,
 	END,
 };
 

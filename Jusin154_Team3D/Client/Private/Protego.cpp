@@ -196,7 +196,23 @@ void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 
 	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);
 
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_PROTEGO_12, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+	_uint iRandomIndex = m_pGameInstance->Real_Random_Int(0, 3);
+
+	switch (iRandomIndex)
+	{
+	case 0:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROTEGO_HIT_0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 1:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROTEGO_HIT_1, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 2:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROTEGO_HIT_2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	case 3:
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::PROTEGO_HIT_2, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		break;
+	}
 
 	m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>()
 		->Use_Skill(SKILL_TYPE::PROTEGO_HIT, m_pOwner, &CollisionDesc->vWorldPos);

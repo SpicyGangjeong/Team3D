@@ -33,6 +33,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	m_bNextLevel = false;
 	m_fTimeDelta = 1.2f;
 
+
+
 	return S_OK;
 }
 

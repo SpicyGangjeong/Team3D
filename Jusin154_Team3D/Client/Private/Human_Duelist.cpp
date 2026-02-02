@@ -108,7 +108,9 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 
 			pPlayer->ExitBattle();
 			
-			
+			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, true, 0.3f);
+
 			m_bBattleEnd = false;
 		}
 	}

@@ -171,7 +171,7 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					m_pRaceRings[m_pRaceRings.size() - 1]->Set_Target(false);
 
 					m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-					m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_0, SD_CHANNEL_GROUP::BGM, true, 0.8f);
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, true, 0.2f);
 				}
 			}
 		}

@@ -7,6 +7,8 @@ using namespace Engine::SOUND;
 
 const _tchar* const SD_PATH::SD_KIND_PATHS[SD_KIND_COUNT] = {
 #pragma region BGM
+	TEXT("BGM/LoadingBGM.wav"),
+	TEXT("BGM/GamePlayBGM.wav"),
 	TEXT("BGM/battle_BGM_0.wav"), 
 	TEXT("BGM/battle_BGM_1.wav"), 
 	TEXT("BGM/grassland_day.wav"), 
@@ -604,7 +606,8 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("Goblin/goblin_149.wav"),
 	TEXT("Goblin/goblin_150.wav"),
 	TEXT("Goblin/Goblin_Mage_Hit.wav"),
-	
+	TEXT("Goblin/GoblinDownAttack.wav"),
+	TEXT("Goblin/GoblinDownAttack2.wav"),
 #pragma endregion
 
 #pragma region GOBLIN_VOICE
@@ -1134,6 +1137,34 @@ TEXT("Broom/broom_up_8.wav"),
 		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE10.wav"),
 		TEXT("Player/potions_ederus_akb/ROCK_COLLIDE11.wav"),
 #pragma endregion
+
+#pragma region THROW
+		TEXT("Spell/Throw0.wav"),
+		TEXT("Spell/Throw1.wav"),
+		TEXT("Spell/Throw2.wav"),
+		TEXT("Spell/Throw3.wav"),
+#pragma endregion
+
+#pragma region LIGHTNING_SIDE
+		TEXT("Spell/LightningSide.wav"),
+#pragma endregion
+		TEXT("Spell/JapSide0.wav"),
+		TEXT("Spell/JapSide1.wav"),
+		TEXT("Spell/JapSide2.wav"),
+		TEXT("Spell/JapSide3.wav"),
+		TEXT("Spell/BombardSide.wav"),
+		TEXT("Spell/ProtegoHit0.wav"),
+		TEXT("Spell/ProtegoHit1.wav"),
+		TEXT("Spell/ProtegoHit2.wav"),
+		TEXT("Spell/Stupefy.wav"),
+		TEXT("Spell/StupefySide.wav"),
+
+		TEXT("Spell/TransformationHit0.wav"),
+		TEXT("Spell/TransformationHit1.wav"),
+		TEXT("Spell/TransformationHit2.wav"),
+		TEXT("Spell/TransformationSide.wav"),
+		TEXT("Spell/Transformation0.wav"),
+		TEXT("Spell/Transformation1.wav"),
 };
 
 static_assert(SD_KIND_COUNT == _countof(SD_PATH::SD_KIND_PATHS),
