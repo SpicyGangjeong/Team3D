@@ -140,7 +140,6 @@ _int CUnit::Get_NextID()
 
 void CUnit::Set_TextID(_int ID)
 {
-    m_iCurrentFlow = ID;
 }
 
 void CUnit::Set_NextID(_int ID)

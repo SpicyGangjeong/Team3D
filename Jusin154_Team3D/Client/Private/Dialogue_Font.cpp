@@ -289,7 +289,6 @@ void CDialogue_Font::NpcDialogue()
 	m_iType = Info.iType;
 	m_iNextID = Info.NextTextID;
 	m_iTextID = Info.iLineID;
-	m_pNpc->Set_TextID(m_iNextID);
 	m_pNpc->Set_NextID(m_iNextID);
 	Npc_Dialogue(m_Info);
 }
@@ -387,7 +386,6 @@ void CDialogue_Font::ENDText()
 	Interact.fAlpha = 1.f;
 	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact.bInteract);
 	m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
-	m_pNpc->Set_TextID(m_iNextID);
 	m_pNpc->Set_NextID(m_iNextID);
 	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &bInteract);
 	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
@@ -411,7 +409,6 @@ void CDialogue_Font::ReSet()
 	Interact.fAlpha = 0.f;
 	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
 	m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
-	m_pNpc->Set_TextID(m_iNextID);
 	m_pNpc->Set_NextID(m_iNextID);
 	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &Interact);
 	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
@@ -438,7 +435,6 @@ void CDialogue_Font::MapMove()
 	Interact.fAlpha = 1.f;
 	m_pInfoInstance->Event_CallBack(TEXT("NpcInteract"), &Interact);
 	m_pNpc->Set_Flow(m_pNpc->Get_Flow() + 1, Interact.fAlpha);
-	m_pNpc->Set_TextID(m_iNextID);
 	m_pNpc->Set_NextID(m_iNextID);
 	m_pInfoInstance->Event_CallBack(TEXT("NpcInteraction"), &Interact);
 	m_pInfoInstance->Event_CallBack(TEXT("CHOICERESET"));
