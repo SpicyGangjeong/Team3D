@@ -125,7 +125,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Player_CanvasChange"), [this](void* p) {this->Get_UIState(*reinterpret_cast<UI_STATE*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("NpcInteraction"), [this](void* p) {this->Set_Interaction(*reinterpret_cast<_bool*>(p)); });
-	m_pInfoInstance->Add_Event(TEXT("SpellLearningSuccess"), [this](void* p) {this->Set_Spell_Learning_Success(); });
+	m_pInfoInstance->Add_Event(TEXT("ReSetNPC"), [this](void* p) {this->ReSetNPC(); });
 
 	m_bAI = false;
 
@@ -393,6 +393,7 @@ HRESULT CPlayer::Update_RaycastElements()
 				XMStoreFloat4(&Pos, static_cast<CUnit*>(pFoundNPC)->Get_WorldPostion());
 				Info.fNPCPosition = Pos;
 				Info.iTextID = static_cast<CUnit*>(pFoundNPC)->Get_TextID();
+				Info.iNextID = static_cast<CUnit*>(pFoundNPC)->Get_NextID();
 				m_bNpcInteraction = true;
 				m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOn"), &Info);
 			}
@@ -415,10 +416,7 @@ HRESULT CPlayer::Update_RaycastElements()
 		{
 			if (m_pCurrentNpcInteraction && !m_bCurrentInteraction)
 			{
-				m_bNpcInteraction = false;
-				m_pCurrentNpcInteraction = nullptr;
-				m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
-				m_pInfoInstance->Event_CallBack(TEXT("BOXInteractionOff"));
+				ReSetNPC();
 			}
 
 		}
@@ -428,10 +426,7 @@ HRESULT CPlayer::Update_RaycastElements()
 	{
 		if (m_pCurrentNpcInteraction && !m_bCurrentInteraction)
 		{
-			m_bNpcInteraction = false;
-			m_pCurrentNpcInteraction = nullptr;
-			m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
-			m_pInfoInstance->Event_CallBack(TEXT("BOXInteractionOff"));
+			ReSetNPC();
 		}
 
 	}
@@ -452,6 +447,14 @@ void CPlayer::ExitBattle()
 void CPlayer::Add_TurboBoost(_float fAmount)
 {
 	m_pBroom->Add_TurboBoost(fAmount);
+}
+
+void CPlayer::ReSetNPC()
+{
+	m_bNpcInteraction = false;
+	m_pCurrentNpcInteraction = nullptr;
+	m_pInfoInstance->Event_CallBack(TEXT("NPCInteractionOff"));
+	m_pInfoInstance->Event_CallBack(TEXT("BOXInteractionOff"));
 }
 
 HRESULT CPlayer::Render_Shadow(SHADOW eType)

@@ -89,14 +89,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(true);
 		static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
 		static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
-		if (m_bRace == false)
-		{
-			static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
-		}
-		else
-		{
-			static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
-		}
+
 		m_pGameInstance->Toggle_MouseCenter(true);
 		break;
 
@@ -268,9 +261,17 @@ void CUI_Manager::Update(_float fTimeDelta)
 
 	if (m_bCurrentNPCInteract == true && m_bNPCInteract == false)
 	{
+		m_fAlphaVelue = 1.f;
 		m_bCurrentNPCInteract = m_bNPCInteract;
+		if (m_bCurrentNPCInteract != m_bNPCInteract)
+			m_bCurrentNPCInteract = m_bNPCInteract;
 
-		if (m_bActive == false)
+		if (m_eType == UI_STATE::NPC_INTERACT)
+		{
+			Canvas_Change(UI_STATE::GAMEPLAYER);
+		}
+
+		/*if (m_bActive == false)
 		{
 			m_bActive = true;
 			m_bAlphaZero = true;
@@ -278,7 +279,7 @@ void CUI_Manager::Update(_float fTimeDelta)
 			{
 				m_eType = UI_STATE::GAMEPLAYER;
 			}
-		}
+		}*/
 	}
 
 	if (m_bActive == true && m_bHover == false)
@@ -340,36 +341,28 @@ void CUI_Manager::Update(_float fTimeDelta)
 		{
 			m_pMouse_Cursor->Set_Visible(false);
 			m_pCamera_LockOn->Set_Visible(false);
-
 			static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 			static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 			static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 			static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
 			static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(false);
-
 			static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(false);
 			static_cast<CGameObject*>(m_pBroom_TargetGate)->Set_Visible(false);
-
-			m_pNPCInteraction->Set_Visible(!m_bRace);
+			static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(false);
 		}
 		else
 		{
 			m_pMouse_Cursor->Set_Visible(false); 
 			m_pCamera_LockOn->Set_Visible(false);
-
 			static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
 			static_cast<CCanvasObject*>(m_pDialogue_Canvas)->Visible(true);
-
 			static_cast<CGameObject*>(m_pInteraction_Key)->Set_Visible(true);
-
 			static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 			static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 			static_cast<CCanvasObject*>(m_pSpellLearn_Canvas)->Visible(false);
-
-			m_pNPCInteraction->Set_Visible(!m_bRace);
+			static_cast<CGameObject*>(m_pNPCInteraction)->Set_Visible(true);
 		}
 	}
-
 	if (m_pGameInstance->Key_Down(DIK_M) && m_pGameInstance->Key_Pressing(DIK_L))
 		Set_Enviroment();
 
@@ -630,11 +623,11 @@ void CUI_Manager::NpcInteract(void* pArg)
 	NPCINTERACT Interact = *reinterpret_cast<NPCINTERACT*>(pArg);
 
 	m_bNPCInteract = Interact.bInteract;
-	m_bHover = Interact.bInteract;
-	m_bActive = Interact.bInteract;
-	m_fAlpha= Interact.fAlpha;
-	m_bAlphaZero = true;
-	m_fAlphaVelue = 1.f;
+	//m_bHover = Interact.bInteract;
+	//m_bActive = Interact.bInteract;
+	//m_fAlpha= Interact.fAlpha;
+	//m_bAlphaZero = true;
+	//m_fAlphaVelue = 1.f;
 }
 
 void CUI_Manager::Chage()
@@ -667,7 +660,7 @@ void CUI_Manager::Set_Race(_bool bRace)
 void CUI_Manager::Set_Battle(_bool bBattle)
 {
 	m_bBattle = bBattle;
-	//FadeIn(1.5f);
+	FadeIn(1.5f);
 }
 
 void CUI_Manager::FadeIn(_float fAlphaVelue)

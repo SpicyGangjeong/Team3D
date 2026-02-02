@@ -1799,7 +1799,8 @@ void CPlayer::Behavior_AncientSpellExit()
 void CPlayer::Behavior_ShieldEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
-
+	DIALOGUEINFO Info;
+	Info.pName = m_pStat->Get_Stat().pUnit_Name;
 	m_pFSM->Enable_State(FSMSTATE::SHIELD);
 
 	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
@@ -1812,10 +1813,12 @@ void CPlayer::Behavior_ShieldEnter()
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
 		0.1f);
 
-	/* 왜 빠져있는거임? */
 	Add_Sound_Event(pairAnimInfo.first,
 		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_PROTEGO, SD_CHANNEL_GROUP::VOICE, false, 0.7f); },
 		0.01f);
+
+	Info.pText = TEXT("프로테고!");
+	m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 
 	Add_Sound_Event(pairAnimInfo.first,
 		[this]() {
@@ -2000,6 +2003,8 @@ void CPlayer::Behavior_BlockExit()
 void CPlayer::Behavior_ParryEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
+	DIALOGUEINFO Info;
+	Info.pName = m_pStat->Get_Stat().pUnit_Name;
 	_int iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	_float fEventRatio = 0.2f;
@@ -2079,9 +2084,13 @@ void CPlayer::Behavior_ParryEnter()
 		fEventRatio);
 
 	Add_Sound_Event(pairAnimInfo.first,
+
+
+
 		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_STUPEFY, SD_CHANNEL_GROUP::EFFECT, false, 0.8f); },
 		0.01f);
-
+		Info.pText = TEXT("스투페파이!");
+		m_pInfoInstance->Event_CallBack(TEXT("Dialogue"), &Info);
 	Add_Sound_Event(pairAnimInfo.first,
 		[this]() {m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_BOMBARD_24, SD_CHANNEL_GROUP::EFFECT, false, 0.7f); }, 0.01f);
 

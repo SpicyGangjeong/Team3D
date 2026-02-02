@@ -201,13 +201,13 @@ void CNPCInteraction::Priority_Update(_float fTimeDelta)
 
 void CNPCInteraction::Update(_float fTimeDelta)
 {
-	if (m_bVisible != true)
+	if (m_bActive != true)
 		return;
 }
 
 void CNPCInteraction::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible != true)
+	if (m_bActive != true)
 		return;
 
 	if (m_bActive == true || m_bBoxActive)

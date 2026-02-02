@@ -1053,6 +1053,8 @@ TEXT("Broom/broom_up_8.wav"),
 
 #pragma region UI
 	TEXT("UI/Logo_Intro.wav"),
+	TEXT("UI/Slot_Hover.wav"),
+	TEXT("UI/Equip_Spell.wav"),
 #pragma endregion
 
 

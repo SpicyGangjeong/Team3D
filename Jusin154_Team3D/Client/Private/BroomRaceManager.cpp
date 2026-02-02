@@ -72,7 +72,6 @@ void CBroomRaceManager::Priority_Update(_float fTimeDelta)
 				m_bRaceEnd = true;
 				_float Alpha = 2.f;
 				m_pInfoInstance->Event_CallBack(TEXT("UIFadeIn"), &Alpha);
-
 				for (auto& racer : m_Racers)
 				{
 					if (racer.pAI)
@@ -163,6 +162,7 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					pTransform->Set_State(STATE::POSITION, XMLoadFloat4(&m_OriginPos));
 					pCharacter->Set_Position(XMLoadFloat4(&m_OriginPos));
 					m_bRaceEnd = false;
+					m_pInfoInstance->Event_CallBack(TEXT("RACEREADY"), &m_bRaceEnd);
 					m_fDelay = 0.f;
 					m_bCurrentRace = false;
 					m_pGameInstance->Sound_Stop(SOUND::SD_KIND::BROOM_BOOST, SD_CHANNEL_GROUP::EFFECT);
@@ -177,7 +177,6 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 		}
 	}
 
-	m_bCurrentRace = true;
 #ifdef _DEBUG
 	//Describe_Entity();
 #endif // _DEBUG
@@ -521,6 +520,7 @@ void CBroomRaceManager::RaceReady()
 	m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
 	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RACE, SD_CHANNEL_GROUP::BGM, true, 0.8f);
 
+	m_bCurrentRace = true;
 }
 
 void CBroomRaceManager::SetTargetRing(CGameObject* pRacer)

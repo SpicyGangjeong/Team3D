@@ -2466,7 +2466,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC Quest_Slot_Desc{};
 
-	Quest_Slot_Desc.iNum = 10;
+	Quest_Slot_Desc.iNum = 6;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Quest_Slot"),
 		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &Quest_Slot_Desc)))) {
