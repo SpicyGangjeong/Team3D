@@ -333,6 +333,7 @@ void CQuest_Slot::Hover()
 		//m_pVIBufferCom->Set_Hover(m_iIndex); 
 		Font_Size();
 		m_iPrevIndex = m_iIndex;
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SLOT_HOVER, SD_CHANNEL_GROUP::EFFECT, false, 1.f);
 	}
 }
 

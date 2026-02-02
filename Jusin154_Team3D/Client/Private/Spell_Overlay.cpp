@@ -122,6 +122,8 @@ void CSpell_Overlay::Spell_Setting(_int SlotIndex, _int SpellIndex)
 	m_bSpellUsed[SlotIndex] = m_pInfoInstance->Get_Spell_Info(SpellIndex).bUse_Skill;
 	m_vUV[SlotIndex] = Compute_UI(SpellIndex);
 	m_iSpellType[SlotIndex] = m_pInfoInstance->Get_Spell_Info(SpellIndex).iSpell_Type;
+	m_pGameInstance->Sound_Play(SOUND::SD_KIND::EQUIP_SPELL, SD_CHANNEL_GROUP::EFFECT, false, 1.f);
+
 }
 
 void CSpell_Overlay::Use_Spell()

@@ -1052,6 +1052,8 @@ RANROK_FOOTSTEP_21,
 
 #pragma region UI
 	LOGO_INTRO,
+	SLOT_HOVER,
+	EQUIP_SPELL,
 #pragma endregion
 
 

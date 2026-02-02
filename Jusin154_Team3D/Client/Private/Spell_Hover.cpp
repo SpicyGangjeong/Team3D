@@ -46,6 +46,7 @@ HRESULT CSpell_Hover::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_iCurrentSpellType = 99;
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
@@ -93,6 +94,15 @@ void CSpell_Hover::Update(_float fTimeDelta)
 	if (m_bClick == false)
 	{
 		m_pVIBufferCom->Set_Hover_Index(m_iSpellType);
+	}
+
+	if (m_iSpellType >= 0)
+	{
+		if (m_iCurrentSpellType != m_iSpellType)
+		{
+			m_iCurrentSpellType = m_iSpellType;
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SLOT_HOVER, SD_CHANNEL_GROUP::EFFECT, false, 1.f);
+		}
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
