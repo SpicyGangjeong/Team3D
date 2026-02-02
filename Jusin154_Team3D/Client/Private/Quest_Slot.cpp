@@ -327,13 +327,16 @@ void CQuest_Slot::Hover()
 	Mouse.y = _long(fMouse.y);
 
 	m_Info.iQuestIndex = m_iIndex = Mousechack(Mouse);
-	
+
 	if (m_iIndex != m_iPrevIndex)
 	{
 		//m_pVIBufferCom->Set_Hover(m_iIndex); 
 		Font_Size();
 		m_iPrevIndex = m_iIndex;
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SLOT_HOVER, SD_CHANNEL_GROUP::EFFECT, false, 1.f);
+		if (m_iIndex != -1)
+		{
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::SLOT_HOVER, SD_CHANNEL_GROUP::EFFECT, false, 1.f);
+		}
 	}
 }
 
