@@ -645,9 +645,11 @@ void CRanrok::Behavior_SwipeEnter()
 		if (m_fCross > 0.f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_L];
+			m_bSiwpeDir = 0;
 		}
 		else {
 			pairAnimInfo = m_Animation[STATEANIM::GROUND_SWIPE_R];
+			m_bSiwpeDir = 1;
 		}
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.8f);
 
@@ -800,7 +802,7 @@ HRESULT CRanrok::Behavior_RushExitCheck(_float fTimeDelta)
 		vLook = XMVector3Normalize(vLook);
 		_vector vPos = m_pCharacter_Controller->Get_Position();
 		_vector vNextPos = vPos + vLook * 10.f * fTimeDelta;
-		m_pCharacter_Controller->Set_Position(vNextPos);
+		m_pTransformCom->AccumulateMomentum(vLook * 10.f * fTimeDelta);
 		return S_OK;
 	}
 
@@ -1356,9 +1358,10 @@ void CRanrok::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_SwipeExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_SwipeExit(); };
 		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
+		Desc.funcLateUpdate = [this](_float fTimeDelta, _bool& bHit) {  Swipe_Hit(bHit); };
 		m_States.emplace(FSMSTATE::SWIPE, CState_Swipe::Create(&Desc));
 	}
+
 
 
 	{

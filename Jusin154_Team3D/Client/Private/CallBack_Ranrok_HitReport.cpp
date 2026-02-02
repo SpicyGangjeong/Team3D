@@ -137,7 +137,7 @@ void CCallBack_Ranrok_HitReport::onControllerHit(const PSX::PxControllersHit& hi
 				if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
 					if (false == *m_pCollisionPlayer) {
 						*m_pCollisionPlayer = true;
-						pTargetActorData->pCharacter->Get_Owner()->OnCollision(pOwner);
+						pTargetActorData->pCharacter->Get_Owner()->OnCollision(pOwner, &CollisionDesc);
 					}
 				}
 			}

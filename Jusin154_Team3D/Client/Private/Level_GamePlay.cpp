@@ -173,7 +173,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 #elif 진우
 	bStartCinematic = true;
 #elif Bin
-	bStartCinematic = true;
+	bStartCinematic = false;
 #elif gimch
 	bStartCinematic = true;
 #elif 나

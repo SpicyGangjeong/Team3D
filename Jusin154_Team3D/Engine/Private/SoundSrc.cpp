@@ -608,6 +608,7 @@ TEXT("Broom/broom_up_8.wav"),
 	TEXT("Goblin/Goblin_Mage_Hit.wav"),
 	TEXT("Goblin/GoblinDownAttack.wav"),
 	TEXT("Goblin/GoblinDownAttack2.wav"),
+	TEXT("Goblin/goblin_Land.wav"),
 #pragma endregion
 
 #pragma region GOBLIN_VOICE
