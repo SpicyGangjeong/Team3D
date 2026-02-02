@@ -76,6 +76,7 @@ typedef struct tegNPCInteractionInfo
 	_wstring		pName;
 	_float4			fNPCPosition{};
 	_int			iTextID{};
+	_int			iNextID{};
 }NPCINTERACTIONINFO;
 
 typedef struct tegBoxInteractionInfo

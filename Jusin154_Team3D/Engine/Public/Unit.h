@@ -61,6 +61,8 @@ public:
 	virtual _wstring Get_NpcName();
 	virtual _int Get_NpcID();
 	virtual _int Get_TextID();
+	virtual _int Get_NextID();
+	virtual void Set_TextID(_int ID);
 	virtual void Set_NextID(_int ID);
 	virtual void Set_Flow(_int Index, _float fTime);
 	virtual _int Get_Flow();
@@ -99,7 +101,7 @@ protected:
 	_int	m_eHitType = {};
 
 	_int	m_iCurrentFlow = 0;
-
+	_int	m_iCurrentNext = 0;
 private:
 	virtual void Add_FSM() {};
 	virtual void Set_FSM() {};
