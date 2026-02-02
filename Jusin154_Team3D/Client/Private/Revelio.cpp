@@ -51,6 +51,11 @@ HRESULT CRevelio::Initialize(void* pArg)
 
 
 
+	m_Events.emplace(0.4f, [&]() {
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_REVELIO0, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+		m_pGameInstance->Sound_Play(SOUND::SD_KIND::SP_REVELIO1, SD_CHANNEL_GROUP::EFFECT, false, 0.5f);
+		});
+
 	m_fDuration = 3.f;
 
 	return S_OK;
@@ -153,6 +158,7 @@ HRESULT CRevelio::Pre_Setting(CGameObject* pObject, void* pArg)
 	}
 
 	m_pGameInstance->Sound_Play(SOUND::SD_KIND::VOICE_REVELIO, SD_CHANNEL_GROUP::EFFECT, false, 0.7f);
+
 
 	return S_OK;
 }
