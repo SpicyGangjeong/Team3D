@@ -604,9 +604,8 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 		return S_OK;
 	}
 
-	//for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
-	//{
-		auto* Object = root->FirstChildElement("Object");
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
 		CRaceRing::RACERING_DESC Desc = {};
 
 		Desc.pBroomRaceManager = this;
@@ -629,7 +628,7 @@ HRESULT CBroomRaceManager::Load_RaceRing()
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, LAYER_RING, &Desc)))
 			return E_FAIL;
-	//}
+	}
 
 	return S_OK;
 }
