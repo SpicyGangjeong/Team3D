@@ -77,6 +77,9 @@ private:
 	DAMAGE_INFO m_DamageInfo;
 	_bool m_bCollisionPlayer = { false };
 	_float2 m_vCreatePropTime = { 0.f , 30.f };
+	_float4 m_vStartPos = {};
+	_float4 m_vEndPos = {};
+	PSX::PxSweepBufferN<12> m_SweepBuffer = {};
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -92,6 +95,7 @@ private:
 	virtual HRESULT Render_Bloom() override;
 	void MoveTo(_float fTimeDelta);
 	HRESULT Load_RanrokPos(const _char* pFilePath);
+	void Swipe_Hit(_bool& bPlayerHit);
 public:
 	static CRanrok* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
@@ -131,6 +135,7 @@ private:
 	_int   m_iHoverDash = {  };
 	_bool  m_bChangePhase = {};
 	_int m_iHpPhase = { 0 };
+	_int m_bSiwpeDir = {};
 
 
 	_float2 m_vCaptureTimer = { 0.f, 0.05f };

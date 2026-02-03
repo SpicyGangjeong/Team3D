@@ -872,6 +872,11 @@ void CGoblin_Mage::HitState_Behavior(_float fTimeDelta)
 			m_pCharacter_Controller->SetGravity(true);
 			pairAnimInfo = m_Animation[STATEANIM::LAND];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_LAND, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+					0.1f);
+
 			m_eHitState = ENUM_CLASS(HIT_STATE::END);
 		}
 	}

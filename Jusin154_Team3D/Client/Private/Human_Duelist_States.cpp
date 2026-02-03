@@ -439,6 +439,10 @@ void CHuman_Duelist::Hit_Levioso(_float fTimeDelta)
 			m_eHitState = ENUM_CLASS(HIT_STATE::END);
 			pairAnimInfo = m_Animation[STATEANIM::LAND];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_LAND, SD_CHANNEL_GROUP::ENEMY, false, 0.5f); },
+					0.1f);
 			m_fAirTime = 0.f;
 			m_pCharacter_Controller->SetGravity(true);
 		}

@@ -100,6 +100,24 @@ HRESULT CRanrok::Initialize(void* pArg)
 
 void CRanrok::Priority_Update(_float fTimeDelta)
 {
+	_matrix BoneMat = XMMatrixIdentity();
+	if (m_bSiwpeDir == 0)
+	{
+		BoneMat = XMLoadFloat4x4(m_pLeftWingWrist_BoneMat);
+	}
+	else if (m_bSiwpeDir == 1)
+	{
+		BoneMat = XMLoadFloat4x4(m_pRightWingWrist_BoneMat);
+	}
+	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
+
+	_vector vWorldPos = XMVector3TransformCoord(
+		XMVectorZero(),
+		BoneMat * WorldMat
+	);
+
+	XMStoreFloat4(&m_vStartPos, XMVectorSetW(vWorldPos, 1.f));
+
 	if (m_bFireBurst) {
 		m_pInfoInstance->Deregist_ActiveMonster(this);
 	}
@@ -118,12 +136,7 @@ void CRanrok::Update(_float fTimeDelta)
 	}
 	if (m_pGameInstance->Key_Up(DIK_Y))
 	{
-		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_AIR);
-		m_pFSM->Change_State(FSMSTATE::HOVER);
-	}
-	if (m_pGameInstance->Key_Up(DIK_I))
-	{
-		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		m_pFSM->Change_State(FSMSTATE::SWIPE);
 	}
 
 	m_pFSM->Update_State(fTimeDelta);
@@ -605,7 +618,7 @@ HRESULT CRanrok::Ready_Components()
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.12f };
-		Desc.fRadius = 2.f;
+		Desc.fRadius = 2.3f;
 		Desc.fHeight = 2.f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Ranrok_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
@@ -838,16 +851,16 @@ HRESULT CRanrok::Render_Nonblend()
 	}*/
 
 #ifdef _DEBUG
-	//if (true == m_pCharacter_Controller->IsActive()) {
-	//	if (FAILED(m_pCharacter_Controller->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
-	//else if (true == m_pRigidBody->IsActive()) {
-	//	if (FAILED(m_pRigidBody->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
+	if (true == m_pCharacter_Controller->IsActive()) {
+		if (FAILED(m_pCharacter_Controller->Render())) {
+			return E_FAIL;
+		}
+	}
+	else if (true == m_pRigidBody->IsActive()) {
+		if (FAILED(m_pRigidBody->Render())) {
+			return E_FAIL;
+		}
+	}
 #endif
 
 	if (0.f < m_fDeadRatio) {
@@ -1213,6 +1226,92 @@ HRESULT CRanrok::Load_RanrokPos(const _char* pFilePath)
 	}
 
 	return S_OK;
+}
+
+void CRanrok::Swipe_Hit(_bool& bPlayerHit)
+{
+	_matrix BoneMat = XMMatrixIdentity();
+	if (m_bSiwpeDir == 0)
+	{
+		BoneMat = XMLoadFloat4x4(m_pLeftWingWrist_BoneMat);
+	}
+	else if (m_bSiwpeDir == 1)
+	{
+		BoneMat = XMLoadFloat4x4(m_pRightWingWrist_BoneMat);
+	}
+	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
+
+	_vector vWorldPos = XMVector3TransformCoord(
+		XMVectorZero(),
+		BoneMat * WorldMat
+	);
+
+	XMStoreFloat4(&m_vEndPos, XMVectorSetW(vWorldPos, 1.f));
+	_vector vStartPos = XMLoadFloat4(&m_vStartPos) + XMVectorSet(-5.f,0.f,0.f,0.f);
+	_vector vEndPos = XMLoadFloat4(&m_vEndPos) + XMVectorSet(5.f, 0.f, 0.f, 0.f);
+	_vector vDir = vEndPos - vStartPos;
+	_float fLength = XMVectorGetX(XMVector4Length(vDir));
+	vDir = XMVector4Normalize(vDir);
+	m_SweepBuffer = {};
+	_bool bHit = m_pGameInstance->SphereCast(0.5f, vStartPos, vDir, fLength, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBuffer);
+	if (true == bHit) {
+		vector<PSX::PxSweepHit*> Hits;
+		_uint iHitCount = m_SweepBuffer.nbTouches;
+		if (true == m_SweepBuffer.hasBlock) {
+			iHitCount += 1;
+			Hits.reserve(iHitCount);
+			Hits.emplace_back(&m_SweepBuffer.block);
+		}
+		else {
+			Hits.reserve(iHitCount);
+		}
+		for (_uint i = 0; i < m_SweepBuffer.nbTouches; ++i) {
+			Hits.emplace_back(&m_SweepBuffer.touches[i]);
+		}
+
+		for (_uint i = 0; i < Hits.size(); ++i) {
+			PSX::PxSweepHit* pHit = Hits[i];
+			PSX::PxActor* pActor = pHit->actor;
+			if (nullptr != pActor && nullptr != pActor->userData) {
+				const PSX::PxSweepHit& hit = m_SweepBuffer.block;
+				PSX::PxShape* pShape = hit.shape;
+				ON_COLLISION_INFO tagCollInfo = {};
+
+				tagCollInfo.vWorldPos.w = 1.f;
+
+				memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+
+				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+				XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+				tagCollInfo.fLength = fLength;
+
+				PHYSX_USERDATA* pUserData = static_cast<PHYSX_USERDATA*>(pActor->userData);
+				tagCollInfo.pObject = pUserData->pOwner;
+				tagCollInfo.eHitType = ENUM_CLASS(HIT_TYPE::HIT_HEAVY);
+				tagCollInfo.fDamage = 30.f;
+
+				switch (pUserData->eKind)
+				{
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case Engine::PXOBJECT::PLAYER:
+					{
+						if (true == bPlayerHit) {
+							continue;
+						}
+						pUserData->pOwner->OnCollision(this, &tagCollInfo);
+						bPlayerHit = true;
+					}
+					break;
+
+					}
+				}
+				}
+			}
+		}
+	}
 }
 
 
