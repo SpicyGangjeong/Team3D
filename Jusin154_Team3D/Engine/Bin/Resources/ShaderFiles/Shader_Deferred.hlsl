@@ -535,7 +535,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float3 vF0 = float3(0.04f, 0.04f, 0.04f);
     float fMetallic = 0.f;
     float fRoughness = 0.5f;
-    float fOcclusion = 1.f;
+    float fOcclusion = 1.f; 
     float fAttenuation = 1.f;
     
     float3 vFinalLightPosition = g_vLightPos.xyz + g_vLightPosOffset.xyz;

@@ -225,16 +225,16 @@ HRESULT CTroll::Render()
 	}
 
 #ifdef _DEBUG
-	//if (true == m_pCharacter_Controller->IsActive()) {
-	//	if (FAILED(m_pCharacter_Controller->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
-	//else {
-	//	if (FAILED(m_pRigidBody->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
+	if (true == m_pCharacter_Controller->IsActive()) {
+		if (FAILED(m_pCharacter_Controller->Render())) {
+			return E_FAIL;
+		}
+	}
+	else {
+		if (FAILED(m_pRigidBody->Render())) {
+			return E_FAIL;
+		}
+	}
 #endif
 
 	if (0.f < m_fDeadRatio) {
@@ -531,7 +531,7 @@ HRESULT CTroll::Ready_Components()
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.02f };
-		Desc.fRadius = 1.2f;
+		Desc.fRadius = 1.f;
 		Desc.fHeight = 1.5f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Troll_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
