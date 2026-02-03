@@ -561,7 +561,7 @@ HRESULT CRenderTarget_Manager::Bind_RenderTarget(const _wstring& strTargetTag, C
 
     return pRenderTarget->Bind_ShaderResource(pShader, pConstantName);
 }
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 HRESULT CRenderTarget_Manager::Render_RenderTarget_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
@@ -633,7 +633,7 @@ void CRenderTarget_Manager::Toggle_RT_Debugger()
     }
 }
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 CRenderTarget* CRenderTarget_Manager::Find_RenderTarget(const _wstring& strRenderTargetKey)
 {

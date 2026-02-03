@@ -640,7 +640,7 @@ void CRenderer::Free()
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);
 }
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 void CRenderer::Describe_Entitiy()
 {
 	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
@@ -700,9 +700,12 @@ void CRenderer::Describe_Entitiy()
 		}
 		if (GUI::CollapsingHeader("End_Padding")) {
 		}
+#ifdef _DEBUG
 		if (GUI::Button("Refresh_Shader")) {
 			m_pShader->Shader_Refresh();
 		}
+#endif // _DEBUG
+		
 	}
 	GUI::End();
 }

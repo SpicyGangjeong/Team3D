@@ -47,7 +47,7 @@ private:
 	virtual ~CCharacter_Controller() = default;
 
 public:
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	virtual HRESULT Render() override;
 	virtual void Set_Name(const _char* pName);
 #endif
@@ -101,18 +101,19 @@ private:
 	_bool					m_bActive = { true };
 	_bool					m_bGravity = { true };
 	_bool					m_bSlide = { false };
-	_float3					m_vLastClimbNormal = { 0.f, 1.f - FLT_EPSILON, 0.f };;
-#ifdef _DEBUG
+	_float3					m_vLastClimbNormal = { 0.f, 1.f - FLT_EPSILON, 0.f };
+
+#ifdef RELEASE_DEBUGGER
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	virtual HRESULT Debug_Initialize();
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 
 	_bool Check_Overlap();

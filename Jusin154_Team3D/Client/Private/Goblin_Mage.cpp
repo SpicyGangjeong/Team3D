@@ -233,17 +233,17 @@ HRESULT CGoblin_Mage::Render()
 		Render_OutLine();
 	}
 
-#ifdef _DEBUG
-	//if (true == m_pCharacter_Controller->IsActive()) {
-	//	if (FAILED(m_pCharacter_Controller->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
-	//else if (true == m_pRigidBody->IsActive()) {
-	//	if (FAILED(m_pRigidBody->Render())) {
-	//		return E_FAIL;
-	//	}
-	//}
+#ifdef RELEASE_DEBUGGER
+	if (true == m_pCharacter_Controller->IsActive()) {
+		if (FAILED(m_pCharacter_Controller->Render())) {
+			return E_FAIL;
+		}
+	}
+	else if (true == m_pRigidBody->IsActive()) {
+		if (FAILED(m_pRigidBody->Render())) {
+			return E_FAIL;
+		}
+	}
 #endif
 
 

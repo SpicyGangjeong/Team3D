@@ -19,7 +19,7 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
 {
 }
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 HRESULT CRigidBody_Dynamic::Render()
 {
 	return Render(nullptr, CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f));
@@ -31,6 +31,9 @@ HRESULT CRigidBody_Dynamic::Render(function<void()> custumState)
 }
 HRESULT CRigidBody_Dynamic::Render(function<void()> custumState, _fvector vColor)
 {
+	if (m_pGameInstance->IsRenderCollider()) {
+		return S_OK;
+	}
 	if (m_pOwner->isDead())
 		return S_OK;
 	PSX::PxTransform pxTranform = m_pRigidBody->getGlobalPose();
@@ -106,7 +109,7 @@ void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
 	default:
 		break;
 	}
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	if (nullptr != m_pMainShape) {
 		m_pMainShape.reset();
 		m_pMainShape = nullptr;
@@ -116,7 +119,7 @@ void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
 		m_pSubShape = nullptr;
 	}
 	Add_DebugShape();
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 }
 void CRigidBody_Dynamic::Move_LocalPos(_matrix newLocalPos)
 {
@@ -135,9 +138,9 @@ void CRigidBody_Dynamic::Move_LocalPos(_fvector vNewRotQ, _gvector vNewTranslati
 	PSX::PxShape* pShape = { nullptr };
 	m_pRigidBody->getShapes(&pShape, m_pRigidBody->getNbShapes());
 	pShape->setLocalPose(PSX::PxTransform(PSX::PxVec3(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z), PSX::PxQuat(m_vLocalRotQ.x, m_vLocalRotQ.y, m_vLocalRotQ.z, m_vLocalRotQ.w)));
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	Add_DebugShape();
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 }
 _float CRigidBody_Dynamic::Get_Mass()
 {
@@ -382,11 +385,11 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	if (FAILED(Add_DebugShape())) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 	RIGIDBODY_DYNAMIC_DESC* pDesc = static_cast<RIGIDBODY_DYNAMIC_DESC*>(pArg);
 	m_tagData.pOwner = m_pOwner;
 	XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
@@ -428,7 +431,7 @@ _bool CRigidBody_Dynamic::IsKinematic()
 //	}
 //}
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 HRESULT CRigidBody_Dynamic::Add_DebugShape()
 {
 	if(nullptr != m_pMainShape)
@@ -452,7 +455,7 @@ HRESULT CRigidBody_Dynamic::Add_DebugShape()
 	}
 	return S_OK;
 }
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 CRigidBody_Dynamic* CRigidBody_Dynamic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, RIGIDBODY_PROTOTYPE_DYNAMIC_DESC& Desc)
 {
 	CRigidBody_Dynamic* pInstance = new CRigidBody_Dynamic(pDevice, pContext);

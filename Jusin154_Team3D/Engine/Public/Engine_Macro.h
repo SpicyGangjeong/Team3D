@@ -14,6 +14,17 @@
 #define PSX physx
 #endif // !PSX
 
+
+#ifdef _DEBUG
+#define RELEASE_DEBUGGER
+#endif // _DEBUG
+#ifndef _DEBUG
+#define RELEASE_DEBUGGER
+#endif // !_DEBUG
+
+
+
+
 #pragma region ProgrammerInfo
 
 #define ASSERT_NURI(expression)

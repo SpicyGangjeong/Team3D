@@ -47,7 +47,7 @@ HRESULT CRenderTarget::Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixel
     m_vClearColor = vClearColor;
 
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
     Ready_Debug();
 #endif
 
@@ -88,7 +88,7 @@ void CRenderTarget::Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc)
 {
     m_pTexture2D->GetDesc(&Desc);
 }
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CRenderTarget::Ready_Debug()
 {

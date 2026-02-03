@@ -24,7 +24,6 @@
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
-
 CGameInstance::CGameInstance()
 {
 }
@@ -32,6 +31,7 @@ CGameInstance::CGameInstance()
 HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext)
 {
 	g_iStaticLevel = EngineDesc.iStaticLevel;
+	m_bRenderCollider = true;
 	m_pGraphic_Device = CGraphic_Device::Create(EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY, ppDevice, ppContext);
 	if (nullptr == m_pGraphic_Device) {
 		return E_FAIL;
@@ -144,7 +144,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
-	
 	_float fExcuteTimeDelta =  Update_SlowMotion(fTimeDelta);
 
 	m_pKey_Manager->Update();
@@ -980,7 +979,7 @@ ID3D11ShaderResourceView* CGameInstance::Get_RenderTarget_SRV(const _wstring& st
 	return m_pRenderTarget_Manager->Get_RenderTarget_SRV(strRenderTargetKey);
 }
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 void CGameInstance::RenderTarget_Debuger()
 {
 	m_pRenderTarget_Manager->RenderTarget_Debuger();
@@ -990,7 +989,7 @@ HRESULT CGameInstance::Render_RenderTarget_Debug(CShader* pShader, CVIBuffer_Rec
 {
 	return m_pRenderTarget_Manager->Render_RenderTarget_Debug(pShader, pVIBuffer);
 }
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 HRESULT CGameInstance::Clear_Cameras(_uint iLevel)
 {
 	return m_pCamera_Manager->Clear_Cameras(iLevel);

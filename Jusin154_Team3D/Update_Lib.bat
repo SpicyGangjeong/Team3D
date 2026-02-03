@@ -59,5 +59,6 @@ xcopy			/y		.\Engine\ThirdPartyLib\fMod\fmod_vc.lib				.\EngineSDK\Lib\Debug\
 xcopy			/y		.\Engine\ThirdPartyLib\fMod\fmod_vc.lib				.\EngineSDK\Lib\Release\
 
 xcopy			/y		.\Engine\ThirdPartyLib\DirectXTK\DirectXTKd.lib				.\EngineSDK\Lib\Debug\
+xcopy			/y		.\Engine\ThirdPartyLib\DirectXTK\DirectXTK.lib				.\EngineSDK\Lib\Release\
 xcopy			/y		.\Engine\ThirdPartyLib\PhysX\PhysX_debug\*.lib				.\EngineSDK\Lib\Debug\
 xcopy			/y		.\Engine\ThirdPartyLib\PhysX\PhysX_release\*.lib			.\EngineSDK\Lib\Release\

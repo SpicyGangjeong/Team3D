@@ -181,6 +181,12 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 #endif
 #endif // _DEBUG
 
+#ifdef RELEASE_DEBUGGER
+	if (m_pGameInstance->Key_Down(DIK_F5)) {
+		m_pGameInstance->Toggle_RenderCollider();
+	}
+#endif
+
 	if (bStartCinematic && false == m_bIntroCinematic) {
 		m_bIntroCinematic = true;
 		bStartCinematic = false;

@@ -148,11 +148,11 @@ HRESULT CMapElement_Interactable::Render()
 	if (m_bDrawOutLine) {
 		Render_OutLine();
 	}
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 	return S_OK;
 }

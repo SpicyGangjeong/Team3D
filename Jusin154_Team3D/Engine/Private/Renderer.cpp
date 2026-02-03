@@ -36,23 +36,26 @@ void CRenderer::Render()
 	memcpy_s(&m_MotionBlurPreViewMatrix,	sizeof(_float4x4), m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW), sizeof(_float4x4));
 	memcpy_s(&m_MotionBlurPreProjMatrix,	sizeof(_float4x4), m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ), sizeof(_float4x4));
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	static _bool m_bToggleDebug = false;
-	Describe_Entitiy();
-	m_pGameInstance->RenderTarget_Debuger();
-	GUI::Begin("RenderTarget Debuger", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::Checkbox("DebugToggle", &m_bToggleDebug);
-
-	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
-		Render_Debug();
+	static _bool m_bRenderSystem = false;
+	if (m_pGameInstance->Key_Up(DIK_F6)) {
+		m_bRenderSystem = !m_bRenderSystem;
 	}
-	else {
+	if (true == m_bRenderSystem) {
+		Describe_Entitiy();
+		m_pGameInstance->RenderTarget_Debuger();
+		GUI::Begin("RenderTarget Debuger", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+		GUI::Checkbox("DebugToggle", &m_bToggleDebug);
+
 		if (m_bToggleDebug) {
 			Render_Debug();
 		}
+		GUI::End();
 	}
-	GUI::End();
-	
+	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
+		Render_Debug();
+	}
 #endif
 	m_eType = RENDER::END;
 }
@@ -1355,7 +1358,7 @@ void CRenderer::Render_Tone_Mapping()
 	COMPUTE_TIMEDELTA("Timer_Render_Tone_Mapping");
 }
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CRenderer::Render_Debug()
 {

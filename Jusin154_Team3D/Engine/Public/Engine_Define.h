@@ -14,7 +14,6 @@ NS_BEGIN(Engine)
 
 static _uint g_iStaticLevel;
 
-
 NS_END
 
 USING(Engine);

@@ -61,9 +61,9 @@ public:
 	void			Set_OriginPos(_vector vPos) { XMStoreFloat4(&m_OriginPos, vPos); }
 	void			Add_TurboBoost(_float fAmount);
 	void			ReSetNPC();
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	void			Render_CameraCoordinateSystem();
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	LOCKON_INFO m_LockOnInfo = {};
@@ -133,10 +133,10 @@ private:
 	void PlayFootStepSound();
 	void StopFootStepSound();
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	unique_ptr<BasicEffect> m_BasicEffect;
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 
 public:
