@@ -27,7 +27,11 @@ public:
 	_float2 Get_ViewPortSize();
 	void BillBoard(CTransform* pTransform);
 	void SlowMotion(_float fSlowIntense, _float fTime);
-
+#ifdef RELEASE_DEBUGGER
+	_bool IsRenderCollider() { return m_bRenderCollider; }
+	void Set_RenderCollider(_bool bRender) { m_bRenderCollider = bRender; }
+	void Toggle_RenderCollider() { m_bRenderCollider = !m_bRenderCollider; }
+#endif RELEASE_DEBUGGER
 #pragma region GRAPHIC_DEVICE
 public:
 	void Render_Begin(const _float4* pClearColor);
@@ -192,10 +196,10 @@ public:
 	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
 	HRESULT Clear_RenderTarget(const _wstring& strRenderTargetKey);
 	ID3D11ShaderResourceView* Get_RenderTarget_SRV(const _wstring& strRenderTargetKey);
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 #pragma endregion
 #pragma region CAMERA_MANAGER
 	HRESULT Clear_Cameras(_uint iLevel);
@@ -386,6 +390,9 @@ private:
 	map<const _char*, CModel*>			m_ModelMap;
 
 #endif // _DEBUG
+	_bool m_bRenderCollider = false;
+	_bool m_bRenderSystem = false;
+
 	map<const _char*, SaveModel>		m_sModelMap;
 public:
 	void Release_Engine();

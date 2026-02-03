@@ -23,7 +23,7 @@ public:
 	void Copy_ResourceFrom(const CRenderTarget& Target);
 	void Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc);
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 public:
 	_bool Render_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	void Ready_Debug();
@@ -41,7 +41,7 @@ private:
 	ID3D11ShaderResourceView* m_pSRV = { nullptr };
 	_float4		m_vClearColor = {};
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 private:
 	_float4x4		m_WorldMatrix = {};
 	_point			m_ptWindowSize = {};

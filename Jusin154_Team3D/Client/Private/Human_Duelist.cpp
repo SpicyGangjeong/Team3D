@@ -144,9 +144,9 @@ void CHuman_Duelist::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
@@ -208,14 +208,11 @@ HRESULT CHuman_Duelist::Render()
 				Render_OutLine();
 			}
 		}
-#ifdef _DEBUG
-		//m_pCharacter_Controller->Render();
-#endif // _DEBUG
-
 	}
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	if (RENDER::NONLIGHT == eType) {
-		//m_pRigidBody->Render();
+		m_pCharacter_Controller->Render();
+		m_pRigidBody->Render();
 	}
 #endif
 

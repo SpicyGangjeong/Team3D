@@ -36,7 +36,7 @@ private:
 #endif // _DEBUG
 
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 private:
 	list<class CComponent*>				m_DebugComponents;
 #endif
@@ -142,7 +142,7 @@ private:
 	void Render_UI_Overley();
 
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 private:
 	void Render_Debug();
 #endif
@@ -156,9 +156,9 @@ private:
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free();
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	virtual void Describe_Entitiy();
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 };
 

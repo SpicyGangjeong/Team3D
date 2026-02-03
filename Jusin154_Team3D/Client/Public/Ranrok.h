@@ -102,8 +102,11 @@ public:
 	virtual void Free() override;
 #ifdef _DEBUG
 	virtual void Describe_Entity() override;
-	HRESULT Render_Collider();
 #endif // _DEBUG
+#ifdef RELEASE_DEBUGGER
+	HRESULT Render_Collider();
+#endif // RELEASE_DEBUGGER
+
 
 private:
 	virtual void Add_FSM();
@@ -178,13 +181,13 @@ private:
 	CRigidBody_Dynamic* m_pTargetableDO[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END)] = { nullptr };
 
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
 
 	ID3D11DepthStencilState* m_pDepthStencilStateNone = { nullptr };
 	_float4 m_vInitialRotQ = {};
 	_float3 m_vInitialTrans = {};
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 
 	void	Behavior_IdleEnter();

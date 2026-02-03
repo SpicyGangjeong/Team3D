@@ -32,18 +32,18 @@ public:
 	void	Flush_All_SRVs(_uint iStartSlot = 0, _uint numSlots = D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
 	void	Flush_All_CSUAVs(_uint iStartSlot = 0, _uint numSlots = D3D11_PS_CS_UAV_REGISTER_COUNT);
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 public:
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 	void    RenderTarget_Debuger();
 	void	Toggle_RT_Debugger();
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 private:
 	_int m_iSizeX = { 350 };
 	_int m_iSizeY = { 350 };
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 private:
 	ID3D11Device* m_pDevice = { nullptr };

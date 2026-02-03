@@ -16,10 +16,12 @@ CCharacter_Controller::CCharacter_Controller(const CCharacter_Controller& rhs)
 {
 
 }
-#ifdef _DEBUG
-
+#ifdef RELEASE_DEBUGGER
 HRESULT CCharacter_Controller::Render()
 {
+	if (m_pGameInstance->IsRenderCollider()) {
+		return S_OK;
+	}
 	_vector  vPos = Get_Position();
 	_float3  vVolume = Get_Volume(); 
 	_matrix  WorldMatrix = XMMatrixTranslationFromVector(vPos);
@@ -65,7 +67,7 @@ void CCharacter_Controller::Set_Name(const _char* pName)
 {
 	m_pController->getActor()->setName(pName);
 }
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 PSX::PxRigidDynamic* CCharacter_Controller::Get_Actor()
 {
 	return m_pController->getActor();
@@ -411,16 +413,16 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	if (FAILED(Debug_Initialize())) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 	return S_OK;
 }
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 HRESULT CCharacter_Controller::Debug_Initialize()
 {
 	_float3 vVolume = Get_Volume();
@@ -438,7 +440,7 @@ HRESULT CCharacter_Controller::Debug_Initialize()
 	}
 	return S_OK;
 }
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 
 _bool CCharacter_Controller::Check_Overlap()

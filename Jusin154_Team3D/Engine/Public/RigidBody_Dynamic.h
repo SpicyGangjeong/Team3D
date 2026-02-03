@@ -28,12 +28,12 @@ private:
 	virtual ~CRigidBody_Dynamic() = default;
 
 public:
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	_float3 Get_LocalTranslation() {return m_vLocalTranslation;	}
 	virtual HRESULT Render()override;
 	HRESULT Render(function<void()> custumState);
 	HRESULT Render(function<void()> custumState, _fvector vColor);
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 	virtual PSX::PxRigidDynamic* Get_Actor()		override { return m_pRigidBody; };
 	void					Set_Name(const _char* szName);
@@ -85,10 +85,10 @@ private:
 	_float					m_fDensity = { 1000.f };
 	_bool					m_bActive = { true };
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 private:
 	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPE_DYNAMIC_DESC& Desc);
@@ -96,7 +96,7 @@ private:
 //	void Move(PSX::PxTransform& pxTransform, _bool bTeleport);
 	_bool IsKinematic();
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	HRESULT Add_DebugShape();
 #endif
 

@@ -45,10 +45,10 @@ HRESULT CTroll_Weapon::Initialize(void* pArg)
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 	XMStoreFloat4x4(&m_HammerMatrix, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Bone")) * m_pTransformCom->Get_XMWorldMatrix());	
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	m_pGripShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 10, false, false));
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.2f, 10, false, false));
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 	return S_OK;
 }
@@ -120,10 +120,10 @@ HRESULT CTroll_Weapon::Render()
 		}
 	}
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	m_pGripShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Green, nullptr, true);
 	m_pSubShape->Draw(XMLoadFloat4x4(&m_HammerMatrix), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Purple, nullptr, true);
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 	{
 		_bool bDisolve = false;

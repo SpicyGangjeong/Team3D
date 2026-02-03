@@ -36,10 +36,10 @@ private:
 	_float4x4				m_HammerMatrix = { };
 	_bool				m_bDisolve = { false };
 	_float				m_fDisolveTime = { 0.f };
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

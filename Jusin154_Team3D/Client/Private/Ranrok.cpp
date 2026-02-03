@@ -326,7 +326,7 @@ HRESULT CRanrok::Render()
 		hr = Render_Blend();
 		hr = S_OK;
 	}
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	else if (RENDER::NONLIGHT == eCurrentPass) {
 		hr = Render_Collider();
 	}
@@ -790,7 +790,7 @@ HRESULT CRanrok::Ready_SubParts()
 		m_pTargetableDO[i]->Set_Kinematic(true);
 	}
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 1.f, 6, false, false));
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
 	depthStencilDesc.DepthEnable = FALSE;
@@ -802,7 +802,7 @@ HRESULT CRanrok::Ready_SubParts()
 	if (FAILED(result)) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 	return S_OK;
 }
 HRESULT CRanrok::Render_Nonblend()
@@ -849,19 +849,6 @@ HRESULT CRanrok::Render_Nonblend()
 	/*if (m_bDrawOutLine) {
 		Render_OutLine();
 	}*/
-
-#ifdef _DEBUG
-	if (true == m_pCharacter_Controller->IsActive()) {
-		if (FAILED(m_pCharacter_Controller->Render())) {
-			return E_FAIL;
-		}
-	}
-	else if (true == m_pRigidBody->IsActive()) {
-		if (FAILED(m_pRigidBody->Render())) {
-			return E_FAIL;
-		}
-	}
-#endif
 
 	if (0.f < m_fDeadRatio) {
 		_bool bDisolve = false;
@@ -1357,9 +1344,9 @@ void CRanrok::Free()
 		SAFE_RELEASE(m_pTargetableDO[i]);
 	}
 	m_pRanrok_Props.clear();
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	SAFE_RELEASE(m_pDepthStencilStateNone);
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 
 	SAFE_RELEASE(m_pMotionTrailCom);
@@ -1496,22 +1483,29 @@ void CRanrok::Describe_Entity()
 	GUI::End();
 }
 
+#endif // _DEBUG
+
+#ifdef RELEASE_DEBUGGER
+
 HRESULT CRanrok::Render_Collider()
 {
-	static _bool s_bRenderCollider = { true };
-	GUI::Begin("CutScene");
-	if (GUI::TreeNode("RenderCollider")) {
-		if (true == s_bRenderCollider) {
-			for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
-				m_pTargetableDO[i]->Render([this]() {
-					m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
-					}, CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f));
-			}
+	if (true == m_pCharacter_Controller->IsActive()) {
+		if (FAILED(m_pCharacter_Controller->Render())) {
+			return E_FAIL;
 		}
-		GUI::TreePop();
 	}
-	GUI::End();
+	else if (true == m_pRigidBody->IsActive()) {
+		if (FAILED(m_pRigidBody->Render())) {
+			return E_FAIL;
+		}
+	}
+
+	for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
+		m_pTargetableDO[i]->Render([this]() {
+			m_pContext->OMSetDepthStencilState(m_pDepthStencilStateNone, 0);
+			}, CMyTools::ColorRGB_A_HEXtoVECTOR(0x00ff00, 1.f));
+	}
 	return S_OK;
 }
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER

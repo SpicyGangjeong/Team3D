@@ -111,15 +111,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 		m_pBroomRaceManager = pDesc->pBroomRaceManager;
 	}
 
-#ifdef _DEBUG
-
+#ifdef RELEASE_DEBUGGER
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
 	m_BasicEffect->SetVertexColorEnabled(true);
 	m_BasicEffect->SetView(m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW));
 	m_BasicEffect->SetProjection(m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ));
 
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
@@ -197,9 +196,9 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
@@ -265,17 +264,12 @@ HRESULT CPlayer::Render()
 				return E_FAIL;
 			}
 		}
-#ifdef _DEBUG
-#ifdef 기무리
-		//Render_CameraCoordinateSystem();
-		//m_pCharacter_Controller->Render();
-#endif // 기무리
-#endif // _DEBUG
-
 	}
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	if (RENDER::NONLIGHT == eType) {
-		//m_pRigidBody->Render();
+		Render_CameraCoordinateSystem();
+		m_pRigidBody->Render();
+		m_pCharacter_Controller->Render();
 	}
 #endif
 
@@ -1125,58 +1119,62 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pRaceRing);
 	SAFE_RELEASE(m_pCarriage);
 }
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
-	m_Batch->Begin();
+	//m_Batch->Begin();
 
-	const _float fArrowLength = 2.0f;
-	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
-	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
+	//const _float fArrowLength = 2.0f;
+	//_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	//_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
 
+	//m_Batch->DrawLine( // W
+	//	VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
+	//	VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
+	//);
+	//m_Batch->DrawLine( // D
+	//	VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::GhostWhite),
+	//	VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
+	//);
+	//m_Batch->DrawLine( // PlayerLook
+	//	VertexPositionColor(XMVectorZero(), DirectX::Colors::GhostWhite),
+	//	VertexPositionColor(fArrowLength * xmvLook, DirectX::Colors::HotPink)
+	//);
+	//m_Batch->End();
 
-	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
-	if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
+	//GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	//GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
+	//if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
 
-		GUI::Text("%d", m_LockOnInfo.pUnit);
+	//	GUI::Text("%d", m_LockOnInfo.pUnit);
 
-		GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
-		GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
-		GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
-		GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
+	//	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
+	//	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
+	//	GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
+	//	GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
 
-		_float  fButtonSize = 45.f;
-		GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button("##2", { fButtonSize, fButtonSize });
-		GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
-		GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-		GUI::Button("##8", { fButtonSize, fButtonSize });
-		//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
-		//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
-		//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
-		//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
-	}
-	GUI::End();
-	m_Batch->DrawLine( // W
-		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
-	);
-	m_Batch->DrawLine( // D
-		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
-	);
-	m_Batch->DrawLine( // PlayerLook
-		VertexPositionColor(XMVectorZero(), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength * xmvLook, DirectX::Colors::HotPink)
-	);
-	m_Batch->End();
+	//	_float  fButtonSize = 45.f;
+	//	GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
+	//	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	//	GUI::Button("##2", { fButtonSize, fButtonSize });
+	//	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	//	GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
+	//	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
+	//	GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
+	//	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	//	GUI::Button("##8", { fButtonSize, fButtonSize });
+	//	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
+	//	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
+	//	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
+	//	//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
+	//}
+	//GUI::End();
 }
+#endif
+
+#ifdef _DEBUG
+
 void CPlayer::Describe_Entity()
 {
 	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);

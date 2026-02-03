@@ -224,7 +224,7 @@ HRESULT CTroll::Render()
 		Render_OutLine();
 	}
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	if (true == m_pCharacter_Controller->IsActive()) {
 		if (FAILED(m_pCharacter_Controller->Render())) {
 			return E_FAIL;
