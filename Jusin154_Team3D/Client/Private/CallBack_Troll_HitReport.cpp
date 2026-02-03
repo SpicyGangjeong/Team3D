@@ -89,7 +89,7 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 				//pDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
 				PSX::PxVec3 vCompressedDir = -vWorldNormal;
 				vCompressedDir.normalize();
-				pDynamic->addForce(vCompressedDir * fLength * 1000.f, PSX::PxForceMode::eFORCE);
+				pDynamic->addForce(vCompressedDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 			}break;
 			default:
 			{

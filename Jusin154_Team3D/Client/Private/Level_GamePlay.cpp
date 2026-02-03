@@ -169,7 +169,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	_bool bStartCinematic = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bStartCinematic = false;
+	bStartCinematic = true;
 #elif 진우
 	bStartCinematic = true;
 #elif Bin
@@ -363,9 +363,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
-	isReady_Hogsmeade = false;
-	isReady_Hogwart = false;
+	isReady_Background = true;
+	isReady_Hogsmeade = true;
+	isReady_Hogwart = true;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -1243,8 +1243,8 @@ void CLevel_GamePlay::ResetLevel_Environment()
 
 	m_pLight->Get_Component<CTransform>()->RotationQ(XMVectorSet(0.581f, 0.239f, -0.183f, 0.757f));
 	m_pLight->Get_Component<CTransform>()->Translation(XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.5f), _float2(0.019f, 0.161f),
-									_float2(2.300f, 10.000f), _float4(0.0047f, 0.0018f, 0.0018f, 0.0018f),
+	m_pGameInstance->Set_Environment(_float3(0.54300f, 0.40100f, 4.00000f), _float(0.5f), _float2(0.054f, 0.161f),
+									_float2(2.300f, 10.000f), _float4(0.0032f, 0.0018f, 0.0018f, 0.0018f),
 									_float4(2.f, 1.f, 1.f, 1.f), _float3(-10.f, -10.f, -50.f), _float3(10.f, 10.f, 50.f));
 	m_pLight->Capture_PreShadow();
 }

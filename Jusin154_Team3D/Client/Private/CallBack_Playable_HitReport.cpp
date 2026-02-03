@@ -93,7 +93,7 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 				}
 				vForceDir.normalize();
 
-				float forceMagnitude = PSX::PxClamp(fLength * 200.f, 0.f, 500.f);
+				float forceMagnitude = PSX::PxClamp(fLength * 40.f, 0.f, 100.f);
 				PSX::PxRigidBodyExt::addForceAtPos(*pDynamic, vForceDir * forceMagnitude, { (_float)hit.worldPos.x, (_float)hit.worldPos.y, (_float)hit.worldPos.z }, PSX::PxForceMode::eFORCE);
 				pTargetActorData->pOwner->OnCollision();
 				dynamic_cast<CPlayer*>(m_pController->Get_Owner())->Set_OpenDoor(true);

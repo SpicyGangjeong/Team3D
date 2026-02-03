@@ -581,7 +581,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
-	isLoad_Hogwart = false;
+	isLoad_Hogwart = true;
 	isLoad_UI_SEQUANTIAL = false;
 	isLoad_NPC = false;
 	isLoad_Monster = true;
