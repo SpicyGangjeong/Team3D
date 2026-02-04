@@ -290,6 +290,7 @@ void CRanrok_Breath::OnCollision(CGameObject* pOther, void* pDesc)
 
 void CRanrok_Breath::Set_BreathTime(_float fTime)
 {
+	m_fDuration = fTime + 0.5f;
 	m_Events.clear();
 
 	m_Events.emplace(fTime, [&]() {

@@ -701,7 +701,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 0.6f;
 		if (ENUM_CLASS(LEVEL::FIELD) == NEXT_LEVEL) {
-			Desc.fRadius = 1.f;
+			Desc.fRadius = 0.65f;
 			Desc.fHeight = 0.3f;
 		}
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
