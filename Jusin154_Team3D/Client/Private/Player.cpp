@@ -233,8 +233,6 @@ HRESULT CPlayer::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	_float fIntensity = 0.f;
-	m_pShaderCom->Bind_RawValue("g_fMBIntensity", &fIntensity, sizeof(_float));
 	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
 	if (RENDER::NONBLEND == eType) {
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
