@@ -103,6 +103,11 @@ void CLevel_Field::Update(_float fTimeDelta)
 		_string strCutSceneName = "RanrokIntro";
 		m_pInfoInstance->Active_Event(strCutSceneName);
 	}
+#ifdef RELEASE_DEBUGGER
+	if (m_pGameInstance->Key_Down(DIK_F5)) {
+		m_pGameInstance->Toggle_RenderCollider();
+	}
+#endif
 
 	if (m_bLevel != m_bCurrentLevel)
 	{
