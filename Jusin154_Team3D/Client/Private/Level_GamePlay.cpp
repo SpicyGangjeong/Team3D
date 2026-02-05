@@ -1243,7 +1243,7 @@ void CLevel_GamePlay::ResetLevel_Environment()
 	{
 		vDiffuse = _float4(0.0471f, 0.0745f, 0.1294f, 0.2549f);
 		vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
-		vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
+		vSpecular = _float4(0.5f, 0.5f, 0.5f, 0.0f);
 	}
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
