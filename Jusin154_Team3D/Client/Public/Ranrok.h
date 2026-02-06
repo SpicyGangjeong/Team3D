@@ -139,6 +139,7 @@ private:
 	_bool  m_bChangePhase = {};
 	_int m_iHpPhase = { 0 };
 	_int m_bSiwpeDir = {};
+	_bool	m_bTestTucked = { false };
 
 
 	_float2 m_vCaptureTimer = { 0.f, 0.05f };
@@ -245,6 +246,10 @@ private:
 	void	Behavior_PulseEnter();
 	HRESULT Behavior_PulseExitCheck(_float fTimeDelta);
 	void	Behavior_PulseExit();
+
+	void	Behavior_Ready_TuckedEnter();
+	HRESULT Behavior_Ready_TuckedExitCheck(_float fTimeDelta);
+	void	Behavior_Ready_TuckedExit();
 
 	void	Behavior_TuckedEnter();
 	HRESULT Behavior_TuckedExitCheck(_float fTimeDelta);

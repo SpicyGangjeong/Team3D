@@ -177,6 +177,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Elf.h" />
     <ClInclude Include="..\public\MapElement_Cave.h" />
     <ClInclude Include="..\public\Enemy_SkillUI.h" />
+    <ClInclude Include="..\Public\State_Ready_Tucked.h" />
     <ClInclude Include="..\Public\State_Spell_Learning.h" />
     <ClInclude Include="..\Public\StupefySide.h" />
     <ClInclude Include="..\Public\Broom_Circle.h" />
@@ -503,6 +504,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Elf.cpp" />
     <ClCompile Include="..\private\MapElement_Cave.cpp" />
     <ClCompile Include="..\private\Enemy_SkillUI.cpp" />
+    <ClCompile Include="..\Private\State_Ready_Tucked.cpp" />
     <ClCompile Include="..\Private\State_Spell_Learning.cpp" />
     <ClCompile Include="..\Private\StupefySide.cpp" />
     <ClCompile Include="..\Private\Broom_Circle.cpp" />

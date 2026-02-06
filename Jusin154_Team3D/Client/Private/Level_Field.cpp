@@ -88,6 +88,11 @@ void CLevel_Field::Update(_float fTimeDelta)
 	{
 		//m_pGameInstance->Set_LevelToChange();
 	}
+#ifdef RELEASE_DEBUGGER
+	if (m_pGameInstance->Key_Down(DIK_F5)) {
+		m_pGameInstance->Toggle_RenderCollider();
+	}
+#endif
 
 	m_pInfoInstance->Update(fTimeDelta);
 
@@ -199,13 +204,13 @@ HRESULT CLevel_Field::Ready_Lights()
 
 HRESULT CLevel_Field::Ready_Volumetric()
 {
-	m_pGameInstance->Setting_Volumetirc(1.812f, 0.003f, 0.56f, 1.f, 0.031f);
+	m_pGameInstance->Setting_Volumetirc(2.812f, 0.005f, 0.56f, 1.f, 0.031f);
 	return S_OK;
 }
 
 HRESULT CLevel_Field::Ready_Camera()
 {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
@@ -230,7 +235,7 @@ HRESULT CLevel_Field::Ready_Camera()
 	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
+//#endif // _DEBUG
 
 	{
 		CCamera_Cinematic::Camera_Cinematic_DESC            Camera_Desc{};

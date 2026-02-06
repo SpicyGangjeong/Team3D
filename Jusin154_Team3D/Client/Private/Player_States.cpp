@@ -166,14 +166,14 @@ HRESULT CPlayer::InputSpell()
 
 HRESULT CPlayer::InputAim()
 {
-	if (IsInputLocked()) {
-		if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON) ||
-			m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
-		{
-			if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) { m_bAim = true; }
-			return S_OK;
-		}
-	}
+	//if (IsInputLocked()) {
+	//	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON) ||
+	//		m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+	//	{
+	//		if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) { m_bAim = true; }
+	//		return S_OK;
+	//	}
+	//}
 	return E_FAIL;
 }
 
@@ -261,21 +261,21 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 	else if(iCurrentAnimIndex != m_Animation[STATEANIM::SPAWN].first) {
-		if (SUCCEEDED(InputAim()))
-		{
-			if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON)) {
-				pairAnimInfo = m_Animation[STATEANIM::IDLE_AIM];
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-			}
-			else
-				pairAnimInfo = m_Animation[STATEANIM::IDLE];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
-		}
-		else
-		{
-			pairAnimInfo = m_Animation[STATEANIM::IDLE];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
-		}
+		//if (SUCCEEDED(InputAim()))
+		//{
+		//	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON)) {
+		//		pairAnimInfo = m_Animation[STATEANIM::IDLE_AIM];
+		//		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		//	}
+		//	else
+		//		pairAnimInfo = m_Animation[STATEANIM::IDLE];
+		//	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+		//}
+		//else
+		//{
+		//	pairAnimInfo = m_Animation[STATEANIM::IDLE];
+		//	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true, 1.f, false);
+		//}
 	}
 
 	if (SUCCEEDED(InputMove()))
@@ -729,7 +729,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 		}
-		else if (fRatio >= 0.9f)
+		else if (fRatio >= 0.3f)
 		{
 			m_pFSM->Disable_State(FSMSTATE::STOP);
 			m_pFSM->Change_State(FSMSTATE::IDLE);
