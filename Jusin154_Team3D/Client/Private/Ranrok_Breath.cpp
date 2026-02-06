@@ -290,7 +290,6 @@ void CRanrok_Breath::OnCollision(CGameObject* pOther, void* pDesc)
 
 void CRanrok_Breath::Set_BreathTime(_float fTime)
 {
-	m_fDuration = fTime + 0.5f;
 	m_Events.clear();
 
 	m_Events.emplace(fTime, [&]() {
@@ -306,6 +305,7 @@ void CRanrok_Breath::Set_BreathTime(_float fTime)
 		});
 
 	m_Events.emplace(fTime + 0.5f, [&]() {
+		m_isStartRayCast = false;
 		// 파티클 제어
 		m_isParticleEnd = true;
 
