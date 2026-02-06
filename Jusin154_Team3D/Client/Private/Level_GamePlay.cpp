@@ -935,7 +935,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	{
 		CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 		Camera_Desc.fFovy = XMConvertToRadians(60.0f);
@@ -959,7 +959,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
 	}
 
-#endif // _DEBUG
+//#endif // _DEBUG
 
 	{
 		CCamera_Cinematic::Camera_Cinematic_DESC            Camera_Desc{};

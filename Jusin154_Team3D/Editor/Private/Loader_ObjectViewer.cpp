@@ -95,10 +95,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	//	return E_FAIL;
 
 
-	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_troll_Model")
-	//));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_troll_Model")
+	));
 
 
 	//futures.emplace_back(Deferred_ModelLoad(

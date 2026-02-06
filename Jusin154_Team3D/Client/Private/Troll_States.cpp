@@ -63,117 +63,142 @@ void CTroll::Behavior_IdleBreakEnter()
 	else {
 		RandIndex = m_pGameInstance->Real_Random_Int(0, 3);
 	}
-	switch (RandIndex)
+
+	if (m_fDegree < 30.f)
 	{
-	case 0: //땅 두번구르기 왼발 오른발
-	{
-		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
-
-		Add_Event(pairAnimInfo.first, [this]() {
-
-			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_LeftFoot")) * m_pTransformCom->Get_XMWorldMatrix();
-
-			_float4 vPosition = {};
-			XMStoreFloat4(&vPosition, HandMat.r[3]);
-
-			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
-			}, 0.3f);
-
-		Add_Event(pairAnimInfo.first, [this]() {
-
-			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_RightFoot")) * m_pTransformCom->Get_XMWorldMatrix();
-
-			_float4 vPosition = {};
-			XMStoreFloat4(&vPosition, HandMat.r[3]);
-
-			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
-			}, 0.7f);
-
-		_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
-		switch (iRand)
+		switch (RandIndex)
 		{
-		case 0:
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+		case 0: //땅 두번구르기 왼발 오른발
+		{
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
+
+			Add_Event(pairAnimInfo.first, [this]() {
+
+				_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_LeftFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+				_float4 vPosition = {};
+				XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+				}, 0.3f);
+
+			Add_Event(pairAnimInfo.first, [this]() {
+
+				_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_RightFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+				_float4 vPosition = {};
+				XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+				}, 0.7f);
+
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			}
+
+		}
+		break;
+		case 1:// 방망이
+		{
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
+
+			Add_Event(pairAnimInfo.first, [this]() {
+
+				_matrix WeaponMat = XMLoadFloat4x4(m_pWeapon_BoneMat) * Get_PartObject<CTroll_Weapon>()->Get_Component<CTransform>()->Get_XMWorldMatrix();;
+
+				_float4 vPosition = {};
+				XMStoreFloat4(&vPosition, WeaponMat.r[3]);
+
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+				}, 0.7f);
+
+			_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
+			switch (iRand)
+			{
+			case 0:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			case 1:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			case 2:
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+				break;
+			}
+		}
+		break;
+		case 2: // 발구르기
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
+
+			Add_Event(pairAnimInfo.first, [this]() {
+
+				_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_RightFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+				_float4 vPosition = {};
+				XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_SHOUT, this, &vPosition);
+
+				m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE, SD_CHANNEL_GROUP::EFFECT, false, 5.f);
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+				}, 0.2f);
+
 			break;
-		case 1:
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
-			break;
-		case 2:
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
+		case 3: //소리지르기
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
+
+			Add_Event(pairAnimInfo.first, [this]() {
+
+				_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("mouth_bag")) * m_pTransformCom->Get_XMWorldMatrix();
+
+				_float4 vPosition = {};
+
+				XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_SHOUT, this, &vPosition);
+
+				CameraShake(5.f, 1.f, 2.f, 0.5f);
+
+				}, 0.2f);
+
 			break;
 		}
-
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
-		break;
-	case 1:// 방망이
+	else if (m_fDegree < 150.f)
 	{
-		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
-
-		Add_Event(pairAnimInfo.first, [this]() {
-
-			_matrix WeaponMat = XMLoadFloat4x4(m_pWeapon_BoneMat) * Get_PartObject<CTroll_Weapon>()->Get_Component<CTransform>()->Get_XMWorldMatrix();;
-
-			_float4 vPosition = {};
-			XMStoreFloat4(&vPosition, WeaponMat.r[3]);
-
-
-			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
-			}, 0.7f);
-
-		_int iRand = m_pGameInstance->Real_Random_Int(0, 2);
-		switch (iRand)
+		if (m_fCross < 0.f)
 		{
-		case 0:
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE2, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
-			break;
-		case 1:
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE3, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
-			break;
-		case 2:
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE4, SD_CHANNEL_GROUP::EFFECT, false, 1.5f);
-			break;
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_90_L];
 		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_90_R];
+		}
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f);
 	}
-		break;
-	case 2: // 발구르기
-		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
-
-		Add_Event(pairAnimInfo.first, [this]() {
-
-			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_RightFoot")) * m_pTransformCom->Get_XMWorldMatrix();
-
-			_float4 vPosition = {};
-			XMStoreFloat4(&vPosition, HandMat.r[3]);
-
-			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_SHOUT, this, &vPosition);
-
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::TROLL_VOICE, SD_CHANNEL_GROUP::EFFECT, false, 5.f);
-
-			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
-			}, 0.2f);
-
-		break;
-	case 3: //소리지르기
-		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
-
-		Add_Event(pairAnimInfo.first, [this]() {
-
-			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("mouth_bag")) * m_pTransformCom->Get_XMWorldMatrix();
-
-			_float4 vPosition = {};
-
-			XMStoreFloat4(&vPosition, HandMat.r[3]);
-
-
-			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_SHOUT, this, &vPosition);
-
-			CameraShake(5.f, 1.f, 2.f, 0.5f);
-
-			}, 0.2f);
-
-		break;
+	else {
+		if (m_fCross < 0.f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L];
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R];
+		}
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f);
 	}
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CTroll::Behavior_IdleBreakExitCheck()
@@ -440,10 +465,10 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 		if (m_fDegree >= 90.f)
 		{
 			if (m_fCross > 0){
-				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L];
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_RUSH_TURN_BWD_L];
 			}
 			else{
-				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R];
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_RUSH_TURN_BWD_R];
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
