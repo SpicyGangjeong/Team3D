@@ -481,7 +481,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
     Out.vSurface = float4(0.5f, 1.f, 1.f, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, 0.f);
     
     return Out;
 }

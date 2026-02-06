@@ -132,7 +132,7 @@ PS_OUT PS_MAIN(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
     
     return Out;
 }
@@ -191,7 +191,7 @@ PS_OUT PS_MAIN_TERRAIN_ANISO(PS_IN In)
         (1.f / 255.f)); // 지형은 1
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
     
     return Out;
 }
