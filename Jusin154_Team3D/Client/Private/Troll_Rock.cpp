@@ -45,7 +45,7 @@ HRESULT CTroll_Rock::Initialize(void* pArg)
 
 void CTroll_Rock::Priority_Update(_float fTimeDelta)
 {
-
+	m_pTransformCom->RewindMomentum();
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 	m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)

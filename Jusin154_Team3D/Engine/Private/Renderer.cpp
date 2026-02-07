@@ -17,7 +17,7 @@ void CRenderer::Render()
 	Render_LightAcc();
 	Render_Combined();
 	Render_Occlusion();
-	Render_EnvironmentPostProcess();
+	//Render_EnvironmentPostProcess();
 	Render_Fog();
 	Render_Blur();
 	Combine_Blur();
@@ -48,12 +48,12 @@ void CRenderer::Render()
 		GUI::Begin("RenderTarget Debuger", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 		GUI::Checkbox("DebugToggle", &m_bToggleDebug);
 
-		if (m_bToggleDebug) {
-			Render_Debug();
-		}
 		GUI::End();
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
+		Render_Debug();
+	} 
+	else if (m_bToggleDebug) {
 		Render_Debug();
 	}
 #endif
@@ -991,6 +991,25 @@ void CRenderer::Render_SSAO_BLUR()
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
 	}
+#ifdef DEBUG_SSAO
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO_BLUR_DEBUG")))) {
+		assert(false); return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_SSAO_AmbientOcclusion"), m_pShader, "g_VelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_SSAO_BLUR"), m_pShader, "g_TileVelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG_RtoRGBA));
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+#endif // DEBUG_SSAO
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO_BLUR");
 }
 

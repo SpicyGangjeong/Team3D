@@ -259,6 +259,17 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_SSAO_AmbientOcclusion */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_AmbientOcclusion_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			return E_FAIL;
+		}
+		/* Target_SSAO_BLUR */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_BLUR_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			return E_FAIL;
+		}
+
 		/* Target_AfterCombined */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterCombined"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
@@ -426,6 +437,12 @@ HRESULT CRenderer::Initialize()
 		}
 		/* MRT_SSAO_BLUR */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR"), TEXT("Target_SSAO_BLUR")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR_DEBUG"), TEXT("Target_SSAO_AmbientOcclusion_DEBUG")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR_DEBUG"), TEXT("Target_SSAO_BLUR_DEBUG")))) {
 			return E_FAIL;
 		}
 		/* MRT_Combined */
@@ -643,7 +660,8 @@ void CRenderer::Free()
 #ifdef RELEASE_DEBUGGER
 void CRenderer::Describe_Entitiy()
 {
-	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	static _bool bShowGUIWindow = true;
+	GUI::Begin("SYSTEM", &bShowGUIWindow, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("RENDERER")) {
 		if (GUI::CollapsingHeader("Variable")) {
 			GUI::DragFloat("SpecularMaximum", &m_fLightSpecularMaximum, 0.01f, 0.0f, 2.f, "%.3f");
@@ -656,34 +674,11 @@ void CRenderer::Describe_Entitiy()
 			GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
 			GUI::EndChild();
 		}
-		if (GUI::CollapsingHeader("Environment DOF"))
-		{
-			GUI::BeginChild("DOF_ENV", ImVec2(0, 0), true);
-
-			GUI::Text("Far DOF (Environment)");
-			GUI::Separator();
-
-			GUI::DragFloat("Depth Cut", &m_fDOF_ENV_CutThreshold, 0.001f, 0.0f, 20.0f, "%.4f");
-			GUI::DragFloat("Focus Dist", &m_fDOF_ENV_FocusDistance, 1.0f, 0.1f, 125.f, "%.1f");
-			GUI::DragFloat("Blur Start", &m_fDOF_ENV_StartDistance, 1.0f, 0.1f, 250.f, "%.1f");
-			GUI::DragFloat("Blur End", &m_fDOF_ENV_MaxEnd, 1.0f, 1.0f, 500.f, "%.1f");
-			GUI::DragFloat("Max Radius", &m_fDOF_ENV_AmountRadius, 0.1f, 0.0f, 10.0f, "%.2f");
-
-#ifdef _DEBUG
-			if (m_fDOF_ENV_StartDistance < m_fDOF_ENV_FocusDistance) {
-				m_fDOF_ENV_StartDistance = m_fDOF_ENV_FocusDistance;
-			}
-			if (m_fDOF_ENV_MaxEnd < m_fDOF_ENV_StartDistance + 1.0f) {
-				m_fDOF_ENV_MaxEnd = m_fDOF_ENV_StartDistance + 1.0f;
-			}
-#endif // _DEBUG
-			GUI::EndChild();
-		}
 		if (GUI::CollapsingHeader("SSAO")) {
 			GUI::BeginChild("SSAO_Setting", ImVec2(0, 0), true);
 			GUI::DragFloat("fSSAORadius ", &m_fSSAO_Radius, 0.001f, -3.f, 3.f, "%.5f");
-			GUI::DragFloat("fSSAO_BIAS", &m_fSSAO_BIAS, 0.001f, -2.f, 2.f, "%.5f");
-			GUI::DragFloat("fSSAOStrength", &m_fSSAOStrength, 0.01f, 1.f, 4.f, "%.5f");
+			GUI::DragFloat("fSSAO_BIAS", &m_fSSAO_BIAS, 0.001f, 0.01f, 2.f, "%.5f");
+			GUI::DragFloat("fSSAOStrength", &m_fSSAOStrength, 0.01f, 0.01f, 4.f, "%.5f");
 			GUI::EndChild();
 		}
 		if (GUI::CollapsingHeader("ToneMapping")) {
@@ -697,8 +692,6 @@ void CRenderer::Describe_Entitiy()
 			GUI::SliderFloat("g_fMBSampleBias", &m_fMBSampleBias, -1.f, 1.f, "%.3f");
 			GUI::SliderFloat("m_fMBMaxBlurRadius", &m_fMBMaxBlurRadius, 0.1f, (_float)m_iMBMaxSampleCount, "%.1f");
 			GUI::SliderInt("g_iMBSampleCount", &m_iMBSampleCount, 0, m_iMBMaxSampleCount, "%d");
-		}
-		if (GUI::CollapsingHeader("End_Padding")) {
 		}
 #ifdef _DEBUG
 		if (GUI::Button("Refresh_Shader")) {

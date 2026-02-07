@@ -201,24 +201,24 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     g_hWnd = hWnd;
 
-#ifndef _DEBUG
-    {
-        g_bFullscreen = true;
-
-        SetWindowLong(g_hWnd, GWL_STYLE, GetWindowLong(g_hWnd, GWL_STYLE) & ~WS_OVERLAPPEDWINDOW);
-
-        _int screenX = GetSystemMetrics(SM_CXSCREEN);
-        _int screenY = GetSystemMetrics(SM_CYSCREEN);
-
-        SetWindowPos(
-            g_hWnd,
-            HWND_TOP,
-            0, 0,
-            screenX, screenY,
-            SWP_NOOWNERZORDER | SWP_FRAMECHANGED
-        );
-    }
-#endif
+//#ifndef _DEBUG
+//    {
+//        g_bFullscreen = true;
+//
+//        SetWindowLong(g_hWnd, GWL_STYLE, GetWindowLong(g_hWnd, GWL_STYLE) & ~WS_OVERLAPPEDWINDOW);
+//
+//        _int screenX = GetSystemMetrics(SM_CXSCREEN);
+//        _int screenY = GetSystemMetrics(SM_CYSCREEN);
+//
+//        SetWindowPos(
+//            g_hWnd,
+//            HWND_TOP,
+//            0, 0,
+//            screenX, screenY,
+//            SWP_NOOWNERZORDER | SWP_FRAMECHANGED
+//        );
+//    }
+//#endif
 
 
     return TRUE;
