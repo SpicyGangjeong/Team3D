@@ -26,6 +26,7 @@
 #include "State_Skill.h"
 #include "State_Rush.h"
 #include "State_Pulse.h"
+#include "State_Ready_Tucked.h"
 #include "State_Tucked.h"
 #include "State_Hit.h"
 #include "State_Dead.h"
@@ -897,6 +898,45 @@ void CRanrok::Behavior_PulseExit()
 	m_bLookAt = true;
 }
 
+void CRanrok::Behavior_Ready_TuckedEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::READY_TUCKED);
+
+	_float curr = Get_HpRatio();
+
+	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
+	m_bTestTucked = true;
+
+	if (m_iHpPhase == 2)
+		m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() { m_bDisolve = true; },
+		0.25f);
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	++m_iHpPhase;
+	m_fPrevHpRatio = curr;
+
+}
+
+HRESULT CRanrok::Behavior_Ready_TuckedExitCheck(_float fTimeDelta)
+{
+	_float Ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+	if (Ratio >=0.55f)
+	{
+		m_pFSM->Change_State(FSMSTATE::TUCKED);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CRanrok::Behavior_Ready_TuckedExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::READY_TUCKED);
+}
+
 void CRanrok::Behavior_TuckedEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
@@ -973,6 +1013,7 @@ void CRanrok::Behavior_TuckedExit()
 
 	m_pFSM->Disable_State(FSMSTATE::TUCKED);
 	m_bTucked = false;
+	m_bTestTucked = false;
 	if (m_iCurrentFlow == 1) {
 		m_vCreatePropTime.x = m_vCreatePropTime.y;
 	}
@@ -1197,29 +1238,13 @@ _bool CRanrok::Update_BehaviorByHPRatio(ON_COLLISION_INFO* CollisionInfo)
 
 	if (m_iHpPhase < 3 && curr <= Thresholds[m_iHpPhase])
 	{
-		pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
-
-		if (m_iHpPhase == 2)
-			m_ePhase = ENUM_CLASS(RANROK_PHASE::PHASE_GROUND);
+		m_pFSM->Change_State(FSMSTATE::READY_TUCKED);
 
 		m_pEffectPool->Use_Skill(
 			SKILL_TYPE::RANROK_IMPACT,
 			this,
 			&CollisionInfo->vWorldPos
 		);
-
-		Add_Event(pairAnimInfo.first,
-			[this]() { m_bDisolve = true; },
-			0.25f);
-
-		Add_Event(pairAnimInfo.first,
-			[this]() { m_pFSM->Change_State(FSMSTATE::TUCKED); },
-			0.55f);
-
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-
-		++m_iHpPhase;
-		m_fPrevHpRatio = curr;
 
 		return true;
 	}
@@ -1394,6 +1419,17 @@ void CRanrok::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::PULSE, CState_Pulse::Create(&Desc));
+	}
+
+	{
+		CState_Ready_Tucked::STATE_READY_TUCKED_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Ready_TuckedEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Ready_TuckedExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Ready_TuckedExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::READY_TUCKED, CState_Ready_Tucked::Create(&Desc));
 	}
 
 	{

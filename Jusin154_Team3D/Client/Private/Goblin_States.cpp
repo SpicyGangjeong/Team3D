@@ -938,7 +938,7 @@ void CGoblin::HitState_Behavior(_float fTimeDelta)
 				_float ease = 1.f - (t * t);
 				_vector Force = vPlayerLook * fTimeDelta * 6.f * ease;
 
-				m_pCharacter_Controller->Set_Position(vPos + Force);
+				m_pTransformCom->AccumulateMomentum(Force);
 				pairAnimInfo = m_Animation[STATEANIM::TUMBLE];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.6f, false, 0.8f);
 			}

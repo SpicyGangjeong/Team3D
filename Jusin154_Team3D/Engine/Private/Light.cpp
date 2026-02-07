@@ -183,7 +183,7 @@ void CLight::Free()
 
 }
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CLight::Describe_Entity()
 {
@@ -225,7 +225,10 @@ void CLight::Describe_Entity()
 			GUI::Text("Direction:");
 			GUI::InputFloat3("##Direction", (_float*)m_LightDesc.pDirection);
 		}
+#ifdef _DEBUG
 		m_pOwner->Get_Component<CTransform>()->Describe_Entity();
+#endif // _DEBUG
+
 		
 		
 
@@ -235,4 +238,4 @@ void CLight::Describe_Entity()
 	GUI::Separator();
 }
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER

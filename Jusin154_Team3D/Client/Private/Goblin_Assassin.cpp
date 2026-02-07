@@ -98,6 +98,11 @@ void CGoblin_Assassin::Priority_Update(_float fTimeDelta)
 
 void CGoblin_Assassin::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_Y))
+	{
+		m_pFSM->Change_State(FSMSTATE::SLASH);
+	}
+
 	if (m_bVisible == false)
 		return;
 
@@ -268,6 +273,19 @@ HRESULT CGoblin_Assassin::Render()
 		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
+
+#ifdef RELEASE_DEBUGGER
+	if (true == m_pCharacter_Controller->IsActive()) {
+		if (FAILED(m_pCharacter_Controller->Render())) {
+			return E_FAIL;
+		}
+	}
+	else if (true == m_pRigidBody->IsActive()) {
+		if (FAILED(m_pRigidBody->Render())) {
+			return E_FAIL;
+		}
+	}
+#endif
 
 	return S_OK;
 }

@@ -17,9 +17,9 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, false);
-#endif // _DEBUG
+//#endif // _DEBUG
 
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_DEBUG))) {
 		return;

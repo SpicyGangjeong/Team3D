@@ -487,10 +487,16 @@ void CRanrok::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
+	if (m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::HIT_BWD2].first)
+		return;
+
 	if (m_bDisolve)
 		return;
 
-	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND | FSMSTATE::TUCKED) || m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::HIT_BWD2].first)
+	if (m_bTestTucked)
+		return;
+
+	if (m_bFireBurst || m_pFSM->IsEnable(FSMSTATE::LAND | FSMSTATE::TUCKED))
 		return;
 
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -1124,7 +1130,7 @@ void CRanrok::MoveTo(_float fTimeDelta)
 	{
 		if (m_iCurrentPoint >= m_Points[m_iCurrentFlow].size() * 0.3f)
 		{
-			m_fTuckedSpeed = 50.f;
+			m_fTuckedSpeed = 25.f;
 		}
 	}
 

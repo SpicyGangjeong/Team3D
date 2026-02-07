@@ -169,7 +169,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	_bool bStartCinematic = { true };
 #ifdef _DEBUG
 #ifdef 기무리
-	bStartCinematic = true;
+	bStartCinematic = false;
 #elif 진우
 	bStartCinematic = true;
 #elif Bin
@@ -369,9 +369,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Hogwart = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = true;
-	isReady_Hogsmeade = true;
-	isReady_Hogwart = true;
+	isReady_Background = false;
+	isReady_Hogsmeade = false;
+	isReady_Hogwart = false;
 #endif // 
 #ifdef 나
 	isReady_Background = false;
@@ -935,7 +935,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	{
 		CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 		Camera_Desc.fFovy = XMConvertToRadians(60.0f);
@@ -959,7 +959,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 		m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
 	}
 
-#endif // _DEBUG
+//#endif // _DEBUG
 
 	{
 		CCamera_Cinematic::Camera_Cinematic_DESC            Camera_Desc{};
@@ -1243,7 +1243,7 @@ void CLevel_GamePlay::ResetLevel_Environment()
 	{
 		vDiffuse = _float4(0.0471f, 0.0745f, 0.1294f, 0.2549f);
 		vAmbient = _float4(0.1686f, 0.1765f, 0.1373f, 0.0f);
-		vSpecular = _float4(0.0f, 0.0f, 0.0f, 0.0f);
+		vSpecular = _float4(0.5f, 0.5f, 0.5f, 0.0f);
 	}
 	m_pLight->Get_Component<CLight>()->Set_Color(vDiffuse, vAmbient, vSpecular);
 
