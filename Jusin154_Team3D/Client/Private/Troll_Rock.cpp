@@ -236,7 +236,7 @@ HRESULT CTroll_Rock::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;                                                                                                                                                                     
 
