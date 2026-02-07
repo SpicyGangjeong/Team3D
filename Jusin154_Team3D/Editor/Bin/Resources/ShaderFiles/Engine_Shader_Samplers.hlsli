@@ -48,15 +48,6 @@ sampler BorderZeroSampler = sampler_state
     AddressV = Border;
     BorderColor = float4(0.f, 0.f, 0.f, 0.f);
 };
-
-sampler BorderHalfSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_POINT;
-    AddressU = Border;
-    AddressV = Border;
-    BorderColor = float4(0.5f, 0.5f, 0.5f, 0.5f);
-};
-
 sampler BorderZeroLinearSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;

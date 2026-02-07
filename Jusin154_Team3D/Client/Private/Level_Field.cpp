@@ -221,7 +221,7 @@ HRESULT CLevel_Field::Ready_Camera()
 	Camera_Desc.pCameraKey = CAMERA_DEBUG;
 	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
 	Camera_Desc.fMouseSensor = 0.1f;
-	Camera_Desc.iPriority = 53;
+	Camera_Desc.iPriority = 52;
 	Camera_Desc.pFollowTarget = { nullptr };
 	Camera_Desc.pLookTarget = { nullptr };
 
@@ -245,7 +245,7 @@ HRESULT CLevel_Field::Ready_Camera()
 		Camera_Desc.fNear = 0.1f;
 		Camera_Desc.fFar = 500.f;
 		Camera_Desc.pCameraKey = CAMERA_CINEMATIC;
-		Camera_Desc.iPriority = 52;
+		Camera_Desc.iPriority = 53;
 		Camera_Desc.bEnableTransitionLerp = false;
 		Camera_Desc.bEnableLookLerp = false;
 		Camera_Desc.bEnableFollowLerp = false;

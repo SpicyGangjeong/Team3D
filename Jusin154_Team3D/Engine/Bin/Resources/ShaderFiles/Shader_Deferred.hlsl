@@ -398,7 +398,7 @@ PS_OUT_VELOCITYTILE PS_MOTIONBLUR_TILESAMPLE(PS_IN In)
 
             float2 vSourceUV = (float2(vSourcePixel) + 0.5f) * vSrcTexelSize;
 
-            vSampleVel = g_VelocityTexture.SampleLevel(BorderHalfSampler, vSourceUV, 0).xy;
+            vSampleVel = g_VelocityTexture.SampleLevel(ClampSampler, vSourceUV, 0).xy;
 
             vSampleUV = vSampleVel * 2.0f - 1.0f;
 
@@ -434,7 +434,7 @@ PS_OUT_VELOCITYTILE PS_MOTIONBLUR_TENTSAMPLE(PS_IN In)
         {
             vSampleUV.x = uv.x + vSrcTexelSize.x * i;
             vSampleUV.y = uv.y + vSrcTexelSize.y * j;
-            vSampleVel = g_VelocityTexture.Sample(BorderHalfSampler, vSampleUV).xy;
+            vSampleVel = g_VelocityTexture.Sample(ClampSampler, vSampleUV).xy;
             vSampleDiff = vSampleVel *2.f - 1.f;
             fSampleSpeed = length(vSampleDiff * g_vResolution * g_iMBTileSize);
             if (fSampleSpeed > vMaxSpeed) {
@@ -726,8 +726,8 @@ PS_OUT_DEBUG_MOTIONBLUR PS_MAIN_DEBUG_MOTIONBLUR_INTENSE(PS_IN In)
 {
     PS_OUT_DEBUG_MOTIONBLUR Out;
     
-    float2 vBase = g_VelocityTexture.Sample(BorderHalfSampler, In.vTexcoord).xy * 2.f - 1.f;
-    float2 vTent = g_TileVelocityTexture.Sample(BorderHalfSampler, In.vTexcoord).xy * 2.f - 1.f;
+    float2 vBase = g_VelocityTexture.Sample(ClampSampler, In.vTexcoord).xy * 2.f - 1.f;
+    float2 vTent = g_TileVelocityTexture.Sample(ClampSampler, In.vTexcoord).xy * 2.f - 1.f;
     
     vBase *= 25.5f;
     vTent *= 25.5f;
