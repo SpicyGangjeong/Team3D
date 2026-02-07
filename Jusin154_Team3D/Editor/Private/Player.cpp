@@ -199,7 +199,7 @@ HRESULT CPlayer::Render()
 #ifdef _DEBUG
 	//m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
-	Render_CameraCoordinateSystem();
+	//Render_CameraCoordinateSystem();
 #endif
 
 	return S_OK;

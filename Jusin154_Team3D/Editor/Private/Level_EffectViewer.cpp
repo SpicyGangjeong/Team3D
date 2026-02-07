@@ -86,14 +86,14 @@ HRESULT CLevel_EffectViewer::Initialize()
 	}
 
 
-	CRaceRing::RACERING_DESC pDesc = {};
+	//CRaceRing::RACERING_DESC pDesc = {};
 
-	pDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	pDesc.vScale = _float3(1.f, 1.f, 1.f);
+	//pDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	//pDesc.vScale = _float3(1.f, 1.f, 1.f);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky") , &pDesc))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky") , &pDesc))) {
+	//	return E_FAIL;
+	//}
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Background"))))
 	{
