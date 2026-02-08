@@ -233,8 +233,6 @@ HRESULT CPlayer::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	_float fIntensity = 0.f;
-	m_pShaderCom->Bind_RawValue("g_fMBIntensity", &fIntensity, sizeof(_float));
 	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
 	if (RENDER::NONBLEND == eType) {
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -701,7 +699,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 0.6f;
 		if (ENUM_CLASS(LEVEL::FIELD) == NEXT_LEVEL) {
-			Desc.fRadius = 1.f;
+			Desc.fRadius = 0.65f;
 			Desc.fHeight = 0.3f;
 		}
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();

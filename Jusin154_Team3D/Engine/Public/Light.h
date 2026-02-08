@@ -83,9 +83,9 @@ public:
 	static CLight* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CComponent* Clone(void* pArg, CGameObject* pOwner) override;
 	virtual void Free() override;
-#ifdef _DEBUG
-	void Describe_Entity() override;
-#endif // _DEBUG
+#ifdef RELEASE_DEBUGGER
+	void Describe_Entity();
+#endif // RELEASE_DEBUGGER
 
 };
 

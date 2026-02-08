@@ -997,6 +997,9 @@
     <ClInclude Include="..\Public\Troll_Attack.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Attack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Ready_Tucked.h">
+      <Filter>04.Mechanic\State\Focus\Ready_Tucked</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -2053,6 +2056,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\EffectPool">
       <UniqueIdentifier>{bdd4863e-8ab9-4ce8-a88d-9a0c558a67fb}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="04.Mechanic\State\Focus\Ready_Tucked">
+      <UniqueIdentifier>{ad8967a6-6253-4d57-8b13-cf1c6f4795fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2974,6 +2980,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectPool.cpp">
       <Filter>02.GameObjects\Effect\EffectPool</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\State_Ready_Tucked.cpp">
+      <Filter>04.Mechanic\State\Focus\Ready_Tucked</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

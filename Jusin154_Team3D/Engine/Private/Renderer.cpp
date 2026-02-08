@@ -1209,6 +1209,25 @@ void CRenderer::Render_PostProcessing()
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
 	}
+#ifdef DEBUG_MOTIONBLUR
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_MotionBlur_DEBUG")))) {
+		assert(false); return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_VelocityMap"), m_pShader, "g_VelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_VelocityTent"), m_pShader, "g_TileVelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG_MOTIONBLUR_INTENSE));
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+#endif // DEBUG_MOTIONBLUR
 	COMPUTE_TIMEDELTA("Timer_Render_PostProcessing");
 }
 

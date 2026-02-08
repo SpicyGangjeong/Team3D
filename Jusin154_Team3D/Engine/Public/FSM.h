@@ -59,6 +59,7 @@ enum ESTATE : _u64Flag
     CUTSCENE                    = 1ULL << 52,
     BLOCK                       = 1ULL << 53,
     SPELL_LEARNING              = 1ULL << 54,
+    READY_TUCKED                = 1ULL << 55,
     END
 };
 NS_END

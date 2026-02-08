@@ -36,12 +36,13 @@ void CGoblin_Assassin::Behavior_IdleEnter()
 HRESULT CGoblin_Assassin::Behavior_IdleExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo;
+
 	if (m_fTargetDistance <= 20.f && m_fTargetDistance > 10.f)
 	{
 		m_bLookAt = false;
 		m_bDetection = true;
 
-		pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
+		pairAnimInfo = m_Animation[STATEANIM::IDLE];
 
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
@@ -318,7 +319,7 @@ HRESULT CGoblin_Assassin::Behavior_SlashExitCheck(_float fTimeDelta)
 
 
 
-	if (fRatio >= 0.8f)
+	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_pGoblinSpector->Spector_Trail_Visible(false);
 		Get_PartObject<CGoblin_Sword>("Goblin_Sword_L")->Set_CanTakeDamage(false);
@@ -972,7 +973,7 @@ void CGoblin_Assassin::HitState_Behavior(_float fTimeDelta)
 				_float ease = 1.f - (t * t);
 				_vector Force = vPlayerLook * fTimeDelta * 6.f * ease;
 
-				m_pCharacter_Controller->Set_Position(vPos + Force);
+				m_pTransformCom->AccumulateMomentum(Force);
 				pairAnimInfo = m_Animation[STATEANIM::TUMBLE];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.6f, false, 0.8f);
 			}

@@ -3,10 +3,12 @@
 
 	<!-- IDLE -->
 	<Anim state="IDLE" index="16" loop="true"/>
-	<Anim state="IDLE_COMBAT_TURN_BWD_R" index="7" loop="false"/>
-	<Anim state="IDLE_COMBAT_TURN_BWD_L" index="8" loop="false"/>
-	<Anim state="IDLE_COMBAT_TURN_90_L" index="9" loop="false"/>
-	<Anim state="IDLE_COMBAT_TURN_90_R" index="10" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_BWD_R" index="118" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_BWD_L" index="114" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_90_L" index="116" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_90_R" index="120" loop="false"/>
+	<Anim state="IDLE_COMBAT_RUSH_TURN_BWD_R" index="7" loop="false"/>
+	<Anim state="IDLE_COMBAT_RUSH_TURN_BWD_L" index="8" loop="false"/>
 
 	<Anim state="IDLE_BREAK1" index="11" loop="false"/>
 	<!-- 땅 2번 구르기 -->

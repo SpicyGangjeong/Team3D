@@ -40,9 +40,15 @@ void CLight_Main::Priority_Update(_float fTimeDelta)
 
 void CLight_Main::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
-	Describe_Entity();
-#endif // _DEBUG
+#ifdef RELEASE_DEBUGGER
+	static _bool s_bRenderSystem = false;
+	if (m_pGameInstance->Key_Up(DIK_F6)) {
+		s_bRenderSystem = !s_bRenderSystem;
+	}
+	if (s_bRenderSystem) {
+		Describe_Entity();
+	}
+#endif // RELEASE_DEBUGGER
 }
 
 void CLight_Main::Late_Update(_float fTimeDelta)
@@ -215,7 +221,7 @@ void CLight_Main::Free()
 
 	Safe_Release(m_pLightCom);
 }
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CLight_Main::Describe_Entity()
 {
@@ -235,4 +241,4 @@ void CLight_Main::Describe_Entity()
 	GUI::End();
 }
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
