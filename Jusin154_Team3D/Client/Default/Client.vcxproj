@@ -492,6 +492,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CutScene_Fire.cpp" />
     <ClCompile Include="..\Private\CutScene_Smoke.cpp" />
     <ClCompile Include="..\Private\CutScene_Shout.cpp" />
+    <ClCompile Include="..\Private\EffectPool.cpp" />
     <ClCompile Include="..\Private\HitScreen.cpp" />
     <ClCompile Include="..\Private\PotionScreen.cpp" />
     <ClCompile Include="..\Private\PotionBroken.cpp" />
@@ -716,7 +717,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
     <ClCompile Include="..\Private\Decendo.cpp" />
-    <ClCompile Include="..\Private\EffectPool.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />

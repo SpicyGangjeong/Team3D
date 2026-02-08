@@ -67,6 +67,13 @@ public:
 	_uint			Get_SkillType() const { return m_iSkillType; }
 	void			Reset_Light();
 
+#pragma region 영상용
+	void			Show_EventTime();
+	void			Show_Name(_uint iNumber);
+protected:
+	vector<_string> EventName = {};
+#pragma endregion
+
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
