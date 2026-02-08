@@ -45,7 +45,6 @@ HRESULT CTroll_Rock::Initialize(void* pArg)
 
 void CTroll_Rock::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 	m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)
@@ -206,7 +205,7 @@ HRESULT CTroll_Rock::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
 			return E_FAIL;
 		}
 
@@ -236,7 +235,7 @@ HRESULT CTroll_Rock::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;                                                                                                                                                                     
 
@@ -246,15 +245,6 @@ HRESULT CTroll_Rock::Ready_Components()
 HRESULT CTroll_Rock::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_PrevWorldMatrix", m_pTransformCom->Get_PrevWorldMatrixPtr()))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevViewMatrix", D3DTS::VIEW))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Bind_PrevMatrix(m_pShaderCom, "g_PrevProjMatrix", D3DTS::PROJ))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {

@@ -109,6 +109,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 
 void CBroomRacerAI::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->RewindMomentum();
 	__super::Priority_Update(fTimeDelta);
 }
 
