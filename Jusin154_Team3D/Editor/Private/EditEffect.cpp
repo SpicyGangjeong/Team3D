@@ -494,7 +494,7 @@ void CEditEffect::Describe_Entity()
 
 	GUI::Separator();
 
-	//m_pTransformCom->Describe_Entity();
+	m_pTransformCom->Describe_Entity();
 
 	GUI::Checkbox("Diffuse", &m_EffectInfo.isDiffuse);
 	GUI::Checkbox("Masking", &m_EffectInfo.isMasking);
