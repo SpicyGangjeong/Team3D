@@ -562,7 +562,7 @@ void CS_MAIN(
     
     if (isInstanceBillboard == true)
     {
-        float3 vBillboardLook = normalize(vCamposition.xyz - particle.vTranslation.xyz);
+        float3 vBillboardLook = normalize(vCamposition.xyz - (particle.vTranslation.xyz + WorldMatrix[3].xyz));
         float3 vBillboardRight = normalize(cross(float3(0.f, 1.f, 0.f), vBillboardLook));
         float3 vBillboardUp = normalize(cross(vBillboardLook, vBillboardRight));
         
