@@ -22,7 +22,7 @@ HRESULT CLevel_Logo::Initialize()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Loading, SD_CHANNEL_GROUP::BGM, false, 0.7f);
+	//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Loading, SD_CHANNEL_GROUP::BGM, false, 0.7f);
 	return S_OK;
 }
 
