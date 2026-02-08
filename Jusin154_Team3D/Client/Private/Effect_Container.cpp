@@ -78,6 +78,46 @@ void CEffect_Container::Reset_Light()
 
 }
 
+void CEffect_Container::Show_EventTime()
+{
+	_uint iIndex = {};
+	
+	GUI::SetWindowFontScale(1.5f);
+
+	for (auto& Event : m_Events)
+	{
+		char buf[32];
+		sprintf_s(buf, "%.2f", Event.first);
+
+		string strEvent = string(buf) + " | " + EventName[iIndex++];
+
+		GUI::Selectable(strEvent.c_str(), Event.first >= m_fAccTime);
+
+		GUI::Spacing(); GUI::Separator(); GUI::Spacing();
+	}
+	string strDuration = "Current Duration : " ;
+	strDuration += to_string(m_fAccTime);
+
+	GUI::Text(strDuration.c_str());
+
+	string strDuration2 = "Duration : ";
+	strDuration2 += to_string(m_fDuration);
+
+	GUI::Text(strDuration2.c_str());
+
+	GUI::SetWindowFontScale(1.f);
+}
+
+void CEffect_Container::Show_Name(_uint iNumber)
+{
+	GUI::SetWindowFontScale(1.3f);
+	string strName = to_string(iNumber) + ". " + CMyTools::ToString(m_wstrEffectName);
+
+	GUI::Text(strName.c_str());
+
+	GUI::SetWindowFontScale(1.f);
+}
+
 HRESULT CEffect_Container::Load_Package(const _char* pPath)
 {
 

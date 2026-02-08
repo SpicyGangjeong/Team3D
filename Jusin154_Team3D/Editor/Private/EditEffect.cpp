@@ -471,22 +471,6 @@ void CEditEffect::Describe_Entity()
 	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
 
 
-	GUI::InputTextMultiline("BONE NAME", m_szBuffer, sizeof(m_szBuffer), ImVec2(250, 25));
-
-	m_strBoneName = m_szBuffer;
-
-	if(GUI::Button("Stick Bone"))
-	{
-		CModel* pModel = m_pOwner->Get_Component<CModel>();
-
-		if (pModel != nullptr)
-		{
-			FollowParants(pModel->Get_BoneMatrixPtr(m_strBoneName.c_str()));
-		}
-		
-	}
-
-
 	if (GUI::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
@@ -505,11 +489,12 @@ void CEditEffect::Describe_Entity()
 
 
 	GUI::Checkbox("Visible", &m_bVisible);
-	GUI::Checkbox("WAND POS", &m_isWandPos);
-	GUI::Checkbox("CAM POS", &m_isCamPos);
-	GUI::DragFloat4("CAM OFFSET", (_float*) & m_vCamOffset, 0.005f, 0.f);
+	//GUI::Checkbox("WAND POS", &m_isWandPos);
+	//GUI::Checkbox("CAM POS", &m_isCamPos);
 
-	m_pTransformCom->Describe_Entity();
+	GUI::Separator();
+
+	//m_pTransformCom->Describe_Entity();
 
 	GUI::Checkbox("Diffuse", &m_EffectInfo.isDiffuse);
 	GUI::Checkbox("Masking", &m_EffectInfo.isMasking);
@@ -534,7 +519,7 @@ void CEditEffect::Describe_Entity()
 
 	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 
-	m_pShaderCom->Describe_Entity();
+	//m_pShaderCom->Describe_Entity();
 
 	GUI::PopItemWidth();
 

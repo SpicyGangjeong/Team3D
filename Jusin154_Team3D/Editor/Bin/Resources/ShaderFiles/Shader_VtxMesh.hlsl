@@ -550,7 +550,7 @@ PS_OUT PS_MAIN_SELECT(PS_IN In)
     
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
     return Out;
 }
 
@@ -570,7 +570,6 @@ PS_OUT PS_GLASS(PS_IN In)
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
     Out.vVelocityUV = float2(0.5f, 0.5f);
-    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }
@@ -599,7 +598,6 @@ PS_OUT PS_GLASS_CUBE(PS_IN In)
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
     Out.vSurface = vSurface;
     Out.vVelocityUV = float2(0.5f, 0.5f);
-    //CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
     
     return Out;
 }
@@ -782,7 +780,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
     Out.vSurface = float4(0.5f, 1.f, 1.f, 0.f);
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
 
     return Out;
 }
@@ -847,7 +845,7 @@ PS_OUT PS_LAKE(PS_IN In)
     1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
 
     return Out;
 }
@@ -905,7 +903,7 @@ PS_OUT PS_LAND(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
 
     return Out;
 }
@@ -933,7 +931,7 @@ PS_OUT PS_NONMRO(PS_IN In)
         1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = g_vSurfaceColor;
-    Out.vVelocityUV = CalcVelocityUV(In.vProjPos, In.vPrevProjPos, g_fMBIntensity);
+    Out.vVelocityUV = float2(0.5f, 0.5f);
 
     return Out;
 }

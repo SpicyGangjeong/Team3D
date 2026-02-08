@@ -22,6 +22,7 @@
 #define RELEASE_DEBUGGER
 #endif // !_DEBUG
 
+#define DEBUG_MOTIONBLUR
 
 
 

@@ -168,22 +168,105 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 
 
 	}
-#ifdef  _DEBUG
-#if 진우
 
 
-	//(*m_EffectList[ENUM_CLASS(SKILL_TYPE::AVADAKEDAVRA_SIDE)].begin())->Describe_Entity();
+	if (m_pGameInstance->Key_Pressing(DIK_F3))
+	{
+		if (m_pGameInstance->Key_Down(DIK_0))
+		{
+			m_isActiveEffectTime = !m_isActiveEffectTime;
+		}
 
-	//Describe_Entity();
+		if (m_pGameInstance->Key_Down(DIK_1))
+		{
+			m_isActiveEffectList = !m_isActiveEffectList;
+		}
 
-#endif
-#endif
+	}
 
+	if (m_isActiveEffectTime == true)
+	{
+		GUI::Begin("Effect Event");
+
+		for (auto pEffect : m_EffectList[ENUM_CLASS(SKILL_TYPE::BLINK)])
+		{
+			if (pEffect->Get_Visible())
+			{
+				pEffect->Show_EventTime();
+			}
+		}
+
+		GUI::End();
+	}
+
+	if (m_isActiveEffectList)
+	{
+		GUI::Begin("Active Pool");
+
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 80, 200, 80));
+		GUI::BeginChild("ActiveList", ImVec2(0, 240), true);
+
+		_uint iIndex = {};
+
+		for (auto iter = m_ActiveEffectList.begin(); iter != m_ActiveEffectList.end(); )
+		{
+
+
+			if (false == (*iter)->Get_Visible())
+			{
+				++iter;
+			}
+			else
+			{
+				if ((*iter)->Get_SkillType() == ENUM_CLASS(SKILL_TYPE::JAP_SIDE))
+				{
+					++iter;
+					continue;
+				}
+
+				(*iter)->Show_Name(iIndex++);
+				++iter;
+
+			}
+		}
+
+		ImGui::PopStyleColor();
+		GUI::EndChild();
+
+		GUI::End();
+
+		iIndex = 0;
+
+		GUI::Begin("Effect Pool");
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 80, 200, 80));
+		GUI::BeginChild("EventBox", ImVec2(0, 360), true);
+
+		for (auto iter = m_EffectList[ENUM_CLASS(SKILL_TYPE::JAP)].begin(); iter != m_EffectList[ENUM_CLASS(SKILL_TYPE::JAP)].end(); )
+		{
+			if (false == (*iter)->Get_Visible())
+			{
+				(*iter)->Show_Name(iIndex++);
+
+				++iter;
+			}
+			else
+			{
+
+				++iter;
+			}
+		}
+		ImGui::PopStyleColor();
+		GUI::EndChild();
+
+		GUI::End();
+	}
 
 }
 
 void CEffectPool::Update(_float fTimeDelta)
 {
+
+
 	for (auto iter = m_ActiveEffectList.begin() ; iter != m_ActiveEffectList.end(); )
 	{
 		if (false == (*iter)->Get_Visible())

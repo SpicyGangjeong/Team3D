@@ -216,6 +216,11 @@ struct PS_OUT_BACKBUFFER
     float4 vBackBuffer  : SV_TARGET0;
     float4 vEnvironment : SV_Target1;
 };
+struct PS_OUT_DEBUG_MOTIONBLUR
+{
+    float3 vBaseMotionBlur  : SV_TARGET0;
+    float3 vTentMotionBlur : SV_Target1;
+};
 struct PS_OUT_LIGHT
 {
     vector vShade : SV_TARGET0;
@@ -716,6 +721,29 @@ PS_OUT_BACKBUFFER PS_MAIN_PRINT(PS_IN In)
     Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
     return Out;
 
+};
+PS_OUT_DEBUG_MOTIONBLUR PS_MAIN_DEBUG_MOTIONBLUR_INTENSE(PS_IN In)
+{
+    PS_OUT_DEBUG_MOTIONBLUR Out;
+    
+    float2 vBase = g_VelocityTexture.Sample(DefaultSampler, In.vTexcoord).xy * 2.f - 1.f;
+    float2 vTent = g_TileVelocityTexture.Sample(DefaultSampler, In.vTexcoord).xy * 2.f - 1.f;
+    
+    vBase *= 25.5f;
+    vTent *= 25.5f;
+    Out.vBaseMotionBlur.xy = vBase * 0.5f + 0.5f;
+    Out.vBaseMotionBlur.z = 0.f;
+    Out.vTentMotionBlur.xy = vTent * 0.5f + 0.5f;
+    Out.vTentMotionBlur.z = 0.f;
+    if (AlmostEqual5(vBase.x, 0.f) && AlmostEqual5(vBase.y, 0.f))
+    {
+        Out.vBaseMotionBlur = float3(1.f, 1.f, 1.f);
+    }
+    if (AlmostEqual5(vTent.x, 0.f) && AlmostEqual5(vTent.y, 0.f))
+    {
+        Out.vTentMotionBlur = float3(1.f, 1.f, 1.f);
+    }
+    return Out;
 };
 
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
@@ -1564,5 +1592,14 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         
         PixelShader = compile ps_5_0 PS_MAIN_PRINT();
+    }
+    pass DEBUG_MOTIONBLUR_INTENSE // 23
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        
+        PixelShader = compile ps_5_0 PS_MAIN_DEBUG_MOTIONBLUR_INTENSE();
     }
 }

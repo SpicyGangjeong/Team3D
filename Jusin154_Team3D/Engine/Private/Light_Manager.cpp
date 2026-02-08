@@ -1,9 +1,12 @@
 ﻿#include "pch.h"
 #include "Light_Manager.h"
 #include "Light.h"
+#include "GameInstance.h"
 
-CLight_Manager::CLight_Manager()
+CLight_Manager::CLight_Manager() :
+ m_pGameInstance{ CGameInstance::GetInstance() }
 {
+    SAFE_ADDREF(m_pGameInstance);
 }
 
 
@@ -95,6 +98,61 @@ _uint CLight_Manager::Get_NumLight(_uint _iCurrentLevel)
 
 HRESULT CLight_Manager::Render_Lights(_uint iCurrentLevel, CShader* pShader, CVIBuffer* pVIBuffer)
 {
+#pragma region 포폴 영상용
+
+    if (m_pGameInstance->Key_Pressing(DIK_F3))
+    {
+        if (m_pGameInstance->Key_Down(DIK_2))
+        {
+            m_isGUITool = !m_isGUITool;
+        }
+    }
+
+    if (m_isGUITool)
+    {
+        GUI::Begin("Persistent Light");
+
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 80, 200, 80));
+        GUI::BeginChild("Persistent Lights", ImVec2(0, 240), true);
+
+        _uint iIndex = {};
+
+        for (auto& pLight : m_Lights[iCurrentLevel])
+        {
+            GUI::Text("%d. Main Light", iIndex++);
+        }
+
+
+        GUI::EndChild();
+        ImGui::PopStyleColor();
+
+        GUI::End();
+
+        iIndex = 0;
+        ////////////////////////////////////////
+
+        GUI::Begin("Transient Light");
+
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 80, 200, 80));
+        GUI::BeginChild("Transient Lights", ImVec2(0, 240), true);
+
+        for (auto& pLight : m_FrameLights[iCurrentLevel])
+        {
+            if (pLight->GetEndLight() == true)
+                continue;
+
+            GUI::Text("%d. Transient Light", iIndex++);
+        }
+
+
+        GUI::EndChild();
+        ImGui::PopStyleColor();
+
+        GUI::End();
+    }
+
+#pragma endregion
+
     for (auto& pLight : m_Lights[iCurrentLevel])
     {
         pLight->Render(pShader, pVIBuffer);
@@ -109,6 +167,7 @@ HRESULT CLight_Manager::Render_Lights(_uint iCurrentLevel, CShader* pShader, CVI
     }
 
     m_FrameLights[iCurrentLevel].clear();
+
 
 
     return S_OK;
@@ -156,5 +215,7 @@ void CLight_Manager::Free()
     }
 
     Safe_Delete_Array(m_FrameLights);
+
+    SAFE_RELEASE(m_pGameInstance);
 
 }

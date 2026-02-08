@@ -25,7 +25,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 public:
-	HRESULT Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPrototypeLevel, _uint iCloneLevel , function<class CEffect_Container*(_uint , _uint)> AddPrototypeEvent);
+	HRESULT Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPrototypeLevel, _uint iCloneLevel, function<class CEffect_Container* (_uint, _uint)> AddPrototypeEvent);
 	HRESULT Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg = nullptr, CEffect_Container** ppOut = nullptr);
 #ifdef _DEBUG
 	HRESULT Reset_Pool();
@@ -41,6 +41,9 @@ private:
 private:
 	_bool m_isActiveEffectCreate = { true };
 	_bool m_isActiveMonsterEffectCreate = { true };
+
+	_bool m_isActiveEffectTime = { false };
+	_bool m_isActiveEffectList = { false };
 public:
 	static CEffectPool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;

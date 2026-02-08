@@ -1184,9 +1184,6 @@
     <Filter Include="02.GameObjects\Environment\Terrain">
       <UniqueIdentifier>{7db61780-d774-4a91-a429-2fb7634e43b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Effect\EffectPool">
-      <UniqueIdentifier>{bdd4863e-8ab9-4ce8-a88d-9a0c558a67fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\02.InstancedProp">
       <UniqueIdentifier>{4ef15d06-4520-4d55-ab49-1ae7179f145b}</UniqueIdentifier>
     </Filter>
@@ -2057,6 +2054,9 @@
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Troll_Attack">
       <UniqueIdentifier>{e1af9a18-369a-4168-8d6e-c98c951ecb39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\EffectPool">
+      <UniqueIdentifier>{bdd4863e-8ab9-4ce8-a88d-9a0c558a67fb}</UniqueIdentifier>
+	</Filter>
     <Filter Include="04.Mechanic\State\Focus\Ready_Tucked">
       <UniqueIdentifier>{ad8967a6-6253-4d57-8b13-cf1c6f4795fd}</UniqueIdentifier>
     </Filter>
@@ -2223,9 +2223,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\LoadingWidget_Flame.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\EffectPool.cpp">
-      <Filter>02.GameObjects\Effect\EffectPool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Decendo.cpp">
       <Filter>02.GameObjects\Effect\Effects\Decendo</Filter>
@@ -2981,6 +2978,9 @@
     <ClCompile Include="..\Private\Troll_Throw.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Troll_Throw</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\EffectPool.cpp">
+      <Filter>02.GameObjects\Effect\EffectPool</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\State_Ready_Tucked.cpp">
       <Filter>04.Mechanic\State\Focus\Ready_Tucked</Filter>
     </ClCompile>
