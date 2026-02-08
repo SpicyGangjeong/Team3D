@@ -45,7 +45,7 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	m_iSkillType = ENUM_CLASS(SKILL_TYPE::JAP);
 
 
-	m_wstrEffectName = L"Nomal_Jap";
+	m_wstrEffectName = L"Nomal Jap";
 
 
 

@@ -108,8 +108,8 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 
 			pPlayer->ExitBattle();
 			
-			m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-			m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, true, 0.3f);
+			//m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+			//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, true, 0.3f);
 
 			m_bBattleEnd = false;
 		}
@@ -119,8 +119,8 @@ void CHuman_Duelist::Update(_float fTimeDelta)
 	if (m_fBattleEndTimer >= 2.f)
 	{
 		m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
-		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_0, SD_CHANNEL_GROUP::BGM, true, 0.8f);
+		//m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+		//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_0, SD_CHANNEL_GROUP::BGM, true, 0.8f);
 
 	}
 

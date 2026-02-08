@@ -27,6 +27,10 @@ public:
 	void Set_LightIntensity(_float fValue) { m_fLightIntensity = fValue; }
 	_float Get_LightIntensity() { return m_fLightIntensity; }
 
+	_bool GetEndLight() {
+		return m_fIntensityRatio <= 0.f;
+	}
+
 public:
 	const LIGHT_DESC* Get_LightDesc() { return &m_LightDesc; }
 	void Set_Color(_float4& vDiffuse, _float4& vAmbient, _float4& vSpecular);	

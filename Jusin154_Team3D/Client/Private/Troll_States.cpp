@@ -1135,9 +1135,9 @@ void CTroll::Add_FSM()
 							pReparoObject->IsRepairable(true);
 					}
 				}
-				m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-				m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
-				m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, false, 0.3f);
+				//m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+				//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+				//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, false, 0.3f);
 
 				m_bDead = true;
 			}

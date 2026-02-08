@@ -38,8 +38,9 @@ HRESULT CNomalJapSide::Initialize(void* pArg)
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
-	m_wstrEffectName = L"JapSideEffect";
+	m_wstrEffectName = L"NomalJap Side";
 
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::JAP_SIDE);
 
 	m_pWandParticle = Get_PartObject<CEffectParts>("WandParticle1");
 	m_pWandLight = Get_PartObject<CEffectParts>("Wand_Red_Long");
