@@ -228,9 +228,11 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 #ifndef DEBUG_SHADOW
+#ifndef DEBUG_CAMERAS
 		else if (m_pGameInstance->Mouse_Down(DIM_LBUTTON)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
+#endif // !DEBUG_CAMERAS
 #endif // !DEBUG_SHADOW
 		else if (m_pGameInstance->Key_Down(DIK_V)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);

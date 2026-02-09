@@ -44,18 +44,13 @@ void CCamera_Cinematic::Update(_float fTimeDelta)
 }
 void CCamera_Cinematic::Late_Update(_float fTimeDelta)
 {
-	if (false == m_bActive) {
-#ifdef _DEBUG
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-		m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
-#endif // _DEBUG
-		return;
-	}
-	else {
-	}
+#ifdef DEBUG_CAMERAS
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+#endif // DEBUG_CAMERAS
 }
 HRESULT CCamera_Cinematic::Render() {
-#ifdef _DEBUG
+#ifdef DEBUG_CAMERAS
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -96,7 +91,7 @@ HRESULT CCamera_Cinematic::Render() {
 
 
 	}
-#endif // _DEBUG
+#endif // DEBUG_CAMERAS
 	return S_OK;
 }
 
@@ -253,11 +248,11 @@ HRESULT CCamera_Cinematic::Initialize(void* pArg)
 	}
 
 
-#ifdef _DEBUG
+#ifdef DEBUG_CAMERAS
 	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.25f, 12, false, false));
 
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
-#endif // _DEBUG
+#endif // DEBUG_CAMERAS
 	return S_OK;
 }
 HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
@@ -265,7 +260,7 @@ HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
-#ifdef _DEBUG
+#ifdef DEBUG_CAMERAS
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Camera_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
@@ -276,7 +271,7 @@ HRESULT CCamera_Cinematic::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
+#endif // DEBUG_CAMERAS
 	return S_OK;
 }
 
@@ -299,7 +294,7 @@ HRESULT CCamera_Cinematic::Ready_SubPart()
 
 HRESULT CCamera_Cinematic::Bind_ShaderResources()
 {
-#ifdef _DEBUG
+#ifdef DEBUG_CAMERAS
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
@@ -312,7 +307,7 @@ HRESULT CCamera_Cinematic::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
+#endif // DEBUG_CAMERAS
 	return S_OK;
 
 }

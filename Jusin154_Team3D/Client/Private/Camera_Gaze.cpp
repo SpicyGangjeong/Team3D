@@ -53,10 +53,6 @@ void CCamera_Gaze::Update(_float fTimeDelta)
 	}
 	Transition(fTimeDelta);
 	Update_LerpTimer(fTimeDelta);
-#ifdef _DEBUG
-	Describe_Entity();
-#endif // _DEBUG
-
 }
 
 void CCamera_Gaze::Update_LerpTimer(Engine::_float fTimeDelta)
@@ -242,7 +238,7 @@ void CCamera_Gaze::Free()
 	__super::Free();
 }
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CCamera_Gaze::Describe_Entity()
 {
@@ -259,32 +255,31 @@ void CCamera_Gaze::Describe_Entity()
 			m_fFovy = XMConvertToRadians(fFovYDegree);
 		}
 		m_pTransformCom->Describe_Entity();
-		GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);
-		GUI::Text("LOOK_DST %.2f, %.2f, %.2f", m_vLookPos_Dest.x, m_vLookPos_Dest.y, m_vLookPos_Dest.z);
-		GUI::Text("FOLLOW_SRC %.2f, %.2f, %.2f", m_vFollowPos_Src.x, m_vFollowPos_Src.y, m_vFollowPos_Src.z);
-		GUI::Text("FOLLOW_DST %.2f, %.2f, %.2f", m_vFollowPos_Dest.x, m_vFollowPos_Dest.y, m_vFollowPos_Dest.z);
+		//GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);
+		//GUI::Text("LOOK_DST %.2f, %.2f, %.2f", m_vLookPos_Dest.x, m_vLookPos_Dest.y, m_vLookPos_Dest.z);
+		//GUI::Text("FOLLOW_SRC %.2f, %.2f, %.2f", m_vFollowPos_Src.x, m_vFollowPos_Src.y, m_vFollowPos_Src.z);
+		//GUI::Text("FOLLOW_DST %.2f, %.2f, %.2f", m_vFollowPos_Dest.x, m_vFollowPos_Dest.y, m_vFollowPos_Dest.z);
 
-		GUI::DragFloat2("VerticalAngle", (_float*)&m_vAccRotDegree_VerticalLocks, 1.f, 0.f, 89.f);
-		GUI::Checkbox("TransitionLerp", &m_bEnable_TransitionLerp);
-		if (true == m_bEnable_TransitionLerp) {
-			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vTransitionTime.x, m_vTransitionTime.y);
-			GUI::SliderFloat("TranslationTime", &m_vTransitionTime.y, 0.1f, 3.f, "%.1f");
-		}
+		//GUI::DragFloat2("VerticalAngle", (_float*)&m_vAccRotDegree_VerticalLocks, 1.f, 0.f, 89.f);
+		//GUI::Checkbox("TransitionLerp", &m_bEnable_TransitionLerp);
+		//if (true == m_bEnable_TransitionLerp) {
+		//	GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vTransitionTime.x, m_vTransitionTime.y);
+		//	GUI::SliderFloat("TranslationTime", &m_vTransitionTime.y, 0.1f, 3.f, "%.1f");
+		//}
 
-		GUI::Checkbox("LookLerp", &m_bEnable_LookLerp);
-		if (true == m_bEnable_LookLerp) {
-			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vLookLerpTime.x, m_vLookLerpTime.y);
-			GUI::SliderFloat("LookTime", &m_vLookLerpTime.y, 0.1f, 3.f, "%.1f");
-		}
+		//GUI::Checkbox("LookLerp", &m_bEnable_LookLerp);
+		//if (true == m_bEnable_LookLerp) {
+		//	GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vLookLerpTime.x, m_vLookLerpTime.y);
+		//	GUI::SliderFloat("LookTime", &m_vLookLerpTime.y, 0.1f, 3.f, "%.1f");
+		//}
 
-		GUI::Checkbox("FollowLerp", &m_bEnable_FollowLerp);
-		if (true == m_bEnable_FollowLerp) {
-			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vFollowLerpTime.x, m_vFollowLerpTime.y);
-			GUI::SliderFloat("FollowTime", &m_vFollowLerpTime.y, 0.1f, 3.f, "%.1f");
-		}
-
+		//GUI::Checkbox("FollowLerp", &m_bEnable_FollowLerp);
+		//if (true == m_bEnable_FollowLerp) {
+		//	GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vFollowLerpTime.x, m_vFollowLerpTime.y);
+		//	GUI::SliderFloat("FollowTime", &m_vFollowLerpTime.y, 0.1f, 3.f, "%.1f");
+		//}
 	}
 	GUI::End();
 }
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
