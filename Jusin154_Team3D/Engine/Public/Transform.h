@@ -106,9 +106,9 @@ private:
 	_float3				m_vMomentum = {}; // 현재 프레임에 계산된 이동량
 	_float3				m_vBackMomentum = {}; // 다음 프레임에 계산될 이동량
 
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	_float3		m_vRotation = {0.f, 0.f, 0.f};
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 
 private:
@@ -119,9 +119,9 @@ public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
-#ifdef _DEBUG
-	void Describe_Entity() override;
-#endif // _DEBUG
+#ifdef RELEASE_DEBUGGER
+	void Describe_Entity();
+#endif // RELEASE_DEBUGGER
 };
 
 NS_END

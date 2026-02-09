@@ -213,6 +213,23 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R16_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
+#ifdef DEBUG_SHADOW
+		/* Target_Shadow_Near */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			return E_FAIL;
+		}
+		/* Target_Shadow_Middle */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Middle_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			return E_FAIL;
+		}
+		/* Target_PreShadow */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_PreShadow_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			return E_FAIL;
+		}
+#endif // DEBUG_SHADOW
 
 		/* Target_Blur */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -231,7 +248,6 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
-
 
 		/* Target_ENV_Blur_X */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_ENV_Blur_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -258,7 +274,7 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
-
+#ifdef DEBUG_SSAO
 		/* Target_SSAO_AmbientOcclusion */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_AmbientOcclusion_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(1.f, 1.f, 1.f, 1.f)))) {
@@ -269,6 +285,7 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
+#endif //DEBUG_SSAO
 
 		/* Target_AfterCombined */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterCombined"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -373,14 +390,15 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMap_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(0.5f, 0.5f, 0.5f, 0.f)))) {
+#ifdef DEBUG_MOTIONBLUR
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_DEBUG"), TEXT("Target_VelocityMap_DEBUG")))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityTent_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(0.5f, 0.5f, 0.5f, 0.f)))) {
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_DEBUG"), TEXT("Target_VelocityTent_DEBUG")))) {
 			return E_FAIL;
 		}
+#endif // DEBUG_MOTIONBLUR
+
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BeforeNormal"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.0f, 0.f, 0.f, 0.f)))) {
 			return E_FAIL;
@@ -447,12 +465,14 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR"), TEXT("Target_SSAO_BLUR")))) {
 			return E_FAIL;
 		}
+#ifdef DEBUG_SSAO
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR_DEBUG"), TEXT("Target_SSAO_AmbientOcclusion_DEBUG")))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR_DEBUG"), TEXT("Target_SSAO_BLUR_DEBUG")))) {
 			return E_FAIL;
 		}
+#endif // DEBUG_SSAO
 		/* MRT_Combined */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_Fog")))) {
 			return E_FAIL;
@@ -481,11 +501,28 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Middle"), TEXT("Target_Shadow_Middle")))) {
 			return E_FAIL;
 		}
+#ifdef DEBUG_SHADOW
+		/* MRT_Shadow */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_DEBUG"), TEXT("Target_Shadow_Near_DEBUG")))) {
+			return E_FAIL;
+		}
+		/* MRT_Shadow_Middle */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_DEBUG"), TEXT("Target_Shadow_Middle_DEBUG")))) {
+			return E_FAIL;
+		}
+#endif // DEBUG_SHADOW
+
 
 		/* MRT_PreShadow */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_PreShadow"), TEXT("Target_PreShadow")))) {
 			return E_FAIL;
 		}
+#ifdef DEBUG_SHADOW
+		/* MRT_PreShadow */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_PreShadow_DEBUG"), TEXT("Target_PreShadow_DEBUG")))) {
+			return E_FAIL;
+		}
+#endif // DEBUG_SHADOW
 
 		/* MRT_Blur */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur")))) {
@@ -550,12 +587,15 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur"), TEXT("Target_VelocityMapFinal")))) {
 			return E_FAIL;
 		}
+#ifdef DEBUG_MOTIONBLUR
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_DEBUG"), TEXT("Target_VelocityMap_DEBUG")))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_MotionBlur_DEBUG"), TEXT("Target_VelocityTent_DEBUG")))) {
 			return E_FAIL;
 		}
+#endif // DEBUG_MOTIONBLUR
+
 
 
 		/* MRT_Blur_Mesh */

@@ -605,7 +605,7 @@ void CRenderTarget_Manager::RenderTarget_Debuger()
     GUI::DragInt("Target Size Y", &m_iSizeY);
     GUI::PopItemWidth();
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-    GUI::BeginChild("RTDebugger", { 120.f, 200.f }, ImGuiChildFlags_None, window_flags);
+    GUI::BeginChild("RTDebugger", { 200.f, 200.f }, ImGuiChildFlags_None, window_flags);
     for (auto& [key, pRenderTarget] : m_RenderTargets)
     {
         _string strKey = CMyTools::ToString(key);

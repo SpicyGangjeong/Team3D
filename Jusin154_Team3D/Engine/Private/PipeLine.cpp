@@ -254,9 +254,15 @@ _float CPipeLine::Get_ShadowBoxFar(_uint iShadowBoxIndex)
 
 void CPipeLine::Update()
 {
-#ifdef _DEBUG
-	Describe_Entity();
-#endif // DEBUG
+#ifdef RELEASE_DEBUGGER
+	static _bool m_bRenderSystem = false;
+	if (m_pGameInstance->Key_Up(DIK_F6)) {
+		m_bRenderSystem = !m_bRenderSystem;
+	}
+	if (true == m_bRenderSystem) {
+		Describe_Entity();
+	}
+#endif // RELEASE_DEBUGGER
 	Update_ShadowDepthNdcZ();
 
 	XMStoreFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(D3DTS::VIEW_INV)], XMMatrixInverse(nullptr, Get_Transform_Matrix(D3DTS::VIEW)));
@@ -545,13 +551,13 @@ void CPipeLine::Free()
 	m_mapGlobalSRV.clear();
 	SAFE_RELEASE(m_pGameInstance);
 }
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CPipeLine::Describe_Entity()
 {
 	GUI::Begin("SYSTEM");
 	if (GUI::CollapsingHeader("PipeLine")) {
-		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
+		GUI::PushItemWidth(400);
 		_bool bModified = { false };
 		_float fNear = m_fShadowNearBoxRatio;
 		_float fFar = m_fShadowFarBoxRatio;
@@ -564,15 +570,15 @@ void CPipeLine::Describe_Entity()
 		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.001f, 0.001f, 0.999f, "%.3f")) {
 			bModified = true;
 		}
-		if (GUI::DragFloat("m_fShadowFarBoxRatio", &fFar, 0.001f, 0.001f, 0.999f, "%.3f")) {
+		if (GUI::DragFloat("m_fShadowMiddleBoxRatio", &fFar, 0.001f, 0.001f, 0.999f, "%.3f")) {
 			bModified = true;
 		}
-		if (GUI::DragFloat("m_fSafe_RadiusMultiplier", &fSafe_RadiusMultiplier, 0.01f, 1.f, 3.f, "%.3f")) {
-			bModified = true;
-		}
-		if (GUI::DragFloat("m_fSafe_RadiusMargin", &fSafe_RadiusMargin, 1.f, 10.f, 40.f, "%.3f")) {
-			bModified = true;
-		}
+		//if (GUI::DragFloat("m_fSafe_RadiusMultiplier", &fSafe_RadiusMultiplier, 0.01f, 1.f, 3.f, "%.3f")) {
+		//	bModified = true;
+		//}
+		//if (GUI::DragFloat("m_fSafe_RadiusMargin", &fSafe_RadiusMargin, 1.f, 10.f, 40.f, "%.3f")) {
+		//	bModified = true;
+		//}
 		if (GUI::DragFloat4("ShadowBiasNMFS", (_float*)&vShadowBias, 0.0001f, 0.0001f, 1.f, "%.4f")) {
 			bModified = true;
 		}
@@ -599,4 +605,4 @@ void CPipeLine::Describe_Entity()
 	GUI::End();
 }
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER

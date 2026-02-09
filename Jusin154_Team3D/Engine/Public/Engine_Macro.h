@@ -23,8 +23,9 @@
 #endif // !_DEBUG
 
 #ifdef 기무리
-#define DEBUG_MOTIONBLUR
-#define DEBUG_SSAO
+//#define DEBUG_MOTIONBLUR
+//#define DEBUG_SSAO
+#define DEBUG_SHADOW
 #endif // 기무리
 
 

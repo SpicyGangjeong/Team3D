@@ -107,6 +107,22 @@ void CRenderer::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& P
 	}
 
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
+
+#ifdef DEBUG_SHADOW
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_PreShadow_DEBUG"), m_pPreShadowDSV))) {
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_PreShadow"), m_pShader, "g_VelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG_RtoRGBA));
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+#endif // DEBUG_SHADOW
 }
 
 HRESULT CRenderer::Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType)
@@ -322,6 +338,26 @@ void CRenderer::Render_Shadow()
 		}
 	}
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
+
+#ifdef DEBUG_SHADOW
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow_DEBUG"), m_pPreShadowDSV))) {
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Near"), m_pShader, "g_VelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Middle"), m_pShader, "g_TileVelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG_RtoRGBA));
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+#endif // DEBUG_SHADOW
 
 	COMPUTE_TIMEDELTA("Timer_Render_Shadow");
 }
