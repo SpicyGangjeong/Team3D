@@ -186,6 +186,9 @@ void CRenderer::Bind_RawValue()
 	if (FAILED(m_pShader->Bind_RawValue("g_vPreShadowResolution", &m_vPreShadowResoltion, sizeof(_float2)))) {
 		return;
 	}
+	if (FAILED(m_pShader->Bind_RawValue("g_bUsePhongShader", &m_bUsePhongShader, sizeof(_bool)))) {
+		return;
+	}
 }
 
 void CRenderer::Render_Occlusion()

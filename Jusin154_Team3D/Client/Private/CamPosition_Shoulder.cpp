@@ -224,6 +224,7 @@ HRESULT CCamPosition_Shoulder::Render()
 {
 	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
 	if (RENDER::NONLIGHT == eType) {
+#ifdef DEBUG_CAMERAS
 		m_Batch->Begin();
 		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 		_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
@@ -238,6 +239,8 @@ HRESULT CCamPosition_Shoulder::Render()
 			m_pSubShape->Draw(XMMatrixTranslationFromVector(vHeadPos), ViewMatrix, ProjMatrix, vColor, nullptr, true);
 		}
 		m_Batch->End();
+#endif // DEBUG_CAMERAS
+
 	}
 	return S_OK;
 }
@@ -551,8 +554,11 @@ void CCamPosition_Shoulder::Describe_Entity()
 		GUI::SliderFloat("FocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
 		GUI::SliderFloat("CameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
 		GUI::Text("FOV %.2f", XMConvertToDegrees(m_pBinded_Camera->Get_Fov()));
+#ifdef DEBUG_CAMERAS
 		GUI::Checkbox("RenderLookPos", &m_bRenderLookPos);
 		GUI::Checkbox("RenderHeadPos", &m_bRenderHeadPos);
+#endif // DEBUG_CAMERAS
+
 #ifdef _DEBUG
 		GUI::Text("%d", m_bSpellFovLerp);
 		GUI::SliderFloat3("m_vSpellFovLerpTimer", (_float*)&m_vSpellFovLerpTimer, 0.f, 5.f);

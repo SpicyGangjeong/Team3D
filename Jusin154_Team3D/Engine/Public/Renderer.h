@@ -79,6 +79,7 @@ private:
 	_float m_fNearShadowBias = { 0.05f };
 	_float m_fFarShadowBias = { 1.f };
 	_float m_fMinShadowBrightness = { 0.47f };
+	_bool  m_bUsePhongShader = { false };
 
 	// MotionBlur 
 	_float	m_fMBMaxBlurRadius = { 28.f };

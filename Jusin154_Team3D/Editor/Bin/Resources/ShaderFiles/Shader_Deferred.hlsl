@@ -50,6 +50,7 @@ float g_fSpotOuterAngle;
 float g_fToneMappingExposure;
 uint g_iToneMappingType;
 bool  g_bUsePowerLightAttenuation;
+bool  g_bUsePhongShader;
 float g_fLightAttenuationPower;
 
 vector g_vLightDir;
@@ -481,6 +482,11 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float fCameraDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
+    
+    if (g_bUsePhongShader)
+    {
+        vDepth.b = 0.f;
+    }
     
     if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
