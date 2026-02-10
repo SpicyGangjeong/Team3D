@@ -5,8 +5,12 @@
 	<Anim state="IDLE" index="16" loop="true"/>
 	<Anim state="IDLE_COMBAT_TURN_BWD_R" index="118" loop="false"/>
 	<Anim state="IDLE_COMBAT_TURN_BWD_L" index="114" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_45_L" index="115" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_45_R" index="119" loop="false"/>
 	<Anim state="IDLE_COMBAT_TURN_90_L" index="116" loop="false"/>
 	<Anim state="IDLE_COMBAT_TURN_90_R" index="120" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_135_L" index="113" loop="false"/>
+	<Anim state="IDLE_COMBAT_TURN_135_R" index="117" loop="false"/>
 	<Anim state="IDLE_COMBAT_RUSH_TURN_BWD_R" index="7" loop="false"/>
 	<Anim state="IDLE_COMBAT_RUSH_TURN_BWD_L" index="8" loop="false"/>
 
