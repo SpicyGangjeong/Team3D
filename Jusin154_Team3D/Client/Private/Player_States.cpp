@@ -812,6 +812,7 @@ void CPlayer::Behavior_LandEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	m_pFSM->Enable_State(FSMSTATE::LAND);
+	_float fRatio = 0.11f;
 	Get_PartObject<CWand>()->Set_Visible(false);
 	_int iCurrAnim = m_pModelCom->Get_AnimIndex();
 	if (iCurrAnim == m_Animation[STATEANIM::JUMP].first)
@@ -821,15 +822,20 @@ void CPlayer::Behavior_LandEnter()
 	else if (iCurrAnim == m_Animation[STATEANIM::JUMP_SPRINT].first)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::LAND_TO_SPRINT];
+		fRatio = 0.18f;
 	}
 	else if (iCurrAnim == m_Animation[STATEANIM::JUMP_JOG].first)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::LAND_TO_JOG];
+		fRatio = 0.18f;
 	}
 	else {
 		pairAnimInfo = m_Animation[STATEANIM::LAND];
 	}
-
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGameInstance->Sound_Play(SOUND::SD_KIND::GOBLIN_LAND, SD_CHANNEL_GROUP::ENEMY, false, 0.1f); },
+			fRatio);
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 

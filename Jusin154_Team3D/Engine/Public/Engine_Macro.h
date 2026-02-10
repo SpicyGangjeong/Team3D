@@ -22,12 +22,12 @@
 #define RELEASE_DEBUGGER
 #endif // !_DEBUG
 
-#ifdef 기무리
+//#ifdef 기무리
 //#define DEBUG_MOTIONBLUR
 //#define DEBUG_SSAO
 //#define DEBUG_SHADOW
 //#define DEBUG_CAMERAS
-#endif // 기무리
+//#endif // 기무리
 
 
 

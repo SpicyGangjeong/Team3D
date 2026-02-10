@@ -154,7 +154,7 @@ void CDialogue_Panel::Change_Map()
 	if (FAILED(m_pInfoInstance->Load_EffectParts("Bon_Fire_Data", "../Bin/Resources/Data/Effect/MapEffect/Bon_Fire")))
 		return;
 
-	CLayer* pDuelistLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_DUELIST);
+	/*CLayer* pDuelistLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_DUELIST);
 	if (nullptr != pDuelistLayer) {
 		CHuman_Duelist* pDuelist = pDuelistLayer->Get_Object<CHuman_Duelist>();
 		pDuelist->Get_Component<CCharacter_Controller>()->Set_Position(XMVectorSet(1007.23f, 2.f, 1015.5f, 1.f));
@@ -209,10 +209,10 @@ void CDialogue_Panel::Change_Map()
 			++i;
 		}
 	}
-
+*/
 
 	//m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_INSIDE, SD_CHANNEL_GROUP::BGM, true, 0.6f);
+	//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_INSIDE, SD_CHANNEL_GROUP::BGM, true, 0.6f);
 	//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_INT, SD_CHANNEL_GROUP::BGM, true, 1.2f);
 }
 

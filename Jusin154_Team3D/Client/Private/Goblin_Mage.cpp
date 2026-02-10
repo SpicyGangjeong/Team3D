@@ -106,6 +106,11 @@ void CGoblin_Mage::Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
 		return;
+
+	if (m_pGameInstance->Key_Down(DIK_Y))
+	{
+		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
+	}
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);

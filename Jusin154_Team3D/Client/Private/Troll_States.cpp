@@ -472,9 +472,9 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-			Add_Event(pairAnimInfo.first,
+			/*Add_Event(pairAnimInfo.first,
 				[this]() {m_bLookAt = true; },
-				0.3f);
+				0.3f);*/
 
 			Add_Sound_Event(pairAnimInfo.first,
 				[this]() {_int iRand = m_pGameInstance->Real_Random_Int(0, 2);

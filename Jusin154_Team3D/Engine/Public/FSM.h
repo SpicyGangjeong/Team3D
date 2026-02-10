@@ -111,6 +111,7 @@ private:
     virtual HRESULT Initialize(void* pArg) override;
 
 public:
+    const char* Get_CurrentStateName();
     static CFSM* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     virtual CFSM* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
     virtual void Free() override;

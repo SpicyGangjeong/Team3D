@@ -98,11 +98,6 @@ void CGoblin_Assassin::Priority_Update(_float fTimeDelta)
 
 void CGoblin_Assassin::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_Y))
-	{
-		m_pFSM->Change_State(FSMSTATE::SLASH);
-	}
-
 	if (m_bVisible == false)
 		return;
 

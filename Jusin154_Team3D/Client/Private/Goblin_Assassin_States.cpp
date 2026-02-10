@@ -37,6 +37,7 @@ HRESULT CGoblin_Assassin::Behavior_IdleExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo;
 
+
 	if (m_fTargetDistance <= 20.f && m_fTargetDistance > 10.f)
 	{
 		m_bLookAt = false;

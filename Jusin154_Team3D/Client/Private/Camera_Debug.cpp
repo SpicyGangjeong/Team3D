@@ -60,6 +60,10 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 		if (m_pGameInstance->Key_Pressing(DIK_TAB)) {
 			Set_InitialPos();
 		}
+		if (m_pGameInstance->Key_Down(DIK_8))
+		{
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(1007.23f, 2.f, 1015.5f, 1.f));
+		}
 		if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
 			if (m_pGameInstance->Key_Up(DIK_MINUS)) {
 				CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);

@@ -1,7 +1,4 @@
 <KeyFrames>
-    <Animation Index="206">
-        <KeyFrame Event="Player/Voice/avadakedavra_voice.wav" Ratio="0.265" Volume="0.8"/>
-    </Animation>
     <Animation Index="0">
         <KeyFrame Event="Player/spells_avada_kedavra_akb/avada_kedavra_7.wav" Ratio="0.01" Volume="0.69999999"/>
         <KeyFrame Event="Player/spells_avada_kedavra_akb/avada_kedavra_6.wav" Ratio="0.01" Volume="0.69999999"/>

@@ -140,24 +140,46 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	}
 #endif // RELEASE_DEBUGGER
 
-#ifndef _DEBUG
-#ifndef DEBUG_CAMERAS
-	if (dynamic_cast<CPlayer*>(m_pOwner)->Get_UIState() == UI_STATE::GAMEPLAYER)
+//#ifndef _DEBUG
+	//if (dynamic_cast<CPlayer*>(m_pOwner)->Get_UIState() == UI_STATE::GAMEPLAYER)
+	//{
+	//	m_bMovable = true;
+	//}
+	//else {
+	//	m_bMovable = false;
+	//}
+
+	//if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
+	//	m_bMovable = !m_bMovable;
+	//}
+	// 
+
+	if (m_pGameInstance->Key_Up(DIK_GRAVE))
+	{
+		m_bFreeze = !m_bFreeze;
+	}
+
+	if (m_bFreeze)
+	{
+		m_bMovable = false;
+	}
+	else if (m_bDebugMove)
 	{
 		m_bMovable = true;
 	}
-	else {
-		m_bMovable = false;
+	else
+	{
+		if (auto pPlayer = dynamic_cast<CPlayer*>(m_pOwner))
+			m_bMovable = (pPlayer->Get_UIState() == UI_STATE::GAMEPLAYER);
 	}
-#endif // DEBUG_CAMERAS
-#endif // _DEBUG
+
+
+//#endif // _DEBUG
 
 	if (m_pGameInstance->Key_Up(DIK_PGDN)) {
 		m_bDampingParentPos = !m_bDampingParentPos;
 	}
-	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
-		m_bMovable = !m_bMovable;
-	}
+
 	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}

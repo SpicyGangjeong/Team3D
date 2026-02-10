@@ -12,7 +12,7 @@ void CRenderer::Render()
 	Render_NonBlend();
 	Render_Decal();
 	Render_EffectNonBlend();
-	Render_SSAO();
+	Render_SSAO();\
 	Render_SSAO_BLUR();
 	Render_LightAcc();
 	Render_Combined();

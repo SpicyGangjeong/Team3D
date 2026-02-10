@@ -152,7 +152,19 @@ void CPlayer::Update(_float fTimeDelta)
 	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
 	Update_RaycastElements();
-	m_pFSM->Update_State(fTimeDelta);
+	if (m_pGameInstance->Key_Up(DIK_9))
+	{
+		m_bFSMUpdate = !m_bFSMUpdate;
+	}
+	if (m_bFSMUpdate) {
+		m_pFSM->Update_State(fTimeDelta);
+	}
+
+	//ImGui::SetWindowFontScale(2.0f); 
+	//ImGui::Text("STATE : %s", m_pFSM->Get_CurrentStateName());
+	//ImGui::SetWindowFontScale(1.0f);
+
+
 
 	Play_SpellHitAnim();
 
@@ -1013,7 +1025,7 @@ vector<_float> CPlayer::GetFootStepTiming(_uint AnimIndex)
 {
 	{
 		if (AnimIndex == m_Animation[STATEANIM::WALK_FWD].first)
-			return { 0.15f, 0.65f };
+			return { 0.1f,0.25f,0.42f, 0.59f ,0.75f,0.92f};
 
 		if (AnimIndex == m_Animation[STATEANIM::JOG_FWD].first)
 			return { 0.01f, 0.17f, 0.33f,0.49f,0.66f,0.84f };
