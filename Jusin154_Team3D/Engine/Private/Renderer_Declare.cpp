@@ -392,11 +392,11 @@ HRESULT CRenderer::Initialize()
 		}
 #ifdef DEBUG_MOTIONBLUR
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityMap_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
+			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(0.5f, 0.5f, 0.5f, 0.5f)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityTent_DEBUG"), (_uint)(Viewport.Width / (_float)m_iMBTileSize), (_uint)(Viewport.Height / (_float)m_iMBTileSize),
-			DXGI_FORMAT_R32G32_FLOAT, _float4(0.5f, 0.5f, 0.f, 0.f)))) {
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_VelocityTent_DEBUG"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, _float4(0.5f, 0.5f, 0.5f, 0.5f)))) {
 			return E_FAIL;
 		}
 #endif // DEBUG_MOTIONBLUR
