@@ -210,6 +210,7 @@ private:
 	_uint			m_iPrevAnimIndex = 0;
 
 	_bool			m_bOnGroundHit = {};
+	_bool			m_bFSMUpdate = {true};	
 
 	/* 무적 불 변수*/
 #ifdef _DEBUG

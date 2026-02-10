@@ -256,24 +256,34 @@ void CVolumetric::Free()
 	SAFE_RELEASE(m_pGameInstance);
 }
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
+
 void CVolumetric::Describe_Entity()
 {
 	_bool open = true;
-	GUI::Begin("SYSTEM", &open, IMGUI_GLOBAL_BEGIN_FLAG);
-	if (GUI::CollapsingHeader("VOLUMETRIC")) {
-		GUI::SliderFloat("Density", &m_fDensity,0.001f, 5.f);
-		GUI::SliderFloat("LightIntensity", &m_fLightIntensity, 0.00f, 0.5f, "%.4f");
-		GUI::SliderFloat("AsymmetryParameter", &m_fAsymmetryParameter, -0.9f, 0.9f, "%.4f");
-		GUI::SliderFloat("DepthPackExponent", &m_fDepthPackExponent, 0.01f, 5.f);
-		GUI::SliderFloat("HieghtOffset", &m_fHeightOffset, 0.f, 1.f, "%.5f");
-		GUI::InputFloat("BaseHeight", &m_fBaseHeight, 0.1f, 1.f);
-	}
-	GUI::End();
+	//GUI::Begin("SYSTEM", &open, IMGUI_GLOBAL_BEGIN_FLAG);
+	//if (GUI::CollapsingHeader("VOLUMETRIC")) {
+	//    GUI::SliderFloat("Density", &m_fDensity,0.001f, 5.f);
+	//    GUI::SliderFloat("LightIntensity", &m_fLightIntensity, 0.00f, 0.5f, "%.4f");
+	//    GUI::SliderFloat("AsymmetryParameter", &m_fAsymmetryParameter, -0.9f, 0.9f, "%.4f");
+	//    GUI::SliderFloat("DepthPackExponent", &m_fDepthPackExponent, 0.01f, 5.f);
+	//    GUI::SliderFloat("HieghtOffset", &m_fHeightOffset, 0.f, 1.f, "%.5f");
+	//    GUI::InputFloat("BaseHeight", &m_fBaseHeight, 0.1f, 1.f);
+	//}
+	//GUI::End();
+	GUI::Begin("VOLUMETRIC");
 
-	
+	GUI::SliderFloat("Density", &m_fDensity, 0.001f, 5.f);
+	GUI::SliderFloat("LightIntensity", &m_fLightIntensity, 0.00f, 0.5f, "%.4f");
+	GUI::SliderFloat("AsymmetryParameter", &m_fAsymmetryParameter, -0.9f, 0.9f, "%.4f");
+	GUI::SliderFloat("DepthPackExponent", &m_fDepthPackExponent, 0.01f, 5.f);
+	GUI::SliderFloat("HieghtOffset", &m_fHeightOffset, 0.f, 1.f, "%.5f");
+	GUI::InputFloat("BaseHeight", &m_fBaseHeight, 0.1f, 1.f);
+
+	GUI::End();
 }
-#endif // _DEBUG
+
+//#endif // _DEBUG
 
 HRESULT CVolumetric::CreateComputeShader()
 {

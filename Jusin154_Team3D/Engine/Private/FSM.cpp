@@ -2,6 +2,28 @@
 #include "FSM.h"
 #include "State.h"
 
+static unordered_map<size_t, const char*> g_FSMStateName =
+{
+	{ FSMSTATE::IDLE, "IDLE" },
+	{ FSMSTATE::MOVE, "MOVE" },
+	{ FSMSTATE::WALK, "WALK" },
+	{ FSMSTATE::JOG, "JOG" },
+	{ FSMSTATE::SPRINT, "SPRINT" },
+	{ FSMSTATE::JUMP, "JUMP" },
+	{ FSMSTATE::LAND, "LAND" },
+	{ FSMSTATE::DODGE, "DODGE" },
+	{ FSMSTATE::LIGHT_ATTACK, "LIGHT_ATTACK" },
+	{ FSMSTATE::SPELL, "SPELL" },
+	{ FSMSTATE::HIT, "HIT" },
+	{ FSMSTATE::DEAD, "DEAD" },
+	{ FSMSTATE::RUSH, "RUSH" },
+	{ FSMSTATE::TUCKED, "TUCKED" },
+	{ FSMSTATE::SLASH, "SLASH" },
+	{ FSMSTATE::DASH, "DASH" },
+	{ FSMSTATE::CUTSCENE, "CUTSCENE" }
+};
+
+
 CFSM::CFSM(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CComponent(pDevice, pContext)
 {
@@ -59,6 +81,23 @@ HRESULT CFSM::Update_State(_float fTimeDelta)
 	}
 	return S_OK;
 }
+
+const char* CFSM::Get_CurrentStateName()
+{
+	if (nullptr == m_pStateMask)
+		return "NONE";
+
+	size_t mask = *m_pStateMask;
+
+	for (auto& pair : g_FSMStateName)
+	{
+		if (mask & pair.first)
+			return pair.second;
+	}
+
+	return "UNKNOWN";
+}
+
 
 CFSM* CFSM::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

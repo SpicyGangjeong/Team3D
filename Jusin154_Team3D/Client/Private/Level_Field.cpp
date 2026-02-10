@@ -211,7 +211,7 @@ HRESULT CLevel_Field::Ready_Volumetric()
 
 HRESULT CLevel_Field::Ready_Camera()
 {
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
@@ -236,7 +236,7 @@ HRESULT CLevel_Field::Ready_Camera()
 	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
-//#endif // _DEBUG
+#endif // _DEBUG
 
 	{
 		CCamera_Cinematic::Camera_Cinematic_DESC            Camera_Desc{};

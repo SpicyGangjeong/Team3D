@@ -168,7 +168,7 @@
 물체 위에 표시가 떳을 때 Z로 시전할 수 있습니다."
 		Spell_Lock="0" Equip_Spell="0" Use_Skill="1" Preview="0" Vidio="0" />
 	<Spell Spell_ID="31" Spell_Name="고대 마법" Image_Name="Ancient_Magic" Spell_Type="6" Type_Name="필수" Skill_Type="31"
-		Spell_Damage="10" Spell_Cooltime="0" Duration="0" AnimNum="152"
+		Spell_Damage="120" Spell_Cooltime="0" Duration="0" AnimNum="152"
 		SpellInfo="고대 마법 MP가 한 부분이라도 가득 차 있으면, 엄청난
 대미지를 주고 방어벽 마버을 부수는 강력한 고대 마법을
 시전할 수 있게 됩니다. 적의 머리 위에 표시가

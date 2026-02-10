@@ -115,9 +115,9 @@ public:
 	static CVolumetric* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free();
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	void Describe_Entity();
-#endif // _DEBUG
+//#endif // _DEBUG
 
 };
 

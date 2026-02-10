@@ -54,6 +54,9 @@ private:
 	_float2		m_vAccRealDegrees = { 0.f, 0.f };
 	_float3		m_vShoulderLocalPos = { 1.f, 2.f, 2.f };
 	_bool		m_bPlayAnim = { false };
+	_bool		m_bDebugMove = false;
+	_bool		m_bFreeze = false;
+
 #pragma endregion
 #pragma region Lerp
 	_bool m_bStartGame = { true };
