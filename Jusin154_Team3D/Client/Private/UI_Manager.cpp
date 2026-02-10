@@ -514,8 +514,8 @@ void CUI_Manager::Set_Enviroment()
 	if (TIME_OF_DAY::DAY == m_eDay)
 	{ /* 밤 */
 		m_eDay = TIME_OF_DAY::NIGHT;
-		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_NIGHT, SD_CHANNEL_GROUP::BGM, true, 0.9f);
+		//m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+		//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_NIGHT, SD_CHANNEL_GROUP::BGM, true, 0.9f);
 		m_pGameInstance->Setting_Volumetirc(
 			1.28f,                         // 밀도
 			0.001f,                          // 빛 강도
@@ -545,8 +545,8 @@ void CUI_Manager::Set_Enviroment()
 			if (nullptr != pInstancedProp_Light)
 				pInstancedProp_Light->Toggle_Light();
 		}
-		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_NIGHT, SD_CHANNEL_GROUP::BGM, true, 0.8f);
+		//m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+		//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_NIGHT, SD_CHANNEL_GROUP::BGM, true, 0.8f);
 	}
 	else
 	{
@@ -584,8 +584,8 @@ void CUI_Manager::Set_Enviroment()
 		}
 
 		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
-		m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, false, 0.3f);
+		//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_Land_DAY, SD_CHANNEL_GROUP::BGM, true, 0.5f);
+		//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, false, 0.3f);
 	}
 
 	

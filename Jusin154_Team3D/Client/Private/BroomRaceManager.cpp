@@ -170,8 +170,8 @@ void CBroomRaceManager::Update(_float fTimeDelta)
 					m_pInfoInstance->Event_CallBack(TEXT("BroomRide"), &m_bCurrentRace);
 					m_pRaceRings[m_pRaceRings.size() - 1]->Set_Target(false);
 
-					m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-					m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, true, 0.2f);
+			/*		m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+					m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_GamePlay, SD_CHANNEL_GROUP::BGM, true, 0.2f);*/
 				}
 			}
 		}
@@ -517,8 +517,8 @@ void CBroomRaceManager::RaceReady()
 
 	m_bRaceReady = true;
 
-	m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RACE, SD_CHANNEL_GROUP::BGM, true, 0.8f);
+	//m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+	//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_RACE, SD_CHANNEL_GROUP::BGM, true, 0.8f);
 
 	m_bCurrentRace = true;
 }

@@ -211,9 +211,9 @@ void CDialogue_Panel::Change_Map()
 	}
 
 
-	m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
+	//m_pGameInstance->Sound_StopChannel(SD_CHANNEL_GROUP::BGM);
 	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_INSIDE, SD_CHANNEL_GROUP::BGM, true, 0.6f);
-	m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_INT, SD_CHANNEL_GROUP::BGM, true, 1.2f);
+	//m_pGameInstance->Sound_Play(SOUND::SD_KIND::BGM_HOGWART_INT, SD_CHANNEL_GROUP::BGM, true, 1.2f);
 }
 
 void CDialogue_Panel::Priority_Update(_float fTimeDelta)

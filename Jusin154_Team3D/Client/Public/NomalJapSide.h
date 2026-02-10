@@ -31,7 +31,6 @@ private:
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
-	_wstring			m_wstrEffectName = {};
 
 	_bool				m_isParticleEnd = {};
 	_bool				m_isTrailEnd = {};

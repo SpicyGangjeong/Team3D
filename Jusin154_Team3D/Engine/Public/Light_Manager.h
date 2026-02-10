@@ -27,6 +27,9 @@ private:
 	_uint				 m_iLevelNumber = {};
 	list<class CLight*>* m_Lights = { nullptr };
 	list<class CLight*>* m_FrameLights = { nullptr };
+
+	_bool				 m_isGUITool = { false };
+	class CGameInstance* m_pGameInstance = { nullptr };
 public:
 	static CLight_Manager* Create(_uint iNumLevel);
 	virtual void Free() override;

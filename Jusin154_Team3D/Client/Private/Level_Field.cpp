@@ -16,7 +16,6 @@
 #include "UI_Manager.h"
 #include "InstancedProp.h"
 
-
 CLevel_Field::CLevel_Field(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
@@ -63,11 +62,13 @@ HRESULT CLevel_Field::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
+
 	ResetLevel_Environment();
 	
 
 	m_bLevel = true;
 	m_pInfoInstance->Event_CallBack(TEXT("UIManagerFadeIn"));
+
 
 	return S_OK;
 }

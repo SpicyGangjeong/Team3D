@@ -32,7 +32,6 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	class  CInfoInstance* m_pInfoInstance = { nullptr };
-	_wstring						  m_wstrEffectName = {};
 
 	_float4							  m_vJapData[4] = { _float4(105.f , 330.f , 35.f , 20.f)
 													 , _float4(95.f , 100.f , 55.f , 200.f)

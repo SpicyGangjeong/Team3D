@@ -93,9 +93,10 @@ HRESULT CBlink::Initialize(void* pArg)
 	m_fSpeed = 1.6f;
 
 
-	m_fDuration = 1.45f;
+	m_fDuration = 2.f;
 
-
+	EventName.push_back("Start Trail Dissolve");
+	EventName.push_back("Start Swirl Disappear");
 
 	return S_OK;
 }
