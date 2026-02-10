@@ -1279,22 +1279,24 @@ PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
     float4 vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
-    vColor *= g_fToneMappingExposure; 
+    vColor = max(vColor, 0); // 후처리 음수 방지
     switch (g_iToneMappingType) {
         case 0:
-            vColor /= g_fToneMappingExposure;
+            // Pass
             break;
         case 1:
-            vColor = float4(ReinHard_ToneMapper(vColor.xyz), 1.f);
+            vColor *= g_fToneMappingExposure; 
+            vColor = float4(Reinhard_ToneMapper(vColor.xyz), 1.f);
             break;
         case 2:
+            vColor *= g_fToneMappingExposure; 
             vColor = float4(Filmic_ToneMapper(vColor.xyz), 1.f);
             break;
         default:
             break;
     }
     
-    Out.vBackBuffer = vColor;
+    Out.vBackBuffer = vColor; // BackBuffer UNORM sRGB RTV. 감마 보정이 필요없음
     Out.vEnvironment = float4(0.f, 0.f, 0.f, 1.f);
     return Out;
 }

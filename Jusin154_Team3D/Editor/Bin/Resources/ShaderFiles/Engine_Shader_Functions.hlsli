@@ -496,7 +496,7 @@ float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
     return fAmount * fRatio;
 }
 
-float3 ReinHard_ToneMapper(float3 vColor)
+float3 Reinhard_ToneMapper(float3 vColor)
 {
     float k = 1.f;
     vColor = (vColor / (vColor + k));
@@ -511,10 +511,8 @@ float3 Filmic_ToneMapper(float3 vColor)
     const float fD = 0.59f;
     const float fE = 0.14f;
 
-    vColor = saturate(
-        vColor * (fA * vColor + fB)
-        / (vColor * (fC * vColor + fD) + fE)
-    );
+    vColor = saturate( vColor * (fA * vColor + fB) 
+        / (vColor * (fC * vColor + fD) + fE) );
     
     return vColor;
 }

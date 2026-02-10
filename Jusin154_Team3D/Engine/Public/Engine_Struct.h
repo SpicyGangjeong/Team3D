@@ -380,12 +380,11 @@ typedef struct tagPHYSX_USERDATA {
 
 	class CGameObject* pOwner = { nullptr };
 	_float4x4			BeforeMatrix = { };
-	_uint				iSubKind = UINT_MAX;
+	_uint				iSubKind = UINT_MAX; // PXOBJECT
 
 	union {
-		class CRigidBody* pBody;
+		class CRigidBody* pBody = nullptr;
 		class CCharacter_Controller* pCharacter;
-		class CObstacle_Controller* pObstacle = { nullptr };
 	};
 
 }PHYSX_USERDATA;

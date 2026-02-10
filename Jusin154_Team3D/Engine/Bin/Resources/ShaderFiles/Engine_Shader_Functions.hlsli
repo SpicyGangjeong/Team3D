@@ -328,10 +328,10 @@ float2 ComputeDepthWeights(float fCenterDepth, float fSampleDepth, float fDepthS
     float delta = fSampleDepth - fCenterDepth;
 
     // backgroundWeight: sample이 더 멀수록 증가
-    float backgroundWeight = saturate(0.5f + fDepthScale * delta);
-    float foregroundWeight = 1.0f - backgroundWeight;
+    float fBackgroundWeight = saturate(0.5f + fDepthScale * delta);
+    float fForegroundWeight = 1.0f - fBackgroundWeight;
     
-    return float2(backgroundWeight, foregroundWeight);
+    return float2(fBackgroundWeight, fForegroundWeight);
 }
 float ComputeSpreadWeight(float fOffsetLength, float fSpreadLength, float fPixelToSampleUnitsScale)
 {
@@ -496,7 +496,7 @@ float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
     return fAmount * fRatio;
 }
 
-float3 ReinHard_ToneMapper(float3 vColor)
+float3 Reinhard_ToneMapper(float3 vColor)
 {
     float k = 1.f;
     vColor = (vColor / (vColor + k));
@@ -511,10 +511,8 @@ float3 Filmic_ToneMapper(float3 vColor)
     const float fD = 0.59f;
     const float fE = 0.14f;
 
-    vColor = saturate(
-        vColor * (fA * vColor + fB)
-        / (vColor * (fC * vColor + fD) + fE)
-    );
+    vColor = saturate( vColor * (fA * vColor + fB) 
+        / (vColor * (fC * vColor + fD) + fE) );
     
     return vColor;
 }
