@@ -178,26 +178,37 @@ void CTroll::Behavior_IdleBreakEnter()
 		}
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
-	else if (m_fDegree < 150.f)
+	if (m_fDegree <= 45.f)
 	{
+		m_bLookAt = false;
 		if (m_fCross < 0.f)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_90_L];
-		}
-		else {
-			pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_90_R];
-		}
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f);
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_45_L];
+		else
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_45_R];
 	}
-	else {
+	else if (m_fDegree <= 90.f)
+	{
+		m_bLookAt = false;
 		if (m_fCross < 0.f)
-		{
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_90_L];
+		else
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_90_R];
+	}
+	else if (m_fDegree <= 135.f)
+	{
+		m_bLookAt = false;
+		if (m_fCross < 0.f)
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_135_L];
+		else
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_135_R];
+	}
+	else
+	{
+		m_bLookAt = false;
+		if (m_fCross < 0.f)
 			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L];
-		}
-		else {
+		else
 			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R];
-		}
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.f);
 	}
 }
 
@@ -229,6 +240,7 @@ HRESULT CTroll::Behavior_IdleBreakExitCheck()
 void CTroll::Behavior_IdleBreakExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
+	m_bLookAt = true;
 }
 
 void CTroll::Behavior_MoveEnter()
@@ -359,17 +371,17 @@ HRESULT CTroll::Behavior_CombatExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] <= 0.f))
+	if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] <= 0.f)  && m_fDegree <=30.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SLAM);
 		return E_FAIL;
 	}
-	else if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] <= 0.f))
+	else if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] <= 0.f) && m_fDegree <= 30.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::BACKHAND_SWING);
 		return E_FAIL;
 	}
-	else if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] <= 0.f))
+	else if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] <= 0.f) && m_fDegree <= 30.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SWING);
 		return E_FAIL;
@@ -496,7 +508,6 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
-		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 		return E_FAIL;
 	}
@@ -816,11 +827,6 @@ void CTroll::Behavior_StunEnter()
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-	Add_Event(pairAnimInfo.first,
-		[this]() { m_bLookAt = true;
-		},
-		0.6f);
-
 	if (m_pRushEffect != nullptr)
 	{
 		m_pRushEffect->Get_PartObject<CEffectParts>()->Get_Component<CInstance_Model>()->Set_Loop(false);
@@ -843,6 +849,8 @@ HRESULT CTroll::Behavior_StunExitCheck(_float fTimeDelta)
 void CTroll::Behavior_StunExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::STUN);
+
+	m_bLookAt = true;
 }
 
 void CTroll::Behavior_HitEnter()
