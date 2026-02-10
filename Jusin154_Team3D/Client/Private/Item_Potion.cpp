@@ -128,7 +128,7 @@ HRESULT CItem_Potion::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
 			return E_FAIL;
 		}
 
@@ -140,8 +140,6 @@ HRESULT CItem_Potion::Render()
 #ifdef _DEBUG
 	m_pRigidBody->Render();
 #endif // _DEBUG
-
-
 	return S_OK;
 }
 

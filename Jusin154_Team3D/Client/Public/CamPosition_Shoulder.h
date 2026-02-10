@@ -96,15 +96,20 @@ private:
 	CCamPosition_Target*	m_pTarget_FollowPart = { nullptr };
 	class CCamera_Gaze*		m_pBinded_Camera = { nullptr };
 	class CModel*			m_pModelCom = { nullptr };
-
+#ifdef DEBUG_CAMERAS
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch = { nullptr };
+	_bool m_bRenderHeadPos = { false };
+	_bool m_bRenderLookPos = { false };
+#endif // DEBUG_CAMERAS
 public:
 	static CCamPosition_Shoulder* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCamPosition_Shoulder* Clone(void* pArg, class CGameObject* pOWner) override;
 	virtual void Free() override;
 
-#ifdef _DEBUG
-	void Describe_Entity() override;
-#endif // _DEBUG
+#ifdef RELEASE_DEBUGGER
+	void Describe_Entity();
+#endif // RELEASE_DEBUGGER
 
 };
 

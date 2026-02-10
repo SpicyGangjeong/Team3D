@@ -91,12 +91,12 @@ private:
 	_float2 m_vCameraShakeTimer = { 0.f, TIMER_SHORT_LERP };
 	_float m_fCameraShakeTime = TIMER_SHORT_LERP;
 	_float m_fCameraShakeIntense = 5.f;
-#ifdef _DEBUG
+#ifdef DEBUG_CAMERAS
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch = { nullptr };
 	class CModel* m_pModelCom = { nullptr };
 	class CShader* m_pShaderCom = { nullptr };
-#endif // _DEBUG
+#endif // DEBUG_CAMERAS
 
 public:
 	static CCamera_Cinematic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

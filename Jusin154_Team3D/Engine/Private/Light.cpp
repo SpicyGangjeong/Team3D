@@ -226,11 +226,7 @@ void CLight::Describe_Entity()
 			GUI::Text("Direction:");
 			GUI::InputFloat3("##Direction", (_float*)m_LightDesc.pDirection);
 		}
-#ifdef _DEBUG
 		m_pOwner->Get_Component<CTransform>()->Describe_Entity();
-#endif // _DEBUG
-
-		
 		
 
 		GUI::TreePop();

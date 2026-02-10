@@ -28,6 +28,7 @@ HRESULT CMotion_Trail::Update_Capture(_float fDeltaTime)
 		CAPTUREINFO* pInfo = (*iter);
 		pInfo->vCaptureLifeTime.x += fDeltaTime;
 		if (m_fMaxCaptureLifeTime < pInfo->vCaptureLifeTime.x) {
+			// LifeTime이 종료된 Capture는 정보를 지우고 보관
 			if (FAILED(ClearInfos(*pInfo))) {
 				return E_FAIL;
 			}
@@ -84,9 +85,11 @@ HRESULT CMotion_Trail::Render(CShader* pShader)
 	return S_OK;
 }
 
+// dispatch 전에 호출할 해야 합니다
 HRESULT CMotion_Trail::Capture_Model(ID3D11Buffer* pBoneBuffer, const _float4x4& matCurrentWorld)
 {
 	CAPTUREINFO* pInfo = { nullptr };
+	// 남은리소스가 있는지 검사하고 없다면 가장 마지막 캡쳐를 사용
 	if (m_RemainingInfos->empty()) {
 		pInfo = m_CaptureInfos->front();
 		if (FAILED(ClearInfos(*pInfo))) {
@@ -98,6 +101,7 @@ HRESULT CMotion_Trail::Capture_Model(ID3D11Buffer* pBoneBuffer, const _float4x4&
 		pInfo = m_RemainingInfos->front();
 		m_RemainingInfos->pop();
 	}
+	// 캡쳐되는 상황의 월드 트랜스폼과 본버퍼 기록
 	m_pContext->CopyResource(pInfo->pBoneMatrixBuffer, pBoneBuffer);
 	pInfo->WorldMatrix = matCurrentWorld;
 	m_CaptureInfos->emplace_back(pInfo);
@@ -118,8 +122,8 @@ HRESULT CMotion_Trail::Initialize_Prototype(MODELCAPTURE_DESC* pDesc)
 	m_fMaxCaptureLifeTime	= pDesc->fMaxCaptureLifeTime;
 	m_iMaximumCapture		= pDesc->iMaximumCapture;
 	m_iNumBones				= pDesc->iNumBones;
-	m_CaptureInfos = new list<CAPTUREINFO*>;
-	m_RemainingInfos = new queue<CAPTUREINFO*>;
+	m_CaptureInfos			= new list<CAPTUREINFO*>;
+	m_RemainingInfos		= new queue<CAPTUREINFO*>;
 	vector<CAPTUREINFO*> Infos = {};
 	for (_uint i = 0; i < m_iMaximumCapture; ++i) {
 		CAPTUREINFO* pInfo = new CAPTUREINFO();

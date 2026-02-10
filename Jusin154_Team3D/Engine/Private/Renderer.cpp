@@ -17,7 +17,7 @@ void CRenderer::Render()
 	Render_LightAcc();
 	Render_Combined();
 	Render_Occlusion();
-	Render_EnvironmentPostProcess();
+	//Render_EnvironmentPostProcess();
 	Render_Fog();
 	Render_Blur();
 	Combine_Blur();
@@ -48,12 +48,12 @@ void CRenderer::Render()
 		GUI::Begin("RenderTarget Debuger", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 		GUI::Checkbox("DebugToggle", &m_bToggleDebug);
 
-		if (m_bToggleDebug) {
-			Render_Debug();
-		}
 		GUI::End();
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
+		Render_Debug();
+	} 
+	else if (m_bToggleDebug) {
 		Render_Debug();
 	}
 #endif
@@ -107,6 +107,22 @@ void CRenderer::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& P
 	}
 
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
+
+#ifdef DEBUG_SHADOW
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_PreShadow_DEBUG"), m_pPreShadowDSV))) {
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_PreShadow"), m_pShader, "g_VelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG_RtoRGBA));
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+#endif // DEBUG_SHADOW
 }
 
 HRESULT CRenderer::Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType)
@@ -168,6 +184,9 @@ void CRenderer::Bind_RawValue()
 		return;
 	}
 	if (FAILED(m_pShader->Bind_RawValue("g_vPreShadowResolution", &m_vPreShadowResoltion, sizeof(_float2)))) {
+		return;
+	}
+	if (FAILED(m_pShader->Bind_RawValue("g_bUsePhongShader", &m_bUsePhongShader, sizeof(_bool)))) {
 		return;
 	}
 }
@@ -322,6 +341,26 @@ void CRenderer::Render_Shadow()
 		}
 	}
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
+
+#ifdef DEBUG_SHADOW
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow_DEBUG"), m_pPreShadowDSV))) {
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Near"), m_pShader, "g_VelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Middle"), m_pShader, "g_TileVelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG_RtoRGBA));
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+#endif // DEBUG_SHADOW
 
 	COMPUTE_TIMEDELTA("Timer_Render_Shadow");
 }
@@ -991,6 +1030,25 @@ void CRenderer::Render_SSAO_BLUR()
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
 	}
+#ifdef DEBUG_SSAO
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO_BLUR_DEBUG")))) {
+		assert(false); return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_SSAO_AmbientOcclusion"), m_pShader, "g_VelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_SSAO_BLUR"), m_pShader, "g_TileVelocityTexture"))) {
+		assert(false);
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG_RtoRGBA));
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+#endif // DEBUG_SSAO
 	COMPUTE_TIMEDELTA("Timer_Render_SSAO_BLUR");
 }
 

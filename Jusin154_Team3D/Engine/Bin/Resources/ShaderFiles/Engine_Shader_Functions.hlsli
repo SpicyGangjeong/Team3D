@@ -323,21 +323,36 @@ float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
 }
 
 // BackGround ForeGround 합은 1
-float2 DepthCompare(float fCenterDepth, float fSampleDepth, float fDepthScale)
+float2 ComputeDepthWeights(float fCenterDepth, float fSampleDepth, float fDepthScale)
 {
-    return saturate(0.5f + float2(fDepthScale, -fDepthScale) * (fSampleDepth - fCenterDepth));
-}
+    float delta = fSampleDepth - fCenterDepth;
 
-float2 SpreadCompare(float fOffsetLength, float2 fSpreadLength, float fPixelToSampleUnitsScale)
+    // backgroundWeight: sample이 더 멀수록 증가
+    float backgroundWeight = saturate(0.5f + fDepthScale * delta);
+    float foregroundWeight = 1.0f - backgroundWeight;
+    
+    return float2(backgroundWeight, foregroundWeight);
+}
+float ComputeSpreadWeight(float fOffsetLength, float fSpreadLength, float fPixelToSampleUnitsScale)
 {
     return saturate(fPixelToSampleUnitsScale * fSpreadLength - fOffsetLength + 1.f);
 }
-
-float SampleWeight(float fCenterDepth, float fSampleDepth, float fOffsetLength, float fCenterSpreadLength, float fSampleSpreadLength, float fPixelToSampleUnitsScale, float fDepthScale)
+// fCenterDepth : 현재 중심 픽셀의 깊이
+// fSampleDepth : 샘플 픽셀의 깊이
+// fOffsetLength : 중심에서 샘플까지의 거리
+// fCenterSpreadLength : 중심 픽셀의 블러 반경
+// fSampleSpreadLength : 샘플 픽셀의 블러 반경
+// fPixelToSampleUnitsScale : spread/offset 단위
+// fDepthScale : 깊이 차이에 얼마나 민감하게 전경/배경을 나눌지 
+float SampleWeight(float fCenterDepth, float fSampleDepth, float fOffsetLength, float fCenterSpreadLength, 
+    float fSampleSpreadLength, float fPixelToSampleUnitsScale, float fDepthScale)
 {
-    float2 vDepthCompare = DepthCompare(fCenterDepth, fSampleDepth, fDepthScale);
-    float2 vSpreadCompare = SpreadCompare(fOffsetLength, float2(fCenterSpreadLength, fSampleSpreadLength), fPixelToSampleUnitsScale);
-    return dot(vDepthCompare, vSpreadCompare);
+    float2 vDepthCompare = ComputeDepthWeights(fCenterDepth, fSampleDepth, fDepthScale);
+    
+    float fSpreadCenter = ComputeSpreadWeight(fOffsetLength, fCenterSpreadLength, fPixelToSampleUnitsScale);
+    float fSpreadSample = ComputeSpreadWeight(fOffsetLength, fSampleSpreadLength, fPixelToSampleUnitsScale);
+    
+    return vDepthCompare.x * fSpreadCenter + vDepthCompare.y * fSpreadSample;
 }
 
 float4x4 RotateX(float fAngle)

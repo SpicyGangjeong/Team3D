@@ -107,9 +107,9 @@ private:
 public:
 	static CPipeLine* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 	virtual void Describe_Entity();
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 
 };
 

@@ -406,8 +406,9 @@ void CBroom::PlayerInput(_float fTimeDelta)
 		m_Input.bTurbo = false;
 		m_pInfoInstance->Event_CallBack(TEXT("BroomBooster"), &m_Input.bTurbo);
 	}
-
+#ifndef DEBUG_SHADOW
 	m_bTurbo = m_Input.bTurbo;
+#endif // !DEBUG_SHADOW
 }
 
 void CBroom::Set_AISpeed(_float speedMul, _float accelMul)

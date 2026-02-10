@@ -50,6 +50,7 @@ void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 		XMStoreFloat4(&m_vStartGripPos, Get_WorldPostion());
 	}
 
+	m_pTransformCom->RewindMomentum();
 	m_pModelCom->Combined_BoneMatrix();
 	_matrix socketMatrix = {};
 
@@ -106,7 +107,10 @@ HRESULT CGoblin_BattleAxe::Render()
 
 		return S_OK;
 	}
-
+	_float Intensity = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -144,6 +148,10 @@ HRESULT CGoblin_BattleAxe::Render()
 	m_pGripShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Green, nullptr, true);
 	m_pSubShape->Draw(XMLoadFloat4x4(&m_vAxeMat), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Purple, nullptr, true);
 #endif // _DEBUG
+	Intensity = 0.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

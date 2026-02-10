@@ -39,6 +39,7 @@ HRESULT CGoblin_Sword::Initialize(void* pArg)
 
 void CGoblin_Sword::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->RewindMomentum();
 	m_pModelCom->Combined_BoneMatrix();
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 
@@ -95,7 +96,11 @@ HRESULT CGoblin_Sword::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-
+	
+	_float Intensity = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	if (FAILED(Render_Disolve())) {
 		return E_FAIL;
 	}
@@ -124,6 +129,10 @@ HRESULT CGoblin_Sword::Render()
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 
+	Intensity = 0.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

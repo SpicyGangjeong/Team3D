@@ -48,10 +48,10 @@ public:
 	virtual void Free() override;
 
 
-#ifdef _DEBUG
-	void Describe_Entity() override;
+#ifdef RELEASE_DEBUGGER
+	void Describe_Entity();
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER
 };
 
 NS_END

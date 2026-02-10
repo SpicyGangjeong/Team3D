@@ -130,11 +130,18 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
-#ifdef _DEBUG
-	Describe_Entity();
-#endif // _DEBUG
+#ifdef RELEASE_DEBUGGER
+	static _bool m_bRenderSystem = false;
+	if (m_pGameInstance->Key_Up(DIK_F6)) {
+		m_bRenderSystem = !m_bRenderSystem;
+	}
+	if (true == m_bRenderSystem) {
+		Describe_Entity();
+	}
+#endif // RELEASE_DEBUGGER
 
 #ifndef _DEBUG
+#ifndef DEBUG_CAMERAS
 	if (dynamic_cast<CPlayer*>(m_pOwner)->Get_UIState() == UI_STATE::GAMEPLAYER)
 	{
 		m_bMovable = true;
@@ -142,6 +149,7 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	else {
 		m_bMovable = false;
 	}
+#endif // DEBUG_CAMERAS
 #endif // _DEBUG
 
 	if (m_pGameInstance->Key_Up(DIK_PGDN)) {
@@ -207,10 +215,33 @@ void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 		}
 		m_pGameInstance->Add_RenderGroup(RENDER::UI_OVERLAY, this);
 	}
+#ifdef DEBUG_CAMERAS
+	m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+#endif // DEBUG_CAMERAS
 }
 
 HRESULT CCamPosition_Shoulder::Render()
 {
+	RENDER eType = m_pGameInstance->Get_CurrentRenderPass();
+	if (RENDER::NONLIGHT == eType) {
+#ifdef DEBUG_CAMERAS
+		m_Batch->Begin();
+		_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+		_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+		_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x0000ff, 1.f);
+		if (m_bRenderLookPos) {
+			m_pSubShape->Draw(m_pLookTransform->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		}
+		if (m_bRenderHeadPos) {
+			vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0000, 1.f);
+			_vector vDestPos = Calc_DampingParentPos();
+			_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
+			m_pSubShape->Draw(XMMatrixTranslationFromVector(vHeadPos), ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		}
+		m_Batch->End();
+#endif // DEBUG_CAMERAS
+
+	}
 	return S_OK;
 }
 
@@ -278,7 +309,23 @@ _vector CCamPosition_Shoulder::Calc_BestPosition(_fvector vCastingPosition, _gve
 	_bool bHit = m_pGameInstance->SphereCast(0.25f, vCastingPosition, vCastingDirection, fZeroSafeDistance,
 		PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eSTATIC/*|PSX::PxQueryFlag::eDYNAMIC*/, m_BufferHit);
 
+	// 벽면에서 팔로우 타겟을 살짝 띄우는 오프셋
+
+	static _float fCameraSurfaceOffset = 0.20f; // 높이면 카메라가 벽으로부터 좀 더 안정적으로 띄워지지만 벽에 바짝 붙은 플레이어를 감당불가
+	static _float fCameraMinDistance = 0.71f;  // 높이면 
+
+#ifdef DEBUG_CAMERAS
+	GUI::Begin("CAMERA");
+	if (GUI::TreeNode("MinSurfaceOffset")) {
+		GUI::DragFloat("fMinDistance", &fCameraMinDistance, 0.01f, 0.01f, 1.f);
+		GUI::DragFloat("fSurfaceOffset", &fCameraSurfaceOffset, 0.01f, 0.01f, 1.f);
+		GUI::TreePop();
+	}
+	GUI::End();
+#endif // DEBUG_CAMERAS
+
 	if (false == bHit) {
+		m_fFocalRatioTargetValue = m_vFocalRatio.y;
 		return vCastingPosition + vCastingDirection * fZeroSafeDistance;
 	}
 
@@ -299,20 +346,6 @@ _vector CCamPosition_Shoulder::Calc_BestPosition(_fvector vCastingPosition, _gve
 	}
 	CMyTools::SortHitsByDistance(sweepHits);
 
-	// 벽면에서 팔로우 타겟을 살짝 띄우는 오프셋
-	
-	static _float fCameraSurfaceOffset = 0.20f; // 높이면 카메라가 벽으로부터 좀 더 안정적으로 띄워지지만 벽에 바짝 붙은 플레이어를 감당불가
-	static _float fCameraMinDistance = 0.71f;  // 높이면 
-
-#ifdef _DEBUG
-	GUI::Begin("CAMERA");
-	if (GUI::TreeNode("MinSurfaceOffset")) {
-		GUI::DragFloat("fCameraMinDistance", &fCameraMinDistance, 0.01f, 0.01f, 1.f);
-		GUI::DragFloat("fCameraSurfaceOffset", &fCameraSurfaceOffset, 0.01f, 0.01f, 1.f);
-		GUI::TreePop();
-	}
-	GUI::End();
-#endif // _DEBUG
 
 	_float fDistance = { };
 	_float fFinalTargetDistance = fZeroSafeDistance;
@@ -468,6 +501,10 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 		return E_FAIL;
 	}
 
+#ifdef DEBUG_CAMERAS
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.25f, 12, false, false));
+	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
+#endif // DEBUG_CAMERAS
 	return S_OK;
 }
 
@@ -503,7 +540,7 @@ void CCamPosition_Shoulder::Free()
 	SAFE_RELEASE(m_pTarget_LookPart);
 	SAFE_RELEASE(m_pTarget_FollowPart);
 }
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CCamPosition_Shoulder::Describe_Entity()
 {
@@ -512,16 +549,22 @@ void CCamPosition_Shoulder::Describe_Entity()
 		m_pTransformCom->Describe_Entity();
 		GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 		GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
-		GUI::SliderFloat("m_fFollowTargetIncludedAngleDegree", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
-		GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
-		GUI::SliderFloat("m_vFocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
-		GUI::SliderFloat("m_fCameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
-		GUI::Text("%.2f", XMConvertToDegrees(m_pBinded_Camera->Get_Fov()));
+		GUI::SliderFloat("FollowTarget_IncludedAngle", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
+		GUI::SliderFloat("CameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
+		GUI::SliderFloat("FocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
+		GUI::SliderFloat("CameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
+		GUI::Text("FOV %.2f", XMConvertToDegrees(m_pBinded_Camera->Get_Fov()));
+#ifdef DEBUG_CAMERAS
+		GUI::Checkbox("RenderLookPos", &m_bRenderLookPos);
+		GUI::Checkbox("RenderHeadPos", &m_bRenderHeadPos);
+#endif // DEBUG_CAMERAS
+
+#ifdef _DEBUG
 		GUI::Text("%d", m_bSpellFovLerp);
-		GUI::SliderFloat3("m_vSpellFovLerpTimer",	(_float*)&m_vSpellFovLerpTimer, 0.f, 5.f);
-		GUI::SliderFloat3("m_vSpellFovLerpDegree",	(_float*)&m_vSpellFovLerpDegree, 1.f, 60.f);
-		
-			
+		GUI::SliderFloat3("m_vSpellFovLerpTimer", (_float*)&m_vSpellFovLerpTimer, 0.f, 5.f);
+		GUI::SliderFloat3("m_vSpellFovLerpDegree", (_float*)&m_vSpellFovLerpDegree, 1.f, 60.f);
+
+
 		if (GUI::TreeNode("AnimList")) {
 			for (_int i = 0; i < m_pModelCom->Get_AnimSize(); i++)
 			{
@@ -534,9 +577,10 @@ void CCamPosition_Shoulder::Describe_Entity()
 
 			GUI::TreePop();
 		}
+#endif // _DEBUG
 		m_pBinded_Camera->Describe_Entity();
 	}
 	GUI::End();
 }
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER

@@ -50,6 +50,7 @@ float g_fSpotOuterAngle;
 float g_fToneMappingExposure;
 uint g_iToneMappingType;
 bool  g_bUsePowerLightAttenuation;
+bool  g_bUsePhongShader;
 float g_fLightAttenuationPower;
 
 vector g_vLightDir;
@@ -218,8 +219,8 @@ struct PS_OUT_BACKBUFFER
 };
 struct PS_OUT_DEBUG_MOTIONBLUR
 {
-    float3 vBaseMotionBlur  : SV_TARGET0;
-    float3 vTentMotionBlur : SV_Target1;
+    float4 vBaseMotionBlur  : SV_TARGET0;
+    float4 vTentMotionBlur : SV_Target1;
 };
 struct PS_OUT_LIGHT
 {
@@ -482,6 +483,11 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
     
+    if (g_bUsePhongShader)
+    {
+        vDepth.b = 0.f;
+    }
+    
     if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
         Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
@@ -726,26 +732,35 @@ PS_OUT_DEBUG_MOTIONBLUR PS_MAIN_DEBUG_MOTIONBLUR_INTENSE(PS_IN In)
 {
     PS_OUT_DEBUG_MOTIONBLUR Out;
     
-    float2 vBase = g_VelocityTexture.Sample(DefaultSampler, In.vTexcoord).xy * 2.f - 1.f;
-    float2 vTent = g_TileVelocityTexture.Sample(DefaultSampler, In.vTexcoord).xy * 2.f - 1.f;
+    float2 vBase = g_VelocityTexture.Sample(ClampSampler, In.vTexcoord).xy * 2.f - 1.f;
+    float2 vTent = g_TileVelocityTexture.Sample(ClampSampler, In.vTexcoord).xy * 2.f - 1.f;
     
     vBase *= 25.5f;
     vTent *= 25.5f;
     Out.vBaseMotionBlur.xy = vBase * 0.5f + 0.5f;
     Out.vBaseMotionBlur.z = 0.f;
+    Out.vBaseMotionBlur.w = 1.f;
     Out.vTentMotionBlur.xy = vTent * 0.5f + 0.5f;
     Out.vTentMotionBlur.z = 0.f;
+    Out.vTentMotionBlur.w = 1.f;
     if (AlmostEqual5(vBase.x, 0.f) && AlmostEqual5(vBase.y, 0.f))
     {
-        Out.vBaseMotionBlur = float3(1.f, 1.f, 1.f);
+        Out.vBaseMotionBlur = float4(1.f, 1.f, 1.f, 1.f);
     }
     if (AlmostEqual5(vTent.x, 0.f) && AlmostEqual5(vTent.y, 0.f))
     {
-        Out.vTentMotionBlur = float3(1.f, 1.f, 1.f);
+        Out.vTentMotionBlur = float4(1.f, 1.f, 1.f, 1.f);
     }
     return Out;
 };
-
+PS_OUT_BACKBUFFER PS_MAIN_DEBUG_RtoRGBA(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    Out.vBackBuffer = g_VelocityTexture.Sample(DefaultSampler, In.vTexcoord).xxxx;
+    Out.vEnvironment = g_TileVelocityTexture.Sample(DefaultSampler, In.vTexcoord).xxxx;
+    Out.vEnvironment.a = Out.vBackBuffer.a = 1.f;
+    return Out;
+};
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
@@ -1297,20 +1312,20 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
         return Out;
     }
     float4 vCenterViewPosition;
-    {
+    { // 센터 뷰스페이스 포지션 복원
         vCenterViewPosition.x = uv.x * 2.f - 1.f;
         vCenterViewPosition.y = uv.y * -2.f + 1.f;
         vCenterViewPosition.z = vDepthDesc.x;
         vCenterViewPosition.w = 1.f;
         vCenterViewPosition *= fCenterViewSpaceZ;
         vCenterViewPosition = mul(vCenterViewPosition, g_invmatProj);
-        vCenterViewPosition /= vCenterViewPosition.w;
+        vCenterViewPosition /= vCenterViewPosition.w; 
     }
     float3 vNormal = normalize(g_NormalTexture.Sample(PointSampler, uv).xyz * 2.f - 1.f);
     float3 vCenterViewNormal = mul(vNormal, (float3x3)g_ViewMatrix);
     
     float2 vNoiseScale = g_vResolution / 4.f;
-    float3 vNoise = g_SSAONoiseTexture.Sample(SsaoDataSampler, uv * vNoiseScale).xyz;
+    float3 vNoise = g_SSAONoiseTexture.Sample(SSAODataSampler, uv * vNoiseScale).xyz;
     
     float3 vTangent = normalize(vNoise - vCenterViewNormal * dot(vNoise, vCenterViewNormal));
     float3 vBiNormal = cross(vCenterViewNormal, vTangent);
@@ -1601,5 +1616,14 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_CAPTURE();
         
         PixelShader = compile ps_5_0 PS_MAIN_DEBUG_MOTIONBLUR_INTENSE();
+    }
+    pass DEBUG_RtoRGBA // 24
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        
+        PixelShader = compile ps_5_0 PS_MAIN_DEBUG_RtoRGBA();
     }
 }

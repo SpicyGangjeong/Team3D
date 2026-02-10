@@ -6,7 +6,7 @@
 #define	GUI	ImGui
 #endif // !GUI
 #ifndef IMGUI_GLOBAL_BEGIN_FLAG
-#define IMGUI_GLOBAL_BEGIN_FLAG  ImGuiWindowFlags_NoFocusOnAppearing|ImGuiWindowFlags_NoBringToFrontOnFocus|ImGuiWindowFlags_AlwaysAutoResize
+#define IMGUI_GLOBAL_BEGIN_FLAG  ImGuiWindowFlags_NoFocusOnAppearing|ImGuiWindowFlags_NoBringToFrontOnFocus
 #endif // IMGUI_GLOBAL_BEGIN_FLAG
 #define COMPUTE_TIMEDELTA(TIMER) m_pGameInstance->Compute_TimeDelta(TEXT(TIMER))
 
@@ -22,7 +22,12 @@
 #define RELEASE_DEBUGGER
 #endif // !_DEBUG
 
-#define DEBUG_MOTIONBLUR
+#ifdef 기무리
+//#define DEBUG_MOTIONBLUR
+//#define DEBUG_SSAO
+//#define DEBUG_SHADOW
+//#define DEBUG_CAMERAS
+#endif // 기무리
 
 
 
@@ -146,11 +151,11 @@
 #define         MRO_PARAMETER				2.f/ 27.f
 #define         SRO_PARAMETER				15.f/ 27.f
 
-constexpr unsigned int g_iNearShadowWidth		= 4096;
-constexpr unsigned int g_iNearShadowHeight		= 4096;
+constexpr unsigned int g_iNearShadowWidth		= 8192;
+constexpr unsigned int g_iNearShadowHeight		= 8192;
 
-constexpr unsigned int g_iMiddleShadowWidth		= 2048;
-constexpr unsigned int g_iMiddleShadowHeight	= 2048;
+constexpr unsigned int g_iMiddleShadowWidth		= 4096;
+constexpr unsigned int g_iMiddleShadowHeight	= 4096;
 
 constexpr unsigned int g_iFarShadowWidth		= 1024;
 constexpr unsigned int g_iFarShadowHeight		= 1024;

@@ -55,6 +55,7 @@ HRESULT CTroll_Weapon::Initialize(void* pArg)
 
 void CTroll_Weapon::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->RewindMomentum();
 	m_pModelCom->Combined_BoneMatrix();
 	_matrix socketMatrix = {};
 

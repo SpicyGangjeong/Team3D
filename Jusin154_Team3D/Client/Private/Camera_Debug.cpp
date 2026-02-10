@@ -93,9 +93,11 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 
 void CCamera_Debug::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
+#ifdef DEBUG_CAMERAS
 	Describe_Entity();
-#endif // _DEBUG
+#endif // DEBUG_CAMERAS
+#endif // RELEASE_DEBUGGER
 }
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)
@@ -183,11 +185,12 @@ void CCamera_Debug::Free()
 {
 	__super::Free();
 }
-#ifdef _DEBUG
+#ifdef RELEASE_DEBUGGER
 
 void CCamera_Debug::Describe_Entity()
 {
 	_float3 vPosition = {};
+#ifdef _DEBUG
 	GUI::Begin("PickingPos");
 	if (m_pGameInstance->Key_Pressing(DIK_Y))
 	{
@@ -197,6 +200,7 @@ void CCamera_Debug::Describe_Entity()
 		}
 	}
 	GUI::End();
+#endif // _DEBUG
 	GUI::Begin("CAMERA");
 	_int iPriority = m_iPriority;
 	size_t iAddress = (size_t)this;
@@ -214,4 +218,4 @@ void CCamera_Debug::Describe_Entity()
 	GUI::End();
 }
 
-#endif // _DEBUG
+#endif // RELEASE_DEBUGGER

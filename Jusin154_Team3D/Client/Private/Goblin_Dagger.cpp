@@ -38,6 +38,7 @@ HRESULT CGoblin_Dagger::Initialize(void* pArg)
 
 void CGoblin_Dagger::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->RewindMomentum();
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 	m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)
@@ -89,7 +90,10 @@ HRESULT CGoblin_Dagger::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-
+	_float Intensity = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
@@ -98,7 +102,7 @@ HRESULT CGoblin_Dagger::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
 			return E_FAIL;
 		}
 
@@ -106,7 +110,10 @@ HRESULT CGoblin_Dagger::Render()
 			return E_FAIL;
 		}
 	}
-
+	Intensity = 0.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMBIntensity", &Intensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
