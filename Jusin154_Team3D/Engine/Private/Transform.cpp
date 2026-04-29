@@ -282,11 +282,11 @@ void CTransform::AccumulateMomentum(_fvector vMomentum)
 }
 _vector CTransform::Get_CurrentMomentum() const
 {
-	return XMLoadFloat3(&m_vMomentum);
+	return XMLoadFloat3(&m_vMomentum); // 누적값 읽기
 }
 void CTransform::Set_CurrentMomentum(_fvector vMomentum)
 {
-	XMStoreFloat3(&m_vMomentum, vMomentum);
+	XMStoreFloat3(&m_vMomentum, vMomentum); 
 }
 _vector CTransform::Get_EstimatedPositionByMomentum() const
 {
@@ -294,14 +294,14 @@ _vector CTransform::Get_EstimatedPositionByMomentum() const
 }
 void CTransform::RewindMomentum()
 {
-	m_vMomentum = m_vBackMomentum;
-	m_vBackMomentum = { 0.f, 0.f, 0.f };
-	m_PrevMatrix = m_WorldMatrix;
+	m_vMomentum = m_vDeferredTranslation;
+	m_vDeferredTranslation = { 0.f, 0.f, 0.f };
+	m_PrevMatrix = m_WorldMatrix; // Velocity Buffer를 위한 PrevMatrix
 }
 
 void CTransform::BookMomentum(_fvector vMomentum)
 {
-	XMStoreFloat3(&m_vBackMomentum, (XMLoadFloat3(&m_vBackMomentum) + XMVectorSetW(vMomentum, 0.f)));
+	XMStoreFloat3(&m_vDeferredTranslation, (XMLoadFloat3(&m_vDeferredTranslation) + XMVectorSetW(vMomentum, 0.f)));
 }
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)

@@ -149,10 +149,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	m_pSound_Manager->Update();
-#ifdef _DEBUG
-	m_pResource_Manager->Describe_Entity();
-	m_pFog->Update_Fog();
-#endif // _DEBUG
+
 	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fExcuteTimeDelta);
@@ -169,8 +166,6 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pLevel_Manager->Update(fExcuteTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
-
-	//m_pObstacle_Manager->Refresh_Region();
 }
 
 HRESULT CGameInstance::Draw()

@@ -483,23 +483,25 @@ void CPhysX_Manager::Update_Kinematic()
 
 			if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
 			{
-				if (nullptr == pBody->userData) {
+				if (nullptr == pBody->userData) { // UserData nullptr -> 해제됨
 					ReleasedList.emplace_back(pBody);
 					continue;
 				}
 				PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)pBody->userData;
 				if (false == pUserData->bAutoOwnerTranslation) {
-					continue;
+					continue;  // 유닛의 상태에 따라 Continue 혹은 Apply 분기
 				}
 				const CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
-
 				pActor->setKinematicTarget(XMWorldToPx_NoScaleNoFlip(pTransform->Get_XMWorldMatrix()));
 			}
 		}
 	}
-	for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
-		Detach_Actor(*(*ReleasedActor), m_pGameInstance->Get_CurrentLevelID());
-		ReleasedActor = ReleasedList.erase(ReleasedActor);
+	{ // 해제된 액터 처리
+		_uint iCurrentLevel = m_pGameInstance->Get_CurrentLevelID();
+		for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
+			Detach_Actor(*(*ReleasedActor), iCurrentLevel);
+			ReleasedActor = ReleasedList.erase(ReleasedActor);
+		}
 	}
 }
 
@@ -517,6 +519,7 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 	{ // Simulate
 		m_pScene->simulate((PSX::PxReal)fTimeDelta);
 		_bool bResult = m_pScene->fetchResults(true);
+		assert(bResult);
 	}
 	{ // Post
 		 Update_Dynamic_ActiveActors();
@@ -529,19 +532,20 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
 	list<PSX::PxActor*> ReleasedList = {};
-	PSX::PxU32 iNumActiveActor = {};
+	PSX::PxU32 iNumActiveActor = {}; // 실제 피직스 이동을 한 액터들
 	PSX::PxActor** ppActiveActors = m_pScene->getActiveActors(iNumActiveActor);
 
 	for (PSX::PxU32 i = 0; i < iNumActiveActor; ++i) {
 		PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)ppActiveActors[i]->userData;
 		PSX::PxRigidDynamic* pActorDynamic = ppActiveActors[i]->is<PSX::PxRigidDynamic>();
+
 		if (nullptr != pActorDynamic) {
-			if (nullptr == ppActiveActors[i]->userData) {
+			if (nullptr == ppActiveActors[i]->userData) { // UserData nullptr -> 해제됨
 				ReleasedList.emplace_back(ppActiveActors[i]);
 				continue;
 			}
 			if (false == pUserData->bAutoOwnerTranslation) {
-				continue;
+				continue; // 유닛의 상태에 따라 Continue 혹은 Apply 분기
 			}
 			CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
 
@@ -553,9 +557,12 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			pTransform->Set_WorldMatrix(WorldMatrix);
 		}
 	}
-	for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
-		Detach_Actor(*(*ReleasedActor), m_pGameInstance->Get_CurrentLevelID());
-		ReleasedActor = ReleasedList.erase(ReleasedActor);
+	{ // 해제된 액터 처리
+		_uint iCurrentLevel = m_pGameInstance->Get_CurrentLevelID();
+		for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
+			Detach_Actor(*(*ReleasedActor), iCurrentLevel);
+			ReleasedActor = ReleasedList.erase(ReleasedActor);
+		}
 	}
 }
 

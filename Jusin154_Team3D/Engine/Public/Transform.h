@@ -104,7 +104,7 @@ private:
 	_float				m_fRadius = { 20.f };
 
 	_float3				m_vMomentum = {}; // 현재 프레임에 계산된 이동량
-	_float3				m_vBackMomentum = {}; // 다음 프레임에 계산될 이동량
+	_float3				m_vDeferredTranslation = {}; // 다음 프레임에 계산될 이동량
 
 #ifdef RELEASE_DEBUGGER
 	_float3		m_vRotation = {0.f, 0.f, 0.f};

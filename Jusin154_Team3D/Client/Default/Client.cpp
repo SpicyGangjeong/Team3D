@@ -131,7 +131,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             pGameInstance->Compute_TimeDelta(TEXT("Timer_60"));
 
 #ifdef _DEBUG
-            pMainApp->Update(1.f / 60.f);
+            _float fFrameTime = min(pGameInstance->Get_TimeDelta(TEXT("Timer_60")), fMaxTimer);
+            pMainApp->Update(fFrameTime);
 #endif // _DEBUG
 #ifndef _DEBUG
             _float fFrameTime = min(pGameInstance->Get_TimeDelta(TEXT("Timer_60")), fMaxTimer);

@@ -835,13 +835,17 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     //Dynamic - > Static
     //부드럽게 전환
 
-    float fVisibilityCombinedLogical = min(fVisibilityDynamic, fVisibility_Static);
-    float fStaticShadowBlendStartRatio = g_fCascadeSplitRatioFar;
-    float fStaticShadowBlendWidthRatio = 0.05f;
-    float fStaticShadowBlendEndRatio = min(1.0f, fStaticShadowBlendStartRatio + fStaticShadowBlendWidthRatio);
-    float fStaticShadowBlendWeight = smoothstep(fStaticShadowBlendStartRatio, fStaticShadowBlendEndRatio, fDepthRatio);
-    float fVisibilityCombined = lerp(fVisibilityDynamic, fVisibilityCombinedLogical, fStaticShadowBlendWeight);
-    
+    float g_fStaticShadowBlendWidthRatio = 0.05f;
+    float fStaticShadowBlendEndRatio = min(1.0f, g_fCascadeSplitRatioFar + g_fStaticShadowBlendWidthRatio);
+    float fStaticShadowBlendWeight = smoothstep(
+    g_fCascadeSplitRatioFar,
+    fStaticShadowBlendEndRatio,
+    fDepthRatio
+);
+
+    float fStaticAdjusted = lerp(1.0f, fVisibility_Static, fStaticShadowBlendWeight);
+
+    float fVisibilityCombined = fVisibilityDynamic * fStaticAdjusted;
     // 2번째 방법
     // Dynamic * Static 항상 최소곱
     //float fVisibilityCombined = saturate(fVisibilityDynamic * fVisibility_Static);
