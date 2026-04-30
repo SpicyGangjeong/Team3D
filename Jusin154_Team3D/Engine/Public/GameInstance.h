@@ -32,6 +32,8 @@ public:
 	void Set_RenderCollider(_bool bRender) { m_bRenderCollider = bRender; }
 	void Toggle_RenderCollider() { m_bRenderCollider = !m_bRenderCollider; }
 #endif RELEASE_DEBUGGER
+	_float Get_DepthOcclusionThreshold() const { return m_fDepthOcclusionThreshold; }
+	void Set_DepthOcclusionThreshold(_float fThreshold) { m_fDepthOcclusionThreshold = max(50.f, min(150.f, fThreshold)); }
 #pragma region GRAPHIC_DEVICE
 public:
 	void Render_Begin(const _float4* pClearColor);
@@ -392,6 +394,7 @@ private:
 #endif // _DEBUG
 	_bool m_bRenderCollider = false;
 	_bool m_bRenderSystem = false;
+	_float m_fDepthOcclusionThreshold = 120.f;
 
 	map<const _char*, SaveModel>		m_sModelMap;
 public:

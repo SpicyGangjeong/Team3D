@@ -89,8 +89,8 @@ void CMapObject_Render::Late_Update(_float fTimeDelta)
 		m_iNumMeshe = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
 
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-		Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 	}
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
 
 HRESULT CMapObject_Render::Render()
