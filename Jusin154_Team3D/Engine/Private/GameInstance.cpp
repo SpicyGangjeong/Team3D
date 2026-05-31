@@ -355,15 +355,15 @@ void CGameInstance::Compute_TimeDelta(const _wstring& strTimerTag)
 void CGameInstance::Compute_FrameCount()
 {
 #ifdef _DEBUG
-	m_fTimer_PriorityUpdate = Get_TimeDelta(TEXT("Timer_PriorityUpdate"));
-	m_fTimer_Update = Get_TimeDelta(TEXT("Timer_Update"));
-	m_fTimer_LateUpdate = Get_TimeDelta(TEXT("Timer_LateUpdate"));
-	m_fTimer_DrawCall = Get_TimeDelta(TEXT("Timer_DrawCall"));
-	m_fTimer_Present = Get_TimeDelta(TEXT("Timer_Present"));
-	m_fTimer_Picking = Get_TimeDelta(TEXT("Timer_Picking"));
-	m_fTimer_PhysX = Get_TimeDelta(TEXT("Timer_PhysX"));
-	m_fTimer_Level = Get_TimeDelta(TEXT("Timer_Level"));
-	m_fTimer_FrameCount = Get_TimeDelta(TEXT("Timer_FrameCount"));
+	m_fTimer_PriorityUpdate		= Get_TimeDelta(TEXT("Timer_PriorityUpdate"));
+	m_fTimer_Update				= Get_TimeDelta(TEXT("Timer_Update"));
+	m_fTimer_LateUpdate			= Get_TimeDelta(TEXT("Timer_LateUpdate"));
+	m_fTimer_DrawCall			= Get_TimeDelta(TEXT("Timer_DrawCall"));
+	m_fTimer_Present			= Get_TimeDelta(TEXT("Timer_Present"));
+	m_fTimer_Picking			= Get_TimeDelta(TEXT("Timer_Picking"));
+	m_fTimer_PhysX				= Get_TimeDelta(TEXT("Timer_PhysX"));
+	m_fTimer_Level				= Get_TimeDelta(TEXT("Timer_Level"));
+	m_fTimer_FrameCount			= Get_TimeDelta(TEXT("Timer_FrameCount"));
 
 	m_fTimer_Render_Priority = Get_TimeDelta(TEXT("Timer_Render_Priority"));
 	m_fTimer_Render_Shadow = Get_TimeDelta(TEXT("Timer_Render_Shadow"));

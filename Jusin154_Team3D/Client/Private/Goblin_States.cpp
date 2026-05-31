@@ -313,7 +313,7 @@ HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
 			vDistance = XMVector4Normalize(vDistance);
 			_float step = dist - fDesiredRange;
 
-			m_pTransformCom->AccumulatevVelocity(vDistance * step * fTimeDelta * 2.f);
+			m_pTransformCom->AccumulateVelocity(vDistance * step * fTimeDelta * 2.f);
 		}
 	}
 
@@ -938,7 +938,7 @@ void CGoblin::HitState_Behavior(_float fTimeDelta)
 				_float ease = 1.f - (t * t);
 				_vector Force = vPlayerLook * fTimeDelta * 6.f * ease;
 
-				m_pTransformCom->AccumulatevVelocity(Force);
+				m_pTransformCom->AccumulateVelocity(Force);
 				pairAnimInfo = m_Animation[STATEANIM::TUMBLE];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.6f, false, 0.8f);
 			}

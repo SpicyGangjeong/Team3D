@@ -38,7 +38,7 @@ void CPhysXEffectHitBox::Priority_Update(_float fTimeDelta)
 
 void CPhysXEffectHitBox::Update(_float fTimeDelta)
 {
-	m_pTransformCom->AccumulatevVelocity(XMLoadFloat3(&m_vDeltaPos));
+	m_pTransformCom->AccumulateVelocity(XMLoadFloat3(&m_vDeltaPos));
 }
 
 void CPhysXEffectHitBox::Late_Update(_float fTimeDelta)
