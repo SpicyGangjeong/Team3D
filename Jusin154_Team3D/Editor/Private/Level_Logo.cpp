@@ -60,7 +60,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 		return;
 #endif // gimch
 #ifdef 기무리
-	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::OBJECT))))
+	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::EFFECT))))
 		return;
 #endif // 기무리
 #ifdef 진우

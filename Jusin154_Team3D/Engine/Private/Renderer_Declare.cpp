@@ -722,6 +722,10 @@ void CRenderer::Describe_Entitiy()
 			GUI::DragFloat("SpecularMaximum", &m_fLightSpecularMaximum, 0.01f, 0.0f, 2.f, "%.3f");
 			GUI::DragFloat("fMinShadowBrightness", &m_fMinShadowBrightness, 0.01f, 0.0f, 1.f, "%.3f");
 			GUI::Checkbox("UsePhongShader", &m_bUsePhongShader);
+			_float fDepthOcclusionThreshold = m_pGameInstance->Get_DepthOcclusionThreshold();
+			if (GUI::SliderFloat("DepthOcclusionThreshold", &fDepthOcclusionThreshold, 50.f, 150.f, "%.1f")) {
+				m_pGameInstance->Set_DepthOcclusionThreshold(fDepthOcclusionThreshold);
+			}
 		}
 		if (GUI::CollapsingHeader("PostProcessing_Bloom"))
 		{
@@ -748,6 +752,16 @@ void CRenderer::Describe_Entitiy()
 			GUI::SliderFloat("g_fMBSampleBias", &m_fMBSampleBias, -1.f, 1.f, "%.3f");
 			GUI::SliderFloat("m_fMBMaxBlurRadius", &m_fMBMaxBlurRadius, 0.1f, (_float)m_iMBMaxSampleCount, "%.1f");
 			GUI::SliderInt("g_iMBSampleCount", &m_iMBSampleCount, 0, m_iMBMaxSampleCount, "%d");
+		}
+		if (GUI::CollapsingHeader("Render_Breakdown"))
+		{
+			GUI::Checkbox("Show Breakdown", &m_bShowRenderBreakdown);
+			if (m_bShowRenderBreakdown)
+			{
+				Draw_RenderBreakdown("NonBlend", m_NonBlendBreakdown, 10);
+				Draw_RenderBreakdown("Shadow_Near", m_ShadowNearBreakdown, 10);
+				Draw_RenderBreakdown("Shadow_Middle", m_ShadowMiddleBreakdown, 10);
+			}
 		}
 #ifdef _DEBUG
 		if (GUI::Button("Refresh_Shader")) {

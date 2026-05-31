@@ -34,14 +34,17 @@ void CBuildingContainer::Update(_float fTimeDelta)
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
 {
+    const _float fDepthOcclusionThreshold = m_pGameInstance->Get_DepthOcclusionThreshold();
+
     if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vExtentWorldPosition), 1.f), m_fRadius)) {
-        if (m_fCamDepth > 300.f)
+        if (m_fCamDepth > fDepthOcclusionThreshold)
         {
             if (m_pOcclusionQueryCom->isDraw())
                 __super::Late_Update(fTimeDelta);
         }
-        else
+        else {
             __super::Late_Update(fTimeDelta);
+        }
 
         m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
 

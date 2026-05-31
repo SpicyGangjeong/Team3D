@@ -483,7 +483,7 @@ void CPhysX_Manager::Update_Kinematic()
 
 			if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
 			{
-				if (nullptr == pBody->userData) {
+				if (nullptr == pBody->userData) { // UserData nullptr -> 해제됨
 					ReleasedList.emplace_back(pBody);
 					continue;
 				}
@@ -492,7 +492,6 @@ void CPhysX_Manager::Update_Kinematic()
 					continue;
 				}
 				const CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
-
 				pActor->setKinematicTarget(XMWorldToPx_NoScaleNoFlip(pTransform->Get_XMWorldMatrix()));
 			}
 		}
@@ -517,6 +516,7 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 	{ // Simulate
 		m_pScene->simulate((PSX::PxReal)fTimeDelta);
 		_bool bResult = m_pScene->fetchResults(true);
+		assert(bResult);
 	}
 	{ // Post
 		 Update_Dynamic_ActiveActors();
@@ -528,14 +528,15 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
 	list<PSX::PxActor*> ReleasedList = {};
-	PSX::PxU32 iNumActiveActor = {};
+	PSX::PxU32 iNumActiveActor = {}; // 실제 피직스 이동을 한 액터들
 	PSX::PxActor** ppActiveActors = m_pScene->getActiveActors(iNumActiveActor);
 
 	for (PSX::PxU32 i = 0; i < iNumActiveActor; ++i) {
 		PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)ppActiveActors[i]->userData;
 		PSX::PxRigidDynamic* pActorDynamic = ppActiveActors[i]->is<PSX::PxRigidDynamic>();
+
 		if (nullptr != pActorDynamic) {
-			if (nullptr == ppActiveActors[i]->userData) {
+			if (nullptr == ppActiveActors[i]->userData) { // UserData nullptr -> 해제됨
 				ReleasedList.emplace_back(ppActiveActors[i]);
 				continue;
 			}
