@@ -16,7 +16,7 @@ CDummy_PhysXMonster::CDummy_PhysXMonster(const CDummy_PhysXMonster& rhs) :
 
 void CDummy_PhysXMonster::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 }
 
@@ -26,16 +26,16 @@ void CDummy_PhysXMonster::Update(_float fTimeDelta)
 	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
 	if (true == m_pCharacter_Controller->IsActive()) {
 		if (m_pGameInstance->Key_Pressing(DIK_UPARROW)) {
-			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+			m_pTransformCom->AccumulatevVelocity(XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_LEFT)) {
-			m_pTransformCom->AccumulateMomentum(XMVectorSet(-1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+			m_pTransformCom->AccumulatevVelocity(XMVectorSet(-1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_DOWN)) {
-			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 0.f, -1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+			m_pTransformCom->AccumulatevVelocity(XMVectorSet(0.f, 0.f, -1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_RIGHT)) {
-			m_pTransformCom->AccumulateMomentum(XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+			m_pTransformCom->AccumulatevVelocity(XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_vStunTimer.x = 0.f;

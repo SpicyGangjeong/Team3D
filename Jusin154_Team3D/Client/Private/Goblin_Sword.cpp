@@ -39,7 +39,7 @@ HRESULT CGoblin_Sword::Initialize(void* pArg)
 
 void CGoblin_Sword::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	m_pModelCom->Combined_BoneMatrix();
 	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 

@@ -17,11 +17,11 @@ CCamera_Model::CCamera_Model(const CCamera_Model& rhs)
 
 void CCamera_Model::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	_float3 vCamPos = {};
 	_float3 vCamMomentum = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
-	XMStoreFloat3(&vCamMomentum, m_pTransformCom->Get_CurrentMomentum());
+	XMStoreFloat3(&vCamMomentum, m_pTransformCom->Get_CurrentVelocity());
 #ifdef _DEBUG
 	GUI::Text("Cam_Model Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
 	GUI::Text("v %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);

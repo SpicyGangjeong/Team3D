@@ -141,7 +141,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	ReLockOnTarget();
 	SetGravity();
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 
 	__super::Priority_Update(fTimeDelta);
 
@@ -576,7 +576,7 @@ void CPlayer::Trigger(CTimeSocket& Socket)
 		m_pTransformCom->Set_State(STATE::POSITION, vNewPos);
 		m_pCharacter_Controller->Set_Position(vNewPos);
 		m_pTransformCom->RotationQ(pContents->pxTransform.q);
-		m_pTransformCom->RewindMomentum();
+		m_pTransformCom->ResetVelocityVector();
 	} break;
 	case TIMESOCKET_FUNC::TRANSLATION_LERP:
 	{
@@ -1196,7 +1196,7 @@ void CPlayer::Describe_Entity()
 		m_pCharacter_Controller->Describe_Entity();
 		GUI::Checkbox("Battle", &m_bDuel_ZOnlyMove);
 		_float4 vMomentum = {};
-		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentVelocity());
 		GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 		_char label[256];
 		for (auto& iter : m_KeyFrames)

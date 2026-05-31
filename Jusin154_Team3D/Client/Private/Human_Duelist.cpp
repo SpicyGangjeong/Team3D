@@ -81,7 +81,7 @@ HRESULT CHuman_Duelist::Initialize(void* pArg)
 
 void CHuman_Duelist::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 
 	__super::Priority_Update(fTimeDelta);
 
@@ -641,7 +641,7 @@ void CHuman_Duelist::Describe_Entity()
 		}
 		m_pCharacter_Controller->Describe_Entity();
 		_float4 vMomentum = {};
-		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentVelocity());
 		GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 		_char label[256];
 		for (auto& iter : m_KeyFrames)

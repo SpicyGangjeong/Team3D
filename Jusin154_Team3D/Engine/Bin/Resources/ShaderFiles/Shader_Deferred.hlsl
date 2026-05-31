@@ -101,6 +101,7 @@ vector g_vFogColor;
 float g_fDepthPackExponent;
 
 Texture3D g_VolumeTexture;
+float g_fCascadeBlendRatio = 0.02f;
 
 float g_fWeights_32[32] =
 {
@@ -813,42 +814,20 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     /* 광원의 NDC에서 샘플링 */
     float fVisibility_Dynamic_Near      = ShadowVisibility_hwPCF(g_ShadowNearTexture,   vNearShadowPos,     g_vNearShadowResolution,    g_vShadowBias.x, g_vShadowRadiusTexel.x);
     float fVisibility_Dynamic_Middle    = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos,   g_vMiddleShadowResolution,  g_vShadowBias.y, g_vShadowRadiusTexel.y);
-    float fVisibility_Static            = ShadowVisibility_hwPCF(g_PreShadowTexture,    vPreShadowPosition, g_vPreShadowResolution,     g_vShadowBias.w, g_vShadowRadiusTexel.w);
+    float fVisibilityStatic             = ShadowVisibility_hwPCF(g_PreShadowTexture,    vPreShadowPosition, g_vPreShadowResolution,     g_vShadowBias.w, g_vShadowRadiusTexel.w);
     
-////////////////////////////
-    // 케스케이드
     float fDepthRatio = saturate(vDepthDesc.y);
 
-    // 경계 블렌딩 폭. 경계 섞는 비중
-    float fShadowCascadeBlendWidthRatio = 0.02f; // 2% 섞음
+    float fCascadeBlend_Front = smoothstep(g_fCascadeSplitRatioNear - g_fCascadeBlendRatio,
+                g_fCascadeSplitRatioNear + g_fCascadeBlendRatio, fDepthRatio);
 
-    // 경계 주변 부드럽게 할 비중
-    float fCascadeBlend_NearToMiddle = smoothstep(g_fCascadeSplitRatioNear - fShadowCascadeBlendWidthRatio,
-        g_fCascadeSplitRatioNear + fShadowCascadeBlendWidthRatio, fDepthRatio);
-    //float fCascadeBlend_MiddleToFar = smoothstep(g_fCascadeSplitRatioFar - fShadowCascadeBlendWidthRatio,
-        //g_fCascadeSplitRatioFar + fShadowCascadeBlendWidthRatio, fDepthRatio);
+    float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_Front);
+    
+    float fStaticShadowBlendWeight = smoothstep(g_fCascadeSplitRatioFar - g_fCascadeBlendRatio,
+                g_fCascadeSplitRatioFar + g_fCascadeBlendRatio, fDepthRatio);
 
-    // Near -> Middle
-    float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_NearToMiddle);
-    
-    // 1번째 방법
-    //Dynamic - > Static
-    //부드럽게 전환
-
-    float fVisibilityCombinedLogical = min(fVisibilityDynamic, fVisibility_Static);
-    float fStaticShadowBlendStartRatio = g_fCascadeSplitRatioFar;
-    float fStaticShadowBlendWidthRatio = 0.05f;
-    float fStaticShadowBlendEndRatio = min(1.0f, fStaticShadowBlendStartRatio + fStaticShadowBlendWidthRatio);
-    float fStaticShadowBlendWeight = smoothstep(fStaticShadowBlendStartRatio, fStaticShadowBlendEndRatio, fDepthRatio);
-    float fVisibilityCombined = lerp(fVisibilityDynamic, fVisibilityCombinedLogical, fStaticShadowBlendWeight);
-    
-    // 2번째 방법
-    // Dynamic * Static 항상 최소곱
-    //float fVisibilityCombined = saturate(fVisibilityDynamic * fVisibility_Static);
-    
-    // 3번째 방법
-    // Dynamic , Static 최소값만 취함
-    //float fVisibilityCombined = min(fVisibilityDynamic, fVisibility_Static);
+    fVisibilityStatic = lerp(1.0f, fVisibilityStatic, fStaticShadowBlendWeight);
+    float fVisibilityCombined = fVisibilityDynamic * fVisibilityStatic;
 
     // 최소 밝기
     float fShadowMultiplier = lerp(g_fMinShadowBrightness, 1.0f, saturate(fVisibilityCombined));

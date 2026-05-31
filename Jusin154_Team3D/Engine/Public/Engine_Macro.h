@@ -23,7 +23,7 @@
 #endif // !_DEBUG
 
 //#ifdef 기무리
-#define DEBUG_MOTIONBLUR
+//#define DEBUG_MOTIONBLUR
 //#define DEBUG_SSAO
 //#define DEBUG_SHADOW
 //#define DEBUG_CAMERAS
@@ -48,7 +48,7 @@
 #endif // !_DEBUG
 
 #ifdef _DEBUG
-#ifdef 기무리
+#ifdef golde
 #undef ASSERT_NURI
 #define ASSERT_NURI(expression) assert(expression)
 #define MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK); assert(false); 

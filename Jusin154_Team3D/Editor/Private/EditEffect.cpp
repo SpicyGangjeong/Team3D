@@ -43,7 +43,7 @@ HRESULT CEditEffect::Initialize(void* pArg)
 void CEditEffect::Priority_Update(_float fTimeDelta)
 {
 	if(m_EffectInfo.isMotionBlur == true)
-		m_pTransformCom->RewindMomentum();
+		m_pTransformCom->ResetVelocityVector();
 }
 
 void CEditEffect::Update(_float fTimeDelta)

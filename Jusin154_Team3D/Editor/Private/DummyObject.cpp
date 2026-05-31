@@ -39,7 +39,7 @@ HRESULT CDummyObject::Initialize(void* pArg)
 
 void CDummyObject::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 }
 
 void CDummyObject::Update(_float fTimeDelta)

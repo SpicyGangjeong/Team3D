@@ -179,7 +179,7 @@ HRESULT CMapElement_Door::Ready_Components(void* pArg)
 	{ // RIGID_BODY
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::DOOR);
-		Desc.bAutoOwnerTranslation = false;
+		Desc.bAutoTranslation = false;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}

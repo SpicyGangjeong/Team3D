@@ -61,7 +61,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 #endif // _DEBUG
 
 #ifndef _DEBUG
-	m_pThreadHolder = CThreadHolder::Create(12);
+	m_pThreadHolder = CThreadHolder::Create(8);
 #endif // !_DEBUG
 
 	if (nullptr == m_pThreadHolder) {
@@ -149,28 +149,17 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	m_pSound_Manager->Update();
-#ifdef _DEBUG
-	m_pResource_Manager->Describe_Entity();
-	m_pFog->Update_Fog();
-#endif // _DEBUG
 	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fExcuteTimeDelta);
-
 	m_pPipeLine->Update();
-
 	m_pObject_Manager->Update(fExcuteTimeDelta);
-
 	m_pPhysX_Manager->Update(fExcuteTimeDelta);
-
 	m_pObject_Manager->Late_Update(fExcuteTimeDelta);
 
 	m_pVolumetric->Dispatch();
-
 	m_pLevel_Manager->Update(fExcuteTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
-
-	//m_pObstacle_Manager->Refresh_Region();
 }
 
 HRESULT CGameInstance::Draw()

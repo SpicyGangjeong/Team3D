@@ -210,7 +210,7 @@ HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
 			vDistance = XMVector4Normalize(vDistance);
 			_float step = dist - fDesiredRange;
 
-			m_pTransformCom->AccumulateMomentum(vDistance * step * fTimeDelta * 1.5f);
+			m_pTransformCom->AccumulatevVelocity(vDistance * step * fTimeDelta * 1.5f);
 		}
 	}
 

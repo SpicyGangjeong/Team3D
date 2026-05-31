@@ -19,7 +19,7 @@ public:
 
 	typedef struct tagRigidBody_DYNAMIC_Desc : public CRigidBody::RIGIDBODY_DESC
 	{
-		_bool bAutoOwnerTranslation = true;
+		_bool bAutoTranslation = true;
 	}RIGIDBODY_DYNAMIC_DESC;
 
 private:
@@ -62,8 +62,8 @@ public:
 	_vector					Get_Position();
 	void					Set_Position(_vector vPos, _bool bTeleport);
 	void					Set_Rotation(_vector vRotQ, _bool bTeleport);
-	void					Set_AutoOwnerTranlation(_bool bAutoOwnerTranslation) { m_tagData.bAutoOwnerTranslation = bAutoOwnerTranslation; };
-	_bool					Get_AutoOwnerTranlation() { return m_tagData.bAutoOwnerTranslation; };
+	void					Set_AutoOwnerTranlation(_bool bAutoTranslation) { m_tagData.bAutoTranslation = bAutoTranslation; };
+	_bool					Get_AutoOwnerTranlation() { return m_tagData.bAutoTranslation; };
 
 	void					Set_Transform(_matrix WorldMatrix, _bool bTeleport);
 	void					Set_Transform(_vector vPos, _vector vRotQ, _bool bTeleport);

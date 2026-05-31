@@ -596,7 +596,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 		_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
 		vLook = XMVector3Normalize(vLook);
-		m_pTransformCom->AccumulateMomentum(vLook *fTimeDelta *0.8f);
+		m_pTransformCom->AccumulatevVelocity(vLook *fTimeDelta *0.8f);
 	}
 	else if (SUCCEEDED(InputMove())) {
 		m_fMoveTime += fTimeDelta;

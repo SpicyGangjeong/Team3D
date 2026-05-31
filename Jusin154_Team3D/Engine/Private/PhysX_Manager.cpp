@@ -488,7 +488,7 @@ void CPhysX_Manager::Update_Kinematic()
 					continue;
 				}
 				PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)pBody->userData;
-				if (false == pUserData->bAutoOwnerTranslation) {
+				if (false == pUserData->bAutoTranslation) {
 					continue;
 				}
 				const CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
@@ -497,9 +497,9 @@ void CPhysX_Manager::Update_Kinematic()
 			}
 		}
 	}
-	for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
-		Detach_Actor(*(*ReleasedActor), m_pGameInstance->Get_CurrentLevelID());
-		ReleasedActor = ReleasedList.erase(ReleasedActor);
+	for (auto iterActor = ReleasedList.begin(); iterActor != ReleasedList.end();) {
+		Detach_Actor(*(*iterActor), m_pGameInstance->Get_CurrentLevelID());
+		iterActor = ReleasedList.erase(iterActor);
 	}
 }
 
@@ -520,7 +520,6 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 	}
 	{ // Post
 		 Update_Dynamic_ActiveActors();
-		//Update_Dynamic_AllActors();
 	}
 #ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PhysX"));
@@ -540,7 +539,7 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 				ReleasedList.emplace_back(ppActiveActors[i]);
 				continue;
 			}
-			if (false == pUserData->bAutoOwnerTranslation) {
+			if (false == pUserData->bAutoTranslation) {
 				continue;
 			}
 			CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
@@ -549,13 +548,14 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			_float3 vOriginalScale = pTransform->Get_Scale();
 			_matrix WorldMatrix = {};
 
-			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), XMLoadFloat4((_float4*)&pPxTransform.q), XMLoadFloat3((_float3*)&pPxTransform.p));
+			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), 
+				XMLoadFloat4((_float4*)&pPxTransform.q), XMLoadFloat3((_float3*)&pPxTransform.p));
 			pTransform->Set_WorldMatrix(WorldMatrix);
 		}
 	}
-	for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
-		Detach_Actor(*(*ReleasedActor), m_pGameInstance->Get_CurrentLevelID());
-		ReleasedActor = ReleasedList.erase(ReleasedActor);
+	for (auto iterActor = ReleasedList.begin(); iterActor != ReleasedList.end();) {
+		Detach_Actor(*(*iterActor), m_pGameInstance->Get_CurrentLevelID());
+		iterActor = ReleasedList.erase(iterActor);
 	}
 }
 

@@ -276,32 +276,32 @@ void CTransform::Translation(_fvector vTrans)
 	Set_State(STATE::POSITION, Get_State(STATE::POSITION) + XMVectorSetW(vTrans, 0.f));
 }
 
-void CTransform::AccumulateMomentum(_fvector vMomentum)
+void CTransform::AccumulateVelocity(_fvector vVelocity)
 {
-	XMStoreFloat3(&m_vMomentum, (XMLoadFloat3(&m_vMomentum) + XMVectorSetW(vMomentum, 0.f)));
+	XMStoreFloat3(&m_vVelocityVector, (XMLoadFloat3(&m_vVelocityVector) + XMVectorSetW(vVelocity, 0.f)));
 }
-_vector CTransform::Get_CurrentMomentum() const
+void CTransform::ResetVelocityVector()
 {
-	return XMLoadFloat3(&m_vMomentum);
-}
-void CTransform::Set_CurrentMomentum(_fvector vMomentum)
-{
-	XMStoreFloat3(&m_vMomentum, vMomentum);
-}
-_vector CTransform::Get_EstimatedPositionByMomentum() const
-{
-	return XMVectorSetW(Get_State(STATE::POSITION) + XMLoadFloat3(&m_vMomentum), 1.f);
-}
-void CTransform::RewindMomentum()
-{
-	m_vMomentum = m_vBackMomentum;
-	m_vBackMomentum = { 0.f, 0.f, 0.f };
+	m_vVelocityVector = m_vBackVelocityVector;
+	m_vBackVelocityVector = { 0.f, 0.f, 0.f };
 	m_PrevMatrix = m_WorldMatrix;
 }
-
-void CTransform::BookMomentum(_fvector vMomentum)
+_vector CTransform::Get_CurrentVelocity() const
 {
-	XMStoreFloat3(&m_vBackMomentum, (XMLoadFloat3(&m_vBackMomentum) + XMVectorSetW(vMomentum, 0.f)));
+	return XMLoadFloat3(&m_vVelocityVector);
+}
+void CTransform::Set_CurrentVelocity(_fvector vVelocity)
+{
+	XMStoreFloat3(&m_vVelocityVector, vVelocity);
+}
+_vector CTransform::Get_EstimatedPositionByVelocityVector() const
+{
+	return XMVectorSetW(Get_State(STATE::POSITION) + XMLoadFloat3(&m_vVelocityVector), 1.f);
+}
+
+void CTransform::BookVelocity(_fvector vVelocity)
+{
+	XMStoreFloat3(&m_vBackVelocityVector, (XMLoadFloat3(&m_vBackVelocityVector) + XMVectorSetW(vVelocity, 0.f)));
 }
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)

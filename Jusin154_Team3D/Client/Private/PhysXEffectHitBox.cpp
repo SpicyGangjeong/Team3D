@@ -33,12 +33,12 @@ HRESULT CPhysXEffectHitBox::Initialize(void* pArg)
 
 void CPhysXEffectHitBox::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 }
 
 void CPhysXEffectHitBox::Update(_float fTimeDelta)
 {
-	m_pTransformCom->AccumulateMomentum(XMLoadFloat3(&m_vDeltaPos));
+	m_pTransformCom->AccumulatevVelocity(XMLoadFloat3(&m_vDeltaPos));
 }
 
 void CPhysXEffectHitBox::Late_Update(_float fTimeDelta)
@@ -49,6 +49,7 @@ void CPhysXEffectHitBox::Late_Update(_float fTimeDelta)
 	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 	}
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
 
 HRESULT CPhysXEffectHitBox::Render()

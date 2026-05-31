@@ -21,7 +21,7 @@ CNPC_Ollivander::CNPC_Ollivander(const CNPC_Ollivander& Prototype)
 
 void CNPC_Ollivander::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	m_iEntered -= 1;
 	if (m_iEntered < 0) {
 		m_iEntered = 0;
@@ -314,7 +314,7 @@ HRESULT CNPC_Ollivander::Ready_Components(void* pArg)
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
-		Desc.bAutoOwnerTranslation = false;
+		Desc.bAutoTranslation = false;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_NPC_HITBOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}

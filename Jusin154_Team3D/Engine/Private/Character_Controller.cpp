@@ -262,9 +262,9 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 		_float fDistanceFromGround = XMVectorGetX(XMVector3Dot(vFootToHitPos, vSurfaceNormal));
 		_float fDotUpNormal = (fabsf(fDotUp) < FLT_EPSILON) ? FLT_EPSILON: fDotUp;
 		_float fCurrentMomentumY = (-fDistanceFromGround / fDotUpNormal) * 0.3f;
-		_vector vCurrentMomentum = m_pTransform->Get_CurrentMomentum();
+		_vector vCurrentMomentum = m_pTransform->Get_CurrentVelocity();
 
-		m_pTransform->Set_CurrentMomentum( XMVectorSetY(vCurrentMomentum, fCurrentMomentumY) );
+		m_pTransform->Set_CurrentVelocity( XMVectorSetY(vCurrentMomentum, fCurrentMomentumY) );
 		Set_OnGroundFlag(true);
 		if (m_fCurrentSlopeDegree < m_fWalkableSlopeDegree * 0.5f) {
 			m_bSlide = false;
@@ -292,17 +292,17 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 	const PSX::PxObstacleContext*	pPxObstacles = { nullptr };			// 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
 	if (true == m_bGravity) {
 		if (0 >= m_iIsOnGround) {      // 공중: 무조건 중력
-			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * m_fGravity * fTimeDelta, 0.f, 0.f));
+			m_pTransform->AccumulateVelocity(XMVectorSet(0.f, -GRAVITY * m_fGravity * fTimeDelta, 0.f, 0.f));
 		}
 		else if ((iCoyote_Counter) >= m_iIsOnGround) {
 			UpdateGroundByCast(fTimeDelta);// 바닥에 플레이어 붙이게 함
 		}
 		else if (m_fCurrentSlopeDegree > m_fWalkableSlopeDegree) {        // 너무 가파른 경사: 중력
-			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
+			m_pTransform->AccumulateVelocity(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 			m_bSlide = true;
 		}
 	}
-	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
+	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentVelocity());
 	m_eBeforeCollisionFlags = m_pController->move(pxVecMomentum, fMinimumDistant, fTimeDelta, pxFilter, pPxObstacles);
 }
 

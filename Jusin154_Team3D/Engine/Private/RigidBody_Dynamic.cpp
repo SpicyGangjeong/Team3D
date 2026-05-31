@@ -394,7 +394,7 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	m_tagData.pOwner = m_pOwner;
 	XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
 	m_tagData.pBody = this;
-	m_tagData.bAutoOwnerTranslation = pDesc->bAutoOwnerTranslation;
+	m_tagData.bAutoTranslation = pDesc->bAutoTranslation;
 	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this, m_pGameInstance->Get_NextLevelID());
 	m_pRigidBody->setCMassLocalPose(m_PxMassCenter);
 	m_pRigidBody->setRigidDynamicLockFlags(m_eLockFlag);

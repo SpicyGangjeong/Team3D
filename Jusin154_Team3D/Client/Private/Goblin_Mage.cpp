@@ -563,7 +563,7 @@ void CGoblin_Mage::Describe_Entity()
 		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
 
 		_float4 vMomentum = {};
-		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentVelocity());
 		GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 
 		_float3 Pos;

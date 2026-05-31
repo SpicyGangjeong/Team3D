@@ -21,30 +21,30 @@ CDummy_PhysXPlayable::CDummy_PhysXPlayable(const CDummy_PhysXPlayable& rhs):
 
 void CDummy_PhysXPlayable::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 }
 
 void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Pressing(DIK_UPARROW)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+		m_pTransformCom->AccumulatevVelocity(XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_LEFT)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(-1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+		m_pTransformCom->AccumulatevVelocity(XMVectorSet(-1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_DOWN)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 0.f, -1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+		m_pTransformCom->AccumulatevVelocity(XMVectorSet(0.f, 0.f, -1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_RIGHT)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+		m_pTransformCom->AccumulatevVelocity(XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
 		if (m_pGameInstance->Key_Pressing(DIK_SPACE)) {
-			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+			m_pTransformCom->AccumulatevVelocity(XMVectorSet(0.f, 10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_C)) {
-			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+			m_pTransformCom->AccumulatevVelocity(XMVectorSet(0.f, -10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
 		if (m_pGameInstance->Key_Down(DIK_V)) {
 			m_pGameInstance->Detach_Actor(*m_pCharacter_Controller->Get_Actor(), m_pGameInstance->Get_CurrentLevelID());
@@ -56,7 +56,7 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 		}
 	}
 
-	m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
+	m_pTransformCom->AccumulatevVelocity(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 	m_pCharacter_Controller->Move(fTimeDelta);
 }
 
