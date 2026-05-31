@@ -458,10 +458,10 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float2 uv = In.vTexcoord;
     
-    float3 vAlbedo                  = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
-    float3 vNormal                  = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
-    float4 vDepth                   = g_DepthTexture.Sample(DefaultSampler, uv);
-    float fSSAO_AmbientOcclusion    = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
+    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
+    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
+    float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fSSAO_AmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
     
@@ -483,8 +483,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float fAttenuation = 1.f;
 
     float fCameraDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
-    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
-    float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
+    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀 -> 카메라
+    float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀 -> 라이트
     
     if (g_bUsePhongShader)
     {
@@ -493,8 +493,15 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
-        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
+        float NdotL = saturate(dot(vNormal, vToLight));
+        float3 vHalf = normalize(vToView + vToLight);
+        float NdotH = saturate(dot(vNormal, vHalf));
+
+        float3 vDiffuse = g_vLightDiffuse.rgb * vAlbedo * NdotL;
+        float3 vAmbient = fSSAO_AmbientOcclusion * g_vLightAmbient.rgb * g_vMtrlAmbient.rgb * vAlbedo;
+
+        Out.vShade = vDiffuse + vAmbient;
+        Out.vSpecular = (g_vLightSpecular.rgb * g_vMtrlSpecular.rgb) * pow(NdotH, 50.f);
         Out.vSpecular.a = 0.f;
         return Out;
     }
@@ -503,16 +510,15 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
-        fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
-        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
-        vF0 = min(vF0, 0.9f); // 메탈릭 상한선
+        fRoughness = max(fRoughness, fMinRoughness);
+        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness);
+        vF0 = min(vF0, 0.9f);
     }
-    
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     PBR_Out.vShade *= fTotalOcclusion;
     
-    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
+    float3 vAmbient = g_vLightAmbient.rgb * vAlbedo * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
     
@@ -579,8 +585,12 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
-        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
+        float NdotL = saturate(dot(vNormal, vToLight));
+        float3 vHalf = normalize(vToView + vToLight);
+        float NdotH = saturate(dot(vNormal, vHalf));
+
+        Out.vShade = g_vLightDiffuse.rgb * vAlbedo * NdotL * fAttenuation;
+        Out.vSpecular = (g_vLightSpecular.rgb * g_vMtrlSpecular.rgb) * pow(NdotH, 50.f) * fAttenuation;
         Out.vSpecular.a = 0.f;
         return Out;
     }
@@ -598,11 +608,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     PBR_Out.vShade *= fTotalOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
-    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
 
-    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 0.f);
     
     return Out;
@@ -680,15 +688,19 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
-        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
+        float NdotL = saturate(dot(vNormal, vToLight));
+        float3 vHalf = normalize(vToView + vToLight);
+        float NdotH = saturate(dot(vNormal, vHalf));
+
+        Out.vShade = g_vLightDiffuse.rgb * vAlbedo * NdotL * fAttenuation;
+        Out.vSpecular = (g_vLightSpecular.rgb * g_vMtrlSpecular.rgb) * pow(NdotH, 50.f) * fAttenuation;
         Out.vSpecular.a = 0.f;
         return Out;
     }
     
     float fTotalOcclusion = saturate(fOcclusion * fSSAO_AmbientOcclusion);
     
-    { // 수치조정 // 점광원
+    { // 수치조정 // 스포트
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
         fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
@@ -699,11 +711,9 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     PBR_Out.vShade *= fTotalOcclusion;
     
-    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
-    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
     
-    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 0.f);
     
     return Out;
@@ -795,12 +805,12 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     vPosition = mul(vPosition, g_invmatProj);
     vPosition = mul(vPosition, g_invMatView);
-    vPreShadowPosition = vPosition;
     
     /* (로컬위치 * 월드) -> (로컬위치 * 월드 * 광원의 뷰 * 광원의 투영 ) */
     float4 vNearShadowPos = vPosition;
     float4 vMiddleShadowPos = vPosition;
     float4 vFarShadowPos = vPosition;
+    vPreShadowPosition = vPosition;
     {
         vNearShadowPos = mul(vNearShadowPos, g_LightViewMatrix_NEAR);
         vNearShadowPos = mul(vNearShadowPos, g_LightProjMatrix_NEAR);
@@ -818,15 +828,17 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     float fDepthRatio = saturate(vDepthDesc.y);
 
-    float fCascadeBlend_Front = smoothstep(g_fCascadeSplitRatioNear - g_fCascadeBlendRatio,
+    float fCascadeBlend_Front = smoothstep(
+                g_fCascadeSplitRatioNear - g_fCascadeBlendRatio,
                 g_fCascadeSplitRatioNear + g_fCascadeBlendRatio, fDepthRatio);
 
-    float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_Front);
-    
-    float fStaticShadowBlendWeight = smoothstep(g_fCascadeSplitRatioFar - g_fCascadeBlendRatio,
+    float fStaticShadowBlendWeight = smoothstep(
+                g_fCascadeSplitRatioFar - g_fCascadeBlendRatio,
                 g_fCascadeSplitRatioFar + g_fCascadeBlendRatio, fDepthRatio);
-
+    
+    float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_Front);
     fVisibilityStatic = lerp(1.0f, fVisibilityStatic, fStaticShadowBlendWeight);
+    
     float fVisibilityCombined = fVisibilityDynamic * fVisibilityStatic;
 
     // 최소 밝기
