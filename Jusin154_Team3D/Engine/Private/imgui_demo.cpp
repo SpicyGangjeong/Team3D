@@ -1560,7 +1560,7 @@ static void DemoWindowWidgetsDragAndDrop()
             };
             static int mode = 0;
             if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-            if (ImGui::RadioButton("AccumulateMomentum", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
+            if (ImGui::RadioButton("AccumulateVelocity", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
             if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
             static const char* names[9] =
             {
@@ -1584,7 +1584,7 @@ static void DemoWindowWidgetsDragAndDrop()
                     // Display preview (could be anything, e.g. when dragging an image we could decide to display
                     // the filename and a small preview of the image, etc.)
                     if (mode == Mode_Copy) { ImGui::Text("Copy %s", names[n]); }
-                    if (mode == Mode_Move) { ImGui::Text("AccumulateMomentum %s", names[n]); }
+                    if (mode == Mode_Move) { ImGui::Text("AccumulateVelocity %s", names[n]); }
                     if (mode == Mode_Swap) { ImGui::Text("Swap %s", names[n]); }
                     ImGui::EndDragDropSource();
                 }

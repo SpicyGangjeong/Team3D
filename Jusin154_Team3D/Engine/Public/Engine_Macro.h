@@ -24,7 +24,7 @@
 
 //#ifdef 기무리
 //#define DEBUG_MOTIONBLUR
-#define DEBUG_SSAO
+//#define DEBUG_SSAO
 //#define DEBUG_SHADOW
 //#define DEBUG_CAMERAS
 //#endif // 기무리

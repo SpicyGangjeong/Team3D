@@ -787,7 +787,7 @@ HRESULT CRanrok::Ready_SubParts()
 	m_pRanrokCombinedBoneMatrices[ENUM_CLASS(RANROK_ENUM_BONEMATRICES::TAIL2)] = m_pTail2_BoneMat = m_pModelCom->Get_BoneMatrixPtr("tail_12");
 
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-	Desc.bAutoOwnerTranslation = false;
+	Desc.bAutoTranslation = false;
 	Desc.iSubKind = ENUM_CLASS(PXOBJECT::RANROK_BODY);
 	for (_uint i = 0; i < ENUM_CLASS(RANROK_ENUM_BONEMATRICES::END); ++i) {
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_RANROK_BODY"), (CComponent**)&m_pTargetableDO[i], &Desc))) {

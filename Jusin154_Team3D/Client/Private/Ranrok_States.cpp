@@ -803,7 +803,7 @@ HRESULT CRanrok::Behavior_RushExitCheck(_float fTimeDelta)
 		vLook = XMVector3Normalize(vLook);
 		_vector vPos = m_pCharacter_Controller->Get_Position();
 		_vector vNextPos = vPos + vLook * 10.f * fTimeDelta;
-		m_pTransformCom->AccumulateMomentum(vLook * 10.f * fTimeDelta);
+		m_pTransformCom->AccumulateVelocity(vLook * 10.f * fTimeDelta);
 		return S_OK;
 	}
 

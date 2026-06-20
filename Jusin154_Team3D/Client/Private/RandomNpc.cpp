@@ -59,7 +59,7 @@ void CRandomNpc::Priority_Update(_float fTimeDelta)
 	if (!m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius())) {
 		return;
 	}
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	m_iEntered -= 1;
 	if (m_iEntered < 0) {
 		m_iEntered = 0;
@@ -448,7 +448,7 @@ HRESULT CRandomNpc::Ready_Components(void* pArg)
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
-		Desc.bAutoOwnerTranslation = false;
+		Desc.bAutoTranslation = false;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_NPC_HITBOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}

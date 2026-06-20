@@ -361,10 +361,10 @@ void CPipeLine::Make_LightBoxes()
 	_matrix ViewInvMatrix = XMMatrixInverse(nullptr, ViewMatrix);
 
 	// Cascaded Shadow Map (3단계: Near / Middle / Far)
-	for (_uint iIndex = 0; iIndex < 3; ++iIndex)
+	for (_uint iCSMIndex = 0; iCSMIndex < 3; ++iCSMIndex)
 	{
 		_float4 vCascadePoints8[8] = {};
-		Get_CascadePoints8(m_vShadowViewPoints, iIndex, vCascadePoints8);
+		Get_CascadePoints8(m_vShadowViewPoints, iCSMIndex, vCascadePoints8);
 
 		// AABB 초기값 설정 (첫 번째 점 기준)
 		_float fMinX = vCascadePoints8[0].x;
@@ -387,12 +387,6 @@ void CPipeLine::Make_LightBoxes()
 			fMaxZ = max(fMaxZ, vCascadePoints8[iPointIndex].z);
 		}
 
-		// 각 Cascade 별로 결과를 저장할 Plane 배열 선택
-		_float4* targetPlanes = nullptr;
-		if (iIndex == 0) targetPlanes = m_vNearShadowViewBoxPlane;
-		if (iIndex == 1) targetPlanes = m_vMiddleShadowViewBoxPlane;
-		if (iIndex == 2) targetPlanes = m_vFarShadowViewBoxPlane;
-
 		// Shadow Box 여유 공간 추가 (Shadow clipping 방지 / 안정성 확보)
 		fMinX += m_vShadowMarginMin.x;
 		fMaxX += m_vShadowMarginMax.x;
@@ -404,7 +398,7 @@ void CPipeLine::Make_LightBoxes()
 		// Cascade 별 Shadow Map 해상도 설정
 		_uint iShadowWidth = { 0 };
 		_uint iShadowHeight = { 0 };
-		switch (iIndex)
+		switch (iCSMIndex)
 		{
 			case 0:
 				iShadowWidth  = g_iNearShadowWidth;
@@ -424,25 +418,31 @@ void CPipeLine::Make_LightBoxes()
 
 		Adjust_ShadowTexcel(fMinX, fMinY, fMaxX, fMaxY, iShadowWidth, iShadowHeight);
 
+		// 각 Cascade 별로 결과를 저장할 Plane 배열 선택
+		_float4* pTargetPlanes = nullptr;
+		if (iCSMIndex == 0) pTargetPlanes = m_vNearShadowViewBoxPlane;
+		if (iCSMIndex == 1) pTargetPlanes = m_vMiddleShadowViewBoxPlane;
+		if (iCSMIndex == 2) pTargetPlanes = m_vFarShadowViewBoxPlane;
+
 		// Light-Space AABB를 Plane 형태로 변환 (Frustum 형태)
 		// 물체는 그대로 World 좌표 사용
 		// Plane vs Bounding Volume 테스트만 수행
-		targetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
-		targetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
-		targetPlanes[2] = _float4(0.f, -1.f, 0.f, fMinY); // Bottom
-		targetPlanes[3] = _float4(0.f, 1.f, 0.f, -fMaxY); // Top
-		targetPlanes[4] = _float4(0.f, 0.f, -1.f, fMinZ); // Near
-		targetPlanes[5] = _float4(0.f, 0.f, 1.f, -fMaxZ); // Far
+		pTargetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
+		pTargetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
+		pTargetPlanes[2] = _float4(0.f, -1.f, 0.f, fMinY); // Bottom
+		pTargetPlanes[3] = _float4(0.f, 1.f, 0.f, -fMaxY); // Top
+		pTargetPlanes[4] = _float4(0.f, 0.f, -1.f, fMinZ); // Near
+		pTargetPlanes[5] = _float4(0.f, 0.f, 1.f, -fMaxZ); // Far
 
 		// Orthographic Projection 생성 Off-Center 방식 사용
 		_matrix ProjMatrix = XMMatrixOrthographicOffCenterLH(fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ);
 
 		// Light View / View Inverse 저장
-		XMStoreFloat4x4(&m_ShadowTransformMatrices[iIndex][ENUM_CLASS(D3DTS::VIEW)], ViewMatrix);
-		XMStoreFloat4x4(&m_ShadowTransformMatrices[iIndex][ENUM_CLASS(D3DTS::VIEW_INV)], ViewInvMatrix);
+		XMStoreFloat4x4(&m_ShadowTransformMatrices[iCSMIndex][ENUM_CLASS(D3DTS::VIEW)], ViewMatrix);
+		XMStoreFloat4x4(&m_ShadowTransformMatrices[iCSMIndex][ENUM_CLASS(D3DTS::VIEW_INV)], ViewInvMatrix);
 		// Light Projection / Projection Inverse 저장
-		XMStoreFloat4x4(&m_ShadowTransformMatrices[iIndex][ENUM_CLASS(D3DTS::PROJ)], ProjMatrix);
-		XMStoreFloat4x4(&m_ShadowTransformMatrices[iIndex][ENUM_CLASS(D3DTS::PROJ_INV)], XMMatrixInverse(nullptr, ProjMatrix));
+		XMStoreFloat4x4(&m_ShadowTransformMatrices[iCSMIndex][ENUM_CLASS(D3DTS::PROJ)], ProjMatrix);
+		XMStoreFloat4x4(&m_ShadowTransformMatrices[iCSMIndex][ENUM_CLASS(D3DTS::PROJ_INV)], XMMatrixInverse(nullptr, ProjMatrix));
 	}
 }
 

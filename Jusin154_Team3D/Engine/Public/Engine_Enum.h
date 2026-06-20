@@ -128,14 +128,6 @@ enum class PHYSX_KIND {
     OBSTACLEActor,
 };
 
-enum class PHYSX_JOINT {
-	D6,
-	DISTANCE,
-	REVOLUTE,
-	FIXED,
-	END
-};
-
 enum class PXOBJECT : _uint {
 #pragma region NOT_DEFINE
 	NOT_DEFINE = 0,
@@ -238,6 +230,14 @@ enum class PXOBJECT : _uint {
 
 #pragma endregion
 	END = 999
+};
+
+enum class PHYSX_JOINT {
+    D6,
+    DISTANCE,
+    REVOLUTE,
+    FIXED,
+    END
 };
 
 enum class HIT_TYPE

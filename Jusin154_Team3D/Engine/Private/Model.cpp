@@ -575,7 +575,7 @@ void CModel::Update_RootBone(_float Amount)
 		vDeltaWorld = XMVectorSetW(vDeltaWorld, 1.f);
 
 		if (m_bRootBone) {
-			m_pTransform->AccumulateMomentum(vDeltaWorld);
+			m_pTransform->AccumulateVelocity(vDeltaWorld);
 		}
 		else {
 			XMStoreFloat4(&m_RootBoneMomentum, vDeltaWorld);

@@ -63,13 +63,13 @@ public:
 	void	Translation(_float3& vTrans);
 	void	Translation(_fvector vTrans);
 
-	void	AccumulateMomentum(_fvector vMomentum);
-	_vector Get_CurrentMomentum() const;
-	void	Set_CurrentMomentum(_fvector vMomentum);
-	void	RewindMomentum();
+	void	AccumulateVelocity(_fvector vVelocity);
+	_vector Get_CurrentVelocity() const;
+	void	Set_CurrentVelocity(_fvector vVelocity);
+	void	ResetVelocityVector();
 
-	_vector Get_EstimatedPositionByMomentum() const;
-	void	BookMomentum(_fvector vMomentum);
+	_vector Get_EstimatedPositionByVelocityVector() const;
+	void	BookVelocity(_fvector vVelocity);
 
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void TurnAngle(_float4 vAxis, _float fAngle);
@@ -103,8 +103,8 @@ private:
 	_float4x4			m_PrevMatrix = {};
 	_float				m_fRadius = { 20.f };
 
-	_float3				m_vMomentum = {}; // 현재 프레임에 계산된 이동량
-	_float3				m_vDeferredTranslation = {}; // 다음 프레임에 계산될 이동량
+	_float3				m_vVelocityVector = {}; // 현재 프레임에 계산된 이동량
+	_float3				m_vBackVelocityVector = {}; // 다음 프레임에 계산될 이동량
 
 #ifdef RELEASE_DEBUGGER
 	_float3		m_vRotation = {0.f, 0.f, 0.f};

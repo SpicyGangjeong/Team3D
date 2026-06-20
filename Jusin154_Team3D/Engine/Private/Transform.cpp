@@ -276,32 +276,32 @@ void CTransform::Translation(_fvector vTrans)
 	Set_State(STATE::POSITION, Get_State(STATE::POSITION) + XMVectorSetW(vTrans, 0.f));
 }
 
-void CTransform::AccumulateMomentum(_fvector vMomentum)
+void CTransform::AccumulateVelocity(_fvector vVelocity)
 {
-	XMStoreFloat3(&m_vMomentum, (XMLoadFloat3(&m_vMomentum) + XMVectorSetW(vMomentum, 0.f)));
+	XMStoreFloat3(&m_vVelocityVector, (XMLoadFloat3(&m_vVelocityVector) + XMVectorSetW(vVelocity, 0.f)));
 }
-_vector CTransform::Get_CurrentMomentum() const
+void CTransform::ResetVelocityVector()
 {
-	return XMLoadFloat3(&m_vMomentum); // 누적값 읽기
+	m_vVelocityVector = m_vBackVelocityVector;
+	m_vBackVelocityVector = { 0.f, 0.f, 0.f };
+	m_PrevMatrix = m_WorldMatrix;
 }
-void CTransform::Set_CurrentMomentum(_fvector vMomentum)
+_vector CTransform::Get_CurrentVelocity() const
 {
-	XMStoreFloat3(&m_vMomentum, vMomentum); 
+	return XMLoadFloat3(&m_vVelocityVector);
 }
-_vector CTransform::Get_EstimatedPositionByMomentum() const
+void CTransform::Set_CurrentVelocity(_fvector vVelocity)
 {
-	return XMVectorSetW(Get_State(STATE::POSITION) + XMLoadFloat3(&m_vMomentum), 1.f);
+	XMStoreFloat3(&m_vVelocityVector, vVelocity);
 }
-void CTransform::RewindMomentum()
+_vector CTransform::Get_EstimatedPositionByVelocityVector() const
 {
-	m_vMomentum = m_vDeferredTranslation;
-	m_vDeferredTranslation = { 0.f, 0.f, 0.f };
-	m_PrevMatrix = m_WorldMatrix; // Velocity Buffer를 위한 PrevMatrix
+	return XMVectorSetW(Get_State(STATE::POSITION) + XMLoadFloat3(&m_vVelocityVector), 1.f);
 }
 
-void CTransform::BookMomentum(_fvector vMomentum)
+void CTransform::BookVelocity(_fvector vVelocity)
 {
-	XMStoreFloat3(&m_vDeferredTranslation, (XMLoadFloat3(&m_vDeferredTranslation) + XMVectorSetW(vMomentum, 0.f)));
+	XMStoreFloat3(&m_vBackVelocityVector, (XMLoadFloat3(&m_vBackVelocityVector) + XMVectorSetW(vVelocity, 0.f)));
 }
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)

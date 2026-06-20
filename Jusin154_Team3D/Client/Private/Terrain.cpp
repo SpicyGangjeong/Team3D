@@ -52,7 +52,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 void CTerrain::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 }
 
 void CTerrain::Update(_float fTimeDelta)

@@ -488,20 +488,17 @@ void CPhysX_Manager::Update_Kinematic()
 					continue;
 				}
 				PHYSX_USERDATA* pUserData = (PHYSX_USERDATA*)pBody->userData;
-				if (false == pUserData->bAutoOwnerTranslation) {
-					continue;  // 유닛의 상태에 따라 Continue 혹은 Apply 분기
+				if (false == pUserData->bAutoTranslation) {
+					continue;
 				}
 				const CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
 				pActor->setKinematicTarget(XMWorldToPx_NoScaleNoFlip(pTransform->Get_XMWorldMatrix()));
 			}
 		}
 	}
-	{ // 해제된 액터 처리
-		_uint iCurrentLevel = m_pGameInstance->Get_CurrentLevelID();
-		for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
-			Detach_Actor(*(*ReleasedActor), iCurrentLevel);
-			ReleasedActor = ReleasedList.erase(ReleasedActor);
-		}
+	for (auto iterActor = ReleasedList.begin(); iterActor != ReleasedList.end();) {
+		Detach_Actor(*(*iterActor), m_pGameInstance->Get_CurrentLevelID());
+		iterActor = ReleasedList.erase(iterActor);
 	}
 }
 
@@ -521,7 +518,6 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 	}
 	{ // Post
 		 Update_Dynamic_ActiveActors();
-		//Update_Dynamic_AllActors();
 	}
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PhysX"));
 }
@@ -540,8 +536,8 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 				ReleasedList.emplace_back(ppActiveActors[i]);
 				continue;
 			}
-			if (false == pUserData->bAutoOwnerTranslation) {
-				continue; // 유닛의 상태에 따라 Continue 혹은 Apply 분기
+			if (false == pUserData->bAutoTranslation) {
+				continue;
 			}
 			CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
 
@@ -549,16 +545,14 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			_float3 vOriginalScale = pTransform->Get_Scale();
 			_matrix WorldMatrix = {};
 
-			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), XMLoadFloat4((_float4*)&pPxTransform.q), XMLoadFloat3((_float3*)&pPxTransform.p));
+			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), 
+				XMLoadFloat4((_float4*)&pPxTransform.q), XMLoadFloat3((_float3*)&pPxTransform.p));
 			pTransform->Set_WorldMatrix(WorldMatrix);
 		}
 	}
-	{ // 해제된 액터 처리
-		_uint iCurrentLevel = m_pGameInstance->Get_CurrentLevelID();
-		for (list<PSX::PxActor*>::iterator ReleasedActor = ReleasedList.begin(); ReleasedActor != ReleasedList.end();) {
-			Detach_Actor(*(*ReleasedActor), iCurrentLevel);
-			ReleasedActor = ReleasedList.erase(ReleasedActor);
-		}
+	for (auto iterActor = ReleasedList.begin(); iterActor != ReleasedList.end();) {
+		Detach_Actor(*(*iterActor), m_pGameInstance->Get_CurrentLevelID());
+		iterActor = ReleasedList.erase(iterActor);
 	}
 }
 

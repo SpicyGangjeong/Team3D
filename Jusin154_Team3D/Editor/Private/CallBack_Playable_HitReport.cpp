@@ -40,12 +40,12 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 			{
 			case 23: // 무거운데 올라갈 수 있는 벽
 				if (m_pGameInstance->Key_Pressing(DIK_E)) {
-					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, 1.5f, 0.f, 0.f));
+					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookVelocity(fLength * XMVectorSet(0.f, 1.5f, 0.f, 0.f));
 				}																			   					  
 				else if (m_pGameInstance->Key_Pressing(DIK_R)) {							   					  
-					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, -1.f, 0.f, 0.f));
+					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookVelocity(fLength * XMVectorSet(0.f, -1.f, 0.f, 0.f));
 				}
-				//pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(XMVectorSet(0.f, 0.5f * GRAVITY, 0.f, 0.f));
+				//pOwnerActorData->pOwner->Get_Component<CTransform>()->BookVelocity(XMVectorSet(0.f, 0.5f * GRAVITY, 0.f, 0.f));
 				break;
 			case 24: // 문짝
 			{

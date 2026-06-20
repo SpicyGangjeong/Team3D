@@ -31,7 +31,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pInteractiveInfo->Update(fTimeDelta);
 	m_pEffectInfo->Update(fTimeDelta);
 	m_pCutSceneInfo->Update(fTimeDelta);
-}	
+}
 
 void CInfoInstance::Change_Level()
 {
@@ -41,7 +41,6 @@ void CInfoInstance::Change_Level()
 	m_pSkillInfo->Change_Level();
 	m_pInteractiveInfo->Change_Level();
 	m_pEffectInfo->Change_Level();
-//	UI_Event.clear();
 	m_pCutSceneInfo->Clear_AllEvents();
 }
 
