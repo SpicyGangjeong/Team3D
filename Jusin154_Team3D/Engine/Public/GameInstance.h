@@ -33,7 +33,7 @@ public:
 	void Toggle_RenderCollider() { m_bRenderCollider = !m_bRenderCollider; }
 #endif RELEASE_DEBUGGER
 	_float Get_DepthOcclusionThreshold() const { return m_fDepthOcclusionThreshold; }
-	void Set_DepthOcclusionThreshold(_float fThreshold) { m_fDepthOcclusionThreshold = max(50.f, min(150.f, fThreshold)); }
+	void Set_DepthOcclusionThreshold(_float fThreshold) { m_fDepthOcclusionThreshold = max(15.f, min(150.f, fThreshold)); }
 #pragma region GRAPHIC_DEVICE
 public:
 	void Render_Begin(const _float4* pClearColor);
@@ -352,7 +352,6 @@ private:
 	_bool							m_isSlowMotion = {};
 	_float2							m_vSlowTime = {};
 	_float							m_fSlowIntense = {};
-#ifdef _DEBUG
 private:
 	_bool							m_bRendererTimerOpen = false;
 
@@ -391,7 +390,6 @@ private:
 	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;
 
-#endif // _DEBUG
 	_bool m_bRenderCollider = false;
 	_bool m_bRenderSystem = false;
 	_float m_fDepthOcclusionThreshold = 50.f;

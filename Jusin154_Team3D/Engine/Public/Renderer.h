@@ -130,6 +130,7 @@ private:
 	_float	m_fSSAO_Radius	= { 0.543f };
 	_float	m_fSSAO_BIAS	= { 0.401f };
 	_float	m_fSSAOStrength = { 4.f };
+	_bool	m_bSSAORangeCheck = { true };
 
 	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
 	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};

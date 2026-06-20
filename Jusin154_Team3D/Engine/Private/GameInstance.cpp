@@ -170,15 +170,11 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 HRESULT CGameInstance::Draw()
 {
-#ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_DrawCall"));
-#endif // _DEBUG
 	m_pRenderer->Render();
 
 	m_pLevel_Manager->Render();
-#ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_DrawCall"));
-#endif // _DEBUG
 	return S_OK;
 }
 
@@ -321,13 +317,9 @@ void CGameInstance::Render_Begin(const _float4* pClearColor)
 
 void CGameInstance::Render_End()
 {
-#ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_Present"));
-#endif // _DEBUG
 	m_pGraphic_Device->Present();
-#ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_Present"));
-#endif // _DEBUG
 }
 
 HRESULT CGameInstance::Bind_DepthStencil(CShader* pShader, const _char* pContantName)
@@ -360,7 +352,6 @@ void CGameInstance::Compute_TimeDelta(const _wstring& strTimerTag)
 
 void CGameInstance::Compute_FrameCount()
 {
-#ifdef _DEBUG
 	m_fTimer_PriorityUpdate = Get_TimeDelta(TEXT("Timer_PriorityUpdate"));
 	m_fTimer_Update = Get_TimeDelta(TEXT("Timer_Update"));
 	m_fTimer_LateUpdate = Get_TimeDelta(TEXT("Timer_LateUpdate"));
@@ -391,13 +382,11 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_Render_Tone_Mapping = Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
 	m_fTimer_Render_UI = Get_TimeDelta(TEXT("Timer_Render_UI"));
 	m_fTimer_Render_UI_Overley = Get_TimeDelta(TEXT("Timer_Render_UI_Overley"));
-#endif // _DEBUG
 }
 
 void CGameInstance::Present_TimeCost() 
 {
 #pragma region TimeCost
-#ifdef _DEBUG
 	_float fTotal = m_fTimer_PriorityUpdate
 		+ m_fTimer_Update
 		+ m_fTimer_LateUpdate
@@ -649,7 +638,6 @@ void CGameInstance::Present_TimeCost()
 		GUI::Text("%f\t%f", GUI::GetIO().Framerate, GUI::GetIO().DeltaTime);
 	}
 	GUI::End();
-#endif // _DEBUG
 #pragma endregion
 }
 

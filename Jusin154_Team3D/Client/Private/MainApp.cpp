@@ -68,8 +68,8 @@ void CMainApp::Update(_float fTimeDelta)
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	GUI::NewFrame();
-#ifdef _DEBUG
 	m_pGameInstance->Present_TimeCost();
+#ifdef _DEBUG
 	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(IMGUI_GLOBAL_ITEM_WIDTH);
 	GUI::SliderFloat("fTimeMult", &g_fTimeMult, 0.01f, 4.f);

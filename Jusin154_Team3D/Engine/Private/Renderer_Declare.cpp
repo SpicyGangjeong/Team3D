@@ -723,7 +723,7 @@ void CRenderer::Describe_Entitiy()
 			GUI::DragFloat("fMinShadowBrightness", &m_fMinShadowBrightness, 0.01f, 0.0f, 1.f, "%.3f");
 			GUI::Checkbox("UsePhongShader", &m_bUsePhongShader);
 			_float fDepthOcclusionThreshold = m_pGameInstance->Get_DepthOcclusionThreshold();
-			if (GUI::SliderFloat("DepthOcclusionThreshold", &fDepthOcclusionThreshold, 50.f, 150.f, "%.1f")) {
+			if (GUI::SliderFloat("DepthOcclusionThreshold", &fDepthOcclusionThreshold, 15.f, 150.f, "%.1f")) {
 				m_pGameInstance->Set_DepthOcclusionThreshold(fDepthOcclusionThreshold);
 			}
 		}
