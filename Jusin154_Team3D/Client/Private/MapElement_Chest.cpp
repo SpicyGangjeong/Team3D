@@ -236,7 +236,7 @@ HRESULT CMapElement_Chest::Ready_Components(void* pArg)
 	// RIGID_BODY
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 	Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
-	Desc.bAutoOwnerTranslation = true;
+	Desc.bAutoTranslation = true;
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HIDDEN_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 		return E_FAIL;
 	}

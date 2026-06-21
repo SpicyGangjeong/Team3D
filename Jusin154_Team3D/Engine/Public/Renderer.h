@@ -39,6 +39,27 @@ private:
 #ifdef RELEASE_DEBUGGER
 private:
 	list<class CComponent*>				m_DebugComponents;
+
+	struct RENDER_PASS_BREAKDOWN
+	{
+		_uint iObjectCount = 0;
+		_uint iRenderFailCount = 0;
+		unordered_map<_string, _uint> ObjectTypeCounts = {};
+		unordered_map<_uint, _uint> ObjectTagCounts = {};
+
+		void Reset()
+		{
+			iObjectCount = 0;
+			iRenderFailCount = 0;
+			ObjectTypeCounts.clear();
+			ObjectTagCounts.clear();
+		}
+	};
+
+	RENDER_PASS_BREAKDOWN m_NonBlendBreakdown = {};
+	RENDER_PASS_BREAKDOWN m_ShadowNearBreakdown = {};
+	RENDER_PASS_BREAKDOWN m_ShadowMiddleBreakdown = {};
+	_bool m_bShowRenderBreakdown = true;
 #endif
 private:
 	class CShader* m_pShader = { nullptr };
@@ -109,6 +130,7 @@ private:
 	_float	m_fSSAO_Radius	= { 0.543f };
 	_float	m_fSSAO_BIAS	= { 0.401f };
 	_float	m_fSSAOStrength = { 4.f };
+	_bool	m_bSSAORangeCheck = { true };
 
 	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
 	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};
@@ -146,6 +168,8 @@ private:
 #ifdef RELEASE_DEBUGGER
 private:
 	void Render_Debug();
+	void Collect_RenderBreakdown(RENDER_PASS_BREAKDOWN& Breakdown, CGameObject* pRenderObject, _bool bRenderResult);
+	void Draw_RenderBreakdown(const _char* pTitle, const RENDER_PASS_BREAKDOWN& Breakdown, _uint iTopN = 10);
 #endif
 
 private:

@@ -44,7 +44,7 @@ HRESULT CWand::Initialize(void* pArg)
 
 void CWand::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	m_pModelCom->Combined_BoneMatrix();
 #ifdef _DEBUG
 	Describe_Entity();

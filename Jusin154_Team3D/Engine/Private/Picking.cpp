@@ -45,13 +45,9 @@ HRESULT CPicking::Initialize(HWND hWnd, _uint iSizeX, _uint iSizeY)
 
 void CPicking::Update()
 {
-#ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_Picking"));
-#endif // _DEBUG
 	m_pGameInstance->Copy_RenderTargetTo(TEXT("Target_Depth"), m_pTexture2D);
-#ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_Picking"));
-#endif // _DEBUG
 }
 _bool CPicking::isPicking(_float3* pOut)
 {

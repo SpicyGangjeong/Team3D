@@ -32,15 +32,15 @@ HRESULT CTriggerBox::TryScanArea(_float fTimeDelta)
 HRESULT CTriggerBox::Render()
 {
 #ifdef _DEBUG
-	m_Batch->Begin();
+	//m_Batch->Begin();
 
-	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
-	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0f0f, CMyTools::Saturate(m_vScanTimer.x / m_vScanTimer.y + 0.1f));
-	m_pSubShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	//_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	//_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+	//_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0xff0f0f, CMyTools::Saturate(m_vScanTimer.x / m_vScanTimer.y + 0.1f));
+	//m_pSubShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), ViewMatrix, ProjMatrix, vColor, nullptr, true);
 
-	m_Batch->End();
-	m_bRender = false;
+	//m_Batch->End();
+	//m_bRender = false;
 #endif // _DEBUG
 
 	return S_OK;

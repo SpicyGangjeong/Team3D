@@ -12,7 +12,7 @@ void CRenderer::Render()
 	Render_NonBlend();
 	Render_Decal();
 	Render_EffectNonBlend();
-	Render_SSAO();\
+	Render_SSAO();
 	Render_SSAO_BLUR();
 	Render_LightAcc();
 	Render_Combined();
@@ -253,6 +253,10 @@ void CRenderer::Render_Shadow()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Shadow");
 	EVENTSCOPE_("Render_Shadow");
+#ifdef RELEASE_DEBUGGER
+	m_ShadowNearBreakdown.Reset();
+	m_ShadowMiddleBreakdown.Reset();
+#endif
 	D3D11_VIEWPORT			ViewPortOldDesc;
 	_uint					iNumViewOldPort = { 1 };
 	ZeroMemory(&ViewPortOldDesc, sizeof(D3D11_VIEWPORT));
@@ -292,7 +296,11 @@ void CRenderer::Render_Shadow()
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_NEAR)]) {
 			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR))) {
+				const _bool bRenderSuccess = SUCCEEDED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR));
+#ifdef RELEASE_DEBUGGER
+				Collect_RenderBreakdown(m_ShadowNearBreakdown, pRenderObject, bRenderSuccess);
+#endif
+				if (false == bRenderSuccess) {
 					assert(false);
 				}
 			}
@@ -326,7 +334,11 @@ void CRenderer::Render_Shadow()
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_MIDDLE)]) {
 			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE))) {
+				const _bool bRenderSuccess = SUCCEEDED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE));
+#ifdef RELEASE_DEBUGGER
+				Collect_RenderBreakdown(m_ShadowMiddleBreakdown, pRenderObject, bRenderSuccess);
+#endif
+				if (false == bRenderSuccess) {
 					assert(false);
 				}
 			}
@@ -370,6 +382,9 @@ void CRenderer::Render_NonBlend()
 	COMPUTE_TIMEDELTA("Timer_Render_NonBlend");
 	EVENTSCOPE_("Render_NonBlend");
 	m_eType = RENDER::NONBLEND;
+#ifdef RELEASE_DEBUGGER
+	m_NonBlendBreakdown.Reset();
+#endif
 
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_GameObjects")))) {
 		return;
@@ -378,7 +393,11 @@ void CRenderer::Render_NonBlend()
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::NONBLEND)])
 	{
 		if (nullptr != pRenderObject) {
-			if (FAILED(pRenderObject->Render())) {
+			const _bool bRenderSuccess = SUCCEEDED(pRenderObject->Render());
+#ifdef RELEASE_DEBUGGER
+			Collect_RenderBreakdown(m_NonBlendBreakdown, pRenderObject, bRenderSuccess);
+#endif
+			if (false == bRenderSuccess) {
 				assert(false);
 			}
 		}
@@ -392,6 +411,72 @@ void CRenderer::Render_NonBlend()
 	}
 	COMPUTE_TIMEDELTA("Timer_Render_NonBlend");
 }
+
+#ifdef RELEASE_DEBUGGER
+void CRenderer::Collect_RenderBreakdown(RENDER_PASS_BREAKDOWN& Breakdown, CGameObject* pRenderObject, _bool bRenderResult)
+{
+	if (nullptr == pRenderObject) {
+		return;
+	}
+
+	++Breakdown.iObjectCount;
+	if (false == bRenderResult) {
+		++Breakdown.iRenderFailCount;
+	}
+
+	const _uint iObjectTag = pRenderObject->Get_ObjectTag();
+	++Breakdown.ObjectTagCounts[iObjectTag];
+
+	const _string strTypeName = typeid(*pRenderObject).name();
+	++Breakdown.ObjectTypeCounts[strTypeName];
+}
+
+void CRenderer::Draw_RenderBreakdown(const _char* pTitle, const RENDER_PASS_BREAKDOWN& Breakdown, _uint iTopN)
+{
+	if (nullptr == pTitle) {
+		return;
+	}
+
+	if (GUI::TreeNode(pTitle))
+	{
+		GUI::Text("Objects: %u / Fail: %u", Breakdown.iObjectCount, Breakdown.iRenderFailCount);
+
+		if (GUI::TreeNode("Top Object Types"))
+		{
+			vector<pair<_string, _uint>> TypeCounts(
+				Breakdown.ObjectTypeCounts.begin(), Breakdown.ObjectTypeCounts.end());
+			sort(TypeCounts.begin(), TypeCounts.end(),
+				[](const pair<_string, _uint>& Left, const pair<_string, _uint>& Right) {
+					return Left.second > Right.second;
+				});
+
+			const _uint iMaxCount = min<_uint>(iTopN, (_uint)TypeCounts.size());
+			for (_uint i = 0; i < iMaxCount; ++i) {
+				GUI::Text("%u) %s : %u", i + 1, TypeCounts[i].first.c_str(), TypeCounts[i].second);
+			}
+			GUI::TreePop();
+		}
+
+		if (GUI::TreeNode("Top Object Tags"))
+		{
+			vector<pair<_uint, _uint>> TagCounts(
+				Breakdown.ObjectTagCounts.begin(), Breakdown.ObjectTagCounts.end());
+			sort(TagCounts.begin(), TagCounts.end(),
+				[](const pair<_uint, _uint>& Left, const pair<_uint, _uint>& Right) {
+					return Left.second > Right.second;
+				});
+
+			const _uint iMaxCount = min<_uint>(iTopN, (_uint)TagCounts.size());
+			for (_uint i = 0; i < iMaxCount; ++i) {
+				GUI::Text("%u) Tag[%u] : %u", i + 1, TagCounts[i].first, TagCounts[i].second);
+			}
+			GUI::TreePop();
+		}
+
+		GUI::TreePop();
+	}
+}
+#endif // RELEASE_DEBUGGER
 
 void CRenderer::Render_Decal()
 {

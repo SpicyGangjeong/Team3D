@@ -117,7 +117,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	ReLockOnTarget();
 	if (m_pCharacter_Controller->Get_GravityAmount() > 0.f)
 		SetGravity();
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 
 	__super::Priority_Update(fTimeDelta);
 
@@ -530,7 +530,7 @@ void CPlayer::Describe_Entity()
 	}
 
 	_float4 vMomentum = {};
-	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentVelocity());
 	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 	_char label[256];
 	for (auto& iter : m_KeyFrames)

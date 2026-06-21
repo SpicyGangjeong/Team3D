@@ -75,15 +75,15 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 #pragma region MONSTER
 
-	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/SK_GOB_M_T4Melee_INST_A_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_SK_GOB_M_T4Melee_INST_A_Master_Model")
-	//));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/SK_GOB_M_T4Melee_INST_A_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_SK_GOB_M_T4Melee_INST_A_Master_Model")
+	));
 
-	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin_Mage/GoblinMage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_GoblinMage_Model")
-	//));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin_Mage/GoblinMage.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_GoblinMage_Model")
+	));
 
 	//futures.emplace_back(Deferred_ModelLoad(
 	//	MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/Goblin_Assassin/SK_GOB_M_Assassin_Master.bin", XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixIdentity(),

@@ -101,6 +101,7 @@ vector g_vFogColor;
 float g_fDepthPackExponent;
 
 Texture3D g_VolumeTexture;
+float g_fCascadeBlendRatio = 0.02f;
 
 float g_fWeights_32[32] =
 {
@@ -224,8 +225,8 @@ struct PS_OUT_DEBUG_MOTIONBLUR
 };
 struct PS_OUT_LIGHT
 {
-    vector vShade : SV_TARGET0;
-    vector vSpecular : SV_TARGET1;
+    float4 vShade : SV_TARGET0;
+    float4 vSpecular : SV_TARGET1;
 };
 struct PS_OUT_FLT4_SINGLE
 {
@@ -269,33 +270,34 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     
     float2 vCenterUV = In.vTexcoord;
     float2 vFullResolutionTexelSize = 1.f / g_vResolution;
-    float fCenterDepth = g_DepthTexture.Sample(PointSampler, vCenterUV).y;
-    float2 vCenterVelo = g_VelocityTexture.Sample(PointSampler, vCenterUV).xy * 2.f - 1.f; // 0~1 -> -1~+1
-    float2 vCenterVeloPixel = vCenterVelo * g_vResolution.xy;
-    bool bBorrowedVelocityFromTile = false;
+    float fCenterDepth = g_DepthTexture.Sample(PointSampler, vCenterUV).y * g_fFar;
+    float2 vCenterVelocity = g_VelocityTexture.Sample(PointSampler, vCenterUV).xy * 2.f - 1.f; // 0~1 -> -1~+1
+    float2 vCenterVeloPixel = vCenterVelocity * g_vResolution.xy;
+    bool bBorrowedVelocity = false;
     
-    float2 vBlurVelo = vCenterVelo;
-    float2 vBlurVeloPixel = vCenterVeloPixel; // 프레임당 픽셀 이동량
+    float2 vBlurVelocity = vCenterVelocity;
+    float2 vBlurVelocityPixel = vCenterVelocity * g_vResolution.xy; // 프레임당 픽셀 이동량
     
     float fVelocityEpsilon = 0.5f;
     
-    if (length(vBlurVeloPixel) < fVelocityEpsilon)
+    if (length(vBlurVelocityPixel) < fVelocityEpsilon)
     {
     // 사실상 정지해 있던 픽셀이면 텐트벨로시티맵에서 빌려옴
-        vBlurVelo = g_TileVelocityTexture.Sample(PointSampler, vCenterUV).xy * 2.f - 1.f;
-        vBlurVeloPixel = vBlurVelo * g_vResolution.xy;
-        bBorrowedVelocityFromTile = true;
+        vBlurVelocity = g_TileVelocityTexture.Sample(PointSampler, vCenterUV).xy * 2.f - 1.f;
+        vBlurVelocityPixel = vBlurVelocity * g_vResolution.xy;
+        bBorrowedVelocity = true;
     }
     
-    if (length(vBlurVeloPixel) < fVelocityEpsilon) {
+    if (length(vBlurVelocityPixel) < fVelocityEpsilon)
+    {
     // 텐트벨로시티맵에서 빌려온 픽셀또한 정지해 있었으면 원본 그대로 반환
         Out.vColor = g_ColorTexture.Sample(ClampLinearSampler, vCenterUV);
         Out.vVelocity = float2(0.5f, 0.5f);
         return Out;
     }
-    float fPixelSpeed = length(vBlurVeloPixel);
+    float fPixelSpeed = length(vBlurVelocityPixel);
     
-    float2 vBlurDirPixel = (vBlurVeloPixel / max(fPixelSpeed, FLT_EPSILON5));
+    float2 vBlurDirPixel = (vBlurVelocityPixel / max(fPixelSpeed, FLT_EPSILON5));
     
     // 픽셀의 속도로 블러 반경을 가변적으로 돌림
     float fBlurRadiusPixel = clamp(fPixelSpeed * 0.4f , 0.f, g_fMBMaxBlurRadius);
@@ -308,39 +310,40 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
     float fSamplePixelSpeed = fBlurRadiusPixel / max((float) iMaxRadius, 1.f);
     
     // 샘플유닛의 크기
-    float fScalePixelToSampleUnit = (float) iMaxRadius / max(fBlurRadiusPixel, FLT_EPSILON5);
-    float fScaleDepth = 0.5f / max(g_fMBSampleBias, FLT_EPSILON5);
+    float fVelocityScale = (float) iMaxRadius / max(fBlurRadiusPixel, FLT_EPSILON5);
+    float fDepthScale = 0.5f / max(g_fMBSampleBias, FLT_EPSILON5);
     float4 vAccColorSum = float4(0.f, 0.f, 0.f, 0.f);
     float2 vAccVeloSum = float2(0.f, 0.f);
     float fAccWeight = 0.f;
     
     // 센터의 스프레드 길이
-    float2 vReferenceVelocityPixel = bBorrowedVelocityFromTile ? vBlurVeloPixel : vCenterVeloPixel; // 빌린놈이면 빌린 타일이 속도 레퍼런스, 아니면 센터가 속도 레퍼런스가 됨
-    float fCenterSpreadLengthPixel = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, fBlurRadiusPixel); // fSampleSpreadLengthPixel 랑 비교하게 될 짝꿍
+    float2 vReferenceVelocityPixel = bBorrowedVelocity ? vBlurVelocityPixel : vCenterVeloPixel; // 빌린놈이면 빌린 타일이 속도 레퍼런스, 아니면 센터가 속도 레퍼런스가 됨
+    float fCurrentVelocityVector = clamp(abs(dot(vReferenceVelocityPixel, vBlurDirPixel)), 0.f, fBlurRadiusPixel); // fSampleSpreadLengthPixel 랑 비교하게 될 짝꿍
 
     [loop]
-    for (int iInterval = -iMaxRadius; iInterval <= iMaxRadius; ++iInterval) {
-        float fOffset = (float) abs(iInterval);
-        float2 vOffsetPixel = vBlurDirPixel * ((float) iInterval * fSamplePixelSpeed);
+    for (int iStep = -iMaxRadius; iStep <= iMaxRadius; ++iStep)
+    {
+        float fOffset = (float) abs(iStep);
+        float2 vOffsetPixel = vBlurDirPixel * ((float) iStep * fSamplePixelSpeed);
         float2 vSamplingUV = vCenterUV + vOffsetPixel * vFullResolutionTexelSize;
         if (false == IsValidUV(vSamplingUV)) {
             continue;
         }
 
-        float fSampledDepth = g_DepthTexture.Sample(PointSampler, vSamplingUV).y;
-        float2 vSampledVelo = g_VelocityTexture.Sample(PointSampler, vSamplingUV).xy * 2.f - 1.f;
-        float2 vSampledVeloPixel = vSampledVelo * g_vResolution.xy;
+        float fSampleDepth = g_DepthTexture.Sample(PointSampler, vSamplingUV).y * g_fFar;
+        float2 vSampledVelocity = g_VelocityTexture.Sample(PointSampler, vSamplingUV).xy * 2.f - 1.f;
+        float2 vSampledVelocityPixel = vSampledVelocity * g_vResolution.xy;
 
         // 샘플의 스프레드 길이
-        float fBlurSampleAccurate = abs(dot(vSampledVeloPixel, vBlurDirPixel));
-        float fSampleSpreadLengthPixel = clamp(fBlurSampleAccurate, 0.f, fBlurRadiusPixel);
-        if (true == bBorrowedVelocityFromTile)
+        float fSampleVelocityVector = clamp(abs(dot(vSampledVelocityPixel, vBlurDirPixel)), 0.f, fBlurRadiusPixel);
+        if (true == bBorrowedVelocity)
         {
-            fSampleSpreadLengthPixel = max(fSampleSpreadLengthPixel, fCenterSpreadLengthPixel);
+            fSampleVelocityVector = max(fSampleVelocityVector, fCurrentVelocityVector);
         }
 
         // 샘플과 센터의 (깊이테스트 + 스프레드테스트)
-        float fWeightCalculated = SampleWeight(fCenterDepth, fSampledDepth, fOffset, fCenterSpreadLengthPixel, fSampleSpreadLengthPixel, fScalePixelToSampleUnit, fScaleDepth);
+        float fWeightCalculated = SampleWeight(fCenterDepth, fSampleDepth, fOffset, 
+            fCurrentVelocityVector, fSampleVelocityVector, fVelocityScale, fDepthScale);
         
         if (fWeightCalculated <= 0.f) {
             continue;
@@ -348,7 +351,7 @@ PS_OUT_VELOCITYBLUR PS_MOTIONBLUR(PS_IN In)
         
         float4 vSampledColor = g_ColorTexture.Sample(ClampLinearSampler, vSamplingUV);
         vAccColorSum += vSampledColor * fWeightCalculated;
-        vAccVeloSum += vSampledVelo * fWeightCalculated;
+        vAccVeloSum += vSampledVelocity * fWeightCalculated;
         fAccWeight += fWeightCalculated;
     }
     float4 vBlurredColor = vAccColorSum / max(fAccWeight, FLT_EPSILON5);
@@ -455,10 +458,10 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float2 uv = In.vTexcoord;
     
-    float3 vAlbedo                  = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
-    float3 vNormal                  = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
-    float4 vDepth                   = g_DepthTexture.Sample(DefaultSampler, uv);
-    float fSSAO_AmbientOcclusion    = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
+    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
+    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
+    float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fSSAO_AmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
     
@@ -480,8 +483,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float fAttenuation = 1.f;
 
     float fCameraDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
-    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
-    float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
+    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀 -> 카메라
+    float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀 -> 라이트
     
     if (g_bUsePhongShader)
     {
@@ -490,8 +493,15 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
-        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
+        float NdotL = saturate(dot(vNormal, vToLight));
+        float3 vHalf = normalize(vToView + vToLight);
+        float NdotH = saturate(dot(vNormal, vHalf));
+
+        float3 vDiffuse = g_vLightDiffuse.rgb * vAlbedo * NdotL;
+        float3 vAmbient = fSSAO_AmbientOcclusion * g_vLightAmbient.rgb * g_vMtrlAmbient.rgb * vAlbedo;
+
+        Out.vShade = float4(vDiffuse + vAmbient, 1.f);
+        Out.vSpecular = float4((g_vLightSpecular.rgb * g_vMtrlSpecular.rgb) * pow(NdotH, 50.f), 0.f);
         Out.vSpecular.a = 0.f;
         return Out;
     }
@@ -500,16 +510,15 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
-        fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
-        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
-        vF0 = min(vF0, 0.9f); // 메탈릭 상한선
+        fRoughness = max(fRoughness, fMinRoughness);
+        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness);
+        vF0 = min(vF0, 0.9f);
     }
-    
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     PBR_Out.vShade *= fTotalOcclusion;
     
-    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
+    float3 vAmbient = g_vLightAmbient.rgb * vAlbedo * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
     
@@ -576,8 +585,12 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
-        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
+        float NdotL = saturate(dot(vNormal, vToLight));
+        float3 vHalf = normalize(vToView + vToLight);
+        float NdotH = saturate(dot(vNormal, vHalf));
+
+        Out.vShade = float4(g_vLightDiffuse.rgb * vAlbedo * NdotL * fAttenuation, 1.f);
+        Out.vSpecular = float4((g_vLightSpecular.rgb * g_vMtrlSpecular.rgb) * pow(NdotH, 50.f) * fAttenuation, 0.f);
         Out.vSpecular.a = 0.f;
         return Out;
     }
@@ -595,11 +608,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     PBR_Out.vShade *= fTotalOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
-    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
 
-    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 0.f);
     
     return Out;
@@ -677,15 +688,19 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     if (false == CalcLighting(g_SurfaceTexture, vDepth.b, uv, vAlbedo, vF0, fMetallic, fRoughness, fOcclusion, fAttenuation))
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
-        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
+        float NdotL = saturate(dot(vNormal, vToLight));
+        float3 vHalf = normalize(vToView + vToLight);
+        float NdotH = saturate(dot(vNormal, vHalf));
+
+        Out.vShade = float4(g_vLightDiffuse.rgb * vAlbedo * NdotL * fAttenuation, 1.f);
+        Out.vSpecular = float4((g_vLightSpecular.rgb * g_vMtrlSpecular.rgb) * pow(NdotH, 50.f) * fAttenuation, 0.f);
         Out.vSpecular.a = 0.f;
         return Out;
     }
     
     float fTotalOcclusion = saturate(fOcclusion * fSSAO_AmbientOcclusion);
     
-    { // 수치조정 // 점광원
+    { // 수치조정 // 스포트
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
         fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
@@ -696,11 +711,9 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     PBR_Out.vShade *= fTotalOcclusion;
     
-    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
-    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = clamp(PBR_Out.vSpecular, 0.f, g_fLightSpecularMaximum) * g_vLightSpecular.rgb;
     
-    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 0.f);
     
     return Out;
@@ -792,12 +805,12 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     vPosition = mul(vPosition, g_invmatProj);
     vPosition = mul(vPosition, g_invMatView);
-    vPreShadowPosition = vPosition;
     
     /* (로컬위치 * 월드) -> (로컬위치 * 월드 * 광원의 뷰 * 광원의 투영 ) */
     float4 vNearShadowPos = vPosition;
     float4 vMiddleShadowPos = vPosition;
     float4 vFarShadowPos = vPosition;
+    vPreShadowPosition = vPosition;
     {
         vNearShadowPos = mul(vNearShadowPos, g_LightViewMatrix_NEAR);
         vNearShadowPos = mul(vNearShadowPos, g_LightProjMatrix_NEAR);
@@ -811,42 +824,22 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     /* 광원의 NDC에서 샘플링 */
     float fVisibility_Dynamic_Near      = ShadowVisibility_hwPCF(g_ShadowNearTexture,   vNearShadowPos,     g_vNearShadowResolution,    g_vShadowBias.x, g_vShadowRadiusTexel.x);
     float fVisibility_Dynamic_Middle    = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos,   g_vMiddleShadowResolution,  g_vShadowBias.y, g_vShadowRadiusTexel.y);
-    float fVisibility_Static            = ShadowVisibility_hwPCF(g_PreShadowTexture,    vPreShadowPosition, g_vPreShadowResolution,     g_vShadowBias.w, g_vShadowRadiusTexel.w);
+    float fVisibilityStatic             = ShadowVisibility_hwPCF(g_PreShadowTexture,    vPreShadowPosition, g_vPreShadowResolution,     g_vShadowBias.w, g_vShadowRadiusTexel.w);
     
-////////////////////////////
-    // 케스케이드
     float fDepthRatio = saturate(vDepthDesc.y);
 
-    // 경계 블렌딩 폭. 경계 섞는 비중
-    float fShadowCascadeBlendWidthRatio = 0.02f; // 2% 섞음
+    float fCascadeBlend_Front = smoothstep(
+                g_fCascadeSplitRatioNear - g_fCascadeBlendRatio,
+                g_fCascadeSplitRatioNear + g_fCascadeBlendRatio, fDepthRatio);
 
-    // 경계 주변 부드럽게 할 비중
-    float fCascadeBlend_NearToMiddle = smoothstep(g_fCascadeSplitRatioNear - fShadowCascadeBlendWidthRatio,
-        g_fCascadeSplitRatioNear + fShadowCascadeBlendWidthRatio, fDepthRatio);
-    //float fCascadeBlend_MiddleToFar = smoothstep(g_fCascadeSplitRatioFar - fShadowCascadeBlendWidthRatio,
-        //g_fCascadeSplitRatioFar + fShadowCascadeBlendWidthRatio, fDepthRatio);
-
-    // Near -> Middle
-    float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_NearToMiddle);
+    float fStaticShadowBlendWeight = smoothstep(
+                g_fCascadeSplitRatioFar - g_fCascadeBlendRatio,
+                g_fCascadeSplitRatioFar + g_fCascadeBlendRatio, fDepthRatio);
     
-    // 1번째 방법
-    //Dynamic - > Static
-    //부드럽게 전환
-
-    float fVisibilityCombinedLogical = min(fVisibilityDynamic, fVisibility_Static);
-    float fStaticShadowBlendStartRatio = g_fCascadeSplitRatioFar;
-    float fStaticShadowBlendWidthRatio = 0.05f;
-    float fStaticShadowBlendEndRatio = min(1.0f, fStaticShadowBlendStartRatio + fStaticShadowBlendWidthRatio);
-    float fStaticShadowBlendWeight = smoothstep(fStaticShadowBlendStartRatio, fStaticShadowBlendEndRatio, fDepthRatio);
-    float fVisibilityCombined = lerp(fVisibilityDynamic, fVisibilityCombinedLogical, fStaticShadowBlendWeight);
+    float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_Front);
+    fVisibilityStatic = lerp(1.0f, fVisibilityStatic, fStaticShadowBlendWeight);
     
-    // 2번째 방법
-    // Dynamic * Static 항상 최소곱
-    //float fVisibilityCombined = saturate(fVisibilityDynamic * fVisibility_Static);
-    
-    // 3번째 방법
-    // Dynamic , Static 최소값만 취함
-    //float fVisibilityCombined = min(fVisibilityDynamic, fVisibility_Static);
+    float fVisibilityCombined = fVisibilityDynamic * fVisibilityStatic;
 
     // 최소 밝기
     float fShadowMultiplier = lerp(g_fMinShadowBrightness, 1.0f, saturate(fVisibilityCombined));
@@ -1324,42 +1317,43 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
         vCenterViewPosition /= vCenterViewPosition.w; 
     }
     float3 vNormal = normalize(g_NormalTexture.Sample(PointSampler, uv).xyz * 2.f - 1.f);
-    float3 vCenterViewNormal = mul(vNormal, (float3x3)g_ViewMatrix);
+    float3 vCenterNormal = mul(vNormal, (float3x3) g_ViewMatrix);
     
     float2 vNoiseScale = g_vResolution / 4.f;
     float3 vNoise = g_SSAONoiseTexture.Sample(SSAODataSampler, uv * vNoiseScale).xyz;
     
-    float3 vTangent = normalize(vNoise - vCenterViewNormal * dot(vNoise, vCenterViewNormal));
-    float3 vBiNormal = cross(vCenterViewNormal, vTangent);
-    float3x3 toViewTBNMatrix = float3x3(vTangent, vBiNormal, vCenterViewNormal);
+    float3 vTangent = normalize(vNoise - vCenterNormal * dot(vNoise, vCenterNormal));
+    float3 vBiNormal = cross(vCenterNormal, vTangent);
+    float3x3 TBNMatrix = float3x3(vTangent, vBiNormal, vCenterNormal);
     
     float fOcclusion = 0.f;
     [loop]
     for (uint i = 0; i < g_iKernelSize; ++i)
     {
-        float3 vViewSamplePosVec = mul(g_SamplePos[i].xyz, toViewTBNMatrix); // TANSPACE -> VIEW
-        float4 vViewSamplePos = vCenterViewPosition + float4(vViewSamplePosVec * g_fSSAORadius, 0.f);
-        float4 vNDCSampleOffset = mul(vViewSamplePos, g_ProjMatrix);
+        float3 vSampleVector= mul(g_SamplePos[i].xyz, TBNMatrix);
+        float4 vSampleViewPosition = vCenterViewPosition + float4(vSampleVector * g_fSSAORadius, 0.f);
+        float4 vNDCSampleOffset = mul(vSampleViewPosition, g_ProjMatrix);
                vNDCSampleOffset /= vNDCSampleOffset.w;
         
-        float2 sampleUV;
-        sampleUV.x = vNDCSampleOffset.x * 0.5f + 0.5f;
-        sampleUV.y = vNDCSampleOffset.y * -0.5f + 0.5f;
+        float2 vSampleUV;
+        vSampleUV.x = vNDCSampleOffset.x * 0.5f + 0.5f;
+        vSampleUV.y = vNDCSampleOffset.y * -0.5f + 0.5f;
 
-        if (sampleUV.x < 0 || sampleUV.x > 1
-         || sampleUV.y < 0 || sampleUV.y > 1) {
+        if (vSampleUV.x < 0 || vSampleUV.x > 1
+         || vSampleUV.y < 0 || vSampleUV.y > 1)
+        {
             continue;
         }
 
-        float fRecordedSampleViewPosDepth = g_DepthTexture.Sample(PointSampler, sampleUV).y * g_fFar;
-        float fIsOccluded = (fRecordedSampleViewPosDepth < vViewSamplePos.z - g_fSSAO_BIAS) ? 1.0f : 0.0f;
+        float fRecordedDepth = g_DepthTexture.Sample(PointSampler, vSampleUV).y * g_fFar;
+        float fIsOccluded = (fRecordedDepth < vSampleViewPosition.z - g_fSSAO_BIAS) ? 1.0f : 0.0f;
 
-        float fRangeCheck = smoothstep(0.f, 1.f, g_fSSAORadius / abs(vViewSamplePos.z - fRecordedSampleViewPosDepth));
+        float fRangeCheck = smoothstep(0.f, 1.f, g_fSSAORadius / abs(vSampleViewPosition.z - fRecordedDepth));
         fIsOccluded *= fRangeCheck;
         fOcclusion += fIsOccluded;
     }
     fOcclusion = saturate(1.f - (fOcclusion * g_fSSAOStrength / g_iKernelSize) * fRatio);
-    Out.fOcclusion = fOcclusion ;
+    Out.fOcclusion = fOcclusion;
     
     return Out;
 }

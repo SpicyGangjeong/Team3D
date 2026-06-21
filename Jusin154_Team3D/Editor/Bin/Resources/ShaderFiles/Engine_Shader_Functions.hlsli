@@ -137,22 +137,8 @@ float2 UV_Cutting(float2 vUV, float2 vUVCutting, uint iCurrentFrame)
 //}
 
 
-// (Kd F(Lambert)) + (Ks F(cook-torrance))
-
-//float LambertDiffuse(float c)
-//{
-//    return c / PI;
-//}
-
-// F(cook-torrance)
-// DFG / (4 (Wo dot N) (Wi dot N))
-
-// D(distribution, NormalDistribution function), 표면의 거칠기에 영향을 받는 halfWay vector
-// G(Geometry, GeometryFunc), 에너지 보존법칙 적용
-// F(Fresnel-Fresnel equation), 표면 각도에 따른 반사율
-
 // F->D
-float NDF_ggxtr(float3 vNormal, float3 vHalfWayVector, float fAlpha) // NormalDistributionGGXTR, (H, halfWay vector), (A, Roughness), (N, Normal)
+float NDF_ggxtr(float3 vNormal, float3 vHalfWayVector, float fAlpha)
 {
     float a2 = fAlpha * fAlpha;
     float NdotH = saturate(dot(vNormal, vHalfWayVector));
@@ -166,28 +152,14 @@ float NDF_ggxtr(float3 vNormal, float3 vHalfWayVector, float fAlpha) // NormalDi
 }
 
 // F->G
-// GschlickGGX(n, v, k) 
-// k는 이하 두개 조명 조건에 따라 가변적임
-// Direct //  Kdir -> ((a + 1) * (a + 1)) / 8 // direct lighting 추천
-// IBL Lighting // Kibl -> a * a / 2 // 이미지 기반 조명기법
-
-float Geometry_SchlickGGX(float NdotV, float fK)
+float Geometry_SchlickGGX(float NdotV, float fk)
 {
-    return NdotV / (NdotV * (1.0f - fK) + fK);
+    return NdotV / (NdotV * (1.0f - fk) + fk);
 }
 
-float Geometry_Smith(float3 vNormal, float3 vFromView, float3 vFromLight, float k)
+float Geometry_Smith(float3 vNormal, float NdotV, float NdotL, float fk)
 {
-    // Geometry Obstruction     
-    // 철이 있는, 주로 튀어나온 장애물
-    float NdotV = saturate(dot(vNormal, vFromView));
-    
-    // Geometry Shadowing       
-    // 요가 있는, 주로 음푹 들어간 장애물 (그래서 셰도잉)
-    float NdotL = saturate(dot(vNormal, vFromLight));
-
-    // 요철이 골고루 있다고 가정하고 적당히 섞음
-    return Geometry_SchlickGGX(NdotV, k) * Geometry_SchlickGGX(NdotL, k); 
+    return Geometry_SchlickGGX(NdotV, fk) * Geometry_SchlickGGX(NdotL, fk);
 }
 
 // F -> F
@@ -217,16 +189,17 @@ PBR_LIGHT_OUT PBR_Lighting(
         return Out;
     }
     
-    float fAlpha = max(fRoughness * fRoughness, 0.04f);
-    float k = ((fRoughness + 1.f) * (fRoughness + 1.f)) / 8.f;
+    float r = max(fRoughness, 0.046);
+    float fAlpha = r * r;
+    float k = ((r + 1.f) * (r + 1.f)) / 8.f;
     
     float D = NDF_ggxtr(vNormal, vHalfVector, fAlpha);
-    float G = Geometry_Smith(vNormal, vToView, vToLight, k);
+    float G = Geometry_Smith(vNormal, NdotV, NdotL, k);
     float3 F = Fresnel_Schlick(saturate(dot(vHalfVector, vToView)), vFO);
     
-    float3 vNumerator = D * G * F;
+    float3 vNominator = D * G * F;
     float fDenominator = max(4.f * NdotL * NdotV, 1e-7);
-    float3 specularBRDF = vNumerator / fDenominator;
+    float3 specularBRDF = vNominator / fDenominator;
     
     float3 kS = F;
     float3 kD = (1.f - kS) * (1.f -fMetallic);
@@ -322,37 +295,28 @@ float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
     return normalize(n);
 }
 
-// BackGround ForeGround 합은 1
 float2 ComputeDepthWeights(float fCenterDepth, float fSampleDepth, float fDepthScale)
 {
     float delta = fSampleDepth - fCenterDepth;
 
-    // backgroundWeight: sample이 더 멀수록 증가
-    float backgroundWeight = saturate(0.5f + fDepthScale * delta);
-    float foregroundWeight = 1.0f - backgroundWeight;
+    float fBackgroundWeight = saturate(0.5f + fDepthScale * delta);
+    float fForegroundWeight = 1.0f - fBackgroundWeight;
     
-    return float2(backgroundWeight, foregroundWeight);
+    return float2(fBackgroundWeight, fForegroundWeight);
 }
-float ComputeSpreadWeight(float fOffsetLength, float fSpreadLength, float fPixelToSampleUnitsScale)
+float ComputeSpreadWeight(float fStepOffset, float fSpreadLength, float fVelocityScale)
 {
-    return saturate(fPixelToSampleUnitsScale * fSpreadLength - fOffsetLength + 1.f);
+    return saturate(fVelocityScale * fSpreadLength - fStepOffset + 1.f);
 }
-// fCenterDepth : 현재 중심 픽셀의 깊이
-// fSampleDepth : 샘플 픽셀의 깊이
-// fOffsetLength : 중심에서 샘플까지의 거리
-// fCenterSpreadLength : 중심 픽셀의 블러 반경
-// fSampleSpreadLength : 샘플 픽셀의 블러 반경
-// fPixelToSampleUnitsScale : spread/offset 단위
-// fDepthScale : 깊이 차이에 얼마나 민감하게 전경/배경을 나눌지 
-float SampleWeight(float fCenterDepth, float fSampleDepth, float fOffsetLength, float fCenterSpreadLength, 
-    float fSampleSpreadLength, float fPixelToSampleUnitsScale, float fDepthScale)
+float SampleWeight(float fCenterDepth, float fSampleDepth, float fStepOffset, float fCenterSpreadLength, 
+    float fSampleSpreadLength, float fVelocityScale, float fDepthScale)
 {
     float2 vDepthCompare = ComputeDepthWeights(fCenterDepth, fSampleDepth, fDepthScale);
     
-    float fSpreadCenter = ComputeSpreadWeight(fOffsetLength, fCenterSpreadLength, fPixelToSampleUnitsScale);
-    float fSpreadSample = ComputeSpreadWeight(fOffsetLength, fSampleSpreadLength, fPixelToSampleUnitsScale);
+    float fCenter = ComputeSpreadWeight(fStepOffset, fCenterSpreadLength, fVelocityScale);
+    float fSample = ComputeSpreadWeight(fStepOffset, fSampleSpreadLength, fVelocityScale);
     
-    return vDepthCompare.x * fSpreadCenter + vDepthCompare.y * fSpreadSample;
+    return vDepthCompare.x * fCenter + vDepthCompare.y * fSample;
 }
 
 float4x4 RotateX(float fAngle)
@@ -598,24 +562,26 @@ float4 BlendDiffuse(float4 vDiffuseA, Texture2D DiffuseBlendTexture, float2 vTex
 float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos, float fIntensity = 1.f)
 {
     float2 vReturnVelocity = float2(0.5f, 0.5f);
-    if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5)
-    {
+    if (vCurrentProjPos.w <= FLT_EPSILON5 || vPreviousProjPos.w <= FLT_EPSILON5) {
         return vReturnVelocity;
     }
+    
+    {
+        float2 currentNDC = vCurrentProjPos.xy / vCurrentProjPos.w;
+        float2 previousNDC = vPreviousProjPos.xy / vPreviousProjPos.w;
 
-    float2 currentNDC = vCurrentProjPos.xy / vCurrentProjPos.w;
-    float2 previousNDC = vPreviousProjPos.xy / vPreviousProjPos.w;
+        currentNDC.y *= -1.f;
+        previousNDC.y *= -1.f;
 
-    currentNDC.y *= -1.f;
-    previousNDC.y *= -1.f;
+        float2 velocityUV = (currentNDC - previousNDC) * 0.5f;
+        velocityUV *= fIntensity;
+        velocityUV = clamp(velocityUV, -1.0f, 1.0f);
 
-    // UV 델타
-    float2 velocityUV = (currentNDC - previousNDC) * 0.5f;
-    velocityUV *= fIntensity;
-    velocityUV = clamp(velocityUV, -1.0f, 1.0f);
-
-    return velocityUV * 0.5f + 0.5f; // 0 속도 -> 0.5
+        vReturnVelocity = velocityUV * 0.5f + 0.5f;
+    }
+    return vReturnVelocity;
 }
+
 float2 CalcVelocityUV(float4 vCurrentProjPos, float4 vPreviousProjPos)
 {
     return CalcVelocityUV(vCurrentProjPos, vPreviousProjPos, 1.0f);

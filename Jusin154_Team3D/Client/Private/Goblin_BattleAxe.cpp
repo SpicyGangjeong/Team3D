@@ -50,7 +50,7 @@ void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 		XMStoreFloat4(&m_vStartGripPos, Get_WorldPostion());
 	}
 
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	m_pModelCom->Combined_BoneMatrix();
 	_matrix socketMatrix = {};
 

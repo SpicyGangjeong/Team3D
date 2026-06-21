@@ -375,7 +375,7 @@ HRESULT CGoblin_Assassin::Behavior_DashExitCheck(_float fTimeDelta)
 	_float4 RootMomentum = m_pModelCom->Get_RootBoneMomentum();
 	_vector RootDelta = XMLoadFloat4(&RootMomentum);
 	_float dashDist = XMVectorGetX(XMVector3Length(RootDelta));
-	m_pTransformCom->AccumulateMomentum(XMLoadFloat4(&m_vDashDir) * dashDist * 1.5f);
+	m_pTransformCom->AccumulateVelocity(XMLoadFloat4(&m_vDashDir) * dashDist * 1.5f);
 
 	if (fRatio >= 0.7f)
 	{
@@ -974,7 +974,7 @@ void CGoblin_Assassin::HitState_Behavior(_float fTimeDelta)
 				_float ease = 1.f - (t * t);
 				_vector Force = vPlayerLook * fTimeDelta * 6.f * ease;
 
-				m_pTransformCom->AccumulateMomentum(Force);
+				m_pTransformCom->AccumulateVelocity(Force);
 				pairAnimInfo = m_Animation[STATEANIM::TUMBLE];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.6f, false, 0.8f);
 			}

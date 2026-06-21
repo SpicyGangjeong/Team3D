@@ -166,40 +166,6 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	_bool bStartCinematic = { true };
-#ifdef _DEBUG
-#ifdef 기무리
-	bStartCinematic = false;
-#elif 진우
-	bStartCinematic = true;
-#elif Bin
-	bStartCinematic = false;
-#elif gimch
-	bStartCinematic = true;
-#elif 나
-	bStartCinematic = false;
-#endif
-#endif // _DEBUG
-
-#ifdef RELEASE_DEBUGGER
-	if (m_pGameInstance->Key_Down(DIK_F5)) {
-		m_pGameInstance->Toggle_RenderCollider();
-	}
-#endif
-
-	if (bStartCinematic && false == m_bIntroCinematic) {
-		m_bIntroCinematic = true;
-		bStartCinematic = false;
-		_string strCutSceneName = "CarriageIntro";
-		m_pInfoInstance->Active_Event(strCutSceneName);
-	}
-	if (m_pGameInstance->Key_Pressing(DIK_0)) {
-		if (m_pGameInstance->Key_Up(DIK_1))
-		{
-			m_pGameInstance->Set_LevelToChange();
-		}
-	}
-
 	m_pInfoInstance->Update(fTimeDelta);
 
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
@@ -208,7 +174,9 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		UI_STATE eState = UI_STATE::LEVELCHANGE;
 		m_pInfoInstance->Event_CallBack(TEXT("Canvas_Change"), &eState);
 
-		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::FIELD)))) {
+		if (FAILED(m_pGameInstance->Change_Level(
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::FIELD)
+		))) {
 			return;
 		}
 	}

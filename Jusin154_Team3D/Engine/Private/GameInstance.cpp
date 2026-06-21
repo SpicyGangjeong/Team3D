@@ -61,7 +61,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 #endif // _DEBUG
 
 #ifndef _DEBUG
-	m_pThreadHolder = CThreadHolder::Create(12);
+	m_pThreadHolder = CThreadHolder::Create(8);
 #endif // !_DEBUG
 
 	if (nullptr == m_pThreadHolder) {
@@ -149,41 +149,26 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	m_pSound_Manager->Update();
-#ifdef _DEBUG
-	m_pResource_Manager->Describe_Entity();
-	m_pFog->Update_Fog();
-#endif // _DEBUG
 	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fExcuteTimeDelta);
-
 	m_pPipeLine->Update();
-
 	m_pObject_Manager->Update(fExcuteTimeDelta);
-
 	m_pPhysX_Manager->Update(fExcuteTimeDelta);
-
 	m_pObject_Manager->Late_Update(fExcuteTimeDelta);
 
 	m_pVolumetric->Dispatch();
-
 	m_pLevel_Manager->Update(fExcuteTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
-
-	//m_pObstacle_Manager->Refresh_Region();
 }
 
 HRESULT CGameInstance::Draw()
 {
-#ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_DrawCall"));
-#endif // _DEBUG
 	m_pRenderer->Render();
 
 	m_pLevel_Manager->Render();
-#ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_DrawCall"));
-#endif // _DEBUG
 	return S_OK;
 }
 
@@ -326,13 +311,9 @@ void CGameInstance::Render_Begin(const _float4* pClearColor)
 
 void CGameInstance::Render_End()
 {
-#ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_Present"));
-#endif // _DEBUG
 	m_pGraphic_Device->Present();
-#ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_Present"));
-#endif // _DEBUG
 }
 
 HRESULT CGameInstance::Bind_DepthStencil(CShader* pShader, const _char* pContantName)
@@ -365,44 +346,41 @@ void CGameInstance::Compute_TimeDelta(const _wstring& strTimerTag)
 
 void CGameInstance::Compute_FrameCount()
 {
-#ifdef _DEBUG
-	m_fTimer_PriorityUpdate = Get_TimeDelta(TEXT("Timer_PriorityUpdate"));
-	m_fTimer_Update = Get_TimeDelta(TEXT("Timer_Update"));
-	m_fTimer_LateUpdate = Get_TimeDelta(TEXT("Timer_LateUpdate"));
-	m_fTimer_DrawCall = Get_TimeDelta(TEXT("Timer_DrawCall"));
-	m_fTimer_Present = Get_TimeDelta(TEXT("Timer_Present"));
-	m_fTimer_Picking = Get_TimeDelta(TEXT("Timer_Picking"));
-	m_fTimer_PhysX = Get_TimeDelta(TEXT("Timer_PhysX"));
-	m_fTimer_Level = Get_TimeDelta(TEXT("Timer_Level"));
-	m_fTimer_FrameCount = Get_TimeDelta(TEXT("Timer_FrameCount"));
+	m_fTimer_PriorityUpdate					= Get_TimeDelta(TEXT("Timer_PriorityUpdate"));
+	m_fTimer_Update							= Get_TimeDelta(TEXT("Timer_Update"));
+	m_fTimer_LateUpdate						= Get_TimeDelta(TEXT("Timer_LateUpdate"));
+	m_fTimer_DrawCall						= Get_TimeDelta(TEXT("Timer_DrawCall"));
+	m_fTimer_Present						= Get_TimeDelta(TEXT("Timer_Present"));
+	m_fTimer_Picking						= Get_TimeDelta(TEXT("Timer_Picking"));
+	m_fTimer_PhysX							= Get_TimeDelta(TEXT("Timer_PhysX"));
+	m_fTimer_Level							= Get_TimeDelta(TEXT("Timer_Level"));
+	m_fTimer_FrameCount						= Get_TimeDelta(TEXT("Timer_FrameCount"));
 
-	m_fTimer_Render_Priority = Get_TimeDelta(TEXT("Timer_Render_Priority"));
-	m_fTimer_Render_Shadow = Get_TimeDelta(TEXT("Timer_Render_Shadow"));
-	m_fTimer_Render_NonBlend = Get_TimeDelta(TEXT("Timer_Render_NonBlend"));
-	m_fTimer_Render_SSAO = Get_TimeDelta(TEXT("Timer_Render_SSAO"));
-	m_fTimer_Render_SSAO_BLUR = Get_TimeDelta(TEXT("Timer_Render_SSAO_BLUR"));
-	m_fTimer_Render_LightAcc = Get_TimeDelta(TEXT("Timer_Render_LightAcc"));
-	m_fTimer_Render_Blur = Get_TimeDelta(TEXT("Timer_Render_Blur"));
-	m_fTimer_Render_Combined = Get_TimeDelta(TEXT("Timer_Render_Combined"));
-	m_fTimer_Render_Occlusion = Get_TimeDelta(TEXT("Timer_Render_Occlusion"));
-	m_fTimer_Render_EnvironmentPostProcess = Get_TimeDelta(TEXT("Timer_Render_EnvironmentPostProcess"));
-	m_fTimer_Render_Fog = Get_TimeDelta(TEXT("Timer_Render_Fog"));
-	m_fTimer_Render_Effect = Get_TimeDelta(TEXT("Timer_Render_Effect"));
-	m_fTimer_Render_NonLight = Get_TimeDelta(TEXT("Timer_Render_NonLight"));
-	m_fTimer_Render_Blend = Get_TimeDelta(TEXT("Timer_Render_Blend"));
-	m_fTimer_Render_WeightBlend = Get_TimeDelta(TEXT("Timer_Render_WeightBlend"));
-	m_fTimer_Render_PostProcessing = Get_TimeDelta(TEXT("Timer_Render_PostProcessing"));
-	m_fTimer_Render_LastColor = Get_TimeDelta(TEXT("Timer_Render_LastColor"));
-	m_fTimer_Render_Tone_Mapping = Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
-	m_fTimer_Render_UI = Get_TimeDelta(TEXT("Timer_Render_UI"));
-	m_fTimer_Render_UI_Overley = Get_TimeDelta(TEXT("Timer_Render_UI_Overley"));
-#endif // _DEBUG
+	m_fTimer_Render_Priority				= Get_TimeDelta(TEXT("Timer_Render_Priority"));
+	m_fTimer_Render_Shadow					= Get_TimeDelta(TEXT("Timer_Render_Shadow"));
+	m_fTimer_Render_NonBlend				= Get_TimeDelta(TEXT("Timer_Render_NonBlend"));
+	m_fTimer_Render_SSAO					= Get_TimeDelta(TEXT("Timer_Render_SSAO"));
+	m_fTimer_Render_SSAO_BLUR				= Get_TimeDelta(TEXT("Timer_Render_SSAO_BLUR"));
+	m_fTimer_Render_LightAcc				= Get_TimeDelta(TEXT("Timer_Render_LightAcc"));
+	m_fTimer_Render_Blur					= Get_TimeDelta(TEXT("Timer_Render_Blur"));
+	m_fTimer_Render_Combined				= Get_TimeDelta(TEXT("Timer_Render_Combined"));
+	m_fTimer_Render_Occlusion				= Get_TimeDelta(TEXT("Timer_Render_Occlusion"));
+	m_fTimer_Render_EnvironmentPostProcess	= Get_TimeDelta(TEXT("Timer_Render_EnvironmentPostProcess"));
+	m_fTimer_Render_Fog						= Get_TimeDelta(TEXT("Timer_Render_Fog"));
+	m_fTimer_Render_Effect					= Get_TimeDelta(TEXT("Timer_Render_Effect"));
+	m_fTimer_Render_NonLight				= Get_TimeDelta(TEXT("Timer_Render_NonLight"));
+	m_fTimer_Render_Blend					= Get_TimeDelta(TEXT("Timer_Render_Blend"));
+	m_fTimer_Render_WeightBlend				= Get_TimeDelta(TEXT("Timer_Render_WeightBlend"));
+	m_fTimer_Render_PostProcessing			= Get_TimeDelta(TEXT("Timer_Render_PostProcessing"));
+	m_fTimer_Render_LastColor				= Get_TimeDelta(TEXT("Timer_Render_LastColor"));
+	m_fTimer_Render_Tone_Mapping			= Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
+	m_fTimer_Render_UI						= Get_TimeDelta(TEXT("Timer_Render_UI"));
+	m_fTimer_Render_UI_Overley				= Get_TimeDelta(TEXT("Timer_Render_UI_Overley"));
 }
 
 void CGameInstance::Present_TimeCost() 
 {
 #pragma region TimeCost
-#ifdef _DEBUG
 	_float fTotal = m_fTimer_PriorityUpdate
 		+ m_fTimer_Update
 		+ m_fTimer_LateUpdate
@@ -654,7 +632,6 @@ void CGameInstance::Present_TimeCost()
 		GUI::Text("%f\t%f", GUI::GetIO().Framerate, GUI::GetIO().DeltaTime);
 	}
 	GUI::End();
-#endif // _DEBUG
 #pragma endregion
 }
 

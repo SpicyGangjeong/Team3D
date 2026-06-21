@@ -34,7 +34,7 @@ HRESULT CMonster::Initialize(void* pArg)
 
 void CMonster::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	__super::Priority_Update(fTimeDelta);
 }
 

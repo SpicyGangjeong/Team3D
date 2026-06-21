@@ -59,16 +59,16 @@ private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	class CGameInstance* m_pGameInstance = { nullptr };
-	_float4x4	m_TransformStateMatrices[ENUM_CLASS(D3DTS::END)] = {};
-	_float4x4	m_ShadowTransformStateMatrices[3][ENUM_CLASS(D3DTS::END)] = {};
+	_float4x4	m_TransformMatrices[ENUM_CLASS(D3DTS::END)] = {};
+	_float4x4	m_ShadowTransformMatrices[3][ENUM_CLASS(D3DTS::END)] = {};
 	_float4		m_vCamPosition = {};
 
 	_float		m_fShadowNearBoxRatio = { 0.075f };
 	_float		m_fShadowFarBoxRatio = { 0.15f };
 	_float		m_fSafe_RadiusMultiplier = { 2.3f };
 	_float		m_fSafe_RadiusMargin = { 10.f };
-	_float3		m_vShadowBoxMarginMin = { 0.f, 0.f, -25.f };
-	_float3		m_vShadowBoxMarginMax = { 0.f, 0.f, 25.f };
+	_float3		m_vShadowMarginMin = { 0.f, 0.f, -25.f };
+	_float3		m_vShadowMarginMax = { 0.f, 0.f, 25.f };
 
 	_float4		m_vShadowBias = { 0.0047f, 0.0018f, 0.0018f, 0.0018f };
 	_float4		m_vShadowRadius = { 2.f, 1.f, 1.f, 1.f };
@@ -87,8 +87,8 @@ private:
 	_float4 m_vLocalNearShadowViewBoxPlane[6] = {};
 	_float4 m_vLocalMiddleShadowViewBoxPlane[6] = {};
 	_float4 m_vLocalFarShadowViewBoxPlane[6] = {};
-	_float4 m_vShadowDirectionalRPYQuat = { 0.f, 0.f, 0.f, 1.f };
-	_float4 m_vShadowInvDirectionalRPYQuat = { 0.f, 0.f, 0.f, 1.f };
+	_float4 m_vShadowQuat = { 0.f, 0.f, 0.f, 1.f };
+	_float4 m_vShadowInvQuat = { 0.f, 0.f, 0.f, 1.f };
 
 	unordered_map<_wstring, ID3D11ShaderResourceView*> m_mapGlobalSRV = {};
 	ID3D11DepthStencilState*	m_pDSS_OutLineWrite = { nullptr };

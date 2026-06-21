@@ -23,23 +23,23 @@ void CPipeLine::Set_Environment(_float2 vNFBoxRatio, _float2 vSafeRadius, _float
 
 	m_vShadowBias = vShadowBias;
 	m_vShadowRadius = vShadowRadius;
-	m_vShadowBoxMarginMin = vShadowBoxMarginMin;
-	m_vShadowBoxMarginMax = vShadowBoxMarginMax;
+	m_vShadowMarginMin = vShadowBoxMarginMin;
+	m_vShadowMarginMax = vShadowBoxMarginMax;
 }
 
 void CPipeLine::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
 {
-	XMStoreFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(eState)], TransformStateMatrix);
+	XMStoreFloat4x4(&m_TransformMatrices[ENUM_CLASS(eState)], TransformStateMatrix);
 }
 
 const _float4x4* CPipeLine::Get_Transform_Float4x4(D3DTS eState)
 {
-	return &m_TransformStateMatrices[ENUM_CLASS(eState)];
+	return &m_TransformMatrices[ENUM_CLASS(eState)];
 }
 
 _matrix CPipeLine::Get_Transform_Matrix(D3DTS eState)
 {
-	return XMLoadFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(eState)]);
+	return XMLoadFloat4x4(&m_TransformMatrices[ENUM_CLASS(eState)]);
 }
 
 _matrix CPipeLine::Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType)
@@ -56,7 +56,7 @@ _matrix CPipeLine::Get_ShadowTransform_Matrix(D3DTS eState, SHADOW eShadowType)
 	}
 	assert(iPass != UINT_MAX);
 
-	return XMLoadFloat4x4(&m_ShadowTransformStateMatrices[iPass][ENUM_CLASS(eState)]);
+	return XMLoadFloat4x4(&m_ShadowTransformMatrices[iPass][ENUM_CLASS(eState)]);
 }
 
 const _float4* CPipeLine::Get_CamPosition()
@@ -107,7 +107,7 @@ pair<_bool, _ubyte> CPipeLine::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _fl
 {
 	pair<_bool, _ubyte> pairResult = { false, 0 };
 	// 월드 센터를 셰도우뷰 센터로 바꿈
-	_vector vShadowViewCenter = XMVectorSetW(XMVector3Rotate(vWorldCenter, XMLoadFloat4(&m_vShadowInvDirectionalRPYQuat)), 1.f);
+	_vector vShadowViewCenter = XMVectorSetW(XMVector3Rotate(vWorldCenter, XMLoadFloat4(&m_vShadowInvQuat)), 1.f);
 
 	_float fSafeRadius = (fRadius + m_fSafe_RadiusMargin) * m_fSafe_RadiusMultiplier; // 그림자임을 고려해서 객체 부피보다 좀 더 넓게 탐색
 
@@ -208,8 +208,8 @@ HRESULT CPipeLine::End_OutLine_Write()
 HRESULT CPipeLine::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
 {
 	_vector vShadowQuat = XMQuaternionNormalize(XMLoadFloat4(&vShadowDirRPYQuat));
-	XMStoreFloat4(&m_vShadowDirectionalRPYQuat, vShadowQuat);
-	XMStoreFloat4(&m_vShadowInvDirectionalRPYQuat, XMQuaternionInverse(vShadowQuat));
+	XMStoreFloat4(&m_vShadowQuat, vShadowQuat);
+	XMStoreFloat4(&m_vShadowInvQuat, XMQuaternionInverse(vShadowQuat));
 	return S_OK;
 }
 
@@ -230,12 +230,12 @@ HRESULT CPipeLine::Bind_Shadow_Resource(CShader* pShader, const _char* pConstant
 	}
 	assert(iPass != UINT_MAX);
 
-	return pShader->Bind_Matrix(pConstantName, &m_ShadowTransformStateMatrices[iPass][ENUM_CLASS(eType)]);
+	return pShader->Bind_Matrix(pConstantName, &m_ShadowTransformMatrices[iPass][ENUM_CLASS(eType)]);
 }
 
 const _float4x4* CPipeLine::Get_ShadowMatricesPtr(_uint iShadowBoxIndex)
 {
-	return m_ShadowTransformStateMatrices[iShadowBoxIndex];
+	return m_ShadowTransformMatrices[iShadowBoxIndex];
 }
 
 _float CPipeLine::Get_ShadowBoxFar(_uint iShadowBoxIndex)
@@ -265,16 +265,16 @@ void CPipeLine::Update()
 #endif // RELEASE_DEBUGGER
 	Update_ShadowDepthNdcZ();
 
-	XMStoreFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(D3DTS::VIEW_INV)], XMMatrixInverse(nullptr, Get_Transform_Matrix(D3DTS::VIEW)));
-	XMStoreFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(D3DTS::PROJ_INV)], XMMatrixInverse(nullptr, Get_Transform_Matrix(D3DTS::PROJ)));
+	XMStoreFloat4x4(&m_TransformMatrices[ENUM_CLASS(D3DTS::VIEW_INV)], XMMatrixInverse(nullptr, Get_Transform_Matrix(D3DTS::VIEW)));
+	XMStoreFloat4x4(&m_TransformMatrices[ENUM_CLASS(D3DTS::PROJ_INV)], XMMatrixInverse(nullptr, Get_Transform_Matrix(D3DTS::PROJ)));
 
 
-	memcpy(&m_vCamPosition, &m_TransformStateMatrices[ENUM_CLASS(D3DTS::VIEW_INV)].m[3], sizeof(_float4));
-	_matrix ProjInvMatrix = XMLoadFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(D3DTS::PROJ_INV)]);
-	_matrix ViewInvMatrix = XMLoadFloat4x4(&m_TransformStateMatrices[ENUM_CLASS(D3DTS::VIEW_INV)]);
+	memcpy(&m_vCamPosition, &m_TransformMatrices[ENUM_CLASS(D3DTS::VIEW_INV)].m[3], sizeof(_float4));
+	_matrix ProjInvMatrix = XMLoadFloat4x4(&m_TransformMatrices[ENUM_CLASS(D3DTS::PROJ_INV)]);
+	_matrix ViewInvMatrix = XMLoadFloat4x4(&m_TransformMatrices[ENUM_CLASS(D3DTS::VIEW_INV)]);
 	_matrix WorldFromClipMatrix = XMMatrixMultiply(ProjInvMatrix, ViewInvMatrix);
 
-	_vector vShadowInvQuat = XMLoadFloat4(&m_vShadowInvDirectionalRPYQuat);
+	_vector vShadowInvQuat = XMLoadFloat4(&m_vShadowInvQuat);
 	for (size_t i = 0; i < 8; ++i)
 	{
 		XMStoreFloat4(&m_vWorldPoints[i], XMVector3TransformCoord(XMLoadFloat4(&m_vOriginalRenderFrustumPoints[i]), WorldFromClipMatrix));
@@ -314,7 +314,7 @@ HRESULT CPipeLine::Initialize()
 	m_vOriginalShadowFrustumPoints[15] = m_vOriginalRenderFrustumPoints[7] = _float4(-1.f,	-1.f,	1.f, 1.f); // LB
 	
 	for (_uint i = ENUM_CLASS(D3DTS::VIEW); i < ENUM_CLASS(D3DTS::END); ++i) {
-		XMStoreFloat4x4(&m_TransformStateMatrices[i], XMMatrixIdentity());
+		XMStoreFloat4x4(&m_TransformMatrices[i], XMMatrixIdentity());
 	}
 
 	if (nullptr == m_pDSS_OutLineWrite) {
@@ -356,16 +356,17 @@ void CPipeLine::Make_Planes(const _float4* pPoints, _float4* pPlanes)
 
 void CPipeLine::Make_LightBoxes()
 {
-	// AABB Lighting space
-	_vector vShadowInvQuat = XMLoadFloat4(&m_vShadowInvDirectionalRPYQuat);
-	_matrix ViewMatrix = XMMatrixRotationQuaternion(vShadowInvQuat);
+	// Directional Light 기준 View Matrix
+	_matrix ViewMatrix = XMMatrixRotationQuaternion(XMLoadFloat4(&m_vShadowInvQuat));
 	_matrix ViewInvMatrix = XMMatrixInverse(nullptr, ViewMatrix);
 
-	for (_uint iIndex = 0; iIndex < 3; ++iIndex)
+	// Cascaded Shadow Map (3단계: Near / Middle / Far)
+	for (_uint iCSMIndex = 0; iCSMIndex < 3; ++iCSMIndex)
 	{
 		_float4 vCascadePoints8[8] = {};
-		Get_CascadePoints8(m_vShadowViewPoints, iIndex, vCascadePoints8);
+		Get_CascadePoints8(m_vShadowViewPoints, iCSMIndex, vCascadePoints8);
 
+		// AABB 초기값 설정 (첫 번째 점 기준)
 		_float fMinX = vCascadePoints8[0].x;
 		_float fMinY = vCascadePoints8[0].y;
 		_float fMinZ = vCascadePoints8[0].z;
@@ -374,6 +375,7 @@ void CPipeLine::Make_LightBoxes()
 		_float fMaxY = vCascadePoints8[0].y;
 		_float fMaxZ = vCascadePoints8[0].z;
 
+		// 8개의 점을 순회하면서 AABB 계산 (Bounding Box 생성)
 		for (_uint iPointIndex = 1; iPointIndex < 8; ++iPointIndex)
 		{
 			fMinX = min(fMinX, vCascadePoints8[iPointIndex].x);
@@ -385,21 +387,18 @@ void CPipeLine::Make_LightBoxes()
 			fMaxZ = max(fMaxZ, vCascadePoints8[iPointIndex].z);
 		}
 
-		_float4* targetPlanes = nullptr;
-		if (iIndex == 0) targetPlanes = m_vNearShadowViewBoxPlane;
-		if (iIndex == 1) targetPlanes = m_vMiddleShadowViewBoxPlane;
-		if (iIndex == 2) targetPlanes = m_vFarShadowViewBoxPlane;
+		// Shadow Box 여유 공간 추가 (Shadow clipping 방지 / 안정성 확보)
+		fMinX += m_vShadowMarginMin.x;
+		fMaxX += m_vShadowMarginMax.x;
+		fMinY += m_vShadowMarginMin.y;
+		fMaxY += m_vShadowMarginMax.y;
+		fMinZ += m_vShadowMarginMin.z;
+		fMaxZ += m_vShadowMarginMax.z;
 
-		fMinX += m_vShadowBoxMarginMin.x;
-		fMaxX += m_vShadowBoxMarginMax.x;
-		fMinY += m_vShadowBoxMarginMin.y;
-		fMaxY += m_vShadowBoxMarginMax.y;
-		fMinZ += m_vShadowBoxMarginMin.z;
-		fMaxZ += m_vShadowBoxMarginMax.z;
-
+		// Cascade 별 Shadow Map 해상도 설정
 		_uint iShadowWidth = { 0 };
 		_uint iShadowHeight = { 0 };
-		switch (iIndex)
+		switch (iCSMIndex)
 		{
 			case 0:
 				iShadowWidth  = g_iNearShadowWidth;
@@ -419,21 +418,32 @@ void CPipeLine::Make_LightBoxes()
 
 		Adjust_ShadowTexcel(fMinX, fMinY, fMaxX, fMaxY, iShadowWidth, iShadowHeight);
 
-		targetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
-		targetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
-		targetPlanes[2] = _float4(0.f, -1.f, 0.f, fMinY); // Bottom
-		targetPlanes[3] = _float4(0.f, 1.f, 0.f, -fMaxY); // Top
-		targetPlanes[4] = _float4(0.f, 0.f, -1.f, fMinZ); // Near
-		targetPlanes[5] = _float4(0.f, 0.f, 1.f, -fMaxZ); // Far
+		// 각 Cascade 별로 결과를 저장할 Plane 배열 선택
+		_float4* pTargetPlanes = nullptr;
+		if (iCSMIndex == 0) pTargetPlanes = m_vNearShadowViewBoxPlane;
+		if (iCSMIndex == 1) pTargetPlanes = m_vMiddleShadowViewBoxPlane;
+		if (iCSMIndex == 2) pTargetPlanes = m_vFarShadowViewBoxPlane;
 
-		XMStoreFloat4x4(&m_ShadowTransformStateMatrices[iIndex][ENUM_CLASS(D3DTS::VIEW)], ViewMatrix);
-		XMStoreFloat4x4(&m_ShadowTransformStateMatrices[iIndex][ENUM_CLASS(D3DTS::VIEW_INV)], ViewInvMatrix);
+		// Light-Space AABB를 Plane 형태로 변환 (Frustum 형태)
+		// 물체는 그대로 World 좌표 사용
+		// Plane vs Bounding Volume 테스트만 수행
+		pTargetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
+		pTargetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
+		pTargetPlanes[2] = _float4(0.f, -1.f, 0.f, fMinY); // Bottom
+		pTargetPlanes[3] = _float4(0.f, 1.f, 0.f, -fMaxY); // Top
+		pTargetPlanes[4] = _float4(0.f, 0.f, -1.f, fMinZ); // Near
+		pTargetPlanes[5] = _float4(0.f, 0.f, 1.f, -fMaxZ); // Far
 
+		// Orthographic Projection 생성 Off-Center 방식 사용
 		_matrix ProjMatrix = XMMatrixOrthographicOffCenterLH(fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ);
-		XMStoreFloat4x4(&m_ShadowTransformStateMatrices[iIndex][ENUM_CLASS(D3DTS::PROJ)], ProjMatrix);
-		XMStoreFloat4x4(&m_ShadowTransformStateMatrices[iIndex][ENUM_CLASS(D3DTS::PROJ_INV)], XMMatrixInverse(nullptr, ProjMatrix));
-	}
 
+		// Light View / View Inverse 저장
+		XMStoreFloat4x4(&m_ShadowTransformMatrices[iCSMIndex][ENUM_CLASS(D3DTS::VIEW)], ViewMatrix);
+		XMStoreFloat4x4(&m_ShadowTransformMatrices[iCSMIndex][ENUM_CLASS(D3DTS::VIEW_INV)], ViewInvMatrix);
+		// Light Projection / Projection Inverse 저장
+		XMStoreFloat4x4(&m_ShadowTransformMatrices[iCSMIndex][ENUM_CLASS(D3DTS::PROJ)], ProjMatrix);
+		XMStoreFloat4x4(&m_ShadowTransformMatrices[iCSMIndex][ENUM_CLASS(D3DTS::PROJ_INV)], XMMatrixInverse(nullptr, ProjMatrix));
+	}
 }
 
 void CPipeLine::Get_CascadePoints8(const _float4* pShadowViewPoints16, _uint iIndexCascade, _float4* pOutPoints8)
@@ -565,8 +575,8 @@ void CPipeLine::Describe_Entity()
 		_float fSafe_RadiusMargin = m_fSafe_RadiusMargin;
 		_float4 vShadowBias = m_vShadowBias;
 		_float4 vShadowRadius = m_vShadowRadius;
-		_float3	vShadowBoxMarginMin = m_vShadowBoxMarginMin;
-		_float3	vShadowBoxMarginMax = m_vShadowBoxMarginMax;
+		_float3	vShadowBoxMarginMin = m_vShadowMarginMin;
+		_float3	vShadowBoxMarginMax = m_vShadowMarginMax;
 		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.001f, 0.001f, 0.999f, "%.3f")) {
 			bModified = true;
 		}
@@ -598,8 +608,8 @@ void CPipeLine::Describe_Entity()
 			m_vShadowRadius = vShadowRadius;
 			m_fSafe_RadiusMultiplier = fSafe_RadiusMultiplier;
 			m_fSafe_RadiusMargin = fSafe_RadiusMargin;
-			m_vShadowBoxMarginMin = vShadowBoxMarginMin;
-			m_vShadowBoxMarginMax = vShadowBoxMarginMax;
+			m_vShadowMarginMin = vShadowBoxMarginMin;
+			m_vShadowMarginMax = vShadowBoxMarginMax;
 		}
 	}
 	GUI::End();

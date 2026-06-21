@@ -71,7 +71,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return E_FAIL;
     }
 
-#ifdef _DEBUG
     if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_PriorityUpdate")))) {
         return E_FAIL;
     }
@@ -99,7 +98,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_FrameCount")))) {
         return E_FAIL;
     }
-#endif // _DEBUG
+
 
 
     _float      fTimeAcc = { };
@@ -124,26 +123,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         if (fTimeAcc >= 1.f / 60.f)
         {
-#ifdef _DEBUG
             pGameInstance->Compute_TimeDelta(TEXT("Timer_FrameCount"));
-#endif // _DEBUG
 
             pGameInstance->Compute_TimeDelta(TEXT("Timer_60"));
 
-#ifdef _DEBUG
-            pMainApp->Update(1.f / 60.f);
-#endif // _DEBUG
-#ifndef _DEBUG
             _float fFrameTime = min(pGameInstance->Get_TimeDelta(TEXT("Timer_60")), fMaxTimer);
             pMainApp->Update(fFrameTime);
-#endif
+
             pMainApp->Render();
 
             fTimeAcc = 0.f;
-#ifdef _DEBUG
             pGameInstance->Compute_TimeDelta(TEXT("Timer_FrameCount"));
             pMainApp->Compute_FrameCount();
-#endif // _DEBUG
         }
     }
 

@@ -34,12 +34,12 @@ HRESULT CDummy_PhysXEffectHitBox::Initialize(void* pArg)
 
 void CDummy_PhysXEffectHitBox::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 }
 
 void CDummy_PhysXEffectHitBox::Update(_float fTimeDelta)
 {
-	m_pTransformCom->AccumulateMomentum(XMLoadFloat3(&m_vDeltaPos));
+	m_pTransformCom->AccumulateVelocity(XMLoadFloat3(&m_vDeltaPos));
 }
 
 void CDummy_PhysXEffectHitBox::Late_Update(_float fTimeDelta)

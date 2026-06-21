@@ -57,7 +57,7 @@ HRESULT CElf::Initialize(void* pArg)
 
 void CElf::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->ResetVelocityVector();
 	m_iEntered -= 1;
 	if (m_iEntered < 0) {
 		m_iEntered = 0;
@@ -507,7 +507,7 @@ HRESULT CElf::Ready_Components(void* pArg)
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::OLLIVANDER);
-		Desc.bAutoOwnerTranslation = false;
+		Desc.bAutoTranslation = false;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_NPC_HITBOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
@@ -580,7 +580,7 @@ void CElf::Describe_Entity()
 	}
 
 	_float4 vMomentum = {};
-	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentVelocity());
 	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 
 	if (GUI::Button("Move To Player"))

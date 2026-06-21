@@ -43,46 +43,36 @@ void CGameObject_Manager::Priority_Update(_float fTimeDelta)
 #ifndef gimch
 	Describe_Entity();
 #endif // !gimch
-	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PriorityUpdate"));
 #endif // _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PriorityUpdate"));
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
 		for (auto& Pair : m_pLayers[i])
 			Pair.second->Priority_Update(fTimeDelta);
 	}
-#ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PriorityUpdate"));
-#endif // _DEBUG
 }
 
 void CGameObject_Manager::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_Update"));
-#endif // _DEBUG
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
 		for (auto& Pair : m_pLayers[i])
 			Pair.second->Update(fTimeDelta);
 	}
-#ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_Update"));
-#endif // _DEBUG
 }
 
 void CGameObject_Manager::Late_Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_LateUpdate"));
-#endif // _DEBUG
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
 		for (auto& Pair : m_pLayers[i])
 			Pair.second->Late_Update(fTimeDelta);
 	}
-#ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_LateUpdate"));
-#endif // _DEBUG
 }
 
 void CGameObject_Manager::Clear(_uint iLevelIndex)

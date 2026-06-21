@@ -46,7 +46,6 @@ HRESULT CTimer_Manager::Add_Timer(const _wstring& strTimerTag)
 
 HRESULT CTimer_Manager::Initialize()
 {
-#ifdef _DEBUG
 	if (FAILED(Add_Timer(TEXT("Timer_Render_Priority")))) {
 		return E_FAIL;
 	}
@@ -107,7 +106,6 @@ HRESULT CTimer_Manager::Initialize()
 	if (FAILED(Add_Timer(TEXT("Timer_Render_UI_Overley")))) {
 		return E_FAIL;
 	}
-#endif // _DEBUG
 	return S_OK;
 }
 
